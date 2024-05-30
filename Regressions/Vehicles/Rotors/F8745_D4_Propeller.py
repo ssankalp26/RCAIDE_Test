@@ -53,3 +53,6 @@ def F8745_D4_Propeller():
     prop.mid_chord_alignment         = np.zeros_like(prop.chord_distribution)  
         
     return prop
+
+
+prop = F8745_D4_Propeller()

@@ -39,14 +39,28 @@ def single_airfoil():
     airfoil_geometry_1   = compute_naca_4series(airfoil_file_1,npoints = 201)
     airfoil_properties_1 = airfoil_analysis(airfoil_geometry_1,AoA_rad,Re_vals)  
     
+    # distribution plots
+    for i in range(16):
+        plt.plot(airfoil_properties_1.fL[:,i,0])
+        plt.title(('AOA =',AoA_deg[i],'degrees'))
+        plt.ylabel("fL")
+        plt.show()
+    
+    for i in range(16):
+        plt.plot(airfoil_properties_1.fD[:,i,0])
+        plt.title(('AOA =',AoA_deg[i],'degrees'))
+        plt.ylabel("fD")
+        plt.show()
+    
     # Plots    
-    plot_airfoil_surface_forces(airfoil_properties_1)   
-    plot_airfoil_polars(airfoil_properties_1)
-    plot_airfoil_boundary_layer_properties(airfoil_properties_1,show_legend = True )   
+    # plot_airfoil_surface_forces(airfoil_properties_1)   
+    # plot_airfoil_polars(airfoil_properties_1)
+    # plot_airfoil_boundary_layer_properties(airfoil_properties_1,show_legend = True )   
     
     # Verification  
     cl_invisc_true        = 1.0675160492711429
     cd_invisc_true        = 7.638304328309864e-05
+    cd_visc_true          = 0.01514252064401875
     cm_invisc_true        = -0.11066949071512713 
     
     print('\nThis is for single airfoil')
@@ -55,10 +69,15 @@ def single_airfoil():
     print(diff_CL)
     assert diff_CL < 1e-6 
     
-    diff_CD  = np.abs((airfoil_properties_1.cd_invisc[0,10] - cd_invisc_true)/cd_invisc_true)  
+    diff_CD_invisc = np.abs((airfoil_properties_1.cd_invisc[0,10] - cd_invisc_true)/cd_invisc_true)  
     print('\ncd_invisc difference')
-    print(diff_CD )
-    assert diff_CD  < 1e-6     
+    print(diff_CD_invisc)
+    assert diff_CD_invisc  < 1e-6
+
+    diff_CD_visc = np.abs((airfoil_properties_1.cd_visc[0,10] - cd_visc_true)/cd_visc_true)  
+    print('\ncd_invisc difference')
+    print(diff_CD_visc)
+    assert diff_CD_visc  < 1e-6    
 
     diff_CM = np.abs((airfoil_properties_1.cm_invisc[0,10] - cm_invisc_true)/cm_invisc_true) 
     print('\ncm_invisc difference')
@@ -71,13 +90,15 @@ def single_airfoil():
     Cd_abbot = 0.0064
     Cm_abbot = -0.0885
     
-    CL_invisc_val_diff = np.abs((airfoil_properties_1.cl_invisc[0,10] - Cl_abbot)/Cl_abbot) 
-    CD_invisc_val_diff = np.abs((airfoil_properties_1.cd_invisc[0,10] - Cd_abbot)/Cd_abbot)
-    CM_invisc_val_diff = np.abs((airfoil_properties_1.cm_invisc[0,10] - Cm_abbot)/Cm_abbot)
+    CL_invisc_abb_diff = np.abs((airfoil_properties_1.cl_invisc[0,10] - Cl_abbot)/Cl_abbot) 
+    CD_invisc_abb_diff = np.abs((airfoil_properties_1.cd_invisc[0,10] - Cd_abbot)/Cd_abbot)
+    CD_visc_abb_diff   = np.abs((airfoil_properties_1.cd_visc[0,10] - Cd_abbot)/Cd_abbot)
+    CM_invisc_abb_diff = np.abs((airfoil_properties_1.cm_invisc[0,10] - Cm_abbot)/Cm_abbot)
     print('\nValidation against Abbot data')
-    print('invisc Cl-Cl_abbot/Cl_abbot',CL_invisc_val_diff*100,'%\n') 
-    print('invisc Cd-Cd_abbot/Cd_abbot',CD_invisc_val_diff*100,'%\n')
-    print('invisc Cm-Cm_abbot/Cm_abbot',CM_invisc_val_diff*100,'%\n')
+    print('invisc Cl-Cl_abbot/Cl_abbot',CL_invisc_abb_diff*100,'%\n') 
+    print('invisc Cd-Cd_abbot/Cd_abbot',CD_invisc_abb_diff*100,'%\n')
+    print('visc Cd-Cd_abbot/Cd_abbot',CD_visc_abb_diff*100,'%\n')
+    print('invisc Cm-Cm_abbot/Cm_abbot',CM_invisc_abb_diff*100,'%\n')
     
     
     # CFD Validation
@@ -87,10 +108,12 @@ def single_airfoil():
     
     CL_invisc_CFD_diff = np.abs((airfoil_properties_1.cl_invisc[0,10] - Cl_CFD)/Cl_CFD) 
     CD_invisc_CFD_diff = np.abs((airfoil_properties_1.cd_invisc[0,10] - Cd_CFD)/Cd_CFD)
+    CD_visc_CFD_diff = np.abs((airfoil_properties_1.cd_visc[0,10] - Cd_CFD)/Cd_CFD)
     CM_invisc_CFD_diff = np.abs((airfoil_properties_1.cm_invisc[0,10] - Cm_CFD)/Cm_CFD)
     print('\nValidation against CFD data')
     print('invisc Cl-Cl_CFD/Cl_CFD',CL_invisc_CFD_diff*100,'%\n') 
     print('invisc Cd-Cd_CFD/Cd_CFD',CD_invisc_CFD_diff*100,'%\n')
+    print('visc Cd-Cd_CFD/Cd_CFD',CD_visc_CFD_diff*100,'%\n')
     print('invisc Cm-Cm_CFD/Cm_CFD',CM_invisc_CFD_diff*100,'%\n')
     
     AoA_abbot_cl_cd = np.array([-4.1552,-3.2336,-2.128,-1.207,-0.1014,0,1.0038,2.6623,4.8738,6.4392,7.8209,9.6644])
@@ -108,7 +131,8 @@ def single_airfoil():
     print('\nNormalised mean absolute error with respect to xfoil in CL inviscid',Final_CL_diff_invisc*100,'%\n') 
     Final_CD_diff_invisc = np.abs(np.sum((airfoil_properties_1.cd_invisc[0,:] - cd_xfoil)/cd_xfoil))/16
     print('Normalised mean absolute error with respect to xfoil in CD inviscid',Final_CD_diff_invisc*100,'%\n')
-     
+    Final_CD_diff_visc = np.abs(np.sum((airfoil_properties_1.cd_visc[0,:] - cd_xfoil)/cd_xfoil))/16
+    print('Normalised mean absolute error with respect to xfoil in CD viscous',Final_CD_diff_visc*100,'%\n')
     Final_CM_diff_invisc = np.abs(np.sum((airfoil_properties_1.cm_invisc[0,:] - cm_xfoil)/cm_xfoil))/16
     print('Normalised mean absolute error with respect to xfoil in CM inviscid',Final_CM_diff_invisc*100,'%\n') 
     

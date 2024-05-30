@@ -1,25 +1,32 @@
-## @ingroup Methods-Aerodynamics-Airfoil_Panel_Method  
-# RCAIDE/Methods/Aerodynamics/Airfoil_Panel_Method/thwaites_method_new.py
+## @ingroup Methods-Aerodynamics-Airfoil_Panel_Method
+# RCAIDE/Methods/Aerodynamics/Airfoil_Panel_Method/thwaites_method_HO.py
 # 
 # 
-# Created:  Apr 2024, Niranjan Nanjappa
+# Created:  Mar 2024, Niranjan Nanjappa
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
-# RCAIDE imports  
+# RCAIDE imports    
 from RCAIDE.Framework.Core import Data 
 
-# pacakge imports  
-import numpy as np
+# package imports  
+import numpy as np 
 
-def thwaites_method(npanel,ncases,ncpts,L,RE_L,X_I,VE_I, DVE_I,tol,THETA_0):
+# ----------------------------------------------------------------------------------------------------------------------
+# heads_method
+# ---------------------------------------------------------------------------------------------------------------------- 
+## @ingroup Methods-Aerodynamics-Airfoil_Panel_Method
+def thwaites_method_HO(npanel,ncases,ncpts,L,RE_L,X_I,VE_I, DVE_I,tol,THETA_0):
     """ Computes the boundary layer characteristics in laminar 
     flow pressure gradients
     
     Source:
     Thwaites, Bryan. "Approximate calculation of the laminar boundary layer." 
     Aeronautical Quarterly 1.3 (1949): 245-280.
+    
+    Dey, J. and Narasimha, R. "An extension of the Thwaites method for calculation 
+    of incompressible laminar boundary layers". Indian Institute of Science Journal. (1990)
     
     Assumptions:
     None  
@@ -50,7 +57,8 @@ def thwaites_method(npanel,ncases,ncpts,L,RE_L,X_I,VE_I, DVE_I,tol,THETA_0):
 
     Properties Used:
     N/A
-    """ 
+    """
+    
     # Initialize vectors
     X_T          = np.zeros((npanel,ncases,ncpts))
     THETA_T      = np.zeros_like(X_T)
@@ -59,13 +67,14 @@ def thwaites_method(npanel,ncases,ncpts,L,RE_L,X_I,VE_I, DVE_I,tol,THETA_0):
     CF_T         = np.zeros_like(X_T)
     RE_THETA_T   = np.zeros_like(X_T)
     RE_X_T       = np.zeros_like(X_T)
-    DELTA_T      = np.zeros_like(X_T)  
-      
+    DELTA_T      = np.zeros_like(X_T)
+    
     for case in range(ncases):
         for cpt in range(ncpts):
             
             def dy_by_dx(index, X, Y):
-                return 0.45*nu*Ve_i[index]**5            
+                derivative = (0.45*nu/Ve_i[index]) - (6*Y*dVe_i[index]/Ve_i[index]) #+ 2*(Y**2)*(dVe_i[index]**2)/(nu*Ve_i[index])
+                return derivative
             
             l              = L[case,cpt]
             theta_0        = THETA_0 
@@ -76,21 +85,21 @@ def thwaites_method(npanel,ncases,ncpts,L,RE_L,X_I,VE_I, DVE_I,tol,THETA_0):
             dVe_i          = DVE_I.data[:,case,cpt][DVE_I.mask[:,case,cpt] ==False]
             n              = len(x_i)
             dx_i           = np.diff(x_i)
-            theta2_Ve6     = np.zeros(n)
-            theta2_Ve6[0]  = (theta_0**2)*Ve_i[0]**6
+            theta2         = np.zeros(n)
+            theta2[0]      = (theta_0**2)
             
-            # determine (Theta**2)*(Ve**6)
+            # determine Theta**2
             for i in range(1,n):
-                theta2_Ve6[i] = RK4(i-1, dx_i, x_i, theta2_Ve6, dy_by_dx)
+                theta2[i] = RK4(i-1, dx_i, x_i, theta2, dy_by_dx)
             
-            # Compute momentum thickness
-            theta       = np.sqrt(theta2_Ve6/Ve_i**6)
+            # compute momentum thickness
+            theta = np.sqrt(theta2)
             
             # find theta values that do not converge and replace them with neighbor
             idx1        = np.where(abs((theta[1:] - theta[:-1])/theta[:-1]) > tol)[0] 
             if len(idx1)> 1:  
                 np.put(theta,idx1 + 1, theta[idx1])
-                
+            
             # Thwaites separation criteria 
             lambda_val  = theta**2*dVe_i/nu 
             
@@ -146,7 +155,8 @@ def thwaites_method(npanel,ncases,ncpts,L,RE_L,X_I,VE_I, DVE_I,tol,THETA_0):
     )    
     
     return RESULTS
-            
+
+
 
 
 
@@ -197,9 +207,9 @@ def getcf(lambda_val , Re_theta):
     idx1    = (lambda_val>0.0)   
     l[idx1] = 0.22 + 1.57*lambda_val[idx1] - 1.8*lambda_val[idx1]**2 
     cf      = 2*l/Re_theta  
-    return cf
+    return cf 
 
-
+    
 def RK4(ind, dx, x, Var, Slope):
     m1 = Slope(ind,  x[ind],  Var[ind])
     m2 = Slope(ind,  x[ind] + dx[ind]/2,  Var[ind] + m1*dx[ind]/2)
@@ -207,5 +217,4 @@ def RK4(ind, dx, x, Var, Slope):
     m4 = Slope(ind,  x[ind] + dx[ind],  Var[ind] + m3*dx[ind])
     
     change = (dx[ind]/6)*(m1 + 2*m2 + 2*m3 + m4)
-    return Var[ind] + change            
-            
+    return Var[ind] + change    
