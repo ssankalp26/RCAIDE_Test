@@ -290,7 +290,7 @@ def compute_boundary_layer_properties(airfoil_geometry,Airfoil_Data):
     if airfoil_geometry == None:
         print('No airfoil defined, NACA 0012 surrogates will be used') 
         a_names                       = ['0012']                
-        airfoil_geometry              = compute_naca_4series(a_names, npoints= 100)    
+        airfoil_geometry              = compute_naca_4series(a_names, npoints= 101)    
     
     AoA_sweep = np.array([-4,0,2,4,8,10,14])*Units.degrees 
     Re_sweep  = np.array([1,5,10,30,50,75,100])*1E4  
