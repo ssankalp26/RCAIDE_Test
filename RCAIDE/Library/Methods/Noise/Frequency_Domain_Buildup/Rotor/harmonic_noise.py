@@ -68,6 +68,15 @@ def harmonic_noise(harmonics,freestream,angle_of_attack,coordinates,
     orientation  = np.array(rotor.orientation_euler_angles) * 1 
     body2thrust  = sp.spatial.transform.Rotation.from_rotvec(orientation).as_matrix()
     
+    
+    # NIRANJAN 
+
+    Re    = aeroacoustic_data.blade_reynolds_number   # number of control points x number of sections          
+    alpha = aeroacoustic_data.blade_effective_angle_of_attack  # number of control points x number of sections             
+    # NIRANJAN 
+    # compute airfoil sectional properties
+    
+    
     # ----------------------------------------------------------------------------------
     # Rotational Noise  Thickness and Loading Noise
     # ----------------------------------------------------------------------------------  
