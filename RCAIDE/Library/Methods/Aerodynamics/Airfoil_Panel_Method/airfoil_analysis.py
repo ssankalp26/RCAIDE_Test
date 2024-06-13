@@ -13,7 +13,9 @@ from .hess_smith           import hess_smith
 from .thwaites_method      import thwaites_method 
 from .heads_method         import heads_method 
 from .aero_coeff           import aero_coeff
-from .chordwise_distribution import chordwise_distribution 
+from .chordwise_distribution import chordwise_distribution
+from .cf_filter            import cf_filter
+from .cf_filter_custom      import cf_filter_custom
 
 from .thwaites_method_HO      import thwaites_method_HO
 
@@ -132,11 +134,11 @@ def airfoil_analysis(airfoil_geometry,alpha,Re_L,initial_momentum_thickness=1E-5
     L_BOT                          = X_BOT[-1,:,:]    
         
     # laminar boundary layer properties using thwaites method  
-    # BOT_T_RESULTS  = thwaites_method(npanel,ncases,ncpts, L_BOT , RE_L_VALS, X_BOT, VE_BOT, DVE_BOT,tolerance,
-    #                                  THETA_0=initial_momentum_thickness)
+    BOT_T_RESULTS  = thwaites_method(npanel,ncases,ncpts, L_BOT , RE_L_VALS, X_BOT, VE_BOT, DVE_BOT,tolerance,
+                                      THETA_0=initial_momentum_thickness)
     
-    BOT_T_RESULTS  = thwaites_method_HO(npanel,ncases,ncpts, L_BOT , RE_L_VALS, X_BOT, VE_BOT, DVE_BOT,tolerance,
-                                     THETA_0=initial_momentum_thickness)
+    # BOT_T_RESULTS  = thwaites_method_HO(npanel,ncases,ncpts, L_BOT , RE_L_VALS, X_BOT, VE_BOT, DVE_BOT,tolerance,
+    #                                  THETA_0=initial_momentum_thickness)
     
     X_T_BOT          = BOT_T_RESULTS.X_T      
     THETA_T_BOT      = BOT_T_RESULTS.THETA_T     
@@ -281,11 +283,11 @@ def airfoil_analysis(airfoil_geometry,alpha,Re_L,initial_momentum_thickness=1E-5
     L_TOP                          = X_TOP[-1,:,:]    
 
     # laminar boundary layer properties using thwaites method 
-    # TOP_T_RESULTS    = thwaites_method(npanel,ncases,ncpts, L_TOP , RE_L_VALS,X_TOP,VE_TOP, DVE_TOP,tolerance,
-    #                                  THETA_0=initial_momentum_thickness) 
+    TOP_T_RESULTS    = thwaites_method(npanel,ncases,ncpts, L_TOP , RE_L_VALS,X_TOP,VE_TOP, DVE_TOP,tolerance,
+                                      THETA_0=initial_momentum_thickness) 
     
-    TOP_T_RESULTS    = thwaites_method_HO(npanel,ncases,ncpts, L_TOP , RE_L_VALS,X_TOP,VE_TOP, DVE_TOP,tolerance,
-                                     THETA_0=initial_momentum_thickness) 
+    # TOP_T_RESULTS    = thwaites_method_HO(npanel,ncases,ncpts, L_TOP , RE_L_VALS,X_TOP,VE_TOP, DVE_TOP,tolerance,
+    #                                  THETA_0=initial_momentum_thickness) 
     
     X_T_TOP          = TOP_T_RESULTS.X_T      
     THETA_T_TOP      = TOP_T_RESULTS.THETA_T     
@@ -409,6 +411,14 @@ def airfoil_analysis(airfoil_geometry,alpha,Re_L,initial_momentum_thickness=1E-5
     DVE_VALS_2 = DVE_VALS_1.data[~DVE_VALS_1.mask]  
     VE         = VE_VALS_2.reshape((npanel,ncases,ncpts),order = 'F') 
     DVE        = DVE_VALS_2.reshape((npanel,ncases,ncpts),order = 'F')  
+    
+    
+    # ------------------------------------------------------------------------------------------------------
+    # Filter Skin Friction Coeffiecient
+    # ------------------------------------------------------------------------------------------------------
+    # CF         = cf_filter(ncpts, ncases, npanel, CF)
+    CF         = cf_filter_custom(ncpts, ncases, npanel, CF)
+    
     
     # ------------------------------------------------------------------------------------------------------
     # Compute effective surface of airfoil with boundary layer and recompute aerodynamic properties  

@@ -281,7 +281,7 @@ class Rotor(Component):
         deltar[-1]    = diff_r[-1]/2
 
         # Calculating rotational parameters
-        omegar   = np.outer(omega,r_1d)
+        omegar   = np.outer(omega,r_1d)  # Something wrong here
         n        = omega/(2.*pi)   # Rotations per second
 
         # 2 dimensional radial distribution non dimensionalized
