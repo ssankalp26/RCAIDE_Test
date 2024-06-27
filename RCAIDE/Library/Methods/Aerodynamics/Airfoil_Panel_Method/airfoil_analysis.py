@@ -16,9 +16,6 @@ from .heads_method         import heads_method
 from .aero_coeff           import aero_coeff
 from .chordwise_distribution import chordwise_distribution
 from .cf_filter            import cf_filter
-from .cf_filter_custom      import cf_filter_custom
-
-from .thwaites_method_HO      import thwaites_method_HO
 
 # pacakge imports  
 import numpy as np  
@@ -137,9 +134,6 @@ def airfoil_analysis(airfoil_geometry,alpha,Re_L,initial_momentum_thickness=1E-5
     # laminar boundary layer properties using thwaites method  
     BOT_T_RESULTS  = thwaites_method(npanel,ncases,ncpts, L_BOT , RE_L_VALS, X_BOT, VE_BOT, DVE_BOT,tolerance,
                                       THETA_0=initial_momentum_thickness)
-    
-    # BOT_T_RESULTS  = thwaites_method_HO(npanel,ncases,ncpts, L_BOT , RE_L_VALS, X_BOT, VE_BOT, DVE_BOT,tolerance,
-    #                                  THETA_0=initial_momentum_thickness)
     
     X_T_BOT          = BOT_T_RESULTS.X_T      
     THETA_T_BOT      = BOT_T_RESULTS.THETA_T     
@@ -287,9 +281,6 @@ def airfoil_analysis(airfoil_geometry,alpha,Re_L,initial_momentum_thickness=1E-5
     TOP_T_RESULTS    = thwaites_method(npanel,ncases,ncpts, L_TOP , RE_L_VALS,X_TOP,VE_TOP, DVE_TOP,tolerance,
                                       THETA_0=initial_momentum_thickness) 
     
-    # TOP_T_RESULTS    = thwaites_method_HO(npanel,ncases,ncpts, L_TOP , RE_L_VALS,X_TOP,VE_TOP, DVE_TOP,tolerance,
-    #                                  THETA_0=initial_momentum_thickness) 
-    
     X_T_TOP          = TOP_T_RESULTS.X_T      
     THETA_T_TOP      = TOP_T_RESULTS.THETA_T     
     DELTA_STAR_T_TOP = TOP_T_RESULTS.DELTA_STAR_T  
@@ -417,8 +408,7 @@ def airfoil_analysis(airfoil_geometry,alpha,Re_L,initial_momentum_thickness=1E-5
     # ------------------------------------------------------------------------------------------------------
     # Filter Skin Friction Coeffiecient
     # ------------------------------------------------------------------------------------------------------
-    # CF         = cf_filter(ncpts, ncases, npanel, CF)
-    CF         = cf_filter_custom(ncpts, ncases, npanel, CF)
+    CF         = cf_filter(ncpts, ncases, npanel, CF)
     
     
     # ------------------------------------------------------------------------------------------------------

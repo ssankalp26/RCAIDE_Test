@@ -23,7 +23,7 @@ def cf_filter(ncpts,ncases,npanel,CF):
     n = npanel
     
     #filter strength
-    m = 25
+    m = 30
     
     b = [1.0/m]*m
     a = 1

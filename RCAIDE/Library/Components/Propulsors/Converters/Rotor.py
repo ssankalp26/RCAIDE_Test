@@ -166,8 +166,7 @@ class Rotor(Component):
         conditions.frames.
           body.transform_to_inertial         (rotation matrix)
           inertial.velocity_vector           [m/s]
-        conditions.energy.
-          throttle                           [-]
+        conditions.energy. 
 
         Outputs:
         conditions.energy.outputs.

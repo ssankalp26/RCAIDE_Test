@@ -14,6 +14,9 @@ from RCAIDE.Library.Components.Component import Container
 from RCAIDE.Library.Methods.Noise.Common.decibel_arithmetic                        import SPL_arithmetic  
 from RCAIDE.Library.Methods.Noise.Common.compute_noise_source_coordinates          import compute_rotor_point_source_coordinates
 from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.harmonic_noise    import harmonic_noise
+
+from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.harmonic_noise_L1    import harmonic_noise_L1
+
 from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.broadband_noise   import broadband_noise
 from RCAIDE.Library.Methods.Noise.Common                                           import atmospheric_attenuation
 from RCAIDE.Library.Methods.Noise.Metrics.A_weighting_metric                       import A_weighting_metric  
@@ -76,7 +79,8 @@ def rotor_noise(rotor,aeroacoustic_data,segment,settings):
     coordinates = compute_rotor_point_source_coordinates(conditions,rotor,microphone_locations,settings) 
 
     # Harmonic Noise    
-    harmonic_noise(harmonics,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)       
+    # harmonic_noise(harmonics,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
+    harmonic_noise_L1(harmonics,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)       
      
     # Broadband Noise
     broadband_noise(freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
