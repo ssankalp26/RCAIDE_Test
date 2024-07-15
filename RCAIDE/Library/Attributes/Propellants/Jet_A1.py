@@ -39,3 +39,4 @@ class Jet_A1(Propellant):
         self.temperatures.autoignition = 483.15                           # K
         self.temperatures.freeze       = 226.15                           # K
         self.temperatures.boiling      = 0.0                              # K
+        self.stoichiometric_f          = 14.5                             # [-]

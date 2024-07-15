@@ -70,6 +70,7 @@ def design_turbofan(turbofan):
     core_nozzle               = turbofan.core_nozzle
     fan_nozzle                = turbofan.fan_nozzle 
     bypass_ratio              = turbofan.bypass_ratio 
+    compute_emission_flag     = turbofan.compute_emission_flag
     
     #Creating the network by manually linking the different components
     
@@ -109,9 +110,12 @@ def design_turbofan(turbofan):
     #link the combustor to the high pressure compressor
     combustor.inputs.stagnation_temperature                = high_pressure_compressor.outputs.stagnation_temperature
     combustor.inputs.stagnation_pressure                   = high_pressure_compressor.outputs.stagnation_pressure
-    
-    #flow through the high pressor comprresor
-    compute_combustor_performance(combustor,conditions)
+        
+    #flow through the high pressor comprresor    
+    if compute_emission_flag == True:
+        compute_combustor_performance_and_emissions(combustor,conditions)
+    else:
+        compute_combustor_performance(combustor,conditions)
     
     #link the high pressure turbione to the combustor
     high_pressure_turbine.inputs.stagnation_temperature    = combustor.outputs.stagnation_temperature
