@@ -58,6 +58,6 @@ class Emissions(Analysis):
                 N/A                
         """
                 
-        results  = networks.evaluate_thrust(state) 
+        results  = networks.evaluate_emissions(state) 
         
         return results
