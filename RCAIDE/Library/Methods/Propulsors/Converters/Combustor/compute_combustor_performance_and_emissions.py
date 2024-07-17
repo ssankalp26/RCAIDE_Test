@@ -196,7 +196,18 @@ def compute_combustor_performance_and_emissions(combustor,conditions, propellant
     dTdz               = (1/(m_dot_gas*c_p_gas))*(-A_SZ*np.sum(h_k*omega_dot_k*W_k) + beta_air_in*(h_air_in - np.sum(h_k*Y_k_in)))
     
     dm_dot_tot_dz      = beta_air_in
-    
+    dMdt               = dMdt_mech
+    dm_dot_soot_dz     = dMdt*A_SZ
+    m_dot_gas          = m_dot_tot - m_dot_soot
+    dNdt               = dNdt_mech 
+    dn_dot_soot_dz     = dNdt*A_SZ
+    V_dot              = m_dot_gas/rho_gas
+    M                  = m_dot_soot/V_dot
+    N                  = n_dot_soot/V_dot
+    u                  = m_dot_gas/(rho_gas*A_SZ)
+    dYkdz              = (beta_air_in*(Y_k_in - Y_k))/(rho_gas*u*A_SZ) + (omega_dot*W_k)/(rho_gas*u) + (1/u)*dYkdt_soot - (Y_k/u)*np.sum(dYkdt_soot)
+    dTdz               = (1/(m_dot_gas*c_p_gas + m_dot_soot*c_p_soot))*(-A_SZ*np.sum(h_k*omega_dot_k*W_k) - A_SZ*rho_gas*np.sum(h_k*dYkdt_soot) - A_SZ*h_soot*dMdt + beta_air_in*(h_air_in - np.sum(h_k*Y_k_in)))
+    dYkdt_soot         = - dMdt_k*(W_k*k_f)/(rho_gas*W_c)
 
     
     # pack computed quantities into outputs
