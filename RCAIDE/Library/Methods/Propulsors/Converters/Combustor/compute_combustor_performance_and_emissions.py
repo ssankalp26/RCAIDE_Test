@@ -130,9 +130,27 @@ def compute_combustor_performance_and_emissions(combustor,conditions, propellant
     rho_gas            = combustor.rho_gas                                                                          # Density of the gas inside the primary zone reactor [kg/m**3]
     m                  = combustor.m                                                                                # Mass
     dYkdt              = omega_dot_k*W_k/rho_gas + m_dot_in*(Y_k_in - Y_k)/m                                        # Conservation of species
-    dTdt               = (1/m*c_p)*(m_dot_in*(h_in - ))
+    K                  = combustor.K                                                                                # total number of species in the gas
+    c_p                = combustor.c_p                                                                              # specific heat capacity of the gas at constant pressure [J/(kg·K)]
+    h_k                = combustor.h_k                                                                              # specific enthalpy of species 𝑘 [J/kg]
+    m_dot_k_gen        = V_PZ*omega_dot_k*W_k                                                                       # generated mass per second of species 𝑘 [kg/s]
+    h_in               = combustor.h_in                                                                             # specific enthalpy entering the reactor
+    dTdt               = (1/(m*c_p))*(m_dot_in*(h_in - np.sum(h_k*Y_k_in)) - np.sum(h_k*m_dot_k_gen))               # energy equation for the ideal gas constant pressure reactor
     
-                                                                                          
+    M                  = combustor.M                                                                                # mass density of soot [kg/m3]
+    m_soot             = M*V_PZ                                                                                     # soot mass 
+    m_tot              = combustor.m_tot                                                                            # total reactor mass
+    m_gas              = m_tot − m_soot                                                                             # mass of the gas
+    dYkdt_soot         = combustor.dYkdt_soot                                                                       # change in mass fractions in the gas due to species transitioning from the gas phase to the solid soot phase (and vice versa)
+    dYkdt              = omega_dot_k*W_k/rho_gas + m_dot_in*(Y_k_in - Y_k)/m_gas + dYkdt_soot - Y_k*np.sum(dYkdt_soot) # Conservation of species
+    c_p_soot           = 840                                                                                        # [J/kg*K]
+    T_ref              = 298                                                                                        # [K]
+    h_soot_ref         = combustor.h_soot_ref                                                                       # assumed to be equal to the specific enthalpy of graphite at 𝑇ref (= 298 K)
+    h_soot             = h_soot_ref + c_p_soot*(T - T_ref)
+    dHdt               = m_dot_in*h_in - h_gas*m_dot_gas_out - h_soot*m_dot_soot_out
+    dTdt               = (1/(m_gas*c_p_gas + m_soot*c_p_soot))*(-h_soot*m_dot_soot - np.sum(h_k*m_dot_k_gen) + m_dot_gas_in*(h_gas_in - np.sum(h_k*Y_k)) - np.sum(h_k*m_gas*dYkdt_soot))
+    
+                                                                                           
     # Secondary zone input variables                                                                 
     A_SZ               = combustor.A_SZ                                                                             # Secondary zone cross-sectional area                   [m^2]   
     L_SZ               = combustor.L_SZ                                                                             # Secondary zone length                                 [m]   
