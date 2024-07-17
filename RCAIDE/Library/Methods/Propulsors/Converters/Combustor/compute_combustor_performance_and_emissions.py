@@ -142,14 +142,25 @@ def compute_combustor_performance_and_emissions(combustor,conditions, propellant
     m_tot              = combustor.m_tot                                                                            # total reactor mass
     m_gas              = m_tot − m_soot                                                                             # mass of the gas
     dYkdt_soot         = combustor.dYkdt_soot                                                                       # change in mass fractions in the gas due to species transitioning from the gas phase to the solid soot phase (and vice versa)
-    dYkdt              = omega_dot_k*W_k/rho_gas + m_dot_in*(Y_k_in - Y_k)/m_gas + dYkdt_soot - Y_k*np.sum(dYkdt_soot) # Conservation of species
+    dYkdt              = omega_dot_k*W_k/rho_gas + m_dot_in*(Y_k_in - Y_k)/m_gas 
+    + dYkdt_soot - Y_k*np.sum(dYkdt_soot)                                                                           # Conservation of species
     c_p_soot           = 840                                                                                        # [J/kg*K]
     T_ref              = 298                                                                                        # [K]
     h_soot_ref         = combustor.h_soot_ref                                                                       # assumed to be equal to the specific enthalpy of graphite at 𝑇ref (= 298 K)
-    h_soot             = h_soot_ref + c_p_soot*(T - T_ref)
-    dHdt               = m_dot_in*h_in - h_gas*m_dot_gas_out - h_soot*m_dot_soot_out
-    dTdt               = (1/(m_gas*c_p_gas + m_soot*c_p_soot))*(-h_soot*m_dot_soot - np.sum(h_k*m_dot_k_gen) + m_dot_gas_in*(h_gas_in - np.sum(h_k*Y_k)) - np.sum(h_k*m_gas*dYkdt_soot))
-    
+    h_soot             = h_soot_ref + c_p_soot*(T - T_ref)                                                          # specific enthalpy of soot
+    dHdt_1             = m_dot_in*h_in - h_gas*m_dot_gas_out - h_soot*m_dot_soot_out                                # equation for the change in total enthalpy - step 1
+    m_dot_gas_soot     = m_gas*np.sum(dYkdt_soot)                                                                   # total mass (in kg) of soot turning into gas on a per second basis
+    m_dot_soot_soot    = - m_dot_gas_soot                                                                           # amount of gas turning into soot [kg/s]
+    dm_gas_dt          = m_dot_gas_in - m_dot_gas_out + m_dot_gas_soot                                              # time derivates of m_gas
+    dm_soot_dt         = - m_dot_soot_out + m_dot_soot_soot                                                         # time derivates of m_soot
+    dHdt_2             = h_gas*dm_gas_dt + h_soot*dm_soot_dt + (m_gas*c_p_gas + m_soot*c_p_soot)*dTdt 
+    + m_gas*np.sum(h_k*dYkdt)                                                                                       # equation for the change in total enthalpy - step 2
+    dTdt               = (1/(m_gas*c_p_gas + m_soot*c_p_soot))*((-h_soot*m_dot_soot_soot 
+    - np.sum(h_k*m_dot_k_gen) + m_dot_gas_in*(h_gas_in - np.sum(h_k*Y_k)) - np.sum(h_k*m_gas*dYkdt_soot)))
+    dNdt_m_dot         = - m_dot_out*N/(rho_out*V_PZ)                                                               # general term accounting for the decrease in N due to soot leaving the reactor with the outgoing massflow
+    dNdt               = dNdt_mech + dNdt_m_dot                                                                     # equation for N
+    dMdt_m_dot         = - m_dot_out*M/(rho_out*V_PZ)                                                               # general term 
+    dMdt               = dMdt_mech + dMdt_m_dot                                                                     # equation for M    
                                                                                            
     # Secondary zone input variables                                                                 
     A_SZ               = combustor.A_SZ                                                                             # Secondary zone cross-sectional area                   [m^2]   
@@ -178,9 +189,13 @@ def compute_combustor_performance_and_emissions(combustor,conditions, propellant
         beta_air_in    = beta_DA
     else:
         beta_air_in    = 0
-        
 
+    dm_dot_gas_dz      = beta_air_in                                                                                # Mass (flow) conservation equation
+    u                  = combustor.u                                                                                # Axial velocity [m/s]
+    dYkdz              = (beta_air_in*(Y_k_in - Y_k))/(rho_gas*u*A_SZ) + (omega_dot*W_k)/(rho_gas*u)                # Species conservation equation for the secondary zone without soot
+    dTdz               = (1/(m_dot_gas*c_p_gas))*(-A_SZ*np.sum(h_k*omega_dot_k*W_k) + beta_air_in*(h_air_in - np.sum(h_k*Y_k_in)))
     
+    dm_dot_tot_dz      = beta_air_in
     
 
     
