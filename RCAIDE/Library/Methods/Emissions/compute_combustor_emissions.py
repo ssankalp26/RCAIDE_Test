@@ -1,6 +1,5 @@
-## @ingroup Library-Methods-Energy-Propulsors-Converters-Combustor
-# RCAIDE/Methods/Energy/Propulsors/Converters/Combustor/compute_combustor_performance_and_emissions.py
-# 
+## @ingroup Library-Methods-Emissions
+# RCAIDE/Library/Methods/Emissions/compute_combustor_emissions.py
 # 
 # Created:  Jul 2024, M. Guidotti
 
@@ -11,11 +10,10 @@
 import numpy as np
 
 # ---------------------------------------------------------------------------------------------------------------------- 
-# compute_combustor_performance_and_emissions
+# compute_combustor_emissions
 # ----------------------------------------------------------------------------------------------------------------------   
 
-## @ingroup Energy-Propulsors-Converters-Combustor  
-def compute_combustor_performance_and_emissions(combustor,conditions, propellant):
+def compute_combustor_emissions(combustor,conditions, propellant):
     """ This computes the output values from the input values according to
     equations from the source and the combustor emissions.
 
@@ -49,79 +47,67 @@ def compute_combustor_performance_and_emissions(combustor,conditions, propellant
       efficiency                          [-]
       area_ratio                          [-]
       fuel_data.specific_energy           [J/kg]
-    """         
-    # unpack the values
+    """       
 
+    # unpacking the values form combustor
+    Tt_in              = combustor.inputs.stagnation_temperature
+    Pt_in              = combustor.inputs.stagnation_pressure
+    Tt4                = combustor.turbine_inlet_temperature
+    pib                = combustor.pressure_ratio
+    eta_b              = combustor.efficiency
+    nondim_r           = combustor.inputs.nondim_mass_ratio
+    P_0                = combustor.inputs.static_pressure
+    htf                = combustor.fuel_data.specific_energy
+    ar                 = combustor.area_ratio
+    
     # unpacking the values from conditions
-    gamma            = conditions.freestream.isentropic_expansion_factor 
-    Cp               = conditions.freestream.specific_heat_at_constant_pressure
-    To               = conditions.freestream.temperature
-    Tto              = conditions.freestream.stagnation_temperature
-    stoichiometric_f = propellant.stoichiometric_f
+    gamma              = conditions.freestream.isentropic_expansion_factor 
+    Cp                 = conditions.freestream.specific_heat_at_constant_pressure
+    To                 = conditions.freestream.temperature
+    Tto                = conditions.freestream.stagnation_temperature
+    stoichiometric_f   = propellant.stoichiometric_f
     
-    # unpacking the values form inputs
-    Tt_in            = combustor.inputs.stagnation_temperature
-    Pt_in            = combustor.inputs.stagnation_pressure
-    Tt4              = combustor.turbine_inlet_temperature
-    pib              = combustor.pressure_ratio
-    eta_b            = combustor.efficiency
-    nondim_r         = combustor.inputs.nondim_mass_ratio
-    P_0              = combustor.inputs.static_pressure
-    
-    # unpacking values from combustor
-    htf              = combustor.fuel_data.specific_energy
-    ar               = combustor.area_ratio
-    
-    # compute pressure
-    Pt_out           = Pt_in*pib
-
-    # method to compute combustor properties
-
-    # method - computing the stagnation enthalpies from stagnation temperatures
-    ht4              = Cp*Tt4*nondim_r
-    ht_in            = Cp*Tt_in*nondim_r
-    ho               = Cp*To
-    
-    # Using the Turbine exit temperature, the fuel properties and freestream temperature to compute the fuel to air ratio f
-    f                = (ht4 - ht_in)/(eta_b*htf-ht4)
-
-    # Computing the exit static and stagnation conditions
-    ht_out           = Cp*Tt4
+    # additional input variables
+    nuc_fac            = 1
+    coag_fac           = 1  
+    ox_num_fac         = 1
+    ox_fac             = 1
+    sg_fac             = 1
+    eps                = 2.2
+    C_N                = 1.48*(10**(-11))
+    rho_soot           = 2000
+    C_coag             = 1                                                                                            # 1-9    
     
     # -----------------------------------------------------------------------------------------------------
-    # Soot Model
+    # Soot Model (two-equation model) -> 4 steps: nucleation, surface growth, coagulation and oxidation.
     # -----------------------------------------------------------------------------------------------------    
     
-    beta_ij          = Ni*Nj*np.pi*((ri + rj)**2)*np.sqrt(8*kB*T/(np.pi*mu_ij))
-    C_N              = 1.48*10**(-11)
-    gamma_i          = C_N*m_i**4
-    eps              = 2.2
-    dNdt_ij          = ((gamma_i + gamma_j)/2)*eps*np.sqrt(8*np.pi*kB*T/mu_ij)*(N_A**2)*((ri + rj)**2)*PAH_i*PAH_j
-    dNdt_nuc         = np.sum(dNdt_ij)
-    dNdt_mech        = nuc_fac*dNdt_nuc + coag_fac*dNdt_coag + ox_num_fac*(N/M)*ox_fac*dMdt_ox                      # equations for soot number
-    rho_soot         = 2000
-    C_coag           = 1                                                                                            # 1-9
-    dNdt_coag        = -C_coag*np.sqrt((24*R_u*T)/(rho_soot*N_A))*(d_p**(0.5))*N**2
-    dMdt_nuc         = np.sum(((n_Cij*W_c)/(N_A))*dNdt_ij)
-    d_p              = (6*M/(np.pi*rho_soot*N))**(1/3)
-    A_S              = N*np.pi*d_p**2
-    A_kG             = 7.5*10**2
-    Ea_Ru            = 12100
-    k_G_T            = A_kG*np.exp(Ea_Ru/T)
-    dMdt_sg          = 2*W_c*k_G_T*(C2H2)*f_A_S
-    gamma_soot       = 0.3
-    dMdt_sg_i        = n_C_i*W_C*((gamma_soot + gamma_i)/2)*eps*np.sqrt(8*np.pi*kB*T/m_soot_i)*(d_p/2 + r_i)**2*N*PAH_i
-    dMdt_sg_PAH      = np.sum(dMdt_sg_i)
-    dMdt_mech        = nuc_fac*dMdt_nuc + sg_fac*dMdt_sg + ox_fac*dMdt_ox                                           # equations for mass density
-    dMdt_ox_i        = -0.25*W_c*eta_i*i*np.sqrt(8*R_u*T/(np.pi*W_i))*np.exp(-E_A_i/(R_u*T))*A_s
-    eta_OH           = 0.13
-    dMdt_ox_OH       = -8.82*eta_OH*W_c*(T**0.5)*OH*A_S
-    eta_OH           = 1
-    k_O_2_T          = 745.88*(T**0.5)*np.exp(-19680/T)
-    dMdt_ox_OH       = -eta_O_2*W_c*k_O_2_T*O_2*A_S
-    eta_O            = 1
-    k_O_2            = 1.82*np.sqrt(T)
-    dMdt_ox_O        = -eta_O*W_c*k_O_T*O*A_S
+    beta_ij            = Ni*Nj*np.pi*((ri + rj)**2)*np.sqrt(8*kB*T/(np.pi*mu_ij))
+    gamma_i            = C_N*m_i**4
+    dNdt_nuc_ij        = ((gamma_i + gamma_j)/2)*eps*np.sqrt(8*np.pi*kB*T/mu_ij)*(N_A**2)*((ri + rj)**2)*PAH_i*PAH_j
+    dNdt_nuc           = np.sum(dNdt_ij)
+    dNdt_mech          = nuc_fac*dNdt_nuc + coag_fac*dNdt_coag + ox_num_fac*(N/M)*ox_fac*dMdt_ox                      # equations for soot number density (N) [particles/m**3]
+    dNdt_coag          = -C_coag*np.sqrt((24*R_u*T)/(rho_soot*N_A))*(d_p**(0.5))*N**2
+    dMdt_nuc           = np.sum(((n_Cij*W_c)/(N_A))*dNdt_ij)
+    d_p                = (6*M/(np.pi*rho_soot*N))**(1/3)
+    A_S                = N*np.pi*d_p**2
+    A_kG               = 7.5*10**2
+    Ea_Ru              = 12100
+    k_G_T              = A_kG*np.exp(Ea_Ru/T)
+    dMdt_sg            = 2*W_c*k_G_T*(C2H2)*f_A_S
+    gamma_soot         = 0.3
+    dMdt_sg_i          = n_C_i*W_C*((gamma_soot + gamma_i)/2)*eps*np.sqrt(8*np.pi*kB*T/m_soot_i)*(d_p/2 + r_i)**2*N*PAH_i
+    dMdt_sg_PAH        = np.sum(dMdt_sg_i)
+    dMdt_mech          = nuc_fac*dMdt_nuc + sg_fac*dMdt_sg + ox_fac*dMdt_ox                                           # equations for mass density
+    dMdt_ox_i          = -0.25*W_c*eta_i*i*np.sqrt(8*R_u*T/(np.pi*W_i))*np.exp(-E_A_i/(R_u*T))*A_s
+    eta_OH             = 0.13
+    dMdt_ox_OH         = -8.82*eta_OH*W_c*(T**0.5)*OH*A_S
+    eta_OH             = 1
+    k_O_2_T            = 745.88*(T**0.5)*np.exp(-19680/T)
+    dMdt_ox_OH         = -eta_O_2*W_c*k_O_2_T*O_2*A_S
+    eta_O              = 1
+    k_O_2              = 1.82*np.sqrt(T)
+    dMdt_ox_O          = -eta_O*W_c*k_O_T*O*A_S
         
     # -----------------------------------------------------------------------------------------------------
     # Combustor Model
@@ -260,7 +246,5 @@ def compute_combustor_performance_and_emissions(combustor,conditions, propellant
     
     # pack computed quantities into outputs
     combustor.outputs.stagnation_temperature  = Tt4
-    combustor.outputs.stagnation_pressure     = Pt_out
-    combustor.outputs.stagnation_enthalpy     = ht_out
-    combustor.outputs.fuel_to_air_ratio       = f 
+    
     return 
