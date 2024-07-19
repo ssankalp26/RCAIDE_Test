@@ -89,6 +89,41 @@ def compute_combustor_performance_and_emissions(combustor,conditions, propellant
     ht_out           = Cp*Tt4
     
     # -----------------------------------------------------------------------------------------------------
+    # Soot Model
+    # -----------------------------------------------------------------------------------------------------    
+    
+    beta_ij          = Ni*Nj*np.pi*((ri + rj)**2)*np.sqrt(8*kB*T/(np.pi*mu_ij))
+    C_N              = 1.48*10**(-11)
+    gamma_i          = C_N*m_i**4
+    eps              = 2.2
+    dNdt_ij          = ((gamma_i + gamma_j)/2)*eps*np.sqrt(8*np.pi*kB*T/mu_ij)*(N_A**2)*((ri + rj)**2)*PAH_i*PAH_j
+    dNdt_nuc         = np.sum(dNdt_ij)
+    dNdt_mech        = nuc_fac*dNdt_nuc + coag_fac*dNdt_coag + ox_num_fac*(N/M)*ox_fac*dMdt_ox                      # equations for soot number
+    rho_soot         = 2000
+    C_coag           = 1                                                                                            # 1-9
+    dNdt_coag        = -C_coag*np.sqrt((24*R_u*T)/(rho_soot*N_A))*(d_p**(0.5))*N**2
+    dMdt_nuc         = np.sum(((n_Cij*W_c)/(N_A))*dNdt_ij)
+    d_p              = (6*M/(np.pi*rho_soot*N))**(1/3)
+    A_S              = N*np.pi*d_p**2
+    A_kG             = 7.5*10**2
+    Ea_Ru            = 12100
+    k_G_T            = A_kG*np.exp(Ea_Ru/T)
+    dMdt_sg          = 2*W_c*k_G_T*(C2H2)*f_A_S
+    gamma_soot       = 0.3
+    dMdt_sg_i        = n_C_i*W_C*((gamma_soot + gamma_i)/2)*eps*np.sqrt(8*np.pi*kB*T/m_soot_i)*(d_p/2 + r_i)**2*N*PAH_i
+    dMdt_sg_PAH      = np.sum(dMdt_sg_i)
+    dMdt_mech        = nuc_fac*dMdt_nuc + sg_fac*dMdt_sg + ox_fac*dMdt_ox                                           # equations for mass density
+    dMdt_ox_i        = -0.25*W_c*eta_i*i*np.sqrt(8*R_u*T/(np.pi*W_i))*np.exp(-E_A_i/(R_u*T))*A_s
+    eta_OH           = 0.13
+    dMdt_ox_OH       = -8.82*eta_OH*W_c*(T**0.5)*OH*A_S
+    eta_OH           = 1
+    k_O_2_T          = 745.88*(T**0.5)*np.exp(-19680/T)
+    dMdt_ox_OH       = -eta_O_2*W_c*k_O_2_T*O_2*A_S
+    eta_O            = 1
+    k_O_2            = 1.82*np.sqrt(T)
+    dMdt_ox_O        = -eta_O*W_c*k_O_T*O*A_S
+        
+    # -----------------------------------------------------------------------------------------------------
     # Combustor Model
     # -----------------------------------------------------------------------------------------------------
     
@@ -120,11 +155,12 @@ def compute_combustor_performance_and_emissions(combustor,conditions, propellant
     m_dot_air_i        = combustor.m_dot_air_i                                                                      # mass flow of air in reactor 𝑖
     t_res_i            = V_PZ_i/(rho_i*(m_dot_fuel_i + m_dot_air_i))                                                # residence time in reactor 𝑖
     
+    # no soot
     K_v                = 0.001                                                                                      # [kg/(s*Pa)]
     m_dot_in           = combustor.m_dot_in                                                                         # mass flow entering the reactor
     m_dot_out          = m_dot_in + K_v*(P - P_0)                                                                   # Conservation of mass 𝑚 -> dmdt = m_dot_in - m_dot_out
     omega_dot_k        = combustor.omega_dot_k                                                                      # formation rate of species 𝑘 [kmol/(m**3·s)]
-    W_k                = combustor.W_k                                                                              # Molecular weight [kg/kmol]
+    W_k                = combustor.W_k                                                                              # Molecular weight of species 𝑘 [kg/kmol]
     Y_k                = combustor.Y_k                                                                              # Mass fraction of species 𝑘 in the gas
     Y_k_in             = combustor.Y_k_in                                                                           # Mass fraction of species 𝑘 in the gas entering the reactor
     rho_gas            = combustor.rho_gas                                                                          # Density of the gas inside the primary zone reactor [kg/m**3]
@@ -137,6 +173,7 @@ def compute_combustor_performance_and_emissions(combustor,conditions, propellant
     h_in               = combustor.h_in                                                                             # specific enthalpy entering the reactor
     dTdt               = (1/(m*c_p))*(m_dot_in*(h_in - np.sum(h_k*Y_k_in)) - np.sum(h_k*m_dot_k_gen))               # energy equation for the ideal gas constant pressure reactor
     
+    # with soot
     M                  = combustor.M                                                                                # mass density of soot [kg/m3]
     m_soot             = M*V_PZ                                                                                     # soot mass 
     m_tot              = combustor.m_tot                                                                            # total reactor mass
@@ -189,26 +226,37 @@ def compute_combustor_performance_and_emissions(combustor,conditions, propellant
         beta_air_in    = beta_DA
     else:
         beta_air_in    = 0
-
+        
+    # no soot
     dm_dot_gas_dz      = beta_air_in                                                                                # Mass (flow) conservation equation
     u                  = combustor.u                                                                                # Axial velocity [m/s]
     dYkdz              = (beta_air_in*(Y_k_in - Y_k))/(rho_gas*u*A_SZ) + (omega_dot*W_k)/(rho_gas*u)                # Species conservation equation for the secondary zone without soot
-    dTdz               = (1/(m_dot_gas*c_p_gas))*(-A_SZ*np.sum(h_k*omega_dot_k*W_k) + beta_air_in*(h_air_in - np.sum(h_k*Y_k_in)))
-    
-    dm_dot_tot_dz      = beta_air_in
-    dMdt               = dMdt_mech
-    dm_dot_soot_dz     = dMdt*A_SZ
-    m_dot_gas          = m_dot_tot - m_dot_soot
-    dNdt               = dNdt_mech 
-    dn_dot_soot_dz     = dNdt*A_SZ
-    V_dot              = m_dot_gas/rho_gas
+    dTdz               = (1/(m_dot_gas*c_p_gas))*(-A_SZ*np.sum(h_k*omega_dot_k*W_k) + 
+                                                  beta_air_in*(h_air_in - np.sum(h_k*Y_k_in)))                      # Equation for the temperature
+    # with soot
+    dm_dot_tot_dz      = beta_air_in                                                                                # conservation of total mass (flow)
+    dMdt               = dMdt_mech 
+    dm_dot_soot_dz     = dMdt*A_SZ                                                                                  # change of the mass flow of soot
+    m_dot_gas          = m_dot_tot - m_dot_soot                                                                     # mass flow of gas
+    dNdt               = dNdt_mech
+    dn_dot_soot_dz     = dNdt*A_SZ                                                                                  # soot number flow 
+    V_dot              = m_dot_gas/rho_gas                                                                          # volume flow
     M                  = m_dot_soot/V_dot
     N                  = n_dot_soot/V_dot
-    u                  = m_dot_gas/(rho_gas*A_SZ)
-    dYkdz              = (beta_air_in*(Y_k_in - Y_k))/(rho_gas*u*A_SZ) + (omega_dot*W_k)/(rho_gas*u) + (1/u)*dYkdt_soot - (Y_k/u)*np.sum(dYkdt_soot)
-    dTdz               = (1/(m_dot_gas*c_p_gas + m_dot_soot*c_p_soot))*(-A_SZ*np.sum(h_k*omega_dot_k*W_k) - A_SZ*rho_gas*np.sum(h_k*dYkdt_soot) - A_SZ*h_soot*dMdt + beta_air_in*(h_air_in - np.sum(h_k*Y_k_in)))
-    dYkdt_soot         = - dMdt_k*(W_k*k_f)/(rho_gas*W_c)
+    u                  = m_dot_gas/(rho_gas*A_SZ)                                                                   # velocity
+    dYkdz              = (beta_air_in*(Y_k_in - Y_k))/(rho_gas*u*A_SZ) + (omega_dot*W_k)/(rho_gas*u) 
+    + (1/u)*dYkdt_soot - (Y_k/u)*np.sum(dYkdt_soot)                                                                 # Species conservation equation for the secondary zone with soot                                                      
+    dTdz               = (1/(m_dot_gas*c_p_gas + m_dot_soot*c_p_soot))*(-A_SZ*np.sum(h_k*omega_dot_k*W_k) 
+    - A_SZ*rho_gas*np.sum(h_k*dYkdt_soot) - A_SZ*h_soot*dMdt + beta_air_in*(h_air_in - np.sum(h_k*Y_k_in)))         # energy equation
+     
+    W_c                = combustor.W_c                                                                              # atomic weight of carbon [kg/kmol]
+    dMdt_k             = combustor.dMdt_k                                                                           # rate of change in soot mass density due to reactions with species 𝑘 of the soot formation process
+    k_f                = combustor.k_f                                                                              # molar ratio in which species 𝑘 reacts to form or destroy soot (0.5 for surface growth through C2H2)
+    dYkdt_soot         = - dMdt_k*(W_k*k_f)/(rho_gas*W_c)                                                           # rates of change of mass fractions of the reacting gas species (dYkdt) are adjusted according to the rate of soot formation
 
+    L                  = combustor.L                                                                                # enthalpy of vaporization [J/kg] at standard conditions
+    Delta_h            = combustor.Delta_h                                                                          # change in specific enthalpy going from standard conditions to 𝑇3 and 𝑃3
+    h_mix              = (1/m_dot_mix)*(m_dot_air*h_air_P3_T3 + m_dot_fuel*h_fuel_P3_T3 - m_dot_fuel*(L + Delta_h)) # specific enthalpy of the gas-fuel mixture
     
     # pack computed quantities into outputs
     combustor.outputs.stagnation_temperature  = Tt4
