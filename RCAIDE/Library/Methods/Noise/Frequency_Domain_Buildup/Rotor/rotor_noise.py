@@ -13,9 +13,11 @@ from RCAIDE.Framework.Core import  Data
 from RCAIDE.Library.Components.Component import Container 
 from RCAIDE.Library.Methods.Noise.Common.decibel_arithmetic                        import SPL_arithmetic  
 from RCAIDE.Library.Methods.Noise.Common.compute_noise_source_coordinates          import compute_rotor_point_source_coordinates
-from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.harmonic_noise    import harmonic_noise
 
-from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.harmonic_noise_L1    import harmonic_noise_L1
+from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.harmonic_noise          import harmonic_noise
+from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.harmonic_noise_point    import harmonic_noise_point
+from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.harmonic_noise_line     import harmonic_noise_line
+from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.harmonic_noise_plane    import harmonic_noise_plane
 
 from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.broadband_noise   import broadband_noise
 from RCAIDE.Library.Methods.Noise.Common                                           import atmospheric_attenuation
@@ -69,7 +71,8 @@ def rotor_noise(rotor,aeroacoustic_data,segment,settings):
     angle_of_attack      = conditions.aerodynamics.angles.alpha 
     velocity_vector      = conditions.frames.inertial.velocity_vector 
     freestream           = conditions.freestream  
-    harmonics            = settings.harmonics    
+    harmonics_blade      = settings.harmonics
+    harmonics_load       = np.linspace(0,5,6).astype(int)       # newly added
     
     # create data structures for computation
     Noise   = Data()  
@@ -78,12 +81,28 @@ def rotor_noise(rotor,aeroacoustic_data,segment,settings):
     # compute position vector from point source (or should it be origin) at rotor hub to microphones 
     coordinates = compute_rotor_point_source_coordinates(conditions,rotor,microphone_locations,settings) 
 
-    # Harmonic Noise    
-    # harmonic_noise(harmonics,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
-    harmonic_noise_L1(harmonics,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)       
-     
+
+    # ----------------------------------------------------------------------------------
+    # Harmonic Noise
+    # ----------------------------------------------------------------------------------
+    # # harmonic noise old version     
+    # harmonic_noise(harmonics_blade,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
+    
+    # # harmonic noise with point load distribution
+    # harmonic_noise_point(harmonics_blade,harmonics_load,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)       
+    
+    # # harmonic noise with line load distribution
+    # harmonic_noise_line(harmonics_blade,harmonics_load,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
+    
+    # harmonic noise with planar load distribution
+    harmonic_noise_plane(conditions,harmonics_blade,harmonics_load,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
+    
+    
+    # ----------------------------------------------------------------------------------
     # Broadband Noise
+    # ----------------------------------------------------------------------------------
     broadband_noise(freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
+    
     
     # Atmospheric attenuation 
     delta_atmo = atmospheric_attenuation(np.linalg.norm(coordinates.X_r[:,0,0,0,0,:],axis=1),settings.center_frequencies)

@@ -4,8 +4,9 @@
 import RCAIDE
 from RCAIDE.Framework.Core import Units, Data  
 from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor   import rotor_noise
-from RCAIDE.Framework.Mission.Common                        import Results  
-from RCAIDE.Framework.Mission.Segments.Segment              import Segment 
+from RCAIDE.Framework.Mission.Common                               import Results
+from RCAIDE.Library.Methods.Energy.Propulsors.Converters.Rotor     import design_propeller   
+from RCAIDE.Framework.Mission.Segments.Segment                     import Segment 
 
 # Python Imports  
 import sys 
@@ -59,14 +60,14 @@ def Hararmonic_Noise_Validation(PP):
     ctrl_pts                = len(test_omega)
     AoA                     = np.zeros(ctrl_pts)
     true_course_angle       = 0
-    fligth_path_angle       = 0 
+    flight_path_angle       = 0 
     three_quarter_twist     = 21 * Units.degrees 
     n                       = len(rotor.twist_distribution)
     beta                    = rotor.twist_distribution
     beta_75                 = beta[round(n*0.75)] 
     delta_beta              = three_quarter_twist-beta_75
     rotor.twist_distribution = beta + delta_beta 
-
+    
     # microphone locations
     positions = np.zeros(( len(theta),3))
     for i in range(len(theta)):
@@ -81,7 +82,7 @@ def Hararmonic_Noise_Validation(PP):
     conditions.freestream.speed_of_sound                   = np.ones((ctrl_pts,1)) * a 
     conditions.freestream.temperature                      = np.ones((ctrl_pts,1)) * T  
     conditions.aerodynamics.angle_of_attack                = np.atleast_2d(AoA).T
-    conditions.frames.inertial.velocity_vector             = np.array([[77.2, 0. ,0.],[ 77.0,0.,0.], [ 77.2, 0. ,0.]]) 
+    conditions.frames.inertial.velocity_vector             = np.array([[77.2, 0.0 ,0.],[ 77.0,0.,0.], [ 77.2, 0. ,0.]]) 
     conditions.energy.throttle                             = np.ones((ctrl_pts,1))*1.0 
     rotor.inputs.omega                                     = np.atleast_2d(test_omega).T   
     rotor.inputs.pitch_command                             = np.ones((ctrl_pts,1))*0.0 
@@ -92,11 +93,11 @@ def Hararmonic_Noise_Validation(PP):
     conditions.frames.planet.true_course_angle[:,1,1]      = np.cos(true_course_angle) 
     conditions.frames.planet.true_course_angle[:,2,2]      = 1 
     conditions.frames.wind.transform_to_inertial           = np.zeros((ctrl_pts,3,3))   
-    conditions.frames.wind.transform_to_inertial[:,0,0]    = np.cos(fligth_path_angle) 
-    conditions.frames.wind.transform_to_inertial[:,0,2]    = np.sin(fligth_path_angle) 
+    conditions.frames.wind.transform_to_inertial[:,0,0]    = np.cos(flight_path_angle) 
+    conditions.frames.wind.transform_to_inertial[:,0,2]    = np.sin(flight_path_angle) 
     conditions.frames.wind.transform_to_inertial[:,1,1]    = 1 
-    conditions.frames.wind.transform_to_inertial[:,2,0]    = -np.sin(fligth_path_angle) 
-    conditions.frames.wind.transform_to_inertial[:,2,2]    = np.cos(fligth_path_angle)  
+    conditions.frames.wind.transform_to_inertial[:,2,0]    = -np.sin(flight_path_angle) 
+    conditions.frames.wind.transform_to_inertial[:,2,2]    = np.cos(flight_path_angle)  
     conditions.frames.body.transform_to_inertial           = np.zeros((ctrl_pts,3,3))
     conditions.frames.body.transform_to_inertial[:,0,0]    = np.cos(AoA)
     conditions.frames.body.transform_to_inertial[:,0,2]    = np.sin(AoA)
@@ -104,10 +105,29 @@ def Hararmonic_Noise_Validation(PP):
     conditions.frames.body.transform_to_inertial[:,2,0]    = -np.sin(AoA)
     conditions.frames.body.transform_to_inertial[:,2,2]    = np.cos(AoA)
     
-    # Run BEMT
-    F, Q, P, Cp , noise_data , etap                        = rotor.spin(conditions) 
+    
+    # # Run BEMT for steady loading
+    # F, Q, P, Cp , noise_data , etap                        = rotor.spin(conditions)
+    
+    
+    # Run BET for unsteady loading
+    Na                                                     = 20
+    Nr                                                     = 30
+    rotor.number_azimuthal_stations                        = Na
+    rotor.cruise.design_freestream_velocity                = 135.     * Units['mph']
+    rotor.cruise.design_angular_velocity                   = 1300.    * Units.rpm
+    rotor.cruise.design_Cl                                 = 0.8
+    rotor.cruise.design_altitude                           = 12000.   * Units.feet
+    rotor.cruise.design_thrust                             = 1200.
+    rotor.rotation                                         = 1
+    rotor.airfoil_polar_stations                           = list(np.zeros(Nr).astype(int))
+    rotor.orientation_euler_angles                         = [0, 30*Units.degrees,0]
+    rotor                                                  = design_propeller(rotor,Nr)
+    rotor.use_2d_analysis                                  = True
+    F, Q, P, Cp , noise_data , etap                        = rotor.spin(conditions)
 
-    # Prepare Inputs for Noise Model   
+    
+# Prepare Inputs for Noise Model   
     conditions.noise.relative_microphone_locations         = np.repeat(positions[ np.newaxis,:,: ],1,axis=0)
     conditions.aerodynamics.angle_of_attack                = np.ones((ctrl_pts,1))* 0. * Units.degrees 
     segment                                                = Segment() 
@@ -115,11 +135,12 @@ def Hararmonic_Noise_Validation(PP):
     segment.state.conditions.expand_rows(ctrl_pts) 
     noise                                                  = RCAIDE.Framework.Analyses.Noise.Frequency_Domain_Buildup() 
     settings                                               = noise.settings   
-    num_mic                                                = len(conditions.noise.relative_microphone_locations[0] )  
+    num_mic                                                = len(conditions.noise.relative_microphone_locations[0])  
     conditions.noise.number_of_microphones                 = num_mic
                  
+    
     # Run Frequency Domain Rotor Noise Model          
-    noise_res                                              = rotor_noise(rotor,noise_data,segment,settings )
+    noise_res                                              = rotor_noise(rotor,noise_data,segment,settings)
     F8745D4_SPL                                            = noise_res.SPL     
     F8745D4_SPL_harmonic                                   = noise_res.SPL_harmonic 
     F8745D4_SPL_broadband                                  = noise_res.SPL_broadband  

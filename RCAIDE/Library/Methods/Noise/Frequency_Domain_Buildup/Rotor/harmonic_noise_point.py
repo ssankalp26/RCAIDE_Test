@@ -27,7 +27,9 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,freestream,angle_of_atta
     approach. The thickness source is however computed using the helicoidal surface theory.
 
     Assumptions:
-    Acoustic compactness of thrust and torque along blade span and chord.
+    1) Acoustic compactness of loads along blade chord.
+    2) Acoustic compactness of loads along blade span.
+    3) Acoustic compactness of loads along blade thickness.
 
     Source:
     1) Hanson, D. B. (1995). Sound from a propeller at angle of attack: a new theoretical viewpoint. 
@@ -62,42 +64,37 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,freestream,angle_of_atta
     Properties Used:
         N/A   
     '''     
-    num_h_b      = len(harmonics_blade)
-    num_h_l      = len(harmonics_load)
-    num_cpt      = len(angle_of_attack) 
-    num_mic      = len(coordinates.X_hub[0,:,0,0,0,0])
-    num_rot      = len(coordinates.X_hub[0,0,:,0,0,0]) 
-    phi_0        = np.array([rotor.phase_offset_angle])  # phase angle offset  
-    num_sec      = len(rotor.radius_distribution)
+    num_h_b        = len(harmonics_blade)
+    num_h_l        = len(harmonics_load)
+    num_cpt        = len(angle_of_attack) 
+    num_mic        = len(coordinates.X_hub[0,:,0,0,0,0])
+    num_rot        = len(coordinates.X_hub[0,0,:,0,0,0]) 
+    phi_0          = np.array([rotor.phase_offset_angle])  # phase angle offset  
+    num_sec        = len(rotor.radius_distribution)
     airfoil_geometry = rotor.Airfoils.airfoil.geometry
-    chord_coord  = len(airfoil_geometry.camber_coordinates)
-    orientation  = np.array(rotor.orientation_euler_angles) * 1 
-    body2thrust  = sp.spatial.transform.Rotation.from_rotvec(orientation).as_matrix()
+    chord_coord    = len(airfoil_geometry.camber_coordinates)
+    orientation    = np.array(rotor.orientation_euler_angles) * 1 
+    body2thrust    = sp.spatial.transform.Rotation.from_rotvec(orientation).as_matrix()
     
     
     # NIRANJAN 
 
-    Re    = aeroacoustic_data.blade_reynolds_number   # number of control points x number of sections          
-    alpha = aeroacoustic_data.blade_effective_angle_of_attack # number of control points x number of sections             
+    Re             = aeroacoustic_data.blade_reynolds_number   # number of control points x number of sections          
+    alpha          = aeroacoustic_data.blade_effective_angle_of_attack # number of control points x number of sections             
     
     # NIRANJAN
     
     
-    # we only need fL, fD, CL and CD in this method
-    fL_pre  = np.zeros_like(Re)
-    fL      = np.tile(fL_pre[:,:,None],(1,1,chord_coord))
-    fD_pre  = np.zeros_like(Re)
-    fD      = np.tile(fD_pre[:,:,None],(1,1,chord_coord))
-    CL = np.zeros_like(Re)
-    CD = np.zeros_like(Re)
+    # Total Loading
+    T_pre          = np.sum(aeroacoustic_data.disc_thrust_distribution, axis=1)
+    Q_pre          = np.sum(aeroacoustic_data.disc_torque_distribution, axis=1)
+    dQ_pre         = aeroacoustic_data.disc_torque_distribution
+    r_pre          = aeroacoustic_data.disc_radial_distribution
+    F_phi_pre      = np.sum(dQ_pre/r_pre, axis=1)
     
-    for cpt in range (num_cpt):
-        for sec in range(num_sec):
-            airfoil_properties = airfoil_analysis(airfoil_geometry,np.atleast_2d(alpha[cpt,sec]),np.atleast_2d(Re[cpt,sec]))
-            fL[cpt,sec,:] = airfoil_properties.fL[:,0,0]
-            fD[cpt,sec,:] = airfoil_properties.fD[:,0,0]
-            CL[cpt,sec]   = airfoil_properties.cl_invisc
-            CD[cpt,sec]   = airfoil_properties.cd_visc
+    # Compute Loading Modes
+    F_xk           = sp.fft.rfft(T_pre, axis=1)
+    F_phik         = sp.fft.rfft(F_phi_pre, axis=1)
     
     
     # ----------------------------------------------------------------------------------
@@ -111,8 +108,7 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,freestream,angle_of_atta
     rho            = np.tile(freestream.density[:,:,None,None,None,None],(1,num_mic,num_rot,num_sec,num_h_b,num_h_l))             # air density   
     alpha          = np.tile((angle_of_attack + np.arccos(body2thrust[0,0]))[:,:,None,None,None,None],(1,num_mic,num_rot,num_sec,num_h_b,num_h_l))          
     B              = rotor.number_of_blades                                                                      # number of rotor blades
-    omega          = np.tile(aeroacoustic_data.omega[:,:,None,None,None,None],(1,num_mic,num_rot,num_sec,num_h_b,num_h_l))        # angular velocity       
-    omega          = np.tile(aeroacoustic_data.omega[:,:,None,None,None,None],(1,num_mic,num_rot,num_sec,num_h_b,num_h_l))
+    omega          = np.tile(aeroacoustic_data.omega[:,:,None,None,None,None],(1,num_mic,num_rot,num_sec,num_h_b,num_h_l))        # angular velocity
     # T              = unsteady thrust per blade
     # Q              = unsteady torque force per blade
     # rs             = radial location of point load application
@@ -134,11 +130,6 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,freestream,angle_of_atta
     M_t            = V_tip/a                                                                                     # tip Mach number 
     M_r            = np.sqrt(M_x**2 + (r**2)*(M_t**2))                                                           # section relative Mach number     
     B_D            = c/D
-    
-    CL_tiled       = np.tile(CL[:,None,None,:,None],(1,num_mic,num_rot,1,num_h_b))
-    CD_tiled       = np.tile(CD[:,None,None,:,None],(1,num_mic,num_rot,1,num_h_b))
-    fL_tiled       = np.tile(fL[:,None,None,:,None,:],(1,num_mic,num_rot,1,num_h_b,1))
-    fD_tiled       = np.tile(fD[:,None,None,:,None,:],(1,num_mic,num_rot,1,num_h_b,1))    
      
     phi            = np.tile(coordinates.phi_hub_r[:,:,:,0,:,None],(1,1,1,1,num_h_b)) + phi_0_vec 
 
@@ -163,8 +154,6 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,freestream,angle_of_atta
     X              = 0.5*(X_edge[0:-1] + X_edge[1:])
     X_tiled        = np.tile(X[None,None,None,None,None,:],(num_cpt,num_mic,num_rot,num_sec,num_h_b,1))
     exp_term       = np.exp(1j*kx_tiled*X_tiled)
-    psi_L          = np.sum(fL*exp_term*dX_tiled,axis=5)
-    psi_D          = np.sum(fD*exp_term*dX_tiled,axis=5)
     
     # frequency domain source function for thickness distribution
     H              = airfoil_geometry.y_upper_surface - airfoil_geometry.y_lower_surface

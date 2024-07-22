@@ -27,7 +27,9 @@ def harmonic_noise_line(harmonics_blade,harmonics_load,freestream,angle_of_attac
     approach. The thickness source is however computed using the helicoidal surface theory.
 
     Assumptions:
-    Acoustic compactness of thrust and torque along blade chord.
+    1) Acoustic compactness of loads along blade chord.
+    2) Acoustic non-compactness of loads along blade span.
+    3) Acoustic compactness of loads along blade thickness.
 
     Source:
     1) Hanson, D. B. (1995). Sound from a propeller at angle of attack: a new theoretical viewpoint. 
