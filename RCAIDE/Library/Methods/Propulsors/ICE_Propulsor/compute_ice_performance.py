@@ -18,7 +18,7 @@ import numpy as np
 # compute_ice_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Energy-Propulsors-ICE_Propulsor
-def compute_ice_performance(fuel_line,state): 
+def compute_ice_performance(fuel_line,state,center_of_gravity): 
     ''' Computes the perfomrance of all internal combustion engine-propellers 
     connected to a fuel tank
     

@@ -36,7 +36,7 @@ class Energy(Analysis):
                     N/A
                 """        
         self.tag      = 'energy'
-        self.networks = None
+        self.vehicle  = None
         
     def evaluate_thrust(self,state):
         
@@ -59,8 +59,9 @@ class Energy(Analysis):
             """
                 
             
-        networks = self.networks
-        results  = networks.evaluate_thrust(state) 
+        networks = self.vehicle.networks
+        cg       = self.vehicle.mass_properties.center_of_gravity
+        results  = networks.evaluate_thrust(state, cg) 
         
         return results
     
@@ -85,8 +86,9 @@ class Energy(Analysis):
             """
                 
             
-        networks = self.networks
-        results  = networks.evaluate_power(state) 
+        networks = self.vehicle.networks
+        cg       = self.vehicle.mass_properties.center_of_gravity
+        results  = networks.evaluate_power(state, cg) 
         
         return results    
     

@@ -168,7 +168,7 @@ class Turboshaft_Engine_Network(Network):
         N/A
         """            
         
-        fuel_lines = segment.analyses.energy.networks.turboshaft_engine.fuel_lines
+        fuel_lines = segment.analyses.energy.vehicle.networks.turboshaft_engine.fuel_lines
         RCAIDE.Library.Mission.Common.Unpack_Unknowns.energy.fuel_line_unknowns(segment,fuel_lines) 
         
         return    
@@ -193,7 +193,7 @@ class Turboshaft_Engine_Network(Network):
             Properties Used:
             N/A
         """                  
-        fuel_lines  = segment.analyses.energy.networks.turboshaft_engine.fuel_lines
+        fuel_lines  = segment.analyses.energy.vehicle.networks.turboshaft_engine.fuel_lines
         ones_row    = segment.state.ones_row 
         segment.state.residuals.network = Residuals()  
          

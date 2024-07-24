@@ -18,7 +18,7 @@ import numpy as np
 # compute_electric_rotor_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Energy-Propulsors-Electric_Rotor_Propulsor
-def compute_electric_rotor_performance(bus,state,voltage,center_of_gravity):
+def compute_electric_rotor_performance(bus,state,voltage,center_of_gravity = [[0, 0, 0]]):
     ''' Computes the perfomrance of all electric propulsors, comprising 
     of rotors, motors and electronic speed controllers, connected to a battery
     
@@ -41,7 +41,6 @@ def compute_electric_rotor_performance(bus,state,voltage,center_of_gravity):
     Properties Used: 
     N.A.        
     ''' 
-    conditions           = state.conditions
     total_power          = 0*state.ones_row(1) 
     total_current        = 0*state.ones_row(1) 
     total_thrust         = 0*state.ones_row(3)
@@ -52,18 +51,18 @@ def compute_electric_rotor_performance(bus,state,voltage,center_of_gravity):
         if propulsor.active == True:  
             if bus.identical_propulsors == False:
                 # run analysis  
-                total_thrust,total_moment,total_power,total_current,stored_results_flag,stored_propulsor_tag = compute_performance(conditions,voltage,bus,propulsor,total_thrust,total_moment,total_power,total_current)
+                total_thrust,total_moment,total_power,total_current,stored_results_flag,stored_propulsor_tag = compute_performance(state,center_of_gravity,voltage,bus,propulsor,total_thrust,total_moment,total_power,total_current)
             else:             
                 if stored_results_flag == False: 
                     # run analysis 
-                    total_thrust,total_moment,total_power,total_current,stored_results_flag,stored_propulsor_tag = compute_performance(conditions,voltage,bus,propulsor,total_thrust,total_moment,total_power,total_current)
+                    total_thrust,total_moment,total_power,total_current,stored_results_flag,stored_propulsor_tag = compute_performance(state,center_of_gravity,voltage,bus,propulsor,total_thrust,total_moment,total_power,total_current)
                 else:
                     # use old results 
-                    total_thrust,total_moment,total_power,total_current = reuse_stored_data(conditions,bus,propulsor,stored_propulsor_tag,total_thrust,total_moment,total_power,total_current)
+                    total_thrust,total_moment,total_power,total_current = reuse_stored_data(state,center_of_gravity,bus,propulsor,stored_propulsor_tag,total_thrust,total_moment,total_power,total_current)
                 
     return total_thrust,total_moment,total_power,total_current
 
-def compute_performance(conditions,voltage,bus,propulsor,total_thrust,total_moment,total_power,total_current): 
+def compute_performance(state,center_of_gravity,voltage,bus,propulsor,total_thrust,total_moment,total_power,total_current): 
     ''' Computes the perfomrance of one propulsor
     
     Assumptions: 
@@ -91,12 +90,14 @@ def compute_performance(conditions,voltage,bus,propulsor,total_thrust,total_mome
     Properties Used: 
     N.A.        
     ''' 
+    conditions           = state.conditions
     noise_results        = conditions.noise[bus.tag][propulsor.tag]
     energy_results       = conditions.energy[bus.tag][propulsor.tag] 
     motor                = propulsor.motor 
     rotor                = propulsor.rotor 
     esc                  = propulsor.electronic_speed_controller 
     eta                  = conditions.energy[bus.tag][propulsor.tag].throttle
+    moment_vector        = 0*state.ones_row(3)
 
     esc.inputs.voltage   = voltage
     compute_voltage_out_from_throttle(esc,eta) 
@@ -146,17 +147,19 @@ def compute_performance(conditions,voltage,bus,propulsor,total_thrust,total_mome
     compute_current_in_from_throttle(esc,eta)
     energy_results.esc.current   = esc.inputs.current  
     energy_results.esc.power     = esc.inputs.power
-    
-    # compute moment
-    center_of_gravity
+
     '''
     TO REMOVE BY AIDAN:
     step 1: get center of gravity of aircraft
     step 2: find vector between propulsor and center of gravity
     step 3: take cross product to compute moment 
-    '''
-    # TO REMOVE BY AIDAN: get center of gr
-    total_moment                 += 0  # AIDAN 
+    '''     
+    moment_vector[:,0] =  rotor.origin[0][0] -   center_of_gravity[0][0] 
+    moment_vector[:,1] =  rotor.origin[0][1]  -  center_of_gravity[0][1] 
+    moment_vector[:,2] =  rotor.origin[0][2]  -  center_of_gravity[0][2]
+    M                  =  np.cross(moment_vector, F) # AIDAN PLEASE CHECK
+    
+    total_moment                 += M
     total_thrust                 += energy_results.rotor.thrust 
     total_power                  += energy_results.esc.power
     total_current                += energy_results.esc.current  
@@ -165,7 +168,7 @@ def compute_performance(conditions,voltage,bus,propulsor,total_thrust,total_mome
     
     return total_thrust,total_moment,total_power,total_current,stored_results_flag,stored_propulsor_tag
                 
-def reuse_stored_data(conditions,bus,propulsor,stored_propulsor_tag,total_thrust,total_moment,total_power,total_current): 
+def reuse_stored_data(state,center_of_gravity,bus,propulsor,stored_propulsor_tag,total_thrust,total_moment,total_power,total_current): 
     '''Reuses results from one propulsor for identical propulsors
     
     Assumptions: 
@@ -191,7 +194,7 @@ def reuse_stored_data(conditions,bus,propulsor,stored_propulsor_tag,total_thrust
     Properties Used: 
     N.A.        
     '''
-    
+
     # compute moment
 
     '''
@@ -199,12 +202,23 @@ def reuse_stored_data(conditions,bus,propulsor,stored_propulsor_tag,total_thrust
     step 1: get center of gravity of aircraft
     step 2: find vector between propulsor and center of gravity
     step 3: take cross product to compute moment 
-    '''     
+    '''
+
+    conditions         = state.conditions
+    moment_vector      = 0*state.ones_row(3)
+    energy_results_0   = conditions.energy[bus.tag][stored_propulsor_tag]
+    noise_results_0    = conditions.noise[bus.tag][stored_propulsor_tag]  
+    energy_results     = conditions.energy[bus.tag][propulsor.tag] 
+    noise_results      = conditions.noise[bus.tag][propulsor.tag]
     
-    energy_results_0                       = conditions.energy[bus.tag][stored_propulsor_tag]
-    noise_results_0                        = conditions.noise[bus.tag][stored_propulsor_tag]  
-    energy_results                         = conditions.energy[bus.tag][propulsor.tag] 
-    noise_results                          = conditions.noise[bus.tag][propulsor.tag]
+    rotor              =  propulsor.rotor
+    F                  =  energy_results_0.rotor.thrust   
+    moment_vector[:,0] =  rotor.origin[0][0] -   center_of_gravity[0][0] 
+    moment_vector[:,1] =  rotor.origin[0][1]  -  center_of_gravity[0][1] 
+    moment_vector[:,2] =  rotor.origin[0][2]  -  center_of_gravity[0][2]
+    M                  =  np.cross(moment_vector, F)      
+
+    
     energy_results.motor.efficiency        = energy_results_0.motor.efficiency      
     energy_results.motor.torque            = energy_results_0.motor.torque          
     energy_results.rotor.torque            = energy_results_0.rotor.torque        
@@ -221,7 +235,7 @@ def reuse_stored_data(conditions,bus,propulsor,stored_propulsor_tag,total_thrust
     energy_results.esc.power               = energy_results_0.esc.power     
     noise_results.rotor                    = noise_results_0.rotor    
     total_thrust                           += energy_results_0.rotor.thrust
-    total_moment                           += 0 # AIDAN
+    total_moment                           += M
     total_power                            += energy_results_0.esc.power
     total_current                          += energy_results_0.esc.current 
     

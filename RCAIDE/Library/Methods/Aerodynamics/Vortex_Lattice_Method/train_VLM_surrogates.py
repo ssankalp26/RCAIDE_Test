@@ -62,7 +62,7 @@ def train_model(aerodynamics, Mach):
         None    
     """    
 
-    geometry       = aerodynamics.geometry
+    geometry       = aerodynamics.vehicle
     settings       = aerodynamics.settings
     AoA            = aerodynamics.training.angle_of_attack                  
     Beta           = aerodynamics.training.sideslip_angle
@@ -87,7 +87,7 @@ def train_model(aerodynamics, Mach):
     
 
     # reset control surfaces for building surrogates  
-    for wing in aerodynamics.geometry.wings: 
+    for wing in geometry.wings: 
         for control_surface in wing.control_surfaces:
             control_surface.deflection  =  0.0
             
@@ -460,7 +460,7 @@ def train_model(aerodynamics, Mach):
     
     # loop through wings to determine what control surfaces are present 
     # for control surfaces, subtract inflence WITHOUT control surface deflected from coefficients WITH control surfaces deflected
-    for wing in aerodynamics.geometry.wings: 
+    for wing in geometry.wings: 
         for control_surface in wing.control_surfaces: 
             if type(control_surface) == RCAIDE.Library.Components.Wings.Control_Surfaces.Aileron:  
                 delta_a                    = aerodynamics.training.aileron_deflection
@@ -761,7 +761,7 @@ def train_trasonic_model(aerodynamics, training_subsonic,training_supersonic,sub
         None    
     """    
 
-    geometry       = aerodynamics.geometry 
+    geometry       = aerodynamics.vehicle
     AoA            = aerodynamics.training.angle_of_attack                  
     Beta           = aerodynamics.training.sideslip_angle
     training       = Data() 

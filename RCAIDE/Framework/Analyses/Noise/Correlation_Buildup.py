@@ -117,7 +117,7 @@ class Correlation_Buildup(Noise):
         None
     
         Properties Used:
-        self.geometry
+        self.vehicle
         """         
     
         # unpack 

@@ -21,7 +21,7 @@ from RCAIDE.Library.Methods.Propulsors.Turbojet_Propulsor            import comp
 # compute_turbojet_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Energy-Propulsors-Turbojet_Propulsor
-def compute_turbojet_performance(fuel_line,state):   
+def compute_turbojet_performance(fuel_line,state, center_of_gravity):   
     ''' Computes the performance of all turbojet engines connected to a fuel tank
     
     Assumptions: 
