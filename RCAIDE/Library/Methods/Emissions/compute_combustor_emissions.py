@@ -13,7 +13,7 @@ import numpy as np
 # compute_combustor_emissions
 # ----------------------------------------------------------------------------------------------------------------------   
 
-def compute_combustor_emissions(combustor,conditions, propellant):
+def compute_combustor_emissions(combustor, conditions, propellant):
     """ This computes the output values from the input values according to
     equations from the source and the combustor emissions.
 
@@ -76,7 +76,12 @@ def compute_combustor_emissions(combustor,conditions, propellant):
     eps                = 2.2
     C_N                = 1.48*(10**(-11))
     rho_soot           = 2000
-    C_coag             = 1                                                                                            # 1-9    
+    C_coag             = 1                   # 1-9    
+    A_kG               = 7.5*10**2
+    Ea_Ru              = 12100    
+    gamma_soot         = 0.3
+    eta_OH             = 0.13                # 1
+    eta_O              = 1
     
     # -----------------------------------------------------------------------------------------------------
     # Soot Model (two-equation model) -> 4 steps: nucleation, surface growth, coagulation and oxidation.
@@ -91,23 +96,20 @@ def compute_combustor_emissions(combustor,conditions, propellant):
     dMdt_nuc           = np.sum(((n_Cij*W_c)/(N_A))*dNdt_ij)
     d_p                = (6*M/(np.pi*rho_soot*N))**(1/3)
     A_S                = N*np.pi*d_p**2
-    A_kG               = 7.5*10**2
-    Ea_Ru              = 12100
     k_G_T              = A_kG*np.exp(Ea_Ru/T)
     dMdt_sg            = 2*W_c*k_G_T*(C2H2)*f_A_S
-    gamma_soot         = 0.3
     dMdt_sg_i          = n_C_i*W_C*((gamma_soot + gamma_i)/2)*eps*np.sqrt(8*np.pi*kB*T/m_soot_i)*(d_p/2 + r_i)**2*N*PAH_i
     dMdt_sg_PAH        = np.sum(dMdt_sg_i)
     dMdt_mech          = nuc_fac*dMdt_nuc + sg_fac*dMdt_sg + ox_fac*dMdt_ox                                           # equations for mass density
     dMdt_ox_i          = -0.25*W_c*eta_i*i*np.sqrt(8*R_u*T/(np.pi*W_i))*np.exp(-E_A_i/(R_u*T))*A_s
-    eta_OH             = 0.13
     dMdt_ox_OH         = -8.82*eta_OH*W_c*(T**0.5)*OH*A_S
-    eta_OH             = 1
     k_O_2_T            = 745.88*(T**0.5)*np.exp(-19680/T)
     dMdt_ox_OH         = -eta_O_2*W_c*k_O_2_T*O_2*A_S
-    eta_O              = 1
     k_O_2              = 1.82*np.sqrt(T)
     dMdt_ox_O          = -eta_O*W_c*k_O_T*O*A_S
+    K_v                = 0.001                                                                                      # [kg/(s*Pa)]
+    c_p_soot           = 840                                                                                        # [J/kg*K]
+    T_ref              = 298                                                                                        # [K]    
         
     # -----------------------------------------------------------------------------------------------------
     # Combustor Model
@@ -142,7 +144,6 @@ def compute_combustor_emissions(combustor,conditions, propellant):
     t_res_i            = V_PZ_i/(rho_i*(m_dot_fuel_i + m_dot_air_i))                                                # residence time in reactor 𝑖
     
     # no soot
-    K_v                = 0.001                                                                                      # [kg/(s*Pa)]
     m_dot_in           = combustor.m_dot_in                                                                         # mass flow entering the reactor
     m_dot_out          = m_dot_in + K_v*(P - P_0)                                                                   # Conservation of mass 𝑚 -> dmdt = m_dot_in - m_dot_out
     omega_dot_k        = combustor.omega_dot_k                                                                      # formation rate of species 𝑘 [kmol/(m**3·s)]
@@ -167,8 +168,6 @@ def compute_combustor_emissions(combustor,conditions, propellant):
     dYkdt_soot         = combustor.dYkdt_soot                                                                       # change in mass fractions in the gas due to species transitioning from the gas phase to the solid soot phase (and vice versa)
     dYkdt              = omega_dot_k*W_k/rho_gas + m_dot_in*(Y_k_in - Y_k)/m_gas 
     + dYkdt_soot - Y_k*np.sum(dYkdt_soot)                                                                           # Conservation of species
-    c_p_soot           = 840                                                                                        # [J/kg*K]
-    T_ref              = 298                                                                                        # [K]
     h_soot_ref         = combustor.h_soot_ref                                                                       # assumed to be equal to the specific enthalpy of graphite at 𝑇ref (= 298 K)
     h_soot             = h_soot_ref + c_p_soot*(T - T_ref)                                                          # specific enthalpy of soot
     dHdt_1             = m_dot_in*h_in - h_gas*m_dot_gas_out - h_soot*m_dot_soot_out                                # equation for the change in total enthalpy - step 1
