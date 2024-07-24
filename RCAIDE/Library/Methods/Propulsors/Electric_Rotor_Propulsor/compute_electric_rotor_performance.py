@@ -18,7 +18,7 @@ import numpy as np
 # compute_electric_rotor_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Energy-Propulsors-Electric_Rotor_Propulsor
-def compute_electric_rotor_performance(bus,state,voltage):
+def compute_electric_rotor_performance(bus,state,voltage,center_of_gravity):
     ''' Computes the perfomrance of all electric propulsors, comprising 
     of rotors, motors and electronic speed controllers, connected to a battery
     
@@ -41,11 +41,11 @@ def compute_electric_rotor_performance(bus,state,voltage):
     Properties Used: 
     N.A.        
     ''' 
-    conditions      = state.conditions
-    total_power     = 0*state.ones_row(1) 
-    total_current   = 0*state.ones_row(1) 
-    total_thrust    = 0*state.ones_row(3)
-    total_moment    = 0*state.ones_row(3)
+    conditions           = state.conditions
+    total_power          = 0*state.ones_row(1) 
+    total_current        = 0*state.ones_row(1) 
+    total_thrust         = 0*state.ones_row(3)
+    total_moment         = 0*state.ones_row(3)
     stored_results_flag  = False 
 
     for propulsor in bus.propulsors:        
@@ -148,6 +148,7 @@ def compute_performance(conditions,voltage,bus,propulsor,total_thrust,total_mome
     energy_results.esc.power     = esc.inputs.power
     
     # compute moment
+    center_of_gravity
     '''
     TO REMOVE BY AIDAN:
     step 1: get center of gravity of aircraft

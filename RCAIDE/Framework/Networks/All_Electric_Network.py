@@ -59,7 +59,7 @@ class All_Electric_Network(Network):
         self.system_voltage               = None  
         
     # manage process with a driver function
-    def evaluate_thrust(self,state):
+    def evaluate_thrust(self,center_of_gravity,state):
         """ Calculate thrust given the current state of the vehicle
     
             Assumptions:
@@ -81,13 +81,13 @@ class All_Electric_Network(Network):
         """          
     
         # unpack   
-        conditions      = state.conditions 
-        busses          = self.busses
-        total_thrust    = 0. * state.ones_row(3)
-        total_moment    = 0. * state.ones_row(3)
-        total_power     = 0. * state.ones_row(1)  
-        recharging_flag = conditions.energy.recharging 
-        reverse_thrust  = self.reverse_thrust
+        conditions        = state.conditions 
+        busses            = self.busses
+        total_thrust      = 0. * state.ones_row(3)
+        total_moment      = 0. * state.ones_row(3)
+        total_power       = 0. * state.ones_row(1)  
+        recharging_flag   = conditions.energy.recharging 
+        reverse_thrust    = self.reverse_thrust
         
         for bus in busses:  
             if bus.active:             
@@ -119,7 +119,7 @@ class All_Electric_Network(Network):
                 else:       
                     # compute energy consumption of each battery on bus  
                     for battery in batteries:  
-                        T,M,P,I          = compute_electric_rotor_performance(bus,state,bus_voltage)  
+                        T,M,P,I          = compute_electric_rotor_performance(bus,state,bus_voltage, center_of_gravity)  
                         total_thrust    += T
                         total_moment    += M
                         total_power     += P    
