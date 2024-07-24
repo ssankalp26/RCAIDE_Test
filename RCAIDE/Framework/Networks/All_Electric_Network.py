@@ -83,7 +83,8 @@ class All_Electric_Network(Network):
         # unpack   
         conditions      = state.conditions 
         busses          = self.busses
-        total_thrust    = 0. * state.ones_row(3) 
+        total_thrust    = 0. * state.ones_row(3)
+        total_moment    = 0. * state.ones_row(3)
         total_power     = 0. * state.ones_row(1)  
         recharging_flag = conditions.energy.recharging 
         reverse_thrust  = self.reverse_thrust
@@ -118,8 +119,9 @@ class All_Electric_Network(Network):
                 else:       
                     # compute energy consumption of each battery on bus  
                     for battery in batteries:  
-                        T,P,I            = compute_electric_rotor_performance(bus,state,bus_voltage)  
+                        T,M,P,I          = compute_electric_rotor_performance(bus,state,bus_voltage)  
                         total_thrust    += T
+                        total_moment    += M
                         total_power     += P    
                         
                         # compute power from each componemnt 
@@ -136,17 +138,18 @@ class All_Electric_Network(Network):
                 
         if reverse_thrust ==  True:
             total_thrust =  total_thrust * -1                         
-        conditions.energy.thrust_force_vector  = total_thrust
+        conditions.energy.thrust_force_vector  = total_thrust       
+        conditions.energy.moment_vector        = total_moment
         conditions.energy.power                = total_power 
         conditions.energy.vehicle_mass_rate    = state.ones_row(1)*0.0  
 
-        # --------------------------------------------------        
-        # A PATCH TO BE DELETED IN RCAIDE
-        results                           = Data()
-        results.thrust_force_vector       = total_thrust
-        results.vehicle_mass_rate         = state.ones_row(1)*0.0         
-        # --------------------------------------------------    
-        return  results 
+        ## --------------------------------------------------        
+        ## A PATCH TO BE DELETED IN RCAIDE
+        #results                           = Data()
+        #results.thrust_force_vector       = total_thrust
+        #results.vehicle_mass_rate         = state.ones_row(1)*0.0         
+        ## --------------------------------------------------    
+        return # results 
      
     def unpack_unknowns(self,segment):
         """ This adds additional unknowns which are unpacked from the mission solver and send to the network.
