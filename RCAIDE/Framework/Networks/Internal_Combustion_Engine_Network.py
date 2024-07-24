@@ -54,7 +54,7 @@ class Internal_Combustion_Engine_Network(Network):
         self.payload                      = None 
     
     # manage process with a driver function
-    def evaluate_thrust(self,state):
+    def evaluate_thrust(self,state,center_of_gravity = [[0,0,0]]):
         """ Calculate thrust given the current state of the vehicle
     
             Assumptions:
@@ -87,7 +87,7 @@ class Internal_Combustion_Engine_Network(Network):
             if fuel_line.active:   
     
                 # Step 2.1: Compute and store perfomrance of all propulsors 
-                fuel_line_T,fuel_line_P = compute_ice_performance(fuel_line,state)  
+                fuel_line_T,fuel_line_P = compute_ice_performance(fuel_line,state, center_of_gravity)  
                 total_thrust += fuel_line_T   
                 total_power  += fuel_line_P  
     
@@ -140,7 +140,7 @@ class Internal_Combustion_Engine_Network(Network):
         N/A
         """            
  
-        fuel_lines   = segment.analyses.energy.networks.internal_combustion_engine.fuel_lines   
+        fuel_lines   = segment.analyses.energy.vehicle.networks.internal_combustion_engine.fuel_lines   
         RCAIDE.Library.Mission.Common.Unpack_Unknowns.energy.fuel_line_unknowns(segment,fuel_lines)
  
         for fuel_line in fuel_lines:         
@@ -171,7 +171,7 @@ class Internal_Combustion_Engine_Network(Network):
                                 
         """     
         
-        fuel_lines   = segment.analyses.energy.networks.internal_combustion_engine.fuel_lines 
+        fuel_lines   = segment.analyses.energy.vehicle.networks.internal_combustion_engine.fuel_lines 
         for fuel_line in fuel_lines:  
             fuel_line_results       = segment.state.conditions.energy[fuel_line.tag]  
             for i , propulsor in enumerate(fuel_line.propulsors):
@@ -203,7 +203,7 @@ class Internal_Combustion_Engine_Network(Network):
             N/A
         """                  
         
-        fuel_lines  = segment.analyses.energy.networks.internal_combustion_engine.fuel_lines
+        fuel_lines  = segment.analyses.energy.vehicle.networks.internal_combustion_engine.fuel_lines
         ones_row    = segment.state.ones_row 
         segment.state.residuals.network = Residuals()  
          

@@ -22,7 +22,7 @@ from RCAIDE.Library.Methods.Propulsors.Turbofan_Propulsor            import comp
 # compute_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Energy-Propulsors-Turbofan_Propulsor
-def compute_turbofan_performance(fuel_line,state):  
+def compute_turbofan_performance(fuel_line,state, center_of_gravity):  
     ''' Computes the perfomrance of all turbofan engines connected to a fuel tank
     
     Assumptions: 

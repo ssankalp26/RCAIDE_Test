@@ -59,7 +59,7 @@ class All_Electric_Network(Network):
         self.system_voltage               = None  
         
     # manage process with a driver function
-    def evaluate_thrust(self,center_of_gravity,state):
+    def evaluate_thrust(self,state,center_of_gravity = [[0,0,0]]):
         """ Calculate thrust given the current state of the vehicle
     
             Assumptions:
@@ -172,7 +172,7 @@ class All_Electric_Network(Network):
             N/A
         """                          
         # unpack the ones function 
-        busses       = segment.analyses.energy.networks.all_electric.busses
+        busses       = segment.analyses.energy.vehicle.networks.all_electric.busses
         RCAIDE.Library.Mission.Common.Unpack_Unknowns.energy.bus_unknowns(segment,busses) 
         
         for bus in busses:           
@@ -209,7 +209,7 @@ class All_Electric_Network(Network):
            N/A
        """           
  
-        busses   = segment.analyses.energy.networks.all_electric.busses 
+        busses   = segment.analyses.energy.vehicle.networks.all_electric.busses 
         for bus in busses:  
             if bus.active and (type(segment) != RCAIDE.Framework.Mission.Segments.Ground.Battery_Recharge):   
                 bus_results   = segment.state.conditions.energy[bus.tag]  
@@ -245,7 +245,7 @@ class All_Electric_Network(Network):
             Properties Used:
             N/A
         """              
-        busses   = segment.analyses.energy.networks.all_electric.busses
+        busses   = segment.analyses.energy.vehicle.networks.all_electric.busses
         ones_row = segment.state.ones_row 
         segment.state.residuals.network = Residuals()  
          

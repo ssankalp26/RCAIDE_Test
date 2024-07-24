@@ -121,7 +121,7 @@ class Frequency_Domain_Buildup(Noise):
         None
     
         Properties Used:
-        self.geometry
+        self.vehicle
         """         
     
         # unpack 

@@ -44,10 +44,10 @@ class Constant_Speed_Internal_Combustion_Engine_Network(Network):
             Properties Used:
             N/A
         """       
-        self.tag                          = 'internal_combustion_engine_constant_speed'      
+        self.tag = 'internal_combustion_engine_constant_speed'      
          
     # manage process with a driver function
-    def evaluate_thrust(self,state):
+    def evaluate_thrust(self,state, center_of_gravity):
         """ Calculate thrust given the current state of the vehicle
     
             Assumptions:
@@ -83,7 +83,7 @@ class Constant_Speed_Internal_Combustion_Engine_Network(Network):
             if fuel_line.active:   
     
                 # Step 2.1: Compute and store perfomrance of all propulsors 
-                fuel_line_T,fuel_line_P = compute_cs_ice_performance(fuel_line,state)  
+                fuel_line_T,fuel_line_P = compute_cs_ice_performance(fuel_line,state, center_of_gravity)  
                 total_thrust += fuel_line_T   
                 total_power  += fuel_line_P  
     
@@ -135,7 +135,7 @@ class Constant_Speed_Internal_Combustion_Engine_Network(Network):
         N/A
         """            
  
-        fuel_lines   = segment.analyses.energy.networks.internal_combustion_engine_constant_speed.fuel_lines  
+        fuel_lines   = segment.analyses.energy.vehicle.networks.internal_combustion_engine_constant_speed.fuel_lines  
         RCAIDE.Library.Mission.Common.Unpack_Unknowns.energy.fuel_line_unknowns(segment,fuel_lines)
         return    
     
@@ -160,7 +160,7 @@ class Constant_Speed_Internal_Combustion_Engine_Network(Network):
             N/A 
         """
 
-        fuel_lines  = segment.analyses.energy.networks.internal_combustion_engine_constant_speed.fuel_lines
+        fuel_lines  = segment.analyses.energy.vehicle.networks.internal_combustion_engine_constant_speed.fuel_lines
         ones_row    = segment.state.ones_row   
          
         for fuel_line_i, fuel_line in enumerate(fuel_lines):    

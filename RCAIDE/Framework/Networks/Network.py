@@ -57,7 +57,7 @@ class Container(Component.Container):
             Source:
             N/A
     """
-    def evaluate_thrust(self,state):
+    def evaluate_thrust(self,state,center_of_gravity):
         """ This is used to evaluate the thrust produced by the network.
                 Assumptions:
                 Network has "evaluate_thrust" method
@@ -73,14 +73,14 @@ class Container(Component.Container):
         """
         ones_row = state.ones_row
         results = Data()
-        results.thrust_force_vector       = 0.*ones_row(3)
-        results.vehicle_mass_rate         = 0.*ones_row(1)
+        #results.thrust_force_vector       = 0.*ones_row(3)
+        #results.vehicle_mass_rate         = 0.*ones_row(1) 
         for net in self.values():
             if hasattr(net, 'has_additional_fuel_type'):
-                if net.has_additional_fuel_type: #Check if Network has additional fuel
-                    results.vehicle_additional_fuel_rate  =  0.*ones_row(1) #fuel rate for additional fuel types, eg cryogenic fuel
+                if net.has_additional_fuel_type:  
+                    results.vehicle_additional_fuel_rate  =  0.*ones_row(1) 
                     results.vehicle_fuel_rate             =  0.*ones_row(1)
-            results_p = net.evaluate_thrust(state)
+            results_p = net.evaluate_thrust(state,center_of_gravity)
             for key in results.keys():
                 results[key] += results_p[key]
         return results
@@ -101,12 +101,12 @@ class Container(Component.Container):
         """
         ones_row = state.ones_row
         results = Data()
-        results.power                     = 0.*ones_row(1)
-        results.vehicle_mass_rate         = 0.*ones_row(1)
+        #results.power                     = 0.*ones_row(1)
+        #results.vehicle_mass_rate         = 0.*ones_row(1)
         for net in self.values():
             if hasattr(net, 'has_additional_fuel_type'):
-                if net.has_additional_fuel_type: #Check if Network has additional fuel
-                    results.vehicle_additional_fuel_rate  =  0.*ones_row(1) #fuel rate for additional fuel types, eg cryogenic fuel
+                if net.has_additional_fuel_type: 
+                    results.vehicle_additional_fuel_rate  =  0.*ones_row(1) 
                     results.vehicle_fuel_rate             =  0.*ones_row(1)
             results_p = net.evaluate_power(state)
             for key in results.keys():

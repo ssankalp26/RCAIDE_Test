@@ -54,7 +54,7 @@ class Isolated_Battery_Cell_Network(Network):
         self.system_voltage          = None          
         
     # manage process with a driver function
-    def evaluate_thrust(self,state):
+    def evaluate_thrust(self,state,center_of_gravity = [[0,0,0]]):
         """ Evaluate the state variables of a cycled cell
     
             Assumptions: 
@@ -162,7 +162,7 @@ class Isolated_Battery_Cell_Network(Network):
             Properties Used:
             N/A
         """          
-        busses   = segment.analyses.energy.networks.isolated_battery_cell.busses
+        busses   = segment.analyses.energy.vehicle.networks.isolated_battery_cell.busses
         ones_row = segment.state.ones_row 
         segment.state.residuals.network = Residuals()  
          
