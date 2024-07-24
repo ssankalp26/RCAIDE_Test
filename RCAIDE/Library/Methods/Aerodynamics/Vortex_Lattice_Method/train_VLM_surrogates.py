@@ -20,7 +20,10 @@ def train_VLM_surrogates(aerodynamics):
     """Call methods to run VLM for sample point evaluation. 
     
     Assumptions:
-        None
+        (1) Beta is defined as negative (see line 144)
+        (2) p is defined as negative (see line 144)
+        (3) delta_a is defined as negative (see line 466)
+        (4) delta_r is defined as negative (see line 578)
         
     Source:
         None
@@ -141,7 +144,7 @@ def train_model(aerodynamics, Mach):
     # --------------------------------------------------------------------------------------------------------------
     # Beta 
     # --------------------------------------------------------------------------------------------------------------
-    Betas         = np.atleast_2d(np.tile(Beta,len_Mach).T.flatten()).T 
+    Betas         = -np.atleast_2d(np.tile(Beta,len_Mach).T.flatten()).T 
     Machs         = np.atleast_2d(np.repeat(Mach,len_Beta)).T        
 
     conditions                                      = RCAIDE.Framework.Mission.Common.Results()
@@ -254,7 +257,7 @@ def train_model(aerodynamics, Mach):
     # -------------------------------------------------------               
     # Roll  Rate 
     # -------------------------------------------------------    
-    p_s     = np.atleast_2d(np.tile(roll_rate, len_Mach).T.flatten()).T 
+    p_s     = -np.atleast_2d(np.tile(roll_rate, len_Mach).T.flatten()).T 
     Machs         = np.atleast_2d(np.repeat(Mach,len_p)).T
 
     conditions                                      = RCAIDE.Framework.Mission.Common.Results() 
@@ -491,7 +494,7 @@ def train_model(aerodynamics, Mach):
                     CZ_d_a[a_i,:]    = CZ_res[:,0]   - CZ_alpha_0[0,:]  
                     CL_d_a[a_i,:]    = CL_res[:,0]   - CL_alpha_0[0,:]  
                     CM_d_a[a_i,:]    = CM_res[:,0]   - CM_alpha_0[0,:]  
-                    CN_d_a[a_i,:]    = CN_res[:,0]   - CN_alpha_0[0,:]
+                    CN_d_a[a_i,:]    = -(CN_res[:,0]   - CN_alpha_0[0,:])
                     
                 # reset deflection 
                 control_surface.deflection =  config_delta_a  
@@ -604,7 +607,7 @@ def train_model(aerodynamics, Mach):
                     CZ_d_r[r_i,:]    = CZ_res[:,0]   - CZ_alpha_0[0,:]  
                     CL_d_r[r_i,:]    = CL_res[:,0]   - CL_alpha_0[0,:]  
                     CM_d_r[r_i,:]    = CM_res[:,0]   - CM_alpha_0[0,:]  
-                    CN_d_r[r_i,:]    = CN_res[:,0]   - CN_alpha_0[0,:] 
+                    CN_d_r[r_i,:]    = -(CN_res[:,0]   - CN_alpha_0[0,:]) 
 
                 # reset deflection 
                 control_surface.deflection =  config_delta_r
