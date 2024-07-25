@@ -29,7 +29,7 @@ class Airfoil(Component):
         
         self.tag                        = 'Airfoil' 
         self.coordinate_file            = None     
-        self.vehicle                   = None
+        self.geometry                   = None
         self.polar_files                = None
         self.polars                     = None
         self.prev                       = None
