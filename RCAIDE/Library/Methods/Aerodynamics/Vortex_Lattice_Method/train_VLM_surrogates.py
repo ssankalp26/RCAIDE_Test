@@ -380,7 +380,7 @@ def train_model(aerodynamics, Mach):
             
     # STABILITY DERIVATIVES 
     training.dClift_dalpha = (Clift_alpha[0,:] - Clift_alpha[1,:]) / (AoA[0] - AoA[1])
-    training.dClift_dbeta = (Clift_beta[0,:] - Clift_beta[1,:]) / (Beta[0] - Beta[1]) 
+    training.dClift_dbeta = (Clift_beta[0,:] - Clift_beta[1,:]) / (Beta[0] - Beta[1])
     training.dClift_du = (Clift_u[0,:] - Clift_u[1,:]) / (u[0] - u[1])            
     training.dClift_dv = (Clift_v[0,:] - Clift_v[1,:]) / (v[0] - v[1])          
     training.dClift_dw = (Clift_w[0,:] - Clift_w[1,:]) / (w[0] - w[1])         
@@ -426,7 +426,7 @@ def train_model(aerodynamics, Mach):
     training.dCZ_dq = (CZ_q[0,:] - CZ_q[1,:]) / (pitch_rate[0]-pitch_rate[1])            
     training.dCZ_dr = (CZ_r[0,:] - CZ_r[1,:]) / (yaw_rate[0]-yaw_rate[1])                    
     training.dCL_dalpha = (CL_alpha[0,:] - CL_alpha[1,:]) / (AoA[0] - AoA[1])         
-    training.dCL_dbeta = (CL_beta[0,:] - CL_beta[1,:]) / (Beta[0] - Beta[1])                
+    training.dCL_dbeta =-((CL_beta[0,:] - CL_beta[1,:]) / (Beta[0] - Beta[1]))                
                 
                 
     training.dCL_du = (CL_u[0,:] - CL_u[1,:]) / (u[0] - u[1])                                              
@@ -442,7 +442,7 @@ def train_model(aerodynamics, Mach):
     training.dCM_dv = (CM_v[0,:] - CM_v[1,:]) / (v[0] - v[1])                                               
     training.dCM_dw = (CM_w[0,:] - CM_w[1,:]) / (w[0] - w[1])                                               
     training.dCM_dp = (CM_p[0,:] - CM_p[1,:]) / (roll_rate[0]-roll_rate[1])                 
-    training.dCM_dq = (CM_q[0,:] - CM_q[1,:]) / (pitch_rate[0]-pitch_rate[1])             
+    training.dCM_dq = (CM_q[0,:] - CM_q[1,:]) / (pitch_rate[0]-pitch_rate[1])        
     training.dCM_dr = (CM_r[0,:] - CM_r[1,:]) / (yaw_rate[0]-yaw_rate[1])                     
     training.dCN_dalpha = (CN_alpha[0,:] - CN_alpha[1,:]) / (AoA[0] - AoA[1])          
     training.dCN_dbeta = (CN_beta[0,:] - CN_beta[1,:]) / (Beta[0] - Beta[1]) 
