@@ -20,10 +20,10 @@ def train_VLM_surrogates(aerodynamics):
     """Call methods to run VLM for sample point evaluation. 
     
     Assumptions:
-        (1) Beta is defined as negative (see line 144)
-        (2) p is defined as negative (see line 144)
-        (3) delta_a is defined as negative (see line 466)
-        (4) delta_r is defined as negative (see line 578)
+        (1) Beta is defined as negative (see line 147)
+        (2) p is defined as negative (see line 260)
+        (3) delta_a is defined as negative only for CL_d_a (see line 495)
+        (4) delta_r is defined as negative only for CN_d_r (see line 610)
         
     Source:
         None
@@ -257,8 +257,8 @@ def train_model(aerodynamics, Mach):
     # -------------------------------------------------------               
     # Roll  Rate 
     # -------------------------------------------------------    
-    p_s     = -np.atleast_2d(np.tile(roll_rate, len_Mach).T.flatten()).T 
-    Machs         = np.atleast_2d(np.repeat(Mach,len_p)).T
+    p_s         = -np.atleast_2d(np.tile(roll_rate, len_Mach).T.flatten()).T 
+    Machs       = np.atleast_2d(np.repeat(Mach,len_p)).T
 
     conditions                                      = RCAIDE.Framework.Mission.Common.Results() 
     conditions.freestream.mach_number               = Machs  
@@ -492,9 +492,9 @@ def train_model(aerodynamics, Mach):
                     CX_d_a[a_i,:]    = CX_res[:,0]   - CX_alpha_0[0,:]   
                     CY_d_a[a_i,:]    = CY_res[:,0]   - CY_alpha_0[0,:]  
                     CZ_d_a[a_i,:]    = CZ_res[:,0]   - CZ_alpha_0[0,:]  
-                    CL_d_a[a_i,:]    = CL_res[:,0]   - CL_alpha_0[0,:]  
+                    CL_d_a[a_i,:]    = -(CL_res[:,0]   - CL_alpha_0[0,:])  
                     CM_d_a[a_i,:]    = CM_res[:,0]   - CM_alpha_0[0,:]  
-                    CN_d_a[a_i,:]    = -(CN_res[:,0]   - CN_alpha_0[0,:])
+                    CN_d_a[a_i,:]    = CN_res[:,0]   - CN_alpha_0[0,:]
                     
                 # reset deflection 
                 control_surface.deflection =  config_delta_a  
