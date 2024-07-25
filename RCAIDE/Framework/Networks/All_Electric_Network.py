@@ -141,15 +141,8 @@ class All_Electric_Network(Network):
         conditions.energy.thrust_force_vector  = total_thrust       
         conditions.energy.moment_vector        = total_moment
         conditions.energy.power                = total_power 
-        conditions.energy.vehicle_mass_rate    = state.ones_row(1)*0.0  
-
-        ## --------------------------------------------------        
-        ## A PATCH TO BE DELETED IN RCAIDE
-        #results                           = Data()
-        #results.thrust_force_vector       = total_thrust
-        #results.vehicle_mass_rate         = state.ones_row(1)*0.0         
-        ## --------------------------------------------------    
-        return # results 
+        conditions.energy.vehicle_mass_rate    = state.ones_row(1)*0.0   
+        return 
      
     def unpack_unknowns(self,segment):
         """ This adds additional unknowns which are unpacked from the mission solver and send to the network.

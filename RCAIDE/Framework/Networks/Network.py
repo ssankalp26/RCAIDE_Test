@@ -70,20 +70,10 @@ class Container(Component.Container):
                 Results of the "evaluate_thrust" method
                 Properties Used:
                 N/A
-        """
-        ones_row = state.ones_row
-        results = Data()
-        #results.thrust_force_vector       = 0.*ones_row(3)
-        #results.vehicle_mass_rate         = 0.*ones_row(1) 
-        for net in self.values():
-            if hasattr(net, 'has_additional_fuel_type'):
-                if net.has_additional_fuel_type:  
-                    results.vehicle_additional_fuel_rate  =  0.*ones_row(1) 
-                    results.vehicle_fuel_rate             =  0.*ones_row(1)
-            results_p = net.evaluate_thrust(state,center_of_gravity)
-            for key in results.keys():
-                results[key] += results_p[key]
-        return results
+        """ 
+        for net in self.values(): 
+            _ = net.evaluate_thrust(state,center_of_gravity) 
+        return 
     
     def evaluate_power(self,state):
         """ This is used to evaluate the power produced by the network.

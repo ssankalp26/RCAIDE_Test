@@ -46,8 +46,8 @@ def converge_root(segment):
     
     unknowns,infodict,ier,msg = root_finder( iterate,
                                          unknowns,
-                                         args = segment,
-                                         xtol = segment.state.numerics.tolerance_solution,
+                                         args   = segment,
+                                         xtol   = segment.state.numerics.tolerance_solution,
                                          maxfev = segment.state.numerics.max_evaluations,
                                          epsfcn = segment.state.numerics.step_size,
                                          full_output = 1)

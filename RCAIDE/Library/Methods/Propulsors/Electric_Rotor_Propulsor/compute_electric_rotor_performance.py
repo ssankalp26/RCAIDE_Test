@@ -97,8 +97,7 @@ def compute_performance(state,center_of_gravity,voltage,bus,propulsor,total_thru
     rotor                = propulsor.rotor 
     esc                  = propulsor.electronic_speed_controller 
     eta                  = conditions.energy[bus.tag][propulsor.tag].throttle
-    moment_vector        = 0*state.ones_row(3)
-
+    moment_vector        = 0*state.ones_row(3) 
     esc.inputs.voltage   = voltage
     compute_voltage_out_from_throttle(esc,eta) 
 
