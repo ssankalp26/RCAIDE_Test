@@ -20,10 +20,9 @@ def train_VLM_surrogates(aerodynamics):
     """Call methods to run VLM for sample point evaluation. 
     
     Assumptions:
-        (1) Beta is defined as negative (see line 147)
-        (2) p is defined as negative (see line 260)
-        (3) delta_a is defined as negative only for CL_d_a (see line 495)
-        (4) delta_r is defined as negative only for CN_d_r (see line 610)
+        (1) p is defined as negative (see line 260)
+        (2) delta_a is defined as negative only for CL_d_a (see line 495)
+        (3) delta_r is defined as negative only for CN_d_r (see line 610)
         
     Source:
         None
