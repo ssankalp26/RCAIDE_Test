@@ -62,7 +62,7 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
     aerodynamics          = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
-    aerodynamics.geometry = vehicle
+    aerodynamics.vehicle = vehicle
     aerodynamics.settings.drag_coefficient_increment = 0.0000
     analyses.append(aerodynamics)   
     
@@ -71,7 +71,7 @@ def base_analysis(vehicle):
     #  Noise Analysis 
     # ------------------------------------------------------------------   
     noise = RCAIDE.Framework.Analyses.Noise.Frequency_Domain_Buildup()   
-    noise.geometry = vehicle
+    noise.vehicle = vehicle
     noise.settings.noise_hemisphere                       = True 
     noise.settings.noise_hemisphere_radius                = 20          
     noise.settings.noise_hemisphere_microphone_resolution = 3
@@ -82,7 +82,7 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     #  Energy
     energy          = RCAIDE.Framework.Analyses.Energy.Energy()
-    energy.networks = vehicle.networks 
+    energy.vehicle = vehicle 
     analyses.append(energy)
 
     # ------------------------------------------------------------------
@@ -194,7 +194,7 @@ def plot_results(results,regression_plotting_flag):
                           max_noise_level  = 90, 
                           noise_scale_label= 'SPL [dBA]',
                           save_filename    = "Noise_Hemisphere_With_Aircraft", 
-                          vehicle          = results.segments.cruise.analyses.aerodynamics.geometry,
+                          vehicle          = results.segments.cruise.analyses.aerodynamics.vehicle,
                           show_figure      = regression_plotting_flag)      
     
      

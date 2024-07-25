@@ -125,15 +125,8 @@ class Turbofan_Engine_Network(Network):
         conditions.energy.thrust_force_vector  = total_thrust
         conditions.energy.power                = total_power 
         conditions.energy.vehicle_mass_rate    = total_mdot           
-        
-        # A PATCH TO BE DELETED IN RCAIDE
-        results = Data()
-        results.thrust_force_vector       = total_thrust
-        results.power                     = total_power
-        results.vehicle_mass_rate         = total_mdot     
-        # -------------------------------------------------- 
-        
-        return results 
+         
+        return  
      
     
     def size(self,state):  

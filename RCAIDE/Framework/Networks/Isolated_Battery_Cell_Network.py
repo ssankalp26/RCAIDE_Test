@@ -127,15 +127,8 @@ class Isolated_Battery_Cell_Network(Network):
         conditions.energy.thrust_force_vector  =  0. * state.ones_row(3)     
         conditions.energy.power                = state.ones_row(1)*0.0        
         conditions.energy.vehicle_mass_rate    = state.ones_row(1)*0.0  
-    
-        # --------------------------------------------------        
-        # A PATCH TO BE DELETED IN RCAIDE
-        results                           = Data()
-        results.thrust_force_vector       = state.ones_row(3)*0.0 
-        results.vehicle_mass_rate         = state.ones_row(1)*0.0         
-        # --------------------------------------------------     
-        
-        return results  
+     
+        return  
       
     def add_unknowns_and_residuals_to_segment(self, 
                                               segment,  

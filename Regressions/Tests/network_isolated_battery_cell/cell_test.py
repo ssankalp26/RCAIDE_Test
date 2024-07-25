@@ -233,7 +233,7 @@ def base_analysis(vehicle):
     
     #  Energy
     energy          = RCAIDE.Framework.Analyses.Energy.Energy()
-    energy.networks = vehicle.networks 
+    energy.vehicle = vehicle 
     analyses.append(energy)
  
     #  Planet Analysis

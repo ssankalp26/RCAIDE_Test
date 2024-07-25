@@ -111,15 +111,8 @@ class Turboshaft_Engine_Network(Network):
                             
         # Step 3: Pack results 
         conditions.energy.power                = total_power 
-        conditions.energy.vehicle_mass_rate    = total_mdot     
-          
-        # A PATCH TO BE DELETED IN RCAIDE
-        results = Data()
-        results.power                     = total_power
-        results.vehicle_mass_rate         = total_mdot     
-        # -------------------------------------------------- 
-        
-        return results 
+        conditions.energy.vehicle_mass_rate    = total_mdot      
+        return 
      
     
     def size(self,state):  

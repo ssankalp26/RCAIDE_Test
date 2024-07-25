@@ -125,7 +125,7 @@ class Frequency_Domain_Buildup(Noise):
         """         
     
         # unpack 
-        config        = segment.analyses.noise.geometry 
+        config        = segment.analyses.noise.vehicle
         settings      = self.settings  
         conditions    = segment.state.conditions  
         dim_cf        = len(settings.center_frequencies ) 

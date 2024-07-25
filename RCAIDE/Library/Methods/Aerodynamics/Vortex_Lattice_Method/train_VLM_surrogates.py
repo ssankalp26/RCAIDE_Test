@@ -62,7 +62,7 @@ def train_model(aerodynamics, Mach):
         None    
     """    
 
-    geometry       = aerodynamics.geometry
+    geometry       = aerodynamics.vehicle
     settings       = aerodynamics.settings
     AoA            = aerodynamics.training.angle_of_attack                  
     Beta           = aerodynamics.training.sideslip_angle
