@@ -138,4 +138,18 @@ class Fuselage(Component):
         # Store data
         self.Fuel_Tanks.append(fuel_tank)
 
-        return 
+        return
+    
+
+    def compute_fuselage_moment_of_inertia(self, center_of_gravity):
+        '''AIDAN WILL COMPUTE MOMENT OF INERTIA OF WING'''
+        
+        # note that self a wing
+        wing =  self
+        
+        # ADD CODE
+        
+        # r =  self.origin - center_of_gravity for parallel axis theorem
+        
+        I =  np.zeros((3, 3))
+        return I    
