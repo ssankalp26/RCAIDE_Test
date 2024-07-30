@@ -106,8 +106,8 @@ def compute_performance(state,center_of_gravity,voltage,bus,propulsor,total_thru
     motor.inputs.rotor_CP        = energy_results.rotor.power_coefficient  
     motor.compute_omega(conditions)
     rotor.inputs.omega           = motor.outputs.omega
-    rotor.inputs.y_axis_rotation += energy_results.y_axis_rotation
-    rotor.inputs.pitch_command   += energy_results.rotor.pitch_command
+    rotor.inputs.y_axis_rotation = energy_results.y_axis_rotation
+    rotor.inputs.pitch_command   = energy_results.rotor.pitch_command
 
     # Spin the rotor 
     F, Q, P, Cp, outputs, etap = rotor.spin(conditions)  

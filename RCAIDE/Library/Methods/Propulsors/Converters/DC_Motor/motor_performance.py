@@ -14,7 +14,7 @@ import numpy as np
 #  dc_motor_performance
 # ----------------------------------------------------------------------------------------------------------------------           
 ## @ingroup Methods-Energy-Propulsors-Converters-DC_Motor
-def compute_Q_from_omega_and_V(motor):
+def compute_Q_from_omega_and_V(motor,motor_conditions,freestream):
     """Calculates the motor's torque
 
     Assumptions:
@@ -25,7 +25,7 @@ def compute_Q_from_omega_and_V(motor):
     Inputs:
 
     Outputs:
-    motor.outputs.torque    [N-m] 
+    motor_conditions.outputs.torque    [N-m] 
 
     Properties Used:
     motor.
@@ -45,14 +45,14 @@ def compute_Q_from_omega_and_V(motor):
     io    = motor.no_load_current + exp_i*(1-etaG)
     G     = motor.gear_ratio
     Kv    = motor.speed_constant/G
-    v     = motor.inputs.voltage
-    omega = motor.inputs.omega
+    v     = motor_conditions.inputs.voltage
+    omega = motor_conditions.inputs.omega
     
     # Torque
     Q = ((v-omega/Kv)/Res -io)/Kv
     
-    motor.outputs.torque = Q
-    motor.outputs.omega  = omega
+    motor_conditions.outputs.torque = Q
+    motor_conditions.outputs.omega  = omega
 
     return
 
@@ -61,7 +61,7 @@ def compute_Q_from_omega_and_V(motor):
 #  compute_omega_and_Q_from_Cp_and_V
 # ----------------------------------------------------------------------------------------------------------------------           
 ## @ingroup Methods-Energy-Propulsors-Converters-DC_Motor
-def compute_omega_and_Q_from_Cp_and_V(motor,conditions):
+def compute_omega_and_Q_from_Cp_and_V(motor,motor_conditions,freestream):
     """Calculates the motor's rotation rate
 
     Assumptions:
@@ -75,10 +75,10 @@ def compute_omega_and_Q_from_Cp_and_V(motor,conditions):
       freestream.velocity                    [m/s]
       freestream.density                     [kg/m^3]
       propulsion.propeller_power_coefficient [-]
-    motor.inputs.voltage                      [V]
+    motor_conditions.inputs.voltage                      [V]
 
     Outputs:
-    motor.outputs.
+    motor_conditions.outputs.
       torque                                 [Nm]
       omega                                  [radian/s]
 
@@ -93,7 +93,7 @@ def compute_omega_and_Q_from_Cp_and_V(motor,conditions):
       propeller_radius                       [m]
     """           
     # Unpack 
-    rho   = conditions.freestream.density[:,0,None]
+    rho   = freestream.density[:,0,None]
     Res   = motor.resistance
     etaG  = motor.gearbox_efficiency
     exp_i = motor.expected_current
@@ -101,8 +101,8 @@ def compute_omega_and_Q_from_Cp_and_V(motor,conditions):
     G     = motor.gear_ratio
     Kv    = motor.speed_constant/G
     R     = motor.rotor_radius
-    v     = motor.inputs.voltage
-    Cp    = motor.inputs.rotor_CP
+    v     = motor_conditions.inputs.voltage
+    Cp    = motor_conditions.inputs.rotor_CP
     
 
     # Omega
@@ -116,8 +116,8 @@ def compute_omega_and_Q_from_Cp_and_V(motor,conditions):
     Q = ((v-omega1/Kv)/Res -io)/Kv
     # store to outputs 
     
-    motor.outputs.torque = Q
-    motor.outputs.omega = omega1
+    motor_conditions.outputs.torque = Q
+    motor_conditions.outputs.omega = omega1
 
     return
 
@@ -126,7 +126,7 @@ def compute_omega_and_Q_from_Cp_and_V(motor,conditions):
 # compute_I_from_omega_and_V
 # ----------------------------------------------------------------------------------------------------------------------           
 ## @ingroup Methods-Energy-Propulsors-Converters-DC_Motor
-def compute_I_from_omega_and_V(motor):
+def compute_I_from_omega_and_V(motor,motor_conditions,freestream):
     """Calculates the motor's current
 
     Assumptions:
@@ -135,10 +135,10 @@ def compute_I_from_omega_and_V(motor):
     N/A
 
     Inputs:
-    motor.inputs.voltage   [V]
+    motor_conditions.inputs.voltage   [V]
 
     Outputs:
-    motor.outputs.current  [A]
+    motor_conditions.outputs.current  [A]
     conditions.
       propulsion.etam      [-] 
 
@@ -157,8 +157,8 @@ def compute_I_from_omega_and_V(motor):
     G     = motor.gear_ratio
     Kv    = motor.speed_constant
     Res   = motor.resistance
-    v     = motor.inputs.voltage
-    omeg  = motor.outputs.omega*G
+    v     = motor_conditions.inputs.voltage
+    omeg  = motor_conditions.outputs.omega*G
     etaG  = motor.gearbox_efficiency
     exp_i = motor.expected_current
     io    = motor.no_load_current + exp_i*(1-etaG)
@@ -169,8 +169,8 @@ def compute_I_from_omega_and_V(motor):
     i[i < 0.0] = 0.0
 
     # Pack
-    motor.outputs.current    = i
-    motor.outputs.efficiency = (1-io/i)*(1-i*Res/v)
+    motor_conditions.outputs.current    = i
+    motor_conditions.outputs.efficiency = (1-io/i)*(1-i*Res/v)
     return
 
 
@@ -179,7 +179,7 @@ def compute_I_from_omega_and_V(motor):
 # compute_V_and_I_from_omega_and_Kv
 # ----------------------------------------------------------------------------------------------------------------------           
 ## @ingroup Methods-Energy-Propulsors-Converters-DC_Motor
-def compute_V_and_I_from_omega_and_Kv(motor):
+def compute_V_and_I_from_omega_and_Kv(motor,motor_conditions,freestream):
     """Calculates the motor's voltage and current
 
     Assumptions:
@@ -190,7 +190,7 @@ def compute_V_and_I_from_omega_and_Kv(motor):
     Inputs:
 
     Outputs:
-    motor.outputs.current   [A]
+    motor_conditions.outputs.current   [A]
     conditions.
       propulsion.volage    [V]
     conditions.
@@ -213,14 +213,14 @@ def compute_V_and_I_from_omega_and_Kv(motor):
     io    = motor.no_load_current + exp_i*(1-etaG)
     G     = motor.gear_ratio
     kv    = motor.speed_constant/G
-    Q     = motor.inputs.torque
-    omega = motor.inputs.omega        
+    Q     = motor_conditions.inputs.torque
+    omega = motor_conditions.inputs.omega        
     
     v = (Q*kv+io)*Res + omega/kv
     i = (v-omega/kv)/Res
     
-    motor.outputs.voltage    = v
-    motor.outputs.current    = i
-    motor.outputs.efficiency = (1-io/i)*(1-i*Res/v)
+    motor_conditions.outputs.voltage    = v
+    motor_conditions.outputs.current    = i
+    motor_conditions.outputs.efficiency = (1-io/i)*(1-i*Res/v)
     
     return

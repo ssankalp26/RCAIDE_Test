@@ -8,7 +8,7 @@
 # compute_electric_rotor_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Energy-Propulsors-Modulators
-def compute_voltage_out_from_throttle(esc,eta):
+def compute_voltage_out_from_throttle(esc,esc_conditions,freestream):
     """ The voltage out of the electronic speed controller
     
         Assumptions:
@@ -19,25 +19,27 @@ def compute_voltage_out_from_throttle(esc,eta):
 
         Inputs:
         conditions.energy.throttle     [0-1] 
-        esc.inputs.voltage            [volts]
+        esc_conditions.inputs.voltage            [volts]
 
         Outputs:
         voltsout                       [volts]
-        esc.outputs.voltageout        [volts]
+        esc_conditions.outputs.voltageout        [volts]
 
         Properties Used:
         None
        
-    """ 
+    """
+    eta =   esc_conditions.throttle
+    
     # Negative throttle is bad
     eta[eta<=0.0] = 0.0
     
     # Cap the throttle
     eta[eta>=1.0] = 1.0
-    voltsout = eta*esc.inputs.voltage
+    voltsout = eta*esc_conditions.inputs.voltage
     
     # Pack the output
-    esc.outputs.voltage  = voltsout
+    esc_conditions.outputs.voltage  = voltsout
     
     return
 
@@ -57,11 +59,11 @@ def compute_voltage_in_from_throttle(esc,eta):
 
         Inputs:
         conditions.energy.throttle     [0-1]
-        esc.inputs.voltage            [volts]
+        esc_conditions.inputs.voltage            [volts]
 
         Outputs:
         voltsout                       [volts]
-        esc.outputs.voltageout        [volts]
+        esc_conditions.outputs.voltageout        [volts]
 
         Properties Used:
         None
@@ -72,11 +74,11 @@ def compute_voltage_in_from_throttle(esc,eta):
 
     # Cap the throttle
     eta[eta>=1.0] = 1.0
-    voltsin = esc.outputs.voltage/eta
+    voltsin = esc_conditions.outputs.voltage/eta
 
     # Pack the output
-    esc.inputs.throttle = eta
-    esc.inputs.voltage  = voltsin
+    esc_conditions.inputs.throttle = eta
+    esc_conditions.inputs.voltage  = voltsin
 
     return
 
@@ -97,24 +99,24 @@ def compute_throttle_from_voltages(esc):
 
         Inputs:
         conditions.energy.throttle     [0-1]
-        esc.inputs.voltage            [volts]
+        esc_conditions.inputs.voltage            [volts]
 
         Outputs:
         voltsout                       [volts]
-        esc.outputs.voltageout        [volts]
+        esc_conditions.outputs.voltageout        [volts]
 
         Properties Used:
         None
 
     """
-    eta  = esc.outputs.voltage/esc.inputs.voltage
+    eta  = esc_conditions.outputs.voltage/esc_conditions.inputs.voltage
 
     # Negative throttle is bad
     eta[eta<=0.0] = 0.0
 
     # Cap the throttle
     eta[eta>=1.0] = 1.0
-    esc.inputs.throttle = eta
+    esc_conditions.inputs.throttle = eta
     return
 
 
@@ -129,7 +131,7 @@ def compute_current_in_from_throttle(esc,eta):
             The ESC draws current.
         
         Inputs:
-            esc.inputs.currentout [amps]
+            esc_conditions.inputs.currentout [amps]
            
         Outputs:
             outputs.currentin      [amps]
@@ -141,11 +143,11 @@ def compute_current_in_from_throttle(esc,eta):
     
     # Unpack, don't modify the throttle   
     eff        = esc.efficiency
-    currentout = esc.outputs.current 
+    currentout = esc_conditions.outputs.current 
     currentin  = currentout*eta/eff # The inclusion of eta satisfies a power balance: p_in = p_out/eff
     
     # Pack 
-    esc.inputs.current   = currentin
-    esc.inputs.power     = esc.inputs.voltage *currentin
+    esc_conditions.inputs.current   = currentin
+    esc_conditions.inputs.power     = esc_conditions.inputs.voltage *currentin
     
     return
