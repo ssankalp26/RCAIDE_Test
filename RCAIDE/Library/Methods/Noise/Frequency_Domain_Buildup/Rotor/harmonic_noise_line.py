@@ -65,7 +65,10 @@ def harmonic_noise_line(harmonics_blade,harmonics_load,freestream,angle_of_attac
 
 
     Properties Used:
-        N/A   
+        N/A
+    
+    Code Convention - The number in front of a variable name indicates the number of dimensions of the variable.
+                      For instance, m_6 is the 6 dimensional harmonic modes variable, m_5 is 5 dimensional harmonic modes variable
     '''     
     num_h_b      = len(harmonics_blade)
     num_h_l      = len(harmonics_load)
@@ -74,103 +77,114 @@ def harmonic_noise_line(harmonics_blade,harmonics_load,freestream,angle_of_attac
     num_rot      = len(coordinates.X_hub[0,0,:,0,0,0]) 
     phi_0        = np.array([rotor.phase_offset_angle])  # phase angle offset  
     num_sec      = len(rotor.radius_distribution)
+    num_az       = aeroacoustic_data.number_azimuthal_stations
     airfoil_geometry = rotor.Airfoils.airfoil.geometry
-    chord_coord  = len(airfoil_geometry.camber_coordinates)
     orientation  = np.array(rotor.orientation_euler_angles) * 1 
     body2thrust  = sp.spatial.transform.Rotation.from_rotvec(orientation).as_matrix()
     
     
-    # NIRANJAN 
-
-    Re    = aeroacoustic_data.blade_reynolds_number   # number of control points x number of sections          
-    alpha = aeroacoustic_data.blade_effective_angle_of_attack # number of control points x number of sections             
-    
-    # NIRANJAN
-    
-    
-    # we only need fL, fD, CL and CD in this method
-    fL_pre  = np.zeros_like(Re)
-    fL      = np.tile(fL_pre[:,:,None],(1,1,chord_coord))
-    fD_pre  = np.zeros_like(Re)
-    fD      = np.tile(fD_pre[:,:,None],(1,1,chord_coord))
-    CL = np.zeros_like(Re)
-    CD = np.zeros_like(Re)
-    
-    for cpt in range (num_cpt):
-        for sec in range(num_sec):
-            airfoil_properties = airfoil_analysis(airfoil_geometry,np.atleast_2d(alpha[cpt,sec]),np.atleast_2d(Re[cpt,sec]))
-            fL[cpt,sec,:] = airfoil_properties.fL[:,0,0]
-            fD[cpt,sec,:] = airfoil_properties.fD[:,0,0]
-            CL[cpt,sec]   = airfoil_properties.cl_invisc
-            CD[cpt,sec]   = airfoil_properties.cd_visc
+    # Reynolds number and AOA of each blade section at each azimuthal station
+    Re      = aeroacoustic_data.blade_reynolds_number
+    AOA_sec = aeroacoustic_data.blade_effective_angle_of_attack
     
     
     # ----------------------------------------------------------------------------------
     # Rotational Noise  Thickness and Loading Noise
     # ----------------------------------------------------------------------------------  
     # [control point, microphones, rotors, radial distribution, blade harmonics, load harmonics]  
-    m              = np.tile(harmonics_blade[None,None,None,None,:,None],(num_cpt,num_mic,num_rot,num_sec,1,num_h_l))                 # harmonic number 
-    m_1d           = harmonics_blade                                                                                         
-    p_ref          = 2E-5                                                                                        # referece atmospheric pressure
-    a              = np.tile(freestream.speed_of_sound[:,:,None,None,None,None],(1,num_mic,num_rot,num_sec,num_h_b,num_h_l))      # speed of sound
-    rho            = np.tile(freestream.density[:,:,None,None,None,None],(1,num_mic,num_rot,num_sec,num_h_b,num_h_l))             # air density   
-    alpha          = np.tile((angle_of_attack + np.arccos(body2thrust[0,0]))[:,:,None,None,None,None],(1,num_mic,num_rot,num_sec,num_h_b,num_h_l))          
-    B              = rotor.number_of_blades                                                                      # number of rotor blades
-    omega          = np.tile(aeroacoustic_data.omega[:,:,None,None,None,None],(1,num_mic,num_rot,num_sec,num_h_b,num_h_l))        # angular velocity       
-    omega          = np.tile(aeroacoustic_data.omega[:,:,None,None,None,None],(1,num_mic,num_rot,num_sec,num_h_b,num_h_l))
     
-    # rs             = radial location of point load application
-    # dT_dr          = np.tile(aeroacoustic_data.blade_dT_dr[:,None,None,:,None,None],(1,num_mic,num_rot,1,num_h_b,num_h_l))      # nondimensionalized differential thrust distribution 
-    # dQ_dr          = np.tile(aeroacoustic_data.blade_dQ_dr[:,None,None,:,None],(1,num_mic,num_rot,1,num_h_b))      # nondimensionalized differential torque distribution
-    R              = np.tile(rotor.radius_distribution[None,None,None,:,None],(num_cpt,num_mic,num_rot,1,num_h_b)) # radial location     
-    c              = np.tile(rotor.chord_distribution[None,None,None,:,None],(num_cpt,num_mic,num_rot,1,num_h_b))  # blade chord    
-    R_tip          = rotor.tip_radius                                                     
-    t_c            = np.tile(rotor.thickness_to_chord[None,None,None,:,None],(num_cpt,num_mic,num_rot,1,num_h_b))  # thickness to chord ratio
-    MCA            = np.tile(rotor.mid_chord_alignment[None,None,None,:,None],(num_cpt,num_mic,num_rot,1,num_h_b)) # Mid Chord Alighment  
-    phi_0_vec      = np.tile(phi_0[None,None,:,None,None],(num_cpt,num_mic,1,num_sec,num_h_b))
-    res.f          = B*omega*m/(2*np.pi) 
-    D              = 2*R[0,0,0,-1,:]                                                                             # rotor diameter    
-    r              = R/R[0,0,0,-1,:]                                                                             # non dimensional radius distribution   
-    Y              = np.tile(np.sqrt(coordinates.X_hub[:,:,:,0,:,1]**2 +  coordinates.X_hub[:,:,:,0,:,2] **2)[:,:,:,:,None],(1,1,1,1,num_h_b))                        # observer distance from rotor axis          
-    V              = np.tile(np.linalg.norm(velocity_vector,axis =1) [:,None,None,None,None],(1,num_mic,num_rot,num_sec,num_h_b))                                                     # velocity magnitude
-    M_x            = V/a                                                                                         
-    V_tip          = R_tip*omega                                                                                 # blade_tip_speed 
-    M_t            = V_tip/a                                                                                     # tip Mach number 
-    M_r            = np.sqrt(M_x**2 + (r**2)*(M_t**2))                                                           # section relative Mach number     
-    B_D            = c/D
+    # freestream density and speed of sound
+    a_4            = np.tile(freestream.speed_of_sound[:,:,None,None],(1,num_mic,num_rot,num_h_b))
+    rho            = freestream.density
     
-    CL_tiled       = np.tile(CL[:,None,None,:,None],(1,num_mic,num_rot,1,num_h_b))
-    CD_tiled       = np.tile(CD[:,None,None,:,None],(1,num_mic,num_rot,1,num_h_b))
-    fL_tiled       = np.tile(fL[:,None,None,:,None,:],(1,num_mic,num_rot,1,num_h_b,1))
-    fD_tiled       = np.tile(fD[:,None,None,:,None,:],(1,num_mic,num_rot,1,num_h_b,1))    
+    B              = rotor.number_of_blades
+    
+    # blade harmonics
+    m_4            = np.tile(harmonics_blade[None,None,None,:],(num_cpt,num_mic,num_rot,1))
+    m_5            = np.tile(harmonics_blade[None,None,None,:,None],(num_cpt,num_mic,num_rot,1,num_h_l))
+    m_6            = np.tile(harmonics_blade[None,None,None,None,:,None],(num_cpt,num_mic,num_rot,num_sec,1,num_h_l))
+    
+    # loading harmonics
+    k_5            = np.tile(harmonics_load[None,None,None,None,:],(num_cpt,num_mic,num_rot,num_h_b,1))
+    k_6            = np.tile(harmonics_load[None,None,None,None,None,:],(num_cpt,num_mic,num_rot,num_sec,num_h_b,1))                                                                                        
+    
+    # reference atmospheric pressure
+    p_ref          = 2E-5
+        
+    # net angle of inclination of propeller axis wrt inertial axis
+    alpha_5        = np.tile((angle_of_attack + np.arccos(body2thrust[0,0]))[:,:,None,None,None],(1,num_mic,num_rot,num_h_b,num_h_l))
+    alpha_6        = np.tile((angle_of_attack + np.arccos(body2thrust[0,0]))[:,:,None,None,None,None],(1,num_mic,num_rot,num_sec,num_h_b,num_h_l))
+    
+    # rotor angular speed
+    omega_4        = np.tile(aeroacoustic_data.omega[:,:,None,None],(1,num_mic,num_rot,num_h_b))
+    
+    R              = rotor.radius_distribution
+    
+    # Non-dimensional radius distribution
+    z_6            = np.tile((R/R[-1])[None,None,None,:,None,None],(num_cpt,num_mic,num_rot,1,num_h_b,num_h_l))
+    
+    R_tip          = rotor.tip_radius
+    D              = 2*R[-1] 
+    
+    # Rotorcraft speed and mach number
+    V_4            = np.tile(np.linalg.norm(velocity_vector, axis=1) [:,None,None,None],(1,num_mic,num_rot,num_h_b))
+    M_4            = V_4/a_4
+    M_6            = np.tile(M_4[:,:,:,None,:,None],(1,1,1,num_sec,1,num_h_l))
+    
+    # Rotor tip speed and mach number
+    V_tip          = R_tip*omega_4                                                        
+    M_t_4          = V_tip/a_4
+    M_t_6          = np.tile(M_t_4[:,:,:,None,:,None],(1,1,1,num_sec,1,num_h_l))
+    
+    # retarded theta
+    theta_r        = coordinates.theta_hub_r[:,:,0,0,0]
+    theta_r_4      = np.tile(theta_r[:,:,None,None],(1,1,num_rot,num_h_b))
+    theta_r_5      = np.tile(theta_r[:,:,None,None,None],(1,1,num_rot,num_h_b,num_h_l))
+    theta_r_6      = np.tile(theta_r[:,:,None,None,None,None],(1,1,num_rot,num_sec,num_h_b,num_h_l))
+    
+    # retarded distance to source
+    Y              = np.sqrt(coordinates.X_hub[:,:,:,0,0,1]**2 +  coordinates.X_hub[:,:,:,0,0,2] **2)
+    Y_4            = np.tile(Y[:,:,:,None],(1,1,1,num_h_b))
+    r_4            = Y_4/np.sin(theta_r_4)
+    
+    # phase angles
+    phi_0_vec      = np.tile(phi_0[None,None,:,None,None],(num_cpt,num_mic,1,num_h_b,num_h_l))
+    phi_5          = np.tile(coordinates.phi_hub_r[:,:,:,0,0,None,None],(1,1,1,num_h_b,num_h_l)) + phi_0_vec
+    phi_6          = np.tile(phi_5[:,:,:,None,:,:],(1,1,1,num_sec,1,1))
+    
+    # total angle between propeller axis and r vector
+    theta_r_prime_5 = np.arccos(np.cos(theta_r_5)*np.cos(alpha_5) + np.sin(theta_r_5)*np.sin(phi_5)*np.sin(alpha_5))
+    theta_r_prime_6 = np.arccos(np.cos(theta_r_6)*np.cos(alpha_6) + np.sin(theta_r_6)*np.sin(phi_6)*np.sin(alpha_6))
+    
+    phi_prime_5    = np.arccos((np.sin(theta_r_5)*np.cos(phi_5))/np.sin(theta_r_prime_5))
+    
+    # wavenumbers
+    k_m_4          = m_4*B*omega_4/a_4
+    k_m_bar        = k_m_4/(1 - M_4*np.cos(theta_r_4))
+    
+    res.f          = B*omega_4*m_4/(2*np.pi)
+    
+    # Frequency domain loading modes
+    F_x            = (1/R_tip)*aeroacoustic_data.disc_thrust_distribution
+    R_temp         = np.tile(R[None,:,None],(num_cpt,1,num_az))
+    F_phi          = (1/R_tip)*(1/R_temp)*aeroacoustic_data.disc_torque_distribution
+    F_xk           = sp.fft.rfft(F_x, axis=2)
+    F_phik         = sp.fft.rfft(F_phi, axis=2)
+    F_xk_6         = np.tile(F_xk[:,None,None,:,None,0:num_h_l],(1,num_mic,num_rot,1,num_h_b,1))
+    F_phik_6       = np.tile(F_phik[:,None,None,:,None,0:num_h_l],(1,num_mic,num_rot,1,num_h_b,1))
+    
+    # FREQUENCY DOMAIN PRESSURE TERM FOR LOADING
+    J_mbk_6        = jv(m_6*B-k_6, (m_6*B*z_6*M_t_6*np.sin(theta_r_prime_6))/(1-M_6*np.cos(theta_r_6)))
+    Term1_6        = ((m_6*B*z_6*M_t_6*np.cos(theta_r_prime_6))/(1-M_6*np.cos(theta_r_6)))*F_xk_6
+    Term2_6        = -(m_6*B-k_6)*F_phik_6
+    Integrand_6    = (1/z_6)*(Term1_6 + Term2_6)*J_mbk_6
+    Summand_5      = np.trapz(Integrand_6, x=z_6[0,0,0,:,0,0], axis=3)*np.exp(1j*(m_5*B-k_5)*(phi_prime_5-(np.pi/2)))
+    Summation_4    = np.sum(Summand_5, axis=4)
+    P_Lm           = (1j*B*np.exp(1j*k_m_4*r_4)*Summation_4)/(4*np.pi*r_4*(1-M_4*np.cos(theta_r_4)))
+    
      
-    phi            = np.tile(coordinates.phi_hub_r[:,:,:,0,:,None],(1,1,1,1,num_h_b)) + phi_0_vec 
-
-    # retarted theta angle in the retarded reference frame
-    theta_r        = np.tile(coordinates.theta_hub_r[:,:,:,0,:,None],(1,1,1,1,num_h_b))  
-    theta_r_prime  = np.arccos(np.cos(theta_r)*np.cos(alpha) + np.sin(theta_r)*np.sin(phi)*np.sin(alpha) )
-    S_r            = np.tile(np.linalg.norm(coordinates.X_hub_r[:,:,:,0,:,:], axis = 4)[:,:,:,:,None],(1,1,1,1,num_h_b))  
-
-    # initialize thickness and loading noise matrices
-    psi_L          = np.zeros((num_cpt,num_mic,num_rot,num_sec,num_h_b))
-    psi_V          = np.zeros((num_cpt,num_mic,num_rot,num_sec,num_h_b))
     
-    # dimensionless wavenumbers
-    k_x            = ((2*m*B*B_D*M_t)/(M_r*(1 - M_x*np.cos(theta_r))))
-    k_y            = ((2*m*B*B_D)/r*M_r)*((M_r**2*np.cos(theta_r) - M_x)/(1 - M_x*np.cos(theta_r)))
-    
-    # frequency domain source function for drag and lift
-    kx_tiled       = np.tile(k_x[:,:,:,:,:,None],(1,1,1,1,1,chord_coord))
-    X_edge         = np.linspace(-0.5,0.5,chord_coord+1)
-    dX             = np.diff(X_edge)
-    dX_tiled       = np.tile(dX[None,None,None,None,None,:],(num_cpt,num_mic,num_rot,num_sec,num_h_b,1))
-    X              = 0.5*(X_edge[0:-1] + X_edge[1:])
-    X_tiled        = np.tile(X[None,None,None,None,None,:],(num_cpt,num_mic,num_rot,num_sec,num_h_b,1))
-    exp_term       = np.exp(1j*kx_tiled*X_tiled)
-    psi_L          = np.sum(fL*exp_term*dX_tiled,axis=5)
-    psi_D          = np.sum(fD*exp_term*dX_tiled,axis=5)
-    
-    # frequency domain source function for thickness distribution
-    H              = airfoil_geometry.y_upper_surface - airfoil_geometry.y_lower_surface
-    H_tiled        = np.tile(H[None,None,None,None,None,:],(num_cpt,num_mic,num_rot,num_sec,num_h_b,1))
-    psi_V          = np.sum(H*exp_term*dX_tiled,axis=5)
+    # # frequency domain source function for thickness distribution
+    # H              = airfoil_geometry.y_upper_surface - airfoil_geometry.y_lower_surface
+    # H_tiled        = np.tile(H[None,None,None,None,None,:],(num_cpt,num_mic,num_rot,num_sec,num_h_b,1))
+    # psi_V          = np.sum(H*exp_term*dX_tiled,axis=5)

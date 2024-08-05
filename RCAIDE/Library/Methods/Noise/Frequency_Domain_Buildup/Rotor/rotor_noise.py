@@ -88,14 +88,14 @@ def rotor_noise(rotor,aeroacoustic_data,segment,settings):
     # # harmonic noise old version     
     # harmonic_noise(harmonics_blade,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
     
-    # # harmonic noise with point load distribution
-    # harmonic_noise_point(harmonics_blade,harmonics_load,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)       
+    # harmonic noise with point load distribution
+    harmonic_noise_point(harmonics_blade,harmonics_load,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
     
     # # harmonic noise with line load distribution
     # harmonic_noise_line(harmonics_blade,harmonics_load,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
     
-    # harmonic noise with planar load distribution
-    harmonic_noise_plane(conditions,harmonics_blade,harmonics_load,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
+    # # harmonic noise with planar load distribution
+    # harmonic_noise_plane(conditions,harmonics_blade,harmonics_load,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
     
     
     # ----------------------------------------------------------------------------------
