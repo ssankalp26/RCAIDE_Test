@@ -1,7 +1,9 @@
-# Regressions/Vehicles/Embraer_E190.py
-# 
-# 
-# Created:  Jul 2023, M. Clarke 
+''' 
+  Embraer_190.py
+  
+  Created: June 2024, M Clarke 
+
+'''
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
@@ -21,17 +23,13 @@ from copy import deepcopy
 #   Build the Vehicle
 # ----------------------------------------------------------------------------------------------------------------------
 def vehicle_setup():
-    # ------------------------------------------------------------------
-    #   Initialize the Vehicle
-    # ------------------------------------------------------------------
-
+    
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ################################################# Vehicle-level Properties ########################################################  
+    #------------------------------------------------------------------------------------------------------------------------------------
     vehicle = RCAIDE.Vehicle()
     vehicle.tag = 'Embraer_E190AR'
-
-    # ------------------------------------------------------------------
-    #   Vehicle-level Properties
-    # ------------------------------------------------------------------
-
+ 
     # mass properties (http://www.embraercommercialaviation.com/AircraftPDF/E190_Weights.pdf)
     vehicle.mass_properties.max_takeoff               = 51800.   # kg
     vehicle.mass_properties.operating_empty           = 27837.   # kg
@@ -55,6 +53,9 @@ def vehicle_setup():
     vehicle.systems.accessories    = "medium range"
 
 
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ######################################################## Wings ####################################################################  
+    #------------------------------------------------------------------------------------------------------------------------------------
     # ------------------------------------------------------------------
     #   Main Wing
     # ------------------------------------------------------------------
@@ -391,9 +392,9 @@ def vehicle_setup():
 
   
     #------------------------------------------------------------------------------------------------------------------------------------  
-    #  Turbofan Network
+    #  Fuel Network
     #------------------------------------------------------------------------------------------------------------------------------------  
-    #initialize the gas turbine network
+    #initialize the fuel network
     net                                         = RCAIDE.Framework.Networks.Fuel() 
     
     #------------------------------------------------------------------------------------------------------------------------------------  
@@ -583,8 +584,7 @@ def configs_setup(vehicle):
     config.wings['main_wing'].control_surfaces.slat.deflection  = 25. * Units.deg 
     config.networks.fuel.fuel_lines['fuel_line'].propulsors['starboard_propulsor'].fan.angular_velocity =  3470. * Units.rpm
     config.networks.fuel.fuel_lines['fuel_line'].propulsors['port_propulsor'].fan.angular_velocity      =  3470. * Units.rpm
-    config.landing_gear.gear_condition                          = 'up'       
-    config.V2_VS_ratio = 1.21
+    config.landing_gear.gear_condition                          = 'up'      
     configs.append(config)
 
     
@@ -613,22 +613,19 @@ def configs_setup(vehicle):
     config.wings['main_wing'].control_surfaces.slat.deflection  = 25. * Units.deg
     config.networks.fuel.fuel_lines['fuel_line'].propulsors['starboard_propulsor'].fan.angular_velocity =  2030. * Units.rpm
     config.networks.fuel.fuel_lines['fuel_line'].propulsors['port_propulsor'].fan.angular_velocity      =  2030. * Units.rpm
-    config.landing_gear.gear_condition                          = 'down'   
-    config.Vref_VS_ratio = 1.23
+    config.landing_gear.gear_condition                          = 'down'    
     configs.append(config)   
      
     # ------------------------------------------------------------------
     #   Short Field Takeoff Configuration
-    # ------------------------------------------------------------------ 
-
+    # ------------------------------------------------------------------  
     config = RCAIDE.Library.Components.Configs.Config(base_config)
     config.tag = 'short_field_takeoff'    
     config.wings['main_wing'].control_surfaces.flap.deflection  = 20. * Units.deg
     config.wings['main_wing'].control_surfaces.slat.deflection  = 25. * Units.deg
     config.networks.fuel.fuel_lines['fuel_line'].propulsors['starboard_propulsor'].fan.angular_velocity =  3470. * Units.rpm
     config.networks.fuel.fuel_lines['fuel_line'].propulsors['port_propulsor'].fan.angular_velocity      =  3470. * Units.rpm
-    config.landing_gear.gear_condition                          = 'down'   
-    config.V2_VS_ratio = 1.21 
+    config.landing_gear.gear_condition                          = 'down'    
     configs.append(config)    
 
     # done!

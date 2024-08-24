@@ -1,8 +1,9 @@
-# Regressions/Vehicles/Isolated_Battery_Cell.py
-# 
-# 
-# Created:  Jul 2023, M. Clarke 
+''' 
+  Isolated_Battery_Cell.py
+  
+  Created: June 2024, M Clarke 
 
+'''
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
@@ -15,13 +16,17 @@ from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common   import initialize_
 #  Build the Vehicle
 # ----------------------------------------------------------------------------------------------------------------------   
 
-def vehicle_setup(current,cell_chemistry,fixed_bus_voltage): 
+def vehicle_setup(current,cell_chemistry,fixed_bus_voltage):
+    
+
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ################################################# Vehicle-level Properties ########################################################  
+    #------------------------------------------------------------------------------------------------------------------------------------    
 
     vehicle                       = RCAIDE.Vehicle() 
     vehicle.tag                   = 'battery'   
     vehicle.reference_area        = 1
- 
-    # ################################################# Vehicle-level Properties #####################################################   
+  
     # mass properties
     vehicle.mass_properties.takeoff         = 1 * Units.kg 
     vehicle.mass_properties.max_takeoff     = 1 * Units.kg 

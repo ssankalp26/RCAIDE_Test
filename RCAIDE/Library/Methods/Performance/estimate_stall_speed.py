@@ -16,9 +16,7 @@ import numpy as np
 
 #------------------------------------------------------------------------------
 # Stall Speed Estimation
-#------------------------------------------------------------------------------
-
-## @ingroup Methods-Performance
+#------------------------------------------------------------------------------ 
 def estimate_stall_speed(vehicle_mass,reference_area,altitude,maximum_lift_coefficient):
 
     """Calculates the stall speed of an aircraft at a given altitude and a maximum lift coefficient.
