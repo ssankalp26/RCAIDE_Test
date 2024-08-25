@@ -1,5 +1,5 @@
 # setup.py
-# (c) Copyright 2023 Aerospace Research Community LLC
+# 
 # 
 # Created:  June 2023, E. Botero
 # Modified: 
@@ -20,7 +20,7 @@ def main():
     
     the_package = 'RCAIDE'
     version     = '1.0.0'
-    date        = 'Jul 4th, 2023'
+    date        = 'Aug 14th, 2024'
     
     if len(sys.argv) >= 2:
         command = sys.argv[1]
@@ -67,7 +67,7 @@ def install(the_package,version,date):
     # test for requirements
     import_tests()
     
-    # list all SUAVE sub packages
+    # list all RCAIDE sub packages
     #print 'Listing Packages and Sub-Packages:'
     packages = list_subpackages(the_package,verbose=False)
     packages = list(map( '.'.join, packages ))
@@ -90,8 +90,7 @@ def install(the_package,version,date):
         platforms = ['Win, Linux, Unix, Mac OS-X'],
         zip_safe  = False,
         requires  = requires,
-        python_requires = python_v,
-        #long_description = read('../README.md');
+        python_requires = python_v, 
     )  
     
     return
@@ -205,8 +204,8 @@ def import_tests():
     try:
         import numpy
     except ImportError:
-        raise ImportError('numpy is required for this package')
-    
+        raise ImportError('numpy is required for this package') 
+     
     try:
         import scipy
     except ImportError:
@@ -225,7 +224,27 @@ def import_tests():
     try:
         import plotly
     except ImportError:
-        raise ImportError('plotly is required for this package')
+        raise ImportError('plotly is required for this package') 
+    
+    try:
+        import kaleido
+    except ImportError:
+        raise ImportError('kaleido is required for this package')   
+
+    try:
+        import pandas
+    except ImportError:
+        raise ImportError('pandas is required for this package')
+     
+    try:
+        import geopy
+    except ImportError:
+        raise ImportError('geopy is required for this package')
+    
+    try:
+        import importlib_metadata
+    except ImportError:
+        raise ImportError('importlib_metadata is required for this package')        
     
     return
     
