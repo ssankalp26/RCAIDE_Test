@@ -47,9 +47,7 @@ class Component(Data):
             """         
         self.tag             = 'Component' 
         self.mass_properties = Mass_Properties()
-        self.origin          = np.array([[0.0,0.0,0.0]]) 
-        self.inputs          = Data()
-        self.outputs         = Data()
+        self.origin          = np.array([[0.0,0.0,0.0]])
     
         
 # ----------------------------------------------------------------------------------------------------------------------
@@ -118,13 +116,25 @@ class Container(ContainerBase):
         total = np.array([[0.0,0.0,0.0]])
         for key,Comp in self.items():
             if isinstance(Comp,Component.Container):
-                total += Comp.total_moment() # recursive!
+                total += Comp.total_moment()  
             elif isinstance(Comp,Component):
                 total += Comp.mass_properties.mass*(np.sum(np.array(Comp.origin),axis=0)/len(Comp.origin)+Comp.mass_properties.center_of_gravity)
 
         return total
     
-    
+    def moment_of_inertia(self):
+        """  
+        """   
+        total = np.array([[0.0,0.0,0.0]])
+        
+        # AIDAN 
+        #for key,Comp in self.items():
+            #if isinstance(Comp,Component.Container):
+                #total += Comp.moment_of_inertia() # recursive!
+            #elif isinstance(Comp,Component):
+                #total += Comp.mass_properties.mass*(np.sum(np.array(Comp.origin),axis=0)/len(Comp.origin)+Comp.mass_properties.center_of_gravity)
+
+        return total    
     
 # ------------------------------------------------------------
 #  Handle Linking

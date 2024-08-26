@@ -10,6 +10,7 @@
 # RCAIDE imports    
 from RCAIDE.Framework.Core import Data,Container
 from RCAIDE.Library.Components import Mass_Properties, Component  
+from RCAIDE.Library.Methods.Stability.Moment_of_Intertia.compute_wing_moment_of_inertia import  compute_wing_moment_of_inertia
 
 import numpy as np
 
@@ -222,19 +223,11 @@ class Wing(Component):
         self.Fuel_Tanks.append(fuel_tank)
 
         return
+
     
-    def compute_wing_moment_of_inertia(self, center_of_gravity):
-        '''AIDAN WILL COMPUTE MOMENT OF INERTIA OF WING'''
-        
-        # note that self a wing
-        wing =  self
-        
-        # ADD CODE
-    
-        # r =  self.origin - center_of_gravity for parallel axis theorem        
-        
-        I =  np.zeros((3, 3))
-        return I
+    def moment_of_inertia(wing,center_of_gravity): 
+        I =  compute_wing_moment_of_inertia(wing,center_of_gravity) 
+        return I  
     
     
 class Container(Component.Container):

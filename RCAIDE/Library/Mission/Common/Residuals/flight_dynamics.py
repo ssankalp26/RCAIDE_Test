@@ -37,7 +37,7 @@ def flight_dynamics(segment):
     MT      = segment.state.conditions.frames.inertial.total_moment_vector    
     ang_acc = segment.state.conditions.frames.inertial.angular_acceleration_vector  
     m       = segment.state.conditions.weights.total_mass
-    I       = segment.analyses.aerodynamics.vehicle.mass_properties.moments_of_inertia.tensor  
+    I       = segment.analyses.aerodynamics.geometry.mass_properties.moments_of_inertia.tensor  
 
     if ground_seg_flag:
         vf = segment.velocity_end
@@ -52,16 +52,10 @@ def flight_dynamics(segment):
         if segment.flight_dynamics.force_z: 
             segment.state.residuals.force_z[:,0] = FT[:,2]/m[:,0] - a[:,2]  
         if  segment.flight_dynamics.moment_x:
-            if I[0,0]  == 0:
-                raise ("Moment of Inertia Matrix must be defined")
             segment.state.residuals.moment_x[:,0] = MT[:,0]/I[0,0] - ang_acc[:,0]   
         if  segment.flight_dynamics.moment_y:
-            if I[1,1]  == 0:
-                raise ("Moment of Inertia Matrix must be defined")
             segment.state.residuals.moment_y[:,0] = MT[:,1]/I[1,1] - ang_acc[:,1]   
         if  segment.flight_dynamics.moment_z:
-            if I[2,2]  == 0:
-                raise ("Moment of Inertia Matrix must be defined")
-            segment.state.residuals.moment_z[:,0] = MT[:,2]/I[2,2] - ang_acc[:,2]   
-   
+            segment.state.residuals.moment_z[:,0] = MT[:,2]/I[2,2] - ang_acc[:,2] 
+     
     return

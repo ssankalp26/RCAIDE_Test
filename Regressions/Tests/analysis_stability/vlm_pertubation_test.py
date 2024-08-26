@@ -47,7 +47,6 @@ def main():
     elevator_deflection_diff   = np.abs(elevator_deflection - elevator_deflection_true)
     print('Error: ',elevator_deflection_diff)
     assert np.abs(elevator_deflection_diff/elevator_deflection_true) < 1e-3
-    
 
     aileron_deflection        = results.segments.climb.conditions.control_surfaces.aileron.deflection[0,0] / Units.deg  
     aileron_deflection_true   = 0.8448403820824947
@@ -100,7 +99,7 @@ def base_analysis(vehicle, configs):
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
     aerodynamics = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
-    aerodynamics.vehicle                            = vehicle
+    aerodynamics.geometry                            = vehicle
     aerodynamics.settings.number_spanwise_vortices   = 30
     aerodynamics.settings.drag_coefficient_increment = 0.0000
     analyses.append(aerodynamics) 
@@ -117,7 +116,7 @@ def base_analysis(vehicle, configs):
     # ------------------------------------------------------------------
     #  Energy
     energy= RCAIDE.Framework.Analyses.Energy.Energy()
-    energy.vehicle = vehicle  
+    energy.vehicle  = vehicle 
     analyses.append(energy)
 
     # ------------------------------------------------------------------

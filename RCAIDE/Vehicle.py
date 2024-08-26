@@ -87,7 +87,7 @@ class Vehicle(Data):
         }
          
         self._energy_network_root_map= {
-            Framework.Networks.Network                 : self['networks']         , 
+            Framework.Networks.Network                 : self['networks']         ,
             }    
         
         self.append_component(Vehicle_Mass_Properties())
@@ -224,17 +224,10 @@ class Vehicle(Data):
         M = np.zeros((3, 3))
         center_of_gravity =  self.mass_properties.center_of_gravity 
         for key in self.keys():
-            item = self[key]
-            if isinstance(item,Components.Wings.Wing):
-                M += item.compute_wing_moment_of_inertia(center_of_gravity)
-    
-            if isinstance(item,Components.Fuselages.Fuselage):
-                M += item.compute_fuselage_moment_of_inertia(center_of_gravity)                
-                   
+            item = self[key] 
+            M += item.moment_of_inertia(center_of_gravity) 
                 
-        return M
-        
-    
+        return M 
     
     def append_energy_network(self,energy_network):
         """ Adds an energy network to vehicle 

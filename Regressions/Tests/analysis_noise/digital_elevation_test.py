@@ -45,7 +45,7 @@ def main():
     plot_elevation_contours(topography_file   ='LA_Metropolitan_Area.txt',use_lat_long_coordinates = False, save_filename = "Elevation_Contours_XY")  
       
     vehicle  = vehicle_setup()      
-    vehicle.networks.all_electric.busses.bus.identical_propulsors     = False # only for regression     
+    vehicle.networks.electric.busses.bus.identical_propulsors     = False # only for regression     
     configs  = configs_setup(vehicle) 
     analyses = analyses_setup(configs,microphone_terrain_data,geospacial_data)  
     mission  = mission_setup(analyses,geospacial_data)
@@ -94,13 +94,13 @@ def base_analysis(vehicle,microphone_terrain_data,geospacial_data):
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
     aerodynamics          = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
-    aerodynamics.vehicle = vehicle
+    aerodynamics.geometry = vehicle
     aerodynamics.settings.drag_coefficient_increment = 0.0000
     analyses.append(aerodynamics)   
  
     #  Noise Analysis   
     noise = RCAIDE.Framework.Analyses.Noise.Frequency_Domain_Buildup()   
-    noise.vehicle = vehicle
+    noise.geometry = vehicle
     noise.settings.mean_sea_level_altitude          = False  
     noise.settings.aircraft_departure_location      = geospacial_data.departure_location   
     noise.settings.aircraft_destination_location    = geospacial_data.destination_location       
@@ -126,7 +126,7 @@ def base_analysis(vehicle,microphone_terrain_data,geospacial_data):
     # ------------------------------------------------------------------
     #  Energy
     energy          = RCAIDE.Framework.Analyses.Energy.Energy()
-    energy.vehicle = vehicle 
+    energy.vehicle  = vehicle 
     analyses.append(energy)
 
     # ------------------------------------------------------------------
@@ -220,7 +220,7 @@ def plot_results(results,regression_plotting_flag):
                           max_noise_level  = 90, 
                           noise_scale_label= 'SPL [dBA]',
                           save_filename    = "Noise_Hemisphere_With_Aircraft", 
-                          vehicle          = results.segments.climb.analyses.aerodynamics.vehicle,
+                          vehicle          = results.segments.climb.analyses.aerodynamics.geometry,
                           show_figure      = regression_plotting_flag)      
     
     

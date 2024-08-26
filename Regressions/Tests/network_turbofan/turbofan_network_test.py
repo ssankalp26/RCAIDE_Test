@@ -88,7 +88,7 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
     aerodynamics          = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
-    aerodynamics.vehicle = vehicle
+    aerodynamics.geometry = vehicle
     aerodynamics.settings.number_of_spanwise_vortices   = 25
     aerodynamics.settings.number_of_chordwise_vortices  = 5     
     analyses.append(aerodynamics)   
@@ -96,7 +96,7 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     #  Energy
     energy          = RCAIDE.Framework.Analyses.Energy.Energy()
-    energy.vehicle = vehicle 
+    energy.vehicle  = vehicle 
     analyses.append(energy)
 
     # ------------------------------------------------------------------

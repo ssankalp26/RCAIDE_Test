@@ -92,14 +92,14 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
     aerodynamics          = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
-    aerodynamics.vehicle = vehicle
+    aerodynamics.geometry = vehicle
     aerodynamics.settings.drag_coefficient_increment = 0.0000
     analyses.append(aerodynamics)   
 
     # ------------------------------------------------------------------
     #  Energy
     energy          = RCAIDE.Framework.Analyses.Energy.Energy()
-    energy.vehicle = vehicle 
+    energy.vehicle  = vehicle 
     analyses.append(energy)
 
     # ------------------------------------------------------------------
@@ -115,7 +115,6 @@ def base_analysis(vehicle):
 
     # done!
     return analyses    
-
 # ----------------------------------------------------------------------
 #   Define the Mission
 # ----------------------------------------------------------------------
@@ -182,8 +181,7 @@ def mission_setup(analyses):
             segment.assigned_control_variables.throttle.active               = True           
             segment.assigned_control_variables.throttle.assigned_propulsors  = [['lift_propulsor_1','lift_propulsor_2','lift_propulsor_3','lift_propulsor_4',
                                                                       'lift_propulsor_5','lift_propulsor_6','lift_propulsor_7','lift_propulsor_8']] 
-            
-
+             
             if (day == 0) and (flight_no == 0):        
                 segment.initial_battery_state_of_charge              = 0.89 
                 segment.initial_battery_resistance_growth_factor     = 1
@@ -276,6 +274,7 @@ def mission_setup(analyses):
             mission.append_segment(segment)                
 
     return mission
+
 
 def missions_setup(mission): 
  

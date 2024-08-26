@@ -39,7 +39,7 @@ def main():
                     max_y_axis_limit            = 30,
                     min_z_axis_limit            = -30,
                     max_z_axis_limit            = 30,
-                    show_figure                 =False 
+                    show_figure                 = False 
                     )         
         
     
@@ -93,7 +93,7 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
     aerodynamics                                       = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method()
-    aerodynamics.vehicle                              = vehicle
+    aerodynamics.geometry                              = vehicle
     aerodynamics.settings.number_of_spanwise_vortices  = 5
     aerodynamics.settings.number_of_chordwise_vortices = 2       
     aerodynamics.settings.model_fuselage               = True
@@ -110,7 +110,7 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     #  Energy
     energy= RCAIDE.Framework.Analyses.Energy.Energy()
-    energy.vehicle = vehicle  
+    energy.vehicle  = vehicle 
     analyses.append(energy)
     
     # ------------------------------------------------------------------
