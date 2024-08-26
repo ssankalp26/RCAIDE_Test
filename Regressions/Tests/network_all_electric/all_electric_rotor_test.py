@@ -56,8 +56,8 @@ def main():
     plot_results(results)    
     
     # lift Coefficient Check During Cruise
-    lift_coefficient_true   = 0.717970335436922
-    lift_coefficient        = results.segments.high_speed_climbing_transition.conditions.aerodynamics.coefficients.lift[2][0] 
+    lift_coefficient_true   = 0.7180063809031857
+    lift_coefficient        = results.segments.high_speed_climbing_transition.conditions.aerodynamics.coefficients.lift.total[2][0] 
     print('CL: ' + str(lift_coefficient)) 
     diff_CL                 = np.abs(lift_coefficient  - lift_coefficient_true) 
     print('CL difference: ' +  str(diff_CL)) 
@@ -91,7 +91,7 @@ def base_analysis(vehicle):
 
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
-    aerodynamics          = RCAIDE.Framework.Analyses.Aerodynamics.Subsonic_VLM() 
+    aerodynamics          = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
     aerodynamics.geometry = vehicle
     aerodynamics.settings.drag_coefficient_increment = 0.0000
     analyses.append(aerodynamics)   
@@ -99,7 +99,7 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     #  Energy
     energy          = RCAIDE.Framework.Analyses.Energy.Energy()
-    energy.networks = vehicle.networks 
+    energy.vehicle  = vehicle 
     analyses.append(energy)
 
     # ------------------------------------------------------------------
@@ -115,7 +115,6 @@ def base_analysis(vehicle):
 
     # done!
     return analyses    
-
 # ----------------------------------------------------------------------
 #   Define the Mission
 # ----------------------------------------------------------------------
@@ -179,11 +178,10 @@ def mission_setup(analyses):
             segment.flight_dynamics.force_z                       = True     
             
             # define flight controls 
-            segment.flight_controls.throttle.active               = True           
-            segment.flight_controls.throttle.assigned_propulsors  = [['lift_propulsor_1','lift_propulsor_2','lift_propulsor_3','lift_propulsor_4',
+            segment.assigned_control_variables.throttle.active               = True           
+            segment.assigned_control_variables.throttle.assigned_propulsors  = [['lift_propulsor_1','lift_propulsor_2','lift_propulsor_3','lift_propulsor_4',
                                                                       'lift_propulsor_5','lift_propulsor_6','lift_propulsor_7','lift_propulsor_8']] 
-            
-
+             
             if (day == 0) and (flight_no == 0):        
                 segment.initial_battery_state_of_charge              = 0.89 
                 segment.initial_battery_resistance_growth_factor     = 1
@@ -210,8 +208,8 @@ def mission_setup(analyses):
             segment.flight_dynamics.force_z                       = True     
             
             # define flight controls 
-            segment.flight_controls.throttle.active               = True           
-            segment.flight_controls.throttle.assigned_propulsors  = [['cruise_propulsor_1','cruise_propulsor_2'],
+            segment.assigned_control_variables.throttle.active               = True           
+            segment.assigned_control_variables.throttle.assigned_propulsors  = [['cruise_propulsor_1','cruise_propulsor_2'],
                                                                      ['lift_propulsor_1','lift_propulsor_2','lift_propulsor_3','lift_propulsor_4',
                                                                     'lift_propulsor_5','lift_propulsor_6','lift_propulsor_7','lift_propulsor_8']]
             mission.append_segment(segment) 
@@ -235,8 +233,8 @@ def mission_setup(analyses):
             segment.flight_dynamics.force_z                       = True     
             
             # define flight controls 
-            segment.flight_controls.throttle.active               = True           
-            segment.flight_controls.throttle.assigned_propulsors  = [['cruise_propulsor_1','cruise_propulsor_2'],
+            segment.assigned_control_variables.throttle.active               = True           
+            segment.assigned_control_variables.throttle.assigned_propulsors  = [['cruise_propulsor_1','cruise_propulsor_2'],
                                                                      ['lift_propulsor_1','lift_propulsor_2','lift_propulsor_3','lift_propulsor_4',
                                                                     'lift_propulsor_5','lift_propulsor_6','lift_propulsor_7','lift_propulsor_8']]
             mission.append_segment(segment) 
@@ -255,8 +253,8 @@ def mission_setup(analyses):
             segment.flight_dynamics.force_z                       = True     
             
             # define flight controls 
-            segment.flight_controls.throttle.active               = True           
-            segment.flight_controls.throttle.assigned_propulsors  = [['lift_propulsor_1','lift_propulsor_2','lift_propulsor_3','lift_propulsor_4',
+            segment.assigned_control_variables.throttle.active               = True           
+            segment.assigned_control_variables.throttle.assigned_propulsors  = [['lift_propulsor_1','lift_propulsor_2','lift_propulsor_3','lift_propulsor_4',
                                                                       'lift_propulsor_5','lift_propulsor_6','lift_propulsor_7','lift_propulsor_8']] 
                     
             mission.append_segment(segment)  
@@ -276,6 +274,7 @@ def mission_setup(analyses):
             mission.append_segment(segment)                
 
     return mission
+
 
 def missions_setup(mission): 
  
