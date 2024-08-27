@@ -10,7 +10,9 @@
 # RCAIDE imports    
 from RCAIDE.Framework.Core                import Data 
 from RCAIDE.Library.Components.Component  import Container
-from RCAIDE.Library.Components            import Component  
+from RCAIDE.Library.Components            import Component
+from RCAIDE.Library.Methods.Stability.Moment_of_Inertia.compute_fuselage_moment_of_inertia import  compute_fuselage_moment_of_inertia
+
  
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Fuselage
@@ -141,15 +143,7 @@ class Fuselage(Component):
         return
     
 
-    def compute_fuselage_moment_of_inertia(self, center_of_gravity):
-        '''AIDAN WILL COMPUTE MOMENT OF INERTIA OF WING'''
-        
-        # note that self a wing
-        wing =  self
-        
-        # ADD CODE
-        
-        # r =  self.origin - center_of_gravity for parallel axis theorem
-        
-        I =  np.zeros((3, 3))
+    def compute_fuselage_moment_of_inertia(fuselage, center_of_gravity):
+                    
+        I =  compute_fuselage_moment_of_inertia(fuselage,center_of_gravity) 
         return I    

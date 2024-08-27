@@ -10,7 +10,7 @@
 # RCAIDE imports    
 from RCAIDE.Framework.Core import Data,Container
 from RCAIDE.Library.Components import Mass_Properties, Component  
-from RCAIDE.Library.Methods.Stability.Moment_of_Intertia.compute_wing_moment_of_inertia import  compute_wing_moment_of_inertia
+from RCAIDE.Library.Methods.Stability.Moment_of_Inertia.compute_wing_moment_of_inertia import  compute_wing_moment_of_inertia
 
 import numpy as np
 
@@ -225,7 +225,8 @@ class Wing(Component):
         return
 
     
-    def moment_of_inertia(wing,center_of_gravity): 
+    def moment_of_inertia(wing,center_of_gravity):
+        
         I =  compute_wing_moment_of_inertia(wing,center_of_gravity) 
         return I  
     

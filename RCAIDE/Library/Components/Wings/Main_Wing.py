@@ -11,6 +11,7 @@
 from .Wing import Wing
 from RCAIDE.Framework.Core import Container 
 from RCAIDE.Library.Components.Wings.Segment import Segment
+from RCAIDE.Library.Methods.Stability.Moment_of_Inertia.compute_wing_moment_of_inertia import  compute_wing_moment_of_inertia
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Main Wing 
@@ -55,7 +56,12 @@ class Main_Wing(Wing):
         self.tag                 = 'main_wing'
         self.Segments            = Segment_Container()
         
-## @ingroup Library-Components-Wings 
+## @ingroup Library-Components-Wings
+
+    def moment_of_inertia(wing,center_of_gravity):
+        I =  compute_wing_moment_of_inertia(wing,center_of_gravity) 
+        return I 
+
 class Segment_Container(Container):
     """ Container for wing segment
     
