@@ -85,7 +85,7 @@ def design_turbofan(turbofan):
     for tag, item in  turbofan.items(): 
         if issubclass(type(item), RCAIDE.Library.Components.Component):
             item.append_operating_conditions(segment,fuel_line,turbofan) 
-                    
+    
     ram                       = turbofan.ram
     inlet_nozzle              = turbofan.inlet_nozzle
     low_pressure_compressor   = turbofan.low_pressure_compressor
@@ -146,6 +146,7 @@ def design_turbofan(turbofan):
     compute_fan_performance(fan,fan_conditions,conditions)
     
     # Step 11: Link the combustor to the high pressure compressor
+    combustor_conditions.inputs.air_mass_flow                         = turbofan.engine_diameter * rho * np.pi * (turbofan.engine_diameter ** 2) / 4
     combustor_conditions.inputs.stagnation_temperature                = hpc_conditions.outputs.stagnation_temperature
     combustor_conditions.inputs.stagnation_pressure                   = hpc_conditions.outputs.stagnation_pressure
     

@@ -18,7 +18,8 @@ from RCAIDE.Library.Methods.Propulsors.Converters.Compression_Nozzle import comp
 from RCAIDE.Library.Methods.Propulsors.Turboshaft_Propulsor          import compute_power
  
 # python imports 
-from copy import deepcopy 
+from copy import deepcopy
+import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 # compute_turboshaft_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
@@ -48,7 +49,8 @@ def compute_turboshaft_performance(turboshaft,state,fuel_line,center_of_gravity=
     ''' 
     conditions                = state.conditions 
     noise_conditions          = conditions.noise[fuel_line.tag][turboshaft.tag]  
-    turboshaft_conditions     = conditions.energy[fuel_line.tag][turboshaft.tag]  
+    turboshaft_conditions     = conditions.energy[fuel_line.tag][turboshaft.tag]
+    rho                       = conditions.freestream.density  
     ram                       = turboshaft.ram
     inlet_nozzle              = turboshaft.inlet_nozzle
     compressor                = turboshaft.compressor
@@ -88,8 +90,9 @@ def compute_turboshaft_performance(turboshaft,state,fuel_line,center_of_gravity=
     compute_compressor_performance(compressor,compressor_conditions,conditions)
                                                                
     #link the combustor to the compressor                      
-    combustor_conditions.inputs.stagnation_temperature                    = compressor_conditions.outputs.stagnation_temperature
-    combustor_conditions.inputs.stagnation_pressure                       = compressor_conditions.outputs.stagnation_pressure
+    combustor_conditions.inputs.air_mass_flow                         = turboshaft.engine_diameter * rho * np.pi * (turboshaft.engine_diameter ** 2) / 4
+    combustor_conditions.inputs.stagnation_temperature                = compressor_conditions.outputs.stagnation_temperature
+    combustor_conditions.inputs.stagnation_pressure                   = compressor_conditions.outputs.stagnation_pressure
                                                                
     # Flow through the combustor                                
     if combustor.use_PSR_PFR_combustor_model: 

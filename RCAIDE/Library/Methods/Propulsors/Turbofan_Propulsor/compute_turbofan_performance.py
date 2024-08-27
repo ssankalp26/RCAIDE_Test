@@ -53,6 +53,7 @@ def compute_turbofan_performance(turbofan,state,fuel_line,center_of_gravity= [[0
     conditions                = state.conditions   
     noise_conditions          = conditions.noise[fuel_line.tag][turbofan.tag] 
     turbofan_conditions       = conditions.energy[fuel_line.tag][turbofan.tag] 
+    rho                       = conditions.freestream.density
     ram                       = turbofan.ram
     inlet_nozzle              = turbofan.inlet_nozzle
     low_pressure_compressor   = turbofan.low_pressure_compressor
@@ -112,6 +113,7 @@ def compute_turbofan_performance(turbofan,state,fuel_line,center_of_gravity= [[0
     compute_fan_performance(fan,fan_conditions,conditions)
 
     # Link the combustor to the high pressure compressor
+    combustor_conditions.inputs.air_mass_flow                         = turbofan.engine_diameter * rho * np.pi * (turbofan.engine_diameter ** 2) / 4
     combustor_conditions.inputs.stagnation_temperature                = hpc_conditions.outputs.stagnation_temperature
     combustor_conditions.inputs.stagnation_pressure                   = hpc_conditions.outputs.stagnation_pressure
 

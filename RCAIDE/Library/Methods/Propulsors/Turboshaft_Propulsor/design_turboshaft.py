@@ -114,6 +114,7 @@ def design_turboshaft(turboshaft):
     compute_compressor_performance(compressor,compressor_conditions,conditions)
     
     # Step 11: Link the combustor to the high pressure compressor
+    combustor_conditions.inputs.air_mass_flow                         = turboshaft.engine_diameter * rho * np.pi * (turboshaft.engine_diameter ** 2) / 4
     combustor_conditions.inputs.stagnation_temperature                = compressor_conditions.outputs.stagnation_temperature
     combustor_conditions.inputs.stagnation_pressure                   = compressor_conditions.outputs.stagnation_pressure
     

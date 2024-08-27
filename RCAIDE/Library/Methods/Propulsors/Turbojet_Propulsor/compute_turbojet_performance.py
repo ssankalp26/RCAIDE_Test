@@ -51,7 +51,8 @@ def compute_turbojet_performance(turbojet,state,fuel_line,center_of_gravity= [[0
     ''' 
     conditions                = state.conditions
     noise_conditions          = conditions.noise[fuel_line.tag][turbojet.tag]  
-    turbojet_conditions       = conditions.energy[fuel_line.tag][turbojet.tag]  
+    turbojet_conditions       = conditions.energy[fuel_line.tag][turbojet.tag]
+    rho                       = conditions.freestream.density
     ram                       = turbojet.ram
     inlet_nozzle              = turbojet.inlet_nozzle
     low_pressure_compressor   = turbojet.low_pressure_compressor
@@ -101,6 +102,7 @@ def compute_turbojet_performance(turbojet,state,fuel_line,center_of_gravity= [[0
     compute_compressor_performance(high_pressure_compressor,hpc_conditions,conditions)
 
     # Link the combustor to the high pressure compressor
+    combustor_conditions.inputs.air_mass_flow                         = turbojet.engine_diameter * rho * np.pi * (turbojet.engine_diameter ** 2) / 4
     combustor_conditions.inputs.stagnation_temperature                = hpc_conditions.outputs.stagnation_temperature
     combustor_conditions.inputs.stagnation_pressure                   = hpc_conditions.outputs.stagnation_pressure
 
@@ -133,6 +135,7 @@ def compute_turbojet_performance(turbojet,state,fuel_line,center_of_gravity= [[0
 
     if turbojet.afterburner_active == True:
         #link the core nozzle to the afterburner
+        afterburner_conditions.inputs.air_mass_flow          = turbojet.engine_diameter * rho * np.pi * (turbojet.engine_diameter ** 2) / 4
         afterburner_conditions.inputs.stagnation_temperature = lpt_conditions.outputs.stagnation_temperature
         afterburner_conditions.inputs.stagnation_pressure    = lpt_conditions.outputs.stagnation_pressure   
         afterburner_conditions.inputs.nondim_ratio           = 1.0 + combustor_conditions.outputs.fuel_to_air_ratio

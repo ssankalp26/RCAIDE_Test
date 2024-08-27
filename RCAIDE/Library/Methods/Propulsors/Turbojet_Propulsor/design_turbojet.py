@@ -121,6 +121,7 @@ def design_turbojet(turbojet):
     compute_compressor_performance(high_pressure_compressor,hpc_conditions,conditions)
    
     # Step 9: Link the combustor to the high pressure compressor
+    combustor_conditions.inputs.air_mass_flow                         = turbojet.engine_diameter * rho * np.pi * (turbojet.engine_diameter ** 2) / 4
     combustor_conditions.inputs.stagnation_temperature                = hpc_conditions.outputs.stagnation_temperature
     combustor_conditions.inputs.stagnation_pressure                   = hpc_conditions.outputs.stagnation_pressure
     
