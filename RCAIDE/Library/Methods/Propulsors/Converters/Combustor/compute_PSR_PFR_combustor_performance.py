@@ -51,8 +51,10 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
     Cp      =  conditions.freestream.specific_heat_at_constant_pressure 
     
     # unpacking the values form inputs
-    Tt_in    = combustor_conditions.inputs.stagnation_temperature
+    Tt_in    = combustor_conditions.inputs.stagnation_temperature  
+    Tt_mix    = Tt_in                                       # We are using T of compressure, we need to update it to get to temp with fuel
     Pt_in    = combustor_conditions.inputs.stagnation_pressure
+    Pt_mix    = Pt_in                                       # We are using P of compressure, we need to update it to get to temp with fuel
     nondim_r = combustor_conditions.inputs.nondim_mass_ratio 
     Tt4      = combustor.turbine_inlet_temperature *  np.ones_like(Tt_in)
     pib      = combustor.pressure_ratio
@@ -74,19 +76,26 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
      
 
     # ENGINE DESIGN PARAMETRS 
-    area_out          = 0 # EDIT MATTEO  
-    temperature       = 0 # EDIT MATTEO 
-    pressure          = 0 # EDIT MATTEO 
-    equivalence_ratio = 0 # EDIT MATTEO 
-    tpfr              = 0 # EDIT MATTEO 
-    tpsr              = 0 # EDIT MATTEO  
+    gamma             = gas.cp_mass / gas.cv_mass
+    rho               = gas.density
+    Area_in           = 0.2
+    U0                = mdot/(rho*Area_in)
+    psr_pfr_ratio     = 0.5
+    a                 = gas.sound_speed
+    M0                = U0/a # CHANGE
+    area_out          = pi*(comb_D**2)/4
+    temperature       = Tt_mix / (1 + 0.5 * (gamma - 1) * M0**2)                         # Static Temperature
+    pressure          = Pt_mix / (1 + 0.5 * (gamma - 1) * M0**2)**(gamma / (gamma - 1))  # Static Pressure
+    equivalence_ratio = combustor.equivalence_ratio
+    tpfr              = (comb_L/U0)*psr_pfr_ratio
+    tpsr              = (comb_L/U0)*(1 - psr_pfr_ratio) 
     
     # Initialize Empty Arrays
     ctrl_pts =  len(Tt_in[:,0])
-    enthalpy               = np.zeors((ctrl_pts,1))
-    phi                    = np.zeors((ctrl_pts,1))
-    tau_b                  = np.zeors((ctrl_pts,1))
-    pi_b                   = np.zeors((ctrl_pts,1))
+    T_stag_out = np.zeors((ctrl_pts,1))
+    P_stag_out = np.zeors((ctrl_pts,1))
+    h_stag_out = np.zeors((ctrl_pts,1))
+    FAR        = np.zeors((ctrl_pts,1))              
     species_mole_fractions = np.zeors((ctrl_pts,len(species_list)))
     species_mass_fractions = np.zeors((ctrl_pts,len(species_list))) 
     emission_indexes       = np.zeors((ctrl_pts,len(species_list))) 
@@ -136,22 +145,21 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
         emission_indexes[cpt] = gas.Y * mdot/mdot_fuel 
         
         # Extract properties of combustor flow 
-        a_out[cpt]      = gas.sound_speed  # Speed of sound at PFR outlet
-        rho_out[cpt]    = gas.density # density of the gas in the combustor
-        gamma[cpt]      = gas.cp_mass / gas.cv_mass
-        h[cpt]          = gas.h # enthalpy
-        vel_out[cpt]    = mdot / (rho_out[cpt] * area_out)  # Outlet velocity (m/s)  
-        M_out[cpt]      = vel_out[cpt] / a_out[cpt] 
-        phi[cpt]        = gas.equivalence_ratio(fuel = dict_fuel, oxidizer = dict_oxy ) 
+        a_out      = gas.sound_speed  # Speed of sound at PFR outlet
+        rho_out   = gas.density # density of the gas in the combustor
+        gamma      = gas.cp_mass / gas.cv_mass
+        h          = gas.h # enthalpy
+        vel_out    = mdot / (rho_out * area_out)  # Outlet velocity (m/s)  
+        M_out      = vel_out / a_out
         
         # Stagnation temperature 
-        T_stag_out[cpt] = gas.T * (1 + 0.5 * (gamma[cpt] - 1) * (M_out[cpt])**2)
+        T_stag_out[cpt] = gas.T * (1 + 0.5 * (gamma - 1) * (M_out)**2)
         
         # stagnation pressure 
-        P_stag_out[cpt] = gas.P * (1 + 0.5 * (gamma[cpt] - 1) * (M_out[cpt])**2)**(gamma[cpt] / (gamma[cpt] - 1))
+        P_stag_out[cpt] = gas.P * (1 + 0.5 * (gamma - 1) * (M_out)**2)**(gamma / (gamma - 1))
         
         # Stagnation enthalpy 
-        h_stag_out[cpt] = h[cpt] + 0.5 * vel_out[cpt]**2 
+        h_stag_out[cpt] = h + 0.5 * vel_out**2 
         
         # Fuel-to-air ratio (FAR)
         FAR[cpt]      = mdot_fuel / mdot_air    
