@@ -36,6 +36,8 @@ class Combustor(Component):
         self.burner_drag_coefficient         = 0.0
         self.absolute_sensible_enthalpy      = 0.0
         self.fuel_equivalency_ratio          = 1.0
+        self.diameter                        = 0 # MATTEO EDIT
+        self.length                          = 0 # MATTEO EDIT
         self.use_PSR_PFR_combustor_model     = False
     
     def append_operating_conditions(self,segment,fuel_line,propulsor):

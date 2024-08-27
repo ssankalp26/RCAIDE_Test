@@ -58,7 +58,9 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
     pib      = combustor.pressure_ratio
     eta_b    = combustor.efficiency
     htf      = combustor.fuel_data.specific_energy
-    high_fi  = combustor.fuel_data.use_high_fidelity_kinetics_model
+    high_fi  = combustor.fuel_data.use_high_fidelity_kinetics_model 
+    comb_D   = combustor.diameter
+    comb_L   = combustor.length 
 
     dict_oxy     = combustor.fuel_data.air_chemical_properties    
     if high_fi:
@@ -72,9 +74,7 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
      
 
     # ENGINE DESIGN PARAMETRS 
-    area_out    = 1  # Assuming the area is 1 m^2 for simplification
-    
-    # initial conditions 
+    area_out    = 0 # EDIT MATTEO  
     temperature       = 0 # EDIT MATTEO 
     pressure          = 0 # EDIT MATTEO 
     equivalence_ratio = 0 # EDIT MATTEO 
