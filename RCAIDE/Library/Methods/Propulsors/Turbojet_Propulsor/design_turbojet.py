@@ -12,7 +12,7 @@
 import RCAIDE 
 from RCAIDE.Framework.Mission.Common                                 import Conditions
 from RCAIDE.Library.Methods.Propulsors.Converters.Ram                import compute_ram_performance
-from RCAIDE.Library.Methods.Propulsors.Converters.Combustor          import compute_combustor_performance
+from RCAIDE.Library.Methods.Propulsors.Converters.Combustor          import compute_combustor_performance, compute_PSR_PFR_combustor_performance
 from RCAIDE.Library.Methods.Propulsors.Converters.Compressor         import compute_compressor_performance
 from RCAIDE.Library.Methods.Propulsors.Converters.Turbine            import compute_turbine_performance
 from RCAIDE.Library.Methods.Propulsors.Converters.Supersonic_Nozzle  import compute_supersonic_nozzle_performance
@@ -124,8 +124,11 @@ def design_turbojet(turbojet):
     combustor_conditions.inputs.stagnation_temperature                = hpc_conditions.outputs.stagnation_temperature
     combustor_conditions.inputs.stagnation_pressure                   = hpc_conditions.outputs.stagnation_pressure
     
-    # Step 10: Compute flow through the high pressor comprresor
-    compute_combustor_performance(combustor,combustor_conditions,conditions)
+    # Step 10: Compute flow through the high pressor compressor
+    if combustor.use_PSR_PFR_combustor_model: 
+        compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditions)
+    else: 
+        compute_combustor_performance(combustor,combustor_conditions,conditions)
 
     hpt_conditions.inputs.stagnation_temperature    = combustor_conditions.outputs.stagnation_temperature
     hpt_conditions.inputs.stagnation_pressure       = combustor_conditions.outputs.stagnation_pressure

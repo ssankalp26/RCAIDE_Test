@@ -10,7 +10,7 @@
 # RCAIDE imports  
 from RCAIDE.Framework.Core import Data   
 from RCAIDE.Library.Methods.Propulsors.Converters.Ram                import compute_ram_performance
-from RCAIDE.Library.Methods.Propulsors.Converters.Combustor          import compute_combustor_performance
+from RCAIDE.Library.Methods.Propulsors.Converters.Combustor          import compute_combustor_performance, compute_PSR_PFR_combustor_performance
 from RCAIDE.Library.Methods.Propulsors.Converters.Compressor         import compute_compressor_performance
 from RCAIDE.Library.Methods.Propulsors.Converters.Fan                import compute_fan_performance
 from RCAIDE.Library.Methods.Propulsors.Converters.Turbine            import compute_turbine_performance
@@ -115,8 +115,11 @@ def compute_turbofan_performance(turbofan,state,fuel_line,center_of_gravity= [[0
     combustor_conditions.inputs.stagnation_temperature                = hpc_conditions.outputs.stagnation_temperature
     combustor_conditions.inputs.stagnation_pressure                   = hpc_conditions.outputs.stagnation_pressure
 
-    # Flow through the high pressor comprresor
-    compute_combustor_performance(combustor,combustor_conditions,conditions)
+    # Flow through the high pressor compressor
+    if combustor.use_PSR_PFR_combustor_model: 
+        compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditions)
+    else: 
+        compute_combustor_performance(combustor,combustor_conditions,conditions)
 
     # Link the shaft power output to the low pressure compressor
     try:

@@ -35,7 +35,8 @@ class Combustor(Component):
         self.fuel_velocity_ratio             = 0.0
         self.burner_drag_coefficient         = 0.0
         self.absolute_sensible_enthalpy      = 0.0
-        self.fuel_equivalency_ratio          = 1.0        
+        self.fuel_equivalency_ratio          = 1.0
+        self.use_PSR_PFR_combustor_model     = False
     
     def append_operating_conditions(self,segment,fuel_line,propulsor):
         propulsor_conditions =  segment.state.conditions.energy[fuel_line.tag][propulsor.tag]

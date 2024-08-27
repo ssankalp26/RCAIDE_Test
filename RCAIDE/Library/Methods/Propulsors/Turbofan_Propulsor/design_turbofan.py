@@ -11,7 +11,7 @@
 import RCAIDE
 from RCAIDE.Framework.Mission.Common                                 import Conditions
 from RCAIDE.Library.Methods.Propulsors.Converters.Ram                import compute_ram_performance
-from RCAIDE.Library.Methods.Propulsors.Converters.Combustor          import compute_combustor_performance
+from RCAIDE.Library.Methods.Propulsors.Converters.Combustor          import compute_combustor_performance, compute_PSR_PFR_combustor_performance
 from RCAIDE.Library.Methods.Propulsors.Converters.Compressor         import compute_compressor_performance 
 from RCAIDE.Library.Methods.Propulsors.Converters.Fan                import compute_fan_performance
 from RCAIDE.Library.Methods.Propulsors.Converters.Turbine            import compute_turbine_performance
@@ -149,8 +149,11 @@ def design_turbofan(turbofan):
     combustor_conditions.inputs.stagnation_temperature                = hpc_conditions.outputs.stagnation_temperature
     combustor_conditions.inputs.stagnation_pressure                   = hpc_conditions.outputs.stagnation_pressure
     
-    # Step 12: Compute flow through the high pressor comprresor
-    compute_combustor_performance(combustor,combustor_conditions,conditions)
+    # Step 12: Compute flow through the high pressor compressor
+    if combustor.use_PSR_PFR_combustor_model: 
+        compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditions)
+    else: 
+        compute_combustor_performance(combustor,combustor_conditions,conditions)
     
     # Step 13: Link the high pressure turbione to the combustor
     hpt_conditions.inputs.stagnation_temperature    = combustor_conditions.outputs.stagnation_temperature

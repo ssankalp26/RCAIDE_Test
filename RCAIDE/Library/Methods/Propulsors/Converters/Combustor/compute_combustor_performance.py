@@ -46,7 +46,7 @@ def compute_combustor_performance(combustor,combustor_conditions,conditions):
       
     Returns:
         None
-    """          
+    """ 
     # unpacking the values from conditions 
     Cp      =  conditions.freestream.specific_heat_at_constant_pressure 
     
