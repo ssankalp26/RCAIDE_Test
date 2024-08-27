@@ -44,9 +44,9 @@ def compute_thrust(turbofan,turbofan_conditions,conditions):
            freestream.gravity                            (numpy.ndarray): freestream gravity            [m/s^2] 
            propulsion.throttle                           (numpy.ndarray): throttle                      [unitless] 
         turbofan 
-           ..fuel_to_air_ratio                          (float): fuel_to_air_ratio                    [unitless] 
-           ..total_temperature_reference                (float): total_temperature_reference          [K] 
-           ..total_pressure_reference                   (float): total_pressure_reference             [Pa]    
+           .fuel_to_air_ratio                          (float): fuel_to_air_ratio                    [unitless] 
+           .total_temperature_reference                (float): total_temperature_reference          [K] 
+           .total_pressure_reference                   (float): total_pressure_reference             [Pa]    
            .core_nozzle.velocity                      (numpy.ndarray): turbofan core nozzle velocity        [m/s] 
            .core_nozzle.static_pressure               (numpy.ndarray): turbofan core nozzle static pressure [Pa] 
            .core_nozzle.area_ratio                            (float): turbofan core nozzle area ratio      [unitless] 
