@@ -74,7 +74,7 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
      
 
     # ENGINE DESIGN PARAMETRS 
-    area_out    = 0 # EDIT MATTEO  
+    area_out          = 0 # EDIT MATTEO  
     temperature       = 0 # EDIT MATTEO 
     pressure          = 0 # EDIT MATTEO 
     equivalence_ratio = 0 # EDIT MATTEO 
@@ -130,31 +130,32 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
         # Determine massflow rate of flow into combustion chamber 
         mdot           = inlet.mass_flow_rate
         mdot_fuel      = sum(mdot * Y_fuel)
+        mdot_air       = mdot - mdot_fuel
         
         # Determine Emission Indices 
         emission_indexes[cpt] = gas.Y * mdot/mdot_fuel 
         
         # Extract properties of combustor flow 
-        #a           = gas.sound_speed # speed of sound 
-        #rho_out     = pfr.thermo.density  # density of the gas in the combustor 
-        #cp          = gas.cp_mass # specific heat at constant pressure 
-        #cv          = gas.cv_mass # specific heat at constant volume 
-        #gamma       = cp/cv
-        enthalpy[cpt]           = gas.enthalpy # enthalpy
-        #vel         = mdot / (rho_out * area_out) # velocity of flow exiting the combustor  
-        #M           = vel/a # Mach number 
+        a_out[cpt]      = gas.sound_speed  # Speed of sound at PFR outlet
+        rho_out[cpt]    = gas.density # density of the gas in the combustor
+        gamma[cpt]      = gas.cp_mass / gas.cv_mass
+        h[cpt]          = gas.h # enthalpy
+        vel_out[cpt]    = mdot / (rho_out[cpt] * area_out)  # Outlet velocity (m/s)  
+        M_out[cpt]      = vel_out[cpt] / a_out[cpt] 
+        phi[cpt]        = gas.equivalence_ratio(fuel = dict_fuel, oxidizer = dict_oxy ) 
         
-        phi[cpt] = gas.equivalence_ratio(fuel = dict_fuel, oxidizer = dict_oxy ) 
+        # Stagnation temperature 
+        T_stag_out[cpt] = gas.T * (1 + 0.5 * (gamma[cpt] - 1) * (M_out[cpt])**2)
         
-        ## Stagnation temperature 
-        #T_stag = gas.T/(1 + ((gamma - 1)/2)*M**2)
+        # stagnation pressure 
+        P_stag_out[cpt] = gas.P * (1 + 0.5 * (gamma[cpt] - 1) * (M_out[cpt])**2)**(gamma[cpt] / (gamma[cpt] - 1))
         
-        ## stagnation pressure 
-        #P_stag = gas.P*(T_stag/gas.T)**(gamma/(gamma - 1))
+        # Stagnation enthalpy 
+        h_stag_out[cpt] = h[cpt] + 0.5 * vel_out[cpt]**2 
         
-        tau_b[cpt] = gas.T/temperature[cpt]
-        pi_b[cpt]  = gas.P/(pressure[cpt]*ct.one_atm)
-         
+        # Fuel-to-air ratio (FAR)
+        FAR[cpt]      = mdot_fuel / mdot_air    
+             
     
         sp_idx = [gas.species_index(sp) for sp in species_list]
         species_mole_fractions[cpt] = gas.X[sp_idx]
@@ -162,9 +163,9 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
   
     
     # Pack results 
-    combustor_conditions.outputs.stagnation_temperature  = Tt4
-    combustor_conditions.outputs.stagnation_pressure     = Pt_out
-    combustor_conditions.outputs.stagnation_enthalpy     = ht_out
-    combustor_conditions.outputs.fuel_to_air_ratio       = f 
+    combustor_conditions.outputs.stagnation_temperature  = T_stag_out
+    combustor_conditions.outputs.stagnation_pressure     = P_stag_out
+    combustor_conditions.outputs.stagnation_enthalpy     = h_stag_out
+    combustor_conditions.outputs.fuel_to_air_ratio       = FAR 
     
     return

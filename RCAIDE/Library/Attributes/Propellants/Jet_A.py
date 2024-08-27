@@ -50,7 +50,7 @@ class Jet_A(Propellant):
         self.surrogate_species_list                = ['CO', 'CO2', 'H2O']
         self.species_list                          = ['CO', 'CO2', 'H2O', 'NO', 'NO2', 'CSOLID']  
    
-      
+
         # critical temperatures   
         self.temperatures.flash           = 311.15                 # K
         self.temperatures.autoignition    = 483.15                 # K
