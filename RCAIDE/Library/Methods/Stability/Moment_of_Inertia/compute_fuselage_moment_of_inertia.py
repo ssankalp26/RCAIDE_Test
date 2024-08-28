@@ -7,7 +7,8 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE 
-import RCAIDE 
+import RCAIDE
+from RCAIDE.Framework.Core import Units 
 
 # package imports 
 import numpy as np 
@@ -15,6 +16,33 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Compute Wing Moment of Intertia
 # ----------------------------------------------------------------------------------------------------------------------  
+def main():
+    fuselage                                    = RCAIDE.Library.Components.Fuselages.Tube_Fuselage() 
+
+    fuselage.seat_pitch                         = 1     * Units.meter 
+    fuselage.fineness.nose                      = 1.6
+    fuselage.fineness.tail                      = 2. 
+    fuselage.lengths.nose                       = 6.4   * Units.meter
+    fuselage.lengths.tail                       = 8.0   * Units.meter
+    fuselage.lengths.total                      = 38.02 * Units.meter  
+    fuselage.lengths.fore_space                 = 6.    * Units.meter
+    fuselage.lengths.aft_space                  = 5.    * Units.meter
+    fuselage.width                              = 3.74  * Units.meter
+    fuselage.heights.maximum                    = 3.74  * Units.meter
+    fuselage.effective_diameter                 = 3.74     * Units.meter
+    fuselage.areas.side_projected               = 142.1948 * Units['meters**2'] 
+    fuselage.areas.wetted                       = 446.718  * Units['meters**2'] 
+    fuselage.areas.front_projected              = 12.57    * Units['meters**2']  
+    fuselage.differential_pressure              = 5.0e4 * Units.pascal 
+    fuselage.heights.at_quarter_length          = 3.74 * Units.meter
+    fuselage.heights.at_three_quarters_length   = 3.65 * Units.meter
+    fuselage.heights.at_wing_root_quarter_chord = 3.74 * Units.meter
+    
+    center_of_gravity = [[15,1,0.5]]
+    
+    compute_fuselage_moment_of_inertia(fuselage, center_of_gravity)
+    return
+
 def compute_fuselage_moment_of_inertia(fuselage,center_of_gravity): 
     # ADD CODE
     I_total = np.zeros((3, 3))
@@ -22,7 +50,7 @@ def compute_fuselage_moment_of_inertia(fuselage,center_of_gravity):
     ## Hemisphere
     
     origin_hemisphere =  np.array([fuselage.lengths.nose, 0, 0]) + np.array(fuselage.origin)
-    m = mass_of_component_hemi
+    m = 1000 # mass_of_component_hemi
     I =  np.zeros((3, 3))
     outer_radius = fuselage.effective_diameter / 2
     inner_radius = 0.75 * fuselage.effective_diameter / 2 # Assume the inner radius is 75 % of the outer radius
@@ -35,13 +63,13 @@ def compute_fuselage_moment_of_inertia(fuselage,center_of_gravity):
     # global system
     s = np.array(origin_hemisphere) - np.array(center_of_gravity)
     
-    I_global = np.array(I) + m * np.array(np.dot(s, s)) * np.array(np.identity(3)) - np.array(np.dot(s, np.transpose(s)))
+    I_global = np.array(I) + m * (np.array(np.dot(s[0], s[0])) * np.array(np.identity(3)) - s*np.transpose(s))
     I_total = np.array(I_total) + np.array(I_global)
     
     ## cylinder
     
     h = fuselage.lengths.total - fuselage.lengths.nose - fuselage.lengths.tail
-    m = mass_of_component_cylinder
+    m = 1000 #mass_of_component_cylinder
     origin_cylinder =  np.array([fuselage.lengths.nose + h / 2,0, 0]) + np.array(fuselage.origin) # origin of the cylinder is located a tthe middle of the cylinder
     
     I =  np.zeros((3, 3))
@@ -54,13 +82,13 @@ def compute_fuselage_moment_of_inertia(fuselage,center_of_gravity):
     # transform moment of inertia to global system
     s = np.array(origin_cylinder) - np.array(center_of_gravity)
     
-    I_global = np.array(I) + m * np.array(np.dot(s, s)) * np.array(np.identity(3)) - np.array(np.dot(s, np.transpose(s)))
+    I_global = np.array(I) + m * (np.array(np.dot(s[0], s[0])) * np.array(np.identity(3)) - s*np.transpose(s))
     I_total = np.array(I_total) + np.array(I_global)
 
     ## cone
     
     h = fuselage.lengths.tail
-    m = mass_of_component_cone
+    m = 1000 #mass_of_component_cone
     origin_cone =  np.array([fuselage.lengths.total - h,0, 0]) + np.array(fuselage.origin)
     
     I =  np.zeros((3, 3))
@@ -75,8 +103,11 @@ def compute_fuselage_moment_of_inertia(fuselage,center_of_gravity):
     
     s = np.array(origin_cone) - np.array(center_of_gravity)
     
-    I_global = np.array(I) + m * np.array(np.dot(s, s)) * np.array(np.identity(3)) - np.array(np.dot(s, np.transpose(s)))
+    I_global =  np.array(I) + m * (np.array(np.dot(s[0], s[0])) * np.array(np.identity(3)) - s*np.transpose(s))
     I_total = np.array(I_total) + np.array(I_global)
     
 
-    return I_total 
+    return I_total
+
+if __name__ == '__main__': 
+    main()

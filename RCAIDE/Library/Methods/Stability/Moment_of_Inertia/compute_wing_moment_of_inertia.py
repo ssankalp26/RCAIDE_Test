@@ -14,6 +14,33 @@ from RCAIDE.Framework.Core import Units
 import numpy as np 
 import math
 
+def main():
+    wing                                  = RCAIDE.Library.Components.Wings.Main_Wing()
+    wing.tag                              = 'main_wing' 
+    wing.aspect_ratio                     = 10.18
+    wing.sweeps.quarter_chord             = 25 * Units.deg
+    wing.thickness_to_chord               = 0.1
+    wing.taper                            = 0.1 
+    wing.spans.projected                  = 34.32 
+    wing.chords.root                      = 7.760 * Units.meter
+    wing.chords.tip                       = 0.782 * Units.meter
+    wing.chords.mean_aerodynamic          = 4.235 * Units.meter 
+    wing.areas.reference                  = 124.862
+    wing.areas.wetted                     = 225.08 
+    wing.twists.root                      = 4.0 * Units.degrees
+    wing.twists.tip                       = 0.0 * Units.degrees 
+    wing.origin                           = [[13.61,0,-0.5]]
+    wing.aerodynamic_center               = [0,0,0] 
+    wing.vertical                         = True
+    wing.symmetric                        = False
+    wing.high_lift                        = True 
+    wing.dynamic_pressure_ratio           = 1.0
+    wing.dihedral = 0
+    center_of_gravity = [[15,1,0.5]]
+    
+    compute_wing_moment_of_inertia(wing,center_of_gravity)
+    return
+
 # ----------------------------------------------------------------------------------------------------------------------
 #  Compute Wing Moment of Intertia
 # ----------------------------------------------------------------------------------------------------------------------  
@@ -26,9 +53,9 @@ def compute_wing_moment_of_inertia(wing,center_of_gravity):
     ct = wing.chords.tip # tip chord 
     cr = wing.chords.root # root chord
     
-    b = wing.spans.total /2 # half-span of the wing
-    A = wing.sweeps.quarter_chord * math.pi / 180 # sweep angle in radians (located at quarter chord)
-    dihedral = wing.dihedral *np.pi /180 # Wing dihedral
+    b = wing.spans.total / 2 # half-span of the wing
+    A = wing.sweeps.quarter_chord * np.pi / 180 # sweep angle in radians (located at quarter chord)
+    dihedral = wing.dihedral * np.pi /180 # Wing dihedral. Converts it to radians
         
     # a0-a4 values are defined below for a NACA 4-digit airfoil. This holds for all NACA airfoils
     # These values help define the thickness distribution. 
