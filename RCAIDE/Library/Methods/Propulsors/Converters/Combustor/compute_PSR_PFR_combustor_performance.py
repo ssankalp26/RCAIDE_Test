@@ -90,7 +90,7 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
     area_out          = N *  np.pi*(comb_D**2)/4
     temperature       = Tt_mix / (1 + 0.5 * (gamma - 1) * M0**2)                         # Static Temperature
     pressure          = Pt_mix / (1 + 0.5 * (gamma - 1) * M0**2)**(gamma / (gamma - 1))  # Static Pressure
-    equivalence_ratio = combustor.equivalence_ratio
+    equivalence_ratio = combustor.fuel_equivalency_ratio
     tpfr              = (comb_L/U0)*psr_pfr_ratio
     tpsr              = (comb_L/U0)*(1 - psr_pfr_ratio) 
     
@@ -162,7 +162,7 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
         P_stag_out[cpt,0] = (gas.P/ct.one_atm) * (1 + 0.5 * (gamma - 1) * (M_out)**2)**(gamma / (gamma - 1))
         
         # Stagnation enthalpy 
-        h_stag_out[cpt,0] = h + 0.5 * vel_out**2 
+        h_stag_out[cpt,0] = T_stag_out[cpt,0] * gas.cp_mass
         
         # Fuel-to-air ratio (FAR)
         FAR[cpt,0]      = mdot_fuel / mdot_air    
