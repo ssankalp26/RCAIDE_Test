@@ -39,6 +39,7 @@ class Combustor(Component):
         self.diameter                        = 0.2
         self.length                          = 0.3
         self.equivalence_ratio               = 0.7
+        self.number_of_combustors            = 40
         self.use_PSR_PFR_combustor_model     = False
     
     def append_operating_conditions(self,segment,fuel_line,propulsor):

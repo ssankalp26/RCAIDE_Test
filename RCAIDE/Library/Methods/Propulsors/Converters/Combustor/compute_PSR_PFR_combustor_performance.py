@@ -53,19 +53,20 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
     U0      =  conditions.freestream.velocity
     
     # unpacking the values form inputs
-    Tt_in    = combustor_conditions.inputs.stagnation_temperature  
-    Tt_mix   = Tt_in                                       # We are using T of compressure, we need to update it to get to temp with fuel
-    Pt_in    = combustor_conditions.inputs.stagnation_pressure
-    Pt_mix   = Pt_in                                    # Pa to atm We are using P of compressure, we need to update it to get to temp with fuel
-    nondim_r = combustor_conditions.inputs.nondim_mass_ratio
-    mdot_air = combustor_conditions.inputs.air_mass_flow
-    Tt4      = combustor.turbine_inlet_temperature *  np.ones_like(Tt_in)
-    pib      = combustor.pressure_ratio
-    eta_b    = combustor.efficiency
-    htf      = combustor.fuel_data.specific_energy
-    high_fi  = combustor.fuel_data.use_high_fidelity_kinetics_model 
-    comb_D   = combustor.diameter
-    comb_L   = combustor.length 
+    Tt_in         = combustor_conditions.inputs.stagnation_temperature  
+    Tt_mix        = Tt_in                                       # We are using T of compressure, we need to update it to get to temp with fuel
+    Pt_in         = combustor_conditions.inputs.stagnation_pressure
+    Pt_mix        = Pt_in                                    # Pa to atm We are using P of compressure, we need to update it to get to temp with fuel
+    nondim_r      = combustor_conditions.inputs.nondim_mass_ratio
+    mdot_air_core = combustor_conditions.inputs.air_mass_flow
+    Tt4           = combustor.turbine_inlet_temperature *  np.ones_like(Tt_in)
+    pib           = combustor.pressure_ratio
+    eta_b         = combustor.efficiency
+    htf           = combustor.fuel_data.specific_energy
+    high_fi       = combustor.fuel_data.use_high_fidelity_kinetics_model 
+    comb_D        = combustor.diameter
+    comb_L        = combustor.length
+    N             = combustor.number_of_combustors
 
     dict_oxy     = combustor.fuel_data.air_chemical_properties    
     if high_fi:
@@ -81,12 +82,12 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
     # ENGINE DESIGN PARAMETRS 
     gamma             = gas.cp_mass / gas.cv_mass
     rho               = gas.density_mass
-    Area_in           = 0.25  # NEED TO BE VALIDATED 
+    Area_in           = 2.0  # NEED TO BE VALIDATED 
     psr_pfr_ratio     = 0.2  # NEED TO BE VALIDATED 
     a                 = gas.sound_speed
-    U0                = mdot_air/(rho*Area_in)
+    U0                = mdot_air_core/(rho*Area_in)
     M0                = U0/a # NEED TO BE VALIDATED 
-    area_out          = np.pi*(comb_D**2)/4
+    area_out          = N *  np.pi*(comb_D**2)/4
     temperature       = Tt_mix / (1 + 0.5 * (gamma - 1) * M0**2)                         # Static Temperature
     pressure          = Pt_mix / (1 + 0.5 * (gamma - 1) * M0**2)**(gamma / (gamma - 1))  # Static Pressure
     equivalence_ratio = combustor.equivalence_ratio
@@ -153,7 +154,7 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
         h          = gas.h # enthalpy
         vel_out    = mdot / (rho_out * area_out)  # Outlet velocity (m/s)  
         M_out      = vel_out / a_out
-        
+   
         # Stagnation temperature 
         T_stag_out[cpt,0] = gas.T * (1 + 0.5 * (gamma - 1) * (M_out)**2)
         

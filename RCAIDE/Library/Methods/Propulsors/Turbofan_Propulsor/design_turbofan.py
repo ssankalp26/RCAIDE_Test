@@ -145,12 +145,8 @@ def design_turbofan(turbofan):
     # Step 10: Compute flow through the fan
     compute_fan_performance(fan,fan_conditions,conditions)
     
-    # Step 11: Link the combustor to the high pressure compressor
-
-    #turbofan_conditions.bypass_ratio                                  = bypass_ratio
-    #turbofan_conditions.flow_through_core                             = 1./(1.+bypass_ratio) #scaled constant to turn on core thrust computation
-    #turbofan_conditions.flow_through_fan                              = bypass_ratio/(1.+bypass_ratio) #scaled constant to turn on fan thrust computation      
-    combustor_conditions.inputs.air_mass_flow                         = (U * rho * np.pi * (turbofan.engine_diameter ** 2) / 4)/(1 + turbofan.bypass_ratio) #(U * rho * np.pi * (turbofan.engine_diameter ** 2) / 4)/turbofan_conditions.bypass_ratio 
+    # Step 11: Link the combustor to the high pressure compressor   
+    combustor_conditions.inputs.air_mass_flow                         = (U * rho * np.pi * (turbofan.engine_diameter ** 2) / 4)/(1 + turbofan.bypass_ratio) 
     combustor_conditions.inputs.stagnation_temperature                = hpc_conditions.outputs.stagnation_temperature
     combustor_conditions.inputs.stagnation_pressure                   = hpc_conditions.outputs.stagnation_pressure
     
