@@ -29,7 +29,7 @@ class Combustor(Component):
         
         self.tag                             = 'Combustor' 
         self.alphac                          = 0.0
-        self.turbine_inlet_temperature       = 1500 #1.0 
+        self.turbine_inlet_temperature       = 1500
         self.area_ratio                      = 1.0
         self.axial_fuel_velocity_ratio       = 0.0
         self.fuel_velocity_ratio             = 0.0
@@ -37,7 +37,7 @@ class Combustor(Component):
         self.absolute_sensible_enthalpy      = 0.0 
         self.diameter                        = 0.2
         self.length                          = 0.3
-        self.fuel_equivalency_ratio          = 0.3 # should be around 0.7
+        self.fuel_equivalency_ratio          = 0.3 
         self.number_of_combustors            = 30
         self.use_PSR_PFR_combustor_model     = False
     
