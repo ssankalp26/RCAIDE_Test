@@ -81,7 +81,7 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
     # ENGINE DESIGN PARAMETRS 
     gamma             = gas.cp_mass / gas.cv_mass
     rho               = gas.density_mass
-    Area_in           = 0.1  # NEED TO BE VALIDATED 
+    Area_in           = 0.25  # NEED TO BE VALIDATED 
     psr_pfr_ratio     = 0.2  # NEED TO BE VALIDATED 
     a                 = gas.sound_speed
     U0                = mdot_air/(rho*Area_in)

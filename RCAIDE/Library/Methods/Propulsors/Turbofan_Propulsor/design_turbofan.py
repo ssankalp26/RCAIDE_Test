@@ -58,7 +58,7 @@ def design_turbofan(turbofan):
         rho = atmo_data.density          
         a   = atmo_data.speed_of_sound    
         mu  = atmo_data.dynamic_viscosity           
-    
+        U   = a*turbofan.design_mach_number
         # setup conditions
         conditions = RCAIDE.Framework.Mission.Common.Results()
     
@@ -74,7 +74,7 @@ def design_turbofan(turbofan):
         conditions.freestream.Cp                          = np.atleast_1d(turbofan.working_fluid.compute_cp(T,p))
         conditions.freestream.R                           = np.atleast_1d(turbofan.working_fluid.gas_specific_constant)
         conditions.freestream.speed_of_sound              = np.atleast_1d(a)
-        conditions.freestream.velocity                    = np.atleast_1d(a*turbofan.design_mach_number) 
+        conditions.freestream.velocity                    = np.atleast_1d(U) 
     
     fuel_line                = RCAIDE.Library.Components.Energy.Distributors.Fuel_Line()
     segment                  = RCAIDE.Framework.Mission.Segments.Segment()  
@@ -146,7 +146,11 @@ def design_turbofan(turbofan):
     compute_fan_performance(fan,fan_conditions,conditions)
     
     # Step 11: Link the combustor to the high pressure compressor
-    combustor_conditions.inputs.air_mass_flow                         = turbofan.engine_diameter * rho * np.pi * (turbofan.engine_diameter ** 2) / 4
+
+    #turbofan_conditions.bypass_ratio                                  = bypass_ratio
+    #turbofan_conditions.flow_through_core                             = 1./(1.+bypass_ratio) #scaled constant to turn on core thrust computation
+    #turbofan_conditions.flow_through_fan                              = bypass_ratio/(1.+bypass_ratio) #scaled constant to turn on fan thrust computation      
+    combustor_conditions.inputs.air_mass_flow                         = (U * rho * np.pi * (turbofan.engine_diameter ** 2) / 4)/(1 + turbofan.bypass_ratio) #(U * rho * np.pi * (turbofan.engine_diameter ** 2) / 4)/turbofan_conditions.bypass_ratio 
     combustor_conditions.inputs.stagnation_temperature                = hpc_conditions.outputs.stagnation_temperature
     combustor_conditions.inputs.stagnation_pressure                   = hpc_conditions.outputs.stagnation_pressure
     
