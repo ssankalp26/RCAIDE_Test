@@ -151,7 +151,6 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
         a_out      = gas.sound_speed  # Speed of sound at PFR outlet
         rho_out    = gas.density_mass # density of the gas in the combustor
         gamma      = gas.cp_mass / gas.cv_mass
-        h          = gas.h # enthalpy
         vel_out    = mdot / (rho_out * area_out)  # Outlet velocity (m/s)  
         M_out      = vel_out / a_out
    
