@@ -68,9 +68,9 @@ def compute_fuselage_moment_of_inertia(fuselage,center_of_gravity):
     
     ## cylinder
     
-    h = fuselage.lengths.total - fuselage.lengths.nose - fuselage.lengths.tail
+    h = fuselage.lengths.total - fuselage.lengths.nose - fuselage.lengths.tail # Length of the cylinder (found by subtracting the tail adn nose lengths from the total length)
     m = 1000 #mass_of_component_cylinder
-    origin_cylinder =  np.array([fuselage.lengths.nose + h / 2,0, 0]) + np.array(fuselage.origin) # origin of the cylinder is located a tthe middle of the cylinder
+    origin_cylinder =  np.array([fuselage.lengths.nose + h / 2,0, 0]) + np.array(fuselage.origin) # origin of the cylinder is located a the middle of the cylinder
     
     I =  np.zeros((3, 3))
     
@@ -87,21 +87,21 @@ def compute_fuselage_moment_of_inertia(fuselage,center_of_gravity):
 
     ## cone
     
-    h = fuselage.lengths.tail
+    h = fuselage.lengths.tail # length of the cone is defined to be the tail length.
     m = 1000 #mass_of_component_cone
     origin_cone =  np.array([fuselage.lengths.total - h,0, 0]) + np.array(fuselage.origin)
     
     I =  np.zeros((3, 3))
     
     # Moment of inertia in local system
-    rho = (m / (1 / 3 * np.pi * (outer_radius ** 2 * h - inner_radius ** 2 * (h * inner_radius / outer_radius))))
+    rho = (m / (1 / 3 * np.pi * (outer_radius ** 2 * h - inner_radius ** 2 * (h * inner_radius / outer_radius)))) # density of the cone. Mass divided by volume.
     I[0][0] =  rho * (1 / 3 * np.pi * outer_radius ** 2 * h ** 3 + np.pi / 20 * outer_radius ** 4 *h - 1 / 3 * np.pi * inner_radius ** 2 * (h * inner_radius / outer_radius) ** 3 + np.pi / 20 * inner_radius ** 4 *(h * inner_radius / outer_radius))
     I[1][1] =  rho * (1 / 3 * np.pi * outer_radius ** 2 * h ** 3 + np.pi / 20 * outer_radius ** 4 *h - 1 / 3 * np.pi * inner_radius ** 2 * (h * inner_radius / outer_radius) ** 3 + np.pi / 20 * inner_radius ** 4 *(h * inner_radius / outer_radius))
     I[2][2] =  rho * (np.pi /10 *outer_radius **4 *h -np.pi /10 *inner_radius **4 *(h * inner_radius / outer_radius)) # Izz
     
     # transform moment of inertia to global system
     
-    s = np.array(origin_cone) - np.array(center_of_gravity)
+    s = np.array(origin_cone) - np.array(center_of_gravity) # vector from the cone base to the center of gravity of the aircraft. 
     
     I_global =  np.array(I) + m * (np.array(np.dot(s[0], s[0])) * np.array(np.identity(3)) - s*np.transpose(s))
     I_total = np.array(I_total) + np.array(I_global)
