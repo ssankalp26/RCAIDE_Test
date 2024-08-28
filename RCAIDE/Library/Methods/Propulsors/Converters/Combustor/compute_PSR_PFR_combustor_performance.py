@@ -56,7 +56,7 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
     Tt_in    = combustor_conditions.inputs.stagnation_temperature  
     Tt_mix   = Tt_in                                       # We are using T of compressure, we need to update it to get to temp with fuel
     Pt_in    = combustor_conditions.inputs.stagnation_pressure
-    Pt_mix   = Pt_in                                       # We are using P of compressure, we need to update it to get to temp with fuel
+    Pt_mix   = Pt_in                                    # Pa to atm We are using P of compressure, we need to update it to get to temp with fuel
     nondim_r = combustor_conditions.inputs.nondim_mass_ratio
     mdot_air = combustor_conditions.inputs.air_mass_flow
     Tt4      = combustor.turbine_inlet_temperature *  np.ones_like(Tt_in)
@@ -80,9 +80,9 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
 
     # ENGINE DESIGN PARAMETRS 
     gamma             = gas.cp_mass / gas.cv_mass
-    rho               = gas.density
-    Area_in           = 0.2  # NEED TO BE VALIDATED 
-    psr_pfr_ratio     = 0.5  # NEED TO BE VALIDATED 
+    rho               = gas.density_mass
+    Area_in           = 0.1  # NEED TO BE VALIDATED 
+    psr_pfr_ratio     = 0.2  # NEED TO BE VALIDATED 
     a                 = gas.sound_speed
     U0                = mdot_air/(rho*Area_in)
     M0                = U0/a # NEED TO BE VALIDATED 
@@ -148,7 +148,7 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
         EIs  = gas.Y * mdot/mdot_fuel 
         # Extract properties of combustor flow 
         a_out      = gas.sound_speed  # Speed of sound at PFR outlet
-        rho_out    = gas.density # density of the gas in the combustor
+        rho_out    = gas.density_mass # density of the gas in the combustor
         gamma      = gas.cp_mass / gas.cv_mass
         h          = gas.h # enthalpy
         vel_out    = mdot / (rho_out * area_out)  # Outlet velocity (m/s)  
@@ -158,7 +158,7 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
         T_stag_out[cpt,0] = gas.T * (1 + 0.5 * (gamma - 1) * (M_out)**2)
         
         # stagnation pressure 
-        P_stag_out[cpt,0] = gas.P * (1 + 0.5 * (gamma - 1) * (M_out)**2)**(gamma / (gamma - 1))
+        P_stag_out[cpt,0] = (gas.P/ct.one_atm) * (1 + 0.5 * (gamma - 1) * (M_out)**2)**(gamma / (gamma - 1))
         
         # Stagnation enthalpy 
         h_stag_out[cpt,0] = h + 0.5 * vel_out**2 

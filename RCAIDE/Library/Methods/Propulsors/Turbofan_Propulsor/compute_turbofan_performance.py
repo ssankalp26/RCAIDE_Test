@@ -54,6 +54,7 @@ def compute_turbofan_performance(turbofan,state,fuel_line,center_of_gravity= [[0
     noise_conditions          = conditions.noise[fuel_line.tag][turbofan.tag] 
     turbofan_conditions       = conditions.energy[fuel_line.tag][turbofan.tag] 
     rho                       = conditions.freestream.density
+    U0                        = conditions.freestream.velocity
     ram                       = turbofan.ram
     inlet_nozzle              = turbofan.inlet_nozzle
     low_pressure_compressor   = turbofan.low_pressure_compressor
@@ -113,7 +114,10 @@ def compute_turbofan_performance(turbofan,state,fuel_line,center_of_gravity= [[0
     compute_fan_performance(fan,fan_conditions,conditions)
 
     # Link the combustor to the high pressure compressor
-    combustor_conditions.inputs.air_mass_flow                         = turbofan.engine_diameter * rho * np.pi * (turbofan.engine_diameter ** 2) / 4
+    turbofan_conditions.bypass_ratio                                  = bypass_ratio
+    turbofan_conditions.flow_through_core                             = 1./(1.+bypass_ratio) #scaled constant to turn on core thrust computation
+    turbofan_conditions.flow_through_fan                              = bypass_ratio/(1.+bypass_ratio) #scaled constant to turn on fan thrust computation      
+    combustor_conditions.inputs.air_mass_flow                         = (U0 * rho * np.pi * (turbofan.engine_diameter ** 2) / 4)/turbofan_conditions.bypass_ratio
     combustor_conditions.inputs.stagnation_temperature                = hpc_conditions.outputs.stagnation_temperature
     combustor_conditions.inputs.stagnation_pressure                   = hpc_conditions.outputs.stagnation_pressure
 
@@ -198,10 +202,7 @@ def compute_turbofan_performance(turbofan,state,fuel_line,center_of_gravity= [[0
 
     # Link the thrust component to the low pressure compressor 
     turbofan_conditions.total_temperature_reference              = lpc_conditions.outputs.stagnation_temperature
-    turbofan_conditions.total_pressure_reference                 = lpc_conditions.outputs.stagnation_pressure 
-    turbofan_conditions.bypass_ratio                             = bypass_ratio
-    turbofan_conditions.flow_through_core                        = 1./(1.+bypass_ratio) #scaled constant to turn on core thrust computation
-    turbofan_conditions.flow_through_fan                         = bypass_ratio/(1.+bypass_ratio) #scaled constant to turn on fan thrust computation        
+    turbofan_conditions.total_pressure_reference                 = lpc_conditions.outputs.stagnation_pressure       
 
     # Compute the thrust
     compute_thrust(turbofan,turbofan_conditions,conditions)
