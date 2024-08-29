@@ -11,36 +11,7 @@ import RCAIDE
 from RCAIDE.Framework.Core import Units    
 
 # package imports 
-import numpy as np 
-import math
-
-def main():
-    wing                                  = RCAIDE.Library.Components.Wings.Main_Wing()
-    wing.tag                              = 'main_wing' 
-    wing.aspect_ratio                     = 10.18
-    wing.sweeps.quarter_chord             = 25 * Units.deg
-    wing.thickness_to_chord               = 0.1
-    wing.taper                            = 0.1 
-    wing.spans.projected                  = 34.32 
-    wing.chords.root                      = 7.760 * Units.meter
-    wing.chords.tip                       = 0.782 * Units.meter
-    wing.chords.mean_aerodynamic          = 4.235 * Units.meter 
-    wing.areas.reference                  = 124.862
-    wing.areas.wetted                     = 225.08 
-    wing.twists.root                      = 4.0 * Units.degrees
-    wing.twists.tip                       = 0.0 * Units.degrees 
-    wing.origin                           = [[13.61,0,-0.5]]
-    wing.aerodynamic_center               = [0,0,0] 
-    wing.vertical                         = True
-    wing.symmetric                        = False
-    wing.high_lift                        = True 
-    wing.dynamic_pressure_ratio           = 1.0
-    wing.dihedral = 0
-    center_of_gravity = [[15,1,0.5]]
-    
-    compute_wing_moment_of_inertia(wing,center_of_gravity)
-    return
-
+import numpy as np  
 # ----------------------------------------------------------------------------------------------------------------------
 #  Compute Wing Moment of Intertia
 # ----------------------------------------------------------------------------------------------------------------------  
@@ -93,9 +64,9 @@ def compute_wing_moment_of_inertia(wing,center_of_gravity):
     delta = 1 # 1 for right wing, -1 for left wing. Assumes all non-symmetric wings are right-wings.
     
     Ixx = m * (56 * b ** 2 * kf * v0 + kg * v3) / (280 * ka * v0)
-    Iyy = m * (84 * b * (2 * b * kf * v0 * math.tan(A) ** 2 + kd * v1 * math.tan(A)) + 49 * ke * v2 + 3 * kg * v3) / (840 * ka * v0)
-    Izz = m * (12 * b * (2 * b * (math.tan(A) ** 2 + 1) * kf * v0 + kd * v1 * math.tan(A)) + 7 * ke * v2) / (120 * ka * v0)
-    Ixy = -1 * delta * b * m * (4 * b * kf * v0 * math.tan(A) + kd * v1) / (20 * ka * v0)
+    Iyy = m * (84 * b * (2 * b * kf * v0 * np.tan(A) ** 2 + kd * v1 * np.tan(A)) + 49 * ke * v2 + 3 * kg * v3) / (840 * ka * v0)
+    Izz = m * (12 * b * (2 * b * (np.tan(A) ** 2 + 1) * kf * v0 + kd * v1 * np.tan(A)) + 7 * ke * v2) / (120 * ka * v0)
+    Ixy = -1 * delta * b * m * (4 * b * kf * v0 * np.tan(A) + kd * v1) / (20 * ka * v0)
     ## Ixz, Iyz are 0
     Ixz = 0
     Iyz = 0
@@ -111,9 +82,9 @@ def compute_wing_moment_of_inertia(wing,center_of_gravity):
         
         delta = -1 # left wing
         Ixx = m * (56 * b ** 2 * kf * v0 + kg * v3) / (280 * ka * v0)
-        Iyy = m * (84 * b * (2 * b * kf * v0 * math.tan(A) ** 2 + kd * v1 * math.tan(A)) + 49 * ke * v2 + 3 * kg * v3) / (840 * ka * v0)
-        Izz = m * (12 * b * (2 * b * (math.tan(A) ** 2 + 1) * kf * v0 + kd * v1 * math.tan(A)) + 7 * ke * v2) / (120 * ka * v0)
-        Ixy = -1 * delta * b * m * (4 * b * kf * v0 * math.tan(A) + kd * v1) / (20 * ka * v0)
+        Iyy = m * (84 * b * (2 * b * kf * v0 * np.tan(A) ** 2 + kd * v1 * np.tan(A)) + 49 * ke * v2 + 3 * kg * v3) / (840 * ka * v0)
+        Izz = m * (12 * b * (2 * b * (np.tan(A) ** 2 + 1) * kf * v0 + kd * v1 * np.tan(A)) + 7 * ke * v2) / (120 * ka * v0)
+        Ixy = -1 * delta * b * m * (4 * b * kf * v0 * np.tan(A) + kd * v1) / (20 * ka * v0)
         I_local_left = np.array([[Ixx, Ixy, Ixz], [Ixy, Iyy, Iyz], [Ixz, Iyz, Izz]])
         
         I_local_left = R *I_local_left * np.transpose(R)
@@ -131,8 +102,5 @@ def compute_wing_moment_of_inertia(wing,center_of_gravity):
     
     I = np.array(I_local) + m * (np.array(np.dot(s[0], s[0])) * np.array(np.identity(3)) - s * np.transpose(s))
     
-    return I 
-
-if __name__ == '__main__': 
-    main()
+    return I  
 

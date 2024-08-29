@@ -15,34 +15,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Compute Wing Moment of Intertia
-# ----------------------------------------------------------------------------------------------------------------------  
-def main():
-    fuselage                                    = RCAIDE.Library.Components.Fuselages.Tube_Fuselage() 
-
-    fuselage.seat_pitch                         = 1     * Units.meter 
-    fuselage.fineness.nose                      = 1.6
-    fuselage.fineness.tail                      = 2. 
-    fuselage.lengths.nose                       = 6.4   * Units.meter
-    fuselage.lengths.tail                       = 8.0   * Units.meter
-    fuselage.lengths.total                      = 38.02 * Units.meter  
-    fuselage.lengths.fore_space                 = 6.    * Units.meter
-    fuselage.lengths.aft_space                  = 5.    * Units.meter
-    fuselage.width                              = 3.74  * Units.meter
-    fuselage.heights.maximum                    = 3.74  * Units.meter
-    fuselage.effective_diameter                 = 3.74     * Units.meter
-    fuselage.areas.side_projected               = 142.1948 * Units['meters**2'] 
-    fuselage.areas.wetted                       = 446.718  * Units['meters**2'] 
-    fuselage.areas.front_projected              = 12.57    * Units['meters**2']  
-    fuselage.differential_pressure              = 5.0e4 * Units.pascal 
-    fuselage.heights.at_quarter_length          = 3.74 * Units.meter
-    fuselage.heights.at_three_quarters_length   = 3.65 * Units.meter
-    fuselage.heights.at_wing_root_quarter_chord = 3.74 * Units.meter
-    
-    center_of_gravity = [[15,1,0.5]]
-    
-    compute_fuselage_moment_of_inertia(fuselage, center_of_gravity)
-    return
-
+# ----------------------------------------------------------------------------------------------------------------------   
 def compute_fuselage_moment_of_inertia(fuselage,center_of_gravity): 
     # ADD CODE
     I_total = np.zeros((3, 3))
