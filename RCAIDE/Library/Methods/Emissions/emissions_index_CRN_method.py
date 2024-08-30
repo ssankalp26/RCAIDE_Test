@@ -1,5 +1,4 @@
-# RCAIDE/Library/Methods/Propulsors/Converters/Combustor/compute_PSR_PFR_combustor_performance.py
-# (c) Copyright 2023 Aerospace Research Community LLC
+# RCAIDE/Library/Methods/Emissions/emissions_index_CRN_method.py 
 # 
 # Created:  Jun 2024, M. Clarke
 
@@ -9,64 +8,46 @@
 # ----------------------------------------------------------------------------------------------------------------------   
 import  numpy as  np 
 import cantera as ct
+import  time
 # ---------------------------------------------------------------------------------------------------------------------- 
-#compute_PSR_PFR_combustor_performance
+# emissions_index_CRN_method
 # ----------------------------------------------------------------------------------------------------------------------    
-def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditions):
-    """ This computes the output values from the input values according to
-        equations from the source. The following properties are computed         
-        combustor_conditions.outputs.
-          stagnation_temperature             (numpy.ndarray):  [K]  
-          stagnation_pressure                (numpy.ndarray):  [Pa]
-          stagnation_enthalpy                (numpy.ndarray):  [J/kg]
-          fuel_to_air_ratio                  (numpy.ndarray):  [unitless] 
+def emissions_index_CRN_method(combustor,turbofan_conditions,conditions):
+    """
+    Chemical Reactor Network Method using Cantera 
+    """
 
-    Assumptions:
-        Constant efficiency and pressure ratio
 
-    Source:
-        https://web.stanford.edu/~cantwell/AA283_Course_Material/AA283_Course_Notes/
+    ti        = time.time()
 
-    Args:
-        conditions.freestream.
-          isentropic_expansion_factor        (numpy.ndarray):  [unitless]
-          specific_heat_at_constant_pressure (numpy.ndarray):  [J/(kg K)]
-          temperature                        (numpy.ndarray):  [K]
-          stagnation_temperature             (numpy.ndarray):  [K]
-        combustor_conditions.inputs.
-          stagnation_temperature             (numpy.ndarray):  [K]
-          stagnation_pressure                (numpy.ndarray):  [Pa]
-          nondim_mass_ratio                  (numpy.ndarray):  [unitless] 
-        combustor.
-          turbine_inlet_temperature                  (float):  [K]
-          pressure_ratio                             (float):  [unitless]
-          efficiency                                 (float):  [unitless]
-          area_ratio                                 (float):  [unitless]
-          fuel_data.specific_energy                  (float):  [J/kg]
-      
-    Returns:
-        None
-    """ 
+        
     # unpacking the values from conditions 
     Cp      =  conditions.freestream.specific_heat_at_constant_pressure 
     rho0    =  conditions.freestream.density 
     U0      =  conditions.freestream.velocity
     
-    # unpacking the values form inputs
-    Tt_in         = combustor_conditions.inputs.stagnation_temperature  
-    Tt_mix        = Tt_in                                       # We are using T of compressure, we need to update it to get to temp with fuel
-    Pt_in         = combustor_conditions.inputs.stagnation_pressure
-    Pt_mix        = Pt_in                                    # Pa to atm We are using P of compressure, we need to update it to get to temp with fuel
-    nondim_r      = combustor_conditions.inputs.nondim_mass_ratio
-    mdot_air_core = combustor_conditions.inputs.air_mass_flow
-    Tt4           = combustor.turbine_inlet_temperature *  np.ones_like(Tt_in)
-    pib           = combustor.pressure_ratio
-    eta_b         = combustor.efficiency
-    htf           = combustor.fuel_data.specific_energy
-    high_fi       = combustor.fuel_data.use_high_fidelity_kinetics_model 
-    comb_D        = combustor.diameter
-    comb_L        = combustor.length
-    N             = combustor.number_of_combustors
+    # designed
+    combustor_conditions = turbofan_conditions[combustor.tag]
+    Tt_in                = combustor_conditions.inputs.stagnation_temperature  
+    Pt_in                = combustor_conditions.inputs.stagnation_pressure
+    Tt_out               = combustor_conditions.outputs.stagnation_temperature
+    Pt_out               = combustor_conditions.outputs.stagnation_pressure 
+    ht_out               = combustor_conditions.outputs.stagnation_enthalpy   
+    mdot_air_core        = turbofan_conditions.core_mass_flow_rate 
+    f                    = turbofan_conditions.fuel_flow_rate        
+    
+    
+    
+    Tt_mix        = Tt_in      # We are using T of compressure, we need to update it to get to temp with fuel
+    Pt_mix        = Pt_in      # Pa to atm We are using P of compressure, we need to update it to get to temp with fuel  
+
+    Area_in           = 2.0  # NEED TO BE VALIDATED 
+    psr_pfr_ratio     = 0.1  # NEED TO BE VALIDATED           
+    equivalence_ratio = 0.9  # combustor.fuel_equivalency_ratio
+    high_fi           = combustor.fuel_data.use_high_fidelity_kinetics_model 
+    comb_D            = combustor.diameter
+    comb_L            = combustor.length
+    N                 = combustor.number_of_combustors
 
     dict_oxy     = combustor.fuel_data.air_chemical_properties    
     if high_fi:
@@ -76,21 +57,17 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
     else: 
         gas          = combustor.fuel_data.surrogate_chemical_kinetics
         species_list = combustor.fuel_data.surrogate_species_list
-        dict_fuel    = combustor.fuel_data.fuel_surrogate_chemical_properties
-     
+        dict_fuel    = combustor.fuel_data.fuel_surrogate_chemical_properties 
 
     # ENGINE DESIGN PARAMETRS 
     gamma             = gas.cp_mass / gas.cv_mass
     rho               = gas.density_mass
-    Area_in           = 2.0  # NEED TO BE VALIDATED 
-    psr_pfr_ratio     = 0.1  # NEED TO BE VALIDATED 
     a                 = gas.sound_speed
     U0                = mdot_air_core/(rho*Area_in)
     M0                = U0/a # NEED TO BE VALIDATED 
     area_out          = N *  np.pi*(comb_D**2)/4
     temperature       = Tt_mix / (1 + 0.5 * (gamma - 1) * M0**2)                         # Static Temperature
     pressure          = Pt_mix / (1 + 0.5 * (gamma - 1) * M0**2)**(gamma / (gamma - 1))  # Static Pressure
-    equivalence_ratio = combustor.fuel_equivalency_ratio
     tpfr              = (comb_L/U0)*psr_pfr_ratio
     tpsr              = (comb_L/U0)*(1 - psr_pfr_ratio) 
     
@@ -111,11 +88,10 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
         gas.set_equivalence_ratio(equivalence_ratio, fuel = dict_fuel, oxidizer = dict_oxy )
             
         comp_fuel = list(dict_fuel.keys())
-        Y_fuel = gas[comp_fuel].Y
+        Y_fuel    = gas[comp_fuel].Y
         
         # psr (flame zone) 
         upstream   = ct.Reservoir(gas)
-        downstream = ct.Reservoir(gas)
             
         gas.equilibrate('HP')
         psr        = ct.IdealGasReactor(gas) 
@@ -123,7 +99,6 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
         
         inlet                = ct.MassFlowController(upstream, psr)
         inlet.mass_flow_rate = func_mdot
-        outlet               = ct.Valve(psr, downstream, K=100) 
         sim_psr              = ct.ReactorNet([psr])
             
         try:
@@ -146,7 +121,8 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
         mdot_air       = mdot - mdot_fuel
         
         # Determine Emission Indices 
-        EIs  = gas.Y * mdot/mdot_fuel 
+        EIs  = gas.Y * mdot/mdot_fuel
+        
         # Extract properties of combustor flow 
         a_out      = gas.sound_speed  # Speed of sound at PFR outlet
         rho_out    = gas.density_mass # density of the gas in the combustor
@@ -171,11 +147,9 @@ def compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditi
         species_mole_fractions[cpt] = gas.X[sp_idx]
         species_mass_fractions[cpt] = gas.Y[sp_idx] 
   
-    
-    # Pack results 
-    combustor_conditions.outputs.stagnation_temperature  = T_stag_out
-    combustor_conditions.outputs.stagnation_pressure     = P_stag_out
-    combustor_conditions.outputs.stagnation_enthalpy     = h_stag_out
-    combustor_conditions.outputs.fuel_to_air_ratio       = FAR 
-    
+    print(Tt_out)
+    print(T_stag_out)
+    tf           = time.time()
+    elapsed_time = round((tf-ti),2)
+    print('Simulation Time: ' + str(elapsed_time) + ' seconds per timestep')     
     return

@@ -10,7 +10,7 @@
 # RCAIDE imports  
 from RCAIDE.Framework.Core import Data    
 from RCAIDE.Library.Methods.Propulsors.Converters.Ram                import compute_ram_performance
-from RCAIDE.Library.Methods.Propulsors.Converters.Combustor          import compute_combustor_performance, compute_PSR_PFR_combustor_performance
+from RCAIDE.Library.Methods.Propulsors.Converters.Combustor          import compute_combustor_performance
 from RCAIDE.Library.Methods.Propulsors.Converters.Compressor         import compute_compressor_performance
 from RCAIDE.Library.Methods.Propulsors.Converters.Turbine            import compute_turbine_performance
 from RCAIDE.Library.Methods.Propulsors.Converters.Supersonic_Nozzle  import compute_supersonic_nozzle_performance
@@ -106,11 +106,8 @@ def compute_turbojet_performance(turbojet,state,fuel_line,center_of_gravity= [[0
     combustor_conditions.inputs.stagnation_temperature                = hpc_conditions.outputs.stagnation_temperature
     combustor_conditions.inputs.stagnation_pressure                   = hpc_conditions.outputs.stagnation_pressure
 
-    # Flow through the high pressor compressor
-    if combustor.use_PSR_PFR_combustor_model: 
-        compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditions)
-    else: 
-        compute_combustor_performance(combustor,combustor_conditions,conditions)
+    # Flow through the high pressor compressor 
+    compute_combustor_performance(combustor,combustor_conditions,conditions)
 
     # Link the high pressure turbine to the combustor
     hpt_conditions.inputs.stagnation_temperature    = combustor_conditions.outputs.stagnation_temperature
@@ -140,11 +137,8 @@ def compute_turbojet_performance(turbojet,state,fuel_line,center_of_gravity= [[0
         afterburner_conditions.inputs.stagnation_pressure    = lpt_conditions.outputs.stagnation_pressure   
         afterburner_conditions.inputs.nondim_ratio           = 1.0 + combustor_conditions.outputs.fuel_to_air_ratio
 
-        #flow through the afterburner
-        if combustor.use_PSR_PFR_combustor_model: 
-            compute_PSR_PFR_combustor_performance(combustor,combustor_conditions,conditions)
-        else: 
-            compute_combustor_performance(combustor,combustor_conditions,conditions)
+        #flow through the afterburner 
+        compute_combustor_performance(combustor,combustor_conditions,conditions)
 
         #link the core nozzle to the afterburner
         core_nozzle_conditions.inputs.stagnation_temperature              = afterburner_conditions.outputs.stagnation_temperature

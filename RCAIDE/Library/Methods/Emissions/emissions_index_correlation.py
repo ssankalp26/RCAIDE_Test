@@ -1,5 +1,4 @@
-## @ingroup Analyses-Emissions
-# RCAIDE/Framework/Analyses/Emissions/Emission_Index_Correlation_Method.py
+# RCAIDE/Library/Methods/Emissions/emissions_index_correlation.py
 #  
 # Created:  Jul 2024, M. Clarke
 

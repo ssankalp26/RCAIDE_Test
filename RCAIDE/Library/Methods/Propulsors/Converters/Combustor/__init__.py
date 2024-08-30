@@ -8,8 +8,7 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
         
-from .compute_combustor_performance         import compute_combustor_performance
-from .compute_PSR_PFR_combustor_performance import compute_PSR_PFR_combustor_performance
+from .compute_combustor_performance         import compute_combustor_performance 
 from .compute_rayleigh                      import compute_rayleigh
 from .compute_supersonic_combustion         import compute_supersonic_combustion
 from .append_combustor_conditions           import append_combustor_conditions 
