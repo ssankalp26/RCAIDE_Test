@@ -22,7 +22,9 @@ def emissions_index_CRN_method(combustor,turbofan_conditions,conditions):
 
         
     # unpacking the values from conditions 
-    Cp      =  conditions.freestream.specific_heat_at_constant_pressure 
+    Cp      =  conditions.freestream.specific_heat_at_constant_pressure
+    P_alt   =  conditions.freestream.pressure
+    a_alt   =  conditions.freestream.speed_of_sound
     rho0    =  conditions.freestream.density 
     U0      =  conditions.freestream.velocity
     
@@ -34,16 +36,19 @@ def emissions_index_CRN_method(combustor,turbofan_conditions,conditions):
     Pt_out               = combustor_conditions.outputs.stagnation_pressure 
     ht_out               = combustor_conditions.outputs.stagnation_enthalpy   
     mdot_air_core        = turbofan_conditions.core_mass_flow_rate 
-    f                    = turbofan_conditions.fuel_flow_rate        
+    f                    = turbofan_conditions.fuel_flow_rate
+    FAR_true            =  f / mdot_air_core  
     
     
     
     Tt_mix        = Tt_in      # We are using T of compressure, we need to update it to get to temp with fuel
     Pt_mix        = Pt_in      # Pa to atm We are using P of compressure, we need to update it to get to temp with fuel  
 
-    Area_in           = 2.0  # NEED TO BE VALIDATED 
-    psr_pfr_ratio     = 0.1  # NEED TO BE VALIDATED           
-    equivalence_ratio = 0.9  # combustor.fuel_equivalency_ratio
+    Area_in           = 0.6  # NEED TO BE VALIDATED 
+    psr_pfr_ratio     = 0.1  # NEED TO BE VALIDATED
+    # FAR_st            = ct.
+    #equivalence_ratio = FAR_true /  FAR_st # 0.24 # combustor.fuel_equivalency_ratio # iteratively modified to meet exit conditions , particilar Tt and FAR
+    equivalence_ratio = 0.24
     high_fi           = combustor.fuel_data.use_high_fidelity_kinetics_model 
     comb_D            = combustor.diameter
     comb_L            = combustor.length
@@ -66,8 +71,8 @@ def emissions_index_CRN_method(combustor,turbofan_conditions,conditions):
     U0                = mdot_air_core/(rho*Area_in)
     M0                = U0/a # NEED TO BE VALIDATED 
     area_out          = N *  np.pi*(comb_D**2)/4
-    temperature       = Tt_mix / (1 + 0.5 * (gamma - 1) * M0**2)                         # Static Temperature
-    pressure          = Pt_mix / (1 + 0.5 * (gamma - 1) * M0**2)**(gamma / (gamma - 1))  # Static Pressure
+    temperature       = Tt_mix / (1 + 0.5 * (gamma - 1) * M0**2)                          
+    pressure          = Pt_mix / (1 + 0.5 * (gamma - 1) * M0**2)**(gamma / (gamma - 1))   
     tpfr              = (comb_L/U0)*psr_pfr_ratio
     tpsr              = (comb_L/U0)*(1 - psr_pfr_ratio) 
     
@@ -84,14 +89,15 @@ def emissions_index_CRN_method(combustor,turbofan_conditions,conditions):
     for cpt in range(ctrl_pts):   
         """ combustor simulation using a simple psr-pfr reactor network with varying pfr residence time """
     
-        gas.TP = temperature[cpt,0], pressure[cpt,0]*ct.one_atm
+        gas.TP = temperature[cpt,0], pressure[cpt,0] # *ct.one_atm
         gas.set_equivalence_ratio(equivalence_ratio, fuel = dict_fuel, oxidizer = dict_oxy )
             
         comp_fuel = list(dict_fuel.keys())
-        Y_fuel    = gas[comp_fuel].Y
+        Y_fuel = gas[comp_fuel].Y
         
         # psr (flame zone) 
         upstream   = ct.Reservoir(gas)
+        downstream = ct.Reservoir(gas)
             
         gas.equilibrate('HP')
         psr        = ct.IdealGasReactor(gas) 
@@ -99,7 +105,8 @@ def emissions_index_CRN_method(combustor,turbofan_conditions,conditions):
         
         inlet                = ct.MassFlowController(upstream, psr)
         inlet.mass_flow_rate = func_mdot
-        sim_psr              = ct.ReactorNet([psr])
+        outlet  = ct.Valve(psr, downstream, K=100) 
+        sim_psr = ct.ReactorNet([psr])
             
         try:
             sim_psr.advance_to_steady_state()
@@ -111,9 +118,10 @@ def emissions_index_CRN_method(combustor,turbofan_conditions,conditions):
         sim_pfr = ct.ReactorNet([pfr])
         
         try:
-            sim_pfr.advance(tpfr[cpt,0]) # sim_pfr.advance(tpfr)
+            sim_pfr.advance(tpfr[cpt,0]) # sim_pfr.advance(residence_time_pfr)
         except RuntimeError:
-            pass
+            pass 
+     
         
         # Determine massflow rate of flow into combustion chamber 
         mdot           = inlet.mass_flow_rate
@@ -134,7 +142,8 @@ def emissions_index_CRN_method(combustor,turbofan_conditions,conditions):
         T_stag_out[cpt,0] = gas.T * (1 + 0.5 * (gamma - 1) * (M_out)**2)
         
         # stagnation pressure 
-        P_stag_out[cpt,0] = (gas.P/ct.one_atm) * (1 + 0.5 * (gamma - 1) * (M_out)**2)**(gamma / (gamma - 1))
+        #P_stag_out[cpt,0] = (gas.P/ct.one_atm) * (1 + 0.5 * (gamma - 1) * (M_out)**2)**(gamma / (gamma - 1))
+        P_stag_out[cpt,0] = (gas.P) * (1 + 0.5 * (gamma - 1) * (M_out)**2)**(gamma / (gamma - 1))
         
         # Stagnation enthalpy 
         h_stag_out[cpt,0] = T_stag_out[cpt,0] * gas.cp_mass
