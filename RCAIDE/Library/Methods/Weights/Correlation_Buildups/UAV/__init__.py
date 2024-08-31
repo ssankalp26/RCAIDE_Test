@@ -9,4 +9,4 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-from Legacy.trunk.S.Methods.Weights.Correlations.UAV.empty import empty
+from RCAIDE.Library.Methods.Weights.Correlation_Buildups.UAV.compute_operating_empty_weight import compute_operating_empty_weight

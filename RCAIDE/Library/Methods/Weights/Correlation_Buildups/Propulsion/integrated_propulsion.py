@@ -1,16 +1,12 @@
-## @ingroup Methods-Weights-Correlations-Propulsion
-# integrated_propulsion.py
+# RCAIDE/Library/Methods/Weights/Correlation_Buildups/Propulsion/integrated_propulsion.py
 # 
-# Created:  Jan 2014, M. A. Wendorff 
-# Modified: Feb 2014, A. Wendorff
-#           Feb 2016, E. Botero
-
-# ----------------------------------------------------------------------
-#   Integrated Propulsion
-# ----------------------------------------------------------------------
-
-## @ingroup Methods-Weights-Correlations-Propulsion
-def integrated_propulsion(engine_jet,num_eng, engine_wt_factor = 1.6):
+# 
+# Created:  Sep 2024, M. Clarke 
+ 
+# ----------------------------------------------------------------------------------------------------------------------
+#  Integrated Propulsion Weight 
+# ----------------------------------------------------------------------------------------------------------------------
+def integrated_propulsion(jet_engine_weight, engine_wt_factor = 1.6):
     """ Calculate the weight of the entire propulsion system 
     
     Assumptions:
@@ -23,7 +19,7 @@ def integrated_propulsion(engine_jet,num_eng, engine_wt_factor = 1.6):
             N/A
             
     Inputs:
-            engine_jet - dry weight of the engine                                             [kilograms]
+            compute_jet_engine_weight - dry weight of the engine                                             [kilograms]
             num_eng - total number of engines on the aircraft                                 [dimensionless]
             engine_wt_factor - weight increase factor for entire integrated propulsion system [dimensionless]
     
@@ -34,7 +30,7 @@ def integrated_propulsion(engine_jet,num_eng, engine_wt_factor = 1.6):
             N/A
     """   
     
-    weight = engine_jet * num_eng * engine_wt_factor
+    weight = jet_engine_weight * engine_wt_factor
     
     return weight
     

@@ -11,7 +11,7 @@ import RCAIDE
 from RCAIDE.Framework.Core import Units   
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor             import design_propeller 
 from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor          import design_motor 
-from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion import nasa_motor
+from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion import compute_motor_weight
 from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common         import initialize_from_circuit_configuration
 from RCAIDE.Library.Methods.Geometry.Planform                       import wing_segmented_planform 
 
@@ -408,7 +408,7 @@ def vehicle_setup():
     motor.design_torque                              = propeller.cruise.design_torque
     motor.angular_velocity                           = propeller.cruise.design_angular_velocity 
     design_motor(motor)  
-    motor.mass_properties.mass                       = nasa_motor(motor.design_torque) 
+    motor.mass_properties.mass                       = compute_motor_weight(motor.design_torque) 
     starboard_propulsor.motor                        = motor 
  
 

@@ -2,7 +2,7 @@
 # RCAIDE/Methods/Weights/Buildups/Common/compute_fuselage_weight.py
 # 
 # 
-# Created:  Jul 2023, M. Clarke  
+# Created:  Sep 2024, M. Clarke
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT

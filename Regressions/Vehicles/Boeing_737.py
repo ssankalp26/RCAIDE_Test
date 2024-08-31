@@ -61,7 +61,7 @@ def vehicle_setup():
     # ------------------------------------------------------------------
     #   Main Wing
     # ------------------------------------------------------------------
-
+ 
     wing                                  = RCAIDE.Library.Components.Wings.Main_Wing()
     wing.tag                              = 'main_wing' 
     wing.aspect_ratio                     = 10.18

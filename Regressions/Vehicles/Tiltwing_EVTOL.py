@@ -11,7 +11,7 @@
 import RCAIDE
 from RCAIDE.Framework.Core import Units, Data    
 from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common                    import initialize_from_circuit_configuration 
-from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion            import nasa_motor
+from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion            import compute_motor_weight
 from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor                     import design_motor
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor                        import design_prop_rotor ,design_prop_rotor 
 from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Electric            import compute_weight , converge_weight 
@@ -303,7 +303,7 @@ def vehicle_setup():
     prop_rotor_motor.design_torque           = prop_rotor.hover.design_torque
     prop_rotor_motor.angular_velocity        = prop_rotor.hover.design_angular_velocity/prop_rotor_motor.gear_ratio  
     design_motor(prop_rotor_motor)
-    prop_rotor_motor.mass_properties.mass    = nasa_motor(prop_rotor_motor.design_torque)     
+    prop_rotor_motor.mass_properties.mass    = compute_motor_weight(prop_rotor_motor.design_torque)     
     lift_propulsor.motor                     = prop_rotor_motor
      
 

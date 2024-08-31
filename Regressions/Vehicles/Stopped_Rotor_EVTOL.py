@@ -13,7 +13,7 @@ from RCAIDE.Framework.Core import Units, Data
 from RCAIDE.Framework.Networks.Electric                                        import Electric 
 from RCAIDE.Library.Methods.Geometry.Planform                                  import segment_properties,wing_segmented_planform    
 from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common                    import initialize_from_circuit_configuration 
-from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion            import nasa_motor
+from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion            import compute_motor_weight
 from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor                     import design_motor
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor                        import design_propeller ,design_lift_rotor 
 from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Electric            import compute_weight , converge_weight 
@@ -473,7 +473,7 @@ def vehicle_setup() :
     propeller_motor.design_torque                          = propeller.cruise.design_torque
     propeller_motor.angular_velocity                       = propeller.cruise.design_angular_velocity/propeller_motor.gear_ratio  
     design_motor(propeller_motor)  
-    propeller_motor.mass_properties.mass                   = nasa_motor(propeller_motor.design_torque)  
+    propeller_motor.mass_properties.mass                   = compute_motor_weight(propeller_motor.design_torque)  
     cruise_propulsor_1.motor                               = propeller_motor 
       
     # rear propeller nacelle 
@@ -665,7 +665,7 @@ def vehicle_setup() :
     lift_rotor_motor.design_torque                         = lift_rotor.hover.design_torque
     lift_rotor_motor.angular_velocity                      = lift_rotor.hover.design_angular_velocity/lift_rotor_motor.gear_ratio  
     design_motor(lift_rotor_motor)
-    lift_rotor_motor.mass_properties.mass                  = nasa_motor(lift_rotor_motor.design_torque)     
+    lift_rotor_motor.mass_properties.mass                  = compute_motor_weight(lift_rotor_motor.design_torque)     
     lift_propulsor_1.motor                                 = lift_rotor_motor
     
 

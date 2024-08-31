@@ -1,21 +1,18 @@
-## @ingroup Methods-Weights-Correlations-Propulsion
-# integrated_propulsion_general_aviation.py
+# RCAIDE/Library/Methods/Weights/Correlation_Buildups/Propulsion/integrated_propulsion_general_aviation.py
 # 
-# Created:  Feb 2018, M. Vegh
-# Modified:
+# 
+# Created:  Sep 2024, M. Clarke 
+# ----------------------------------------------------------------------------------------------------------------------
+#  IMPORT
+# ----------------------------------------------------------------------------------------------------------------------
 
-# ----------------------------------------------------------------------
-#  Imports
-# ----------------------------------------------------------------------
+# RCAIDE 
+from RCAIDE.Framework.Core import  Units
 
-from Legacy.trunk.S.Core import Units
-
-
-# ----------------------------------------------------------------------
-#   Integrated Propulsion
-# ----------------------------------------------------------------------
-## @ingroup Methods-Weights-Correlations-Propulsion
-def integrated_propulsion_general_aviation(engine_piston,num_eng, engine_wt_factor = 2.575, engine_wt_exp = .922):
+# ----------------------------------------------------------------------------------------------------------------------
+#  Integrated Propulsion Weight 
+# ----------------------------------------------------------------------------------------------------------------------
+def integrated_propulsion_general_aviation(piston_engine_weight,num_eng, engine_wt_factor = 2.575, engine_wt_exp = .922):
     """ 
         Calculate the weight of the entire propulsion system        
 
@@ -23,7 +20,7 @@ def integrated_propulsion_general_aviation(engine_piston,num_eng, engine_wt_fact
                 Source: Raymer, Aircraft Design, a Conceptual Approach        
                 
         Inputs:
-                engine_piston - dry weight of a single engine                                     [kilograms]
+                piston_engine_weight - dry weight of a single engine                                     [kilograms]
                 num_eng - total number of engines on the aircraft                                 [dimensionless]
                 engine_wt_factor - weight increase factor for entire integrated propulsion system [dimensionless]
         
@@ -31,7 +28,7 @@ def integrated_propulsion_general_aviation(engine_piston,num_eng, engine_wt_fact
                 weight - weight of the full propulsion system [kilograms]
 
     """     
-    engine_dry = engine_piston/Units.lbs
+    engine_dry = piston_engine_weight/Units.lbs
     weight     = engine_wt_factor * (engine_dry**engine_wt_exp)*num_eng
     mass       = weight*Units.lbs #convert to kg
 

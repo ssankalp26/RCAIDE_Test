@@ -2,14 +2,14 @@
 # RCAIDE/Methods/Weights/Buildups/eVTOL/converge_evtol_weight.py
 # 
 # 
-# Created:  Jul 2023, M. Clarke  
+# Created:  Sep 2024, M. Clarke
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE
-from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Electric import compute_weight
+from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Electric import compute_operating_empty_weight
 from RCAIDE.Framework.Core import Data
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -54,7 +54,7 @@ def converge_weight(vehicle,
     N/A
     '''
     settings       = Data()
-    breakdown      = compute_weight(vehicle,contingency_factor,
+    breakdown      = compute_operating_empty_weight(vehicle,contingency_factor,
                            speed_of_sound,max_tip_mach,disk_area_factor,
                            safety_factor,max_thrust_to_weight_ratio,
                            max_g_load,motor_efficiency) 
@@ -68,7 +68,7 @@ def converge_weight(vehicle,
         # Note that 'diff' will be negative if buildup mass is larger than MTOW, so subtractive
         # iteration always moves MTOW toward buildup mass
         
-        breakdown      = compute_weight(vehicle,contingency_factor,
+        breakdown      = compute_operating_empty_weight(vehicle,contingency_factor,
                            speed_of_sound,max_tip_mach,disk_area_factor,
                            safety_factor,max_thrust_to_weight_ratio,
                            max_g_load,motor_efficiency)

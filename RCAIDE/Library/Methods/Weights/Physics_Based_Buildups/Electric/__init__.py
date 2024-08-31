@@ -9,5 +9,5 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-from .compute_weight           import compute_weight
-from .converge_weight          import converge_weight
+from .compute_operating_empty_weight import compute_operating_empty_weight
+from .converge_weight                import converge_weight
