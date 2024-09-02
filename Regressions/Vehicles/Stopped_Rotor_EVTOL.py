@@ -44,8 +44,8 @@ def vehicle_setup() :
     vehicle.mass_properties.max_takeoff       = 2700 
     vehicle.mass_properties.takeoff           = vehicle.mass_properties.max_takeoff
     vehicle.mass_properties.operating_empty   = vehicle.mass_properties.max_takeoff
-    vehicle.envelope.ultimate_load            = 5.7   
-    vehicle.envelope.limit_load               = 3.  
+    vehicle.flight_envelope.ultimate_load     = 5.7   
+    vehicle.flight_envelope.limit_load        = 3.  
     vehicle.passengers                        = 5 
         
     #------------------------------------------------------------------------------------------------------------------------------------

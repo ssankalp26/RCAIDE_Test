@@ -29,7 +29,7 @@ def compute_vertical_tail_weight(vehicle, wing, rudder_fraction=0.25):
         
     Inputs:
         S_v - area of the vertical tail (combined fin and rudder)                      [meters**2]
-        vehicle.envelope.ultimate_load - ultimate load of the aircraft                 [dimensionless]
+        vehicle.flight_envelope.ultimate_load - ultimate load of the aircraft                 [dimensionless]
         wing.spans.projected - span of the vertical                                    [meters]
         vehicle.mass_properties.max_takeoff - maximum takeoff weight of the aircraft   [kilograms]
         wing.thickness_to_chord- thickness-to-chord ratio of the vertical tail         [dimensionless]
@@ -61,7 +61,7 @@ def compute_vertical_tail_weight(vehicle, wing, rudder_fraction=0.25):
 
         # Calculate weight of wing for traditional aircraft vertical tail without rudder
     tail_vert_English = T_tail_factor * (
-                2.62 * area + 1.5 * 10. ** (-5.) * vehicle.envelope.ultimate_load * span ** 3. * (8. + 0.44 * mtow / Sref) / (
+                2.62 * area + 1.5 * 10. ** (-5.) * vehicle.flight_envelope.ultimate_load * span ** 3. * (8. + 0.44 * mtow / Sref) / (
                     t_c_v * (np.cos(sweep) ** 2.)))
 
     tail_weight = tail_vert_English * Units.lbs

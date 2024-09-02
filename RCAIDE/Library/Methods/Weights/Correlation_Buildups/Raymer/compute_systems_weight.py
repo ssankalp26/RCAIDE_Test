@@ -7,7 +7,8 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-# RCAIDE 
+# RCAIDE
+import RCAIDE 
 from RCAIDE.Framework.Core    import Units, Data 
 
 # python imports 
@@ -63,16 +64,36 @@ def compute_systems_weight(vehicle):
         Properties Used:
             N/A
     """
-    L              = vehicle.fuselages['fuselage'].lengths.total / Units.ft
-    Bw             = vehicle.wings['main_wing'].spans.projected / Units.ft
+ 
+    ref_wing = None 
+    for wing in  vehicle.wings:
+        if isinstance(wing, RCAIDE.Library.Components.Wings.Main_Wing):
+            ref_wing  =  wing
+    
+    S = 0
+    if ref_wing == None:
+        for wing in  vehicle.wings:
+            if S < wing.areas.reference:
+                ref_wing = wing
+    L_fus = 0
+    for fuselage in vehicle.fuselages:
+        if L_fus < fuselage.lengths.total:
+            ref_fuselage = fuselage
+            
+    L              = ref_fuselage.lengths.total / Units.ft
+    Bw             = ref_wing.spans.projected / Units.ft
     DG             = vehicle.mass_properties.max_takeoff / Units.lbs
-    Scs            = vehicle.wings['main_wing'].flap_ratio * vehicle.reference_area / Units.ft**2
-    design_mach    = vehicle.design_mach_number
-    num_pax        = vehicle.passengers
-    network_name   = list(vehicle.networks.keys())[0]
-    networks       = vehicle.networks[network_name]    
-    fuse_w         = vehicle.fuselages['fuselage'].width / Units.ft
-    fuse_h         = vehicle.fuselages['fuselage'].heights.maximum / Units.ft   
+    Scs            = ref_wing.flap_ratio * vehicle.reference_area / Units.ft**2
+    design_mach    = vehicle.flight_envelope.design_mach_number
+    num_pax        = vehicle.passengers 
+    NENG = 0 
+    for network in  vehicle.networks:
+        for fuel_line in network.fuel_lines:
+            for propulsor in fuel_line.propulsors:
+                if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
+                    NENG += 1  
+    fuse_w         = ref_fuselage.width / Units.ft
+    fuse_h         = ref_fuselage.heights.maximum / Units.ft   
     cargo_weight   = vehicle.payload.cargo.mass_properties.mass / Units.lbs
     
     if vehicle.passengers >= 150:
@@ -92,8 +113,7 @@ def compute_systems_weight(vehicle):
         apu_wt = 7.0 * num_pax
     else:
         apu_wt = 0.0  # no apu if less than 9 seats
-    WAPU            = max(apu_wt, 70./Units.lbs)
-    NENG            = networks.number_of_engines
+    WAPU            = max(apu_wt, 70./Units.lbs) 
     WIN = 4.509 * Kr * Ktp * flight_crew ** 0.541 * NENG * (L + Bw) ** 0.5
     WHYD = 0.2673 * Nf * (L + Bw) ** 0.937
     WELEC = 7.291 * Rkva ** 0.782 * (2*L) ** 0.346 * NENG ** 0.1

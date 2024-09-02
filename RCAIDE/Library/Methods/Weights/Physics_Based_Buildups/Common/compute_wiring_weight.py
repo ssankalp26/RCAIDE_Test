@@ -41,7 +41,7 @@ def compute_wiring_weight(wing, config, cablePower):
         for bus in network.busses: 
             for propulsor in bus.propulsors:
                 motor = propulsor.motor
-                if motor.wing_mounted == True: 
+                if propulsor.wing_mounted == True: 
                     if motor.wing_tag == wing.tag: 
                         MSL             = np.array(motor.origin)  
                         cableLength     += np.sum(abs(MSL)) 

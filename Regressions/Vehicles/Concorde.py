@@ -40,8 +40,8 @@ def vehicle_setup():
     vehicle.mass_properties.max_zero_fuel             = 92000.
         
     # envelope properties
-    vehicle.envelope.ultimate_load = 3.75
-    vehicle.envelope.limit_load    = 2.5
+    vehicle.flight_envelope.ultimate_load = 3.75
+    vehicle.flight_envelope.limit_load    = 2.5
 
     # basic parameters
     vehicle.reference_area               = 358.25      

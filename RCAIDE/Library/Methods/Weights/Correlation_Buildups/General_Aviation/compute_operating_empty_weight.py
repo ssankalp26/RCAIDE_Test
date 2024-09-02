@@ -167,13 +167,13 @@ def compute_operating_empty_weight(vehicle):
 
     # Unpack inputs
     S_gross_w   = vehicle.reference_area
-    Nult        = vehicle.envelope.ultimate_load 
+    Nult        = vehicle.flight_envelope.ultimate_load 
     TOW         = vehicle.mass_properties.max_takeoff 
     num_pax     = vehicle.passengers
     wt_cargo    = vehicle.mass_properties.cargo
 
     q_c         = vehicle.design_dynamic_pressure
-    mach_number = vehicle.design_mach_number
+    mach_number = vehicle.flight_envelope.design_mach_number
 
     network_name   = list(vehicle.networks.keys())[0] #obtain the key for the network for assignment purposes
     networks       = vehicle.networks[network_name]

@@ -81,7 +81,14 @@ def compute_operating_empty_weight(vehicle):
             bwb_aft_centerbody_area       = fuselage.aft_centerbody_area
             bwb_aft_centerbody_taper      = fuselage.aft_centerbody_taper 
             wt_cabin                      = compute_cabin_weight(fuselage.cabin_area, TOW)
-            fuselage.mass_properties.mass = wt_cabin            
+            fuselage.mass_properties.mass = wt_cabin
+        else:
+            print('No BWB Fuselage is defined!') 
+            bwb_aft_centerbody_area       = 0
+            bwb_aft_centerbody_taper      = 0
+            wt_cabin                      = 0
+            fuselage.mass_properties.mass = 0      
+    
     
     # Compute Propulsor Weight 
     for network in vehicle.networks:
@@ -91,32 +98,32 @@ def compute_operating_empty_weight(vehicle):
             for propulsor in fuel_line.propulsors:
                 if type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbofan:
                     no_of_engines  += 1
-                    thrust_sls      = network.sealevel_static_thrust
+                    thrust_sls      = propulsor.sealevel_static_thrust
                     wt_engine_jet   = Propulsion.compute_jet_engine_weight(thrust_sls)
                     wt_propulsion   += Propulsion.integrated_propulsion(wt_engine_jet) 
         for bus in network.busses: 
             for propulsor in bus.propulsors:
                 if type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbofan:
                     no_of_engines  += 1
-                    thrust_sls      = network.sealevel_static_thrust
+                    thrust_sls      = propulsor.sealevel_static_thrust
                     wt_engine_jet   = Propulsion.compute_jet_engine_weight(thrust_sls)
                     wt_propulsion   += Propulsion.integrated_propulsion(wt_engine_jet)                     
  
         network.mass_properties.mass = wt_propulsion
         
     # Compute Wing Weight 
-    for wing in vehicle.wings():
+    for wing in vehicle.wings:
         if isinstance(wing,RCAIDE.Library.Components.Wings.Main_Wing):
             rho      = Aluminum().density
             sigma    = Aluminum().yield_tensile_strength           
-            wt_wing  = Common.compute_main_wing_weight(vehicle,wing, rho, sigma, computation_type='simple')
+            wt_wing  = Common.compute_main_wing_weight(vehicle,wing, rho, sigma)
             wing.mass_properties.mass = wt_wing
 
     # Calculating Landing Gear Weight 
     landing_gear        = Common.compute_landing_gear_weight(vehicle)
     
     # Compute Aft Center Body Weight 
-    wt_aft_centerbody   = compute_aft_centerbody_weight(bwb_aft_centerbody_area, bwb_aft_centerbody_taper, TOW)
+    wt_aft_centerbody   = compute_aft_centerbody_weight(no_of_engines,bwb_aft_centerbody_area, bwb_aft_centerbody_taper, TOW)
     
     # Compute Systems Weight     
     systems_weights     = Common.compute_systems_weight(vehicle) 

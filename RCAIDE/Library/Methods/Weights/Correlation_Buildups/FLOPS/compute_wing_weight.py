@@ -13,6 +13,7 @@ from RCAIDE.Framework.Core    import Units
 
 # python imports 
 import  numpy as  np
+import  copy 
  
 # ----------------------------------------------------------------------------------------------------------------------
 # Main Wing Weight 
@@ -36,7 +37,7 @@ def compute_wing_weight(vehicle, wing, WPOD, complexity, settings, num_main_wing
             vehicle - data dictionary with vehicle properties                   [dimensionless]
                 -.reference_area: wing surface area                             [m^2]
                 -.mass_properties.max_takeoff: MTOW                             [kilograms]
-                -.envelope.ultimate_load: ultimate load factor (default: 3.75)
+                -.flight_envelope.ultimate_load: ultimate load factor (default: 3.75)
                 -.systems.accessories: type of aircraft (short-range, commuter
                                                         medium-range, long-range,
                                                         sst, cargo)
@@ -82,10 +83,18 @@ def compute_wing_weight(vehicle, wing, WPOD, complexity, settings, num_main_wing
     # Aeroelastic tailoring factor [0 no aeroelastic tailoring, 1 maximum aeroelastic tailoring]
     FAERT           = aeroelastic_tailoring_factor  
     # Wing strut bracing factor [0 for no struts, 1 for struts]
-    FSTRT           = strut_braced_wing_factor
-    network_name    = list(vehicle.networks.keys())[0]
-    networks        = vehicle.networks[network_name]
-    NEW             = sum(networks.wing_mounted)
+    FSTRT           = strut_braced_wing_factor 
+    
+    NENG = 0
+    NEW  = 0
+    for network in  vehicle.networks:
+        for fuel_line in network.fuel_lines:
+            for propulsor in fuel_line.propulsors:
+                if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
+                    NENG += 1  
+                    if propulsor.wing_mounted: 
+                        NEW += 1
+                         
     DG              = vehicle.mass_properties.max_takeoff / Units.lbs  # Design gross weight in lb
 
     if complexity == 'Simple':
@@ -103,10 +112,14 @@ def compute_wing_weight(vehicle, wing, WPOD, complexity, settings, num_main_wing
 
     else:
         NSD             = 500
-        N2              = int(sum(networks.wing_mounted) / 2)
-        ETA, C, T, SWP  = generate_wing_stations(vehicle.fuselages['fuselage'].width, copy.deepcopy(wing))
+        N2              = int(NEW / 2) 
+        L_fus           = 0
+        for fuselage in vehicle.fuselages:
+            if L_fus < fuselage.lengths.total:
+                ref_fuselage = fuselage 
+        ETA, C, T, SWP  = generate_wing_stations(ref_fuselage.width, copy.deepcopy(wing))
         NS, Y           = generate_int_stations(NSD, ETA)
-        EETA            = get_spanwise_engine(networks, SEMISPAN)
+        EETA            = get_spanwise_engine(vehicle.networks,SEMISPAN)
         P0              = calculate_load(ETA[-1])
         ASW             = 0
         EM              = 0
@@ -214,7 +227,7 @@ def compute_wing_weight(vehicle, wing, WPOD, complexity, settings, num_main_wing
     A       = wing_weight_constants_FLOPS(vehicle.systems.accessories)  # Wing weight constants
     # Composite utilization factor [0 no composite, 1 full composite]
     FCOMP   = composite_utilization_factor  
-    ULF     = vehicle.envelope.ultimate_load
+    ULF     = vehicle.flight_envelope.ultimate_load
     if len(vehicle.fuselages) == 1:
         CAYF    = 1  # Multiple fuselage factor [1 one fuselage, 0.5 multiple fuselages]
     elif len(vehicle.fuselage) > 1:
@@ -297,30 +310,32 @@ def generate_wing_stations(fuselage_width, wing):
     C      = np.zeros(num_seg + 1)
     T      = np.zeros(num_seg + 1)
     SWP    = np.zeros(num_seg + 1)
-    ETA[0] = wing.Segments[0].percent_span_location
-    C[0]   = root_chord * wing.Segments[0].root_chord_percent * 1 / SEMISPAN
+
+    segment_keys  = list(wing.Segments.keys())     
+    ETA[0] = wing.Segments[segment_keys[0]].percent_span_location
+    C[0]   = root_chord * wing.Segments[segment_keys[0]].root_chord_percent * 1 / SEMISPAN
     SWP[0] = 0
     
-    if hasattr(wing.Segments[0], 'thickness_to_chord'):
-        T[0] = wing.Segments[0].thickness_to_chord
+    if hasattr(wing.Segments[segment_keys[0]], 'thickness_to_chord'):
+        T[0] = wing.Segments[segment_keys[0]].thickness_to_chord
     else:
         T[0] = wing.thickness_to_chord
     ETA[1] = fuselage_width / 2 * 1 / Units.ft * 1 / SEMISPAN
     C[1] = determine_fuselage_chord(fuselage_width, wing) * 1 / SEMISPAN
 
-    if hasattr(wing.Segments[0], 'thickness_to_chord'):
-        T[1] = wing.Segments[0].thickness_to_chord
+    if hasattr(wing.Segments[segment_keys[0]], 'thickness_to_chord'):
+        T[1] = wing.Segments[segment_keys[0]].thickness_to_chord
     else:
         T[1] = wing.thickness_to_chord
     for i in range(1, num_seg):
-        ETA[i + 1] = wing.Segments[i].percent_span_location
-        C[i + 1] = root_chord * wing.Segments[i].root_chord_percent * 1 / SEMISPAN
-        if hasattr(wing.Segments[i], 'thickness_to_chord'):
-            T[i + 1] = wing.Segments[i].thickness_to_chord
+        ETA[i + 1] = wing.Segments[segment_keys[i]].percent_span_location
+        C[i + 1] = root_chord * wing.Segments[segment_keys[i]].root_chord_percent * 1 / SEMISPAN
+        if hasattr(wing.Segments[segment_keys[i]], 'thickness_to_chord'):
+            T[i + 1] = wing.Segments[segment_keys[i]].thickness_to_chord
         else:
             T[i + 1] = wing.thickness_to_chord
-        SWP[i] = np.arctan(np.tan(wing.Segments[i - 1].sweeps.quarter_chord) - (C[i - 1] - C[i]))
-    SWP[-1] = np.arctan(np.tan(wing.Segments[-2].sweeps.quarter_chord) - (C[-2] - C[-1]))
+        SWP[i] = np.arctan(np.tan(wing.Segments[segment_keys[i-1]].sweeps.quarter_chord) - (C[i - 1] - C[i]))
+    SWP[-1] = np.arctan(np.tan(wing.Segments[segment_keys[-2]].sweeps.quarter_chord) - (C[-2] - C[-1]))
     return ETA, C, T, SWP
 
 ## @ingroup Methods-Weights-Correlations-FLOPS
@@ -429,13 +444,14 @@ def get_spanwise_engine(networks, SEMISPAN):
         Properties Used:
             N/A
     """
-    N2      = int(sum(networks.wing_mounted) / 2)
-    EETA    = np.zeros(N2)
-    idx     = 0
-    for i in range(int(networks.number_of_engines)):
-        if networks.wing_mounted[i] and networks.origin[i][1] > 0:
-            EETA[idx] = (networks.origin[i][1] / Units.ft) * 1 / SEMISPAN
-            idx += 1
+    EETA =  []
+    for network in  networks:
+        for fuel_line in network.fuel_lines:
+            for propulsor in fuel_line.propulsors:
+                if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
+                    if propulsor.wing_mounted:  
+                        EETA.append((propulsor.origin[0][1] / Units.ft) * 1 / SEMISPAN) 
+    EETA =  np.array(EETA)
     return EETA
 
 ## @ingroup Methods-Weights-Correlations-FLOPS
@@ -478,13 +494,15 @@ def determine_fuselage_chord(fuselage_width, wing):
         Properties Used:
             N/A
     """
+
+    segment_keys    = list(wing.Segments.keys())      
     root_chord      = wing.chords.root / Units.ft
     SPAN            = wing.spans.projected / Units.ft  # Wing span, ft
     SEMISPAN        = SPAN / 2
-    c1              = root_chord * wing.Segments[0].root_chord_percent
-    c2              = root_chord * wing.Segments[1].root_chord_percent
-    y1              = wing.Segments[0].percent_span_location
-    y2              = wing.Segments[1].percent_span_location
+    c1              = root_chord * wing.Segments[segment_keys[0]].root_chord_percent
+    c2              = root_chord * wing.Segments[segment_keys[-1]].root_chord_percent
+    y1              = wing.Segments[segment_keys[0]].percent_span_location
+    y2              = wing.Segments[segment_keys[1]].percent_span_location
     b               = (y2 - y1) * SEMISPAN
     taper           = c2 / c1
     y               = fuselage_width / 2 * 1 / Units.ft

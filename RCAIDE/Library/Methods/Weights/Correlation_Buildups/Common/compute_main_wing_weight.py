@@ -26,7 +26,7 @@ def compute_main_wing_weight(vehicle, wing, rho, sigma):
         vehicle - data dictionary with vehicle properties                   [dimensionless]
             -.mass_properties.max_takeoff: MTOW                             [kilograms]
             -.mass_properties.max_zero_fuel: zero fuel weight aircraft      [kilograms]
-            -.envelope.ultimate_load: ultimate load factor
+            -.flight_envelope.ultimate_load: ultimate load factor
         wing    - data dictionary with specific wing properties             [dimensionless]
             -.areas.reference: wing reference surface area                  [m^2]
             -.sweeps.quarter_chord: quarter chord sweep angle               [deg]
@@ -51,7 +51,7 @@ def compute_main_wing_weight(vehicle, wing, rho, sigma):
     RC          = wing.chords.root
     frac        = wing.areas.reference / vehicle.reference_area
     rho_sigma   = rho * 9.81 / sigma
-    Nult        = vehicle.envelope.ultimate_load
+    Nult        = vehicle.flight_envelope.ultimate_load
     TOW         = vehicle.mass_properties.max_takeoff
     wt_zf       = vehicle.mass_properties.max_zero_fuel
 

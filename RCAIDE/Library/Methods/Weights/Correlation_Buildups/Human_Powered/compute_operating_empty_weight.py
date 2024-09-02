@@ -80,7 +80,7 @@ def compute_operating_empty_weight(vehicle,settings=None):
     
     #Unpack
     
-    nult   = vehicle.envelope.ultimate_load
+    nult   = vehicle.flight_envelope.ultimate_load
     gw     = vehicle.mass_properties.max_takeoff
     qm     = vehicle.envelope.maximum_dynamic_pressure
     

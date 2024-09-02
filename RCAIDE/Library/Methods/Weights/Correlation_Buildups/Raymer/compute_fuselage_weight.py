@@ -29,7 +29,7 @@ def compute_fuselage_weight(vehicle, fuse, settings):
         Inputs:
             vehicle - data dictionary with vehicle properties                   [dimensionless]
                 -.mass_properties.max_takeoff: MTOW                             [kg]
-                -.envelope.ultimate_load: ultimate load factor (default: 3.75)
+                -.flight_envelope.ultimate_load: ultimate load factor (default: 3.75)
                 -.wings['main_wing']: data dictionary with main wing properties
                     -.taper: wing taper ratio
                     -.sweeps.quarter_chord: quarter chord sweep                 [rad]
@@ -57,6 +57,6 @@ def compute_fuselage_weight(vehicle, fuse, settings):
     Kws     = 0.75 * (1 + 2 * wing.taper) / (1 + wing.taper) * (wing.spans.projected / Units.ft *
                                                             np.tan(wing.sweeps.quarter_chord)) / L
 
-    weight_fuse = 0.328 * Kdoor * Klg * (DG * vehicle.envelope.ultimate_load) ** 0.5 * L ** 0.25 * \
+    weight_fuse = 0.328 * Kdoor * Klg * (DG * vehicle.flight_envelope.ultimate_load) ** 0.5 * L ** 0.25 * \
                  Sf ** 0.302 * (1 + Kws) ** 0.04 * (L / D) ** 0.1
     return weight_fuse * Units.lbs

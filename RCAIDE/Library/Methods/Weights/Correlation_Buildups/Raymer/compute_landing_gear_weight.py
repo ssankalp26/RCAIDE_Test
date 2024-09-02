@@ -52,7 +52,7 @@ def compute_landing_gear_weight(vehicle):
         RFACT   = 0.00009
     else:
         RFACT   = 0.00004
-    DESRNG      = vehicle.design_range / Units.nmi  # Design range in nautical miles
+    DESRNG      = vehicle.flight_envelope.design_range / Units.nmi  # Design range in nautical miles
     WLDG        = vehicle.mass_properties.max_takeoff / Units.lbs * (1 - RFACT * DESRNG)
     Ngear       = 3  # gear load factor, usually around 3
     Nl          = Ngear * 1.5  # ultimate landing load factor

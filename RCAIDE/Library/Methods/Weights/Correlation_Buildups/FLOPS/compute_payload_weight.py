@@ -43,7 +43,7 @@ def compute_payload_weight(vehicle, weight_per_passenger = 165. * Units.lb):
     """
     WPPASS  = weight_per_passenger
     WPASS   = vehicle.passengers * WPPASS
-    DESRNG  = vehicle.design_range / Units.nmi
+    DESRNG  = vehicle.flight_envelope.design_range / Units.nmi
     if DESRNG <= 900:
         BPP = 35 * Units.lbs  # luggage weight per passenger depends on the design range
     elif DESRNG <= 2900:

@@ -34,7 +34,7 @@ def compute_fuselage_weight(vehicle):
                 -.fuselages['fuselage'].lengths.total: fuselage total length      [meters]
                 -.fuselages['fuselage'].width: fuselage width                    [meters]
                 -.fuselages['fuselage'].heights.maximum: fuselage maximum height [meters]
-                -.envelope.ultimate_load: ultimate load factor (default: 3.75)
+                -.flight_envelope.ultimate_load: ultimate load factor (default: 3.75)
                 -.systems.accessories: type of aircraft (short-range, commuter
                                                         medium-range, long-range,
                                                         sst, cargo)
@@ -59,18 +59,27 @@ def compute_fuselage_weight(vehicle):
     DAV = (width + max_height) / 2. * 1 / Units.ft
     if vehicle.systems.accessories == "short-range" or vehicle.systems.accessories == "commuter":
         SWFUS           = np.pi * (XL / DAV - 1.7) * DAV ** 2  # Fuselage wetted area, ft**2
-        ULF             = vehicle.envelope.ultimate_load  # Ultimate load factor
+        ULF             = vehicle.flight_envelope.ultimate_load  # Ultimate load factor
         atmosphere      = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
-        atmo_data       = atmosphere.compute_values(vehicle.design_cruise_alt, 0)
+        atmo_data       = atmosphere.compute_values(vehicle.flight_envelope.design_cruise_altitude, 0)
         atmo_data_floor = atmosphere.compute_values(0, 0)
         DELTA           = atmo_data.pressure/atmo_data_floor.pressure
-        QCRUS           = 1481.35 * DELTA * vehicle.design_mach_number**2  # Cruise dynamic pressure, psf
+        QCRUS           = 1481.35 * DELTA * vehicle.flight_envelope.design_mach_number**2  # Cruise dynamic pressure, psf
         DG              = vehicle.mass_properties.max_takeoff / Units.lbs  # Design gross weight in lb
         WFUSE           = 0.052 * SWFUS ** 1.086 * (ULF * DG) ** 0.177 * QCRUS ** 0.241
-    else:
-        network_name  = list(vehicle.networks.keys())[0]
-        networks      = vehicle.networks[network_name]
-        FNEF = len(networks.wing_mounted) - sum(networks.wing_mounted)   # Number of fuselage mounted engines
+    else: 
+        NENG = 0
+        FNEW = 0
+        FNEF = 0 
+        for network in  vehicle.networks:
+            for fuel_line in network.fuel_lines:
+                for propulsor in fuel_line.propulsors:
+                    if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
+                        NENG += 1 
+                        FNEF += 1
+                        if propulsor.wing_mounted: 
+                            FNEW += 1 
+        
         if vehicle.systems.accessories == 'cargo':
             CARGF = 1
         else:

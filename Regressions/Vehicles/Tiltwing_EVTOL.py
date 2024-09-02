@@ -40,8 +40,8 @@ def vehicle_setup():
     vehicle.mass_properties.max_takeoff         = 735.
     vehicle.mass_properties.center_of_gravity   = [[ 2.0144,   0.  ,  0.]] 
     vehicle.passengers                          = 0
-    vehicle.envelope.ultimate_load              = 5.7
-    vehicle.envelope.limit_load                 = 3.     
+    vehicle.flight_envelope.ultimate_load       = 5.7
+    vehicle.flight_envelope.limit_load          = 3.     
 
     # ------------------------------------------------------    
     # WINGS    

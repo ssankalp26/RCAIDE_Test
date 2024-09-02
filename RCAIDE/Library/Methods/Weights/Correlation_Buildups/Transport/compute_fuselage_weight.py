@@ -31,7 +31,7 @@ def compute_fuselage_weight(vehicle, fuse, wt_wing, wt_propulsion):
         fuse.width - width of the fuselage                                                                  [meters]
         fuse.heights.maximum - height of the fuselage                                                       [meters]
         fuse.lengths.total - length of the fuselage                                                         [meters]
-        vehicle.envelope.limit_load - limit load factor at zero fuel weight of the aircraft                 [dimensionless]
+        vehicle.flight_envelope.limit_load - limit load factor at zero fuel weight of the aircraft                 [dimensionless]
         vehicle.mass_properties.max_zero_fuel - zero fuel weight of the aircraft                            [kilograms]
         wt_wing - weight of the wing of the aircraft                           [kilograms]
         wt_propulsion - weight of the entire propulsion system of the aircraft                              [kilograms]
@@ -59,7 +59,7 @@ def compute_fuselage_weight(vehicle, fuse, wt_wing, wt_propulsion):
 
     # Calculate fuselage indices
     I_p = 1.5 * 10 ** -3. * diff_p * width
-    I_b = 1.91 * 10 ** -4. * vehicle.envelope.limit_load * weight * length / height ** 2.
+    I_b = 1.91 * 10 ** -4. * vehicle.flight_envelope.limit_load * weight * length / height ** 2.
 
     if I_p > I_b:
         I_f = I_p

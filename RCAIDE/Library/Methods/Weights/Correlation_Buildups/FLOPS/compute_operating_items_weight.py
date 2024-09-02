@@ -7,7 +7,8 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-# RCAIDE 
+# RCAIDE
+import  RCAIDE 
 from RCAIDE.Framework.Core    import Units ,  Data
 
 # python imports 
@@ -57,34 +58,41 @@ def compute_operating_items_weight(vehicle):
 
         Properties Used:
             N/A
-    """
-    network_name  = list(vehicle.networks.keys())[0]
-    networks      = vehicle.networks[network_name]
-    NENG            = networks.number_of_engines
-    THRUST          = networks.sealevel_static_thrust * 1 / Units.lbf
+    """ 
+    NENG =  0 
+    for network in  vehicle.networks:
+        for fuel_line in network.fuel_lines:
+            for propulsor in fuel_line.propulsors:
+                if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
+                    ref_propulsor = propulsor  
+                    NENG  += 1   
+    
+    THRUST          = ref_propulsor.sealevel_static_thrust * 1 / Units.lbf
     SW              = vehicle.reference_area / Units.ft ** 2
     FMXTOT          = vehicle.mass_properties.max_zero_fuel / Units.lbs
-    DESRNG          = vehicle.design_range / Units.nmi
-    VMAX            = vehicle.design_mach_number   
+    DESRNG          = vehicle.flight_envelope.design_range / Units.nmi
+    VMAX            = vehicle.flight_envelope.design_mach_number   
     
-    NTANK = 0 # number of fuel tanks
-    for wing in vehicle.wings:
-        NTANK += len(wing.Fuel_Tanks)
-    for fuselage in vehicle.fuselages:
-        NTANK += len(fuselage.Fuel_Tanks)
+    NTANK = 0 # number of fuel tanks 
+    for network in  vehicle.networks:
+        for fuel_line in network.fuel_lines:
+            for fuel_tank in fuel_line.fuel_tanks:
+                NTANK += 1 
     if NTANK == 0:
         NTANK = 5    
     
     WUF             = 11.5 * NENG * THRUST ** 0.2 + 0.07 * SW + 1.6 * NTANK * FMXTOT ** 0.28  # unusable fuel weight
     WOIL            = 0.082 * NENG * THRUST ** 0.65  # engine oil weight
-    if hasattr(vehicle.fuselages['fuselage'], 'number_coach_seats'):
-        NPT = vehicle.fuselages['fuselage'].number_coach_seats  # number of economy passengers
-        NPF = (vehicle.passengers - NPT) / 4.  # number of first clss passengers
-        NPB = vehicle.passengers - NPF - NPT  # number of bussines passengers
-    else:
-        NPF = vehicle.passengers / 20.
-        NPB = vehicle.passengers / 10.
-        NPT = vehicle.passengers - NPF - NPB
+    
+    for fuselage in  vehicle.fuselages: 
+        if hasattr(fuselage, 'number_coach_seats'):
+            NPT = fuselage.number_coach_seats  # number of economy passengers
+            NPF = (vehicle.passengers - NPT) / 4.  # number of first clss passengers
+            NPB = vehicle.passengers - NPF - NPT  # number of bussines passengers
+        else:
+            NPF = vehicle.passengers / 20.
+            NPB = vehicle.passengers / 10.
+            NPT = vehicle.passengers - NPF - NPB
     vehicle.NPF = NPF
     vehicle.NPB = NPB
     vehicle.NPT = NPT

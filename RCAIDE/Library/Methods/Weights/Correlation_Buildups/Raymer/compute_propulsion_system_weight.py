@@ -8,9 +8,9 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE 
+import  RCAIDE 
 from RCAIDE.Framework.Core    import Units, Data
 from RCAIDE.Library.Methods.Weights.Correlation_Buildups.FLOPS.compute_propulsion_system_weight import compute_engine_weight
-
 
 # python imports 
 import  numpy as  np
@@ -50,13 +50,21 @@ def compute_propulsion_system_weight(vehicle,network):
         Properties Used:
             N/A
     """
-    
-    
-    NENG            = len(network.propulsors) 
+
+    NENG =  0 
+    for network in  vehicle.networks:
+        for fuel_line in network.fuel_lines:
+            for propulsor in fuel_line.propulsors:
+                if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
+                    ref_propulsor = propulsor  
+                    NENG  += 1 
+                if 'nacelle' in propulsor:
+                    ref_nacelle =  propulsor.nacelle 
+                    
     WFSYS           = compute_fuel_system_weight(vehicle, NENG)
-    WENG            = compute_engine_weight(vehicle, network)
-    WNAC            = compute_nacelle_weight(vehicle, WENG)
-    WEC, WSTART     = compute_misc_engine_weight(vehicle, network, WENG)
+    WENG            = compute_engine_weight(vehicle,ref_propulsor)
+    WNAC            = compute_nacelle_weight(vehicle,ref_nacelle, NENG, WENG)
+    WEC, WSTART     = compute_misc_engine_weight(vehicle,NENG, WENG)
     WTHR            = 0
     WPRO            = NENG * WENG + WFSYS + WEC + WSTART + WTHR + WNAC
 
@@ -71,7 +79,7 @@ def compute_propulsion_system_weight(vehicle,network):
     return output
 
 ## @ingroup Methods-Weights-Correlations-Raymer
-def compute_nacelle_weight(vehicle, WENG):
+def compute_nacelle_weight(vehicle,ref_nacelle, NENG, WENG):
     """ Calculates the nacelle weight based on the Raymer method
         Assumptions:
             1) All nacelles are identical
@@ -93,23 +101,18 @@ def compute_nacelle_weight(vehicle, WENG):
 
         Properties Used:
             N/A
-    """
-    
-
-    nacelle_tag     = list(vehicle.nacelles.keys())[0]
-    ref_nacelle     = vehicle.nacelles[nacelle_tag]    
-    NENG            = len(vehicle.nacelles)
+    """ 
     Kng             = 1 # assuming the engine is not pylon mounted
     Nlt             = ref_nacelle.length / Units.ft
     Nw              = ref_nacelle.diameter / Units.ft
     Wec             = 2.331 * WENG ** 0.901 * 1.18
     Sn              = 2 * np.pi * Nw/2 * Nlt + np.pi * Nw**2/4 * 2
-    WNAC            = 0.6724 * Kng * Nlt ** 0.1 * Nw ** 0.294 * vehicle.envelope.ultimate_load ** 0.119 \
+    WNAC            = 0.6724 * Kng * Nlt ** 0.1 * Nw ** 0.294 * vehicle.flight_envelope.ultimate_load ** 0.119 \
                       * Wec ** 0.611 * NENG * 0.984 * Sn ** 0.224
     return WNAC * Units.lbs
 
 ## @ingroup Methods-Weights-Correlations-Raymer
-def compute_misc_engine_weight(vehicle, network, WENG):
+def compute_misc_engine_weight(vehicle, NENG, WENG):
     """ Calculates the miscellaneous engine weight based on the Raymer method, electrical control system weight
         and starter engine weight
         Assumptions:
@@ -130,8 +133,12 @@ def compute_misc_engine_weight(vehicle, network, WENG):
         Properties Used:
             N/A
     """
-    NENG    = network.number_of_engines
-    Lec     = NENG * vehicle.fuselages['fuselage'].lengths.total / Units.ft
+
+    L =  0 
+    for fuselage in vehicle.fuselages:
+        if L < fuselage.lengths.total: 
+            total_length = fuselage.lengths.total             
+    Lec     = NENG * total_length / Units.ft
     WEC     = 5 * NENG + 0.8 * Lec
     WSTART  = 49.19*(NENG*WENG/1000)**0.541
     return WEC * Units.lbs, WSTART * Units.lbs
@@ -155,7 +162,7 @@ def compute_fuel_system_weight(vehicle, NENG):
         Properties Used:
             N/A
     """
-    VMAX    = vehicle.design_mach_number
+    VMAX    = vehicle.flight_envelope.design_mach_number
     FMXTOT  = vehicle.mass_properties.max_zero_fuel / Units.lbs
     WFSYS = 1.07 * FMXTOT ** 0.58 * NENG ** 0.43 * VMAX ** 0.34
     return WFSYS * Units.lbs

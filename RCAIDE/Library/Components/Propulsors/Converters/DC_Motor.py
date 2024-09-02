@@ -53,8 +53,7 @@ class DC_Motor(Component):
         self.gearbox_efficiency = 1.0
         self.expected_current   = 0.0
         self.power_split_ratio  = 0.0
-        self.design_torque      = 0.0
-        self.wing_mounted       = False
+        self.design_torque      = 0.0 
         self.interpolated_func  = None
         
     def append_operating_conditions(self,segment,bus,propulsor):

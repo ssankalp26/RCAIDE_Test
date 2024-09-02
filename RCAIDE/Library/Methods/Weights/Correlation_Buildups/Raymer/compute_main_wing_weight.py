@@ -27,7 +27,7 @@ def compute_main_wing_weight(vehicle, wing):
     Inputs:
         vehicle - data dictionary with vehicle properties                   [dimensionless]
                 -.mass_properties.max_takeoff: MTOW                         [kg]
-                -.envelope.ultimate_load: ultimate loading factor
+                -.flight_envelope.ultimate_load: ultimate loading factor
                 -.systems.accessories: type of aircraft (short-range, commuter
                                                         medium-range, long-range,
                                                         sst, cargo)
@@ -53,7 +53,7 @@ def compute_main_wing_weight(vehicle, wing):
     t_c_w   = wing.thickness_to_chord
 
     Wdg     = vehicle.mass_properties.max_takeoff / Units.lb
-    Nz      = vehicle.envelope.ultimate_load
+    Nz      = vehicle.flight_envelope.ultimate_load
     Sw      = area / Units.ft ** 2
     A       = wing.aspect_ratio
     tc_root = t_c_w

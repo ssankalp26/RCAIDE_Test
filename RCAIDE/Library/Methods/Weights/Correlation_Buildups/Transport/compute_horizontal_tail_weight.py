@@ -61,7 +61,7 @@ def compute_horizontal_tail_weight(vehicle, wing):
     # horizontal tail (Convert meters to ft)
 
     # Calculate weight of wing for traditional aircraft horizontal tail
-    weight_English = 5.25 * area + 0.8 * 10. ** -6 * vehicle.envelope.ultimate_load * span ** 3. * mtow * l_w *\
+    weight_English = 5.25 * area + 0.8 * 10. ** -6 * vehicle.flight_envelope.ultimate_load * span ** 3. * mtow * l_w *\
                      np.sqrt(exposed * area) / (wing.thickness_to_chord * (np.cos(sweep) ** 2.) * length_w_h * area ** 1.5)
 
     weight = weight_English * Units.lbs  # Convert from lbs to kg

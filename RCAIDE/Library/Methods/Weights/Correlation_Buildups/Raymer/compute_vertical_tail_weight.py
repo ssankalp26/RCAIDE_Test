@@ -27,7 +27,7 @@ def compute_vertical_tail_weight(vehicle, wing):
         Inputs:
             vehicle - data dictionary with vehicle properties                    [dimensionless]
                 -.mass_properties.max_takeoff: MTOW                             [kilograms]
-                -.envelope.ultimate_load: ultimate load factor (default: 3.75)
+                -.flight_envelope.ultimate_load: ultimate load factor (default: 3.75)
                 -.wings['main_wing']: data dictionary with properties of main wing
                     -.aerodynamic_center: aerodynamic center as measured from root leading edge
                     -.origin: root of main wing as measured from nose of aircraft
@@ -54,7 +54,7 @@ def compute_vertical_tail_weight(vehicle, wing):
     sweep       = wing.sweeps.quarter_chord
     Av          = wing.aspect_ratio
     t_c         = wing.thickness_to_chord 
-    Nult        = vehicle.envelope.ultimate_load
+    Nult        = vehicle.flight_envelope.ultimate_load
     
     H = 0
     if t_tail_flag:
