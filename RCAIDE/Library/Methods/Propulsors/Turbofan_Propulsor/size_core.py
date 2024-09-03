@@ -53,11 +53,13 @@ def size_core(turbofan,turbofan_conditions,conditions):
     compute_thrust(turbofan,turbofan_conditions,conditions) 
 
     # Compute dimensional mass flow rates
+    TSFC       = turbofan_conditions.thrust_specific_fuel_consumption
     Fsp        = turbofan_conditions.non_dimensional_thrust
     mdot_core  = turbofan.design_thrust/(Fsp*a0*(1+bypass_ratio)*turbofan_conditions.throttle)  
     mdhc       = mdot_core/ (np.sqrt(Tref/Tt_ref)*(Pt_ref/Pref))
 
     # Store results on turbofan data structure 
+    turbofan.TSFC                                = TSFC
     turbofan.mass_flow_rate_design               = mdot_core
     turbofan.compressor_nondimensional_massflow  = mdhc
 
