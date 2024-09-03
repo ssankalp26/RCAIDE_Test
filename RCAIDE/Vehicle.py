@@ -11,7 +11,8 @@
 from RCAIDE                    import Framework
 from RCAIDE.Framework.Core     import Data, DataOrdered
 from RCAIDE.Library            import Components, Attributes 
-import numpy as np
+import numpy as np 
+from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Common.compute_operating_empty_weight import  compute_operating_empty_weight
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Vehicle
@@ -232,7 +233,20 @@ class Vehicle(Data):
             item = self[key] 
             M += item.moment_of_inertia(center_of_gravity) 
                 
-        return M 
+        return M
+     
+    def operating_empty_weight(self):
+        """ Compute operating empty weight  
+        
+            Assumptions:
+                None
+    
+            Source:
+                None
+        """  
+        outputs = compute_operating_empty_weight(self)  
+                
+        return outputs     
     
     def append_energy_network(self,energy_network):
         """ Adds an energy network to vehicle 
