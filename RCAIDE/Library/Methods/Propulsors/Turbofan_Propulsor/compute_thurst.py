@@ -116,7 +116,7 @@ def compute_thrust(turbofan,turbofan_conditions,conditions):
 
     # Pack turbofan outouts  
     turbofan_conditions.thrust                            = FD2 
-    turbofan_conditions.thrust_specific_fuel_consumption  = TSFC
+    turbofan_conditions.thrust_specific_fuel_consumption  = TSFC/ Units.hour
     turbofan_conditions.non_dimensional_thrust            = Fsp  
     turbofan_conditions.power                             = power  
     turbofan_conditions.specific_impulse                  = Isp
