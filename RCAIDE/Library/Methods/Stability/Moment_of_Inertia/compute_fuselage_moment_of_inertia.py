@@ -16,17 +16,20 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Compute Wing Moment of Intertia
 # ----------------------------------------------------------------------------------------------------------------------   
-def compute_fuselage_moment_of_inertia(fuselage,center_of_gravity): 
-    # ADD CODE
-    I_total = np.zeros((3, 3))
+def compute_fuselage_moment_of_inertia(fuselage,center_of_gravity, fuse_weight): 
 
-    ## Hemisphere
-    
-    origin_hemisphere =  np.array([fuselage.lengths.nose, 0, 0]) + np.array(fuselage.origin)
-    m = 1000 # mass_of_component_hemi
-    I =  np.zeros((3, 3))
+    I_total = np.zeros((3, 3))
     outer_radius = fuselage.effective_diameter / 2
-    inner_radius = 0.75 * fuselage.effective_diameter / 2 # Assume the inner radius is 75 % of the outer radius
+    inner_radius = 0.75 * fuselage.effective_diameter / 2 # Assume the inner radius is 75 % of the outer radius    
+    center_length = fuselage.lengths.total - fuselage.lengths.nose - fuselage.lengths.tail     # Length of the cylinder (found by subtracting the tail adn nose lengths from the total length)
+    volume_fraction = Volume_Fraction(outer_radius, inner_radius, center_length, fuselage.lengths.tail) # [hemisphere, cylinder, cone]
+    
+    # ----------------------------------------------------------------------------------------------------------------------   
+    ## Hemisphere
+    # ----------------------------------------------------------------------------------------------------------------------   
+    origin_hemisphere =  np.array([fuselage.lengths.nose, 0, 0]) + np.array(fuselage.origin)
+    m =  fuse_weight * volume_fraction[0] # mass_of_component_hemi
+    I =  np.zeros((3, 3))
     
     # Moment of inertia in local system
     I[0][0] =  2 * m / 5 *  (outer_radius ** 5 - inner_radius ** 5) /(outer_radius **3 -inner_radius **3) # Ixx
@@ -39,18 +42,20 @@ def compute_fuselage_moment_of_inertia(fuselage,center_of_gravity):
     I_global = np.array(I) + m * (np.array(np.dot(s[0], s[0])) * np.array(np.identity(3)) - s*np.transpose(s))
     I_total = np.array(I_total) + np.array(I_global)
     
-    ## cylinder
     
-    h = fuselage.lengths.total - fuselage.lengths.nose - fuselage.lengths.tail # Length of the cylinder (found by subtracting the tail adn nose lengths from the total length)
-    m = 1000 #mass_of_component_cylinder
+    # ----------------------------------------------------------------------------------------------------------------------   
+    ## cylinder
+    # ----------------------------------------------------------------------------------------------------------------------   
+    
+    m = fuse_weight *volume_fraction[1] #mass_of_component_cylinder
     origin_cylinder =  np.array([fuselage.lengths.nose + h / 2,0, 0]) + np.array(fuselage.origin) # origin of the cylinder is located a the middle of the cylinder
     
     I =  np.zeros((3, 3))
     
     # Moment of inertia in local system
     I[0][0] =  m / 2 *  (outer_radius ** 2 + inner_radius ** 2) # Ixx
-    I[1][1] =  m / 12 * (3 * (outer_radius ** 2 + inner_radius ** 2) + h ** 2) # Iyy
-    I[2][2] =  m / 12 * (3 * (outer_radius ** 2 + inner_radius ** 2) + h ** 2) # Izz
+    I[1][1] =  m / 12 * (3 * (outer_radius ** 2 + inner_radius ** 2) + center_length ** 2) # Iyy
+    I[2][2] =  m / 12 * (3 * (outer_radius ** 2 + inner_radius ** 2) + center_length ** 2) # Izz
     
     # transform moment of inertia to global system
     s = np.array(origin_cylinder) - np.array(center_of_gravity)
@@ -58,10 +63,12 @@ def compute_fuselage_moment_of_inertia(fuselage,center_of_gravity):
     I_global = np.array(I) + m * (np.array(np.dot(s[0], s[0])) * np.array(np.identity(3)) - s*np.transpose(s))
     I_total = np.array(I_total) + np.array(I_global)
 
+    # ----------------------------------------------------------------------------------------------------------------------   
     ## cone
+    # ----------------------------------------------------------------------------------------------------------------------   
     
     h = fuselage.lengths.tail # length of the cone is defined to be the tail length.
-    m = 1000 #mass_of_component_cone
+    m = fuse_weight *volume_fraction[2] #mass_of_component_cone
     origin_cone =  np.array([fuselage.lengths.total - h,0, 0]) + np.array(fuselage.origin)
     
     I =  np.zeros((3, 3))
@@ -75,12 +82,25 @@ def compute_fuselage_moment_of_inertia(fuselage,center_of_gravity):
     # transform moment of inertia to global system
     
     s = np.array(origin_cone) - np.array(center_of_gravity) # vector from the cone base to the center of gravity of the aircraft. 
-    
     I_global =  np.array(I) + m * (np.array(np.dot(s[0], s[0])) * np.array(np.identity(3)) - s*np.transpose(s))
+    
     I_total = np.array(I_total) + np.array(I_global)
     
-
     return I_total
+
+def Volume_Fraction(outer_radius, inner_radius, center_length, tail_length):
+    
+    # Calculate the volume fraction of each of the three components that make up the entire fuselage
+    
+    volume_cone = np.pi * outer_radius ** 2 * tail_length / 3 - np.pi * inner_radius ** 2 * (tail_length * inner_radius / outer_radius) / 3
+    volume_hemisphere = 2 / 3 * np.pi * outer_radius ** 3 -2 / 3 * np.pi * inner_radius ** 3 
+    volume_cylinder = np.pi * center_length * (outer_radius ** 2 - inner_radius ** 2)
+    
+    total_volume = volume_cone + volume_hemisphere + volume_cylinder
+    
+    fraction = np.array([volume_hemisphere / total_volume, volume_cylinder / total_volume, volume_cone / total_volume])
+    
+    return fraction
 
 if __name__ == '__main__': 
     main()

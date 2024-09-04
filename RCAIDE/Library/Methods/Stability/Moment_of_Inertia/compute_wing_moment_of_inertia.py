@@ -15,10 +15,8 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Compute Wing Moment of Intertia
 # ----------------------------------------------------------------------------------------------------------------------  
-def compute_wing_moment_of_inertia(wing,center_of_gravity): 
+def compute_wing_moment_of_inertia(wing, center_of_gravity, mass): 
     
-      
-    m = 1000.00
     tr = wing.thickness_to_chord # root thickness as percent of chord
     tt = wing.thickness_to_chord #tip thickness as a percent of chord
     ct = wing.chords.tip # tip chord 
@@ -63,10 +61,10 @@ def compute_wing_moment_of_inertia(wing,center_of_gravity):
     # Moment of inertia in local system
     delta = 1 # 1 for right wing, -1 for left wing. Assumes all non-symmetric wings are right-wings.
     
-    Ixx = m * (56 * b ** 2 * kf * v0 + kg * v3) / (280 * ka * v0)
-    Iyy = m * (84 * b * (2 * b * kf * v0 * np.tan(A) ** 2 + kd * v1 * np.tan(A)) + 49 * ke * v2 + 3 * kg * v3) / (840 * ka * v0)
-    Izz = m * (12 * b * (2 * b * (np.tan(A) ** 2 + 1) * kf * v0 + kd * v1 * np.tan(A)) + 7 * ke * v2) / (120 * ka * v0)
-    Ixy = -1 * delta * b * m * (4 * b * kf * v0 * np.tan(A) + kd * v1) / (20 * ka * v0)
+    Ixx = mass * (56 * b ** 2 * kf * v0 + kg * v3) / (280 * ka * v0)
+    Iyy = mass * (84 * b * (2 * b * kf * v0 * np.tan(A) ** 2 + kd * v1 * np.tan(A)) + 49 * ke * v2 + 3 * kg * v3) / (840 * ka * v0)
+    Izz = mass * (12 * b * (2 * b * (np.tan(A) ** 2 + 1) * kf * v0 + kd * v1 * np.tan(A)) + 7 * ke * v2) / (120 * ka * v0)
+    Ixy = -1 * delta * b * mass * (4 * b * kf * v0 * np.tan(A) + kd * v1) / (20 * ka * v0)
     ## Ixz, Iyz are 0
     Ixz = 0
     Iyz = 0
@@ -81,10 +79,10 @@ def compute_wing_moment_of_inertia(wing,center_of_gravity):
         R = np.array([[1, 0, 0], [0, np.cos(dihedral), -1 * np.sin(dihedral)], [0, np.sin(dihedral), np.cos(dihedral)]])        
         
         delta = -1 # left wing
-        Ixx = m * (56 * b ** 2 * kf * v0 + kg * v3) / (280 * ka * v0)
-        Iyy = m * (84 * b * (2 * b * kf * v0 * np.tan(A) ** 2 + kd * v1 * np.tan(A)) + 49 * ke * v2 + 3 * kg * v3) / (840 * ka * v0)
-        Izz = m * (12 * b * (2 * b * (np.tan(A) ** 2 + 1) * kf * v0 + kd * v1 * np.tan(A)) + 7 * ke * v2) / (120 * ka * v0)
-        Ixy = -1 * delta * b * m * (4 * b * kf * v0 * np.tan(A) + kd * v1) / (20 * ka * v0)
+        Ixx = mass * (56 * b ** 2 * kf * v0 + kg * v3) / (280 * ka * v0)
+        Iyy = mass * (84 * b * (2 * b * kf * v0 * np.tan(A) ** 2 + kd * v1 * np.tan(A)) + 49 * ke * v2 + 3 * kg * v3) / (840 * ka * v0)
+        Izz = mass * (12 * b * (2 * b * (np.tan(A) ** 2 + 1) * kf * v0 + kd * v1 * np.tan(A)) + 7 * ke * v2) / (120 * ka * v0)
+        Ixy = -1 * delta * b * mass * (4 * b * kf * v0 * np.tan(A) + kd * v1) / (20 * ka * v0)
         I_local_left = np.array([[Ixx, Ixy, Ixz], [Ixy, Iyy, Iyz], [Ixz, Iyz, Izz]])
         
         I_local_left = R *I_local_left * np.transpose(R)
@@ -100,7 +98,7 @@ def compute_wing_moment_of_inertia(wing,center_of_gravity):
     # global system
     s = np.array(wing.origin) - np.array(center_of_gravity) # Vector for the parallel axis theorem
     
-    I = np.array(I_local) + m * (np.array(np.dot(s[0], s[0])) * np.array(np.identity(3)) - s * np.transpose(s))
+    I = np.array(I_local) + mass * (np.array(np.dot(s[0], s[0])) * np.array(np.identity(3)) - s * np.transpose(s))
     
     return I  
 
