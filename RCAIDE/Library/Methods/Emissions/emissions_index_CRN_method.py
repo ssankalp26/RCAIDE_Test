@@ -42,7 +42,7 @@ def emissions_index_CRN_method(combustor,turbofan_conditions,conditions):
     
     
     Tt_mix        = Tt_in      # We are using T of compressure, we need to update it to get to temp with fuel
-    Pt_mix        = Pt_in      # Pa to atm We are using P of compressure, we need to update it to get to temp with fuel  
+    Pt_mix        = Pt_in      # We are using P of compressure, we need to update it to get to temp with fuel  
 
     Area_in           = 0.6  # NEED TO BE VALIDATED 
     psr_pfr_ratio     = 0.1  # NEED TO BE VALIDATED
@@ -89,7 +89,7 @@ def emissions_index_CRN_method(combustor,turbofan_conditions,conditions):
     for cpt in range(ctrl_pts):   
         """ combustor simulation using a simple psr-pfr reactor network with varying pfr residence time """
     
-        gas.TP = temperature[cpt,0], pressure[cpt,0] # *ct.one_atm
+        gas.TP = temperature[cpt,0], pressure[cpt,0] # In Pa
         gas.set_equivalence_ratio(equivalence_ratio, fuel = dict_fuel, oxidizer = dict_oxy )
             
         comp_fuel = list(dict_fuel.keys())
@@ -142,7 +142,6 @@ def emissions_index_CRN_method(combustor,turbofan_conditions,conditions):
         T_stag_out[cpt,0] = gas.T * (1 + 0.5 * (gamma - 1) * (M_out)**2)
         
         # stagnation pressure 
-        #P_stag_out[cpt,0] = (gas.P/ct.one_atm) * (1 + 0.5 * (gamma - 1) * (M_out)**2)**(gamma / (gamma - 1))
         P_stag_out[cpt,0] = (gas.P) * (1 + 0.5 * (gamma - 1) * (M_out)**2)**(gamma / (gamma - 1))
         
         # Stagnation enthalpy 
