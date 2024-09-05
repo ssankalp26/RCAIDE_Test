@@ -1,4 +1,4 @@
-# RCAIDE/Unmanned_Aerial_Vehicle.py
+# RCAIDE/Transport_Vehicle.py
 # # 
 # Created:  Sep 2024, M. Clarke 
 
@@ -7,13 +7,13 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
 # RCAIDE imports    
 from .Vehicle import Vehicle   
-from RCAIDE.Library.Methods.Weights.Correlation_Buildups.UAV.compute_operating_empty_weight import  compute_operating_empty_weight
-
+from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Common.compute_operating_empty_weight import  compute_operating_empty_weight
+  
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  UAV_Vehicle
 # ----------------------------------------------------------------------------------------------------------------------   
-class Unmanned_Aerial_Vehicle(Vehicle):
-    '''Unmanned_Aerial Vehicle Class
+class Transport_Vehicle(Vehicle):
+    '''Transport Vehicle Class
     
     '''
     def __defaults__(self): 
@@ -34,11 +34,11 @@ class Unmanned_Aerial_Vehicle(Vehicle):
         Properties Used:
         N/A
         """         
-        self.tag  =  'UAV'
+        self.tag  =  'Transport'
         
 
-    def operating_empty_weight(self, settings=None): 
-        """ Compute Operating Empty Weight of UAV Aircraft 
+    def operating_empty_weight(self, settings=None, method_type='RCAIDE'): 
+        """ Compute Operating Empty Weight of transport Aircraft 
         
             Assumptions:
                 None
@@ -46,10 +46,6 @@ class Unmanned_Aerial_Vehicle(Vehicle):
             Source:
                 None
         """          
-        outputs = compute_operating_empty_weight(self, settings)  
+        outputs = compute_operating_empty_weight(self, settings, method_type)
                 
-        return outputs           
-        
-        
-    
-     
+        return outputs     
