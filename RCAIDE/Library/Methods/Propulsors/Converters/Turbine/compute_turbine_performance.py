@@ -38,9 +38,17 @@ def compute_turbine_performance(turbine,turbine_conditions,conditions):
     Returns:
         None 
     """            
-    # Unpack flight conditions 
-    gamma           = conditions.freestream.isentropic_expansion_factor
-    Cp              = conditions.freestream.specific_heat_at_constant_pressure
+    P0                      = turbine_conditions.inputs.static_temperature
+    T0                      = turbine_conditions.inputs.static_pressure  
+    M0                      = turbine_conditions.inputs.mach_number    
+                             
+    # Unpack ram inputs       
+    working_fluid           = turbine.working_fluid
+
+    # Compute the working fluid properties
+
+    gamma  = working_fluid.compute_gamma(T0,P0) 
+    Cp     = working_fluid.compute_cp(T0,P0)  
     
     #Unpack turbine entering properties 
     eta_mech        = turbine.mechanical_efficiency
@@ -61,9 +69,15 @@ def compute_turbine_performance(turbine,turbine_conditions,conditions):
     ht_out    =  Cp*Tt_out   
     Pt_out    =  Pt_in*(Tt_out/Tt_in)**(gamma/((gamma-1)*etapolt))
     
+    P_out     = Tt_out/(1.+(gamma-1.)/2.*M0*M0)
+    T_out     = Pt_out/((1.+(gamma-1.)/2.*M0*M0)**(gamma/(gamma-1.)))         
+    
     # Pack outputs of turbine 
     turbine_conditions.outputs.stagnation_pressure     = Pt_out
     turbine_conditions.outputs.stagnation_temperature  = Tt_out
     turbine_conditions.outputs.stagnation_enthalpy     = ht_out
+    turbine_conditions.outputs.static_temperature      = T_out
+    turbine_conditions.outputs.static_pressure         = P_out 
+    turbine_conditions.outputs.mach_number             = M0     
     
     return

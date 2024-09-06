@@ -35,21 +35,31 @@ def compute_compressor_performance(compressor,compressor_conditions,conditions):
         None 
     """          
     
-    # Unpack flight conditions 
-    gamma    = conditions.freestream.isentropic_expansion_factor
-    Cp       = conditions.freestream.specific_heat_at_constant_pressure
-    
     # Unpack component inputs
     Tt_in    = compressor_conditions.inputs.stagnation_temperature
     Pt_in    = compressor_conditions.inputs.stagnation_pressure 
     PR       = compressor.pressure_ratio
     etapold  = compressor.polytropic_efficiency
     
+    P0                      = compressor_conditions.inputs.static_temperature
+    T0                      = compressor_conditions.inputs.static_pressure  
+    M0                      = compressor_conditions.inputs.mach_number    
+    
+    # Unpack ram inputs
+    working_fluid           = compressor.working_fluid
+ 
+    # Compute the working fluid properties
+
+    gamma  = working_fluid.compute_gamma(T0,P0) 
+    Cp     = working_fluid.compute_cp(T0,P0)    
+        
     # Compute the output properties based on the pressure ratio of the component
     ht_in     = Tt_in*Cp 
     Pt_out    = Pt_in*PR
     Tt_out    = Tt_in*(PR**((gamma-1)/(gamma*etapold)))
     ht_out    = Tt_out*Cp
+    P_out     = Tt_out/(1.+(gamma-1.)/2.*M0*M0)
+    T_out     = Pt_out/((1.+(gamma-1.)/2.*M0*M0)**(gamma/(gamma-1.)))    
     
     # Compute the work done by the compressor (normalized by mass flow i.e. J/(kg/s)
     work_done = ht_out - ht_in
@@ -59,6 +69,9 @@ def compute_compressor_performance(compressor,compressor_conditions,conditions):
     compressor_conditions.outputs.stagnation_temperature  = Tt_out
     compressor_conditions.outputs.stagnation_pressure     = Pt_out
     compressor_conditions.outputs.stagnation_enthalpy     = ht_out
+    compressor_conditions.outputs.static_temperature      = T_out
+    compressor_conditions.outputs.static_pressure         = P_out 
+    compressor_conditions.outputs.mach_number             = M0
     
     return 
 
