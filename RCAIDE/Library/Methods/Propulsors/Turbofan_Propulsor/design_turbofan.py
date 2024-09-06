@@ -87,10 +87,10 @@ def design_turbofan(turbofan):
             item.append_operating_conditions(segment,fuel_line,turbofan) 
     
     ram                       = turbofan.ram
+    fan                       = turbofan.fan
     inlet_nozzle              = turbofan.inlet_nozzle
     low_pressure_compressor   = turbofan.low_pressure_compressor
     high_pressure_compressor  = turbofan.high_pressure_compressor
-    fan                       = turbofan.fan
     combustor                 = turbofan.combustor
     high_pressure_turbine     = turbofan.high_pressure_turbine
     low_pressure_turbine      = turbofan.low_pressure_turbine
@@ -103,13 +103,13 @@ def design_turbofan(turbofan):
     ram_conditions          = turbofan_conditions[ram.tag]    
     fan_conditions          = turbofan_conditions[fan.tag]    
     inlet_nozzle_conditions = turbofan_conditions[inlet_nozzle.tag]
-    core_nozzle_conditions  = turbofan_conditions[core_nozzle.tag]
-    fan_nozzle_conditions   = turbofan_conditions[fan_nozzle.tag]
     lpc_conditions          = turbofan_conditions[low_pressure_compressor.tag]
     hpc_conditions          = turbofan_conditions[high_pressure_compressor.tag]
+    combustor_conditions    = turbofan_conditions[combustor.tag] 
     lpt_conditions          = turbofan_conditions[low_pressure_turbine.tag]
     hpt_conditions          = turbofan_conditions[high_pressure_turbine.tag]
-    combustor_conditions    = turbofan_conditions[combustor.tag] 
+    core_nozzle_conditions  = turbofan_conditions[core_nozzle.tag]
+    fan_nozzle_conditions   = turbofan_conditions[fan_nozzle.tag]    
      
     # Step 1: Set the working fluid to determine the fluid properties
     ram.working_fluid                             = turbofan.working_fluid
