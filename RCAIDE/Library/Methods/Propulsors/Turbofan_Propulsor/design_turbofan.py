@@ -123,7 +123,7 @@ def design_turbofan(turbofan):
     inlet_nozzle_conditions.inputs.static_temperature                 = ram_conditions.outputs.static_temperature
     inlet_nozzle_conditions.inputs.static_pressure                    = ram_conditions.outputs.static_pressure
     inlet_nozzle_conditions.inputs.mach_number                        = ram_conditions.outputs.mach_number
-    inlet_nozzle.working_fluid                                        = turbofan.working_fluid
+    inlet_nozzle.working_fluid                                        = ram.working_fluid
     
     # Step 4: Compute flow through the inlet nozzle
     compute_compression_nozzle_performance(inlet_nozzle,inlet_nozzle_conditions,conditions)
@@ -134,7 +134,7 @@ def design_turbofan(turbofan):
     fan_conditions.inputs.static_temperature                          = inlet_nozzle_conditions.outputs.static_temperature
     fan_conditions.inputs.static_pressure                             = inlet_nozzle_conditions.outputs.static_pressure
     fan_conditions.inputs.mach_number                                 = inlet_nozzle_conditions.outputs.mach_number  
-    fan.working_fluid                                                 = turbofan.working_fluid
+    fan.working_fluid                                                 = inlet_nozzle.working_fluid
      
     # Step 6: Compute flow through the fan
     compute_fan_performance(fan,fan_conditions,conditions)    
@@ -145,7 +145,7 @@ def design_turbofan(turbofan):
     lpc_conditions.inputs.static_temperature                          = fan_conditions.outputs.static_temperature
     lpc_conditions.inputs.static_pressure                             = fan_conditions.outputs.static_pressure
     lpc_conditions.inputs.mach_number                                 = fan_conditions.outputs.mach_number  
-    low_pressure_compressor.working_fluid                             = turbofan.working_fluid
+    low_pressure_compressor.working_fluid                             = fan.working_fluid
     
     # Step 8: Compute flow through the low pressure compressor
     compute_compressor_performance(low_pressure_compressor,lpc_conditions,conditions)
@@ -156,7 +156,7 @@ def design_turbofan(turbofan):
     hpc_conditions.inputs.static_temperature                          = lpc_conditions.outputs.static_temperature
     hpc_conditions.inputs.static_pressure                             = lpc_conditions.outputs.static_pressure
     hpc_conditions.inputs.mach_number                                 = lpc_conditions.outputs.mach_number  
-    high_pressure_compressor.working_fluid                            = turbofan.working_fluid    
+    high_pressure_compressor.working_fluid                            = low_pressure_compressor.working_fluid    
     
     # Step 10: Compute flow through the high pressure compressor
     compute_compressor_performance(high_pressure_compressor,hpc_conditions,conditions)
@@ -168,7 +168,7 @@ def design_turbofan(turbofan):
     combustor_conditions.inputs.static_temperature                    = hpc_conditions.outputs.static_temperature
     combustor_conditions.inputs.static_pressure                       = hpc_conditions.outputs.static_pressure
     combustor_conditions.inputs.mach_number                           = hpc_conditions.outputs.mach_number  
-    combustor.working_fluid                                           = turbofan.working_fluid     
+    combustor.working_fluid                                           = high_pressure_compressor.working_fluid     
     
     # Step 12: Compute flow through the high pressor compressor 
     compute_combustor_performance(combustor,combustor_conditions,conditions)
@@ -183,7 +183,7 @@ def design_turbofan(turbofan):
     hpt_conditions.inputs.compressor                = hpc_conditions.outputs 
     hpt_conditions.inputs.fan                       = fan_conditions.outputs
     hpt_conditions.inputs.bypass_ratio              = 0.0 #set to zero to ensure that fan not linked here 
-    high_pressure_turbine.working_fluid             = turbofan.working_fluid    
+    high_pressure_turbine.working_fluid             = combustor.working_fluid    
     
     # Step 14: Compute flow through the high pressure turbine
     compute_turbine_performance(high_pressure_turbine,hpt_conditions,conditions)
@@ -194,7 +194,7 @@ def design_turbofan(turbofan):
     lpt_conditions.inputs.static_temperature         = hpt_conditions.outputs.static_temperature
     lpt_conditions.inputs.static_pressure            = hpt_conditions.outputs.static_pressure  
     lpt_conditions.inputs.mach_number                = hpt_conditions.outputs.mach_number    
-    low_pressure_turbine.working_fluid               = turbofan.working_fluid    
+    low_pressure_turbine.working_fluid               = high_pressure_turbine.working_fluid    
     
     # Step 16: Link the low pressure turbine to the low_pressure_compresor
     lpt_conditions.inputs.compressor                 = lpc_conditions.outputs
@@ -215,7 +215,7 @@ def design_turbofan(turbofan):
     core_nozzle_conditions.inputs.static_temperature         = lpt_conditions.outputs.static_temperature
     core_nozzle_conditions.inputs.static_pressure            = lpt_conditions.outputs.static_pressure  
     core_nozzle_conditions.inputs.mach_number                = lpt_conditions.outputs.mach_number   
-    core_nozzle.working_fluid                                = turbofan.working_fluid 
+    core_nozzle.working_fluid                                = low_pressure_turbine.working_fluid 
     
     # Step 21: Compute flow through the core nozzle
     compute_expansion_nozzle_performance(core_nozzle,core_nozzle_conditions,conditions)
@@ -226,7 +226,7 @@ def design_turbofan(turbofan):
     fan_nozzle_conditions.inputs.static_temperature         = fan_conditions.outputs.static_temperature
     fan_nozzle_conditions.inputs.static_pressure            = fan_conditions.outputs.static_pressure  
     fan_nozzle_conditions.inputs.mach_number                = fan_conditions.outputs.mach_number   
-    fan_nozzle.working_fluid                                = turbofan.working_fluid
+    fan_nozzle.working_fluid                                = fan.working_fluid
     
     # Step 23: Compute flow through the fan nozzle
     compute_expansion_nozzle_performance(fan_nozzle,fan_nozzle_conditions,conditions)
