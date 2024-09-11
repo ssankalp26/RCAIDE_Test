@@ -4,9 +4,9 @@
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Imports
-# ----------------------------------------------------------------------------------------------------------------------
-import RCAIDE
-from RCAIDE.Framework.Core import Data, Units 
+# ---------------------------------------------------------------------------------------------------------------------- 
+from RCAIDE.Framework.Core import Data, Units
+import RCAIDE.Library.Components.Wings as Wings 
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 # Payload
@@ -44,10 +44,7 @@ def compute_systems_weight(vehicle):
 
     Properties Used:
         N/A
-    """
-    
-    Wings = RCAIDE.Library.Components.Wings
-    
+    """ 
     num_seats   = vehicle.passengers
     ctrl_type   = vehicle.systems.control
     ac_type     = vehicle.systems.accessories
@@ -119,8 +116,7 @@ def compute_systems_weight(vehicle):
         furnish_wt += 23.0 * num_seats * Units.lb  # add aditional seat wt
     else:
         instruments_wt = 800.0 * Units.lb
-        avionics_wt = 900.0 * Units.lb
-
+        avionics_wt = 900.0 * Units.lb 
 
     # packup outputs
     output = Data()

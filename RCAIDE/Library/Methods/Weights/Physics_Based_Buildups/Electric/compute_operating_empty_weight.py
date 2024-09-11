@@ -172,15 +172,8 @@ def compute_operating_empty_weight(vehicle,
     #-------------------------------------------------------------------------------
     maxLiftPower           = 0
     total_number_of_rotors = 0 
-    for network in vehicle.networks:
-
-        if not isinstance(network, RCAIDE.Framework.Networks.Electric):
-            raise NotImplementedError("""eVTOL weight buildup only supports the Battery Electric Rotor energy network.\n
-            Weight buildup will not return information on propulsion system.""",RuntimeWarning)
-                
-        for bus in network.busses: 
-    
-            
+    for network in vehicle.networks: 
+        for bus in network.busses:  
             #------------------------------------------------------------------------------- 
             # Payload Weight
             #-------------------------------------------------------------------------------
@@ -243,7 +236,7 @@ def compute_operating_empty_weight(vehicle,
                     weight.hubs                 += lift_rotor_hub_weight 
                 
                 # Motor 
-                motor = propulsor.rotor                            
+                motor = propulsor.motor                            
                 weight.motors              += motor.mass_properties.mass  
                
         total_number_of_rotors  = int(number_of_lift_rotors + number_of_propellers)  

@@ -76,6 +76,7 @@ def compute_propulsion_system_weight(vehicle,network):
     output.fuel_system          = WFSYS
     output.nacelle              = WNAC
     output.wt_eng               = WENG * NENG
+    output.number_of_engines    = NENG 
     return output
 
 ## @ingroup Methods-Weights-Correlations-Raymer
