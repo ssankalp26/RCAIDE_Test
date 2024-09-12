@@ -20,6 +20,8 @@ from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.harmonic_noise_
 from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.harmonic_noise_plane    import harmonic_noise_plane
 
 from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.broadband_noise   import broadband_noise
+from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.broadband_noise_unsteady   import broadband_noise_unsteady
+
 from RCAIDE.Library.Methods.Noise.Common                                           import atmospheric_attenuation
 from RCAIDE.Library.Methods.Noise.Metrics.A_weighting_metric                       import A_weighting_metric  
 
@@ -85,23 +87,27 @@ def rotor_noise(rotor,aeroacoustic_data,segment,settings):
     # ----------------------------------------------------------------------------------
     # Harmonic Noise
     # ----------------------------------------------------------------------------------
-    # # harmonic noise old version     
+    # harmonic noise old version     
     # harmonic_noise(harmonics_blade,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
     
-    # harmonic noise with point load distribution
-    harmonic_noise_point(harmonics_blade,harmonics_load,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
+    # # harmonic noise with point load distribution
+    # harmonic_noise_point(harmonics_blade,harmonics_load,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
     
     # # harmonic noise with line load distribution
     # harmonic_noise_line(harmonics_blade,harmonics_load,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
     
-    # # harmonic noise with planar load distribution
-    # harmonic_noise_plane(conditions,harmonics_blade,harmonics_load,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
+    # harmonic noise with planar load distribution
+    harmonic_noise_plane(conditions,harmonics_blade,harmonics_load,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
     
     
     # ----------------------------------------------------------------------------------
     # Broadband Noise
     # ----------------------------------------------------------------------------------
-    broadband_noise(freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
+    # # broadband noise old version
+    # broadband_noise(freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
+    
+    # broadband noise unsteady
+    broadband_noise_unsteady(freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
     
     
     # Atmospheric attenuation 

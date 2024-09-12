@@ -169,6 +169,16 @@ def harmonic_noise_plane(conditions,harmonics_blade,harmonics_load,freestream,an
     B_D_6          = c_6/D
     B_D_7          = c_7/D
     
+    # maximum thickness to chord ratio
+    t_b            = rotor.thickness_to_chord
+    t_b_6          = np.tile(t_b[None,None,None,:,None,None],(num_cpt,num_mic,num_rot,1,num_h_b,num_h_l))
+    
+    # chordwise thickness distribution normalized wrt chord
+    y_u_7          = np.tile(airfoil_geometry.y_upper_surface[None,None,None,None,None,None,:],(num_cpt,num_mic,num_rot,num_sec,num_h_b,num_h_l,1))
+    y_l_7          = np.tile(airfoil_geometry.y_lower_surface[None,None,None,None,None,None,:],(num_cpt,num_mic,num_rot,num_sec,num_h_b,num_h_l,1))
+    H_7            = (y_u_7 - y_l_7)/c_7
+    
+    
     # Rotorcraft speed and mach number
     V_4            = np.tile(np.linalg.norm(velocity_vector, axis=1) [:,None,None,None],(1,num_mic,num_rot,num_h_b))
     M_4            = V_4/a_4
@@ -267,12 +277,29 @@ def harmonic_noise_plane(conditions,harmonics_blade,harmonics_load,freestream,an
     
     # FREQUENCY DOMAIN PRESSURE TERM FOR LOADING
     J_mBk_6        = jv(m_6*B-k_6, (m_6*B*z_6*M_t_6*np.sin(theta_r_prime_6))/(1-M_6*np.cos(theta_r_6)))
-    Integrand_6    = (M_r_6**2)*psi_hat_Fk_6*J_mBk_6
-    Summand_5      = np.trapz(Integrand_6, x=z_6[0,0,0,:,0,0], axis=3)*np.exp(1j*(m_5*B-k_5)*(phi_prime_5-(np.pi/2)))
-    Summation_4    = np.sum(Summand_5, axis=4)
-    P_Lm           = (-1j*rho_4*(a_4**2)*B*np.exp(1j*k_m_4*r_4)*Summation_4)/(4*np.pi*(r_4/R_tip)*(1-M_4*np.cos(theta_r_4)))
+    L_Integrand_6  = (M_r_6**2)*psi_hat_Fk_6*J_mBk_6
+    L_Summand_5    = np.trapz(L_Integrand_6, x=z_6[0,0,0,:,0,0], axis=3)*np.exp(1j*(m_5*B-k_5)*(phi_prime_5-(np.pi/2)))
+    L_Summation_4  = np.sum(L_Summand_5, axis=4)
+    P_Lm           = (-1j*rho_4*(a_4**2)*B*np.exp(1j*k_m_4*r_4)*L_Summation_4)/(4*np.pi*(r_4/R_tip)*(1-M_4*np.cos(theta_r_4)))
     
-    # # frequency domain source function for thickness distribution
-    # H              = airfoil_geometry.y_upper_surface - airfoil_geometry.y_lower_surface
-    # H_tiled        = np.tile(H[None,None,None,None,None,:],(num_cpt,num_mic,num_rot,num_sec,num_h_b,1))
-    # psi_V          = np.sum(H*exp_term*dX_tiled,axis=5)
+    # frequency domain source function for drag and lift
+    psi_V_6        = np.trapz(H_7*exp_term_7, x=X, axis=6)
+    
+    # FREQUENCY DOMAIN PRESSURE TERM FOR THICKNESS
+    V_Integrand_6  = (M_r_6**2)*(k_x_hat_6**2)*t_b_6*psi_V_6*J_mBk_6
+    V_Summand_5    = np.trapz(V_Integrand_6, x=z_6[0,0,0,:,0,0], axis=3)*np.exp(1j*m_5*B*(phi_prime_5-(np.pi/2)))
+    
+    # we take a single dimension along the 4th axis because we only want the loading mode corresponding to k=0
+    V_Summation_4  = V_Summand_5[:,:,:,:,0]
+    P_Vm           = (-rho_4*(a_4**2)*B*np.exp(1j*k_m_4*r_4)*V_Summation_4)/(4*np.pi*(r_4/R_tip)*(1-M_4*np.cos(theta_r_4)))
+    
+    
+    # SOUND PRESSURE LEVELS
+    P_Lm_abs       = np.abs(P_Lm)
+    P_Vm_abs       = np.abs(P_Vm)
+    res.SPL_prop_harmonic_bpf_spectrum     = 20*np.log10((abs(P_Lm_abs + P_Vm_abs))/p_ref)  
+    res.SPL_prop_harmonic_1_3_spectrum     = convert_to_third_octave_band(res.SPL_prop_harmonic_bpf_spectrum,res.f[:,0,0,:],settings)          
+    res.SPL_prop_harmonic_1_3_spectrum[np.isinf(res.SPL_prop_harmonic_1_3_spectrum)]         = 0 
+    
+    return
+    

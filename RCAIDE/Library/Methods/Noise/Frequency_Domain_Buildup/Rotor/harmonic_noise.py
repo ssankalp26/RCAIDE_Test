@@ -140,7 +140,7 @@ def harmonic_noise(harmonics,freestream,angle_of_attack,coordinates,
     p_mL_H_integral   = (((np.cos(theta_r_prime)/(1 - M_x*np.cos(theta_r)))*dT_dr - (1/((r**2)*M_t*R_tip))*dQ_dr)
                          * np.exp(1j*phi_s)*Jmb * psi_L)*(m_1d*B*M_t*np.sin(theta_r)/ (2*np.sqrt(2)*np.pi*Y*R_tip)) *exponent_fraction
     p_mL_H            = np.trapz(p_mL_H_integral,x = r[0,0,0,:,0], axis = 3 ) 
-    p_mL_H_abs        =  abs(p_mL_H)  
+    p_mL_H_abs        = abs(p_mL_H)  
 
     # sound pressure levels  
     res.SPL_prop_harmonic_bpf_spectrum     = 20*np.log10((abs(p_mL_H_abs + p_mT_H_abs))/p_ref)  
