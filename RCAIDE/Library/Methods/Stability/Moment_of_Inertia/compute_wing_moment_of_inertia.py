@@ -15,7 +15,9 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Compute Wing Moment of Intertia
 # ----------------------------------------------------------------------------------------------------------------------  
-def compute_wing_moment_of_inertia(wing, center_of_gravity, mass): 
+def compute_wing_moment_of_inertia(wing, center_of_gravity): 
+    
+    mass = wing.mass # edit this call
     
     tr = wing.thickness_to_chord # root thickness as percent of chord
     tt = wing.thickness_to_chord #tip thickness as a percent of chord

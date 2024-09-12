@@ -16,8 +16,8 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Compute Wing Moment of Intertia
 # ----------------------------------------------------------------------------------------------------------------------   
-def compute_fuselage_moment_of_inertia(fuselage,center_of_gravity, fuse_weight): 
-
+def compute_fuselage_moment_of_inertia(fuselage,center_of_gravity): 
+    fuse_weight = fuselage.mass # Edit this call
     I_total = np.zeros((3, 3))
     outer_radius = fuselage.effective_diameter / 2
     inner_radius = 0.75 * fuselage.effective_diameter / 2 # Assume the inner radius is 75 % of the outer radius    
