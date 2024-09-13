@@ -21,7 +21,7 @@ import numpy as np
 # ---------------------------------------------------------------------------------------------------------------------- 
 # Operating Empty Weight 
 # ----------------------------------------------------------------------------------------------------------------------
-def compute_operating_empty_weight(vehicle,settings=None, method_type='RCAIDE', update_fuel_mass = True):
+def compute_operating_empty_weight(vehicle,settings=None, method_type='RCAIDE', update_fuel_weight = True):
     """ Main function that estimates the zero-fuel weight of a transport aircraft:
         - MTOW = WZFW + FUEL
         - WZFW = WOE + WPAYLOAD
@@ -198,6 +198,7 @@ def compute_operating_empty_weight(vehicle,settings=None, method_type='RCAIDE', 
             W_energy_network.fuel_system        += W_energy_network.fuel_system 
             W_energy_network.nacelle            += W_energy_network.nacelle    
             network_number_of_engines           += W_energy_network.number_of_engines
+            n_tanks                             = W_energy_network.number_of_fuel_tanks
             
         elif method_type == 'Raymer':
             W_energy_network                    = Raymer.compute_propulsion_system_weight(vehicle, network) 
@@ -208,9 +209,13 @@ def compute_operating_empty_weight(vehicle,settings=None, method_type='RCAIDE', 
             W_energy_network.wt_starter         += W_energy_network.wt_starter
             W_energy_network.fuel_system        += W_energy_network.fuel_system 
             W_energy_network.nacelle            += W_energy_network.nacelle    
-            network_number_of_engines           += W_energy_network.number_of_engines 
+            network_number_of_engines           += W_energy_network.number_of_engines
+            n_tanks                             = W_energy_network.number_of_fuel_tanks
         else:
+            n_tanks = 0
             for fuel_line in  network.fuel_lines: 
+                for fuel_tank in fuel_line.fuel_tanks:
+                    n_tanks +=  1
                 for propulsor in fuel_line.propulsors:
                     if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan):
                         thrust_sls  = propulsor.sealevel_static_thrust  
@@ -384,12 +389,15 @@ def compute_operating_empty_weight(vehicle,settings=None, method_type='RCAIDE', 
     output.operating_empty      = output.empty + output.operational_items.total
     output.zero_fuel_weight     = output.operating_empty + output.payload_breakdown.total
     output.max_takeoff          = vehicle.mass_properties.max_takeoff
-    fuel_mass                   = vehicle.mass_properties.max_takeoff - output.zero_fuel_weight 
-
-    #for network in vehicle.networks:  
-        #for fuel_line in  network.fuel_lines: 
-            #for fuel_tank in fuel_line.fuel_tanks:
-                #pass
+    total_fuel_weight           = vehicle.mass_properties.max_takeoff - output.zero_fuel_weight
+    
+    # assume fuel is equally distributed in fuel tanks
+    if update_fuel_weight:
+        for network in vehicle.networks: 
+            for fuel_line in network.fuel_lines:  
+                for fuel_tank in fuel_line.fuel_tanks:
+                    fuel_weight =  total_fuel_weight/n_tanks  
+                    fuel_tank.fuel.mass_properties.mass = fuel_weight
                     
     if not hasattr(vehicle.landing_gear, 'nose'):
         vehicle.landing_gear.nose   =  RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()

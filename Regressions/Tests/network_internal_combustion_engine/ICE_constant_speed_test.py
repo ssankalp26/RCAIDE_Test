@@ -80,15 +80,14 @@ def ICE_CS(vehicle):
     fuel_line                                   = RCAIDE.Library.Components.Energy.Distributors.Fuel_Line() 
     
     #------------------------------------------------------------------------------------------------------------------------------------  
-    # uel Tank and Fuel
+    # Fuel Tank and Fuel
     #------------------------------------------------------------------------------------------------------------------------------------   
-    fuel_tank                                   = RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Fuel_Tank()
-    fuel_tank.origin                            = vehicle.wings.main_wing.origin  
-    fuel                                        = RCAIDE.Library.Attributes.Propellants.Aviation_Gasoline() 
-    fuel.mass_properties.mass                   = 319 *Units.lbs 
-    fuel.mass_properties.center_of_gravity      =  vehicle.wings.main_wing.mass_properties.center_of_gravity
-    fuel.internal_volume                        = fuel.mass_properties.mass/fuel.density  
-    fuel_tank.fuel                              = fuel  
+    fuel_tank                                         = RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Fuel_Tank() 
+    fuel_tank.origin                                  = vehicle.wings.main_wing.origin  
+    fuel_tank.fuel                                    = RCAIDE.Library.Attributes.Propellants.Aviation_Gasoline() 
+    fuel_tank.fuel.mass_properties.mass               = 319 *Units.lbs 
+    fuel_tank.fuel.mass_properties.center_of_gravity  = vehicle.wings.main_wing.mass_properties.center_of_gravity
+    fuel_tank.volume                                  = fuel_tank.fuel.mass_properties.mass/fuel_tank.fuel.density   
     fuel_line.fuel_tanks.append(fuel_tank)
 
 

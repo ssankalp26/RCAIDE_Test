@@ -17,7 +17,7 @@ from RCAIDE.Library.Attributes.Materials.Aluminum import Aluminum
 # ---------------------------------------------------------------------------------------------------------------------- 
 # Operating Empty Weight 
 # ----------------------------------------------------------------------------------------------------------------------
-def compute_operating_empty_weight(vehicle):
+def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
     """ This is for a BWB aircraft configuration.
 
     Assumptions:
@@ -90,7 +90,8 @@ def compute_operating_empty_weight(vehicle):
             fuselage.mass_properties.mass = 0      
     
     
-    # Compute Propulsor Weight 
+    # Compute Propulsor Weight
+    n_tanks =  0
     for network in vehicle.networks:
         wt_propulsion = 0
         no_of_engines = 0
@@ -100,7 +101,9 @@ def compute_operating_empty_weight(vehicle):
                     no_of_engines  += 1
                     thrust_sls      = propulsor.sealevel_static_thrust
                     wt_engine_jet   = Propulsion.compute_jet_engine_weight(thrust_sls)
-                    wt_propulsion   += Propulsion.integrated_propulsion(wt_engine_jet) 
+                    wt_propulsion   += Propulsion.integrated_propulsion(wt_engine_jet)
+            for fuel_tank in fuel_line.fuel_tanks:
+                n_tanks +=  1
         for bus in network.busses: 
             for propulsor in bus.propulsors:
                 if type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbofan:
@@ -188,13 +191,20 @@ def compute_operating_empty_weight(vehicle):
     output.empty                                     = output.structures.total + output.propulsion_breakdown.total + output.systems_breakdown.total
     output.operating_empty                           = output.empty + output.operational_items.total
     output.zero_fuel_weight                          = output.operating_empty + output.payload_breakdown.total
-    output.fuel                                      = vehicle.mass_properties.max_takeoff - output.zero_fuel_weight
-                        
+    total_fuel_weight                                = vehicle.mass_properties.max_takeoff - output.zero_fuel_weight
+    
+    # assume fuel is equally distributed in fuel tanks
+    if update_fuel_weight:
+        for network in vehicle.networks: 
+            for fuel_line in network.fuel_lines:  
+                for fuel_tank in fuel_line.fuel_tanks:
+                    fuel_weight =  total_fuel_weight/n_tanks  
+                    fuel_tank.fuel.mass_properties.mass = fuel_weight   
+     
     control_systems                                  = RCAIDE.Library.Components.Component()
     electrical_systems                               = RCAIDE.Library.Components.Component()
     furnishings                                      = RCAIDE.Library.Components.Component()
-    air_conditioner                                  = RCAIDE.Library.Components.Component()
-    fuel                                             = RCAIDE.Library.Components.Component()
+    air_conditioner                                  = RCAIDE.Library.Components.Component() 
     apu                                              = RCAIDE.Library.Components.Component()
     hydraulics                                       = RCAIDE.Library.Components.Component()
     avionics                                         = RCAIDE.Library.Components.Systems.Avionics()
@@ -210,8 +220,7 @@ def compute_operating_empty_weight(vehicle):
     furnishings.mass_properties.mass                 = output.systems_breakdown.furnish
     avionics.mass_properties.mass                    = output.systems_breakdown.avionics \
                                                      + output.systems_breakdown.instruments
-    air_conditioner.mass_properties.mass             = output.systems_breakdown.air_conditioner
-    fuel.mass_properties.mass                        = output.fuel
+    air_conditioner.mass_properties.mass             = output.systems_breakdown.air_conditioner 
     apu.mass_properties.mass                         = output.systems_breakdown.apu
     hydraulics.mass_properties.mass                  = output.systems_breakdown.hydraulics
     optionals.mass_properties.mass                   = output.operational_items.operating_items_less_crew
@@ -221,8 +230,7 @@ def compute_operating_empty_weight(vehicle):
     vehicle.electrical_systems = electrical_systems
     vehicle.avionics           = avionics
     vehicle.furnishings        = furnishings
-    vehicle.air_conditioner    = air_conditioner
-    vehicle.fuel               = fuel
+    vehicle.air_conditioner    = air_conditioner 
     vehicle.apu                = apu
     vehicle.hydraulics         = hydraulics
     vehicle.optionals          = optionals

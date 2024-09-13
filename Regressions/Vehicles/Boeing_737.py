@@ -619,16 +619,13 @@ def vehicle_setup():
     #  Energy Source: Fuel Tank
     #------------------------------------------------------------------------------------------------------------------------- 
     # fuel tank
-    fuel_tank                                   = RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Fuel_Tank()
-    fuel_tank.origin                            = wing.origin 
-    
-    # append fuel 
-    fuel                                        = RCAIDE.Library.Attributes.Propellants.Jet_A1()   
-    fuel.mass_properties.mass                   = vehicle.mass_properties.max_takeoff-vehicle.mass_properties.max_fuel
-    fuel.origin                                 = vehicle.wings.main_wing.mass_properties.center_of_gravity      
-    fuel.mass_properties.center_of_gravity      = vehicle.wings.main_wing.aerodynamic_center
-    fuel.internal_volume                        = fuel.mass_properties.mass/fuel.density  
-    fuel_tank.fuel                              = fuel            
+    fuel_tank                                        = RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Fuel_Tank()
+    fuel_tank.origin                                 = vehicle.wings.main_wing.origin  
+    fuel_tank.fuel                                   = RCAIDE.Library.Attributes.Propellants.Jet_A1()   
+    fuel_tank.fuel.mass_properties.mass              = vehicle.mass_properties.max_takeoff-vehicle.mass_properties.max_fuel
+    fuel_tank.fuel.origin                            = vehicle.wings.main_wing.mass_properties.center_of_gravity      
+    fuel_tank.fuel.mass_properties.center_of_gravity = vehicle.wings.main_wing.aerodynamic_center
+    fuel_tank.volume                                 = fuel_tank.fuel.mass_properties.mass/fuel_tank.fuel.density   
     
     # apend fuel tank to dataclass of fuel tanks on fuel line 
     fuel_line.fuel_tanks.append(fuel_tank) 
