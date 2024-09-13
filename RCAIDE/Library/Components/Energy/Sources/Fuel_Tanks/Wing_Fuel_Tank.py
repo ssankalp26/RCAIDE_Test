@@ -2,7 +2,7 @@
 # RCAIDE/Library/Compoments/Energy/Fuel_Tanks/Central_Fuel_Tank.py
 # 
 # 
-# Created:  Mar 2024, M. Clarke 
+# Created:  Sep 2024, A. Molloy and M. Clarke 
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
@@ -16,7 +16,7 @@ from RCAIDE.Library.Methods.Energy.Sources.Fuel_Tanks.append_fuel_tank_condition
 #  Fuel Tank
 # ---------------------------------------------------------------------------------------------------------------------   
 ## @ingroup Library-Compoments-Energy-Fuel_Tanks 
-class Central_Fuel_Tank(Fuel_Tank):
+class Wing_Fuel_Tank(Fuel_Tank):
     """Fuel tank compoment.
     """
     def __defaults__(self):
@@ -28,7 +28,7 @@ class Central_Fuel_Tank(Fuel_Tank):
         Source:
             None
         """          
-        self.tag                         = 'fuel_tank'
+        self.tag                         = 'wing_fuel_tank'
         self.fuel_selector_ratio         = 1.0 
         self.mass_properties.empty_mass  = 0.0   
         self.secondary_fuel_flow         = 0.0

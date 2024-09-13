@@ -15,7 +15,7 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Compute Wing Moment of Intertia
 # ----------------------------------------------------------------------------------------------------------------------  
-def compute_wing_moment_of_inertia(wing, center_of_gravity): 
+def compute_wing_moment_of_inertia(wing, center_of_gravity, fuel_flag=False): 
     
     mass = wing.mass # edit this call
     
