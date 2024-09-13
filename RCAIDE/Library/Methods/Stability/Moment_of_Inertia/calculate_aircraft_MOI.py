@@ -27,29 +27,29 @@ def caclulate_aircraft_MOI(vehicle, CG_location):
     # ------------------------------------------------------------------        
     #  Electric network
     # ------------------------------------------------------------------      
-    I_network = np.zeros(3)
-    if electric system: # Need to update
-        for network in vehicle.network:
-            for bus in network.busses:
-                for propulsor in bus.properties:
-                    if type(propulsor) == RCAIDE.Library.Components.Propulsors.Converters.Propeller:
-                        I_network += compute_cylinder_moment_of_inertia(propulsor.origin, propulsor.mass_properties.mass, need_length, need_radius, 0,0, CG_location)
-                    if type(propulsor) == RCAIDE.Library.Components.Propulsors.Converters.DC_Motor:
-                        I_network += compute_cylinder_moment_of_inertia(propulsor.origin, propulsor.mass_properties.mass, need_length, need_radius, 0,0, CG_location)
-                    if type(propulsor) == RCAIDE.Library.Components.Energy.Batteries:
-                        I_network += compute_cuboid_moment_of_inertia(propulsor.origin, propulsor.mass_properties.mass, need_length, need_width, need_height, 0, 0, 0, CG_location)
-    
-    # ------------------------------------------------------------------        
-    #  Fuel network
-    # ------------------------------------------------------------------      
-    elif fuel system: # Need to update
-        for network in vehicle.network:
-            for Fuel_Line in network.Fuel_Line:
-                for engine_system in Fuel_Line.properties:
-                    if type(engine_system) == RCAIDE.Library.Components.Propulsors.Turbofan:
-                        I_network += compute_cylinder_moment_of_inertia(engine_system.origin, engine_system.mass_properties.mass, engine_system.engine_length, need_radius, 0,0, CG_location)
-                    if type(engine_system) == RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Fuel_Tank:
-                        I_network += compute_cuboid_moment_of_inertia(engine_system.origin, engine_system.mass_properties.mass, need_length, need_width, need_height, 0, 0, 0, CG_location)
+    I_network = np.zeros(3) 
+    for network in vehicle.network:
+        for bus in network.busses:
+            for propulsor in bus.propulsors:
+                for item , tag in  propulsor.items():
+                    if isinstance(item, RCAIDE.Library.Components.Propulsors.Converters.Rotor):
+                        pass 
+                    if isinstance(item,RCAIDE.Library.Components.Propulsors.Converters.DC_Motor):
+                        I_network += compute_cylinder_moment_of_inertia(item.origin,item.mass_properties.mass, need_length, need_radius, 0,0, CG_location)
+                for battery in bus.batteries: 
+                    I_network += compute_cuboid_moment_of_inertia(battery.origin, battery.mass_properties.mass, need_length, need_width, need_height, 0, 0, 0, CG_location)
+
+        for fuel_line in network.fuel_lines:
+            for propulsor in fuel_line.propulsors: 
+                for item , tag in  propulsor.items():
+                    if isinstance(item,RCAIDE.Library.Components.Propulsors.Turbofan):
+                        pass # TO DO 
+                for fuel_tank in fuel_line.fuel_tanks:
+                    if isinstance(fuel_tank,RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Central_Fuel_Tank ): 
+                        I_network += compute_cuboid_moment_of_inertia(fuel_tank.origin, fuel_tank.mass_properties.mass, need_length, need_width, need_height, 0, 0, 0, CG_location)
+                    else:
+                        pass # TO DO 
+                        
                   
     else:
         print("Propulsion system moment of inertia could not be calculated")
