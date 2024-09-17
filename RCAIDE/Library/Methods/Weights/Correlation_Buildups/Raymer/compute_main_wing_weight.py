@@ -57,14 +57,12 @@ def compute_main_wing_weight(vehicle, wing):
     Sw      = area / Units.ft ** 2
     A       = wing.aspect_ratio
     tc_root = t_c_w
-    taper   = taper
-    sweep   = sweep
     Scsw    = Sw * .1
 
     if vehicle.systems.accessories == 'sst':
         sweep = 0
-    Wwing = 0.0051 * (Wdg * Nz) ** .557 * Sw ** .649 * A ** .5 * tc_root ** -.4 * (1 + taper) ** .1 * np.cos(
+    W_wing = 0.0051 * (Wdg * Nz) ** .557 * Sw ** .649 * A ** .5 * tc_root ** -.4 * (1 + taper) ** .1 * np.cos(
         sweep) ** -1. * Scsw ** .1
-    weight = Wwing * Units.lb
+    weight = W_wing * Units.lb
 
     return weight
