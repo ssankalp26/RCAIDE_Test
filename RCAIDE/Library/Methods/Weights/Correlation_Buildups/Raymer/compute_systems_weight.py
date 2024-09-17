@@ -51,12 +51,12 @@ def compute_systems_weight(vehicle):
 
         Outputs:
             output - a data dictionary with fields:
-               W_flt_ctrl - weight of the flight control system                                [kilograms]
+               W_flight_controls - weight of the flight control system                                [kilograms]
                W_apu - weight of the apu                                                       [kilograms]
                W_hyd_pnu - weight of the hydraulics and pneumatics                             [kilograms]
                W_instruments - weight of the instruments and navigational equipment            [kilograms]
                W_avionics - weight of the avionics                                             [kilograms]
-               W_elec - weight of the electrical items                                         [kilograms]
+               W_electrical - weight of the electrical items                                         [kilograms]
                W_ac - weight of the air conditioning and anti-ice system                       [kilograms]
                W_furnish - weight of the furnishings in the fuselage                           [kilograms]
                W_anti_ice - weight of anti-ice system                                          [kilograms]
@@ -136,7 +136,7 @@ def compute_systems_weight(vehicle):
     output.W_hyd_pnu           = WHYD * Units.lbs
     output.W_instruments       = WIN * Units.lbs
     output.W_avionics          = WAVONC * Units.lbs
-    output.W_elec              = WELEC * Units.lbs
+    output.W_electrical              = WELEC * Units.lbs
     output.W_ac                = WAC * Units.lbs
     output.W_furnish           = WFURN * Units.lbs
     output.W_anti_ice          = WAI * Units.lbs

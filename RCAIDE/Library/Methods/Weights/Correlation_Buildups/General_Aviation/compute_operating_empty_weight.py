@@ -339,13 +339,13 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
 
     output.propulsion_breakdown             = Data()
     output.propulsion_breakdown.total       = W_energy_network_cumulative
-    output.propulsion_breakdown.fuel_system = output_2.W_fuel_sys
+    output.propulsion_breakdown.fuel_system = output_2.W_fuel_system
 
     output.systems_breakdown                    = Data()
     output.systems_breakdown.control_systems    = output_2.W_flight_control
     output.systems_breakdown.hydraulics         = output_2.W_hyd_pnu
     output.systems_breakdown.avionics           = output_2.W_avionics
-    output.systems_breakdown.electrical         = output_2.W_elec
+    output.systems_breakdown.electrical         = output_2.W_electrical
     output.systems_breakdown.air_conditioner    = output_2.W_ac
     output.systems_breakdown.furnish            = output_2.W_furnish
     output.systems_breakdown.apu                = 0

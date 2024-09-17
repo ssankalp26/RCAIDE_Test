@@ -33,56 +33,56 @@ def compute_systems_weight(W_uav, V_fuel, V_int, N_tank, N_eng, l_fuselage, span
 
         Outputs:
             output - a data dictionary with fields:
-                W_flt_ctrl - weight of the flight control system [kilograms]
+                W_flight_controls - weight of the flight control system [kilograms]
                 W_apu - weight of the apu [kilograms]
                 W_hyd_pnu - weight of the hydraulics and pneumatics [kilograms]
                 W_avionics - weight of the avionics [kilograms]
                 W_opitems - weight of the optional items based on the type of aircraft [kilograms]
-                W_elec - weight of the electrical items [kilograms]
+                W_electrical - weight of the electrical items [kilograms]
                 W_ac - weight of the air conditioning and anti-ice system [kilograms]
                 W_furnish - weight of the furnishings in the fuselage [kilograms]
     """ 
     # unpack inputs
 
     Q_tot  = V_fuel/Units.gallons
-    Q_int  = V_int/Units.gallons
-
+    Q_int  = V_int/Units.gallons 
     l_fus  = l_fuselage / Units.ft  # Convert meters to ft
     b_wing = span/Units.ft
 
     W_0 = TOW/Units.lb
     
-    #fuel system
-    fuel_sys_wt = 2.49*(Q_tot**.726)*((Q_tot/(Q_tot+Q_int))**.363)*(N_tank**.242)*(N_eng**.157)*Units.lb
+    # Fuel system
+    W_fuel_system = 2.49*(Q_tot**.726)*((Q_tot/(Q_tot+Q_int))**.363)*(N_tank**.242)*(N_eng**.157)*Units.lb
 
-    #flight controls
-    flt_ctrl_wt = .053*(l_fus**1.536)*(b_wing**.371)*((Nult*W_0**(10.**(-4.)))**.8)*Units.lb
-    #Hydraulics & Pneumatics Group Wt
+    # Flight controls
+    W_flight_controls = .053*(l_fus**1.536)*(b_wing**.371)*((Nult*W_0**(10.**(-4.)))**.8)*Units.lb
+    
+    # Hydraulics & Pneumatics Group Wt
     hyd_pnu_wt = (.001*W_0) * Units.lb
 
-    #avionics weight
-    avionics_wt = 2.117*((W_uav/Units.lbs)**.933)*Units.lb 
+    # Avionics weight
+    W_avionics = 2.117*((W_uav/Units.lbs)**.933)*Units.lb 
 
     # Electrical Group Wt
-    elec_wt = 12.57*((avionics_wt/Units.lb + fuel_sys_wt/Units.lb)**.51)*Units.lb
+    W_electrical = 12.57*((W_avionics/Units.lb + W_fuel_system/Units.lb)**.51)*Units.lb
 
     # Environmental Control 
-    ac_wt = has_air_conditioner*.265*(W_0**.52)*((1. * num_seats)**.68)*((avionics_wt/Units.lb)**.17)*(mach_number**.08)*Units.lb
+    W_air_conditioning = has_air_conditioner*.265*(W_0**.52)*((1. * num_seats)**.68)*((W_avionics/Units.lb)**.17)*(mach_number**.08)*Units.lb
 
     # Furnishings Group Wt
-    furnish_wt = (.0582*W_0-65.)*Units.lb
+    W_furnishings = (.0582*W_0-65.)*Units.lb
 
     # packup outputs
     output = Data()   
-    output.W_flight_control    = flt_ctrl_wt
+    output.W_flight_control    = W_flight_controls
     output.W_hyd_pnu           = hyd_pnu_wt
-    output.W_avionics          = avionics_wt
-    output.W_elec              = elec_wt
-    output.W_ac                = ac_wt
-    output.W_furnish           = furnish_wt
-    output.W_fuel_sys          = fuel_sys_wt
+    output.W_avionics          = W_avionics
+    output.W_electrical        = W_electrical
+    output.W_ac                = W_air_conditioning
+    output.W_furnish           = W_furnishings
+    output.W_fuel_system       = W_fuel_system
     output.W_systems           = output.W_flight_control + output.W_hyd_pnu \
-                                  + output.W_ac + output.W_avionics + output.W_elec \
-                                  + output.W_furnish + output.W_fuel_sys
+                                  + output.W_ac + output.W_avionics + output.W_electrical \
+                                  + output.W_furnish + output.W_fuel_system
 
     return output

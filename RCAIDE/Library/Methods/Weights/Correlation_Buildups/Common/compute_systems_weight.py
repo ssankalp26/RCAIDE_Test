@@ -32,13 +32,13 @@ def compute_systems_weight(vehicle):
 
    Outputs:
        output - a data dictionary with fields:
-           W_flt_ctrl - weight of the flight control system                                               [kilograms]
+           W_flight_controls - weight of the flight control system                                               [kilograms]
            W_apu - weight of the apu                                                                      [kilograms]
            W_hyd_pnu - weight of the hydraulics and pneumatics                                            [kilograms]
            W_instruments - weight of the instruments and navigational equipment                           [kilograms]
            W_avionics - weight of the avionics                                                            [kilograms]
            W_opitems - weight of the optional items based on the type of aircraft                         [kilograms]
-           W_elec - weight of the electrical items                                                        [kilograms]
+           W_electrical - weight of the electrical items                                                        [kilograms]
            W_ac - weight of the air conditioning and anti-ice system                                      [kilograms]
            W_furnish - weight of the furnishings in the fuselage                                          [kilograms]
 
@@ -68,7 +68,7 @@ def compute_systems_weight(vehicle):
         flt_ctrl_scaler = 2.5
     else:
         flt_ctrl_scaler = 1.7  # fully aerodynamic controls
-    flt_ctrl_wt = (flt_ctrl_scaler * (area_hv)) * Units.lb
+    W_flight_controls = (flt_ctrl_scaler * (area_hv)) * Units.lb
 
     # APU Group Wt
     if num_seats >= 6.:
@@ -80,57 +80,57 @@ def compute_systems_weight(vehicle):
     hyd_pnu_wt = (0.65 * sref) * Units.lb
 
     # Electrical Group Wt
-    elec_wt = (13.0 * num_seats) * Units.lb
+    W_electrical = (13.0 * num_seats) * Units.lb
 
     # Furnishings Group Wt
-    furnish_wt = ((43.7 - 0.037 * min(num_seats, 300.)) * num_seats + 46.0 * num_seats) * Units.lb
+    W_furnishings = ((43.7 - 0.037 * min(num_seats, 300.)) * num_seats + 46.0 * num_seats) * Units.lb
 
     # Environmental Control
-    ac_wt = (15.0 * num_seats) * Units.lb
+    W_air_conditioning = (15.0 * num_seats) * Units.lb
 
     # Instruments, Electronics, Operating Items based on Type of Vehicle
 
     if ac_type == "short-range":  # short-range domestic, austere accomodations
-        instruments_wt = 800.0 * Units.lb
-        avionics_wt = 900.0 * Units.lb
+        W_instruments = 800.0 * Units.lb
+        W_avionics = 900.0 * Units.lb
     elif ac_type == "medium-range":  # medium-range domestic
-        instruments_wt = 800.0 * Units.lb
-        avionics_wt = 900.0 * Units.lb
+        W_instruments = 800.0 * Units.lb
+        W_avionics = 900.0 * Units.lb
     elif ac_type == "long-range":  # long-range overwater
-        instruments_wt = 1200.0 * Units.lb
-        avionics_wt = 1500.0 * Units.lb
-        furnish_wt += 23.0 * num_seats * Units.lb  # add aditional seat wt
+        W_instruments = 1200.0 * Units.lb
+        W_avionics = 1500.0 * Units.lb
+        W_furnishings += 23.0 * num_seats * Units.lb  # add aditional seat wt
     elif ac_type == "business":  # business jet
-        instruments_wt = 100.0 * Units.lb
-        avionics_wt = 300.0 * Units.lb
+        W_instruments = 100.0 * Units.lb
+        W_avionics = 300.0 * Units.lb
     elif ac_type == "cargo":  # all cargo
-        instruments_wt = 800.0 * Units.lb
-        avionics_wt = 900.0 * Units.lb
-        elec_wt = 1950.0 * Units.lb  # for cargo a/c
+        W_instruments = 800.0 * Units.lb
+        W_avionics = 900.0 * Units.lb
+        W_electrical = 1950.0 * Units.lb  # for cargo a/c
     elif ac_type == "commuter":  # commuter
-        instruments_wt = 300.0 * Units.lb
-        avionics_wt = 500.0 * Units.lb
+        W_instruments = 300.0 * Units.lb
+        W_avionics = 500.0 * Units.lb
     elif ac_type == "sst":  # sst
-        instruments_wt = 1200.0 * Units.lb
-        avionics_wt = 1500.0 * Units.lb
-        furnish_wt += 23.0 * num_seats * Units.lb  # add aditional seat wt
+        W_instruments = 1200.0 * Units.lb
+        W_avionics = 1500.0 * Units.lb
+        W_furnishings += 23.0 * num_seats * Units.lb  # add aditional seat wt
     else:
-        instruments_wt = 800.0 * Units.lb
-        avionics_wt = 900.0 * Units.lb 
+        W_instruments = 800.0 * Units.lb
+        W_avionics = 900.0 * Units.lb 
 
     # packup outputs
     output = Data()
-    output.W_flight_control    = flt_ctrl_wt
+    output.W_flight_control    = W_flight_controls
     output.W_apu               = apu_wt
     output.W_hyd_pnu           = hyd_pnu_wt
-    output.W_instruments       = instruments_wt
-    output.W_avionics          = avionics_wt
-    output.W_elec              = elec_wt
-    output.W_ac                = ac_wt
-    output.W_furnish           = furnish_wt
+    output.W_instruments       = W_instruments
+    output.W_avionics          = W_avionics
+    output.W_electrical        = W_electrical
+    output.W_ac                = W_air_conditioning
+    output.W_furnish           = W_furnishings
     output.W_anti_ice          = 0 # included in AC
     output.W_systems           = output.W_flight_control + output.W_apu + output.W_hyd_pnu \
-                                + output.W_ac + output.W_avionics + output.W_elec \
+                                + output.W_ac + output.W_avionics + output.W_electrical \
                                 + output.W_furnish + output.W_instruments
 
     return output
