@@ -50,18 +50,10 @@ def compute_horizontal_tail_weight(vehicle, wing):
     exposed    = wing.areas.exposed / wing.areas.wetted
     
     # Compute length between the main wing's aerodynamic center and the horizontal tail
-    l_w2h      = wing.origin[0][0] + wing.aerodynamic_center[0] - vehicle.wings['main_wing'].origin[0][0] - \
-                vehicle.wings['main_wing'].aerodynamic_center[0]
-    if type(l_w2h) == np.ndarray:
-        l_w2h  = l_w2h[0]
-        l_w    = vehicle.wings['main_wing'].chords.mean_aerodynamic / Units.ft  # Convert from meters to ft
-    if np.isnan(l_w):
-        l_w    = 0
-    if np.isnan(l_w2h):
-        l_w2h  = 0.
+    l_w2h      = np.array([wing.origin[0][0] + wing.aerodynamic_center[0] - vehicle.wings['main_wing'].origin[0][0] -  vehicle.wings['main_wing'].aerodynamic_center[0]])
+    l_w        = np.array([vehicle.wings['main_wing'].chords.mean_aerodynamic / Units.ft])   # Convert from meters to ft
     length_w_h = l_w2h / Units.ft  # Distance from mean aerodynamic center of wing to mean aerodynamic center of
-    # horizontal tail (Convert meters to ft)
-
+     
     # Calculate weight of wing for traditional aircraft horizontal tail
     weight_English = 5.25 * area + 0.8 * 10. ** -6 * vehicle.flight_envelope.ultimate_load * span ** 3. * mtow * l_w *\
                      np.sqrt(exposed * area) / (wing.thickness_to_chord * (np.cos(sweep) ** 2.) * length_w_h * area ** 1.5)

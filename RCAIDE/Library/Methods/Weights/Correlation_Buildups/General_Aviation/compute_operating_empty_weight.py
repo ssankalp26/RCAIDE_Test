@@ -173,34 +173,41 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
     W_cargo     = vehicle.mass_properties.cargo 
     q_c         = vehicle.design_dynamic_pressure
     mach_number = vehicle.flight_envelope.design_mach_number
-
-    network_name                = list(vehicle.networks.keys())[0] #obtain the key for the network for assignment purposes
-    networks                    = vehicle.networks[network_name]
-    num_eng                     = networks.number_of_engines 
+ 
     landing_weight              = TOW
     m_fuel                      =  0
     number_of_tanks             =  0
     V_fuel                      =  0
     V_fuel_int                  =  0
     W_energy_network_cumulative =  0
-
+    number_of_engines           =  0
+ 
     for network in vehicle.networks:
-        W_energy_network_total =  0 
+        W_energy_network_total   = 0
+        number_of_jet_engines    = 0
+        number_of_piston_engines = 0
+        turbofan_flag      =  False
+        piston_engine_flag =  False
         for fuel_line in network.fuel_lines: 
-            for propulsor in  fuel_line.propulsors:
+            for propulsor in  fuel_line.propulsors: 
                 if type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turbofan:
-                    thrust_sls              = networks.sealevel_static_thrust
-                    W_engine_jet            = Propulsion.compute_jet_engine_weight(thrust_sls)
-                    W_propulsion            = Propulsion.integrated_propulsion(W_engine_jet,num_eng)
-                    W_energy_network_total  += W_propulsion
-        
-                elif type(propulsor) ==  RCAIDE.Library.Components.Propulsors.ICE_Propeller:           
-                    engine_key               = list(networks.engines.keys())[0]
-                    engine                   = networks.engines[engine_key]
-                    rated_power              = engine.sea_level_power
-                    W_engine_piston          = Propulsion.compute_piston_engine_weight(rated_power)
-                    W_propulsion             = Propulsion.integrated_propulsion_general_aviation(W_engine_piston,num_eng)
-                    W_energy_network_total  += W_propulsion   
+                    number_of_jet_engines += 1
+                    thrust_sls    =  propulsor.sealevel_static_thrust
+                    turbofan_flag = True 
+                elif type(propulsor) ==  RCAIDE.Library.Components.Propulsors.ICE_Propeller:      
+                    number_of_piston_engines += 1
+                    rated_power   = propulsor.engine.sea_level_power
+                    piston_engine_flag =  True 
+                          
+            if turbofan_flag:
+                W_engine_jet            = Propulsion.compute_jet_engine_weight(thrust_sls)
+                W_propulsion            = Propulsion.integrated_propulsion(W_engine_jet,number_of_jet_engines)
+                W_energy_network_total  += W_propulsion
+    
+            if piston_engine_flag:           
+                W_engine_piston          = Propulsion.compute_piston_engine_weight(rated_power)
+                W_propulsion             = Propulsion.integrated_propulsion_general_aviation(W_engine_piston,number_of_piston_engines)
+                W_energy_network_total  += W_propulsion   
          
             for fuel_tank in fuel_line.fuel_tanks: 
                 m_fuel_tank     = fuel_tank.fuel.mass_properties.mass
@@ -228,6 +235,7 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
                 
         network.mass_properties.mass = W_energy_network_total
         W_energy_network_cumulative += W_energy_network_total
+        number_of_engines           +=  number_of_jet_engines +  number_of_piston_engines
     
     for wing in vehicle.wings:
         if isinstance(wing,RCAIDE.Library.Components.Wings.Main_Wing):
@@ -242,6 +250,7 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
             # set main wing to be used in future horizontal tail calculations 
             main_wing  =  wing
         
+    l_w2h = 0
     for wing in vehicle.wings:            
         if isinstance(wing,RCAIDE.Library.Components.Wings.Horizontal_Tail):
             S_h                = wing.areas.reference
@@ -303,7 +312,7 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
         has_air_conditioner = 1
 
     # Calculating Empty Weight of Aircraft
-    W_systems           = compute_systems_weight(W_uav,V_fuel, V_fuel_int, number_of_tanks, num_eng, l_fus, b, TOW, Nult, num_seats, mach_number, has_air_conditioner)
+    W_systems           = compute_systems_weight(W_uav,V_fuel, V_fuel_int, number_of_tanks, number_of_engines, l_fus, b, TOW, Nult, num_seats, mach_number, has_air_conditioner)
 
     # Calculate the equipment empty weight of the aircraft
 

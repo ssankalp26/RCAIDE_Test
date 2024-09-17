@@ -45,7 +45,7 @@ def compute_propulsion_system_weight(vehicle,network):
                     - output.W_engine_controls: engine controls weight
                     - output.fuel_system: fuel system weight
                     - output.nacelle: nacelle weight
-                    - output.W_eng: dry engine weight
+                    - output.W_engine: dry engine weight
 
         Properties Used:
             N/A
@@ -72,13 +72,13 @@ def compute_propulsion_system_weight(vehicle,network):
     WPRO            = NENG * WENG + WFSYS + WEC + WSTART + WTHR + WNAC
 
     output                      = Data()
-    output.W_prop              = WPRO
-    output.W_thrust_reverser   = WTHR
-    output.W_starter           = WSTART
-    output.W_engine_controls   = WEC
-    output.fuel_system          = WFSYS
-    output.nacelle              = WNAC
-    output.W_eng               = WENG * NENG
+    output.W_prop               = WPRO
+    output.W_thrust_reverser    = WTHR
+    output.W_starter            = WSTART
+    output.W_engine_controls    = WEC
+    output.W_fuel_system        = WFSYS
+    output.W_nacelle            = WNAC
+    output.W_engine             = WENG * NENG
     output.number_of_engines    = NENG
     output.number_of_fuel_tanks = number_of_tanks  
     return output

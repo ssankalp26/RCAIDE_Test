@@ -31,8 +31,8 @@ def vehicle_setup():
     vehicle.mass_properties.cargo               = 0. 
                                                
     # envelope properties                       
-    vehicle.flight_envelope.ultimate_load       = 5.7
-    vehicle.flight_envelope.limit_load          = 3.8
+    vehicle.flight_envelope.ultimate_load       = 5.7 
+    vehicle.flight_envelope.limit_load          = 3.8  
                                                 
     cruise_speed                                = 124. * Units.kts
     altitude                                    = 8500. * Units.ft
@@ -41,7 +41,7 @@ def vehicle_setup():
     freestream0                                 = atmo.compute_values (altitude)
     mach_number                                 = (cruise_speed/freestream.speed_of_sound)[0][0] 
     vehicle.design_dynamic_pressure             = ( .5 *freestream0.density*(cruise_speed*cruise_speed))[0][0]
-    vehicle.design_mach_number                  =  mach_number
+    vehicle.flight_envelope.design_mach_number  =  mach_number
                                                 
     # basic parameters                          
     vehicle.reference_area                      = 174. * Units.feet**2       
@@ -98,7 +98,7 @@ def vehicle_setup():
     #  Horizontal Stabilizer
     # ------------------------------------------------------------------        
                                                 
-    wing                                        = RCAIDE.Library.Components.Wings.Wing()
+    wing                                        = RCAIDE.Library.Components.Wings.Horizontal_Tail()
     wing.tag                                    = 'horizontal_stabilizer' 
     wing.sweeps.quarter_chord                   = 0.0 * Units.deg
     wing.thickness_to_chord                     = 0.12
@@ -124,7 +124,7 @@ def vehicle_setup():
     #   Vertical Stabilizer
     # ------------------------------------------------------------------
 
-    wing                                        = RCAIDE.Library.Components.Wings.Wing()
+    wing                                        = RCAIDE.Library.Components.Wings.Vertical_Tail()
     wing.tag                                    = 'vertical_stabilizer' 
     wing.sweeps.quarter_chord                   = 25. * Units.deg
     wing.thickness_to_chord                     = 0.12
