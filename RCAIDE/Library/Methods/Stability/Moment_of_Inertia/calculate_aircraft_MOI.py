@@ -48,7 +48,7 @@ def caclulate_aircraft_MOI(vehicle, CG_location):
                     if isinstance(fuel_tank,RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Central_Fuel_Tank ): 
                         I_network += compute_cuboid_moment_of_inertia(fuel_tank.origin, fuel_tank.mass_properties.mass, need_length, need_width, need_height, 0, 0, 0, CG_location)
                     if isinstance(fuel_tank,RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Wing_Fuel_Tank ): 
-                        I_network += compute_cuboid_moment_of_inertia(fuel_tank.origin, fuel_tank.mass_properties.mass, need_length, need_width, need_height, 0, 0, 0, CG_location)
+                        I_network += compute_wing_moment_of_inertia(vehicle.wings["main_wing"], CG_location, fuel_flag=True)
                     else:
                         pass # TO DO 
                         

@@ -23,11 +23,18 @@ def compute_wing_moment_of_inertia(wing, center_of_gravity, fuel_flag=False):
     tt = wing.thickness_to_chord #tip thickness as a percent of chord
     ct = wing.chords.tip # tip chord 
     cr = wing.chords.root # root chord
+    origin_wing = wing.origin
     
     b = wing.spans.total / 2 # half-span of the wing
     A = wing.sweeps.quarter_chord * np.pi / 180 # sweep angle in radians (located at quarter chord)
     dihedral = wing.dihedral * np.pi /180 # Wing dihedral. Converts it to radians
-        
+    
+    if fuel_flag:
+        b = b * 0.8 # Wing fuel tank is 80% span of the entire wing
+        ct = (0.8 * (ct - cr) + cr)* 0.6 # Wing fuel tank has 60% of the chord 80% down the wing. Assumes linear relation ebtween cr and ct 
+        cr = cr * 0.6 # Wing tank has 60% of the chord of the root chord
+        origin_wing = origin_wing + np.array([[cr * 0.10], [0], [0]])  # wing fuel tank is set about 10% back in the wing
+    
     # a0-a4 values are defined below for a NACA 4-digit airfoil. This holds for all NACA airfoils
     # These values help define the thickness distribution. 
     a0 = 2.969
@@ -98,7 +105,7 @@ def compute_wing_moment_of_inertia(wing, center_of_gravity, fuel_flag=False):
         I_local = R * I_rotated * np.transpose(R) # Rotation of ienrtia matrix to a vertical frame of reference         
     
     # global system
-    s = np.array(wing.origin) - np.array(center_of_gravity) # Vector for the parallel axis theorem
+    s = np.array(origin_wing) - np.array(center_of_gravity) # Vector for the parallel axis theorem
     
     I = np.array(I_local) + mass * (np.array(np.dot(s[0], s[0])) * np.array(np.identity(3)) - s * np.transpose(s))
     
