@@ -41,15 +41,17 @@ def single_airfoil():
     
     # distribution plots
     for i in range(16):
-        plt.plot(airfoil_properties_1.fL[:,i,0])
+        plt.plot(airfoil_properties_1.x[0,0,150:],airfoil_properties_1.fL[:,i,0])
         plt.title(('AOA =',AoA_deg[i],'degrees'))
         plt.ylabel("fL")
+        plt.xlabel("c")
         plt.show()
     
     for i in range(16):
-        plt.plot(airfoil_properties_1.fD[:,i,0])
+        plt.plot(airfoil_properties_1.x[0,0,150:],airfoil_properties_1.fD[:,i,0])
         plt.title(('AOA =',AoA_deg[i],'degrees'))
         plt.ylabel("fD")
+        plt.xlabel("c")
         plt.show()
     
     # Plots    
