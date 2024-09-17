@@ -43,20 +43,22 @@ def compute_horizontal_tail_weight(vehicle, wing):
         N/A
     """
     # unpack inputs
-    span    = wing.spans.projected / Units.ft  # Convert meters to ft
-    sweep   = wing.sweeps.quarter_chord
-    area    = wing.areas.reference / Units.ft ** 2  # Convert meters squared to ft squared
-    mtow    = vehicle.mass_properties.max_takeoff / Units.lb  # Convert kg to lbs
-    exposed = wing.areas.exposed / wing.areas.wetted
-    l_w2h   = wing.origin[0][0] + wing.aerodynamic_center[0] - vehicle.wings['main_wing'].origin[0][0] - \
+    span       = wing.spans.projected / Units.ft  # Convert meters to ft
+    sweep      = wing.sweeps.quarter_chord
+    area       = wing.areas.reference / Units.ft ** 2  # Convert meters squared to ft squared
+    mtow       = vehicle.mass_properties.max_takeoff / Units.lb  # Convert kg to lbs
+    exposed    = wing.areas.exposed / wing.areas.wetted
+    
+    # Compute length between the main wing's aerodynamic center and the horizontal tail
+    l_w2h      = wing.origin[0][0] + wing.aerodynamic_center[0] - vehicle.wings['main_wing'].origin[0][0] - \
                 vehicle.wings['main_wing'].aerodynamic_center[0]
     if type(l_w2h) == np.ndarray:
-        l_w2h = l_w2h[0]
-    l_w = vehicle.wings['main_wing'].chords.mean_aerodynamic / Units.ft  # Convert from meters to ft
+        l_w2h  = l_w2h[0]
+        l_w    = vehicle.wings['main_wing'].chords.mean_aerodynamic / Units.ft  # Convert from meters to ft
     if np.isnan(l_w):
-        l_w = 0
+        l_w    = 0
     if np.isnan(l_w2h):
-        l_w2h = 0.
+        l_w2h  = 0.
     length_w_h = l_w2h / Units.ft  # Distance from mean aerodynamic center of wing to mean aerodynamic center of
     # horizontal tail (Convert meters to ft)
 

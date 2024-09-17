@@ -50,7 +50,7 @@ def compute_operating_items_weight(vehicle):
     """
     num_seats   = vehicle.passengers
     ac_type     = vehicle.systems.accessories
-    if ac_type == "short-range":  # short-range domestic, austere accomodations
+    if ac_type   == "short-range":  # short-range domestic, austere accomodations
         operitems_wt = 17.0 * num_seats * Units.lb
     elif ac_type == "medium-range":  # medium-range domestic
         operitems_wt = 28.0 * num_seats * Units.lb

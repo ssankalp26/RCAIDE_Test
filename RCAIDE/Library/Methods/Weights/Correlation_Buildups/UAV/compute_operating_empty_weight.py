@@ -35,10 +35,14 @@ def compute_operating_empty_weight(vehicle,settings=None):
     Properties Used:
         N/A
     """    
-    
+    # ----------------------------------------------------------------------------------------------------------------------
     # Unpack
+    # ----------------------------------------------------------------------------------------------------------------------
     S     = vehicle.reference_area
     
+    # ----------------------------------------------------------------------------------------------------------------------
+    #  find max wing area and aspect ratio 
+    # ----------------------------------------------------------------------------------------------------------------------    
     S_max = 0
     for wing in vehicle.wings:
         if S_max < wing.areas.projected:
@@ -51,11 +55,13 @@ def compute_operating_empty_weight(vehicle,settings=None):
     Earth = RCAIDE.Library.Attributes.Planets.Earth()
     g     = Earth.sea_level_gravity 
     
+    # ----------------------------------------------------------------------------------------------------------------------
     # Airframe weight
-    Waf = (5.58*(S**1.59)*(AR**0.71))/g  
+    # ----------------------------------------------------------------------------------------------------------------------
+    W_airframe   = (5.58*(S**1.59)*(AR**0.71))/g  
     
     # Pack
-    weight = Data()
-    weight.empty = Waf
+    weight       = Data()
+    weight.empty = W_airframe
     
     return weight
