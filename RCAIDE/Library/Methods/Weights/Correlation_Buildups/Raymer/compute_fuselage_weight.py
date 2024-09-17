@@ -14,9 +14,9 @@ from RCAIDE.Framework.Core    import Units
 import  numpy as  np
  
 # ----------------------------------------------------------------------------------------------------------------------
-# Fuselage Weight 
+# fuselage Weight 
 # ----------------------------------------------------------------------------------------------------------------------
-def compute_fuselage_weight(vehicle, fuse, settings):
+def compute_fuselage_weight(vehicle, fuselage, settings):
     """ Calculate the weight of the fuselage of a transport aircraft based on the Raymer method
 
         Assumptions:
@@ -24,7 +24,7 @@ def compute_fuselage_weight(vehicle, fuse, settings):
             1 cargo door
 
         Source:
-            Aircraft Design: A Conceptual Approach (2nd edition)
+            Aircraft Design: A ConceptualengthApproach (2nd edition)
 
         Inputs:
             vehicle - data dictionary with vehicle properties                   [dimensionless]
@@ -33,30 +33,30 @@ def compute_fuselage_weight(vehicle, fuse, settings):
                 -.wings['main_wing']: data dictionary with main wing properties
                     -.taper: wing taper ratio
                     -.sweeps.quarter_chord: quarter chord sweep                 [rad]
-            fuse - data dictionary with specific fuselage properties            [dimensionless]
-                -.lenghts.total: total length                                   [m]
+            fuselage - data dictionary with specific fuselage properties            [dimensionless]
+                -.lenghts.total: totalengthlength                                   [m]
                 -.width: fuselage width                                         [m]
                 -.heights.maximum: maximum height of the fuselage               [m]
 
         Outputs:
-            weight_fuse - weight of the fuselage                                [kilograms]
+            weight_fuselage - weight of the fuselage                                [kilograms]
 
         Properties Used:
             N/A
     """
-    Klg     = settings.Raymer.fuselage_mounted_landing_gear_factor
-    DG      = vehicle.mass_properties.max_takeoff / Units.lbs
-    L       = fuse.lengths.total / Units.ft
-    fuse_w  = fuse.width / Units.ft
-    fuse_h  = fuse.heights.maximum / Units.ft
+    Klg         = settings.Raymer.fuselage_mounted_landing_gear_factor
+    DG          = vehicle.mass_properties.max_takeoff / Units.lbs
+    length      = fuselage.lengths.totalength/ Units.ft
+    fuselage_w  = fuselage.width / Units.ft
+    fuselage_h  = fuselage.heights.maximum / Units.ft
     
-    Kdoor   = 1.06  # Assuming 1 cargo door
-    D       = (fuse_w + fuse_h) / 2.
-    Sf      = np.pi * (L / D - 1.7) * D ** 2  # Fuselage wetted area, ft**2
-    wing    = vehicle.wings['main_wing']
-    Kws     = 0.75 * (1 + 2 * wing.taper) / (1 + wing.taper) * (wing.spans.projected / Units.ft *
+    Kdoor       = 1.06  # Assuming 1 cargo door
+    D           = (fuselage_w + fuselage_h) / 2.
+    Sf          = np.pi * (length/ D - 1.7) * D ** 2  # fuselage wetted area, ft**2
+    wing        = vehicle.wings['main_wing']
+    Kws         = 0.75 * (1 + 2 * wing.taper) / (1 + wing.taper) * (wing.spans.projected / Units.ft *
                                                             np.tan(wing.sweeps.quarter_chord)) / L
 
-    weight_fuse = 0.328 * Kdoor * Klg * (DG * vehicle.flight_envelope.ultimate_load) ** 0.5 * L ** 0.25 * \
-                 Sf ** 0.302 * (1 + Kws) ** 0.04 * (L / D) ** 0.1
-    return weight_fuse * Units.lbs
+    weight_fuselage = 0.328 * Kdoor * Klg * (DG * vehicle.flight_envelope.ultimate_load) ** 0.5 * length** 0.25 * \
+                 Sf ** 0.302 * (1 + Kws) ** 0.04 * (length/ D) ** 0.1
+    return weight_fuselage * Units.lbs

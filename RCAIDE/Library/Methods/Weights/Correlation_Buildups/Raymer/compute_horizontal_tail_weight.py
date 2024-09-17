@@ -60,9 +60,9 @@ def compute_horizontal_tail_weight(vehicle, wing, elevator_fraction=0.4):
         for wing in  vehicle.wings:
             if S < wing.areas.reference:
                 ref_wing = wing
-    L_fus = 0
+    L_fuselage = 0
     for fuselage in vehicle.fuselages:
-        if L_fus < fuselage.lengths.total:
+        if L_fuselage < fuselage.lengths.total:
             ref_fuselage = fuselage
             
     Kuht    = 1 # not a all-moving unit horizontal tail

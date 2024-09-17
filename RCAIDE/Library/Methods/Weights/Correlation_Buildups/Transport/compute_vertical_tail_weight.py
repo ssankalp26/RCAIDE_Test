@@ -47,12 +47,12 @@ def compute_vertical_tail_weight(vehicle, wing, rudder_fraction=0.25):
         N/A
     """
     # unpack inputs
-    span    = wing.spans.projected / Units.ft  # Convert meters to ft
-    sweep   = wing.sweeps.quarter_chord  # Convert deg to radians
-    area    = wing.areas.reference / Units.ft ** 2  # Convert meters squared to ft squared
-    mtow    = vehicle.mass_properties.max_takeoff / Units.lb  # Convert kg to lbs
-    Sref    = vehicle.reference_area / Units.ft ** 2  # Convert from meters squared to ft squared
-    t_c_v   = wing.thickness_to_chord
+    span                   = wing.spans.projected / Units.ft  # Convert meters to ft
+    sweep                  = wing.sweeps.quarter_chord  # Convert deg to radians
+    area                   = wing.areas.reference / Units.ft ** 2  # Convert meters squared to ft squared
+    mtow                   = vehicle.mass_properties.max_takeoff / Units.lb  # Convert kg to lbs
+    Sref                   = vehicle.reference_area / Units.ft ** 2  # Convert from meters squared to ft squared
+    thickness_to_chord_v   = wing.thickness_to_chord
     # Determine weight of the vertical portion of the tail
     if wing.t_tail == "yes":
         T_tail_factor = 1.25  # Weight of vertical portion of the T-tail is 25% more than a conventional tail
@@ -62,9 +62,9 @@ def compute_vertical_tail_weight(vehicle, wing, rudder_fraction=0.25):
         # Calculate weight of wing for traditional aircraft vertical tail without rudder
     tail_vert_English = T_tail_factor * (
                 2.62 * area + 1.5 * 10. ** (-5.) * vehicle.flight_envelope.ultimate_load * span ** 3. * (8. + 0.44 * mtow / Sref) / (
-                    t_c_v * (np.cos(sweep) ** 2.)))
+                    thickness_to_chord_v * (np.cos(sweep) ** 2.)))
 
-    tail_weight = tail_vert_English * Units.lbs
+    tail_weight  = tail_vert_English * Units.lbs
     tail_weight += tail_weight * rudder_fraction * 1.6
 
     return tail_weight
