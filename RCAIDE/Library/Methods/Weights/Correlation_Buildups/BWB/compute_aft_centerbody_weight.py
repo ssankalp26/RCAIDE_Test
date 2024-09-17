@@ -31,7 +31,7 @@ def compute_aft_centerbody_weight(no_of_engines, aft_centerbody_area, aft_center
             the chord taken up by the pressurized passenger cabin) [dimensionless]
             TOGW - Takeoff gross weight of the aircraft [kilograms]
         Outputs:
-            aft_wt - the estimated structural weight of the BWB aft centerbody
+            W_aft - the estimated structural weight of the BWB aft centerbody
                 
         Properties Used:
         N/A
@@ -41,9 +41,9 @@ def compute_aft_centerbody_weight(no_of_engines, aft_centerbody_area, aft_center
     l_aft  = aft_centerbody_taper
     W      = TOGW/ Units.pounds
     
-    aft_wt = (1.0 + 0.05*no_of_engines) * 0.53 * S_aft * (W**0.2) * (l_aft + 0.5)
+    W_aft = (1.0 + 0.05*no_of_engines) * 0.53 * S_aft * (W**0.2) * (l_aft + 0.5)
     
     # convert back to base units
-    aft_wt = aft_wt * Units.pounds
+    W_aft = W_aft * Units.pounds
     
-    return aft_wt
+    return W_aft

@@ -52,11 +52,11 @@ def compute_propulsion_system_weight(vehicle,network):
     """
 
     NENG    =  0 
-    n_tanks =  0
+    number_of_tanks =  0
     for network in  vehicle.networks:
         for fuel_line in network.fuel_lines:
             for fuel_tank in fuel_line.fuel_tanks:
-                n_tanks +=  1
+                number_of_tanks +=  1
             for propulsor in fuel_line.propulsors:
                 if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
                     ref_propulsor = propulsor  
@@ -80,7 +80,7 @@ def compute_propulsion_system_weight(vehicle,network):
     output.nacelle              = WNAC
     output.W_eng               = WENG * NENG
     output.number_of_engines    = NENG
-    output.number_of_fuel_tanks = n_tanks  
+    output.number_of_fuel_tanks = number_of_tanks  
     return output
 
 ## @ingroup Methods-Weights-Correlations-Raymer

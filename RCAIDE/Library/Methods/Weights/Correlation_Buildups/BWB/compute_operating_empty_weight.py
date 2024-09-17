@@ -80,18 +80,18 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
         if type(fuselage) ==  RCAIDE.Library.Components.Fuselages.Blended_Wing_Body_Fuselage: 
             bwb_aft_centerbody_area       = fuselage.aft_centerbody_area
             bwb_aft_centerbody_taper      = fuselage.aft_centerbody_taper 
-            W_cabin                      = compute_cabin_weight(fuselage.cabin_area, TOW)
+            W_cabin                       = compute_cabin_weight(fuselage.cabin_area, TOW)
             fuselage.mass_properties.mass = W_cabin
         else:
             print('No BWB Fuselage is defined!') 
             bwb_aft_centerbody_area       = 0
             bwb_aft_centerbody_taper      = 0
-            W_cabin                      = 0
+            W_cabin                       = 0
             fuselage.mass_properties.mass = 0      
     
     
     # Compute Propulsor Weight
-    n_tanks =  0
+    number_of_tanks =  0
     for network in vehicle.networks:
         W_propulsion = 0
         no_of_engines = 0
@@ -99,17 +99,17 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
             for propulsor in fuel_line.propulsors:
                 if type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbofan:
                     no_of_engines  += 1
-                    thrust_sls      = propulsor.sealevel_static_thrust
+                    thrust_sls     = propulsor.sealevel_static_thrust
                     W_engine_jet   = Propulsion.compute_jet_engine_weight(thrust_sls)
                     W_propulsion   += Propulsion.integrated_propulsion(W_engine_jet)
             for fuel_tank in fuel_line.fuel_tanks:
-                n_tanks +=  1
+                number_of_tanks +=  1
         for bus in network.busses: 
             for propulsor in bus.propulsors:
                 if type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbofan:
                     no_of_engines  += 1
                     thrust_sls      = propulsor.sealevel_static_thrust
-                    W_engine_jet   = Propulsion.compute_jet_engine_weight(thrust_sls)
+                    W_engine_jet    = Propulsion.compute_jet_engine_weight(thrust_sls)
                     W_propulsion   += Propulsion.integrated_propulsion(W_engine_jet)                     
  
         network.mass_properties.mass = W_propulsion
@@ -119,7 +119,7 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
         if isinstance(wing,RCAIDE.Library.Components.Wings.Main_Wing):
             rho      = Aluminum().density
             sigma    = Aluminum().yield_tensile_strength           
-            W_wing  = Common.compute_main_wing_weight(vehicle,wing, rho, sigma)
+            W_wing   = Common.compute_main_wing_weight(vehicle,wing, rho, sigma)
             wing.mass_properties.mass = W_wing
 
     # Calculating Landing Gear Weight 
@@ -154,7 +154,7 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
     output.structures.main_landing_gear             = landing_gear.main
     output.structures.nose_landing_gear             = landing_gear.nose
     output.structures.nacelle                       = 0
-    output.structures.paint                         = 0  # TODO change
+    output.structures.paint                         = 0   
     output.structures.total                         = output.structures.wing + output.structures.afterbody \
                                                       + output.structures.fuselage + output.structures.main_landing_gear + output.structures.nose_landing_gear \
                                                       + output.structures.paint + output.structures.nacelle
@@ -198,7 +198,7 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
         for network in vehicle.networks: 
             for fuel_line in network.fuel_lines:  
                 for fuel_tank in fuel_line.fuel_tanks:
-                    fuel_weight =  total_fuel_weight/n_tanks  
+                    fuel_weight =  total_fuel_weight/number_of_tanks  
                     fuel_tank.fuel.mass_properties.mass = fuel_weight   
      
     control_systems                                  = RCAIDE.Library.Components.Component()

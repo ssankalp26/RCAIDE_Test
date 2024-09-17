@@ -176,32 +176,33 @@ def compute_operating_empty_weight(vehicle,settings=None, method_type='RCAIDE', 
     output.propulsion_breakdown.miscellaneous       = 0
     output.propulsion_breakdown.fuel_system         = 0
 
-    W_energy_network                   = Data()  
-    W_energy_network.W_engine             = 0 
+    W_energy_network                   = Data()
+    W_energy_network.total             = 0
+    W_energy_network.W_engine          = 0 
     W_energy_network.W_thrust_reverser = 0 
     W_energy_network.W_engine_controls = 0 
     W_energy_network.W_starter         = 0 
-    W_energy_network.fuel_system       = 0 
-    W_energy_network.motors            = 0 
-    W_energy_network.nacelle           = 0 
-    network_number_of_engines          = 0   
-    network_number_of_engines          = 0
+    W_energy_network.W_fuel_system     = 0 
+    W_energy_network.W_motors          = 0 
+    W_energy_network.W_nacelle         = 0 
+    number_of_engines                  = 0
+    number_of_tanks
     W_energy_network_cumulative        = 0 
 
     for network in vehicle.networks: 
         W_energy_network_total   = 0 
         # Fuel-Powered Propulsors  
         if method_type == 'FLOPS Simple' or method_type == 'FLOPS Complex':
-            W_energy_network                     = FLOPS.compute_propulsion_system_weight(vehicle, network)
-            W_energy_network_total              += W_energy_network.W_prop 
-            W_energy_network.W_engine           += W_energy_network.W_engine
-            W_energy_network.W_thrust_reverser  += W_energy_network.W_thrust_reverser
-            W_energy_network.W_engine_controls  += W_energy_network.W_engine_controls
-            W_energy_network.W_starter          += W_energy_network.W_starter
-            W_energy_network.W_fuel_system      += W_energy_network.W_fuel_system 
-            W_energy_network.W_nacelle          += W_energy_network.W_nacelle    
-            network_number_of_engines           += W_energy_network.number_of_engines
-            n_tanks                             = W_energy_network.number_of_fuel_tanks
+            W_propulsion                         = FLOPS.compute_propulsion_system_weight(vehicle, network)
+            W_energy_network.total              += W_propulsion.W_prop 
+            W_energy_network.W_engine           += W_propulsion.W_engine
+            W_energy_network.W_thrust_reverser  += W_propulsion.W_thrust_reverser
+            W_energy_network.W_engine_controls  += W_propulsion.W_engine_controls
+            W_energy_network.W_starter          += W_propulsion.W_starter
+            W_energy_network.W_fuel_system      += W_propulsion.W_fuel_system 
+            W_energy_network.W_nacelle          += W_propulsion.W_nacelle    
+            number_of_engines           += W_propulsion.number_of_engines
+            number_of_tanks                             += W_propulsion.number_of_fuel_tanks
             
         elif method_type == 'Raymer':
             W_energy_network                    = Raymer.compute_propulsion_system_weight(vehicle, network) 
@@ -212,19 +213,19 @@ def compute_operating_empty_weight(vehicle,settings=None, method_type='RCAIDE', 
             W_energy_network.W_starter          += W_energy_network.W_starter
             W_energy_network.W_fuel_system      += W_energy_network.W_fuel_system 
             W_energy_network.W_nacelle          += W_energy_network.W_nacelle    
-            network_number_of_engines           += W_energy_network.number_of_engines
-            n_tanks                             = W_energy_network.number_of_fuel_tanks
+            number_of_engines           += W_energy_network.number_of_engines
+            number_of_tanks                             += W_energy_network.number_of_fuel_tanks
         else:
-            n_tanks = 0
+            number_of_tanks = 0
             for fuel_line in  network.fuel_lines: 
                 for fuel_tank in fuel_line.fuel_tanks:
-                    n_tanks +=  1
+                    number_of_tanks +=  1
                 for propulsor in fuel_line.propulsors:
                     if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan):
                         thrust_sls  = propulsor.sealevel_static_thrust  
                         W_engine_jet = Propulsion.compute_jet_engine_weight(thrust_sls)
                         W_energy_network_total  += Propulsion.integrated_propulsion(W_engine_jet) 
-                        network_number_of_engines += 1             
+                        number_of_engines += 1             
                  
         # Electric-Powered Propulsors  
         for bus in network.busses: 
@@ -251,7 +252,7 @@ def compute_operating_empty_weight(vehicle,settings=None, method_type='RCAIDE', 
     ##-------------------------------------------------------------------------------         
     WPOD  = 0.0             
     if method_type == 'FLOPS Complex': 
-        NENG   = network_number_of_engines
+        NENG   = number_of_engines
         WTNFA  = W_energy_network.W_engine + W_energy_network.W_thrust_reverser + W_energy_network.W_starter \
                 + 0.25 * W_energy_network.W_engine_controls + 0.11 * W_systems.W_instruments + 0.13 * W_systems.W_elec \
                 + 0.13 * W_systems.W_hyd_pnu + 0.25 * W_energy_network.fuel_system
@@ -400,7 +401,7 @@ def compute_operating_empty_weight(vehicle,settings=None, method_type='RCAIDE', 
         for network in vehicle.networks: 
             for fuel_line in network.fuel_lines:  
                 for fuel_tank in fuel_line.fuel_tanks:
-                    fuel_weight =  total_fuel_weight/n_tanks  
+                    fuel_weight =  total_fuel_weight/number_of_tanks  
                     fuel_tank.fuel.mass_properties.mass = fuel_weight
                     
     if not hasattr(vehicle.landing_gear, 'nose'):

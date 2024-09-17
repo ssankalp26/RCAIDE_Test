@@ -28,7 +28,7 @@ def compute_cabin_weight(cabin_area, TOGW):
         cabin_area - the planform area representing the passenger cabin  [meters**2]
         TOGW - Takeoff gross weight of the aircraft                      [kilograms]
     Outputs:
-        cabin_wt - the estimated structural weight of the BWB cabin      [kilograms]
+        W_cabin - the estimated structural weight of the BWB cabin      [kilograms]
             
     Properties Used:
     N/A
@@ -38,9 +38,9 @@ def compute_cabin_weight(cabin_area, TOGW):
     S_cab    = cabin_area / Units.feet ** 2.0
     W        = TOGW       / Units.pounds
     
-    cabin_wt = 5.698865 * 0.316422 * (W ** 0.166552) * S_cab ** 1.061158
+    W_cabin = 5.698865 * 0.316422 * (W ** 0.166552) * S_cab ** 1.061158
     
     # convert to SI units
-    cabin_wt = cabin_wt * Units.pounds
+    W_cabin = W_cabin * Units.pounds
     
-    return cabin_wt
+    return W_cabin
