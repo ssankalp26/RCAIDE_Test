@@ -42,14 +42,12 @@ def compute_systems_weight(W_uav, V_fuel, V_int, N_tank, N_eng, l_fuselage, span
                 W_ac - weight of the air conditioning and anti-ice system [kilograms]
                 W_furnish - weight of the furnishings in the fuselage [kilograms]
     """ 
-    # unpack inputs
-
+    # unpack inputs 
     Q_tot  = V_fuel/Units.gallons
     Q_int  = V_int/Units.gallons 
     l_fus  = l_fuselage / Units.ft  # Convert meters to ft
-    b_wing = span/Units.ft
-
-    W_0 = TOW/Units.lb
+    b_wing = span/Units.ft 
+    W_0    = TOW/Units.lb
     
     # Fuel system
     W_fuel_system = 2.49*(Q_tot**.726)*((Q_tot/(Q_tot+Q_int))**.363)*(N_tank**.242)*(N_eng**.157)*Units.lb
@@ -70,7 +68,7 @@ def compute_systems_weight(W_uav, V_fuel, V_int, N_tank, N_eng, l_fuselage, span
     W_air_conditioning = has_air_conditioner*.265*(W_0**.52)*((1. * num_seats)**.68)*((W_avionics/Units.lb)**.17)*(mach_number**.08)*Units.lb
 
     # Furnishings Group Wt
-    W_furnishings = (.0582*W_0-65.)*Units.lb
+    W_furnish = (.0582*W_0-65.)*Units.lb
 
     # packup outputs
     output = Data()   
@@ -79,9 +77,9 @@ def compute_systems_weight(W_uav, V_fuel, V_int, N_tank, N_eng, l_fuselage, span
     output.W_avionics          = W_avionics
     output.W_electrical        = W_electrical
     output.W_ac                = W_air_conditioning
-    output.W_furnish           = W_furnishings
+    output.W_furnish           = W_furnish
     output.W_fuel_system       = W_fuel_system
-    output.W_systems           = output.W_flight_control + output.W_hyd_pnu \
+    output.total               = output.W_flight_control + output.W_hyd_pnu \
                                   + output.W_ac + output.W_avionics + output.W_electrical \
                                   + output.W_furnish + output.W_fuel_system
 

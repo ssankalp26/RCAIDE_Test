@@ -8,7 +8,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE 
-from RCAIDE.Framework.Core import  Units 
+from RCAIDE.Framework.Core import  Units ,  Data  
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Main Wing Weight 
@@ -37,8 +37,8 @@ def compute_landing_gear_weight(landing_weight, Nult, strut_length_main, strut_l
     main_weight = .095*((Nult*W_l)**.768)*(l_m/12.)**.409
     nose_weight = .125*((Nult*W_l)**.566)*(l_n/12.)**.845
 
-    #pack outputs
-    output = Data
+    # pack outputs
+    output      = Data()
     output.main = main_weight*Units.lbs
     output.nose = nose_weight*Units.lbs
 

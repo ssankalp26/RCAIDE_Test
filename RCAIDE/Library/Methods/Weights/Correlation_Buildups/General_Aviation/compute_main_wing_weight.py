@@ -36,8 +36,7 @@ def compute_main_wing_weight(S_wing, m_fuel, AR_w, sweep_w, q_c, taper_w, t_c_w,
             output - a dictionary with outputs:
                 W_main_wing - weight of the vertical fin portion of the vertical tail [kilograms]
     """     
-    # unpack inputs
-
+    # unpack inputs 
     W_0  = TOW / Units.lb # Convert kg to lbs
     S_w  = S_wing/ (Units.ft**2) # Convert from meters squared to ft squared  
     W_fw = m_fuel/Units.lbs #convert from kg to lbs
@@ -45,8 +44,8 @@ def compute_main_wing_weight(S_wing, m_fuel, AR_w, sweep_w, q_c, taper_w, t_c_w,
 
     # Calculate weight of wing for traditional aircraft vertical tail without rudder
     weight_English = .036 * (S_w**.758)*(W_fw**.0035)*((AR_w/(np.cos(sweep_w)**2))**.6)*(q**.006)*(taper_w**.04)*((100.*t_c_w/np.cos(sweep_w))**(-.3))*((Nult*W_0)**.49)
+    
     # packup outputs    
-
     weight =  weight_English * Units.lbs # Convert from lbs to kg
 
     return weight

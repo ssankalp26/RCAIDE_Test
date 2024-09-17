@@ -59,8 +59,7 @@ def compute_systems_weight(vehicle):
             if isinstance(wing, Wings.Main_Wing):
                 s_tail += wing.areas.reference * 0.01
     area_hv = s_tail / Units.ft ** 2  # Convert meters squared to ft squared
-
-    # process
+ 
     # Flight Controls Group Wt
     if ctrl_type == "fully powered":  # fully powered controls
         flt_ctrl_scaler = 3.5
@@ -76,6 +75,7 @@ def compute_systems_weight(vehicle):
     else:
         apu_wt = 0.0 * Units.lb  # no apu if less than 9 seats
     apu_wt = max(apu_wt, 70.)
+    
     # Hydraulics & Pneumatics Group Wt
     hyd_pnu_wt = (0.65 * sref) * Units.lb
 
@@ -83,13 +83,12 @@ def compute_systems_weight(vehicle):
     W_electrical = (13.0 * num_seats) * Units.lb
 
     # Furnishings Group Wt
-    W_furnishings = ((43.7 - 0.037 * min(num_seats, 300.)) * num_seats + 46.0 * num_seats) * Units.lb
+    W_furnish = ((43.7 - 0.037 * min(num_seats, 300.)) * num_seats + 46.0 * num_seats) * Units.lb
 
     # Environmental Control
     W_air_conditioning = (15.0 * num_seats) * Units.lb
 
-    # Instruments, Electronics, Operating Items based on Type of Vehicle
-
+    # Instruments, Electronics, Operating Items based on Type of Vehicle 
     if ac_type == "short-range":  # short-range domestic, austere accomodations
         W_instruments = 800.0 * Units.lb
         W_avionics = 900.0 * Units.lb
@@ -99,7 +98,7 @@ def compute_systems_weight(vehicle):
     elif ac_type == "long-range":  # long-range overwater
         W_instruments = 1200.0 * Units.lb
         W_avionics = 1500.0 * Units.lb
-        W_furnishings += 23.0 * num_seats * Units.lb  # add aditional seat wt
+        W_furnish += 23.0 * num_seats * Units.lb  # add aditional seat wt
     elif ac_type == "business":  # business jet
         W_instruments = 100.0 * Units.lb
         W_avionics = 300.0 * Units.lb
@@ -113,7 +112,7 @@ def compute_systems_weight(vehicle):
     elif ac_type == "sst":  # sst
         W_instruments = 1200.0 * Units.lb
         W_avionics = 1500.0 * Units.lb
-        W_furnishings += 23.0 * num_seats * Units.lb  # add aditional seat wt
+        W_furnish += 23.0 * num_seats * Units.lb  # add aditional seat wt
     else:
         W_instruments = 800.0 * Units.lb
         W_avionics = 900.0 * Units.lb 
@@ -127,7 +126,7 @@ def compute_systems_weight(vehicle):
     output.W_avionics          = W_avionics
     output.W_electrical        = W_electrical
     output.W_ac                = W_air_conditioning
-    output.W_furnish           = W_furnishings
+    output.W_furnish           = W_furnish
     output.W_anti_ice          = 0 # included in AC
     output.W_systems           = output.W_flight_control + output.W_apu + output.W_hyd_pnu \
                                 + output.W_ac + output.W_avionics + output.W_electrical \

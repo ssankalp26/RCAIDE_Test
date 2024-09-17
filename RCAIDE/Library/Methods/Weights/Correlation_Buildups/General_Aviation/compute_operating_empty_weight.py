@@ -179,7 +179,7 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
     num_eng                     = networks.number_of_engines 
     landing_weight              = TOW
     m_fuel                      =  0
-    number_of_tanks                     =  0
+    number_of_tanks             =  0
     V_fuel                      =  0
     V_fuel_int                  =  0
     W_energy_network_cumulative =  0
@@ -206,7 +206,7 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
                 m_fuel_tank     = fuel_tank.fuel.mass_properties.mass
                 m_fuel          += m_fuel_tank   
                 landing_weight  -= m_fuel_tank   
-                number_of_tanks         += 1
+                number_of_tanks += 1
                 V_fuel_int      += m_fuel_tank/fuel_tank.fuel.density  #assume all fuel is in integral tanks 
                 V_fuel          += m_fuel_tank/fuel_tank.fuel.density #total fuel
         
@@ -251,7 +251,7 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
             sweep_h            = wing.sweeps.quarter_chord 
             t_c_h              = wing.thickness_to_chord
             l_w2h              = wing.origin[0][0] + wing.aerodynamic_center[0] - main_wing.origin[0][0] - main_wing.aerodynamic_center[0] 
-            W_tail_horizontal = compute_horizontal_tail_weight(S_h, AR_h, sweep_h, q_c, taper_h, t_c_h,Nult,TOW)                 
+            W_tail_horizontal  = compute_horizontal_tail_weight(S_h, AR_h, sweep_h, q_c, taper_h, t_c_h,Nult,TOW)                 
             wing.mass_properties.mass = W_tail_horizontal     
         if isinstance(wing,RCAIDE.Library.Components.Wings.Vertical_Tail):     
             S_v        = wing.areas.reference
@@ -272,7 +272,7 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
         l_fus       = fuselage.lengths.structure
         V_fuse      = fuselage.mass_properties.volume 
         num_seats   = fuselage.number_coach_seats  
-        W_fuselage = compute_fuselage_weight(S_fus, Nult, TOW, w_fus, h_fus, l_fus, l_w2h, q_c, V_fuse, diff_p_fus)
+        W_fuselage  = compute_fuselage_weight(S_fus, Nult, TOW, w_fus, h_fus, l_fus, l_w2h, q_c, V_fuse, diff_p_fus)
         fuselage.mass_properties.mass = W_fuselage
         
     #landing gear
@@ -303,11 +303,11 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
         has_air_conditioner = 1
 
     # Calculating Empty Weight of Aircraft
-    output_2           = compute_systems_weight(W_uav,V_fuel, V_fuel_int, number_of_tanks, num_eng, l_fus, b, TOW, Nult, num_seats, mach_number, has_air_conditioner)
+    W_systems           = compute_systems_weight(W_uav,V_fuel, V_fuel_int, number_of_tanks, num_eng, l_fus, b, TOW, Nult, num_seats, mach_number, has_air_conditioner)
 
     # Calculate the equipment empty weight of the aircraft
 
-    W_empty           = (W_wing + W_fuselage + W_landing_gear.main+W_landing_gear.nose + W_energy_network_cumulative + output_2.W_systems + \
+    W_empty           = (W_wing + W_fuselage + W_landing_gear.main+W_landing_gear.nose + W_energy_network_cumulative + W_systems.total + \
                           W_tail_horizontal + output_3.W_tail_vertical) 
 
     # packup outputs
@@ -323,31 +323,31 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
 
 
     # Distribute all weight in the output fields
-    output = Data()
-    output.structures                       = Data()
-    output.structures.wing                  = W_wing
-    output.structures.horizontal_tail       = W_tail_horizontal
-    output.structures.vertical_tail         = output_3.W_tail_vertical
-    output.structures.fuselage              = W_fuselage
-    output.structures.main_landing_gear     = W_landing_gear.main
-    output.structures.nose_landing_gear     = W_landing_gear.nose
-    output.structures.nacelle               = 0
-    output.structures.paint                 = 0  
-    output.structures.total                 = output.structures.wing + output.structures.horizontal_tail + output.structures.vertical_tail \
-                                            + output.structures.fuselage + output.structures.main_landing_gear + output.structures.nose_landing_gear \
-                                            + output.structures.paint + output.structures.nacelle
-
-    output.propulsion_breakdown             = Data()
-    output.propulsion_breakdown.total       = W_energy_network_cumulative
-    output.propulsion_breakdown.fuel_system = output_2.W_fuel_system
+    output                                      = Data()
+    output.structures                           = Data()
+    output.structures.wing                      = W_wing
+    output.structures.horizontal_tail           = W_tail_horizontal
+    output.structures.vertical_tail             = output_3.W_tail_vertical
+    output.structures.fuselage                  = W_fuselage
+    output.structures.main_landing_gear         = W_landing_gear.main
+    output.structures.nose_landing_gear         = W_landing_gear.nose
+    output.structures.nacelle                   = 0
+    output.structures.paint                     = 0  
+    output.structures.total                     = output.structures.wing + output.structures.horizontal_tail + output.structures.vertical_tail \
+                                                + output.structures.fuselage + output.structures.main_landing_gear + output.structures.nose_landing_gear \
+                                                + output.structures.paint + output.structures.nacelle
+    
+    output.propulsion_breakdown                 = Data()
+    output.propulsion_breakdown.total           = W_energy_network_cumulative
+    output.propulsion_breakdown.fuel_system     = W_systems.W_fuel_system
 
     output.systems_breakdown                    = Data()
-    output.systems_breakdown.control_systems    = output_2.W_flight_control
-    output.systems_breakdown.hydraulics         = output_2.W_hyd_pnu
-    output.systems_breakdown.avionics           = output_2.W_avionics
-    output.systems_breakdown.electrical         = output_2.W_electrical
-    output.systems_breakdown.air_conditioner    = output_2.W_ac
-    output.systems_breakdown.furnish            = output_2.W_furnish
+    output.systems_breakdown.control_systems    = W_systems.W_flight_control
+    output.systems_breakdown.hydraulics         = W_systems.W_hyd_pnu
+    output.systems_breakdown.avionics           = W_systems.W_avionics
+    output.systems_breakdown.electrical         = W_systems.W_electrical
+    output.systems_breakdown.air_conditioner    = W_systems.W_ac
+    output.systems_breakdown.furnish            = W_systems.W_furnish
     output.systems_breakdown.apu                = 0
     output.systems_breakdown.instruments        = 0
     output.systems_breakdown.anti_ice           = 0

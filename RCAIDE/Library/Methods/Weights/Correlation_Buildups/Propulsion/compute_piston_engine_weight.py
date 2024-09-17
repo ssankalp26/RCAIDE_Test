@@ -31,6 +31,6 @@ def compute_piston_engine_weight(max_power, kwt2=5.22, xwt=.780):
                
     """    
     bhp    = max_power/Units.horsepower
-    weight = kwt2*((bhp)**xwt)  #weight in lbs.
+    weight = kwt2*((bhp)**xwt)  # weight in lbs.
     mass   = weight*Units.lbs
     return mass

@@ -151,7 +151,7 @@ def compute_systems_weight(vehicle):
     output.W_hyd_pnu           = WHYD * Units.lbs
     output.W_instruments       = WIN * Units.lbs
     output.W_avionics          = WAVONC * Units.lbs
-    output.W_electrical              = WELEC * Units.lbs
+    output.W_electrical        = WELEC * Units.lbs
     output.W_ac                = WAC * Units.lbs
     output.W_furnish           = WFURN * Units.lbs
     output.W_anti_ice          = WAI * Units.lbs

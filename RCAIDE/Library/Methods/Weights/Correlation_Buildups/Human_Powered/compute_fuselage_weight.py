@@ -28,8 +28,7 @@ def compute_fuselage_weight(Sts,qm,Ltb):
         
     Properties Used:
         N/A
-    """ 
-    #Fuselage:
+    """  
     Wtb=(Ltb*1.14e-1 +(1.96e-2)*(Ltb**2))*(1.0+((qm*Sts)/78.5-1.0)/2.0)
     
     return Wtb

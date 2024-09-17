@@ -78,8 +78,7 @@ def compute_fuselage_weight(vehicle):
                         NENG += 1 
                         FNEF += 1
                         if propulsor.wing_mounted: 
-                            FNEW += 1 
-        
+                            FNEW += 1  
         if vehicle.systems.accessories == 'cargo':
             CARGF = 1
         else:
