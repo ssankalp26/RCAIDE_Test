@@ -51,15 +51,15 @@ def compute_systems_weight(vehicle):
 
         Outputs:
             output - a data dictionary with fields:
-               wt_flt_ctrl - weight of the flight control system                                [kilograms]
-               wt_apu - weight of the apu                                                       [kilograms]
-               wt_hyd_pnu - weight of the hydraulics and pneumatics                             [kilograms]
-               wt_instruments - weight of the instruments and navigational equipment            [kilograms]
-               wt_avionics - weight of the avionics                                             [kilograms]
-               wt_elec - weight of the electrical items                                         [kilograms]
-               wt_ac - weight of the air conditioning and anti-ice system                       [kilograms]
-               wt_furnish - weight of the furnishings in the fuselage                           [kilograms]
-               wt_anti_ice - weight of anti-ice system                                          [kilograms]
+               W_flt_ctrl - weight of the flight control system                                [kilograms]
+               W_apu - weight of the apu                                                       [kilograms]
+               W_hyd_pnu - weight of the hydraulics and pneumatics                             [kilograms]
+               W_instruments - weight of the instruments and navigational equipment            [kilograms]
+               W_avionics - weight of the avionics                                             [kilograms]
+               W_elec - weight of the electrical items                                         [kilograms]
+               W_ac - weight of the air conditioning and anti-ice system                       [kilograms]
+               W_furnish - weight of the furnishings in the fuselage                           [kilograms]
+               W_anti_ice - weight of anti-ice system                                          [kilograms]
 
         Properties Used:
             N/A
@@ -131,14 +131,14 @@ def compute_systems_weight(vehicle):
     WAI = 0.002 * DG
 
     output                      = Data()
-    output.wt_flight_control    = WSC * Units.lbs
-    output.wt_apu               = WAPU * Units.lbs
-    output.wt_hyd_pnu           = WHYD * Units.lbs
-    output.wt_instruments       = WIN * Units.lbs
-    output.wt_avionics          = WAVONC * Units.lbs
-    output.wt_elec              = WELEC * Units.lbs
-    output.wt_ac                = WAC * Units.lbs
-    output.wt_furnish           = WFURN * Units.lbs
-    output.wt_anti_ice          = WAI * Units.lbs
-    output.wt_systems           = WSC + WAPU + WIN + WHYD + WELEC + WAVONC + WFURN + WAC + WAI
+    output.W_flight_control    = WSC * Units.lbs
+    output.W_apu               = WAPU * Units.lbs
+    output.W_hyd_pnu           = WHYD * Units.lbs
+    output.W_instruments       = WIN * Units.lbs
+    output.W_avionics          = WAVONC * Units.lbs
+    output.W_elec              = WELEC * Units.lbs
+    output.W_ac                = WAC * Units.lbs
+    output.W_furnish           = WFURN * Units.lbs
+    output.W_anti_ice          = WAI * Units.lbs
+    output.W_systems           = WSC + WAPU + WIN + WHYD + WELEC + WAVONC + WFURN + WAC + WAI
     return output

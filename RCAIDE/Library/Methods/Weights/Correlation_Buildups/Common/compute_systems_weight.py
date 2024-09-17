@@ -32,15 +32,15 @@ def compute_systems_weight(vehicle):
 
    Outputs:
        output - a data dictionary with fields:
-           wt_flt_ctrl - weight of the flight control system                                               [kilograms]
-           wt_apu - weight of the apu                                                                      [kilograms]
-           wt_hyd_pnu - weight of the hydraulics and pneumatics                                            [kilograms]
-           wt_instruments - weight of the instruments and navigational equipment                           [kilograms]
-           wt_avionics - weight of the avionics                                                            [kilograms]
-           wt_opitems - weight of the optional items based on the type of aircraft                         [kilograms]
-           wt_elec - weight of the electrical items                                                        [kilograms]
-           wt_ac - weight of the air conditioning and anti-ice system                                      [kilograms]
-           wt_furnish - weight of the furnishings in the fuselage                                          [kilograms]
+           W_flt_ctrl - weight of the flight control system                                               [kilograms]
+           W_apu - weight of the apu                                                                      [kilograms]
+           W_hyd_pnu - weight of the hydraulics and pneumatics                                            [kilograms]
+           W_instruments - weight of the instruments and navigational equipment                           [kilograms]
+           W_avionics - weight of the avionics                                                            [kilograms]
+           W_opitems - weight of the optional items based on the type of aircraft                         [kilograms]
+           W_elec - weight of the electrical items                                                        [kilograms]
+           W_ac - weight of the air conditioning and anti-ice system                                      [kilograms]
+           W_furnish - weight of the furnishings in the fuselage                                          [kilograms]
 
     Properties Used:
         N/A
@@ -120,17 +120,17 @@ def compute_systems_weight(vehicle):
 
     # packup outputs
     output = Data()
-    output.wt_flight_control    = flt_ctrl_wt
-    output.wt_apu               = apu_wt
-    output.wt_hyd_pnu           = hyd_pnu_wt
-    output.wt_instruments       = instruments_wt
-    output.wt_avionics          = avionics_wt
-    output.wt_elec              = elec_wt
-    output.wt_ac                = ac_wt
-    output.wt_furnish           = furnish_wt
-    output.wt_anti_ice          = 0 # included in AC
-    output.wt_systems           = output.wt_flight_control + output.wt_apu + output.wt_hyd_pnu \
-                                + output.wt_ac + output.wt_avionics + output.wt_elec \
-                                + output.wt_furnish + output.wt_instruments
+    output.W_flight_control    = flt_ctrl_wt
+    output.W_apu               = apu_wt
+    output.W_hyd_pnu           = hyd_pnu_wt
+    output.W_instruments       = instruments_wt
+    output.W_avionics          = avionics_wt
+    output.W_elec              = elec_wt
+    output.W_ac                = ac_wt
+    output.W_furnish           = furnish_wt
+    output.W_anti_ice          = 0 # included in AC
+    output.W_systems           = output.W_flight_control + output.W_apu + output.W_hyd_pnu \
+                                + output.W_ac + output.W_avionics + output.W_elec \
+                                + output.W_furnish + output.W_instruments
 
     return output

@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  Integrated Propulsion Weight 
 # ----------------------------------------------------------------------------------------------------------------------
-def integrated_propulsion(jet_engine_weight, engine_wt_factor = 1.6):
+def integrated_propulsion(jet_engine_weight, engine_W_factor = 1.6):
     """ Calculate the weight of the entire propulsion system 
     
     Assumptions:
@@ -21,7 +21,7 @@ def integrated_propulsion(jet_engine_weight, engine_wt_factor = 1.6):
     Inputs:
             compute_jet_engine_weight - dry weight of the engine                                             [kilograms]
             num_eng - total number of engines on the aircraft                                 [dimensionless]
-            engine_wt_factor - weight increase factor for entire integrated propulsion system [dimensionless]
+            engine_W_factor - weight increase factor for entire integrated propulsion system [dimensionless]
     
     Outputs:
             weight - weight of the full propulsion system                                     [kilograms]
@@ -30,7 +30,7 @@ def integrated_propulsion(jet_engine_weight, engine_wt_factor = 1.6):
             N/A
     """   
     
-    weight = jet_engine_weight * engine_wt_factor
+    weight = jet_engine_weight * engine_W_factor
     
     return weight
     

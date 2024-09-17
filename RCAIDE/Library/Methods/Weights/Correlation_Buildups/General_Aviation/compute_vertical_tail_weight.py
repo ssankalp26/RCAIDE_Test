@@ -37,7 +37,7 @@ def compute_vertical_tail_weight(S_v, AR_v, sweep_v, q_c, taper_v, t_c_v, Nult,T
         
         Outputs:
             output - a dictionary with outputs:
-                wt_tail_vertical - weight of the vertical fin portion of the vertical tail [kilograms]
+                W_tail_vertical - weight of the vertical fin portion of the vertical tail [kilograms]
             
         Assumptions:
             Vertical tail weight is the weight of the vertical fin without the rudder weight.
@@ -59,6 +59,6 @@ def compute_vertical_tail_weight(S_v, AR_v, sweep_v, q_c, taper_v, t_c_v, Nult,T
 
     # packup outputs    
     output                  = Data()
-    output.wt_tail_vertical = tail_vert_English * Units.lbs # Convert from lbs to kg
+    output.W_tail_vertical = tail_vert_English * Units.lbs # Convert from lbs to kg
 
     return output

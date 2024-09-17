@@ -40,8 +40,8 @@ def compute_vertical_tail_weight(vehicle, wing, rudder_fraction=0.25):
     
     Outputs:
         output - a dictionary with outputs:
-            wt_tail_vertical - weight of the vertical fin portion of the vertical tail [kilograms]
-            wt_rudder - weight of the rudder on the aircraft                           [kilograms]
+            W_tail_vertical - weight of the vertical fin portion of the vertical tail [kilograms]
+            W_rudder - weight of the rudder on the aircraft                           [kilograms]
   
     Properties Used:
         N/A

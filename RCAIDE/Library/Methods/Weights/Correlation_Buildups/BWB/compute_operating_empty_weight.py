@@ -48,7 +48,7 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
             zfw - maximum zero fuel weight of the aircraft                                                 [kilograms]
             num_eng - number of engines on the aircraft                                                    [dimensionless]
             num_pax - number of passengers on the aircraft                                                 [dimensionless]
-            wt_cargo - weight of the bulk cargo being carried on the aircraft                              [kilograms]
+            W_cargo - weight of the bulk cargo being carried on the aircraft                              [kilograms]
             num_seats - number of seats installed on the aircraft                                          [dimensionless]
             ctrl - specifies if the control system is "fully powered", "partially powered", or not powered [dimensionless]
             ac - determines type of instruments, electronics, and operating items based on types:
@@ -63,11 +63,11 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
 
     Outputs:
         output - a data dictionary with fields:
-            wt_payload - weight of the passengers plus baggage and paid cargo                              [kilograms]
-            wt_pax - weight of all the passengers                                                          [kilogram]
-            wt_bag - weight of all the baggage                                                             [kilogram]
-            wt_fuel - weight of the fuel carried                                                           [kilogram]
-            wt_empty - operating empty weight of the aircraft                                              [kilograms]
+            W_payload - weight of the passengers plus baggage and paid cargo                              [kilograms]
+            W_pax - weight of all the passengers                                                          [kilogram]
+            W_bag - weight of all the baggage                                                             [kilogram]
+            W_fuel - weight of the fuel carried                                                           [kilogram]
+            W_empty - operating empty weight of the aircraft                                              [kilograms]
 
     Properties Used:
     N/A
@@ -80,28 +80,28 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
         if type(fuselage) ==  RCAIDE.Library.Components.Fuselages.Blended_Wing_Body_Fuselage: 
             bwb_aft_centerbody_area       = fuselage.aft_centerbody_area
             bwb_aft_centerbody_taper      = fuselage.aft_centerbody_taper 
-            wt_cabin                      = compute_cabin_weight(fuselage.cabin_area, TOW)
-            fuselage.mass_properties.mass = wt_cabin
+            W_cabin                      = compute_cabin_weight(fuselage.cabin_area, TOW)
+            fuselage.mass_properties.mass = W_cabin
         else:
             print('No BWB Fuselage is defined!') 
             bwb_aft_centerbody_area       = 0
             bwb_aft_centerbody_taper      = 0
-            wt_cabin                      = 0
+            W_cabin                      = 0
             fuselage.mass_properties.mass = 0      
     
     
     # Compute Propulsor Weight
     n_tanks =  0
     for network in vehicle.networks:
-        wt_propulsion = 0
+        W_propulsion = 0
         no_of_engines = 0
         for fuel_line in network.fuel_lines: 
             for propulsor in fuel_line.propulsors:
                 if type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbofan:
                     no_of_engines  += 1
                     thrust_sls      = propulsor.sealevel_static_thrust
-                    wt_engine_jet   = Propulsion.compute_jet_engine_weight(thrust_sls)
-                    wt_propulsion   += Propulsion.integrated_propulsion(wt_engine_jet)
+                    W_engine_jet   = Propulsion.compute_jet_engine_weight(thrust_sls)
+                    W_propulsion   += Propulsion.integrated_propulsion(W_engine_jet)
             for fuel_tank in fuel_line.fuel_tanks:
                 n_tanks +=  1
         for bus in network.busses: 
@@ -109,24 +109,24 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
                 if type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbofan:
                     no_of_engines  += 1
                     thrust_sls      = propulsor.sealevel_static_thrust
-                    wt_engine_jet   = Propulsion.compute_jet_engine_weight(thrust_sls)
-                    wt_propulsion   += Propulsion.integrated_propulsion(wt_engine_jet)                     
+                    W_engine_jet   = Propulsion.compute_jet_engine_weight(thrust_sls)
+                    W_propulsion   += Propulsion.integrated_propulsion(W_engine_jet)                     
  
-        network.mass_properties.mass = wt_propulsion
+        network.mass_properties.mass = W_propulsion
         
     # Compute Wing Weight 
     for wing in vehicle.wings:
         if isinstance(wing,RCAIDE.Library.Components.Wings.Main_Wing):
             rho      = Aluminum().density
             sigma    = Aluminum().yield_tensile_strength           
-            wt_wing  = Common.compute_main_wing_weight(vehicle,wing, rho, sigma)
-            wing.mass_properties.mass = wt_wing
+            W_wing  = Common.compute_main_wing_weight(vehicle,wing, rho, sigma)
+            wing.mass_properties.mass = W_wing
 
     # Calculating Landing Gear Weight 
     landing_gear        = Common.compute_landing_gear_weight(vehicle)
     
     # Compute Aft Center Body Weight 
-    wt_aft_centerbody   = compute_aft_centerbody_weight(no_of_engines,bwb_aft_centerbody_area, bwb_aft_centerbody_taper, TOW)
+    W_aft_centerbody   = compute_aft_centerbody_weight(no_of_engines,bwb_aft_centerbody_area, bwb_aft_centerbody_taper, TOW)
     
     # Compute Systems Weight     
     systems_weights     = Common.compute_systems_weight(vehicle) 
@@ -143,14 +143,14 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
     
 
     # Compute Peripheral Operating Items Weights 
-    wt_oper = Transport.compute_operating_items_weight(vehicle)
+    W_oper = Transport.compute_operating_items_weight(vehicle)
     
     # Store Weights Results 
     output = Data()
     output.structures                               = Data()
-    output.structures.wing                          = wt_wing
-    output.structures.afterbody                     = wt_aft_centerbody
-    output.structures.fuselage                      = wt_cabin
+    output.structures.wing                          = W_wing
+    output.structures.afterbody                     = W_aft_centerbody
+    output.structures.fuselage                      = W_cabin
     output.structures.main_landing_gear             = landing_gear.main
     output.structures.nose_landing_gear             = landing_gear.nose
     output.structures.nacelle                       = 0
@@ -160,21 +160,21 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
                                                       + output.structures.paint + output.structures.nacelle
 
     output.propulsion_breakdown                     = Data()
-    output.propulsion_breakdown.total               = wt_propulsion
+    output.propulsion_breakdown.total               = W_propulsion
     output.propulsion_breakdown.engines             = 0
     output.propulsion_breakdown.thrust_reversers    = 0
     output.propulsion_breakdown.miscellaneous       = 0
     output.propulsion_breakdown.fuel_system         = 0
 
     output.systems_breakdown                        = Data()
-    output.systems_breakdown.control_systems        = systems_weights.wt_flight_control
-    output.systems_breakdown.apu                    = systems_weights.wt_apu
-    output.systems_breakdown.electrical             = systems_weights.wt_elec
-    output.systems_breakdown.avionics               = systems_weights.wt_avionics
-    output.systems_breakdown.hydraulics             = systems_weights.wt_hyd_pnu
-    output.systems_breakdown.furnish                = systems_weights.wt_furnish
-    output.systems_breakdown.air_conditioner        = systems_weights.wt_ac
-    output.systems_breakdown.instruments            = systems_weights.wt_instruments
+    output.systems_breakdown.control_systems        = systems_weights.W_flight_control
+    output.systems_breakdown.apu                    = systems_weights.W_apu
+    output.systems_breakdown.electrical             = systems_weights.W_elec
+    output.systems_breakdown.avionics               = systems_weights.W_avionics
+    output.systems_breakdown.hydraulics             = systems_weights.W_hyd_pnu
+    output.systems_breakdown.furnish                = systems_weights.W_furnish
+    output.systems_breakdown.air_conditioner        = systems_weights.W_ac
+    output.systems_breakdown.instruments            = systems_weights.W_instruments
     output.systems_breakdown.anti_ice               = 0
     output.systems_breakdown.total                  = output.systems_breakdown.control_systems + output.systems_breakdown.apu \
                                                       + output.systems_breakdown.electrical + output.systems_breakdown.avionics \
@@ -186,7 +186,7 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
     output.payload_breakdown                         = payload
                         
     output.operational_items                         = Data()
-    output.operational_items                         = wt_oper
+    output.operational_items                         = W_oper
          
     output.empty                                     = output.structures.total + output.propulsion_breakdown.total + output.systems_breakdown.total
     output.operating_empty                           = output.empty + output.operational_items.total

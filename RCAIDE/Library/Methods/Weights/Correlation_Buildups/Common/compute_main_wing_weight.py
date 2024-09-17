@@ -53,10 +53,10 @@ def compute_main_wing_weight(vehicle, wing, rho, sigma):
     rho_sigma   = rho * 9.81 / sigma
     Nult        = vehicle.flight_envelope.ultimate_load
     TOW         = vehicle.mass_properties.max_takeoff
-    wt_zf       = vehicle.mass_properties.max_zero_fuel
+    W_zf       = vehicle.mass_properties.max_zero_fuel
 
     # Start the calculations
-    l_tot   = Nult * np.sqrt(TOW * wt_zf) * 9.81
+    l_tot   = Nult * np.sqrt(TOW * W_zf) * 9.81
     L0      = frac * 2 * l_tot / (span * np.pi)
     
 
@@ -108,7 +108,7 @@ def compute_main_wing_weight(vehicle, wing, rho, sigma):
         area    = wing.areas.reference / Units.ft ** 2
         span    = wing.spans.projected / Units.ft
         mtow    = TOW / Units.lb  # Convert kg to lbs
-        zfw     = wt_zf / Units.lb  # Convert kg to lbs
+        zfw     = W_zf / Units.lb  # Convert kg to lbs
 
         # Calculate weight of wing for traditional aircraft wing
         weight  = 4.22 * area + 1.642 * 10. ** -6. * Nult * (span) ** 3. * (mtow * zfw) ** 0.5 \

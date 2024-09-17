@@ -63,10 +63,10 @@ def compute_landing_gear_weight(vehicle):
     Knp         = 1  # assuming not a reciprocating engine
     Ln          = vehicle.landing_gear.nose_strut_length / Units.inch
     Nnw         = vehicle.landing_gear.nose_wheels
-    wt_main_landing_gear = 0.0106 * Kmp * WLDG ** 0.888 * Nl ** 0.25 * Lm ** 0.4 * Nmw ** 0.321 * Nmss ** (-0.5) * Vstall ** 0.1
-    wt_nose_landing_gear = 0.032 * Knp * WLDG ** 0.646 * Nl ** 0.2 * Ln ** 0.5 * Nnw ** 0.45
+    W_main_landing_gear = 0.0106 * Kmp * WLDG ** 0.888 * Nl ** 0.25 * Lm ** 0.4 * Nmw ** 0.321 * Nmss ** (-0.5) * Vstall ** 0.1
+    W_nose_landing_gear = 0.032 * Knp * WLDG ** 0.646 * Nl ** 0.2 * Ln ** 0.5 * Nnw ** 0.45
 
     output          = Data()
-    output.main     = wt_main_landing_gear * Units.lbs
-    output.nose     = wt_nose_landing_gear * Units.lbs
+    output.main     = W_main_landing_gear * Units.lbs
+    output.nose     = W_nose_landing_gear * Units.lbs
     return output

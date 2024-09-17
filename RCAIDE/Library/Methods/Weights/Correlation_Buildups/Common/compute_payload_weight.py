@@ -10,7 +10,7 @@ from RCAIDE.Framework.Core import Data, Units
 # ---------------------------------------------------------------------------------------------------------------------- 
 # Payload
 # ---------------------------------------------------------------------------------------------------------------------- 
-def compute_payload_weight(vehicle, wt_passenger=195 * Units.lbs, wt_baggage=30 * Units.lbs):
+def compute_payload_weight(vehicle, W_passenger=195 * Units.lbs, W_baggage=30 * Units.lbs):
     """ Calculate the weight of the payload and the resulting fuel mass
     
     Assumptions:
@@ -21,11 +21,11 @@ def compute_payload_weight(vehicle, wt_passenger=195 * Units.lbs, wt_baggage=30 
         
     Inputs:
         TOW -                                                              [kilograms]
-        wt_empty - Operating empty weight of the aircraft                  [kilograms]
+        W_empty - Operating empty weight of the aircraft                  [kilograms]
         num_pax - number of passengers on the aircraft                     [dimensionless]
-        wt_cargo - weight of cargo being carried on the aircraft           [kilogram]
-        wt_passenger - weight of each passenger on the aircraft            [kilogram]
-        wt_baggage - weight of the baggage for each passenger              [kilogram]
+        W_cargo - weight of cargo being carried on the aircraft           [kilogram]
+        W_passenger - weight of each passenger on the aircraft            [kilogram]
+        W_baggage - weight of the baggage for each passenger              [kilogram]
     
     Outputs:
         output - a data dictionary with fields:
@@ -41,15 +41,15 @@ def compute_payload_weight(vehicle, wt_passenger=195 * Units.lbs, wt_baggage=30 
 
     # process
     num_pax     = vehicle.passengers
-    wt_pax      = wt_passenger * num_pax
-    wt_bag      = wt_baggage * num_pax
-    wt_payload  = wt_pax + wt_bag + vehicle.mass_properties.cargo
+    W_pax      = W_passenger * num_pax
+    W_bag      = W_baggage * num_pax
+    W_payload  = W_pax + W_bag + vehicle.mass_properties.cargo
 
     # packup outputs
     output              = Data()
-    output.total        = wt_payload
-    output.passengers   = wt_pax
-    output.baggage      = wt_bag
+    output.total        = W_payload
+    output.passengers   = W_pax
+    output.baggage      = W_bag
     output.cargo        = vehicle.mass_properties.cargo
 
     return output

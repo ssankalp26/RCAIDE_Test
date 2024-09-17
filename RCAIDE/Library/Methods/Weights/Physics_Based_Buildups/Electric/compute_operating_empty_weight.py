@@ -9,7 +9,7 @@
 
 # RCAIDE
 import RCAIDE
-from RCAIDE.Framework.Core                                            import Units, Data 
+from RCAIDE.Framework.Core                                          import Units, Data 
 from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Common   import compute_fuselage_weight
 from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Common   import compute_boom_weight
 from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Common   import compute_rotor_weight
@@ -23,14 +23,9 @@ import numpy as np
 # Compute Operating Empty Weight 
 # ----------------------------------------------------------------------------------------------------------------------
 def compute_operating_empty_weight(vehicle, 
-          contingency_factor            = 1.1,
-          speed_of_sound                = 340.294,
-          max_tip_mach                  = 0.65,
-          disk_area_factor              = 1.15,
-          safety_factor                 = 1.5,
+          miscelleneous_weight_factor   = 1.1,  
           max_thrust_to_weight_ratio    = 1.1,
-          max_g_load                    = 3.8,
-          motor_efficiency              = 0.85 * 0.98):
+          max_g_load                    = 3.8):
 
     """ Calculates the empty vehicle mass for an EVTOL-type aircraft including seats,
         avionics, servomotors, ballistic recovery system, rotor and hub assembly,
@@ -42,9 +37,7 @@ def compute_operating_empty_weight(vehicle,
 
 
         Inputs: 
-            vehicle:                     RCAIDE Config Data Stucture
-            contingency_factor          Factor capturing uncertainty in vehicle weight [Unitless]
-            speed_of_sound:             Local Speed of Sound                           [m/s]
+            vehicle:                     RCAIDE Config Data Stucture 
             max_tip_mach:               Allowable Tip Mach Number                      [Unitless]
             disk_area_factor:           Inverse of Disk Area Efficiency                [Unitless]
             max_thrust_to_weight_ratio: Allowable Thrust to Weight Ratio               [Unitless]
@@ -95,71 +88,67 @@ def compute_operating_empty_weight(vehicle,
     weight.wings             = Data()
     weight.wings_total       = 0.0
 
-    vehicle.payload.passengers                      = RCAIDE.Library.Components.Component()
-    vehicle.payload.baggage                         = RCAIDE.Library.Components.Component()
-    vehicle.payload.cargo                           = RCAIDE.Library.Components.Component()
-    control_systems                                = RCAIDE.Library.Components.Component()
-    electrical_systems                             = RCAIDE.Library.Components.Component()
-    furnishings                                    = RCAIDE.Library.Components.Component()
-    air_conditioner                                = RCAIDE.Library.Components.Component()
-    fuel                                           = RCAIDE.Library.Components.Component()
-    apu                                            = RCAIDE.Library.Components.Component()
-    hydraulics                                     = RCAIDE.Library.Components.Component()
-    avionics                                       = RCAIDE.Library.Components.Systems.Avionics()
-    optionals                                      = RCAIDE.Library.Components.Component()
+    vehicle.payload.passengers  = RCAIDE.Library.Components.Component()
+    vehicle.payload.baggage     = RCAIDE.Library.Components.Component()
+    vehicle.payload.cargo       = RCAIDE.Library.Components.Component()
+    control_systems             = RCAIDE.Library.Components.Component()
+    electrical_systems          = RCAIDE.Library.Components.Component()
+    furnishings                 = RCAIDE.Library.Components.Component()
+    air_conditioner             = RCAIDE.Library.Components.Component()
+    fuel                        = RCAIDE.Library.Components.Component()
+    apu                         = RCAIDE.Library.Components.Component()
+    hydraulics                  = RCAIDE.Library.Components.Component()
+    avionics                    = RCAIDE.Library.Components.Systems.Avionics()
+    optionals                   = RCAIDE.Library.Components.Component()
 
     # assign components to vehicle
-    vehicle.systems.control_systems                 = control_systems
-    vehicle.systems.electrical_systems              = electrical_systems
-    vehicle.systems.avionics                        = avionics
-    vehicle.systems.furnishings                     = furnishings
-    vehicle.systems.air_conditioner                 = air_conditioner
-    vehicle.systems.fuel                            = fuel
-    vehicle.systems.apu                             = apu
-    vehicle.systems.hydraulics                      = hydraulics
-    vehicle.systems.optionals                       = optionals
+    vehicle.systems.control_systems    = control_systems
+    vehicle.systems.electrical_systems = electrical_systems
+    vehicle.systems.avionics           = avionics
+    vehicle.systems.furnishings        = furnishings
+    vehicle.systems.air_conditioner    = air_conditioner
+    vehicle.systems.fuel               = fuel
+    vehicle.systems.apu                = apu
+    vehicle.systems.hydraulics         = hydraulics
+    vehicle.systems.optionals          = optionals 
 
+    #-------------------------------------------------------------------------------
+    # Inputs 
+    #------------------------------------------------------------------------------- 
+    atmosphere        = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976() 
+    atmo_data         = atmosphere.compute_values(0, 0) 
+    safety_factor     = 1.5   
+    disk_area_factor  = 1.15    
+    ToverW            = max_thrust_to_weight_ratio 
+    rho_ref           = atmo_data.density 
+    maxLift           = MTOW * ToverW * 9.81           
+    AvgBladeCD        = 0.012         
 
     #-------------------------------------------------------------------------------
     # Fixed Weights
     #-------------------------------------------------------------------------------
     MTOW                = vehicle.mass_properties.max_takeoff
-    maxSpan             = vehicle.wings["main_wing"].spans.projected  
     weight.seats        = vehicle.passengers * 15.   * Units.kg
     weight.passengers   = vehicle.passengers * 70.   * Units.kg
-    weight.avionics     = 15.                       * Units.kg
-    weight.landing_gear = MTOW * 0.02               * Units.kg
+    weight.avionics     = 15.                        * Units.kg
+    weight.landing_gear = MTOW * 0.02                * Units.kg
     weight.ECS          = vehicle.passengers * 7.    * Units.kg
 
-    # Inputs and other constants
-    tipMach        = max_tip_mach
-    k              = disk_area_factor
-    ToverW         = max_thrust_to_weight_ratio
-    eta            = motor_efficiency
-    rho_ref        = 1.225
-    maxVTip        = speed_of_sound * tipMach         # Prop Tip Velocity
-    maxLift        = MTOW * ToverW * 9.81             # Maximum Thrust
-    AvgBladeCD     = 0.012                            # Average Blade CD
-
-    
     # Determine length scale 
-    length_scale = 1. 
- 
+    length_scale = 1.  
     if len(vehicle.fuselages) == 0.:
-        for w  in vehicle.wings:
-            if isinstance(w ,RCAIDE.Library.Components.Wings.Main_Wing):
-                b = w.chords.root
-                if b>length_scale:
-                    length_scale = b
-                    nose_length  = 0.25*b
+        for wing in vehicle.wings:
+            if isinstance(wing ,RCAIDE.Library.Components.Wings.Main_Wing): 
+                if wing.chords.root>length_scale:
+                    length_scale = wing.chords.root
+                    nose_length  = 0.25*wing.chords.root
     else:
         for fuse in vehicle.fuselages:
             nose   = fuse.lengths.nose
             length = fuse.lengths.total
             if length > length_scale:
                 length_scale = length
-                nose_length  = nose
-     
+                nose_length  = nose 
                             
     #-------------------------------------------------------------------------------
     # Environmental Control System
@@ -178,8 +167,8 @@ def compute_operating_empty_weight(vehicle,
             # Payload Weight
             #-------------------------------------------------------------------------------
             if bus.payload.origin[0][0] == 0:
-                bus.payload.origin[0][0]                              = 0.5 * length_scale
-            weight.payload                                            += bus.payload.mass_properties.mass * Units.kg
+                bus.payload.origin[0][0]  = 0.5 * length_scale
+            weight.payload  += bus.payload.mass_properties.mass * Units.kg
      
             #-------------------------------------------------------------------------------
             # Avionics Weight
@@ -187,11 +176,10 @@ def compute_operating_empty_weight(vehicle,
             if bus.avionics.origin[0][0] == 0:
                 bus.avionics.origin[0][0]                          = 0.4 * nose_length
             bus.avionics.mass_properties.center_of_gravity[0][0]   = 0.0
-            weight.avionics                                        += bus.avionics.mass_properties.mass      
- 
+            weight.avionics += bus.avionics.mass_properties.mass   
                         
             for battery in bus.batteries: 
-                weight.battery                                            += battery.mass_properties.mass * Units.kg 
+                weight.battery += battery.mass_properties.mass * Units.kg 
         
             # Servo, Hub and BRS Weights
             lift_rotor_hub_weight   = 4.   * Units.kg
@@ -210,7 +198,7 @@ def compute_operating_empty_weight(vehicle,
                 if type(rotor) == RCAIDE.Library.Components.Propulsors.Converters.Propeller:
                     ''' Propeller Weight '''  
                     number_of_propellers       += 1   
-                    rTip_ref                   = rotor.tip_radius
+                    rTip_ref                   = rotor.tip_radius 
                     bladeSol_ref               = rotor.blade_solidity 
                     prop_servo_weight          = 5.2 * Units.kg  
                     propeller_mass             = compute_rotor_weight(rotor, maxLift/5.) * Units.kg
@@ -224,6 +212,7 @@ def compute_operating_empty_weight(vehicle,
                     number_of_lift_rotors       += 1  
                     rTip_ref                    = rotor.tip_radius
                     bladeSol_ref                = rotor.blade_solidity 
+                    maxVTip                     = rotor.hover.design_angular_velocity * rotor.tip_radius
                     lift_rotor_servo_weight     = 0.65 * Units.kg 
                     if rotor.oei.design_thrust == None:
                         design_thrust = rotor.hover.design_thrust
@@ -236,8 +225,8 @@ def compute_operating_empty_weight(vehicle,
                     weight.hubs                 += lift_rotor_hub_weight 
                 
                 # Motor 
-                motor = propulsor.motor                            
-                weight.motors              += motor.mass_properties.mass  
+                eta             = propulsor.motor.efficiency  
+                weight.motors  += propulsor.motor.mass_properties.mass  
                
         total_number_of_rotors  = int(number_of_lift_rotors + number_of_propellers)  
         if total_number_of_rotors > 1:
@@ -246,15 +235,12 @@ def compute_operating_empty_weight(vehicle,
             prop_BRS_weight     = 0.   * Units.kg
  
         # Add associated weights  
-        weight.BRS    += (prop_BRS_weight + lift_rotor_BRS_weight)  
-        maxLiftPower   = 1.15*maxLift*(k*np.sqrt(maxLift/(2*rho_ref*np.pi*rTip_ref**2)) +
-                                           bladeSol_ref*AvgBladeCD/8*maxVTip**3/(maxLift/(rho_ref*np.pi*rTip_ref**2)))
+        weight.BRS   += (prop_BRS_weight + lift_rotor_BRS_weight)  
+        maxLiftPower = 1.15*maxLift*(disk_area_factor*np.sqrt(maxLift/(2*rho_ref*np.pi*rTip_ref**2)) + bladeSol_ref*AvgBladeCD/8*maxVTip**3/(maxLift/(rho_ref*np.pi*rTip_ref**2)))
         # Tail Rotor
-        if number_of_lift_rotors == 1: # this assumes that the vehicle is an electric helicopter with a tail rotor
-            
+        if number_of_lift_rotors == 1: # this assumes that the vehicle is an electric helicopter with a tail rotor 
             maxLiftOmega   = maxVTip/rTip_ref
-            maxLiftTorque  = maxLiftPower / maxLiftOmega 
-    
+            maxLiftTorque  = maxLiftPower / maxLiftOmega  
             for bus in network.busses: 
                 tailrotor = next(iter(bus.lift_rotors))
                 weight.tail_rotor  = compute_rotor_weight(tailrotor, 1.5*maxLiftTorque/(1.25*rTip_ref))*0.2 * Units.kg
@@ -262,19 +248,21 @@ def compute_operating_empty_weight(vehicle,
 
     #-------------------------------------------------------------------------------
     # Wing and Motor Wiring Weight
-    #-------------------------------------------------------------------------------  
-    for w in vehicle.wings:
-        if w.symbolic:
+    #-------------------------------------------------------------------------------
+    maxSpan =  0
+    for wing in vehicle.wings: 
+        maxSpan = np.maxiumum(wing.spans.projected, maxSpan)  
+        if wing.symbolic:
             wing_weight = 0
         else:
-            wing_weight            = compute_wing_weight(w, vehicle, maxLift/5, safety_factor= safety_factor, max_g_load =  max_g_load )
-            wing_tag               = w.tag
-            weight.wings[wing_tag] = wing_weight
-            w.mass_properties.mass = wing_weight 
-        weight.wings_total         += wing_weight
+            wing_weight               = compute_wing_weight(wing, vehicle, maxLift/5, safety_factor= safety_factor, max_g_load =  max_g_load )
+            wing_tag                  = wing.tag
+            weight.wings[wing_tag]    = wing_weight
+            wing.mass_properties.mass = wing_weight 
+        weight.wings_total           += wing_weight
 
         # compute_wiring_weight weight
-        weight.wiring  += compute_wiring_weight(w, vehicle, maxLiftPower/(eta*total_number_of_rotors)) * Units.kg 
+        weight.wiring  += compute_wiring_weight(wing, vehicle, maxLiftPower/(eta*total_number_of_rotors)) * Units.kg 
 
     #-------------------------------------------------------------------------------
     # Landing Gear Weight
@@ -292,24 +280,23 @@ def compute_operating_empty_weight(vehicle,
     for fuse in  vehicle.fuselages: 
         fuselage_weight = compute_fuselage_weight(fuse, maxSpan, MTOW )  
         fuse.mass_properties.center_of_gravity[0][0] = .45*fuse.lengths.total
-        fuse.mass_properties.mass                    =  fuselage_weight + weight.passengers + weight.seats +\
-                                                                             weight.wiring + weight.BRS
+        fuse.mass_properties.mass                    =  fuselage_weight + weight.passengers + weight.seats + weight.wiring + weight.BRS
         weight.fuselage += fuselage_weight  
 
     #-------------------------------------------------------------------------------
     # Boom Weight
     #-------------------------------------------------------------------------------
-    for b in vehicle.booms:
-        boom_weight                                = compute_boom_weight(b) * Units.kg
-        weight.booms                               += boom_weight 
-        b.mass_properties.mass                     =  boom_weight 
+    for boom in vehicle.booms:
+        boom_weight                = compute_boom_weight(boom) * Units.kg
+        weight.booms               += boom_weight 
+        boom.mass_properties.mass  =  boom_weight 
     
     #-------------------------------------------------------------------------------
     # Pack Up Outputs
     #-------------------------------------------------------------------------------
     weight.structural = (weight.rotors + weight.hubs + weight.booms + weight.fuselage + weight.landing_gear +weight.wings_total)*Units.kg
 
-    weight.empty      = (contingency_factor * (weight.structural + weight.seats + weight.avionics +weight.ECS +\
+    weight.empty      = (miscelleneous_weight_factor * (weight.structural + weight.seats + weight.avionics +weight.ECS +\
                         weight.motors + weight.servos + weight.wiring + weight.BRS) + weight.battery) *Units.kg
 
     weight.total      = weight.empty + weight.payload + weight.passengers

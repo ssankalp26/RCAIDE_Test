@@ -13,17 +13,17 @@ from RCAIDE.Framework.Core import  Units
 # ----------------------------------------------------------------------------------------------------------------------
 # Payload Weight 
 # ----------------------------------------------------------------------------------------------------------------------
-def compute_payload_weight(TOW, empty, num_pax, wt_cargo, wt_passenger = 225.*Units.lbs,wt_baggage = 0.):
+def compute_payload_weight(TOW, empty, num_pax, W_cargo, W_passenger = 225.*Units.lbs,W_baggage = 0.):
     """ 
         Calculate the weight of the payload and the resulting fuel mass
  
         Inputs:
             TOW -                                                    [kilograms]
-            wt_empty - Operating empty weight of the aircraft        [kilograms]
+            W_empty - Operating empty weight of the aircraft        [kilograms]
             num_pax - number of passengers on the aircraft           [dimensionless]
-            wt_cargo - weight of cargo being carried on the aircraft [kilogram]
-            wt_passenger - weight of each passenger on the aircraft  [kilograms]
-            wt_baggage - weight of the baggage for each passenger    [kilograms]
+            W_cargo - weight of cargo being carried on the aircraft [kilogram]
+            W_passenger - weight of each passenger on the aircraft  [kilograms]
+            W_baggage - weight of the baggage for each passenger    [kilograms]
             
             
         Outputs:
@@ -37,15 +37,15 @@ def compute_payload_weight(TOW, empty, num_pax, wt_cargo, wt_passenger = 225.*Un
     """     
 
     # process
-    wt_pax     = wt_passenger * num_pax 
-    wt_bag     = wt_baggage * num_pax
-    wt_payload = wt_pax + wt_bag + wt_cargo
+    W_pax     = W_passenger * num_pax 
+    W_bag     = W_baggage * num_pax
+    W_payload = W_pax + W_bag + W_cargo
 
     # packup outputs
     output = Data()
-    output.total        = wt_payload
-    output.passengers   = wt_pax
-    output.baggage      = wt_bag
-    output.cargo        = wt_cargo
+    output.total        = W_payload
+    output.passengers   = W_pax
+    output.baggage      = W_bag
+    output.cargo        = W_cargo
 
     return output

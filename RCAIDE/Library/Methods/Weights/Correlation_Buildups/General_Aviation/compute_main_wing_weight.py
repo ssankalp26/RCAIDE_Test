@@ -34,7 +34,7 @@ def compute_main_wing_weight(S_wing, m_fuel, AR_w, sweep_w, q_c, taper_w, t_c_w,
    
         Outputs:
             output - a dictionary with outputs:
-                wt_main_wing - weight of the vertical fin portion of the vertical tail [kilograms]
+                W_main_wing - weight of the vertical fin portion of the vertical tail [kilograms]
     """     
     # unpack inputs
 

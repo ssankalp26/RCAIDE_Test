@@ -77,13 +77,13 @@ def compute_operating_items_weight(vehicle):
     else:
         flight_attendants = 1 + np.floor(vehicle.passengers / 40.)
 
-    wt_flight_attendants = flight_attendants * (170 + 40)  # FLOPS: WSTUAB
-    wt_flight_crew = flight_crew * (190 + 50)  # FLOPS: WFLCRB
+    W_flight_attendants = flight_attendants * (170 + 40)  # FLOPS: WSTUAB
+    W_flight_crew = flight_crew * (190 + 50)  # FLOPS: WFLCRB
 
     output                           = Data()
     output.operating_items_less_crew = operitems_wt
-    output.flight_crew               = wt_flight_crew * Units.lbs
-    output.flight_attendants         = wt_flight_attendants * Units.lbs
+    output.flight_crew               = W_flight_crew * Units.lbs
+    output.flight_attendants         = W_flight_attendants * Units.lbs
     output.total                     = output.operating_items_less_crew + output.flight_crew + \
                                        output.flight_attendants
     return output

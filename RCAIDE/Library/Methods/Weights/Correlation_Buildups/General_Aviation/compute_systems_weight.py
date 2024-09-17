@@ -33,14 +33,14 @@ def compute_systems_weight(W_uav, V_fuel, V_int, N_tank, N_eng, l_fuselage, span
 
         Outputs:
             output - a data dictionary with fields:
-                wt_flt_ctrl - weight of the flight control system [kilograms]
-                wt_apu - weight of the apu [kilograms]
-                wt_hyd_pnu - weight of the hydraulics and pneumatics [kilograms]
-                wt_avionics - weight of the avionics [kilograms]
-                wt_opitems - weight of the optional items based on the type of aircraft [kilograms]
-                wt_elec - weight of the electrical items [kilograms]
-                wt_ac - weight of the air conditioning and anti-ice system [kilograms]
-                wt_furnish - weight of the furnishings in the fuselage [kilograms]
+                W_flt_ctrl - weight of the flight control system [kilograms]
+                W_apu - weight of the apu [kilograms]
+                W_hyd_pnu - weight of the hydraulics and pneumatics [kilograms]
+                W_avionics - weight of the avionics [kilograms]
+                W_opitems - weight of the optional items based on the type of aircraft [kilograms]
+                W_elec - weight of the electrical items [kilograms]
+                W_ac - weight of the air conditioning and anti-ice system [kilograms]
+                W_furnish - weight of the furnishings in the fuselage [kilograms]
     """ 
     # unpack inputs
 
@@ -74,15 +74,15 @@ def compute_systems_weight(W_uav, V_fuel, V_int, N_tank, N_eng, l_fuselage, span
 
     # packup outputs
     output = Data()   
-    output.wt_flight_control    = flt_ctrl_wt
-    output.wt_hyd_pnu           = hyd_pnu_wt
-    output.wt_avionics          = avionics_wt
-    output.wt_elec              = elec_wt
-    output.wt_ac                = ac_wt
-    output.wt_furnish           = furnish_wt
-    output.wt_fuel_sys          = fuel_sys_wt
-    output.wt_systems           = output.wt_flight_control + output.wt_hyd_pnu \
-                                  + output.wt_ac + output.wt_avionics + output.wt_elec \
-                                  + output.wt_furnish + output.wt_fuel_sys
+    output.W_flight_control    = flt_ctrl_wt
+    output.W_hyd_pnu           = hyd_pnu_wt
+    output.W_avionics          = avionics_wt
+    output.W_elec              = elec_wt
+    output.W_ac                = ac_wt
+    output.W_furnish           = furnish_wt
+    output.W_fuel_sys          = fuel_sys_wt
+    output.W_systems           = output.W_flight_control + output.W_hyd_pnu \
+                                  + output.W_ac + output.W_avionics + output.W_elec \
+                                  + output.W_furnish + output.W_fuel_sys
 
     return output

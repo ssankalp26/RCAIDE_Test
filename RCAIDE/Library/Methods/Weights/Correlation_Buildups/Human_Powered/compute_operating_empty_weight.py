@@ -92,8 +92,8 @@ def compute_operating_empty_weight(vehicle,settings=None):
             Nwr     = wing.number_ribs
             t_cw    = wing.thickness_to_chord
             Nwer    = wing.number_end_ribs
-            wt_wing = compute_wing_weight(Sw,bw,cw,Nwr,t_cw,Nwer,nult,gw)
-            wing.mass_properties.mass = wt_wing
+            W_wing = compute_wing_weight(Sw,bw,cw,Nwr,t_cw,Nwer,nult,gw)
+            wing.mass_properties.mass = W_wing
     
         # Horizontal Tail weight
         elif isinstance(wing,RCAIDE.Library.Components.Wings.Horizontal_Tail): 
@@ -102,8 +102,8 @@ def compute_operating_empty_weight(vehicle,settings=None):
             chs    = wing.chords.mean_aerodynamic
             Nhsr   = wing.number_ribs
             t_ch   = wing.thickness_to_chord
-            wt_ht  = compute_tail_weight(S_h,b_h,chs,Nhsr,t_ch,qm)
-            wing.mass_properties.mass = wt_ht
+            W_ht  = compute_tail_weight(S_h,b_h,chs,Nhsr,t_ch,qm)
+            wing.mass_properties.mass = W_ht
 
         # Vertical Tail weight 
         elif isinstance(wing,RCAIDE.Library.Components.Wings.Vertical_Tail):     
@@ -112,20 +112,20 @@ def compute_operating_empty_weight(vehicle,settings=None):
             cvs    = wing.chords.mean_aerodynamic
             Nvsr   = wing.number_ribs
             t_cv   = wing.thickness_to_chord
-            wt_vt   = compute_tail_weight(S_v,b_v,cvs,Nvsr,t_cv,qm)
-            wing.mass_properties.mass = wt_vt
+            W_vt   = compute_tail_weight(S_v,b_v,cvs,Nvsr,t_cv,qm)
+            wing.mass_properties.mass = W_vt
 
     for fuselage in vehicle.fuselages: 
         Ltb     = vehicle.Ltb  
-        wt_tb   = compute_fuselage_weight(S_h,qm,Ltb)
-        fuselage.mass_properties.mass = wt_tb
+        W_tb   = compute_fuselage_weight(S_h,qm,Ltb)
+        fuselage.mass_properties.mass = W_tb
     
     weight                 = Data()
-    weight.wing            = wt_wing
-    weight.fuselage        = wt_tb
-    weight.horizontal_tail = wt_ht
-    weight.vertical_tail   = wt_vt
+    weight.wing            = W_wing
+    weight.fuselage        = W_tb
+    weight.horizontal_tail = W_ht
+    weight.vertical_tail   = W_vt
     
-    weight.empty = wt_ht + wt_tb + wt_vt + wt_wing
+    weight.empty = W_ht + W_tb + W_vt + W_wing
     
     return weight

@@ -16,7 +16,7 @@ import  numpy as  np
 # ----------------------------------------------------------------------------------------------------------------------
 # Fuselage Weight 
 # ----------------------------------------------------------------------------------------------------------------------
-def compute_fuselage_weight(vehicle, fuse, wt_wing, wt_propulsion):
+def compute_fuselage_weight(vehicle, fuse, W_wing, W_propulsion):
     """ Calculate the weight of a fuselage in the state tube and wing configuration
     
     Assumptions:
@@ -33,8 +33,8 @@ def compute_fuselage_weight(vehicle, fuse, wt_wing, wt_propulsion):
         fuse.lengths.total - length of the fuselage                                                         [meters]
         vehicle.flight_envelope.limit_load - limit load factor at zero fuel weight of the aircraft                 [dimensionless]
         vehicle.mass_properties.max_zero_fuel - zero fuel weight of the aircraft                            [kilograms]
-        wt_wing - weight of the wing of the aircraft                           [kilograms]
-        wt_propulsion - weight of the entire propulsion system of the aircraft                              [kilograms]
+        W_wing - weight of the wing of the aircraft                           [kilograms]
+        W_propulsion - weight of the entire propulsion system of the aircraft                              [kilograms]
         vehicle.wings.main_wing.chords.root - wing root chord                                               [meters]
         
     Outputs:
@@ -52,7 +52,7 @@ def compute_fuselage_weight(vehicle, fuse, wt_wing, wt_propulsion):
     # setup
     length  = fuse.lengths.total - vehicle.wings.main_wing.chords.root / 2.
     length  = length / Units.ft  # Convert meters to ft
-    weight  = (vehicle.mass_properties.max_zero_fuel - wt_wing - wt_propulsion) / Units.lb  # Convert kg to lbs
+    weight  = (vehicle.mass_properties.max_zero_fuel - W_wing - W_propulsion) / Units.lb  # Convert kg to lbs
     area    = fuse.areas.wetted / Units.ft ** 2  # Convert square meters to square ft
 
     # process
