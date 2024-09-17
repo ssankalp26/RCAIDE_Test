@@ -73,15 +73,15 @@ def compute_operating_items_weight(vehicle):
     DESRNG          = vehicle.flight_envelope.design_range / Units.nmi
     VMAX            = vehicle.flight_envelope.design_mach_number   
     
-    NTANK = 0 # number of fuel tanks 
+    number_of_tanks = 0  
     for network in  vehicle.networks:
         for fuel_line in network.fuel_lines:
             for fuel_tank in fuel_line.fuel_tanks:
-                NTANK += 1 
-    if NTANK == 0:
-        NTANK = 5    
+                number_of_tanks += 1 
+    if number_of_tanks == 0:
+        number_of_tanks = 5    
     
-    WUF             = 11.5 * NENG * THRUST ** 0.2 + 0.07 * SW + 1.6 * NTANK * FMXTOT ** 0.28  # unusable fuel weight
+    WUF             = 11.5 * NENG * THRUST ** 0.2 + 0.07 * SW + 1.6 * number_of_tanks * FMXTOT ** 0.28  # unusable fuel weight
     WOIL            = 0.082 * NENG * THRUST ** 0.65  # engine oil weight
     
     for fuselage in  vehicle.fuselages: 
