@@ -81,8 +81,8 @@ def compute_combustor_performance(combustor,combustor_conditions,conditions):
     # Computing the exit static and stagnation conditions
     ht_out  = Tt4 * Cp
     
-    P_out     = Tt4/(1.+(gamma-1.)/2.*M0*M0)
-    T_out     = Pt_out/((1.+(gamma-1.)/2.*M0*M0)**(gamma/(gamma-1.)))     
+    T_out     = Tt4/(1.+(gamma-1.)/2.*M0*M0)
+    P_out     = Pt_out/((1.+(gamma-1.)/2.*M0*M0)**(gamma/(gamma-1.)))     
     
     # Pack results 
     combustor_conditions.outputs.stagnation_temperature  = Tt4

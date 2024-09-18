@@ -17,7 +17,6 @@ def emissions_index_CRN_method(combustor,turbofan_conditions,conditions):
     Chemical Reactor Network Method using Cantera 
     """
 
-
     ti        = time.time()
 
         
