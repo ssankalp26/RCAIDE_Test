@@ -22,9 +22,7 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 # Compute Operating Empty Weight 
 # ----------------------------------------------------------------------------------------------------------------------
-def compute_operating_empty_weight(vehicle, 
-          miscelleneous_weight_factor   = 1.1):
-
+def compute_operating_empty_weight(vehicle, miscelleneous_weight_factor   = 1.1): 
     """ Calculates the empty vehicle mass for an EVTOL-type aircraft including seats,
         avionics, servomotors, ballistic recovery system, rotor and hub assembly,
         transmission, and landing gear. 
@@ -113,6 +111,7 @@ def compute_operating_empty_weight(vehicle,
     #-------------------------------------------------------------------------------
     # Default Values
     #------------------------------------------------------------------------------- 
+    MTOW                          = vehicle.mass_properties.max_takeoff
     atmosphere                    = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976() 
     atmo_data                     = atmosphere.compute_values(0, 0) 
     safety_factor                 = 1.5   
@@ -126,7 +125,6 @@ def compute_operating_empty_weight(vehicle,
     #-------------------------------------------------------------------------------
     # Fixed Weights
     #-------------------------------------------------------------------------------
-    MTOW                = vehicle.mass_properties.max_takeoff
     weight.seats        = vehicle.passengers * 15.   * Units.kg
     weight.passengers   = vehicle.passengers * 70.   * Units.kg
     weight.avionics     = 15.                        * Units.kg
@@ -250,7 +248,7 @@ def compute_operating_empty_weight(vehicle,
     #-------------------------------------------------------------------------------
     maxSpan =  0
     for wing in vehicle.wings: 
-        maxSpan = np.maxiumum(wing.spans.projected, maxSpan)  
+        maxSpan = max(wing.spans.projected, maxSpan)  
         if wing.symbolic:
             wing_weight = 0
         else:
@@ -261,7 +259,8 @@ def compute_operating_empty_weight(vehicle,
         weight.wings_total           += wing_weight
 
         # compute_wiring_weight weight
-        weight.wiring  += compute_wiring_weight(wing, vehicle, maxLiftPower/(eta*total_number_of_rotors)) * Units.kg 
+        wiring_weight  = compute_wiring_weight(wing, vehicle, maxLiftPower/(eta*total_number_of_rotors)) * Units.kg  
+        weight.wiring  += wiring_weight[0][0]
 
     #-------------------------------------------------------------------------------
     # Landing Gear Weight
@@ -299,16 +298,16 @@ def compute_operating_empty_weight(vehicle,
     output.structural_breakdown.booms         = weight.booms 
     output.structural_breakdown.fusleage      = weight.fuselage  
     output.structural_breakdown.landing_gear  = weight.landing_gear  
-    output.structural_breakdown.wing          = weight.wings_total 
+    output.structural_breakdown.wings         = weight.wings_total 
 
     output.propulsion_breakdown               = Data()
-    output.propulsion_breakdown.total         = weight.rotors + weight.hubs  
     output.propulsion_breakdown.motors        = weight.motors
     output.propulsion_breakdown.rotors        = weight.rotors
     output.propulsion_breakdown.hubs          = weight.hubs 
     output.propulsion_breakdown.servos        = weight.servos
-    output.propulsion_breakdown.wiring        = weight.wiring
+    output.propulsion_breakdown.wiring        = weight.wiring 
     output.propulsion_breakdown.battery       = weight.battery
+    output.propulsion_breakdown.total         = weight.rotors + weight.hubs +  weight.battery +  weight.motors +   weight.wiring +   weight.servos
 
     output.systems_breakdown                              = Data()
     output.systems_breakdown.environmental_control_system = weight.ECS
@@ -317,9 +316,8 @@ def compute_operating_empty_weight(vehicle,
     output.systems_breakdown.balistic_recovery_system     = weight.BRS
     output.systems_breakdown.total                        = weight.ECS + weight.avionics +   weight.BRS +  weight.seats  
     
-    output.empty      = (miscelleneous_weight_factor * (output.structural_breakdown.total + output.propulsion_breakdown.total + output.systems_breakdown.total) )   
+    output.empty       = (miscelleneous_weight_factor * (output.structural_breakdown.total + output.propulsion_breakdown.total + output.systems_breakdown.total) )   
     output.total       = output.empty + weight.payload + weight.passengers
     output.passengers  = weight.passengers
     output.payload     = weight.payload  
-
     return output

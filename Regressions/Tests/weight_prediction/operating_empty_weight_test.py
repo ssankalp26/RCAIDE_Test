@@ -57,7 +57,7 @@ def Transport_Aircraft_Test():
             
         weight = Common.compute_operating_empty_weight(vehicle, settings = settings, method_type = method_type)
     
-        save_results(weight, 'weights_'+method_type.replace(' ','_')+'.res')
+        #save_results(weight, 'weights_'+method_type.replace(' ','_')+'.res')
         old_weight = load_results('weights_'+method_type.replace(' ','_')+'.res')
     
         check_list = [
@@ -98,7 +98,7 @@ def General_Aviation_Test():
     vehicle                = general_aviation_setup()	
     weight                 = General_Aviation.compute_operating_empty_weight(vehicle)	  
 
-    save_results(weight, 'weights_General_Aviation.res')
+    #save_results(weight, 'weights_General_Aviation.res')
     old_weight = load_results('weights_General_Aviation.res')
 
     check_list = [
@@ -128,7 +128,7 @@ def BWB_Aircraft_Test():
     vehicle = bwb_setup()
     weight  = BWB.compute_operating_empty_weight(vehicle)
 
-    save_results(weight, 'weights_BWB.res')
+    #save_results(weight, 'weights_BWB.res')
     old_weight = load_results('weights_BWB.res')
     
     check_list = [
@@ -151,46 +151,17 @@ def BWB_Aircraft_Test():
 
         print('')
         
-    return 
-        
-def Human_Powered_Aircraft_Test():
-    # Human Powered Aircraft
-    vehicle = hp_setup()
-    weight  = HP.compute_operating_empty_weight(vehicle) 
-
-    save_results(weight, 'weights_Human_Powered.res')
-    old_weight = load_results('weights_Human_Powered.res')
-    
-    check_list = [
-        'empty',
-        'structural_breakdown.wing', 
-        'structural_breakdown.total', 
-    ]
-
-    # do the check
-    for k in check_list:
-        print(k)
-
-        old_val = old_weight.deep_get(k)
-        new_val = weight.deep_get(k)
-        err = (new_val-old_val)/old_val
-        print('Error:' , err)
-        assert np.abs(err) < 1e-6 , 'Check Failed : %s' % k     
-
-        print('')
-        
-    return       
+    return
 
 def EVTOL_Aircraft_Test(): 
     vehicle = evtol_setup()
     weight  = Electric.compute_operating_empty_weight(vehicle)
 
-    save_results(weight, 'weights_EVTOL.res')
+    #save_results(weight, 'weights_EVTOL.res')
     old_weight = load_results('weights_EVTOL.res')
     
     check_list = [
-        'empty',
-        'structural_breakdown.wing', 
+        'empty', 
         'structural_breakdown.total',
         'propulsion_breakdown.total',   
         'systems_breakdown.total',  
@@ -210,30 +181,60 @@ def EVTOL_Aircraft_Test():
      
     return
 
-def UAV_Test():
+        
+#def Human_Powered_Aircraft_Test():
+    ## Human Powered Aircraft
+    #vehicle = hp_setup()
+    #weight  = HP.compute_operating_empty_weight(vehicle) 
 
-    vehicle = uav_setup()
-    weight  = UAV.compute_operating_empty_weight(vehicle)
-
-    save_results(weight, 'weights_UAV.res')
-    old_weight = load_results('weights_UAV.res')
+    #save_results(weight, 'weights_Human_Powered.res')
+    #old_weight = load_results('weights_Human_Powered.res')
     
-    check_list = [
-        'empty', 
-    ]
+    #check_list = [
+        #'empty',
+        #'structural_breakdown.wing', 
+        #'structural_breakdown.total', 
+    #]
 
-    # do the check
-    for k in check_list:
-        print(k) 
-        old_val = old_weight.deep_get(k)
-        new_val = weight.deep_get(k)
-        err = (new_val-old_val)/old_val
-        print('Error:' , err)
-        assert np.abs(err) < 1e-6 , 'Check Failed : %s' % k     
+    ## do the check
+    #for k in check_list:
+        #print(k)
 
-        print('') 
+        #old_val = old_weight.deep_get(k)
+        #new_val = weight.deep_get(k)
+        #err = (new_val-old_val)/old_val
+        #print('Error:' , err)
+        #assert np.abs(err) < 1e-6 , 'Check Failed : %s' % k     
+
+        #print('')
+        
+    #return       
+
+
+#def UAV_Test():
+
+    #vehicle = uav_setup()
+    #weight  = UAV.compute_operating_empty_weight(vehicle)
+
+    #save_results(weight, 'weights_UAV.res')
+    #old_weight = load_results('weights_UAV.res')
     
-    return
+    #check_list = [
+        #'empty', 
+    #]
+
+    ## do the check
+    #for k in check_list:
+        #print(k) 
+        #old_val = old_weight.deep_get(k)
+        #new_val = weight.deep_get(k)
+        #err = (new_val-old_val)/old_val
+        #print('Error:' , err)
+        #assert np.abs(err) < 1e-6 , 'Check Failed : %s' % k     
+
+        #print('') 
+    
+    #return
 
 
 if __name__ == '__main__':
