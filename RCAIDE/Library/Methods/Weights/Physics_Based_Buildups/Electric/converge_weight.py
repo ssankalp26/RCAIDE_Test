@@ -18,14 +18,7 @@ from RCAIDE.Framework.Core import Data
 ## @ingroup Methods-Weights-Buildups-eVTOL 
 def converge_weight(vehicle,
                     print_iterations              = False,
-                    contingency_factor            = 1.1,
-                    speed_of_sound                = 340.294,
-                    max_tip_mach                  = 0.65,
-                    disk_area_factor              = 1.15,
-                    safety_factor                 = 1.5,
-                    max_thrust_to_weight_ratio    = 1.1,
-                    max_g_load                    = 3.8,
-                    motor_efficiency              = 0.85 * 0.98):
+                    miscelleneous_weight_factor   = 1.1,):
     '''Converges the maximum takeoff weight of an aircraft using the eVTOL 
     weight buildup routine.  
     
@@ -38,7 +31,7 @@ def converge_weight(vehicle,
     Inputs:
     vehicle                     RCAIDE Config Data Stucture
     print_iterations            Boolean Flag      
-    contingency_factor          Factor capturing uncertainty in vehicle weight [Unitless]
+    miscelleneous_weight_factor          Factor capturing uncertainty in vehicle weight [Unitless]
     speed_of_sound:             Local Speed of Sound                           [m/s]
     max_tip_mach:               Allowable Tip Mach Number                      [Unitless]
     disk_area_factor:           Inverse of Disk Area Efficiency                [Unitless]
@@ -53,25 +46,14 @@ def converge_weight(vehicle,
     Properties Used:
     N/A
     '''
-    settings       = Data()
-    breakdown      = compute_operating_empty_weight(vehicle,contingency_factor,
-                           speed_of_sound,max_tip_mach,disk_area_factor,
-                           safety_factor,max_thrust_to_weight_ratio,
-                           max_g_load,motor_efficiency) 
+    breakdown      = compute_operating_empty_weight(vehicle,miscelleneous_weight_factor) 
     build_up_mass  = breakdown.total    
     diff           = vehicle.mass_properties.max_takeoff - build_up_mass
     iterations     = 0
     
     while(abs(diff)>1):
         vehicle.mass_properties.max_takeoff = vehicle.mass_properties.max_takeoff - diff
-        
-        # Note that 'diff' will be negative if buildup mass is larger than MTOW, so subtractive
-        # iteration always moves MTOW toward buildup mass
-        
-        breakdown      = compute_operating_empty_weight(vehicle,contingency_factor,
-                           speed_of_sound,max_tip_mach,disk_area_factor,
-                           safety_factor,max_thrust_to_weight_ratio,
-                           max_g_load,motor_efficiency)
+        breakdown      = compute_operating_empty_weight(vehicle,miscelleneous_weight_factor)
         build_up_mass  = breakdown.total    
         diff           = vehicle.mass_properties.max_takeoff - build_up_mass 
         iterations     += 1

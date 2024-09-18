@@ -120,11 +120,12 @@ def compute_operating_empty_weight(vehicle,settings=None):
         W_tb   = compute_fuselage_weight(S_h,qm,Ltb)
         fuselage.mass_properties.mass = W_tb
     
-    weight                 = Data()
-    weight.wing            = W_wing
-    weight.fuselage        = W_tb
-    weight.horizontal_tail = W_ht
-    weight.vertical_tail   = W_vt
+    weight                      = Data()
+    weight.structural_breakdown =  Data()
+    weight.structural_breakdown.wing            = W_wing
+    weight.structural_breakdown.fuselage        = W_tb
+    weight.structural_breakdown.horizontal_tail = W_ht
+    weight.structural_breakdown.vertical_tail   = W_vt
     
     weight.empty = W_ht + W_tb + W_vt + W_wing
     

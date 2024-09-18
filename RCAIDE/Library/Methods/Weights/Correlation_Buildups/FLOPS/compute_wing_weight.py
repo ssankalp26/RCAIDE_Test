@@ -187,12 +187,12 @@ def compute_wing_weight(vehicle, wing, WPOD, complexity, settings, num_main_wing
             # Do a for loop over engine stations
             for ii in range(len(EETA)):
                 # Find the station closest to the engine but inboard
-                distances = EETA[ii]-Y
+                distances              = EETA[ii]-Y
                 distances[distances<0] = np.inf
-                distance = np.min(distances)
-                loc      = np.argmin(distances)
-                DELM2[loc] = DELM2[loc] + distance
-                EEL[loc+1:] = EEL[loc+1:] + 1
+                distance               = np.min(distances)
+                loc                    = np.argmin(distances)
+                DELM2[loc]             = DELM2[loc] + distance
+                EEL[loc+1:]            = EEL[loc+1:] + 1
 
             DELM2 = DELM2 + EEL*DY
 
@@ -449,7 +449,7 @@ def get_spanwise_engine(networks, SEMISPAN):
         for fuel_line in network.fuel_lines:
             for propulsor in fuel_line.propulsors:
                 if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
-                    if propulsor.wing_mounted:  
+                    if propulsor.wing_mounted and propulsor.origin[0][1] > 0:  
                         EETA.append((propulsor.origin[0][1] / Units.ft) * 1 / SEMISPAN) 
     EETA =  np.array(EETA)
     return EETA

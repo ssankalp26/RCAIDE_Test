@@ -147,17 +147,17 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
     
     # Store Weights Results 
     output = Data()
-    output.structures                               = Data()
-    output.structures.wing                          = W_wing
-    output.structures.afterbody                     = W_aft_centerbody
-    output.structures.fuselage                      = W_cabin
-    output.structures.main_landing_gear             = landing_gear.main
-    output.structures.nose_landing_gear             = landing_gear.nose
-    output.structures.nacelle                       = 0
-    output.structures.paint                         = 0   
-    output.structures.total                         = output.structures.wing + output.structures.afterbody \
-                                                      + output.structures.fuselage + output.structures.main_landing_gear + output.structures.nose_landing_gear \
-                                                      + output.structures.paint + output.structures.nacelle
+    output.structural_breakdown                               = Data()
+    output.structural_breakdown.wing                          = W_wing
+    output.structural_breakdown.afterbody                     = W_aft_centerbody
+    output.structural_breakdown.fuselage                      = W_cabin
+    output.structural_breakdown.main_landing_gear             = landing_gear.main
+    output.structural_breakdown.nose_landing_gear             = landing_gear.nose
+    output.structural_breakdown.nacelle                       = 0
+    output.structural_breakdown.paint                         = 0   
+    output.structural_breakdown.total                         = output.structural_breakdown.wing + output.structural_breakdown.afterbody \
+                                                      + output.structural_breakdown.fuselage + output.structural_breakdown.main_landing_gear + output.structural_breakdown.nose_landing_gear \
+                                                      + output.structural_breakdown.paint + output.structural_breakdown.nacelle
 
     output.propulsion_breakdown                     = Data()
     output.propulsion_breakdown.total               = W_propulsion
@@ -188,7 +188,7 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
     output.operational_items                         = Data()
     output.operational_items                         = W_oper
          
-    output.empty                                     = output.structures.total + output.propulsion_breakdown.total + output.systems_breakdown.total
+    output.empty                                     = output.structural_breakdown.total + output.propulsion_breakdown.total + output.systems_breakdown.total
     output.operating_empty                           = output.empty + output.operational_items.total
     output.zero_fuel_weight                          = output.operating_empty + output.payload_breakdown.total
     total_fuel_weight                                = vehicle.mass_properties.max_takeoff - output.zero_fuel_weight
@@ -211,9 +211,9 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
     optionals                                        = RCAIDE.Library.Components.Component()
          
     vehicle.landing_gear.nose                        = RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear()
-    vehicle.landing_gear.nose.mass                   = output.structures.nose_landing_gear
+    vehicle.landing_gear.nose.mass                   = output.structural_breakdown.nose_landing_gear
     vehicle.landing_gear.main                        = RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()   
-    vehicle.landing_gear.main.mass                   = output.structures.main_landing_gear  
+    vehicle.landing_gear.main.mass                   = output.structural_breakdown.main_landing_gear  
          
     control_systems.mass_properties.mass             = output.systems_breakdown.control_systems
     electrical_systems.mass_properties.mass          = output.systems_breakdown.electrical

@@ -332,49 +332,49 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
 
 
     # Distribute all weight in the output fields
-    output                                      = Data()
-    output.structures                           = Data()
-    output.structures.wing                      = W_wing
-    output.structures.horizontal_tail           = W_tail_horizontal
-    output.structures.vertical_tail             = output_3.W_tail_vertical
-    output.structures.fuselage                  = W_fuselage
-    output.structures.main_landing_gear         = W_landing_gear.main
-    output.structures.nose_landing_gear         = W_landing_gear.nose
-    output.structures.nacelle                   = 0
-    output.structures.paint                     = 0  
-    output.structures.total                     = output.structures.wing + output.structures.horizontal_tail + output.structures.vertical_tail \
-                                                + output.structures.fuselage + output.structures.main_landing_gear + output.structures.nose_landing_gear \
-                                                + output.structures.paint + output.structures.nacelle
-    
-    output.propulsion_breakdown                 = Data()
-    output.propulsion_breakdown.total           = W_energy_network_cumulative
-    output.propulsion_breakdown.fuel_system     = W_systems.W_fuel_system
+    output                                        = Data()
+    output.structural_breakdown                   = Data()
+    output.structural_breakdown.wing              = W_wing
+    output.structural_breakdown.horizontal_tail   = W_tail_horizontal
+    output.structural_breakdown.vertical_tail     = output_3.W_tail_vertical
+    output.structural_breakdown.fuselage          = W_fuselage
+    output.structural_breakdown.main_landing_gear = W_landing_gear.main
+    output.structural_breakdown.nose_landing_gear = W_landing_gear.nose
+    output.structural_breakdown.nacelle           = 0
+    output.structural_breakdown.paint             = 0  
+    output.structural_breakdown.total             = output.structural_breakdown.wing + output.structural_breakdown.horizontal_tail + output.structural_breakdown.vertical_tail \
+                                                     + output.structural_breakdown.fuselage + output.structural_breakdown.main_landing_gear + output.structural_breakdown.nose_landing_gear \
+                                                     + output.structural_breakdown.paint + output.structural_breakdown.nacelle
+          
+    output.propulsion_breakdown                   = Data()
+    output.propulsion_breakdown.total             = W_energy_network_cumulative
+    output.propulsion_breakdown.fuel_system       = W_systems.W_fuel_system
+  
+    output.systems_breakdown                      = Data()
+    output.systems_breakdown.control_systems      = W_systems.W_flight_control
+    output.systems_breakdown.hydraulics           = W_systems.W_hyd_pnu
+    output.systems_breakdown.avionics             = W_systems.W_avionics
+    output.systems_breakdown.electrical           = W_systems.W_electrical
+    output.systems_breakdown.air_conditioner      = W_systems.W_ac
+    output.systems_breakdown.furnish              = W_systems.W_furnish
+    output.systems_breakdown.apu                  = 0
+    output.systems_breakdown.instruments          = 0
+    output.systems_breakdown.anti_ice             = 0
+    output.systems_breakdown.total                = output.systems_breakdown.control_systems + output.systems_breakdown.apu \
+                                                  + output.systems_breakdown.electrical + output.systems_breakdown.avionics \
+                                                  + output.systems_breakdown.hydraulics + output.systems_breakdown.furnish \
+                                                  + output.systems_breakdown.air_conditioner + output.systems_breakdown.instruments \
+                                                  + output.systems_breakdown.anti_ice
+  
+    output.payload_breakdown                      = Data()
+    output.payload_breakdown                      = W_payload
+    output.operational_items                      = Data()
+    output.operational_items.oper_items           = 0
+    output.operational_items.flight_crew          = 0
+    output.operational_items.flight_attendants    = 0
+    output.operational_items.total                = 0
 
-    output.systems_breakdown                    = Data()
-    output.systems_breakdown.control_systems    = W_systems.W_flight_control
-    output.systems_breakdown.hydraulics         = W_systems.W_hyd_pnu
-    output.systems_breakdown.avionics           = W_systems.W_avionics
-    output.systems_breakdown.electrical         = W_systems.W_electrical
-    output.systems_breakdown.air_conditioner    = W_systems.W_ac
-    output.systems_breakdown.furnish            = W_systems.W_furnish
-    output.systems_breakdown.apu                = 0
-    output.systems_breakdown.instruments        = 0
-    output.systems_breakdown.anti_ice           = 0
-    output.systems_breakdown.total              = output.systems_breakdown.control_systems + output.systems_breakdown.apu \
-                                                + output.systems_breakdown.electrical + output.systems_breakdown.avionics \
-                                                + output.systems_breakdown.hydraulics + output.systems_breakdown.furnish \
-                                                + output.systems_breakdown.air_conditioner + output.systems_breakdown.instruments \
-                                                + output.systems_breakdown.anti_ice
-
-    output.payload_breakdown                    = Data()
-    output.payload_breakdown                    = W_payload
-    output.operational_items                    = Data()
-    output.operational_items.oper_items         = 0
-    output.operational_items.flight_crew        = 0
-    output.operational_items.flight_attendants  = 0
-    output.operational_items.total              = 0
-
-    output.empty            = output.structures.total + output.propulsion_breakdown.total + output.systems_breakdown.total
+    output.empty            = output.structural_breakdown.total + output.propulsion_breakdown.total + output.systems_breakdown.total
     output.operating_empty  = output.empty + output.operational_items.total
     output.zero_fuel_weight = output.operating_empty + output.payload_breakdown.total
     total_fuel_weight       = vehicle.mass_properties.max_takeoff - output.zero_fuel_weight
@@ -397,10 +397,10 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
 
     if not hasattr(vehicle.landing_gear, 'nose'):
         vehicle.landing_gear.nose       = RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()
-    vehicle.landing_gear.nose.mass  = output.structures.nose_landing_gear
+    vehicle.landing_gear.nose.mass  = output.structural_breakdown.nose_landing_gear
     if not hasattr(vehicle.landing_gear, 'main'):
         vehicle.landing_gear.main       = RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear()   
-    vehicle.landing_gear.main.mass  = output.structures.main_landing_gear 
+    vehicle.landing_gear.main.mass  = output.structural_breakdown.main_landing_gear 
     
     control_systems.mass_properties.mass    = output.systems_breakdown.control_systems
     electrical_systems.mass_properties.mass = output.systems_breakdown.electrical

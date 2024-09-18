@@ -220,7 +220,7 @@ def compute_operating_empty_weight(vehicle,settings=None,
         # Fuel-Powered Propulsors  
         if method_type == 'FLOPS Simple' or method_type == 'FLOPS Complex':
             W_propulsion                         = FLOPS.compute_propulsion_system_weight(vehicle, network)
-            W_energy_network.total              += W_propulsion.W_prop 
+            W_energy_network_total              += W_propulsion.W_prop 
             W_energy_network.W_engine           += W_propulsion.W_engine
             W_energy_network.W_thrust_reverser  += W_propulsion.W_thrust_reverser
             W_energy_network.W_engine_controls  += W_propulsion.W_engine_controls
@@ -379,21 +379,21 @@ def compute_operating_empty_weight(vehicle,settings=None,
     ##-------------------------------------------------------------------------------                 
     # Accumulate Structural Weight
     ##-------------------------------------------------------------------------------   
-    output.structures                       = Data()
-    output.structures.wing                  = W_main_wing
-    output.structures.horizontal_tail       = W_tail_horizontal
-    output.structures.vertical_tail         = W_tail_vertical
-    output.structures.fuselage              = W_fuselage_total
-    output.structures.main_landing_gear     = landing_gear.main
-    output.structures.nose_landing_gear     = landing_gear.nose 
-    output.structures.nacelle               = W_energy_network.W_nacelle
+    output.structural_breakdown                       = Data()
+    output.structural_breakdown.wing                  = W_main_wing
+    output.structural_breakdown.horizontal_tail       = W_tail_horizontal
+    output.structural_breakdown.vertical_tail         = W_tail_vertical
+    output.structural_breakdown.fuselage              = W_fuselage_total
+    output.structural_breakdown.main_landing_gear     = landing_gear.main
+    output.structural_breakdown.nose_landing_gear     = landing_gear.nose 
+    output.structural_breakdown.nacelle               = W_energy_network.W_nacelle
     
     if 'FLOPS' in method_type:
         print('Paint weight is currently ignored in FLOPS calculations.')
-    output.structures.paint = 0  # TODO reconcile FLOPS paint calculations with Raymer and RCAIDE baseline
-    output.structures.total = output.structures.wing + output.structures.horizontal_tail + output.structures.vertical_tail \
-                              + output.structures.fuselage + output.structures.main_landing_gear + output.structures.nose_landing_gear \
-                              + output.structures.paint + output.structures.nacelle 
+    output.structural_breakdown.paint = 0  # TODO reconcile FLOPS paint calculations with Raymer and RCAIDE baseline
+    output.structural_breakdown.total = output.structural_breakdown.wing + output.structural_breakdown.horizontal_tail + output.structural_breakdown.vertical_tail \
+                              + output.structural_breakdown.fuselage + output.structural_breakdown.main_landing_gear + output.structural_breakdown.nose_landing_gear \
+                              + output.structural_breakdown.paint + output.structural_breakdown.nacelle 
 
     ##-------------------------------------------------------------------------------                 
     # Accumulate Systems Weight
@@ -416,7 +416,7 @@ def compute_operating_empty_weight(vehicle,settings=None,
     output.payload_breakdown    = payload 
     output.operational_items    = Data()
     output.operational_items    = W_oper 
-    output.empty                = output.structures.total + output.propulsion_breakdown.total + output.systems_breakdown.total
+    output.empty                = output.structural_breakdown.total + output.propulsion_breakdown.total + output.systems_breakdown.total
     output.operating_empty      = output.empty + output.operational_items.total
     output.zero_fuel_weight     = output.operating_empty + output.payload_breakdown.total
     output.max_takeoff          = vehicle.mass_properties.max_takeoff
@@ -432,10 +432,10 @@ def compute_operating_empty_weight(vehicle,settings=None,
                     
     if not hasattr(vehicle.landing_gear, 'nose'):
         vehicle.landing_gear.nose   =  RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()
-    vehicle.landing_gear.nose.mass  = output.structures.nose_landing_gear
+    vehicle.landing_gear.nose.mass  = output.structural_breakdown.nose_landing_gear
     if not hasattr(vehicle.landing_gear, 'main'):
         vehicle.landing_gear.main   =  RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear()   
-    vehicle.landing_gear.main.mass  = output.structures.main_landing_gear  
+    vehicle.landing_gear.main.mass  = output.structural_breakdown.main_landing_gear  
 
     control_systems                         = RCAIDE.Library.Components.Component()
     control_systems.mass_properties.mass    = output.systems_breakdown.control_systems
