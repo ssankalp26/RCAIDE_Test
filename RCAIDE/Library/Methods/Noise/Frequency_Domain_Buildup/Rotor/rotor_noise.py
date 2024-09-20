@@ -26,7 +26,8 @@ from RCAIDE.Library.Methods.Noise.Common                                        
 from RCAIDE.Library.Methods.Noise.Metrics.A_weighting_metric                       import A_weighting_metric  
 
 # Python package imports   
-import numpy as np    
+import numpy as np
+import time     
 
 # ----------------------------------------------------------------------------------------------------------------------    
 #  Rotor Noise 
@@ -99,15 +100,14 @@ def rotor_noise(rotor,aeroacoustic_data,segment,settings):
     # harmonic noise with planar load distribution
     harmonic_noise_plane(conditions,harmonics_blade,harmonics_load,freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
     
-    
     # ----------------------------------------------------------------------------------
     # Broadband Noise
     # ----------------------------------------------------------------------------------
     # # broadband noise old version
     # broadband_noise(freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
     
-    # broadband noise unsteady
-    broadband_noise_unsteady(freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
+    # # broadband noise unsteady
+    # broadband_noise_unsteady(freestream,angle_of_attack,coordinates,velocity_vector,rotor,aeroacoustic_data,settings,Noise)
     
     
     # Atmospheric attenuation 
@@ -116,28 +116,29 @@ def rotor_noise(rotor,aeroacoustic_data,segment,settings):
     # Combine Harmonic (periodic/tonal) and Broadband Noise
     num_mic      = len(coordinates.X_hub[0,:,0,0,0,0])
     num_rot      = len(coordinates.X_hub[0,0,:,0,0,0]) 
-    Noise.SPL_total_1_3_spectrum      = 10*np.log10( 10**(Noise.SPL_prop_harmonic_1_3_spectrum/10) + 10**(Noise.SPL_prop_broadband_1_3_spectrum/10)) - np.tile(delta_atmo[:,None,None,:],(1,num_mic,num_rot,1))
+    # Noise.SPL_total_1_3_spectrum      = 10*np.log10( 10**(Noise.SPL_prop_harmonic_1_3_spectrum/10) + 10**(Noise.SPL_prop_broadband_1_3_spectrum/10)) - np.tile(delta_atmo[:,None,None,:],(1,num_mic,num_rot,1))
+    Noise.SPL_total_1_3_spectrum      = 10*np.log10( 10**(Noise.SPL_prop_harmonic_1_3_spectrum/10) ) - np.tile(delta_atmo[:,None,None,:],(1,num_mic,num_rot,1))
     Noise.SPL_total_1_3_spectrum[np.isnan(Noise.SPL_total_1_3_spectrum)] = 0 
 
     # Summation of spectra from propellers into into one SPL and store results
-    Results.SPL                                           = SPL_arithmetic(SPL_arithmetic(Noise.SPL_total_1_3_spectrum)) 
-    Results.SPL_dBA                                       = SPL_arithmetic(SPL_arithmetic(A_weighting_metric(Noise.SPL_total_1_3_spectrum,settings.center_frequencies))) 
-    Results.SPL_harmonic                                  = SPL_arithmetic(SPL_arithmetic(Noise.SPL_prop_harmonic_1_3_spectrum))    
-    Results.SPL_broadband                                 = SPL_arithmetic(SPL_arithmetic(Noise.SPL_prop_broadband_1_3_spectrum)) 
+    Results.SPL                                           = SPL_arithmetic(SPL_arithmetic(Noise.SPL_total_1_3_spectrum, sum_axis=2), sum_axis=2) 
+    Results.SPL_dBA                                       = SPL_arithmetic(SPL_arithmetic(A_weighting_metric(Noise.SPL_total_1_3_spectrum,settings.center_frequencies), sum_axis=2), sum_axis=2) 
+    Results.SPL_harmonic                                  = SPL_arithmetic(SPL_arithmetic(Noise.SPL_prop_harmonic_1_3_spectrum, sum_axis=2), sum_axis=2)    
+    # Results.SPL_broadband                                 = SPL_arithmetic(SPL_arithmetic(Noise.SPL_prop_broadband_1_3_spectrum)) 
     
     # blade passing frequency 
-    Results.blade_passing_frequencies                     = Noise.f[:,0,0,0,:]              
-    Results.SPL_harmonic_bpf_spectrum                     = SPL_arithmetic(Noise.SPL_prop_harmonic_bpf_spectrum)    
-    Results.SPL_harmonic_bpf_spectrum_dBA                 = A_weighting_metric(Results.SPL_harmonic_bpf_spectrum,Noise.f[0,0,0,0,:]) 
+    Results.blade_passing_frequencies                     = Noise.f[:,0,0,:]              
+    Results.SPL_harmonic_bpf_spectrum                     = SPL_arithmetic(Noise.SPL_prop_harmonic_bpf_spectrum, sum_axis=2)    
+    Results.SPL_harmonic_bpf_spectrum_dBA                 = A_weighting_metric(Results.SPL_harmonic_bpf_spectrum,Noise.f[0,0,0,:]) 
     
     # 1/3 octave band
     Results.one_third_frequency_spectrum                  = settings.center_frequencies 
-    Results.SPL_1_3_spectrum                              = SPL_arithmetic(Noise.SPL_total_1_3_spectrum)      
+    Results.SPL_1_3_spectrum                              = SPL_arithmetic(Noise.SPL_total_1_3_spectrum, sum_axis=2)      
     Results.SPL_1_3_spectrum_dBA                          = A_weighting_metric(Results.SPL_1_3_spectrum,settings.center_frequencies)      
-    Results.SPL_harmonic_1_3_spectrum                     = SPL_arithmetic(Noise.SPL_prop_harmonic_1_3_spectrum)       
+    Results.SPL_harmonic_1_3_spectrum                     = SPL_arithmetic(Noise.SPL_prop_harmonic_1_3_spectrum, sum_axis=2)       
     Results.SPL_harmonic_1_3_spectrum_dBA                 = A_weighting_metric(Results.SPL_harmonic_1_3_spectrum,settings.center_frequencies) 
-    Results.SPL_broadband_1_3_spectrum                    = SPL_arithmetic(Noise.SPL_prop_broadband_1_3_spectrum) 
-    Results.SPL_broadband_1_3_spectrum_dBA                = A_weighting_metric(Results.SPL_broadband_1_3_spectrum,settings.center_frequencies)
+    # Results.SPL_broadband_1_3_spectrum                    = SPL_arithmetic(Noise.SPL_prop_broadband_1_3_spectrum) 
+    # Results.SPL_broadband_1_3_spectrum_dBA                = A_weighting_metric(Results.SPL_broadband_1_3_spectrum,settings.center_frequencies)
     
     # A-weighted 
     return Results

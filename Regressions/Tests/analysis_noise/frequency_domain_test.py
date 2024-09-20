@@ -11,7 +11,9 @@ from RCAIDE.Framework.Mission.Segments.Segment                     import Segmen
 # Python Imports  
 import sys 
 import numpy as np 
-import matplotlib.pyplot as plt  
+import matplotlib.pyplot as plt 
+import time 
+
 
 sys.path.append('../../Vehicles/Rotors')
 # the analysis functions
@@ -32,9 +34,8 @@ def main():
     # harmonic noise test 
     Hararmonic_Noise_Validation(PP)
 
-    # broadband nosie test function 
-    Broadband_Noise_Validation(PP)
-    
+    # # broadband noise test function 
+    # Broadband_Noise_Validation(PP)
     return  
     
     
@@ -139,11 +140,14 @@ def Hararmonic_Noise_Validation(PP):
     conditions.noise.number_of_microphones                 = num_mic
                  
     
-    # Run Frequency Domain Rotor Noise Model          
+    # Run Frequency Domain Rotor Noise Model
+    ti = time.time()         
     noise_res                                              = rotor_noise(rotor,noise_data,segment,settings)
+    tf = time.time()
+    
     F8745D4_SPL                                            = noise_res.SPL     
     F8745D4_SPL_harmonic                                   = noise_res.SPL_harmonic 
-    F8745D4_SPL_broadband                                  = noise_res.SPL_broadband  
+    # F8745D4_SPL_broadband                                  = noise_res.SPL_broadband  
     F8745D4_SPL_harmonic_bpf_spectrum                      = noise_res.SPL_harmonic_bpf_spectrum     
     
     validation_data = Hararmonic_Noise_Validation_Data()
@@ -211,8 +215,8 @@ def Hararmonic_Noise_Validation(PP):
     axis2.plot(-theta*Units.degrees,F8745D4_SPL[0,:] , color = PP.Slc[0] , linestyle =PP.Sls , marker = PP.Slm[0] , markersize = PP.m*2 , linewidth = PP.lw  )  
     axis2.plot(theta*Units.degrees,F8745D4_SPL_harmonic[0,:] , color = PP.Slc[1] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw   )  
     axis2.plot(-theta*Units.degrees,F8745D4_SPL_harmonic[0,:] , color = PP.Slc[1] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw, label = 'Harmonic'  )  
-    axis2.plot(theta*Units.degrees,F8745D4_SPL_broadband[0,:] , color = PP.Slc[2] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw   )  
-    axis2.plot(-theta*Units.degrees,F8745D4_SPL_broadband[0,:] , color = PP.Slc[2] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw, label = 'Broadband' )     
+    # axis2.plot(theta*Units.degrees,F8745D4_SPL_broadband[0,:] , color = PP.Slc[2] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw   )  
+    # axis2.plot(-theta*Units.degrees,F8745D4_SPL_broadband[0,:] , color = PP.Slc[2] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw, label = 'Broadband' )     
     axis2.set_yticks(np.arange(50,150,25))     
     axis2.grid(True)  
     axis2.legend(loc='upper right', prop={'size': PP.lf} , bbox_to_anchor=(1.2,1.5))
