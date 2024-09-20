@@ -183,23 +183,17 @@ def compute_turbofan_performance(turbofan,state,fuel_line,center_of_gravity= [[0
     low_pressure_turbine.working_fluid               = turbofan.working_fluid    
     
     # Link the low pressure turbine to the low_pressure_compresor
-    lpt_conditions.inputs.compressor                 = lpc_conditions.outputs
-
-    # Link the low pressure turbine to the combustor
-    lpt_conditions.inputs.fuel_to_air_ratio          = combustor_conditions.outputs.fuel_to_air_ratio
-
-    # Link the low pressure turbine to the fan
-    lpt_conditions.inputs.fan                        = fan_conditions.outputs 
-
-    # Get the bypass ratio from the thrust component
+    lpt_conditions.inputs.compressor                 = lpc_conditions.outputs 
+    lpt_conditions.inputs.fuel_to_air_ratio          = combustor_conditions.outputs.fuel_to_air_ratio 
+    lpt_conditions.inputs.fan                        = fan_conditions.outputs  
     lpt_conditions.inputs.bypass_ratio               = bypass_ratio
 
     # Flow through the low pressure turbine
     compute_turbine_performance(low_pressure_turbine,lpt_conditions,conditions)
 
     # Link the core nozzle to the low pressure turbine
-    core_nozzle_conditions.inputs.stagnation_temperature              = lpt_conditions.outputs.stagnation_temperature
-    core_nozzle_conditions.inputs.stagnation_pressure                 = lpt_conditions.outputs.stagnation_pressure
+    core_nozzle_conditions.inputs.stagnation_temperature     = lpt_conditions.outputs.stagnation_temperature
+    core_nozzle_conditions.inputs.stagnation_pressure        = lpt_conditions.outputs.stagnation_pressure
     core_nozzle_conditions.inputs.static_temperature         = lpt_conditions.outputs.static_temperature
     core_nozzle_conditions.inputs.static_pressure            = lpt_conditions.outputs.static_pressure  
     core_nozzle_conditions.inputs.mach_number                = lpt_conditions.outputs.mach_number   
@@ -209,8 +203,8 @@ def compute_turbofan_performance(turbofan,state,fuel_line,center_of_gravity= [[0
     compute_expansion_nozzle_performance(core_nozzle,core_nozzle_conditions,conditions)
 
     # Link the dan nozzle to the fan
-    fan_nozzle_conditions.inputs.stagnation_temperature               = fan_conditions.outputs.stagnation_temperature
-    fan_nozzle_conditions.inputs.stagnation_pressure                  = fan_conditions.outputs.stagnation_pressure
+    fan_nozzle_conditions.inputs.stagnation_temperature     = fan_conditions.outputs.stagnation_temperature
+    fan_nozzle_conditions.inputs.stagnation_pressure        = fan_conditions.outputs.stagnation_pressure
     fan_nozzle_conditions.inputs.static_temperature         = fan_conditions.outputs.static_temperature
     fan_nozzle_conditions.inputs.static_pressure            = fan_conditions.outputs.static_pressure  
     fan_nozzle_conditions.inputs.mach_number                = fan_conditions.outputs.mach_number   

@@ -47,7 +47,8 @@ def size_core(turbofan,turbofan_conditions,conditions):
     Tref           = turbofan.reference_temperature
     Pref           = turbofan.reference_pressure 
     Tt_ref         = turbofan_conditions.total_temperature_reference  
-    Pt_ref         = turbofan_conditions.total_pressure_reference  
+    Pt_ref         = turbofan_conditions.total_pressure_reference
+    
     # Compute nondimensional thrust
     turbofan_conditions.throttle = 1.0
     compute_thrust(turbofan,turbofan_conditions,conditions) 

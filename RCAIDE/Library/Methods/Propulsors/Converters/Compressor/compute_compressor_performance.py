@@ -1,11 +1,16 @@
 # RCAIDE/Library/Methods/Propulsors/Converters/Compressor/compute_compressor_performance.py
 # (c) Copyright 2023 Aerospace Research Community LLC
 # 
-# Created:  Jun 2024, M. Clarke     
+# Created:  Jun 2024, M. Clarke
+
+# ---------------------------------------------------------------------------------------------------------------------- 
+# Imports 
+# ----------------------------------------------------------------------------------------------------------------------
+import numpy as np
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 # compute_compression_nozzle_performance
-# ----------------------------------------------------------------------------------------------------------------------  
+# ----------------------------------------------------------------------------------------------------------------------
 def compute_compressor_performance(compressor,compressor_conditions,conditions):
     """ Computes the performance of a compressor bases on its polytropic efficiency.
         The following properties are computed: 
@@ -39,17 +44,15 @@ def compute_compressor_performance(compressor,compressor_conditions,conditions):
     Tt_in    = compressor_conditions.inputs.stagnation_temperature
     Pt_in    = compressor_conditions.inputs.stagnation_pressure 
     PR       = compressor.pressure_ratio
-    etapold  = compressor.polytropic_efficiency
-    
-    P0                      = compressor_conditions.inputs.static_temperature
-    T0                      = compressor_conditions.inputs.static_pressure  
-    M0                      = compressor_conditions.inputs.mach_number    
+    etapold  = compressor.polytropic_efficiency 
+    T0       = compressor_conditions.inputs.static_temperature
+    P0       = compressor_conditions.inputs.static_pressure  
+    M0       = compressor_conditions.inputs.mach_number    
     
     # Unpack ram inputs
     working_fluid           = compressor.working_fluid
  
-    # Compute the working fluid properties
-
+    # Compute the working fluid properties 
     gamma  = working_fluid.compute_gamma(T0,P0) 
     Cp     = working_fluid.compute_cp(T0,P0)    
         
@@ -58,9 +61,9 @@ def compute_compressor_performance(compressor,compressor_conditions,conditions):
     Pt_out    = Pt_in*PR
     Tt_out    = Tt_in*(PR**((gamma-1)/(gamma*etapold)))
     ht_out    = Tt_out*Cp
-    P_out     = Tt_out/(1.+(gamma-1.)/2.*M0*M0)
-    T_out     = Pt_out/((1.+(gamma-1.)/2.*M0*M0)**(gamma/(gamma-1.)))    
-    
+    T_out     = Tt_out/(1.+(gamma-1.)/2.*M0*M0)
+    P_out     = Pt_out/((1.+(gamma-1.)/2.*M0*M0)**(gamma/(gamma-1.))) 
+    M_out     = np.sqrt( (((Pt_out/P_out)**((gamma-1.)/gamma))-1.) *2./(gamma-1.) ) 
     # Compute the work done by the compressor (normalized by mass flow i.e. J/(kg/s)
     work_done = ht_out - ht_in
     
@@ -71,7 +74,7 @@ def compute_compressor_performance(compressor,compressor_conditions,conditions):
     compressor_conditions.outputs.stagnation_enthalpy     = ht_out
     compressor_conditions.outputs.static_temperature      = T_out
     compressor_conditions.outputs.static_pressure         = P_out 
-    compressor_conditions.outputs.mach_number             = M0
+    compressor_conditions.outputs.mach_number             = M_out
     
     return 
 

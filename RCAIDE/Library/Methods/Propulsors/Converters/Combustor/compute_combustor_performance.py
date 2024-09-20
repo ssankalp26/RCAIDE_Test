@@ -47,17 +47,16 @@ def compute_combustor_performance(combustor,combustor_conditions,conditions):
     Returns:
         None
     """ 
-    P0                      = combustor_conditions.inputs.static_temperature
-    T0                      = combustor_conditions.inputs.static_pressure  
-    M0                      = combustor_conditions.inputs.mach_number    
+    T0                      = combustor_conditions.inputs.static_temperature
+    P0                      = combustor_conditions.inputs.static_pressure  
+    M0                      = combustor_conditions.inputs.mach_number 
                                  
     # Unpack ram inputs         
     working_fluid           = combustor.working_fluid
  
-    # Compute the working fluid properties
-
+    # Compute the working fluid properties 
     gamma  = working_fluid.compute_gamma(T0,P0) 
-    Cp     = working_fluid.compute_cp(T0,P0)   
+    Cp     = working_fluid.compute_cp(T0,P0) 
     
     # unpacking the values form inputs
     Tt_in    = combustor_conditions.inputs.stagnation_temperature

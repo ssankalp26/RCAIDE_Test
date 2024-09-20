@@ -37,18 +37,17 @@ def compute_turbine_performance(turbine,turbine_conditions,conditions):
 
     Returns:
         None 
-    """            
-    P0                      = turbine_conditions.inputs.static_temperature
-    T0                      = turbine_conditions.inputs.static_pressure  
-    M0                      = turbine_conditions.inputs.mach_number    
+    """              
                              
     # Unpack ram inputs       
-    working_fluid           = turbine.working_fluid
+    working_fluid   = turbine.working_fluid
 
     # Compute the working fluid properties
-
-    gamma  = working_fluid.compute_gamma(T0,P0) 
-    Cp     = working_fluid.compute_cp(T0,P0)  
+    T0              = turbine_conditions.inputs.static_temperature
+    P0              = turbine_conditions.inputs.static_pressure  
+    M0              = turbine_conditions.inputs.mach_number   
+    gamma           = working_fluid.compute_gamma(T0,P0) 
+    Cp              = working_fluid.compute_cp(T0,P0)
     
     #Unpack turbine entering properties 
     eta_mech        = turbine.mechanical_efficiency
@@ -65,12 +64,11 @@ def compute_turbine_performance(turbine,turbine_conditions,conditions):
     deltah_ht = -1/(1+f) * (compressor_work + shaft_takeoff + alpha * fan_work) * 1/eta_mech
     
     # Compute the output stagnation quantities from the inputs and the energy drop computed above
-    Tt_out    =  Tt_in+deltah_ht/Cp
-    ht_out    =  Cp*Tt_out   
-    Pt_out    =  Pt_in*(Tt_out/Tt_in)**(gamma/((gamma-1)*etapolt))
-    
-    P_out     = Tt_out/(1.+(gamma-1.)/2.*M0*M0)
-    T_out     = Pt_out/((1.+(gamma-1.)/2.*M0*M0)**(gamma/(gamma-1.)))         
+    Tt_out    = Tt_in+deltah_ht/Cp
+    ht_out    = Cp*Tt_out   
+    Pt_out    = Pt_in*(Tt_out/Tt_in)**(gamma/((gamma-1)*etapolt)) 
+    T_out     = Tt_out/(1.+(gamma-1.)/2.*M0*M0)
+    P_out     = Pt_out/((1.+(gamma-1.)/2.*M0*M0)**(gamma/(gamma-1.)))         
     
     # Pack outputs of turbine 
     turbine_conditions.outputs.stagnation_pressure     = Pt_out
