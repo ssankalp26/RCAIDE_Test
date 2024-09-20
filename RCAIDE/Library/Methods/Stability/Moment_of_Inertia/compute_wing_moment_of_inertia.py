@@ -15,19 +15,26 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Compute Wing Moment of Intertia
 # ----------------------------------------------------------------------------------------------------------------------  
-def compute_wing_moment_of_inertia(wing, center_of_gravity, fuel_flag=False): 
+def compute_wing_moment_of_inertia(wing, mass=0,  center_of_gravity=[[0, 0, 0]], fuel_flag=False):
+    '''
     
-    mass = wing.mass # edit this call
     
+    
+    
+    
+    
+    
+    '''
+    
+    # Distribute properties of the wing
     tr = wing.thickness_to_chord # root thickness as percent of chord
     tt = wing.thickness_to_chord #tip thickness as a percent of chord
     ct = wing.chords.tip # tip chord 
     cr = wing.chords.root # root chord
-    origin_wing = wing.origin
-    
     b = wing.spans.total / 2 # half-span of the wing
     A = wing.sweeps.quarter_chord * np.pi / 180 # sweep angle in radians (located at quarter chord)
     dihedral = wing.dihedral * np.pi /180 # Wing dihedral. Converts it to radians
+    origin_wing = wing.origin
     
     if fuel_flag:
         b = b * 0.8 # Wing fuel tank is 80% span of the entire wing
