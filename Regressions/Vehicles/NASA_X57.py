@@ -46,7 +46,7 @@ def vehicle_setup():
     vehicle.systems.control               = "fully powered"
     vehicle.systems.accessories           = "commuter"    
     
-    cruise_speed                          = 135.*Units['mph']    
+    cruise_speed                          = 135.*Units['mp    origin_wing = wing.originh']    
     altitude                              = 2500. * Units.ft
     atmo                                  = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
     freestream                            = atmo.compute_values (0.)
@@ -343,7 +343,7 @@ def vehicle_setup():
     #------------------------------------------------------------------------------------------------------------------------------------           
     # Battery
     #------------------------------------------------------------------------------------------------------------------------------------  
-    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Batteries.Lithium_Ion_NMC()
+    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC()
     bat.tag                                                = 'li_ion_battery'
     bat.pack.electrical_configuration.series               = 140   
     bat.pack.electrical_configuration.parallel             = 100
