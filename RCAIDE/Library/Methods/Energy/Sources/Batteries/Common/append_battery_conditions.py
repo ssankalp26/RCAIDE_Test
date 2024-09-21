@@ -17,7 +17,7 @@ from RCAIDE.Framework.Mission.Common     import   Conditions
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Energy-Sources-Battery 
 def append_battery_conditions(battery,segment,bus): 
-    """ modules the initial battery conditions
+    """ Appends the initial battery conditions
     
         Assumptions:
         Battery temperature is set to one degree hotter than ambient 
@@ -70,24 +70,36 @@ def append_battery_conditions(battery,segment,bus):
         
     bus_results                                              = segment.state.conditions.energy[bus.tag]        
     bus_results[battery.tag]                                 = Conditions() 
-    bus_results[battery.tag].module                          = Conditions() 
     bus_results[battery.tag].cell                            = Conditions()
-    bus_results[battery.tag].pack                            = Conditions()  
-    bus_results[battery.tag].module.voltage_open_circuit     = 0 * ones_row(1)  
-    bus_results[battery.tag].module.voltage_under_load       = 0 * ones_row(1)  
-    bus_results[battery.tag].module.power                    = 0 * ones_row(1) 
-    bus_results[battery.tag].module.power_draw               = 0 * ones_row(1)    
-    bus_results[battery.tag].module.current_draw             = 0 * ones_row(1)    
-    bus_results[battery.tag].pack.charging_current          = 0 * ones_row(1)    
-    bus_results[battery.tag].module.current                  = 0 * ones_row(1)    
-    bus_results[battery.tag].module.heat_energy_generated    = 0 * ones_row(1)   
-    bus_results[battery.tag].module.internal_resistance      = 0 * ones_row(1)   
+
+
+    bus_results[battery.tag].voltage_open_circuit          = 0 * ones_row(1)
+    bus_results[battery.tag].cell.voltage_open_circuit       = 0 * ones_row(1)
+    
+    bus_results[battery.tag].internal_resistance         = 0 * ones_row(1)
+    bus_results[battery.tag].cell.internal_resistance      = 0 * ones_row(1)
+    
+    bus_results[battery.tag].voltage_under_load       = 0 * ones_row(1)
+    bus_results[battery.tag].cell.voltage_under_load         = 0 * ones_row(1)
+       
+    bus_results[battery.tag].power                    = 0 * ones_row(1)
+    bus_results[battery.tag].cell.power                      = 0 * ones_row(1)   
+    
+    bus_results[battery.tag].power_draw               = 0 * ones_row(1)    
+    bus_results[battery.tag].current_draw             = 0 * ones_row(1)
+    
+    bus_results[battery.tag].charging_current         = 0 * ones_row(1)
+    
+    bus_results[battery.tag].current                  = 0 * ones_row(1)
+    bus_results[battery.tag].cell.current              = 0 * ones_row(1)  
+
+    bus_results[battery.tag].heat_energy_generated    = 0 * ones_row(1)   
+       
     bus_results[battery.tag].cell.heat_energy_generated      = 0 * ones_row(1)    
-    bus_results[battery.tag].cell.power                      = 0 * ones_row(1)         
+          
     bus_results[battery.tag].cell.energy                     = 0 * ones_row(1)         
-    bus_results[battery.tag].cell.voltage_under_load         = 0 * ones_row(1)         
-    bus_results[battery.tag].cell.voltage_open_circuit       = 0 * ones_row(1)        
-    bus_results[battery.tag].cell.current                    = 0 * ones_row(1)  
+    
+    
     bus_results[battery.tag].cell.cycle_in_day               = 0
     bus_results[battery.tag].cell.resistance_growth_factor   = 1.
     bus_results[battery.tag].cell.capacity_fade_factor       = 1. 
@@ -110,12 +122,12 @@ def append_battery_conditions(battery,segment,bus):
     # first segment 
     if 'initial_battery_state_of_charge' in segment:  
         initial_battery_energy                                   = segment.initial_battery_state_of_charge*battery.module.maximum_energy   
-        bus_results[battery.tag].module.maximum_initial_energy   = initial_battery_energy
-        bus_results[battery.tag].module.energy                   = initial_battery_energy*segment.initial_battery_state_of_charge* ones_row(1) 
+        bus_results[battery.tag].maximum_initial_energy          = initial_battery_energy
+        bus_results[battery.tag].energy                          = initial_battery_energy*segment.initial_battery_state_of_charge* ones_row(1) 
         bus_results[battery.tag].cell.state_of_charge            = segment.initial_battery_state_of_charge* ones_row(1) 
         bus_results[battery.tag].cell.depth_of_discharge         = 1 - segment.initial_battery_state_of_charge* ones_row(1)
     else:  
-        bus_results[battery.tag].module.energy                 = 0 * ones_row(1) 
+        bus_results[battery.tag].energy                         = 0 * ones_row(1) 
         bus_results[battery.tag].cell.state_of_charge          = 0 * ones_row(1)       
         bus_results[battery.tag].cell.depth_of_discharge       = 0 * ones_row(1)   
         
@@ -124,7 +136,7 @@ def append_battery_conditions(battery,segment,bus):
         cell_temperature  = segment.battery_cell_temperature  
     else:
         cell_temperature  = atmo_data.temperature[0,0] 
-    bus_results[battery.tag].module.temperature              = cell_temperature * ones_row(1)         
+    bus_results[battery.tag].temperature                  = cell_temperature * ones_row(1)         
     bus_results[battery.tag].cell.temperature              = cell_temperature * ones_row(1) 
 
     # charge thoughput 

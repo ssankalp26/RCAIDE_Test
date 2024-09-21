@@ -55,50 +55,62 @@ class Lithium_Ion_NMC(Lithium_Ion_Generic):
             18650-format lithium-ion battery cells." Journal of The Electrochemical
             Society 162.8 (2015): A1592.
         
-        """    
-        self.tag                              = 'lithium_ion_nmc'
-        self.power_split_ratio                                 = None
-        self.number_of_cells                                   = 1
-        self.maximum_energy                                    = 0.0
-        self.maximum_power                                     = 0.0
-        self.maximum_voltage                                   = 0.0        
-        self.electrical_configuration                          = Data()
-        self.electrical_configuration.series                   = 1
-        self.electrical_configuration.parallel                 = 1   
-        self.electrical_configuration.total                    = 1   
-        self.geometrtic_configuration                          = Data() 
-        self.geometrtic_configuration.normal_count             = 1       # number of cells normal to flow
-        self.geometrtic_configuration.parallel_count           = 1       # number of cells parallel to flow      
-        self.geometrtic_configuration.normal_spacing           = 0.02
-        self.geometrtic_configuration.parallel_spacing         = 0.02
+        """
+        # ----------------------------------------------------------------------------------------------------------------------
+        #  Module Level Properties
+        # ----------------------------------------------------------------------------------------------------------------------
         
-
-        self.cell.diameter                    = 0.0185                                                   # [m]
-        self.cell.height                      = 0.0653                                                   # [m]
-        self.cell.mass                        = 0.048 * Units.kg                                         # [kg]
+        self.tag                                         = 'lithium_ion_nmc'
+        self.power_split_ratio                           = None
+        self.number_of_cells                             = 1
+        self.maximum_energy                              = 0.0
+        self.maximum_power                               = 0.0
+        self.maximum_voltage                             = 0.0
+        
+        self.electrical_configuration                    = Data()
+        self.electrical_configuration.series             = 1
+        self.electrical_configuration.parallel           = 1   
+        self.electrical_configuration.total              = 1
+        
+        self.geometrtic_configuration                    = Data() 
+        self.geometrtic_configuration.normal_count       = 1       # number of cells normal to flow
+        self.geometrtic_configuration.parallel_count     = 1       # number of cells parallel to flow      
+        self.geometrtic_configuration.normal_spacing     = 0.02
+        self.geometrtic_configuration.parallel_spacing   = 0.02
+        
+        # ----------------------------------------------------------------------------------------------------------------------
+        #  Cell Level Properties
+        # ----------------------------------------------------------------------------------------------------------------------        
+        self.cell.chemistry                   = 'LiNiMnCoO2'
+        self.cell.diameter                    = 0.0185                                                                            # [m]
+        self.cell.height                      = 0.0653                                                                            # [m]
+        self.cell.mass                        = 0.048 * Units.kg                                                                  # [kg]
         self.cell.surface_area                = (np.pi*self.cell.height*self.cell.diameter) + (0.5*np.pi*self.cell.diameter**2)  # [m^2]
         self.cell.volume                      = np.pi*(0.5*self.cell.diameter)**2*self.cell.height 
-        self.cell.density                     = self.cell.mass/self.cell.volume                          # [kg/m^3]  
-        self.cell.electrode_area              = 0.0342                                                   # [m^2] 
-                                                                                               
-        self.cell.maximum_voltage             = 4.2                                                      # [V]
-        self.cell.nominal_capacity            = 3.55                                                     # [Amp-Hrs]
-        self.cell.nominal_voltage             = 3.6                                                      # [V] 
-        self.cell.charging_voltage            = self.cell.nominal_voltage                                # [V] 
+        self.cell.density                     = self.cell.mass/self.cell.volume                                                  # [kg/m^3]  
+        self.cell.electrode_area              = 0.0342                                                                           # [m^2] 
+                                                                                                                           
+        self.cell.maximum_voltage             = 4.2                                                                              # [V]
+        self.cell.nominal_capacity            = 3.55                                                                             # [Amp-Hrs]
+        self.cell.nominal_voltage             = 3.6                                                                              # [V] 
+        self.cell.charging_voltage            = self.cell.nominal_voltage                                                        # [V] 
         
-        self.cell.watt_hour_rating                 = self.cell.nominal_capacity  * self.cell.nominal_voltage  # [Watt-hours]      
-        self.cell.specific_energy                  = self.cell.watt_hour_rating*Units.Wh/self.cell.mass            # [J/kg]
-        self.cell.specific_power                   = self.cell.specific_energy/self.cell.nominal_capacity          # [W/kg]   
-        self.cell.resistance                       = 0.025                                                    # [Ohms]
-                                                                                                         
-                                 
-        self.cell.specific_heat_capacity      = 1108                                                     # [J/kgK]    
-        self.cell.radial_thermal_conductivity = 0.4                                                      # [J/kgK]  
-        self.cell.axial_thermal_conductivity  = 32.2                                                     # [J/kgK] # estimated  
+        self.cell.watt_hour_rating            = self.cell.nominal_capacity  * self.cell.nominal_voltage                          # [Watt-hours]      
+        self.cell.specific_energy             = self.cell.watt_hour_rating*Units.Wh/self.cell.mass                               # [J/kg]
+        self.cell.specific_power              = self.cell.specific_energy/self.cell.nominal_capacity                             # [W/kg]   
+        self.cell.resistance                  = 0.025                                                                            # [Ohms]
+                                                                                                                                 
+                                                            
+        self.cell.specific_heat_capacity      = 1108                                                                             # [J/kgK]    
+        self.cell.radial_thermal_conductivity = 0.4                                                                              # [J/kgK]  
+        self.cell.axial_thermal_conductivity  = 32.2                                                                             # [J/kgK] # estimated  
                                               
         battery_raw_data                      = load_battery_results()                                                   
-        self.discharge_performance_map        = create_discharge_performance_map(battery_raw_data)  
-         
+        self.cell.discharge_performance_map   = create_discharge_performance_map(battery_raw_data)  
+
+  
+
+
         return  
     
     def energy_calc(self,state,bus,coolant_lines, t_idx, delta_t, discharge= True): 

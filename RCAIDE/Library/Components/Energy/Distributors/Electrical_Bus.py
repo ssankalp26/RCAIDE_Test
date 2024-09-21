@@ -10,7 +10,8 @@
 # RCAIDE imports  
 import RCAIDE 
 from RCAIDE.Library.Components                                import Component
-from RCAIDE.Library.Components.Component                      import Container    
+from RCAIDE.Library.Components.Component                      import Container
+from RCAIDE.Library.Methods.Energy.Distributors.Electrical_Bus import append_bus_conditions
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Electrical_Bus
@@ -40,4 +41,9 @@ class Electrical_Bus(Component):
         self.voltage                       = 0.0 
         self.charging_power                = 0.0
         self.power_split_ratio             = 1.0
+        
+    def append_operating_conditions(self, segment):
+        append_bus_conditions(self, segment)
+        return
+        
          

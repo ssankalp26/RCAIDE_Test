@@ -115,10 +115,10 @@ class Electric(Network):
                 if recharging_flag:
                     for battery in battery_modules: 
                         # append compoment power to bus 
-                        avionics_power         = (avionics_conditions.power*battery.bus_power_split_ratio)/len(battery_modules)* state.ones_row(1)
-                        payload_power          = (payload_conditions.power*battery.bus_power_split_ratio)/len(battery_modules)* state.ones_row(1)            
+                        avionics_power         = (avionics_conditions.power*bus.power_split_ratio)/len(battery_modules)* state.ones_row(1)
+                        payload_power          = (payload_conditions.power*bus.power_split_ratio)/len(battery_modules)* state.ones_row(1)            
                         total_esc_power        = 0 * state.ones_row(1)     
-                        charging_power         = (state.conditions.energy[bus.tag][battery.tag].pack.charging_current*bus_voltage*battery.bus_power_split_ratio)/len(battery_modules)
+                        charging_power         = (state.conditions.energy[bus.tag][battery.tag].pack.charging_current*bus_voltage*bus.power_split_ratio)/len(battery_modules)
 
                         # append bus outputs to battery
                         battery_conditions                   = state.conditions.energy[bus.tag][battery.tag] 
@@ -148,15 +148,15 @@ class Electric(Network):
                                 total_power  += P 
 
                         # compute power from each componemnt 
-                        avionics_power  = (avionics_conditions.power*battery.bus_power_split_ratio)/len(battery_modules)* state.ones_row(1) 
-                        payload_power   = (payload_conditions.power*battery.bus_power_split_ratio)/len(battery_modules) * state.ones_row(1)   
-                        charging_power  = (state.conditions.energy[bus.tag][battery.tag].pack.charging_current*bus_voltage*battery.bus_power_split_ratio)/len(battery_modules) 
-                        total_esc_power = total_power*battery.bus_power_split_ratio  
+                        avionics_power  = (avionics_conditions.power*bus.power_split_ratio)/len(battery_modules)* state.ones_row(1) 
+                        payload_power   = (payload_conditions.power*bus.power_split_ratio)/len(battery_modules) * state.ones_row(1)   
+                        charging_power  = (state.conditions.energy[bus.tag][battery.tag].charging_current*bus_voltage*bus.power_split_ratio) * len(battery_modules) 
+                        total_esc_power = total_power*bus.power_split_ratio  
 
                         # append bus outputs to battery 
-                        battery_conditions                    = state.conditions.energy[bus.tag][battery.tag] 
-                        battery_conditions.pack.power_draw    = ((avionics_power + payload_power + total_esc_power) - charging_power)/bus.efficiency
-                        battery_conditions.pack.current_draw  = battery_conditions.pack.power_draw/bus_voltage
+                        bus_conditions                    = state.conditions.energy[bus.tag]
+                        bus_conditions.power_draw         = ((avionics_power + payload_power + total_esc_power) - charging_power)/bus.efficiency
+                        bus_conditions.current_draw       = bus_conditions.power_draw/bus_voltage
                        
         
         time               = state.conditions.frames.inertial.time[:,0] 
@@ -311,6 +311,7 @@ class Electric(Network):
             # ------------------------------------------------------------------------------------------------------
             # Assign network-specific  residuals, unknowns and results data structures
             # ------------------------------------------------------------------------------------------------------ 
+            bus.append_operating_conditions(segment)
             for tag, item in  bus.items():
                 if tag == 'battery_modules':
                     for battery in item:

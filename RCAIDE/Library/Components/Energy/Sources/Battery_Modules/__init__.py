@@ -10,7 +10,6 @@
 
 from .Aluminum_Air           import Aluminum_Air
 from .Generic_Battery_Module import Generic_Battery_Module
-from .Lithium_Ion_Generic    import Lithium_Ion_Generic 
 from .Lithium_Ion_LFP        import Lithium_Ion_LFP
 from .Lithium_Ion_NMC        import Lithium_Ion_NMC  
 from .Lithium_Sulfur         import Lithium_Sulfur

@@ -52,7 +52,10 @@ class Lithium_Ion_LFP(Lithium_Ion_Generic):
             18650 Lithium Iron Phosphate cell." Energy Conversion and Management 75 (2013): 
             162-174.
         
-        """     
+        """
+        # ----------------------------------------------------------------------------------------------------------------------
+        #  Module Level Properties
+        # ----------------------------------------------------------------------------------------------------------------------        
         self.tag                              = 'lithium_ion_lfp' 
         self.power_split_ratio                                 = None
         self.number_of_cells                                   = 1
@@ -69,7 +72,9 @@ class Lithium_Ion_LFP(Lithium_Ion_Generic):
         self.geometrtic_configuration.normal_spacing           = 0.02
         self.geometrtic_configuration.parallel_spacing         = 0.02
         
-        
+        # ----------------------------------------------------------------------------------------------------------------------
+        #  Cell Level Properties
+        # ----------------------------------------------------------------------------------------------------------------------        
         self.cell.diameter                    = 0.0185                                                   # [m]
         self.cell.height                      = 0.0653                                                   # [m]
         self.cell.mass                        = 0.03  * Units.kg                                         # [kg]

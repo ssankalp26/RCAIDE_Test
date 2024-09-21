@@ -1,5 +1,4 @@
-## @defgroup Methods-Energy Energy 
-# RCAIDE/Methods/Energy/__init__.py
+# RCAIDE/Methods/Energy/Distributors/__init__.py
 # 
 
 """ RCAIDE Package Setup
@@ -8,5 +7,4 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
-from . import Sources
-from . import Distributors
+from . import Electrical_Bus 

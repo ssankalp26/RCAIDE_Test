@@ -10,7 +10,7 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
 
  # RCAIDE imports
-from .Battery import Battery  
+from .Generic_Battery_Module import Generic_Battery_Module  
 from RCAIDE.Framework.Core                      import Units, Data
 from RCAIDE.Library.Methods.Energy.Sources.Batteries.Lithium_Ion_Generic  import compute_generic_li_cell_performance 
 
@@ -18,7 +18,7 @@ from RCAIDE.Library.Methods.Energy.Sources.Batteries.Lithium_Ion_Generic  import
 #  Lithium_Ion_Generic
 # ----------------------------------------------------------------------    
 ## @ingroup Library-Compoments-Energy-Batteries 
-class Lithium_Ion_Generic(Battery):
+class Lithium_Ion_Generic(Generic_Battery_Module):
     """ Generic lithium ion battery.  
     """  
     def __defaults__(self):
