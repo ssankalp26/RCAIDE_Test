@@ -39,7 +39,7 @@ def update_nmc_cell_age(battery,battery_conditions,increment_battery_age_by_one_
     Properties Used:
     N/A 
     """    
-    n_series   = battery.pack.electrical_configuration.series
+    n_series   = battery.module.electrical_configuration.series
     SOC        = battery_conditions.cell.state_of_charge
     V_ul       = battery_conditions.pack.voltage_under_load/n_series
     t          = battery_conditions.cell.cycle_in_day         

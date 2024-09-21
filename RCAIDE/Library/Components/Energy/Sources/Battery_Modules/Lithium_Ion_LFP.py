@@ -10,7 +10,7 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
 
 # RCAIDE imports 
-from RCAIDE.Framework.Core          import Units
+from RCAIDE.Framework.Core          import Units,Data
 from .Lithium_Ion_Generic import Lithium_Ion_Generic 
 from RCAIDE.Library.Methods.Energy.Sources.Batteries.Lithium_Ion_LFP  import compute_lfp_cell_performance 
 
@@ -54,7 +54,22 @@ class Lithium_Ion_LFP(Lithium_Ion_Generic):
         
         """     
         self.tag                              = 'lithium_ion_lfp' 
-         
+        self.power_split_ratio                                 = None
+        self.number_of_cells                                   = 1
+        self.maximum_energy                                    = 0.0
+        self.maximum_power                                     = 0.0
+        self.maximum_voltage                                   = 0.0        
+        self.electrical_configuration                          = Data()
+        self.electrical_configuration.series                   = 1
+        self.electrical_configuration.parallel                 = 1   
+        self.electrical_configuration.total                    = 1   
+        self.geometrtic_configuration                          = Data() 
+        self.geometrtic_configuration.normal_count             = 1       # number of cells normal to flow
+        self.geometrtic_configuration.parallel_count           = 1       # number of cells parallel to flow      
+        self.geometrtic_configuration.normal_spacing           = 0.02
+        self.geometrtic_configuration.parallel_spacing         = 0.02
+        
+        
         self.cell.diameter                    = 0.0185                                                   # [m]
         self.cell.height                      = 0.0653                                                   # [m]
         self.cell.mass                        = 0.03  * Units.kg                                         # [kg]
@@ -68,19 +83,19 @@ class Lithium_Ion_LFP(Lithium_Ion_Generic):
         self.cell.nominal_voltage             = 3.6                                                      # [V]
         self.cell.charging_voltage            = self.cell.nominal_voltage                                # [V]  
          
-        self.watt_hour_rating                 = self.cell.nominal_capacity  * self.cell.nominal_voltage  # [Watt-hours]      
-        self.specific_energy                  = self.watt_hour_rating*Units.Wh/self.cell.mass            # [J/kg]
-        self.specific_power                   = self.specific_energy/self.cell.nominal_capacity          # [W/kg]   
-        self.ragone.const_1                   = 88.818  * Units.kW/Units.kg
-        self.ragone.const_2                   = -.01533 / (Units.Wh/Units.kg)
-        self.ragone.lower_bound               = 60.     * Units.Wh/Units.kg
-        self.ragone.upper_bound               = 225.    * Units.Wh/Units.kg         
-        self.resistance                       = 0.022                                                    # [Ohms]
-                                                        
-        self.specific_heat_capacity           = 1115                                                     # [J/kgK] 
-        self.cell.specific_heat_capacity      = 1115                                                     # [J/kgK] 
+        self.cell.watt_hour_rating                 = self.cell.nominal_capacity  * self.cell.nominal_voltage  # [Watt-hours]      
+        self.cell.specific_energy                  = self.cell.watt_hour_rating*Units.Wh/self.cell.mass            # [J/kg]
+        self.cell.specific_power                   = self.cell.specific_energy/self.cell.nominal_capacity          # [W/kg]   
+        self.cell.ragone.const_1                   = 88.818  * Units.kW/Units.kg
+        self.cell.ragone.const_2                   = -.01533 / (Units.Wh/Units.kg)
+        self.cell.ragone.lower_bound               = 60.     * Units.Wh/Units.kg
+        self.cell.ragone.upper_bound               = 225.    * Units.Wh/Units.kg         
+        self.cell.resistance                       = 0.022                                                    # [Ohms]
+                                                                                                            # [J/kgK] 
+        self.cell.specific_heat_capacity      = 1115                                                     
         self.cell.radial_thermal_conductivity = 0.475                                                    # [J/kgK]  
-        self.cell.axial_thermal_conductivity  = 37.6                                                     # [J/kgK]   
+        self.cell.axial_thermal_conductivity  = 37.6    
+                                                 # [J/kgK]   
         
         return
     

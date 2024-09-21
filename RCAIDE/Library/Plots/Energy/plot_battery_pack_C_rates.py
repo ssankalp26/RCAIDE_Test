@@ -62,7 +62,7 @@ def plot_battery_pack_C_rates(results,
     for network in results.segments[0].analyses.energy.vehicle.networks: 
         busses  = network.busses
         for bus in busses: 
-            for battery in bus.batteries:    
+            for battery in bus.battery_modules:    
                 fig = plt.figure(save_filename + '_' + battery.tag)
                 fig.set_size_inches(width,height)  
                 for i in range(len(results.segments)):

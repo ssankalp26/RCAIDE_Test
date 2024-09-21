@@ -48,13 +48,17 @@ class Lithium_Ion_Generic(Battery):
         self.convective_heat_transfer_coefficient                     = 35.     # [W/m^2K] 
         self.heat_transfer_efficiency                                 = 1.0       
                     
-        self.pack.electrical_configuration                            = Data()
-        self.pack.electrical_configuration.series                     = 1
-        self.pack.electrical_configuration.parallel                   = 1  
-        self.pack.electrical_configuration.total                      = 1   
-        self.pack.number_of_modules                                   = 1
+        #self.pack.electrical_configuration                            = Data()
+        #self.pack.electrical_configuration.series                     = 1
+        #self.pack.electrical_configuration.parallel                   = 1  
+        #self.pack.electrical_configuration.total                      = 1   
+        #self.pack.number_of_modules                                   = 1
          
-        self.module.number_of_cells                                   = 1                   
+        self.module.power_split_ratio                                 = None
+        self.module.number_of_cells                                   = 1
+        self.module.maximum_energy                                    = 0.0
+        self.module.maximum_power                                     = 0.0
+        self.module.maximum_voltage                                   = 0.0        
         self.module.electrical_configuration                          = Data()
         self.module.electrical_configuration.series                   = 1
         self.module.electrical_configuration.parallel                 = 1   

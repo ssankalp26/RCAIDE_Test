@@ -33,7 +33,7 @@ def cross_flow_heat_exchanger_geometry_setup(HEX):
      
     HEX.coolant_temperature_of_hot_fluid                  = 313 # Temperature from reservior
     bat.thermal_management_system.heat_exchanger_system   = HEX 
-    bus.batteries.append(bat)
+    bus.battery_modules.append(bat)
     net.busses.append(bus) 
     vehicle.append_energy_network(net)
     

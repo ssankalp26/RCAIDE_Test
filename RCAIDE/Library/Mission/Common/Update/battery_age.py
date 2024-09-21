@@ -32,7 +32,7 @@ def battery_age(segment):
         if 'busses' in network: 
             busses  = network.busses
             for bus in busses:
-                for battery in bus.batteries: 
+                for battery in bus.battery_modules: 
                     increment_day = segment.increment_battery_age_by_one_day
                     battery_conditions  = segment.conditions.energy[bus.tag][battery.tag] 
                     battery.update_battery_age(battery_conditions,increment_battery_age_by_one_day = increment_day) 

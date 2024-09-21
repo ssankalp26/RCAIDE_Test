@@ -57,7 +57,7 @@ def modify_crossflow_hex_size(nexus):
           Source:
              None
     """           
-    hex_opt       = nexus.hex_configurations.optimized.networks.electric.busses.bus.batteries.lithium_ion_nmc.thermal_management_system.heat_exchanger_system
+    hex_opt       = nexus.hex_configurations.optimized.networks.electric.busses.bus.battery_modules.lithium_ion_nmc.thermal_management_system.heat_exchanger_system
   
     # ------------------------------------------------------------------------------------------------------------------------
     # Unpack paramters  
@@ -406,7 +406,7 @@ def post_process(nexus):
     """        
     
     summary              = nexus.summary  
-    battery              = nexus.hex_configurations.optimized.networks.electric.busses.bus.batteries.lithium_ion_nmc       
+    battery              = nexus.hex_configurations.optimized.networks.electric.busses.bus.battery_modules.lithium_ion_nmc       
     hex_opt              = battery.thermal_management_system.heat_exchanger_system
   
     # -------------------------------------------------------

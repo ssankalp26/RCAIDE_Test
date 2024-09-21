@@ -109,7 +109,7 @@ def compute_lfp_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
     HAS = None  
     for coolant_line in coolant_lines:
         for tag, item in  coolant_line.items():
-            if tag == 'batteries':
+            if tag == 'battery_modules':
                 for sub_tag, sub_item in item.items():
                     if sub_tag == battery.tag:
                         for btms in  sub_item:

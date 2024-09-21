@@ -68,7 +68,7 @@ def plot_battery_temperature(results,
     for network in results.segments[0].analyses.energy.vehicle.networks: 
         busses  = network.busses
         for bus in busses: 
-            for battery in bus.batteries:  
+            for battery in bus.battery_modules:  
                 axis_0.plot(np.zeros(2),np.zeros(2), color = line_colors[0], marker = ps.markers[b_i], linewidth = ps.line_width,label= battery.tag) 
                 axis_0.grid(False)
                 axis_0.axis('off')

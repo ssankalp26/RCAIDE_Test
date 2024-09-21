@@ -29,7 +29,7 @@ class Electrical_Bus(Component):
             None
         """                
         self.tag                           = 'bus' 
-        self.batteries                     = Container()
+        self.battery_modules               = Container()
         self.propulsors                    = Container() 
         self.solar_panel                   = None 
         self.avionics                      = RCAIDE.Library.Components.Systems.Avionics()
@@ -39,4 +39,5 @@ class Electrical_Bus(Component):
         self.efficiency                    = 1.0
         self.voltage                       = 0.0 
         self.charging_power                = 0.0
+        self.power_split_ratio             = 1.0
          

@@ -75,7 +75,7 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
     cell_mass          = battery.cell.mass    
     Cp                 = battery.cell.specific_heat_capacity       
     battery_data       = battery.discharge_performance_map  
-    I_bat              = battery_conditions.pack.current_draw
+    I_pack             = battery_conditions.pack.current_draw
     P_bat              = battery_conditions.pack.power_draw      
     E_max              = battery_conditions.pack.maximum_initial_energy * battery_conditions.cell.capacity_fade_factor
     E_pack             = battery_conditions.pack.energy    
@@ -101,9 +101,12 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
     # Compute battery electrical properties 
     # --------------------------------------------------------------------------------- 
     # Calculate the current going into one cell  
-    n_series          = battery.pack.electrical_configuration.series  
-    n_parallel        = battery.pack.electrical_configuration.parallel 
-    n_total           = battery.pack.electrical_configuration.total
+    power_split_ratio =  battery.module.power_split_ratio
+    
+    # Calculate the current going into one cell  
+    n_series          = battery.module.electrical_configuration.series  
+    n_parallel        = battery.module.electrical_configuration.parallel 
+    n_total           = battery.module.electrical_configuration.total
     
     # ---------------------------------------------------------------------------------
     # Examine Thermal Management System
@@ -111,7 +114,7 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
     HAS = None  
     for coolant_line in coolant_lines:
         for tag, item in  coolant_line.items():
-            if tag == 'batteries':
+            if tag == 'battery_modules':
                 for sub_tag, sub_item in item.items():
                     if sub_tag == battery.tag:
                         for btms in  sub_item:
@@ -121,7 +124,8 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
     # ---------------------------------------------------------------------------------------------------
     # Current State 
     # ---------------------------------------------------------------------------------------------------
-    I_cell[t_idx]        = I_bat[t_idx]/n_parallel   
+    I_module[t_idx]      = I_pack[t_idx] /power_split_ratio 
+    I_cell[t_idx]        = I_module[t_idx]/n_parallel   
 
     # ---------------------------------------------------------------------------------
     # Compute battery cell temperature 
@@ -150,7 +154,7 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
     P_pack[t_idx]         = P_bat[t_idx]  - np.abs(Q_heat_pack[t_idx]) 
 
     # store remaining variables 
-    I_pack[t_idx]         = I_bat[t_idx]  
+    I_pack[t_idx]         = I_module[t_idx] *  power_split_ratio
     V_oc_pack[t_idx]      = V_oc[t_idx]*n_series 
     V_ul_pack[t_idx]      = V_ul[t_idx]*n_series  
     T_pack[t_idx]         = T_cell[t_idx] 
@@ -167,7 +171,7 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
             T_cell[t_idx+1] = HAS.compute_thermal_performance(battery,coolant_line, Q_heat_cell[t_idx],T_cell[t_idx],state,delta_t[t_idx],t_idx)
         else:
             # Considers a thermally insulated system and the heat piles on in the system
-            Q_heat_pack[t_idx+1]  = Q_heat_cell[t_idx]*battery.pack.electrical_configuration.total
+            Q_heat_pack[t_idx+1]  = Q_heat_cell[t_idx]*battery.module.electrical_configuration.total
             dT_dt                 = Q_heat_cell[t_idx]/(cell_mass*Cp)
             T_cell[t_idx+1]       =  T_cell[t_idx] + dT_dt*delta_t[t_idx]
             

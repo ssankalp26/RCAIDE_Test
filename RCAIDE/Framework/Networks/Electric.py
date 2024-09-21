@@ -97,9 +97,9 @@ class Electric(Network):
 
         for bus in busses:
             if bus.active:             
-                avionics        = bus.avionics
-                payload         = bus.payload  
-                batteries       = bus.batteries
+                avionics              = bus.avionics
+                payload               = bus.payload  
+                battery_modules       = bus.battery_modules
 
                 # Avionics Power Consumtion
                 avionics_conditions = state.conditions.energy[bus.tag][avionics.tag]
@@ -113,12 +113,12 @@ class Electric(Network):
                 bus_voltage = bus.voltage * state.ones_row(1)
 
                 if recharging_flag:
-                    for battery in batteries: 
+                    for battery in battery_modules: 
                         # append compoment power to bus 
-                        avionics_power         = (avionics_conditions.power*battery.bus_power_split_ratio)/len(batteries)* state.ones_row(1)
-                        payload_power          = (payload_conditions.power*battery.bus_power_split_ratio)/len(batteries)* state.ones_row(1)            
+                        avionics_power         = (avionics_conditions.power*battery.bus_power_split_ratio)/len(battery_modules)* state.ones_row(1)
+                        payload_power          = (payload_conditions.power*battery.bus_power_split_ratio)/len(battery_modules)* state.ones_row(1)            
                         total_esc_power        = 0 * state.ones_row(1)     
-                        charging_power         = (state.conditions.energy[bus.tag][battery.tag].pack.charging_current*bus_voltage*battery.bus_power_split_ratio)/len(batteries)
+                        charging_power         = (state.conditions.energy[bus.tag][battery.tag].pack.charging_current*bus_voltage*battery.bus_power_split_ratio)/len(battery_modules)
 
                         # append bus outputs to battery
                         battery_conditions                   = state.conditions.energy[bus.tag][battery.tag] 
@@ -127,7 +127,7 @@ class Electric(Network):
 
                 else:       
                     # compute energy consumption of each battery on bus  
-                    for battery in batteries: 
+                    for battery in battery_modules: 
                         stored_results_flag  = False
                         stored_propulsor_tag = None 
                         for propulsor in bus.propulsors:  
@@ -148,9 +148,9 @@ class Electric(Network):
                                 total_power  += P 
 
                         # compute power from each componemnt 
-                        avionics_power  = (avionics_conditions.power*battery.bus_power_split_ratio)/len(batteries)* state.ones_row(1) 
-                        payload_power   = (payload_conditions.power*battery.bus_power_split_ratio)/len(batteries) * state.ones_row(1)   
-                        charging_power  = (state.conditions.energy[bus.tag][battery.tag].pack.charging_current*bus_voltage*battery.bus_power_split_ratio)/len(batteries) 
+                        avionics_power  = (avionics_conditions.power*battery.bus_power_split_ratio)/len(battery_modules)* state.ones_row(1) 
+                        payload_power   = (payload_conditions.power*battery.bus_power_split_ratio)/len(battery_modules) * state.ones_row(1)   
+                        charging_power  = (state.conditions.energy[bus.tag][battery.tag].pack.charging_current*bus_voltage*battery.bus_power_split_ratio)/len(battery_modules) 
                         total_esc_power = total_power*battery.bus_power_split_ratio  
 
                         # append bus outputs to battery 
@@ -164,7 +164,8 @@ class Electric(Network):
         for t_idx in range(state.numerics.number_of_control_points):
             if recharging_flag:
                 for bus in  busses:
-                    for battery in  bus.batteries:
+                    
+                    for battery in  bus.battery_modules:
                         battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t, recharging_flag)
                         for coolant_line in  coolant_lines:
                             if t_idx != state.numerics.number_of_control_points-1:
@@ -176,8 +177,10 @@ class Electric(Network):
                                         for reservoir in  item:
                                             reservoir.compute_reservior_coolant_temperature(state,coolant_line,delta_t[t_idx],t_idx)                     
             else:
-                for bus in  busses:
-                    for battery in  bus.batteries:
+                for bus in  busses:                
+                    for battery in  bus.battery_modules:
+                        if battery.module.power_split_ratio is  None:
+                            raise Exception('Power split ratio for battery module not defined')
                         battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t, recharging_flag)
                     for coolant_line in  coolant_lines:
                         if t_idx != state.numerics.number_of_control_points-1:
@@ -309,7 +312,7 @@ class Electric(Network):
             # Assign network-specific  residuals, unknowns and results data structures
             # ------------------------------------------------------------------------------------------------------ 
             for tag, item in  bus.items():
-                if tag == 'batteries':
+                if tag == 'battery_modules':
                     for battery in item:
                         battery.append_operating_conditions(segment,bus)
                 elif tag == 'propulsors':  
@@ -331,7 +334,7 @@ class Electric(Network):
             # Assign network-specific  residuals, unknowns and results data structures
             # ------------------------------------------------------------------------------------------------------ 
             for tag, item in  coolant_line.items(): 
-                if tag == 'batteries':
+                if tag == 'battery_modules':
                     for battery in item:
                         for btms in  battery:
                             btms.append_operating_conditions(segment,coolant_line)
