@@ -107,27 +107,9 @@ def Hararmonic_Noise_Validation(PP):
     
     
     # # Run BEMT for steady loading
-    # F, Q, P, Cp , noise_data , etap                        = rotor.spin(conditions)
+    F, Q, P, Cp , noise_data , etap                        = rotor.spin(conditions) 
     
-    
-    # Run BET for unsteady loading
-    Na                                                     = 20
-    Nr                                                     = 30
-    rotor.number_azimuthal_stations                        = Na
-    rotor.cruise.design_freestream_velocity                = 135.     * Units['mph']
-    rotor.cruise.design_angular_velocity                   = 1300.    * Units.rpm
-    rotor.cruise.design_Cl                                 = 0.8
-    rotor.cruise.design_altitude                           = 12000.   * Units.feet
-    rotor.cruise.design_thrust                             = 1200.
-    rotor.rotation                                         = 1
-    rotor.airfoil_polar_stations                           = list(np.zeros(Nr).astype(int))
-    rotor.orientation_euler_angles                         = [0, 30*Units.degrees,0]
-    rotor                                                  = design_propeller(rotor,Nr)
-    rotor.use_2d_analysis                                  = True
-    F, Q, P, Cp , noise_data , etap                        = rotor.spin(conditions)
-
-    
-# Prepare Inputs for Noise Model   
+    # Prepare Inputs for Noise Model   
     conditions.noise.relative_microphone_locations         = np.repeat(positions[ np.newaxis,:,: ],1,axis=0)
     conditions.aerodynamics.angle_of_attack                = np.ones((ctrl_pts,1))* 0. * Units.degrees 
     segment                                                = Segment() 

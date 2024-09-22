@@ -70,8 +70,7 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,freestream,angle_of_atta
     num_h_b      = len(harmonics_blade)
     num_h_l      = len(harmonics_load)
     num_cpt      = len(angle_of_attack) 
-    num_mic      = len(coordinates.X_hub[0,:,0,0,0,0])
-    num_rot      = len(coordinates.X_hub[0,0,:,0,0,0]) 
+    num_mic      = len(coordinates.X_hub[0,:,0,0,0,0]) 
     phi_0        = np.array([rotor.phase_offset_angle])  # phase angle offset  
     num_sec      = len(rotor.radius_distribution)
     num_az       = aeroacoustic_data.number_azimuthal_stations
@@ -92,37 +91,37 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,freestream,angle_of_atta
     # [control point, microphones, rotors, radial distribution, blade harmonics, load harmonics]  
     
     # freestream density and speed of sound
-    a_4            = np.tile(freestream.speed_of_sound[:,:,None,None],(1,num_mic,num_rot,num_h_b))
-    a_5            = np.tile(freestream.speed_of_sound[:,:,None,None,None],(1,num_mic,num_rot,num_h_b,num_h_l))
+    a_4            = np.tile(freestream.speed_of_sound[:,:,None],(1,num_mic,num_h_b))
+    a_5            = np.tile(freestream.speed_of_sound[:,:,None,None],(1,num_mic,num_h_b,num_h_l))
     rho            = freestream.density
     
     B              = rotor.number_of_blades
     
     # blade harmonics
-    m_4            = np.tile(harmonics_blade[None,None,None,:],(num_cpt,num_mic,num_rot,1))
-    m_5            = np.tile(harmonics_blade[None,None,None,:,None],(num_cpt,num_mic,num_rot,1,num_h_l))
+    m_4            = np.tile(harmonics_blade[None,None,:],(num_cpt,num_mic,1))
+    m_5            = np.tile(harmonics_blade[None,None,:,None],(num_cpt,num_mic,1,num_h_l))
     
     # loading harmonics
-    k_5            = np.tile(harmonics_load[None,None,None,None,:],(num_cpt,num_mic,num_rot,num_h_b,1))
+    k_5            = np.tile(harmonics_load[None,None,None,:],(num_cpt,num_mic,num_h_b,1))
     
     # referece atmospheric pressure
     p_ref          = 2E-5
     
     # net angle of inclination of propeller wrt inertial axis
-    alpha_5        = np.tile((angle_of_attack + np.arccos(body2thrust[0,0]))[:,:,None,None,None],(1,num_mic,num_rot,num_h_b,num_h_l))          
+    alpha_5        = np.tile((angle_of_attack + np.arccos(body2thrust[0,0]))[:,:,None,None],(1,num_mic,num_h_b,num_h_l))          
     
     # rotor angular speed
-    omega_4        = np.tile(aeroacoustic_data.omega[:,:,None,None],(1,num_mic,num_rot,num_h_b))
-    omega_5        = np.tile(aeroacoustic_data.omega[:,:,None,None,None],(1,num_mic,num_rot,num_h_b,num_h_l))
+    omega_4        = np.tile(aeroacoustic_data.omega[:,:,None],(1,num_mic,num_h_b))
+    omega_5        = np.tile(aeroacoustic_data.omega[:,:,None,None],(1,num_mic,num_h_b,num_h_l))
     
     R              = rotor.radius_distribution
     R_tip          = rotor.tip_radius
     D              = 2*R[-1]
     
     # Rotorcraft speed and mach number
-    V_4            = np.tile(np.linalg.norm(velocity_vector, axis=1) [:,None,None,None],(1,num_mic,num_rot,num_h_b))
+    V_4            = np.tile(np.linalg.norm(velocity_vector, axis=1) [:,None,None,None],(1,num_mic,num_h_b))
     M_4            = V_4/a_4
-    M_5            = np.tile(M_4[:,:,:,:,None],(1,1,1,1,num_h_l))
+    M_5            = np.tile(M_4[:,:,:,None],(1,1,1,num_h_l))
     
     # Total Loading
     T             = np.sum(aeroacoustic_data.disc_thrust_distribution, axis=1)
@@ -139,12 +138,12 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,freestream,angle_of_atta
     rs            = np.average((rs_thrust + rs_torque)/2)
     V_s            = rs*omega_4                                                        
     M_s_4          = V_s/a_4
-    M_s_5          = np.tile(M_s_4[:,:,:,:,None],(1,1,1,1,num_h_l))
+    M_s_5          = np.tile(M_s_4[:,:,:,None],(1,1,1,num_h_l))
     
     # retarded theta
     theta_r        = coordinates.theta_hub_r[:,:,0,0,0]
-    theta_r_4      = np.tile(theta_r[:,:,None,None],(1,1,num_rot,num_h_b))
-    theta_r_5      = np.tile(theta_r[:,:,None,None,None],(1,1,num_rot,num_h_b,num_h_l))
+    theta_r_4      = np.tile(theta_r[:,:,None],(1,1,num_h_b))
+    theta_r_5      = np.tile(theta_r[:,:,None,None],(1,1,num_h_b,num_h_l))
     
     # retarded distance to source
     Y              = np.sqrt(coordinates.X_hub[:,:,:,0,0,1]**2 +  coordinates.X_hub[:,:,:,0,0,2] **2)
@@ -171,8 +170,8 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,freestream,angle_of_atta
     # Frequency domain loading modes
     F_xk          = sp.fft.rfft(T, axis=1)
     F_phik        = sp.fft.rfft(F_phi, axis=1)
-    F_xk_5        = np.tile(F_xk[:,None,None,None,0:num_h_l],(1,num_mic,num_rot,num_h_b,1))
-    F_phik_5      = np.tile(F_phik[:,None,None,None,0:num_h_l],(1,num_mic,num_rot,num_h_b,1))
+    F_xk_5        = np.tile(F_xk[:,None,None,0:num_h_l],(1,num_mic,num_h_b,1))
+    F_phik_5      = np.tile(F_phik[:,None,None,0:num_h_l],(1,num_mic,num_h_b,1))
     
     # FREQUENCY DOMAIN PRESSURE TERM FOR LOADING
     J_mbk_5       = jv(m_5*B*k_5, (m_5*B*M_s_5*np.sin(theta_r_prime_5))/(1-M_5*np.cos(theta_r_5)))

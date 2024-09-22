@@ -8,7 +8,7 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 # RCAIDE
-from RCAIDE.Framework.Core                                 import Data , Units, Container,orientation_product, orientation_transpose  
+from RCAIDE.Framework.Core                                 import orientation_product, orientation_transpose  
 from RCAIDE.Library.Methods.Noise.Common                   import convert_to_third_octave_band
 from RCAIDE.Library.Methods.Aerodynamics.Airfoil_Panel_Method.airfoil_analysis   import airfoil_analysis
 
@@ -124,44 +124,44 @@ def harmonic_noise_plane(conditions,harmonics_blade,harmonics_load,freestream,an
     # [control point, microphones, rotors, radial distribution, blade harmonics, load harmonics]  
     
     # freestream density and speed of sound
-    rho_4          = np.tile(freestream.density[:,:,None,None],(1,num_mic,num_rot,num_h_b))
-    a_4            = np.tile(freestream.speed_of_sound[:,:,None,None],(1,num_mic,num_rot,num_h_b))
+    rho_4          = np.tile(freestream.density[:,:,None],(1,num_mic,num_h_b))
+    a_4            = np.tile(freestream.speed_of_sound[:,:,None],(1,num_mic,num_h_b))
     
     B              = rotor.number_of_blades
     
     # blade harmonics
-    m_4            = np.tile(harmonics_blade[None,None,None,:],(num_cpt,num_mic,num_rot,1))
-    m_5            = np.tile(harmonics_blade[None,None,None,:,None],(num_cpt,num_mic,num_rot,1,num_h_l))
-    m_6            = np.tile(harmonics_blade[None,None,None,None,:,None],(num_cpt,num_mic,num_rot,num_sec,1,num_h_l))
-    m_7            = np.tile(harmonics_blade[None,None,None,None,:,None,None],(num_cpt,num_mic,num_rot,num_sec,1,num_h_l,chord_coord))
+    m_4            = np.tile(harmonics_blade[None,None,:],(num_cpt,num_mic,1))
+    m_5            = np.tile(harmonics_blade[None,None,:,None],(num_cpt,num_mic,1,num_h_l))
+    m_6            = np.tile(harmonics_blade[None,None,None,:,None],(num_cpt,num_mic,num_sec,1,num_h_l))
+    m_7            = np.tile(harmonics_blade[None,None,None,:,None,None],(num_cpt,num_mic,num_sec,1,num_h_l,chord_coord))
                                                                                             
     # loading harmonics
-    k_5            = np.tile(harmonics_load[None,None,None,None,:],(num_cpt,num_mic,num_rot,num_h_b,1))
-    k_6            = np.tile(harmonics_load[None,None,None,None,None,:],(num_cpt,num_mic,num_rot,num_sec,num_h_b,1))
-    k_7            = np.tile(harmonics_load[None,None,None,None,None,:,None],(num_cpt,num_mic,num_rot,num_sec,num_h_b,1,chord_coord))
+    k_5            = np.tile(harmonics_load[None,None,None,:],(num_cpt,num_mic,num_h_b,1))
+    k_6            = np.tile(harmonics_load[None,None,None,None,:],(num_cpt,num_mic,num_sec,num_h_b,1))
+    k_7            = np.tile(harmonics_load[None,None,None,None,:,None],(num_cpt,num_mic,num_sec,num_h_b,1,chord_coord))
     
     # reference atmospheric pressure
     p_ref          = 2E-5
     
     # net angle of inclination of propeller axis wrt inertial axis
-    alpha_5        = np.tile((angle_of_attack + np.arccos(body2thrust[0,0]))[:,:,None,None,None],(1,num_mic,num_rot,num_h_b,num_h_l))
-    alpha_6        = np.tile((angle_of_attack + np.arccos(body2thrust[0,0]))[:,:,None,None,None,None],(1,num_mic,num_rot,num_sec,num_h_b,num_h_l))
-    alpha_7        = np.tile((angle_of_attack + np.arccos(body2thrust[0,0]))[:,:,None,None,None,None,None],(1,num_mic,num_rot,num_sec,num_h_b,num_h_l,chord_coord))
+    alpha_5        = np.tile((angle_of_attack + np.arccos(body2thrust[0,0]))[:,:,None,None],(1,num_mic,num_h_b,num_h_l))
+    alpha_6        = np.tile((angle_of_attack + np.arccos(body2thrust[0,0]))[:,:,None,None,None],(1,num_mic,num_sec,num_h_b,num_h_l))
+    alpha_7        = np.tile((angle_of_attack + np.arccos(body2thrust[0,0]))[:,:,None,None,None,None],(1,num_mic,num_sec,num_h_b,num_h_l,chord_coord))
     
     # rotor angular speed
-    omega_4        = np.tile(aeroacoustic_data.omega[:,:,None,None],(1,num_mic,num_rot,num_h_b))   
+    omega_4        = np.tile(aeroacoustic_data.omega[:,:,None],(1,num_mic,num_h_b))   
     
     R              = rotor.radius_distribution
     
     # Non-dimensional radius distribution
-    z_6            = np.tile((R/R[-1])[None,None,None,:,None,None],(num_cpt,num_mic,num_rot,1,num_h_b,num_h_l))
-    z_7            = np.tile((R/R[-1])[None,None,None,:,None,None,None],(num_cpt,num_mic,num_rot,1,num_h_b,num_h_l,chord_coord))
+    z_6            = np.tile((R/R[-1])[None,None,:,None,None],(num_cpt,num_mic,1,num_h_b,num_h_l))
+    z_7            = np.tile((R/R[-1])[None,None,:,None,None,None],(num_cpt,num_mic,1,num_h_b,num_h_l,chord_coord))
     
     # Radial chord distribution
-    c_6            = np.tile(rotor.chord_distribution[None,None,None,:,None,None],(num_cpt,num_mic,num_rot,1,num_h_b,num_h_l))
-    c_7            = np.tile(rotor.chord_distribution[None,None,None,:,None,None,None],(num_cpt,num_mic,num_rot,1,num_h_b,num_h_l,chord_coord))
+    c_6            = np.tile(rotor.chord_distribution[None,None,:,None,None],(num_cpt,num_mic,1,num_h_b,num_h_l))
+    c_7            = np.tile(rotor.chord_distribution[None,None,:,None,None,None],(num_cpt,num_mic,1,num_h_b,num_h_l,chord_coord))
     
-    MCA_6          = np.tile(rotor.mid_chord_alignment[None,None,None,:,None,None],(num_cpt,num_mic,num_rot,1,num_h_b,num_h_l))
+    MCA_6          = np.tile(rotor.mid_chord_alignment[None,None,:,None,None],(num_cpt,num_mic,1,num_h_b,num_h_l))
     
     # chord to diameter ratio
     R_tip          = rotor.tip_radius
@@ -171,16 +171,16 @@ def harmonic_noise_plane(conditions,harmonics_blade,harmonics_load,freestream,an
     
     # maximum thickness to chord ratio
     t_b            = rotor.thickness_to_chord
-    t_b_6          = np.tile(t_b[None,None,None,:,None,None],(num_cpt,num_mic,num_rot,1,num_h_b,num_h_l))
+    t_b_6          = np.tile(t_b[None,None,:,None,None],(num_cpt,num_mic,1,num_h_b,num_h_l))
     
     # chordwise thickness distribution normalized wrt chord
-    y_u_7          = np.tile(airfoil_geometry.y_upper_surface[None,None,None,None,None,None,:],(num_cpt,num_mic,num_rot,num_sec,num_h_b,num_h_l,1))
-    y_l_7          = np.tile(airfoil_geometry.y_lower_surface[None,None,None,None,None,None,:],(num_cpt,num_mic,num_rot,num_sec,num_h_b,num_h_l,1))
+    y_u_7          = np.tile(airfoil_geometry.y_upper_surface[None,None,None,None,None,:],(num_cpt,num_mic,num_sec,num_h_b,num_h_l,1))
+    y_l_7          = np.tile(airfoil_geometry.y_lower_surface[None,None,None,None,None,:],(num_cpt,num_mic,num_sec,num_h_b,num_h_l,1))
     H_7            = (y_u_7 - y_l_7)/c_7
     
     
     # Rotorcraft speed and mach number
-    V_4            = np.tile(np.linalg.norm(velocity_vector, axis=1) [:,None,None,None],(1,num_mic,num_rot,num_h_b))
+    V_4            = np.tile(np.linalg.norm(velocity_vector, axis=1) [:,None,None],(1,num_mic,num_h_b))
     M_4            = V_4/a_4
     M_6            = np.tile(M_4[:,:,:,None,:,None],(1,1,1,num_sec,1,num_h_l))
     M_7            = np.tile(M_4[:,:,:,None,:,None,None],(1,1,1,num_sec,1,num_h_l,chord_coord))
@@ -196,10 +196,10 @@ def harmonic_noise_plane(conditions,harmonics_blade,harmonics_load,freestream,an
     
     # retarded theta
     theta_r        = coordinates.theta_hub_r[:,:,0,0,0]
-    theta_r_4      = np.tile(theta_r[:,:,None,None],(1,1,num_rot,num_h_b))
-    theta_r_5      = np.tile(theta_r[:,:,None,None,None],(1,1,num_rot,num_h_b,num_h_l))
-    theta_r_6      = np.tile(theta_r[:,:,None,None,None,None],(1,1,num_rot,num_sec,num_h_b,num_h_l))
-    theta_r_7      = np.tile(theta_r[:,:,None,None,None,None,None],(1,1,num_rot,num_sec,num_h_b,num_h_l,chord_coord))
+    theta_r_4      = np.tile(theta_r[:,:None],(1,1,num_h_b))
+    theta_r_5      = np.tile(theta_r[:,:,None,None],(1,1,num_h_b,num_h_l))
+    theta_r_6      = np.tile(theta_r[:,:,None,None,None],(1,1,num_sec,num_h_b,num_h_l))
+    theta_r_7      = np.tile(theta_r[:,:,None,None,None,None],(1,1,num_sec,num_h_b,num_h_l,chord_coord))
     
     # retarded distance to source
     Y              = np.sqrt(coordinates.X_hub[:,:,:,0,0,1]**2 +  coordinates.X_hub[:,:,:,0,0,2] **2)
@@ -227,7 +227,7 @@ def harmonic_noise_plane(conditions,harmonics_blade,harmonics_load,freestream,an
     T_body2thrust   = orientation_transpose(np.ones_like(T_body2inertial[:])*body2thrust)
     V_thrust        = orientation_product(T_body2thrust,V_body)
     V_thrust_perp   = V_thrust[:,0,None]
-    V_thrust_perp_4 = np.tile(V_thrust_perp[:,:,None,None],(1,num_mic,num_rot,num_h_b))
+    V_thrust_perp_4 = np.tile(V_thrust_perp[:,:,None],(1,num_mic,num_h_b))
     M_thrust_4      = V_thrust_perp_4/a_4
     M_thrust_6      = np.tile(M_thrust_4[:,:,:,None,:,None],(1,1,1,num_sec,1,num_h_l))
     
@@ -249,12 +249,12 @@ def harmonic_noise_plane(conditions,harmonics_blade,harmonics_load,freestream,an
     res.f          = B*m_4*omega_4/(2*np.pi)
 
     
-    CL_k_6         = np.tile(CL_k[:,None,None,:,None,0:num_h_l],(1,num_mic,num_rot,1,num_h_b,1))
-    CD_k_6         = np.tile(CD_k[:,None,None,:,None,0:num_h_l],(1,num_mic,num_rot,1,num_h_b,1))
+    CL_k_6         = np.tile(CL_k[:,None,:,None,0:num_h_l],(1,num_mic,1,num_h_b,1))
+    CD_k_6         = np.tile(CD_k[:,None,:,None,0:num_h_l],(1,num_mic,1,num_h_b,1))
     
     # [control point, microphones, rotors, radial distribution, blade harmonics, load harmonics, chordwise coordinate]
-    fL_k_7         = np.tile(fL_k[:,None,None,:,None,0:num_h_l,:],(1,num_mic,num_rot,1,num_h_b,1,1))
-    fD_k_7         = np.tile(fD_k[:,None,None,:,None,0:num_h_l,:],(1,num_mic,num_rot,1,num_h_b,1,1))   
+    fL_k_7         = np.tile(fL_k[:,None,:,None,0:num_h_l,:],(1,num_mic,1,num_h_b,1,1))
+    fD_k_7         = np.tile(fD_k[:,None,:,None,0:num_h_l,:],(1,num_mic,1,num_h_b,1,1))   
       
     
     S_r            = np.tile(np.linalg.norm(coordinates.X_hub_r[:,:,:,0,:,:], axis = 4)[:,:,:,:,None],(1,1,1,1,num_h_b))  
@@ -263,9 +263,9 @@ def harmonic_noise_plane(conditions,harmonics_blade,harmonics_load,freestream,an
     # frequency domain source function for drag and lift
     X_edge         = np.linspace(-0.5,0.5,chord_coord+1)
     dX             = np.diff(X_edge)
-    dX_tiled_7     = np.tile(dX[None,None,None,None,None,None,:],(num_cpt,num_mic,num_rot,num_sec,num_h_b,num_h_l,1))
+    dX_tiled_7     = np.tile(dX[None,None,None,None,None,:],(num_cpt,num_mic,num_sec,num_h_b,num_h_l,1))
     X              = 0.5*(X_edge[0:-1] + X_edge[1:])
-    X_7            = np.tile(X[None,None,None,None,None,None,:],(num_cpt,num_mic,num_rot,num_sec,num_h_b,num_h_l,1))
+    X_7            = np.tile(X[None,None,None,None,None,:],(num_cpt,num_mic,num_sec,num_h_b,num_h_l,1))
     exp_term_7     = np.exp(1j*k_x_hat_7*X_7)
     psi_Lk_6       = np.trapz(fL_k_7*exp_term_7, x=X, axis=6)
     psi_Dk_6       = np.trapz(fD_k_7*exp_term_7, x=X, axis=6)
