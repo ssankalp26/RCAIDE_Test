@@ -20,8 +20,7 @@ import scipy as sp
 # Compute Harmonic Noise 
 # ----------------------------------------------------------------------------------------------------------------------
 ## @ingroup Methods-Noise-Frequency_Domain_Buildup-Rotor 
-def harmonic_noise_line(harmonics_blade,harmonics_load,freestream,angle_of_attack,coordinates,
-                           velocity_vector,rotor,aeroacoustic_data,settings,res):
+def harmonic_noise_line(harmonics_blade,harmonics_load,conditions,aeroacoustic_data,coordinates,rotor,settings,Noise):
     '''This computes the harmonic noise (i.e. thickness and loading noise) in the frequency domain 
     of a rotor at any angle of attack with load distribution along the blade span. This is a level 1 fidelity
     approach. The thickness source is however computed using the helicoidal surface theory.
@@ -69,22 +68,23 @@ def harmonic_noise_line(harmonics_blade,harmonics_load,freestream,angle_of_attac
     
     Code Convention - The number in front of a variable name indicates the number of dimensions of the variable.
                       For instance, m_6 is the 6 dimensional harmonic modes variable, m_5 is 5 dimensional harmonic modes variable
-    '''     
-    num_h_b      = len(harmonics_blade)
-    num_h_l      = len(harmonics_load)
-    num_cpt      = len(angle_of_attack) 
-    num_mic      = len(coordinates.X_hub[0,:,0,0,0,0]) 
-    phi_0        = np.array([rotor.phase_offset_angle])  # phase angle offset  
-    num_sec      = len(rotor.radius_distribution)
-    num_az       = aeroacoustic_data.number_azimuthal_stations
-    airfoil_geometry = rotor.Airfoils.airfoil.geometry
-    orientation  = np.array(rotor.orientation_euler_angles) * 1 
-    body2thrust  = sp.spatial.transform.Rotation.from_rotvec(orientation).as_matrix()
-    
-    
-    # Reynolds number and AOA of each blade section at each azimuthal station
-    Re      = aeroacoustic_data.blade_reynolds_number
-    AOA_sec = aeroacoustic_data.blade_effective_angle_of_attack
+    '''
+
+    angle_of_attack      = conditions.aerodynamics.angles.alpha 
+    velocity_vector      = conditions.frames.inertial.velocity_vector 
+    freestream           = conditions.freestream       
+    num_h_b              = len(harmonics_blade)
+    num_h_l              = len(harmonics_load)
+    num_cpt              = len(angle_of_attack) 
+    num_mic              = len(coordinates.X_hub[0,:,0,0,0]) 
+    phi_0                = np.array([rotor.phase_offset_angle])  # phase angle offset  
+    num_sec              = len(rotor.radius_distribution)
+    num_az               = aeroacoustic_data.number_azimuthal_stations
+    airfoil_geometry     = rotor.Airfoils.airfoil.geometry
+    orientation          = np.array(rotor.orientation_euler_angles) * 1 
+    body2thrust          = sp.spatial.transform.Rotation.from_rotvec(orientation).as_matrix() 
+    Re                   = aeroacoustic_data.blade_reynolds_number
+    AOA_sec              = aeroacoustic_data.blade_effective_angle_of_attack
     
     
     # ----------------------------------------------------------------------------------
@@ -128,21 +128,21 @@ def harmonic_noise_line(harmonics_blade,harmonics_load,freestream,angle_of_attac
     # Rotorcraft speed and mach number
     V_4            = np.tile(np.linalg.norm(velocity_vector, axis=1) [:,None,None],(1,num_mic,num_h_b))
     M_4            = V_4/a_4
-    M_6            = np.tile(M_4[:,:,:,None,:,None],(1,1,1,num_sec,1,num_h_l))
+    M_6            = np.tile(M_4[:,:,None,:,None],(1,1,num_sec,1,num_h_l))
     
     # Rotor tip speed and mach number
     V_tip          = R_tip*omega_4                                                        
     M_t_4          = V_tip/a_4
-    M_t_6          = np.tile(M_t_4[:,:,:,None,:,None],(1,1,1,num_sec,1,num_h_l))
+    M_t_6          = np.tile(M_t_4[:,:,None,:,None],(1,1,num_sec,1,num_h_l))
     
     # retarded theta
-    theta_r        = coordinates.theta_hub_r[:,:,0,0,0]
+    theta_r        = coordinates.theta_hub_r[:,:,0,0]
     theta_r_4      = np.tile(theta_r[:,:,None],(1,1,num_h_b))
     theta_r_5      = np.tile(theta_r[:,:,None,None],(1,1,num_h_b,num_h_l))
     theta_r_6      = np.tile(theta_r[:,:,None,None,None],(1,1,num_sec,num_h_b,num_h_l))
     
     # retarded distance to source
-    Y              = np.sqrt(coordinates.X_hub[:,:,:,0,0,1]**2 +  coordinates.X_hub[:,:,:,0,0,2] **2)
+    Y              = np.sqrt(coordinates.X_hub[:,:,:,0,1]**2 +  coordinates.X_hub[:,:,:,0,2] **2)
     Y_4            = np.tile(Y[:,:,:,None],(1,1,1,num_h_b))
     r_4            = Y_4/np.sin(theta_r_4)
     
@@ -161,7 +161,7 @@ def harmonic_noise_line(harmonics_blade,harmonics_load,freestream,angle_of_attac
     k_m_4          = m_4*B*omega_4/a_4
     k_m_bar        = k_m_4/(1 - M_4*np.cos(theta_r_4))
     
-    res.f          = B*omega_4*m_4/(2*np.pi)
+    Noise.f          = B*omega_4*m_4/(2*np.pi)
     
     # Frequency domain loading modes
     F_x            = (1/R_tip)*aeroacoustic_data.disc_thrust_distribution
@@ -179,13 +179,19 @@ def harmonic_noise_line(harmonics_blade,harmonics_load,freestream,angle_of_attac
     Integrand_6    = (1/z_6)*(Term1_6 + Term2_6)*J_mbk_6
     Summand_5      = np.trapz(Integrand_6, x=z_6[0,0,0,:,0,0], axis=3)*np.exp(1j*(m_5*B-k_5)*(phi_prime_5-(np.pi/2)))
     Summation_4    = np.sum(Summand_5, axis=4)
-    P_Lm           = (1j*B*np.exp(1j*k_m_4*r_4)*Summation_4)/(4*np.pi*r_4*(1-M_4*np.cos(theta_r_4)))
-    
-     
+    P_Lm           = (1j*B*np.exp(1j*k_m_4*r_4)*Summation_4)/(4*np.pi*r_4*(1-M_4*np.cos(theta_r_4))) 
     
     # # frequency domain source function for thickness distribution
     # H              = airfoil_geometry.y_upper_surface - airfoil_geometry.y_lower_surface
     # H_tiled        = np.tile(H[None,None,None,None,None,:],(num_cpt,num_mic,num_rot,num_sec,num_h_b,1))
     # psi_V          = np.sum(H*exp_term*dX_tiled,axis=5)
+    
+
+    # SOUND PRESSURE LEVELS
+    P_Lm_abs       = np.abs(P_Lm)
+    P_Vm_abs       = np.abs(P_Vm)
+    Noise.SPL_prop_harmonic_bpf_spectrum     = 20*np.log10((abs(P_Lm_abs + P_Vm_abs))/p_ref)  
+    Noise.SPL_prop_harmonic_1_3_spectrum     = convert_to_third_octave_band(Noise.SPL_prop_harmonic_bpf_spectrum,Noise.f[:,0,0,:],settings)          
+    Noise.SPL_prop_harmonic_1_3_spectrum[np.isinf(Noise.SPL_prop_harmonic_1_3_spectrum)]         = 0     
     
     return 

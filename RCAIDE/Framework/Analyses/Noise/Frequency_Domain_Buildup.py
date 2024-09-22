@@ -6,15 +6,15 @@
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
-# ---------------------------------------------------------------------------------------------------------------------- 
-from .Noise      import Noise  
-from RCAIDE.Library.Components.Component import Container 
+# ----------------------------------------------------------------------------------------------------------------------
+import  RCAIDE
+from .Noise      import Noise    
 
 # noise imports    
 from RCAIDE.Library.Methods.Noise.Common.decibel_arithmetic                           import SPL_arithmetic
 from RCAIDE.Library.Methods.Noise.Common.generate_microphone_locations                import generate_zero_elevation_microphone_locations, generate_noise_hemisphere_microphone_locations
 from RCAIDE.Library.Methods.Noise.Common.compute_relative_noise_evaluation_locations  import compute_relative_noise_evaluation_locations  
-from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.rotor_noise          import rotor_noise 
+from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.compute_rotor_noise  import compute_rotor_noise
 
 # package imports
 import numpy as np
@@ -64,6 +64,7 @@ class Frequency_Domain_Buildup(Noise):
         
         # Initialize quantities
         settings                                        = self.settings
+        settings.fidelity                               = 'point_source' # can be 'point_source', 'line_source' or 'plane_source'         
         settings.harmonics                              = np.arange(1,30) 
         settings.flyover                                = False    
         settings.approach                               = False
@@ -91,7 +92,6 @@ class Frequency_Domain_Buildup(Noise):
         settings.noise_hemisphere_microphone_resolution = 20
         settings.noise_hemisphere_phi_angle_bounds      = np.array([0,np.pi])
         settings.noise_hemisphere_theta_angle_bounds    = np.array([0,2*np.pi])
-         
                 
         # settings for acoustic frequency resolution
         settings.center_frequencies                   = np.array([16,20,25,31.5,40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, \

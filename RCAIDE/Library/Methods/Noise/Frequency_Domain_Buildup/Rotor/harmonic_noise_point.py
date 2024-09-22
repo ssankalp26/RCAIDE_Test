@@ -20,8 +20,7 @@ import scipy as sp
 # Compute Harmonic Noise 
 # ----------------------------------------------------------------------------------------------------------------------
 ## @ingroup Methods-Noise-Frequency_Domain_Buildup-Rotor 
-def harmonic_noise_point(harmonics_blade,harmonics_load,freestream,angle_of_attack,coordinates,
-                           velocity_vector,rotor,aeroacoustic_data,settings,res):
+def harmonic_noise_point(harmonics_blade,harmonics_load,conditions,aeroacoustic_data,coordinates,rotor,settings,Noise):
     '''This computes the harmonic noise (i.e. thickness and loading noise) in the frequency domain 
     of a rotor at any angle of attack having the loads act at a single point. This is a level 1 fidelity
     approach. The thickness source is however computed using the helicoidal surface theory.
@@ -66,18 +65,22 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,freestream,angle_of_atta
         
     Code Convention - The number in front of a variable name indicates the number of dimensions of the variable.
                       For instance, m_6 is the 6 dimensional harmonic modes variable, m_5 is 5 dimensional harmonic modes variable
-    '''     
-    num_h_b      = len(harmonics_blade)
-    num_h_l      = len(harmonics_load)
-    num_cpt      = len(angle_of_attack) 
-    num_mic      = len(coordinates.X_hub[0,:,0,0,0,0]) 
-    phi_0        = np.array([rotor.phase_offset_angle])  # phase angle offset  
-    num_sec      = len(rotor.radius_distribution)
-    num_az       = aeroacoustic_data.number_azimuthal_stations
-    airfoil_geometry = rotor.Airfoils.airfoil.geometry
-    chord_coord  = len(airfoil_geometry.camber_coordinates)
-    orientation  = np.array(rotor.orientation_euler_angles) * 1 
-    body2thrust  = sp.spatial.transform.Rotation.from_rotvec(orientation).as_matrix()
+    '''
+    
+    angle_of_attack      = conditions.aerodynamics.angles.alpha 
+    velocity_vector      = conditions.frames.inertial.velocity_vector 
+    freestream           = conditions.freestream   
+    num_h_b              = len(harmonics_blade)
+    num_h_l              = len(harmonics_load)
+    num_cpt              = len(angle_of_attack) 
+    num_mic              = len(coordinates.X_hub[0,:,0,0,0]) 
+    phi_0                = np.array([rotor.phase_offset_angle])  # phase angle offset  
+    num_sec              = len(rotor.radius_distribution)
+    num_az               = aeroacoustic_data.number_azimuthal_stations
+    airfoil_geometry     = rotor.Airfoils.airfoil.geometry
+    chord_coord          = len(airfoil_geometry.camber_coordinates)
+    orientation          = np.array(rotor.orientation_euler_angles) * 1 
+    body2thrust          = sp.spatial.transform.Rotation.from_rotvec(orientation).as_matrix()
     
     
     # Reynolds number and AOA of each blade section at each azimuthal station
@@ -119,7 +122,7 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,freestream,angle_of_atta
     D              = 2*R[-1]
     
     # Rotorcraft speed and mach number
-    V_4            = np.tile(np.linalg.norm(velocity_vector, axis=1) [:,None,None,None],(1,num_mic,num_h_b))
+    V_4            = np.tile(np.linalg.norm(velocity_vector, axis=1) [:,None,None],(1,num_mic,num_h_b))
     M_4            = V_4/a_4
     M_5            = np.tile(M_4[:,:,:,None],(1,1,1,num_h_l))
     
@@ -141,18 +144,18 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,freestream,angle_of_atta
     M_s_5          = np.tile(M_s_4[:,:,:,None],(1,1,1,num_h_l))
     
     # retarded theta
-    theta_r        = coordinates.theta_hub_r[:,:,0,0,0]
+    theta_r        = coordinates.theta_hub_r[:,:,0,0]
     theta_r_4      = np.tile(theta_r[:,:,None],(1,1,num_h_b))
     theta_r_5      = np.tile(theta_r[:,:,None,None],(1,1,num_h_b,num_h_l))
     
     # retarded distance to source
-    Y              = np.sqrt(coordinates.X_hub[:,:,:,0,0,1]**2 +  coordinates.X_hub[:,:,:,0,0,2] **2)
-    Y_4            = np.tile(Y[:,:,:,None],(1,1,1,num_h_b))
+    Y              = np.sqrt(coordinates.X_hub[:,:,0,0,1]**2 +  coordinates.X_hub[:,:,0,0,2] **2)
+    Y_4            = np.tile(Y[:,:,None],(1,1,num_h_b))
     r_4            = Y_4/np.sin(theta_r_4)
     
     # phase angles
-    phi_0_vec      = np.tile(phi_0[None,None,:,None,None],(num_cpt,num_mic,1,num_h_b,num_h_l))
-    phi_5          = np.tile(coordinates.phi_hub_r[:,:,:,0,0,None,None],(1,1,1,num_h_b,num_h_l)) + phi_0_vec
+    phi_0_vec      = np.tile(phi_0[:,None,None,None],(num_cpt,num_mic,num_h_b,num_h_l))
+    phi_5          = np.tile(coordinates.phi_hub_r[:,:,0,0,None,None],(1,1,num_h_b,num_h_l)) + phi_0_vec
     
     # total angle between propeller axis and r vector
     theta_r_prime_5 = np.arccos(np.cos(theta_r_5)*np.cos(alpha_5) + np.sin(theta_r_5)*np.sin(phi_5)*np.sin(alpha_5))
@@ -163,9 +166,9 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,freestream,angle_of_atta
     k_m_4          = m_4*B*omega_4/a_4
     k_m_bar        = k_m_4/(1 - M_4*np.cos(theta_r_4))
     
-    res.f          = B*omega_4*m_4/(2*np.pi)                                                 
+    Noise.f        = B*omega_4*m_4/(2*np.pi)                                                 
 
-    S_r            = np.tile(np.linalg.norm(coordinates.X_hub_r[:,:,:,0,:,:], axis = 4)[:,:,:,:,None],(1,1,1,1,num_h_b))
+    S_r            = np.tile(np.linalg.norm(coordinates.X_hub_r[:,:,0,:,:], axis = 3)[:,:,:,None],(1,1,1,num_h_b))
     
     # Frequency domain loading modes
     F_xk          = sp.fft.rfft(T, axis=1)
@@ -178,7 +181,7 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,freestream,angle_of_atta
     Term1_5       = (m_5*B*M_s_5*np.cos(theta_r_prime_5)*F_xk_5)/(1-M_5*np.cos(theta_r_5))
     Term2_5       = -(m_5*B-k_5)*F_phik_5
     Summand_5     = (Term1_5 + Term2_5)*J_mbk_5*np.exp(1j*(m_5*B-k_5)*(phi_prime_5-(np.pi/2)))
-    Summation_4   = np.sum(Summand_5, axis=4)
+    Summation_4   = np.sum(Summand_5, axis=3)
     P_Lm          = (1j*B*np.exp(1j*k_m_4*r_4)*Summation_4)/(4*np.pi*r_4*rs*(1-M_4*np.cos(theta_r_4)))
     
     # # frequency domain source function for thickness distribution

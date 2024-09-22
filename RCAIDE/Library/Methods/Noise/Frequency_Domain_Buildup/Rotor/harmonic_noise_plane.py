@@ -21,8 +21,7 @@ import scipy as sp
 # Compute Harmonic Noise 
 # ----------------------------------------------------------------------------------------------------------------------
 ## @ingroup Methods-Noise-Frequency_Domain_Buildup-Rotor 
-def harmonic_noise_plane(conditions,harmonics_blade,harmonics_load,freestream,angle_of_attack,coordinates,
-                           velocity_vector,rotor,aeroacoustic_data,settings,res):
+def harmonic_noise_plane(harmonics_blade,harmonics_load,conditions,aeroacoustic_data,coordinates,rotor,settings,Noise):
     '''This computes the harmonic noise (i.e. thickness and loading noise) in the frequency domain 
     of a rotor at any angle of attack with load distribution along the blade span and blade chord. This is a 
     level 3 fidelity approach. All sources are computed using the helicoidal surface theory.
@@ -74,19 +73,21 @@ def harmonic_noise_plane(conditions,harmonics_blade,harmonics_load,freestream,an
     Code Convention - The number in front of a variable name indicates the number of dimensions of the variable.
                       For instance, m_6 is the 6 dimensional harmonic modes variable, m_5 is 5 dimensional harmonic modes variable
     '''     
-    
-    num_h_b      = len(harmonics_blade)
-    num_h_l      = len(harmonics_load)
-    num_cpt      = len(angle_of_attack) 
-    num_mic      = len(coordinates.X_hub[0,:,0,0,0,0])
-    num_rot      = len(coordinates.X_hub[0,0,:,0,0,0]) 
-    phi_0        = np.array([rotor.phase_offset_angle])  # phase angle offset  
-    num_sec      = len(rotor.radius_distribution)
-    num_az       = aeroacoustic_data.number_azimuthal_stations
-    airfoil_geometry = rotor.Airfoils.airfoil.geometry
-    chord_coord  = len(airfoil_geometry.camber_coordinates)
-    orientation  = np.array(rotor.orientation_euler_angles) * 1 
-    body2thrust  = sp.spatial.transform.Rotation.from_rotvec(orientation).as_matrix()
+
+    angle_of_attack      = conditions.aerodynamics.angles.alpha 
+    velocity_vector      = conditions.frames.inertial.velocity_vector 
+    freestream           = conditions.freestream       
+    num_h_b              = len(harmonics_blade)
+    num_h_l              = len(harmonics_load)
+    num_cpt              = len(angle_of_attack) 
+    num_mic              = len(coordinates.X_hub[0,:,0,0,0]) 
+    phi_0                = np.array([rotor.phase_offset_angle])  # phase angle offset  
+    num_sec              = len(rotor.radius_distribution)
+    num_az               = aeroacoustic_data.number_azimuthal_stations
+    airfoil_geometry     = rotor.Airfoils.airfoil.geometry
+    chord_coord          = len(airfoil_geometry.camber_coordinates)
+    orientation          = np.array(rotor.orientation_euler_angles) * 1 
+    body2thrust          = sp.spatial.transform.Rotation.from_rotvec(orientation).as_matrix()
 
     # Reynolds number and AOA of each blade section at each azimuthal station
     Re      = aeroacoustic_data.blade_reynolds_number
@@ -246,7 +247,7 @@ def harmonic_noise_plane(conditions,harmonics_blade,harmonics_load,freestream,an
     phi_s_6        = k_x_hat_6*MCA_6/c_6
     # phi_FA         = k_x_hat*
     
-    res.f          = B*m_4*omega_4/(2*np.pi)
+    Noise.f          = B*m_4*omega_4/(2*np.pi)
 
     
     CL_k_6         = np.tile(CL_k[:,None,:,None,0:num_h_l],(1,num_mic,1,num_h_b,1))
@@ -297,9 +298,9 @@ def harmonic_noise_plane(conditions,harmonics_blade,harmonics_load,freestream,an
     # SOUND PRESSURE LEVELS
     P_Lm_abs       = np.abs(P_Lm)
     P_Vm_abs       = np.abs(P_Vm)
-    res.SPL_prop_harmonic_bpf_spectrum     = 20*np.log10((abs(P_Lm_abs + P_Vm_abs))/p_ref)  
-    res.SPL_prop_harmonic_1_3_spectrum     = convert_to_third_octave_band(res.SPL_prop_harmonic_bpf_spectrum,res.f[:,0,0,:],settings)          
-    res.SPL_prop_harmonic_1_3_spectrum[np.isinf(res.SPL_prop_harmonic_1_3_spectrum)]         = 0 
+    Noise.SPL_prop_harmonic_bpf_spectrum     = 20*np.log10((abs(P_Lm_abs + P_Vm_abs))/p_ref)  
+    Noise.SPL_prop_harmonic_1_3_spectrum     = convert_to_third_octave_band(Noise.SPL_prop_harmonic_bpf_spectrum,Noise.f[:,0,0,:],settings)          
+    Noise.SPL_prop_harmonic_1_3_spectrum[np.isinf(Noise.SPL_prop_harmonic_1_3_spectrum)]         = 0 
     
     return
     

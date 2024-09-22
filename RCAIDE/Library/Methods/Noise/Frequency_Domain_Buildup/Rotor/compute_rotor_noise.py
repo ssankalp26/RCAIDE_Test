@@ -80,18 +80,14 @@ def compute_rotor_noise(distributor,propulsor,rotor,conditions,settings):
 
     # ----------------------------------------------------------------------------------
     # Harmonic Noise
-    # ----------------------------------------------------------------------------------
-    # harmonic noise old version     
-    # harmonic_noise(harmonics_blade,freestream,angle_of_attack,coordinates,velocity_vector,rotor,energy_conditions,settings,Noise)
-    
-    # # harmonic noise with point load distribution
-    # harmonic_noise_point(harmonics_blade,freestream,angle_of_attack,coordinates,velocity_vector,rotor,energy_conditions,settings,Noise)
-    
-    # # harmonic noise with line load distribution
-    # harmonic_noise_line(harmonics_blade,harmonics_load,freestream,angle_of_attack,coordinates,velocity_vector,rotor,energy_conditions,settings,Noise)
-    
+    # ---------------------------------------------------------------------------------- 
     # harmonic noise with planar load distribution
-    harmonic_noise_plane(conditions,harmonics_blade,harmonics_load,freestream,angle_of_attack,coordinates,velocity_vector,rotor,energy_conditions,settings,Noise)
+    if settings.fidelity == 'plane_source':
+        harmonic_noise_plane(harmonics_blade,harmonics_load,conditions,energy_conditions,coordinates,rotor,settings,Noise)
+    elif settings.fidelity == 'line_source': 
+        harmonic_noise_line(harmonics_blade,harmonics_load,conditions,energy_conditions,coordinates,rotor,settings,Noise)
+    else:
+        harmonic_noise_point(harmonics_blade,harmonics_load,conditions,energy_conditions,coordinates,rotor,settings,Noise) 
 
     # ----------------------------------------------------------------------------------    
     # Broadband Noise
