@@ -124,7 +124,8 @@ class Frequency_Domain_Buildup(Noise):
         self.geometry
         """ 
         # unpack 
-        settings      = self.settings  
+        settings      = self.settings
+        geometry      = self.geometry
         conditions    = segment.state.conditions  
         dim_cf        = len(settings.center_frequencies ) 
         ctrl_pts      = len(conditions.freestream.density) 

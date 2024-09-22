@@ -80,12 +80,8 @@ def Hararmonic_Noise_Validation(PP):
  
     segment                                                = Segment()  
     conditions                                             = Results() 
-    conditions.noise.relative_microphone_locations         = np.repeat(positions[ np.newaxis,:,: ],1,axis=0)  
-<<<<<<< HEAD
-    conditions.aerodynamics.angles.alpha                   = np.atleast_2d(AoA).T
-=======
-    conditions.aerodynamics.angle_of_attack                = np.atleast_2d(AoA).T
->>>>>>> 1d593ba4d8f2bb2b765d4c305a4bcca42f489fcf
+    conditions.noise.relative_microphone_locations         = np.repeat(positions[ np.newaxis,:,: ],1,axis=0)   
+    conditions.aerodynamics.angles.alpha                   = np.atleast_2d(AoA).T 
     conditions.freestream.density                          = np.ones((ctrl_pts,1)) * density
     conditions.freestream.dynamic_viscosity                = np.ones((ctrl_pts,1)) * dynamic_viscosity   
     conditions.freestream.speed_of_sound                   = np.ones((ctrl_pts,1)) * a 
@@ -229,16 +225,10 @@ def Hararmonic_Noise_Validation(PP):
 # Broadband Noise Validation
 # ------------------------------------------------------------------     
 def Broadband_Noise_Validation(PP):   
-    bus                            = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus()  
-<<<<<<< HEAD
+    bus                            = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus()   
     electric_rotor                 = RCAIDE.Library.Components.Propulsors.Electric_Rotor() 
     rotor                          = APC_11x4_Propeller()  
-    electric_rotor.rotor           = rotor   
-=======
-    electric_rotor                   = RCAIDE.Library.Components.Propulsors.Electric_Rotor() 
-    rotor                          = APC_11x4_Propeller()  
-    electric_rotor.rotor                = rotor   
->>>>>>> 1d593ba4d8f2bb2b765d4c305a4bcca42f489fcf
+    electric_rotor.rotor           = rotor    
     bus.propulsors.append(electric_rotor)
     
     # Operating Conditions       
