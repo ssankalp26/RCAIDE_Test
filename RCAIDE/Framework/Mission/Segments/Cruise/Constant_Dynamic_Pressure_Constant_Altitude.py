@@ -11,7 +11,7 @@
 # RCAIDE imports 
 from RCAIDE.Framework.Mission.Segments.Evaluate   import Evaluate 
 from RCAIDE.Framework.Core                                 import Units   
-from RCAIDE.Library.Methods.Mission                      import Common,Segments
+from RCAIDE.Library.Mission                      import Common,Segments
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Constant_Dynamic_Pressure_Constant_Altitude
@@ -53,7 +53,7 @@ class Constant_Dynamic_Pressure_Constant_Altitude(Evaluate):
         self.altitude          = 0.0
         self.dynamic_pressure  = None  
         self.distance          = 1.0 * Units.km
-        self.true_course_angle = 0.0 * Units.degrees              
+        self.true_course       = 0.0 * Units.degrees              
     
         # -------------------------------------------------------------------------------------------------------------- 
         #  Mission specific processes 
@@ -63,7 +63,7 @@ class Constant_Dynamic_Pressure_Constant_Altitude(Evaluate):
         iterate                            = self.process.iterate   
         iterate.unknowns.controls          = Common.Unpack_Unknowns.control_surfaces
         iterate.unknowns.mission           = Common.Unpack_Unknowns.orientation  
-        iterate.residuals.flight_dynamics  = Common.Residuals.level_flight_dynamics
+        iterate.residuals.flight_dynamics  = Common.Residuals.flight_dynamics
 
         return
 

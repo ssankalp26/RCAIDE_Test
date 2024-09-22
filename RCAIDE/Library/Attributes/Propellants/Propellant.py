@@ -34,6 +34,7 @@ class Propellant(Data):
         self.density                   = 0.0                       # kg/m^3
         self.specific_energy           = 0.0                       # MJ/kg
         self.energy_density            = 0.0                       # MJ/m^3
+        self.lower_heating_value       = 0.0                       # MJ/kg
         self.mass_properties           = Mass_Properties()
         self.max_mass_fraction         = Data({'Air' : 0.0, 'O2' : 0.0}) # kg propellant / kg oxidizer
         self.temperatures              = Data()
@@ -41,3 +42,20 @@ class Propellant(Data):
         self.temperatures.autoignition = 0.0                       # K
         self.temperatures.freeze       = 0.0                       # K
         self.temperatures.boiling      = 0.0                       # K
+        
+        # Emission Indices 
+        self.emission_indices             =  Data() 
+        self.emission_indices.Production  = 0
+        self.emission_indices.CO2         = 0
+        self.emission_indices.H2O         = 0
+        self.emission_indices.SO2         = 0
+        self.emission_indices.NOx         = 0
+        self.emission_indices.Soot        = 0 
+
+        self.global_warming_potential_100           =  Data() 
+        self.global_warming_potential_100.CO2       = 0
+        self.global_warming_potential_100.H2O       = 0
+        self.global_warming_potential_100.SO2       = 0
+        self.global_warming_potential_100.NOx       = 0
+        self.global_warming_potential_100.Soot      = 0  
+        self.global_warming_potential_100.Contrails = 0        

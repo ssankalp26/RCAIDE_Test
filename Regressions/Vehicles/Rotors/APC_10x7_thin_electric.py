@@ -8,8 +8,13 @@
 import RCAIDE
 from RCAIDE.Framework.Core import Data, Units
 import numpy as np
+<<<<<<< HEAD
 from RCAIDE.Library.Methods.Geometry.Two_Dimensional.Airfoil   import compute_airfoil_properties
 from RCAIDE.Library.Methods.Geometry.Two_Dimensional.Airfoil   import import_airfoil_geometry    
+=======
+from RCAIDE.Library.Methods.Geometry.Airfoil.import_airfoil_geometry import import_airfoil_geometry
+from RCAIDE.Library.Methods.Geometry.Airfoil.compute_airfoil_properties import compute_airfoil_properties
+>>>>>>> 1d593ba4d8f2bb2b765d4c305a4bcca42f489fcf
 import os
 
 

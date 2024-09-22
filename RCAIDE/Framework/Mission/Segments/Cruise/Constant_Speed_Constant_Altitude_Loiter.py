@@ -11,7 +11,7 @@
 # RCAIDE imports 
 from RCAIDE.Framework.Mission.Segments.Evaluate   import Evaluate 
 from RCAIDE.Framework.Core                                 import Units   
-from RCAIDE.Library.Methods.Mission                      import Common,Segments
+from RCAIDE.Library.Mission                      import Common,Segments
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Constant_Speed_Constant_Altitude_Loiter
@@ -54,7 +54,7 @@ class Constant_Speed_Constant_Altitude_Loiter(Evaluate):
         self.altitude          = None
         self.air_speed         = None
         self.time              = 1.0 * Units.sec
-        self.true_course_angle = 0.0 * Units.degrees        
+        self.true_course       = 0.0 * Units.degrees        
                 
         # -------------------------------------------------------------------------------------------------------------- 
         #  Mission specific processes 
@@ -64,6 +64,6 @@ class Constant_Speed_Constant_Altitude_Loiter(Evaluate):
         iterate                            = self.process.iterate   
         iterate.unknowns.controls          = Common.Unpack_Unknowns.control_surfaces
         iterate.unknowns.mission           = Common.Unpack_Unknowns.orientation
-        iterate.residuals.flight_dynamics  = Common.Residuals.level_flight_dynamics
+        iterate.residuals.flight_dynamics  = Common.Residuals.flight_dynamics
         return
 

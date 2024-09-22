@@ -12,7 +12,7 @@
 import RCAIDE
 from RCAIDE.Framework.Core                                 import Units 
 from RCAIDE.Framework.Mission.Segments.Evaluate   import Evaluate 
-from RCAIDE.Library.Methods.Mission                      import Common,Segments
+from RCAIDE.Library.Mission                      import Common,Segments
 
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Constant_Speed_Constant_Angle_Noise
@@ -58,7 +58,7 @@ class Constant_Speed_Constant_Angle_Noise(Evaluate):
         self.altitude_end      = 0.0 * Units.km
         self.descent_angle     = 3.  * Units.deg
         self.air_speed         = 100 * Units.m / Units.s
-        self.true_course_angle = 0.0 * Units.degrees 
+        self.true_course       = 0.0 * Units.degrees 
         
         self.state.numerics.discretization_method = RCAIDE.Library.Methods.Utilities.Chebyshev.linear_data 
         
@@ -70,7 +70,7 @@ class Constant_Speed_Constant_Angle_Noise(Evaluate):
         initialize.expand_state            = Segments.Descent.Constant_Speed_Constant_Angle_Noise.expand_state
         initialize.conditions              = Segments.Descent.Constant_Speed_Constant_Angle_Noise.initialize_conditions
         iterate                            = self.process.iterate   
-        iterate.residuals.flight_dynamics  = Common.Residuals.climb_descent_flight_dynamics
+        iterate.residuals.flight_dynamics  = Common.Residuals.flight_dynamics
         iterate.unknowns.mission           = Common.Unpack_Unknowns.orientation          
         
         return

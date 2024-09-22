@@ -81,7 +81,11 @@ def Hararmonic_Noise_Validation(PP):
     segment                                                = Segment()  
     conditions                                             = Results() 
     conditions.noise.relative_microphone_locations         = np.repeat(positions[ np.newaxis,:,: ],1,axis=0)  
+<<<<<<< HEAD
     conditions.aerodynamics.angles.alpha                   = np.atleast_2d(AoA).T
+=======
+    conditions.aerodynamics.angle_of_attack                = np.atleast_2d(AoA).T
+>>>>>>> 1d593ba4d8f2bb2b765d4c305a4bcca42f489fcf
     conditions.freestream.density                          = np.ones((ctrl_pts,1)) * density
     conditions.freestream.dynamic_viscosity                = np.ones((ctrl_pts,1)) * dynamic_viscosity   
     conditions.freestream.speed_of_sound                   = np.ones((ctrl_pts,1)) * a 
@@ -125,7 +129,11 @@ def Hararmonic_Noise_Validation(PP):
     conditions.noise.number_of_microphones                 = num_mic
                  
     # Run Frequency Domain Rotor Noise Model          
+<<<<<<< HEAD
     compute_rotor_noise(bus,electric_rotor,rotor,segment.state.conditions,settings)
+=======
+    compute_rotor_noise(bus,electric_rotor,segment,settings)
+>>>>>>> 1d593ba4d8f2bb2b765d4c305a4bcca42f489fcf
     F8745D4_SPL                                            = conditions.noise[bus.tag][electric_rotor.tag][rotor.tag].SPL     
     F8745D4_SPL_harmonic                                   = conditions.noise[bus.tag][electric_rotor.tag][rotor.tag].SPL_harmonic 
     F8745D4_SPL_broadband                                  = conditions.noise[bus.tag][electric_rotor.tag][rotor.tag].SPL_broadband  
@@ -222,9 +230,15 @@ def Hararmonic_Noise_Validation(PP):
 # ------------------------------------------------------------------     
 def Broadband_Noise_Validation(PP):   
     bus                            = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus()  
+<<<<<<< HEAD
     electric_rotor                 = RCAIDE.Library.Components.Propulsors.Electric_Rotor() 
     rotor                          = APC_11x4_Propeller()  
     electric_rotor.rotor           = rotor   
+=======
+    electric_rotor                   = RCAIDE.Library.Components.Propulsors.Electric_Rotor() 
+    rotor                          = APC_11x4_Propeller()  
+    electric_rotor.rotor                = rotor   
+>>>>>>> 1d593ba4d8f2bb2b765d4c305a4bcca42f489fcf
     bus.propulsors.append(electric_rotor)
     
     # Operating Conditions       
@@ -302,7 +316,11 @@ def Broadband_Noise_Validation(PP):
     conditions.noise.number_of_microphones                 = num_mic
                  
     # Run Frequency Domain Rotor Noise Model          
+<<<<<<< HEAD
     compute_rotor_noise(bus,electric_rotor,rotor,segment.state.conditions,settings) 
+=======
+    compute_rotor_noise(bus,electric_rotor,segment,settings) 
+>>>>>>> 1d593ba4d8f2bb2b765d4c305a4bcca42f489fcf
     
     APC_SF_1_3_Spectrum                                     = conditions.noise[bus.tag][electric_rotor.tag][rotor.tag].SPL_1_3_spectrum 
     APC_SF_SPL_broadband_1_3_spectrum                       = conditions.noise[bus.tag][electric_rotor.tag][rotor.tag].SPL_broadband_1_3_spectrum  

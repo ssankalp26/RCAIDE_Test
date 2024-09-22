@@ -11,7 +11,7 @@
 # RCAIDE imports 
 from RCAIDE.Framework.Core                                     import Units 
 from RCAIDE.Framework.Mission.Segments.Evaluate       import Evaluate
-from RCAIDE.Library.Methods.Mission                          import Common,Segments
+from RCAIDE.Library.Mission                          import Common,Segments
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ class Constant_Mach_Linear_Altitude(Evaluate):
         self.distance          = 10. * Units.km
         self.altitude_start    = None
         self.altitude_end      = None
-        self.true_course_angle = 0.0 * Units.degrees     
+        self.true_course       = 0.0 * Units.degrees     
         
         # -------------------------------------------------------------------------------------------------------------- 
         #  Mission specific processes 
@@ -66,7 +66,7 @@ class Constant_Mach_Linear_Altitude(Evaluate):
         iterate                            = self.process.iterate
         iterate.unknowns.mission           = Common.Unpack_Unknowns.orientation   
         iterate.unknowns.controls          = Common.Unpack_Unknowns.control_surfaces
-        iterate.residuals.flight_dynamics  = Common.Residuals.climb_descent_flight_dynamics
+        iterate.residuals.flight_dynamics  = Common.Residuals.flight_dynamics
 
 
         return

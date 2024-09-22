@@ -11,7 +11,7 @@
 # RCAIDE imports 
 from RCAIDE.Framework.Core                            import Units 
 from RCAIDE.Framework.Mission.Segments.Evaluate       import Evaluate
-from RCAIDE.Library.Methods.Mission                   import Common,Segments
+from RCAIDE.Library.Mission                           import Common,Segments
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Constant_Acceleration_Constant_Angle_Linear_Climb
@@ -56,7 +56,7 @@ class Constant_Acceleration_Constant_Angle_Linear_Climb(Evaluate):
         self.acceleration           = 1.  * Units['m/s/s'] 
         self.pitch_initial          = None
         self.pitch_final            = 0.0 * Units['rad']
-        self.true_course_angle      = 0.0 * Units.degrees  
+        self.true_course            = 0.0 * Units.degrees  
         
         # -------------------------------------------------------------------------------------------------------------- 
         #  Mission specific processes 
@@ -66,7 +66,7 @@ class Constant_Acceleration_Constant_Angle_Linear_Climb(Evaluate):
         iterate                            = self.process.iterate  
         iterate.unknowns.mission           = Common.Unpack_Unknowns.orientation
         iterate.unknowns.controls          = Common.Unpack_Unknowns.control_surfaces
-        iterate.residuals.flight_dynamics  = Common.Residuals.level_flight_dynamics
+        iterate.residuals.flight_dynamics  = Common.Residuals.flight_dynamics
         
         return
 
