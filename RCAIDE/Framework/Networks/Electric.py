@@ -163,8 +163,7 @@ class Electric(Network):
         delta_t            = np.diff(time)
         for t_idx in range(state.numerics.number_of_control_points):
             if recharging_flag:
-                for bus in  busses:
-                    
+                for bus in  busses: 
                     for battery in  bus.battery_modules:
                         battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t, recharging_flag)
                         for coolant_line in  coolant_lines:
@@ -175,7 +174,8 @@ class Electric(Network):
                                                 heat_exchanger.compute_heat_exchanger_performance(state,coolant_line,delta_t[t_idx],t_idx)
                                     if tag == 'reservoirs':
                                         for reservoir in  item:
-                                            reservoir.compute_reservior_coolant_temperature(state,coolant_line,delta_t[t_idx],t_idx)                     
+                                            reservoir.compute_reservior_coolant_temperature(state,coolant_line,delta_t[t_idx],t_idx)
+                    
             else:
                 for bus in  busses:                
                     for battery in  bus.battery_modules:
@@ -191,7 +191,7 @@ class Electric(Network):
                                 if tag == 'reservoirs':
                                     for reservoir in  item:
                                         reservoir.compute_reservior_coolant_temperature(state,coolant_line,delta_t[t_idx],t_idx)      
-                                
+                    #bus.compute_distributor_conditions(state)
 
 
         if reverse_thrust ==  True:

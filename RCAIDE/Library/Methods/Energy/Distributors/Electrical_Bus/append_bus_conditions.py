@@ -1,13 +1,11 @@
-# RCAIDE/Methods/Energy/Sources/Battery/Common/append_battery_conditions.py
-# 
+#  RCAIDE/Methods/Energy/Distributors/Electrical_Bus/append_battery_conditions.py
 # 
 # Created: Sep 2024, S. Shekar
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
-# RCAIDE imports 
-import RCAIDE 
+# RCAIDE imports  
 from RCAIDE.Framework.Mission.Common     import   Conditions
 
 # ----------------------------------------------------------------------------------------------------------------------

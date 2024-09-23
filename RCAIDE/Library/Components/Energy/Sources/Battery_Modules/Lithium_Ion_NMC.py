@@ -154,7 +154,7 @@ class Lithium_Ion_NMC(Generic_Battery_Module):
         Returns: 
             None
         """              
-        return battery_conditions.pack.voltage_under_load 
+        return battery_conditions.voltage_under_load 
     
     def update_battery_age(self,battery_conditions,increment_battery_age_by_one_day = False):  
         """ This is an aging model for 18650 lithium-nickel-manganese-cobalt-oxide batteries.   

@@ -148,7 +148,7 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
     # ---------------------------------------------------------------------------------
     # Compute battery cell temperature 
     # ---------------------------------------------------------------------------------
-    R_0_module[t_idx]                     =  0.01483*(SOC_cell[t_idx]**2) - 0.02518*SOC_cell[t_idx] + 0.1036  
+    R_0_module[t_idx]                       =  (0.01483*(SOC_cell[t_idx]**2) - 0.02518*SOC_cell[t_idx] + 0.1036) *battery_conditions.cell.resistance_growth_factor  
     R_0_module[t_idx][R_0_module[t_idx]<0]  = 0. 
 
     # Determine temperature increase         
@@ -162,7 +162,7 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
     q_dot_entropy         = -(T_cell[t_idx])*delta_S*i_cell/(n*F)       
     q_dot_joule           = (i_cell**2)/sigma                   
     Q_heat_cell[t_idx]    = (q_dot_joule + q_dot_entropy)*As_cell 
-    Q_heat_module[t_idx]    = Q_heat_cell[t_idx]*n_total  
+    Q_heat_module[t_idx]  = Q_heat_cell[t_idx]*n_total  
 
     V_ul_cell[t_idx]           = compute_nmc_cell_state(battery_data,SOC_cell[t_idx],T_cell[t_idx],I_cell[t_idx]) 
 

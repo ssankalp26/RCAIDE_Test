@@ -20,4 +20,3 @@ from .find_total_mass_gain                  import find_total_mass_gain
 from .initialize_from_mass                  import initialize_from_mass
 from .initialize_from_energy_and_power      import initialize_from_energy_and_power
 from .initialize_from_circuit_configuration import initialize_from_circuit_configuration
-from .pack_battery_conditions               import pack_battery_conditions
