@@ -39,6 +39,17 @@ class Combustor(Component):
         self.length                          = 0.3
         self.fuel_equivalency_ratio          = 0.3 
         self.number_of_combustors            = 30 
+        
+        self.f_air_PZ                = 0.18                                                  # [-]       Fraction of total air present in the combustor that enters the Primary Zone         
+        self.N_comb                  = 10                                                    # [-]       Number of can-annular combustors
+        self.N_PZ                    = 8                                                     # [-]       Number of PSR (EVEN, must match the number of PSR below)
+        self.A_PZ                    = 0.15                                                  # [m**2]    Primary Zone cross-sectional area     
+        self.L_PZ                    = 0.0153                                                # [m]       Primary Zone length  
+        self.N_SZ                    = 3                                                     # [-]       Number of dilution air inlets        
+        self.A_SZ                    = 0.15                                                  # [m**2]    Secondary Zone cross-sectional area
+        self.L_SZ                    = 0.075                                                 # [m]       Secondary Zone length  
+        self.phi_SZ                  = 0.2                                                   # [-]       Equivalence Ratio for PFR   
+                
     
     def append_operating_conditions(self,segment,fuel_line,propulsor):
         propulsor_conditions =  segment.state.conditions.energy[fuel_line.tag][propulsor.tag]
