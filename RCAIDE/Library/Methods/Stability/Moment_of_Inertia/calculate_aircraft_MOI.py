@@ -1,5 +1,4 @@
 # caclulate_aircraft_MOI.py   
-from RCAIDE.Framework.Core import Units,  Data ,  Container
 from RCAIDE.Library.Methods.Stability.Moment_of_Inertia import compute_cuboid_moment_of_inertia, compute_cylinder_moment_of_inertia, compute_fuselage_moment_of_inertia, compute_wing_moment_of_inertia
 
 import RCAIDE
@@ -10,7 +9,7 @@ import numpy as  np
 # ------------------------------------------------------------------  
 def caclulate_aircraft_MOI(vehicle, CG_location): 
     
-    total_MOI = np.zeros(3)
+    total_MOI = np.zeros(3) # Array to hold the entire aircraft's inertia tensor
     
     # ------------------------------------------------------------------        
     #  Fuselage(s)
@@ -46,15 +45,12 @@ def caclulate_aircraft_MOI(vehicle, CG_location):
                         pass # TO DO 
                 for fuel_tank in fuel_line.fuel_tanks:
                     if isinstance(fuel_tank,RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Central_Fuel_Tank ): 
-                        I_network += compute_cuboid_moment_of_inertia(fuel_tank.origin, fuel_tank.mass_properties.mass, need_length, need_width, need_height, 0, 0, 0, CG_location)
+                        I_network += compute_cuboid_moment_of_inertia(fuel_tank.origin, fuel_tank.mass_properties.mass, fuel_tank.length, fuel_tank.width, fuel_tank.height, 0, 0, 0, CG_location)
                     if isinstance(fuel_tank,RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Wing_Fuel_Tank ): 
                         I_network += compute_wing_moment_of_inertia(vehicle.wings["main_wing"], CG_location, fuel_flag=True)
                     else:
                         pass # TO DO 
                         
-                  
-    else:
-        print("Propulsion system moment of inertia could not be calculated")
     total_MOI += I_network    
     
     return(total_MOI)  
