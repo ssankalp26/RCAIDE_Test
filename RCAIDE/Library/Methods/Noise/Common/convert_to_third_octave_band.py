@@ -46,11 +46,11 @@ def convert_to_third_octave_band(SPL,f,settings):
     dim_cpt          = len(SPL[:,0,0])
     dim_mic          = len(SPL[0,:,0]) 
     num_cf           = len(cf)
-    num_f            = len(f[0,:]) 
+    num_f            = len(f[0,0,:]) 
     
     uf_vals          = np.tile(uf[None,None,:,None],(dim_cpt,dim_mic,1,num_f))
     lf_vals          = np.tile(lf[None,None,:,None],(dim_cpt,dim_mic,1,num_f))
-    f_vals           = np.tile(f[:,None,None,:],(1,dim_mic,num_cf,1))
+    f_vals           = np.tile(f[:,:,None,:],(1,1,num_cf,1))
     SPL_vals         = np.tile(SPL[:,:,None,:],(1,1,num_cf,1))
      
     upper_bool       = (f_vals  <= uf_vals)

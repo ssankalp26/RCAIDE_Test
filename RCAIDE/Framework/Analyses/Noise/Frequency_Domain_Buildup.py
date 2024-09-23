@@ -85,7 +85,8 @@ class Frequency_Domain_Buildup(Noise):
         settings.ground_microphone_min_x                = 1E-6
         settings.ground_microphone_max_x                = 5000 
         settings.ground_microphone_min_y                = 1E-6
-        settings.ground_microphone_max_y                = 450  
+        settings.ground_microphone_max_y                = 450
+        settings.airfoil_number_of_points               = 201
         
         settings.noise_hemisphere                       = False 
         settings.noise_hemisphere_radius                = 20 

@@ -293,14 +293,12 @@ def compute_rotor_performance(propulsor,state,disributor,center_of_gravity= [[0.
     lamdaw, F, _ = compute_inflow_and_tip_loss(r,R,Wa,Wt,B)
 
     # Compute aerodynamic forces based on specified input airfoil or surrogate
-    Cl, Cdval, alpha, Ma,W, Re = compute_airfoil_aerodynamics(beta,c,r,R,B,Wa,Wt,a,nu,airfoils,a_loc,ctrl_pts,Nr,Na,tc,use_2d_analysis)
-    
+    Cl, Cdval, alpha, alpha_disc,Ma,W,Re,Re_disc = compute_airfoil_aerodynamics(beta,c,r,R,B,Wa,Wt,a,nu,airfoils,a_loc,ctrl_pts,Nr,Na,tc,use_2d_analysis) 
     
     # compute HFW circulation at the blade
     Gamma = 0.5*W*c*Cl  
 
-    #---------------------------------------------------------------------------            
-            
+    #---------------------------------------------------------------------------      
     # tip loss correction for velocities, since tip loss correction is only applied to loads in prior BET iteration
     va     = F*va
     vt     = F*vt
@@ -451,6 +449,8 @@ def compute_rotor_performance(propulsor,state,disributor,center_of_gravity= [[0.
                 blade_axial_induced_velocity      = Va_ind_avg,
                 blade_reynolds_number             = Re,
                 blade_effective_angle_of_attack   = alpha,
+                disc_reynolds_number              = Re_disc,
+                disc_effective_angle_of_attack    = alpha_disc,
                 blade_tangential_velocity         = Vt_avg,
                 blade_axial_velocity              = Va_avg,
                 blade_velocity                    = W,
@@ -468,8 +468,7 @@ def compute_rotor_performance(propulsor,state,disributor,center_of_gravity= [[0.
                 blade_dT_dr                       = blade_dT_dr,
                 disc_dT_dr                        = blade_dT_dr_2d,
                 blade_thrust_distribution         = blade_T_distribution,
-                disc_thrust_distribution          = blade_T_distribution_2d,
-                disc_effective_angle_of_attack    = alpha_2d,
+                disc_thrust_distribution          = blade_T_distribution_2d, 
                 thrust_per_blade                  = thrust/B,
                 thrust_coefficient                = Ct,
                 disc_azimuthal_distribution       = psi_2d,

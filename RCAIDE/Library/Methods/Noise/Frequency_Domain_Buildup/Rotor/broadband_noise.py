@@ -23,8 +23,7 @@ import numpy as np
 # Compute Broadband Noise 
 # ----------------------------------------------------------------------------------------------------------------------
 ## @ingroup Methods-Noise-Frequency_Domain_Buildup-Rotor
-def broadband_noise(freestream,angle_of_attack,coordinates,
-                            velocity_vector,rotor,aeroacoustic_data,settings,res):
+def broadband_noise(harmonics_blade,harmonics_load,conditions,propulsor_conditions,coordinates,rotor,settings,Noise):
     '''This computes the trailing edge noise compoment of broadband noise of a propeller or 
     lift-rotor in the frequency domain. Boundary layer properties are computed using RCAIDE's 
     panel method.
@@ -72,19 +71,21 @@ def broadband_noise(freestream,angle_of_attack,coordinates,
     # ----------------------------------------------------------------------------------
     # Trailing Edge Noise
     # ---------------------------------------------------------------------------------- 
+    freestream         = conditions.freestream  
     speed_of_sound     = freestream.speed_of_sound          # speed of sound
     density            = freestream.density                 # air density 
     dyna_visc          = freestream.dynamic_viscosity  
+    aeroacoustic_data  = propulsor_conditions[rotor.tag]  
     alpha              = aeroacoustic_data.blade_effective_angle_of_attack/Units.degrees 
     alpha_tip          = aeroacoustic_data.blade_effective_angle_of_attack[:,-1]/Units.degrees  
     blade_Re           = aeroacoustic_data.blade_reynolds_number
     blade_speed        = aeroacoustic_data.blade_velocity
     blade_Ma           = aeroacoustic_data.blade_Mach_number
     Vt                 = aeroacoustic_data.blade_tangential_velocity  
-    Va                 = aeroacoustic_data.blade_axial_velocity                
+    Va                 = aeroacoustic_data.blade_axial_velocity         
+    Omega              = aeroacoustic_data.omega            # angular velocity         
     blade_chords       = rotor.chord_distribution           # blade chord    
-    r                  = rotor.radius_distribution          # radial location   
-    Omega              = aeroacoustic_data.omega            # angular velocity    
+    r                  = rotor.radius_distribution          # radial location     
     L                  = np.zeros_like(r)
     del_r              = r[1:] - r[:-1]
     L[0]               = del_r[0]
@@ -92,20 +93,20 @@ def broadband_noise(freestream,angle_of_attack,coordinates,
     L[1:-1]            = (del_r[:-1]+ del_r[1:])/2
 
     if np.all(Omega == 0):
-        res.p_pref_broadband                          = np.zeros((num_cpt,num_mic,num_cf)) 
-        res.SPL_prop_broadband_spectrum               = np.zeros_like(res.p_pref_broadband)
-        res.SPL_prop_broadband_spectrum_dBA           = np.zeros_like(res.p_pref_broadband)
-        res.SPL_prop_broadband_1_3_spectrum           = np.zeros((num_cpt,num_mic,num_cf))
-        res.SPL_prop_broadband_1_3_spectrum_dBA       = np.zeros((num_cpt,num_mic,num_cf))
-        res.p_pref_azimuthal_broadband                = np.zeros((num_cpt,num_mic,num_cf))
-        res.p_pref_azimuthal_broadband_dBA            = np.zeros_like(res.p_pref_azimuthal_broadband)
-        res.SPL_prop_azimuthal_broadband_spectrum     = np.zeros_like(res.p_pref_azimuthal_broadband)
-        res.SPL_prop_azimuthal_broadband_spectrum_dBA = np.zeros_like(res.p_pref_azimuthal_broadband)
+        Noise.p_pref_broadband                          = np.zeros((num_cpt,num_mic,num_cf)) 
+        Noise.SPL_prop_broadband_spectrum               = np.zeros_like(Noise.p_pref_broadband)
+        Noise.SPL_prop_broadband_spectrum_dBA           = np.zeros_like(Noise.p_pref_broadband)
+        Noise.SPL_prop_broadband_1_3_spectrum           = np.zeros((num_cpt,num_mic,num_cf))
+        Noise.SPL_prop_broadband_1_3_spectrum_dBA       = np.zeros((num_cpt,num_mic,num_cf))
+        Noise.p_pref_azimuthal_broadband                = np.zeros((num_cpt,num_mic,num_cf))
+        Noise.p_pref_azimuthal_broadband_dBA            = np.zeros_like(Noise.p_pref_azimuthal_broadband)
+        Noise.SPL_prop_azimuthal_broadband_spectrum     = np.zeros_like(Noise.p_pref_azimuthal_broadband)
+        Noise.SPL_prop_azimuthal_broadband_spectrum_dBA = np.zeros_like(Noise.p_pref_azimuthal_broadband)
     else: 
         # dimension of matrices [control point, microphone , num rotors , number of blades, number of sections ,num center frequencies ] 
-        c                 = np.tile(blade_chords[None,None,:,None],(num_mic,num_blades,1,num_cf))
-        L                 = np.tile(L[None,None,:,None],(num_mic,num_blades,1,num_cf))
-        f                 = np.tile(frequency[None,None,None,:],(num_mic,num_blades,num_sec,1))
+        c  = np.tile(blade_chords[None,None,:,None],(num_mic,num_blades,1,num_cf))
+        L  = np.tile(L[None,None,:,None],(num_mic,num_blades,1,num_cf))
+        f  = np.tile(frequency[None,None,None,:],(num_mic,num_blades,num_sec,1))
             
         SPLb_sum_3 = np.zeros((num_cpt,num_mic,num_blades,num_cf))
         for cpt_i in range(num_cpt):
@@ -196,8 +197,8 @@ def broadband_noise(freestream,angle_of_attack,coordinates,
             SPLb_sum_3[cpt_i] = 10*np.log10( 10**(SPLb_sum_2/10) + 10**(SPL_TIP/10) ) 
         
         # store results 
-        res.SPL_prop_broadband_spectrum                   = SPL_arithmetic(SPLb_sum_3, sum_axis=2) 
-        res.SPL_prop_broadband_1_3_spectrum               = res.SPL_prop_broadband_spectrum     # already in 1/3 octave specturm  
+        Noise.SPL_prop_broadband_spectrum                   = SPL_arithmetic(SPLb_sum_3, sum_axis=2) 
+        Noise.SPL_prop_broadband_1_3_spectrum               = Noise.SPL_prop_broadband_spectrum     # already in 1/3 octave specturm  
         
     return
  

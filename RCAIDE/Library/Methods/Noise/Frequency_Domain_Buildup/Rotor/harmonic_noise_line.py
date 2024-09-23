@@ -8,8 +8,7 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 # RCAIDE    
-from RCAIDE.Library.Methods.Noise.Common                         import convert_to_third_octave_band
-from RCAIDE.Library.Methods.Aerodynamics.Airfoil_Panel_Method.airfoil_analysis   import airfoil_analysis
+from RCAIDE.Library.Methods.Noise.Common                         import convert_to_third_octave_band 
 
 # Python Package imports  
 import numpy as np
@@ -20,7 +19,7 @@ import scipy as sp
 # Compute Harmonic Noise 
 # ----------------------------------------------------------------------------------------------------------------------
 ## @ingroup Methods-Noise-Frequency_Domain_Buildup-Rotor 
-def harmonic_noise_line(harmonics_blade,harmonics_load,conditions,aeroacoustic_data,coordinates,rotor,settings,Noise):
+def harmonic_noise_line(harmonics_blade,harmonics_load,conditions,propulsor_conditions,coordinates,rotor,settings,Noise):
     '''This computes the harmonic noise (i.e. thickness and loading noise) in the frequency domain 
     of a rotor at any angle of attack with load distribution along the blade span. This is a level 1 fidelity
     approach. The thickness source is however computed using the helicoidal surface theory.
@@ -70,6 +69,7 @@ def harmonic_noise_line(harmonics_blade,harmonics_load,conditions,aeroacoustic_d
                       For instance, m_6 is the 6 dimensional harmonic modes variable, m_5 is 5 dimensional harmonic modes variable
     '''
 
+    aeroacoustic_data    = propulsor_conditions[rotor.tag] 
     angle_of_attack      = conditions.aerodynamics.angles.alpha 
     velocity_vector      = conditions.frames.inertial.velocity_vector 
     freestream           = conditions.freestream       
@@ -79,13 +79,9 @@ def harmonic_noise_line(harmonics_blade,harmonics_load,conditions,aeroacoustic_d
     num_mic              = len(coordinates.X_hub[0,:,0,0,0]) 
     phi_0                = np.array([rotor.phase_offset_angle])  # phase angle offset  
     num_sec              = len(rotor.radius_distribution)
-    num_az               = aeroacoustic_data.number_azimuthal_stations
-    airfoil_geometry     = rotor.Airfoils.airfoil.geometry
+    num_az               = aeroacoustic_data.number_azimuthal_stations 
     orientation          = np.array(rotor.orientation_euler_angles) * 1 
-    body2thrust          = sp.spatial.transform.Rotation.from_rotvec(orientation).as_matrix() 
-    Re                   = aeroacoustic_data.blade_reynolds_number
-    AOA_sec              = aeroacoustic_data.blade_effective_angle_of_attack
-    
+    body2thrust          = sp.spatial.transform.Rotation.from_rotvec(orientation).as_matrix()  
     
     # ----------------------------------------------------------------------------------
     # Rotational Noise  Thickness and Loading Noise
@@ -142,14 +138,14 @@ def harmonic_noise_line(harmonics_blade,harmonics_load,conditions,aeroacoustic_d
     theta_r_6      = np.tile(theta_r[:,:,None,None,None],(1,1,num_sec,num_h_b,num_h_l))
     
     # retarded distance to source
-    Y              = np.sqrt(coordinates.X_hub[:,:,:,0,1]**2 +  coordinates.X_hub[:,:,:,0,2] **2)
-    Y_4            = np.tile(Y[:,:,:,None],(1,1,1,num_h_b))
+    Y              = np.sqrt(coordinates.X_hub[:,:,0,0,1]**2 +  coordinates.X_hub[:,:,0,0,2] **2)
+    Y_4            = np.tile(Y[:,:,None],(1,1,num_h_b))
     r_4            = Y_4/np.sin(theta_r_4)
     
     # phase angles
-    phi_0_vec      = np.tile(phi_0[None,None,:,None,None],(num_cpt,num_mic,1,num_h_b,num_h_l))
-    phi_5          = np.tile(coordinates.phi_hub_r[:,:,:,0,0,None,None],(1,1,1,num_h_b,num_h_l)) + phi_0_vec
-    phi_6          = np.tile(phi_5[:,:,:,None,:,:],(1,1,1,num_sec,1,1))
+    phi_0_vec      = np.tile(phi_0[:,None,None,None],(num_cpt,num_mic,num_h_b,num_h_l))
+    phi_5          = np.tile(coordinates.phi_hub_r[:,:,0,0,None,None],(1,1,num_h_b,num_h_l)) + phi_0_vec
+    phi_6          = np.tile(phi_5[:,:,None,:,:],(1,1,num_sec,1,1))
     
     # total angle between propeller axis and r vector
     theta_r_prime_5 = np.arccos(np.cos(theta_r_5)*np.cos(alpha_5) + np.sin(theta_r_5)*np.sin(phi_5)*np.sin(alpha_5))
@@ -177,15 +173,14 @@ def harmonic_noise_line(harmonics_blade,harmonics_load,conditions,aeroacoustic_d
     Term1_6        = ((m_6*B*z_6*M_t_6*np.cos(theta_r_prime_6))/(1-M_6*np.cos(theta_r_6)))*F_xk_6
     Term2_6        = -(m_6*B-k_6)*F_phik_6
     Integrand_6    = (1/z_6)*(Term1_6 + Term2_6)*J_mbk_6
-    Summand_5      = np.trapz(Integrand_6, x=z_6[0,0,0,:,0,0], axis=3)*np.exp(1j*(m_5*B-k_5)*(phi_prime_5-(np.pi/2)))
-    Summation_4    = np.sum(Summand_5, axis=4)
+    Summand_5      = np.trapz(Integrand_6, x=z_6[0,0,:,0,0], axis=2)*np.exp(1j*(m_5*B-k_5)*(phi_prime_5-(np.pi/2)))
+    Summation_4    = np.sum(Summand_5, axis=3)
     P_Lm           = (1j*B*np.exp(1j*k_m_4*r_4)*Summation_4)/(4*np.pi*r_4*(1-M_4*np.cos(theta_r_4))) 
     
     # # frequency domain source function for thickness distribution
     # H              = airfoil_geometry.y_upper_surface - airfoil_geometry.y_lower_surface
     # H_tiled        = np.tile(H[None,None,None,None,None,:],(num_cpt,num_mic,num_rot,num_sec,num_h_b,1))
-    # psi_V          = np.sum(H*exp_term*dX_tiled,axis=5)
-    
+    # psi_V          = np.sum(H*exp_term*dX_tiled,axis=5) 
 
     # SOUND PRESSURE LEVELS
     P_Lm_abs       = np.abs(P_Lm)

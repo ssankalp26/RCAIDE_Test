@@ -11,8 +11,7 @@
 # RCAIDE Imports 
 from RCAIDE.Framework.Core import  Data   
 from RCAIDE.Library.Methods.Noise.Common.decibel_arithmetic                             import SPL_arithmetic  
-from RCAIDE.Library.Methods.Noise.Common.compute_noise_source_coordinates               import compute_rotor_point_source_coordinates 
-from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.harmonic_noise         import harmonic_noise
+from RCAIDE.Library.Methods.Noise.Common.compute_noise_source_coordinates               import compute_rotor_point_source_coordinates  
 from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.harmonic_noise_point   import harmonic_noise_point
 from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.harmonic_noise_line    import harmonic_noise_line
 from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.harmonic_noise_plane   import harmonic_noise_plane
@@ -63,7 +62,7 @@ def compute_rotor_noise(distributor,propulsor,rotor,conditions,settings):
     '''
  
     # unpack 
-    energy_conditions    = conditions.energy[distributor.tag][propulsor.tag][rotor.tag] 
+    energy_conditions    = conditions.energy[distributor.tag][propulsor.tag] 
     microphone_locations = conditions.noise.relative_microphone_locations
     angle_of_attack      = conditions.aerodynamics.angles.alpha 
     velocity_vector      = conditions.frames.inertial.velocity_vector 
@@ -92,7 +91,7 @@ def compute_rotor_noise(distributor,propulsor,rotor,conditions,settings):
     # ----------------------------------------------------------------------------------    
     # Broadband Noise
     # ----------------------------------------------------------------------------------
-    broadband_noise(freestream,angle_of_attack,coordinates,velocity_vector,rotor,energy_conditions,settings,Noise)
+    broadband_noise(harmonics_blade,harmonics_load,conditions,energy_conditions,coordinates,rotor,settings,Noise)  
 
     # ----------------------------------------------------------------------------------    
     # Atmospheric attenuation 
@@ -115,9 +114,9 @@ def compute_rotor_noise(distributor,propulsor,rotor,conditions,settings):
     Results.SPL_broadband                                 = SPL_arithmetic(Noise.SPL_prop_broadband_1_3_spectrum)
     
     # blade passing frequency 
-    Results.blade_passing_frequencies                     = Noise.f[:,0,0,:]              
+    Results.blade_passing_frequencies                     = Noise.f          
     Results.SPL_harmonic_bpf_spectrum                     = Noise.SPL_prop_harmonic_bpf_spectrum
-    Results.SPL_harmonic_bpf_spectrum_dBA                 = A_weighting_metric(Results.SPL_harmonic_bpf_spectrum,Noise.f[0,0,0,:]) 
+    Results.SPL_harmonic_bpf_spectrum_dBA                 = A_weighting_metric(Results.SPL_harmonic_bpf_spectrum,Noise.f) 
     
     # 1/3 octave band
     Results.one_third_frequency_spectrum                  = settings.center_frequencies 

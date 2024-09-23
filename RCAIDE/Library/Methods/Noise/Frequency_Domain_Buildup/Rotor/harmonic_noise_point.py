@@ -8,8 +8,7 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 # RCAIDE    
-from RCAIDE.Library.Methods.Noise.Common                         import convert_to_third_octave_band
-from RCAIDE.Library.Methods.Aerodynamics.Airfoil_Panel_Method.airfoil_analysis   import airfoil_analysis
+from RCAIDE.Library.Methods.Noise.Common                         import convert_to_third_octave_band 
 
 # Python Package imports  
 import numpy as np
@@ -20,7 +19,7 @@ import scipy as sp
 # Compute Harmonic Noise 
 # ----------------------------------------------------------------------------------------------------------------------
 ## @ingroup Methods-Noise-Frequency_Domain_Buildup-Rotor 
-def harmonic_noise_point(harmonics_blade,harmonics_load,conditions,aeroacoustic_data,coordinates,rotor,settings,Noise):
+def harmonic_noise_point(harmonics_blade,harmonics_load,conditions,propulsor_conditions,coordinates,rotor,settings,Noise):
     '''This computes the harmonic noise (i.e. thickness and loading noise) in the frequency domain 
     of a rotor at any angle of attack having the loads act at a single point. This is a level 1 fidelity
     approach. The thickness source is however computed using the helicoidal surface theory.
@@ -66,7 +65,8 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,conditions,aeroacoustic_
     Code Convention - The number in front of a variable name indicates the number of dimensions of the variable.
                       For instance, m_6 is the 6 dimensional harmonic modes variable, m_5 is 5 dimensional harmonic modes variable
     '''
-    
+
+    aeroacoustic_data    = propulsor_conditions[rotor.tag]     
     angle_of_attack      = conditions.aerodynamics.angles.alpha 
     velocity_vector      = conditions.frames.inertial.velocity_vector 
     freestream           = conditions.freestream   
@@ -96,8 +96,7 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,conditions,aeroacoustic_
     # freestream density and speed of sound
     a_4            = np.tile(freestream.speed_of_sound[:,:,None],(1,num_mic,num_h_b))
     a_5            = np.tile(freestream.speed_of_sound[:,:,None,None],(1,num_mic,num_h_b,num_h_l))
-    rho            = freestream.density
-    
+    rho            = freestream.density 
     B              = rotor.number_of_blades
     
     # blade harmonics
@@ -164,10 +163,8 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,conditions,aeroacoustic_
     
     # wavenumbers
     k_m_4          = m_4*B*omega_4/a_4
-    k_m_bar        = k_m_4/(1 - M_4*np.cos(theta_r_4))
-    
-    Noise.f        = B*omega_4*m_4/(2*np.pi)                                                 
-
+    k_m_bar        = k_m_4/(1 - M_4*np.cos(theta_r_4)) 
+    Noise.f        = B*omega_4*m_4/(2*np.pi)     
     S_r            = np.tile(np.linalg.norm(coordinates.X_hub_r[:,:,0,:,:], axis = 3)[:,:,:,None],(1,1,1,num_h_b))
     
     # Frequency domain loading modes
