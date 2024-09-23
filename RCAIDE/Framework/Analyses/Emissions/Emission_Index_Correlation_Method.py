@@ -7,7 +7,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------  
-from RCAIDE.Library.Methods.Emissions import  emissions_index_correlation 
+from RCAIDE.Library.Methods.Emissions.Emission_Index_Empirical_Method import  emissions_index_correlation 
 from .Emissions            import Emissions 
   
 
