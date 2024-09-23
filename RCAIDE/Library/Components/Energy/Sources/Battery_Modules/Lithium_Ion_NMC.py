@@ -10,7 +10,7 @@
 # RCAIDE imports
 import RCAIDE
 from RCAIDE.Framework.Core                                            import Units , Data
-from .Lithium_Ion_Generic                                             import Lithium_Ion_Generic   
+from .Generic_Battery_Module                                          import Generic_Battery_Module   
 from RCAIDE.Library.Methods.Energy.Sources.Batteries.Lithium_Ion_NMC  import compute_nmc_cell_performance, update_nmc_cell_age
 
 # package imports 
@@ -22,7 +22,7 @@ from scipy.interpolate  import RegularGridInterpolator
 #  Lithium_Ion_NMC
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Library-Compoments-Energy-Batteries 
-class Lithium_Ion_NMC(Lithium_Ion_Generic):
+class Lithium_Ion_NMC(Generic_Battery_Module):
     """ 18650 lithium-nickel-manganese-cobalt-oxide battery cellc.
     """       
     
@@ -67,6 +67,7 @@ class Lithium_Ion_NMC(Lithium_Ion_Generic):
         self.maximum_power                               = 0.0
         self.maximum_voltage                             = 0.0
         
+        
         self.electrical_configuration                    = Data()
         self.electrical_configuration.series             = 1
         self.electrical_configuration.parallel           = 1   
@@ -103,7 +104,9 @@ class Lithium_Ion_NMC(Lithium_Ion_Generic):
                                                             
         self.cell.specific_heat_capacity      = 1108                                                                             # [J/kgK]    
         self.cell.radial_thermal_conductivity = 0.4                                                                              # [J/kgK]  
-        self.cell.axial_thermal_conductivity  = 32.2                                                                             # [J/kgK] # estimated  
+        self.cell.axial_thermal_conductivity  = 32.2                                                                             # [J/kgK] # estimated
+        
+        self.cell.charging_current            = 1.0     # [Amps]
                                               
         battery_raw_data                      = load_battery_results()                                                   
         self.cell.discharge_performance_map   = create_discharge_performance_map(battery_raw_data)  

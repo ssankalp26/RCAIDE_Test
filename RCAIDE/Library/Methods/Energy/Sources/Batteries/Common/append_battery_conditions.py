@@ -110,18 +110,18 @@ def append_battery_conditions(battery,segment,bus):
         segment.state.unknowns['recharge']          =  0* ones_row(1)  
         segment.state.residuals.network['recharge'] =  0* ones_row(1) 
             
-        bus_results[battery.tag].module.charging_current = segment.current * ones_row(1)  
+        bus_results[battery.tag].charging_current = segment.current * ones_row(1)  
     elif type(segment) == RCAIDE.Framework.Mission.Segments.Ground.Battery_Discharge:
         segment.state.conditions.energy.recharging  = False 
         segment.state.unknowns['discharge']          =  0* ones_row(1)  
         segment.state.residuals.network['discharge'] =  0* ones_row(1) 
-        bus_results[battery.tag].module.charging_current = -segment.current * ones_row(1)
+        bus_results[battery.tag].charging_current = -segment.current * ones_row(1)
     else:
         segment.state.conditions.energy.recharging  = False 
         
     # first segment 
     if 'initial_battery_state_of_charge' in segment:  
-        initial_battery_energy                                   = segment.initial_battery_state_of_charge*battery.module.maximum_energy   
+        initial_battery_energy                                   = segment.initial_battery_state_of_charge*battery.maximum_energy   
         bus_results[battery.tag].maximum_initial_energy          = initial_battery_energy
         bus_results[battery.tag].energy                          = initial_battery_energy*segment.initial_battery_state_of_charge* ones_row(1) 
         bus_results[battery.tag].cell.state_of_charge            = segment.initial_battery_state_of_charge* ones_row(1) 
@@ -177,9 +177,9 @@ def append_battery_segment_conditions(battery, bus, conditions, segment):
             battery_conditions.battery_discharge_flag           = False 
         else:                   
             battery_conditions.battery_discharge_flag           = True             
-        battery_conditions.module.maximum_initial_energy          = battery_initials.module.maximum_initial_energy 
-        battery_conditions.module.energy[:,0]                     = battery_initials.module.energy[-1,0]
-        battery_conditions.module.temperature[:,0]                = battery_initials.module.temperature[-1,0]
+        battery_conditions.maximum_initial_energy          = battery_initials.maximum_initial_energy 
+        battery_conditions.energy[:,0]                     = battery_initials.energy[-1,0]
+        battery_conditions.temperature[:,0]                = battery_initials.temperature[-1,0]
         battery_conditions.cell.temperature[:,0]                = battery_initials.cell.temperature[-1,0]
         battery_conditions.cell.cycle_in_day                    = battery_initials.cell.cycle_in_day      
         battery_conditions.cell.charge_throughput[:,0]          = battery_initials.cell.charge_throughput[-1,0]
@@ -188,7 +188,7 @@ def append_battery_segment_conditions(battery, bus, conditions, segment):
         battery_conditions.cell.state_of_charge[:,0]            = battery_initials.cell.state_of_charge[-1,0]
 
     if 'battery_cell_temperature' in segment:       
-        battery_conditions.module.temperature[:,0]       = segment.battery_cell_temperature 
+        battery_conditions.temperature[:,0]       = segment.battery_cell_temperature 
         battery_conditions.cell.temperature[:,0]       = segment.battery_cell_temperature     
 
     return    

@@ -179,7 +179,7 @@ class Electric(Network):
             else:
                 for bus in  busses:                
                     for battery in  bus.battery_modules:
-                        if battery.module.power_split_ratio is  None:
+                        if battery.power_split_ratio is  None:
                             raise Exception('Power split ratio for battery module not defined')
                         battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t, recharging_flag)
                     for coolant_line in  coolant_lines:
