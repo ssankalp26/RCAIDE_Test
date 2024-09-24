@@ -28,16 +28,11 @@ def train_CRN_EI_surrogates(emissions):
     for network in vehicle.networks:  
         for fuel_line in network.fuel_line:
             for propulsor in  fuel_line.propulsors:
-                if isinstance(propulsor,RCAIDE.Library.Components.Propulsors.Turbofan):
-                    combustor = propulsor.combustor
-    
-                elif isinstance(propulsor,RCAIDE.Library.Components.Propulsors.Turbojet):
-                    combustor = propulsor.combustor                     
 
-                elif isinstance(propulsor,RCAIDE.Library.Components.Propulsors.Turboshaft):
-                    combustor = propulsor.combustor                    
-                                 
-                elif isinstance(propulsor,RCAIDE.Library.Components.Propulsors.ICE_Propeller):
+                if  isinstance(propulsor,RCAIDE.Library.Components.Propulsors.Turbofan) or \
+                    isinstance(propulsor,RCAIDE.Library.Components.Propulsors.Turbojet) or \
+                    isinstance(propulsor,RCAIDE.Library.Components.Propulsors.Turboshaft) or \
+                    isinstance(propulsor,RCAIDE.Library.Components.Propulsors.ICE_Propeller):            
                     combustor = propulsor.combustor              
                 else:
                     combustor =  False 

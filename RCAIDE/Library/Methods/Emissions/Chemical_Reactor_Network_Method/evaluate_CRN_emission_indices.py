@@ -6,7 +6,9 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 import  RCAIDE
-from RCAIDE.Framework.Core import Data 
+from RCAIDE.Framework.Core import Data
+import RCAIDE.Library.Methods.Emissions.Chemical_Reactor_Network_Method.evaluate_cantera as evaluate_cantera 
+
  
 # package imports
 import numpy as np
@@ -98,21 +100,24 @@ def evaluate_CRN_emission_indices_surrogate(state,settings,vehicle):
                                 if (type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turbofan) or \
                                     type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turboshaft or \
                                     type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turbojet:    
-                         
-                                    EI_NOx  = fuel.emission_indices.NOx
-                                    EI_CO2  = fuel.emission_indices.CO2 
-                                    EI_H2O  = fuel.emission_indices.H2O
-                                    EI_SO2  = fuel.emission_indices.SO2
-                                    EI_Soot = fuel.emission_indices.Soot  
-                                    
-                                    mdot = propulsor_results.fuel_flow_rate
-                                      
+                                    combustor =  propulsor.combustor
+
                                     # CALL CANTERA SURROGATE
-                                    NOx_total         +=  
-                                    CO2_total         +=  
-                                    SO2_total         +=  
-                                    H2O_total         +=  
-                                    Soot_total        +=  
+                                    EI_results = evaluate_cantera(combustor,T,P,mdot,FAR)
+                                    
+                                    EI_NOx  = EI_results.NOx
+                                    EI_CO2  = EI_results.CO2 
+                                    EI_H2O  = EI_results.H2O
+                                    EI_SO2  = EI_results.SO2
+                                    EI_Soot = EI_results.Soot  
+                                    
+                                    mdot = propulsor_results.fuel_flow_rate 
+                                    
+                                    NOx_total  += np.dot(I,mdot*EI_NOx)
+                                    CO2_total  += np.dot(I,mdot*EI_CO2)
+                                    SO2_total  += np.dot(I,mdot*EI_SO2)
+                                    H2O_total  += np.dot(I,mdot*EI_H2O) 
+                                    Soot_total += np.dot(I,mdot*EI_Soot)
                                      
          
     flight_range    =  state.conditions.frames.inertial.aircraft_range 

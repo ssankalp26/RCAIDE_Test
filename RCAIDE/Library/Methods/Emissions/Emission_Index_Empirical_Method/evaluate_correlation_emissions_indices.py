@@ -63,11 +63,11 @@ def evaluate_correlation_emissions_indices(state,settings,vehicle):
                                     mdot = propulsor_results.fuel_flow_rate
                                      
                                     # Integrate them over the entire segment
-                                    NOx_total         += np.dot(I,mdot*EI_NOx)
-                                    CO2_total         += np.dot(I,mdot*EI_CO2)
-                                    SO2_total         += np.dot(I,mdot*EI_SO2)
-                                    H2O_total         += np.dot(I,mdot*EI_H2O) 
-                                    Soot_total        += np.dot(I,mdot*EI_Soot)
+                                    NOx_total  += np.dot(I,mdot*EI_NOx)
+                                    CO2_total  += np.dot(I,mdot*EI_CO2)
+                                    SO2_total  += np.dot(I,mdot*EI_SO2)
+                                    H2O_total  += np.dot(I,mdot*EI_H2O) 
+                                    Soot_total += np.dot(I,mdot*EI_Soot)
                                      
          
     flight_range    =  state.conditions.frames.inertial.aircraft_range 
