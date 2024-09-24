@@ -5,83 +5,79 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE imports
-from RCAIDE.Framework.Core import  Data  
-import cantera              as ct 
-import pandas               as pd
+from   RCAIDE.Framework.Core import Data  
+import cantera               as ct 
+import pandas                as pd
+import numpy                 as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  evaluate_cantera
 # ----------------------------------------------------------------------------------------------------------------------  
 def evaluate_cantera(combustor,T,P,mdot,FAR):  
 
+    # ------------------------------------------------------------------------------              
+    # ------------------------------ Combustor Inputs ------------------------------              
+    # ------------------------------------------------------------------------------              
+    
     high_fidelity_kin_mech  = False                                                 # [-]       True (simulation time around 300 s): Computes EI_CO2, EI_CO, EI_H2O, EI_NO2, EI_NO, EI_CSOOT; False (simulation time around 60 s): Computes EI_CO2, EI_CO, EI_H2O
-    T_stag_0                = 800                                                   # [K]       Stagnation Temperature entering all combustors
-    P_stag_0                = 2000000                                               # [Pa]      Stagnation Pressure entering all combustors
-    FAR                     = 0.02                                                  # [-]       Fuel-to-Air ratio
-    FAR_TO                  = 0.0275                                                # [-]       Fuel-to-Air ratio during TO 
-    FAR_st                  = 0.068                                                 # [-]       Stoichiometric Fuel-to-Air ratio
-    m_dot_air_tot           = 40                                                    # [kg/s]    Air mass flow going through all combustors
-    m_dot_air_TO_tot        = 44                                                    # [kg/s]    Air mass flow going through all combustors during TO 
+    T_stag_0                = T                                                     # [K]       Stagnation Temperature entering all combustors
+    P_stag_0                = P                                                     # [Pa]      Stagnation Pressure entering all combustors
+    FAR                     = FAR                                                   # [-]       Fuel-to-Air ratio
+    m_dot_air_tot           = mdot                                                  # [kg/s]    Air mass flow going through all combustors
+    
+    f_air_PZ                = combustor.f_air_PZ                                    # [-]       Fraction of total air present in the combustor that enters the Primary Zone         
+    FAR_st                  = combustor.FAR_st                                      # [-]       Stoichiometric Fuel to Air ratio 
+    N_comb                  = combustor.N_comb                                      # [-]       Number of can-annular combustors
+    N_PZ                    = combustor.N_PZ                                        # [-]       Number of PSR (EVEN, must match the number of PSR below)
+    A_PZ                    = combustor.A_PZ                                        # [m**2]    Primary Zone cross-sectional area     
+    L_PZ                    = combustor.L_PZ                                        # [m]       Primary Zone length  
+    N_SZ                    = combustor.N_SZ                                        # [-]       Number of dilution air inlets        
+    A_SZ                    = combustor.A_SZ                                        # [m**2]    Secondary Zone cross-sectional area
+    L_SZ                    = combustor.L_SZ                                        # [m]       Secondary Zone length  
+    phi_SZ                  = combustor.phi_SZ                                      # [-]       Equivalence Ratio for PFR    phi_PZ_des              = 0.6                                                   # [-]       Primary Zone Design Equivalence Ratio
+    S_PZ                    = combustor.S_PZ                                        # [-]       Mixing parameter, used to define the Equivalence Ratio standard deviation  
+    F_SC                    = combustor.F_SC                                        # [-]       Fuel scaler
+    
     m_dot_fuel_tot          = m_dot_air_tot*FAR                                     # [kg/s]    Fuel mass flow going through all combustors
-    m_dot_fuel_TO_tot       = m_dot_air_TO_tot*FAR_TO                               # [kg/s]    Fuel mass flow going through all combustors during TO 
-    N_comb                  = 10                                                    # [-]       Number of can-annular combustors
-    m_dot_air_id            = m_dot_air_tot/N_comb                                  # [kg/s]    Ideal Air mass flow inside each combustor, scaled inside each PSR to vary the Equivalence Ratio
-    m_dot_air_TO            = m_dot_air_TO_tot/N_comb                               # [kg/s]    Air mass flow inside each combustor during TO
-    m_dot_fuel              = m_dot_fuel_tot/N_comb                                 # [kg/s]    Fuel mass flow inside each combustor
-    m_dot_fuel_TO           = m_dot_fuel_TO_tot/N_comb                              # [kg/s]    Fuel mass flow inside each combustor during TO    
-
-    N_PZ                    = 8                                                     # [-]       Number of PSR (EVEN, must match the number of PSR below)
-    V_PZ                    = 0.0023                                                # [m**3]    Volume of the Primary Zone in a SINGLE combustor, must be split into the different PSRs       
-    phi_PZ_des              = 0.55                                                   # [-]       Primary Zone Design Equivalence Ratio
-    S_PZ                    = 0.4                                                   # [-]       Mixing parameter, used to define the Equivalence Ratio standard deviation  
-    F_SC                    = 0.8                                                   # [-]       Fuel scaler, used to define the fraction of total air present in the combustor that enters the Primary Zone
-
-    A_SZ                    = 0.15                                                  # [m**2]    Secondary Zone cross-sectional area
-    L_SZ                    = 0.075                                                 # [m]       Secondary Zone length  
-    phi_SZ_des_1            = 0.7                                                   # [-]       Design Equivalence Ratio for PFR #1
-    phi_SZ_des_2            = 0.2                                                   # [-]       Design Equivalence Ratio for PFR #2
-    phi_SZ_des_3            = 0.2                                                   # [-]       Design Equivalence Ratio for PFR #3
-
+    m_dot_air               = m_dot_air_tot/N_comb                                  # [kg/s]    Air mass flow inside each combustor, scaled inside each PSR to vary the Equivalence Ratio
+    m_dot_fuel              = m_dot_fuel_tot/N_comb                                 # [kg/s]    Fuel mass flow inside each combustor                                                                                                                                                                    
+    phi_sign                = (m_dot_fuel_tot*F_SC)/(m_dot_air_tot*f_air_PZ*FAR_st) # [-]       Primary Zone mean Equivalence Ratio
+    sigma_phi               = phi_sign*S_PZ                                         # [-]       Primary Zone Equivalence Ratio standard deviation                                                                                                                                                      
+    
     if high_fidelity_kin_mech:                                                               
         dict_fuel           = {'NC10H22':0.16449, 'NC12H26':0.34308,'NC16H34':0.10335, 'IC8H18':0.08630,'NC7H14':0.07945, 'C6H5C2H5': 0.07348,'C6H5C4H9': 0.05812, 'C10H7CH3': 0.10972} # [-]       Fuel species and corresponding mole fractions for full fuel model
     else:                                                                                       
         dict_fuel           = {'N-C12H26':0.6, 'A1CH3':0.2, 'A1':0.2}               # [-]       Fuel species and corresponding mole fractions for surrogate fuel model 
-
+    
     dict_oxy                = {'O2':0.2095, 'N2':0.7809, 'AR':0.0096}               # [-]       Air species and corresponding mole fractions     
-
+    
     if high_fidelity_kin_mech:                                                                           
         list_sp             = ['CO', 'CO2', 'H2O', 'NO', 'NO2', 'CSOLID']           # [-]       Fuel species for Emission Index analysis
     else:                                                                                       
         list_sp             = ['CO2', 'CO', 'H2O']                                  # [-]       Fuel species for Emission Index analysis
-
-    col_names = ['Tout(K)', 'T_stag_out','P_stag_out', 'h_stag_out'] + ['X_' +str(sp) for sp in list_sp] + ['Y_' +str(sp) for sp in list_sp] + ['EI_' +str(sp) for sp in list_sp] # [-]       Define output variables
     
+    col_names = ['EI_' +str(sp) for sp in list_sp] # [-]       Define output variables 
+    df                      = pd.DataFrame(columns=col_names)                       # [-]       Assign output variables space to df
     
-    #df                      = pd.DataFrame(columns=col_names)                       # [-]       Assign output variables space to df
-
-    #for n in range(1):                                                              
-        #gas, EI, T_stag_out, P_stag_out, h_stag_out = combustor(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_stag_0, FAR, FAR_TO, FAR_st, m_dot_fuel, m_dot_fuel_TO, m_dot_air_id, m_dot_air_TO, N_PZ, V_PZ, phi_PZ_des, S_PZ, phi_SZ_des_1, phi_SZ_des_2, phi_SZ_des_3, F_SC, A_SZ, L_SZ) # [-]       Run combustor function
-
-        #sp_idx              = [gas.species_index(sp) for sp in list_sp]             # [-]       Retrieve the species index
-        #data_n              = [gas.T, T_stag_out, P_stag_out, h_stag_out] + list(gas.X[sp_idx]) + list(gas.Y[sp_idx]) + list(EI[sp_idx]) # [-]       Assign output variables  
-        #df.loc[n]           = data_n                                                # [-]       Assign output variables to df 
-
-    #print(df['EI_CO2'])                                                             # [-]       Print the value of EI_CO2
-    #print(df['EI_CO'])                                                              # [-]       Print the value of EI_CO
-    #print(df['EI_H2O'])                                                             # [-]       Print the value of EI_H2O
-
-    #if high_fidelity_kin_mech:                                                                           
-        #print(df['EI_NO'])                                                          # [-]       Print the value of EI_NO
-        #print(df['EI_NO2'])                                                         # [-]       Print the value of EI_NO2
-        #print(df['EI_CSOLID'])                                                      # [-]       Print the value of EI_CSOLID
-
-    #tf                      = time.time()                                           # [s]       Define the final simulation time
-    #elapsed_time            = round((tf-ti),2)                                      # [s]       Compute the total simulation time
-
-    #print('Simulation Time: ' + str(elapsed_time) + ' seconds per timestep')        # [-]       Print the value of total simulation time
-
-    #return
+    gas, EI = combustor(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_stag_0, FAR, m_dot_fuel, m_dot_air, N_PZ, A_PZ, L_PZ, phi_sign, phi_SZ, A_SZ, L_SZ, f_air_PZ, N_SZ, sigma_phi) # [-]       Run combustor function
     
+    sp_idx                  = [gas.species_index(sp) for sp in list_sp]             # [-]       Retrieve the species index
+    data_n                  = list(EI[sp_idx])                                      # [-]       Assign output variables  
+    df.loc[0]               = data_n                                                # [-]       Assign output variables to df 
+    
+    results = np.zeros(5)
+    results.EI_CO2 = df.loc[0, 'EI_CO2']
+    results.EI_CO = df.loc[0, 'EI_CO']
+    results.EI_H2O = df.loc[0, 'EI_H2O']
+    
+    if high_fidelity_kin_mech:  
+        results.EI_NO = df.loc[0, 'EI_NO']
+        results.EI_NO2 = df.loc[0, 'EI_NO2']
+    
+    return results
+
+def combustor(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_stag_0, FAR, FAR_TO,FAR_st, m_dot_fuel, m_dot_fuel_TO, m_dot_air_id, m_dot_air_TO, N_PZ,V_PZ, phi_PZ_des, S_PZ, phi_SZ_des_1, phi_SZ_des_2, phi_SZ_des_3,F_SC, A_SZ, L_SZ):
+
     # ------------------------------------------------------------------------------
     # ----------------------------- Initial Parameters -----------------------------
     # ------------------------------------------------------------------------------    
@@ -463,17 +459,6 @@ def evaluate_cantera(combustor,T,P,mdot,FAR):
     # ------------------------------------------------------------------------------    
 
     m_dot_input_combustor   = m_dot_fuel + m_dot_air_id                             # [kg/s]    Total mass flow rate entering a single combustor (air + fuel)
-    Emission_Index          = Fuel_1.Y * (m_dot_input_combustor)/m_dot_fuel         # [-]       Computation of the Emission Index
-    a_out                   = Fuel_1.sound_speed                                    # [m/s]     Speed of sound at PFR outlet
-    rho_out                 = Fuel_1.density                                        # [kg/m**3] Density of the Fuel_1 
-    gamma                   = Fuel_1.cp_mass / Fuel_1.cv_mass                       # [-]       Heat capacity ratio
-    h                       = Fuel_1.h                                              # [J/kg]    Enthalpy
-    vel_out                 = (m_dot_input_combustor) / (rho_out * A_SZ)            # [m/s]     Outlet velocity 
-    M_out                   = vel_out / a_out                                       # [-]       Outlet Mach number   
-    T_stag_out              = Fuel_1.T * (1 + 0.5 * (gamma - 1) * (M_out)**2)       # [K]       Stagnation temperature      
-    P_stag_out              = Fuel_1.P * (1 + 0.5 * (gamma - 1) * (M_out)**2)**(gamma / (gamma - 1)) # [Pa]      Stagnation pressure  
-    h_stag_out              = T_stag_out  * Fuel_1.cp_mass                          # [J/kg]    Stagnation enthalpy                    
+    Emission_Index          = Fuel_1.Y * (m_dot_input_combustor)/m_dot_fuel         # [-]       Computation of the Emission Index   
 
-  
-
-    return 
+    return (Fuel_1, Emission_Index)  

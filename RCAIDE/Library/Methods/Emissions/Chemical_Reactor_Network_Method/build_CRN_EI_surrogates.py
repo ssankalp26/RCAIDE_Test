@@ -10,30 +10,32 @@ from RCAIDE.Framework.Core import  Data
 # package imports 
 from scipy.interpolate  import RegularGridInterpolator
 from scipy import interpolate 
+import cantera               as ct 
+import pandas                as pd
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  build_CRN_EI_surrogates
 # ---------------------------------------------------------------------------------------------------------------------- 
 def build_CRN_EI_surrogates(emissions):
      
-    surrogates =  emissions.surrogates
-    training   =  emissions.training  
-    
-    # unpack data
-    surrogates     = Data()
-    mach_data      = training.Mach
-    geometry       = emissions.geometry
-    AoA_data       = emissions.training.angle_of_attack           
-    Beta_data      = emissions.training.sideslip_angle  
-    u_data         = emissions.training.u
-    v_data         = emissions.training.v
-    w_data         = emissions.training.w
-    p_data         = emissions.training.roll_rate 
-
+    surrogates                            = emissions.surrogates
+    training                              = emissions.training
+    geometry                              = emissions.geometry  
+                                                                
+    surrogates                            = Data()
+    pressure_data                         = training.pressure         
+    temperature_data                      = training.temperature      
+    air_mass_flowrate_data                = training.air_mass_flowrate
+    fuel_to_air_ratio_data                = training.fuel_to_air_ratio
+                                          
+    surrogates.EI_CO2                     = Data()
+    surrogates.EI_CO                      = Data()
+    surrogates.EI_H2O                     = Data()
+    surrogates.EI_NO                      = Data()
+    surrogates.EI_NO2                     = Data()
+    surrogates.EI_CO2                     = RegularGridInterpolator((pressure_data ,temperature_data, air_mass_flowrate_data, fuel_to_air_ratio_data),training.EI_CO2 ,method = 'linear',   bounds_error=False, fill_value=None) 
+    surrogates.EI_CO                      = RegularGridInterpolator((pressure_data ,temperature_data, air_mass_flowrate_data, fuel_to_air_ratio_data),training.EI_CO  ,method = 'linear',   bounds_error=False, fill_value=None) 
+    surrogates.EI_H2O                     = RegularGridInterpolator((pressure_data ,temperature_data, air_mass_flowrate_data, fuel_to_air_ratio_data),training.EI_H2O ,method = 'linear',   bounds_error=False, fill_value=None) 
+    surrogates.EI_NO                      = RegularGridInterpolator((pressure_data ,temperature_data, air_mass_flowrate_data, fuel_to_air_ratio_data),training.EI_NO  ,method = 'linear',   bounds_error=False, fill_value=None) 
+    surrogates.EI_NO2                     = RegularGridInterpolator((pressure_data ,temperature_data, air_mass_flowrate_data, fuel_to_air_ratio_data),training.EI_NO2 ,method = 'linear',   bounds_error=False, fill_value=None) 
    
-    surrogates.Clift_wing_alpha = Data()
-    surrogates.Cdrag_wing_alpha = Data()  
-    surrogates.Clift_wing_alpha[wing.tag] = RegularGridInterpolator((AoA_data ,mach_data),training.Clift_wing_alpha[wing.tag]        ,method = 'linear',   bounds_error=False, fill_value=None) 
-    surrogates.Cdrag_wing_alpha[wing.tag] = RegularGridInterpolator((AoA_data ,mach_data),training.Cdrag_wing_alpha[wing.tag]        ,method = 'linear',   bounds_error=False, fill_value=None) 
-        
-    

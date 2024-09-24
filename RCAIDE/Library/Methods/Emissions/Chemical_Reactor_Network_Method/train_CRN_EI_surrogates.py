@@ -11,7 +11,8 @@ import RCAIDE.Library.Methods.Emissions.Chemical_Reactor_Network_Method.evaluate
 
 # package imports    
 import numpy    as  np
-
+import cantera               as ct 
+import pandas                as pd
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Train Cantera Model 
@@ -61,8 +62,16 @@ def train_CRN_EI_surrogates(emissions):
                     # Call cantera 
                     results = evaluate_cantera(combustor,P[p_i],T[t_i],mdot[mdot_i],FAR[far_i])
                     
-                    EI_CO[p_i, t_i, mdot_i,far_i] = results.EI_CO 
+                    EI_CO2[p_i, t_i, mdot_i,far_i] = results.EI_CO2
+                    EI_CO [p_i, t_i, mdot_i,far_i] = results.EI_CO 
+                    EI_H2O[p_i, t_i, mdot_i,far_i] = results.EI_H2O
+                    EI_NO [p_i, t_i, mdot_i,far_i] = results.EI_NO 
+                    EI_NO2[p_i, t_i, mdot_i,far_i] = results.EI_NO2
     
-    training.EI_CO =  EI_CO
+    training.EI_CO2 =  EI_CO2
+    training.EI_CO =   EI_CO
+    training.EI_H2O =  EI_H2O
+    training.EI_NO =   EI_NO
+    training.EI_NO2 =  EI_NO2
     
     return 
