@@ -1,5 +1,4 @@
-## @ingroup  Library-Methods-Emissions-Chemical_Reactor_Network 
-# RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network/build_CRN_EI_surrogates.py
+# RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network_Method/build_CRN_EI_surrogates.py
 #  
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
@@ -9,15 +8,12 @@
 from RCAIDE.Framework.Core import  Data 
 
 # package imports 
-from scipy.interpolate       import RegularGridInterpolator
-from scipy import interpolate
-import cantera              as ct 
-import pandas               as pd
+from scipy.interpolate  import RegularGridInterpolator
+from scipy import interpolate 
 
 # ----------------------------------------------------------------------------------------------------------------------
-#  Vortex_Lattice
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Methods-Stability   
+#  build_CRN_EI_surrogates
+# ---------------------------------------------------------------------------------------------------------------------- 
 def build_CRN_EI_surrogates(emissions):
      
     surrogates =  emissions.surrogates

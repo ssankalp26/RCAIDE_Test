@@ -89,7 +89,7 @@ class Emission_Index_CRN_Method(Emissions):
         self.geometry
         """          
         settings = self.settings
-        geometry = self.vehicle
+        geometry = self.geometry
         results  = self.process.compute(state,settings,geometry)
 
         return results

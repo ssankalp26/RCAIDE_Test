@@ -1,4 +1,4 @@
-# RCAIDE/Library/Methods/Emissions/evaluate_CRN_emission_indices.py
+# RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network_Method/evaluate_CRN_emission_indices.py
 #  
 # Created:  Jul 2024, M. Clarke
 
