@@ -108,7 +108,7 @@ def harmonic_noise_plane(conditions,harmonics_blade,harmonics_load,freestream,an
                 fL[cpt,sec,az,:] = airfoil_properties.fL[:,0,0]
                 fD[cpt,sec,az,:] = airfoil_properties.fD[:,0,0]
                 CL[cpt,sec,az]   = airfoil_properties.cl_invisc
-                CD[cpt,sec,az]   = airfoil_properties.cd_visc/2
+                CD[cpt,sec,az]   = airfoil_properties.cd_visc
     
     
     # DFT to get loading modes
