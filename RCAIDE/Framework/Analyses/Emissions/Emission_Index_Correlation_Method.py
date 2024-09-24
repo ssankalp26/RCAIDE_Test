@@ -7,7 +7,8 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------  
-from RCAIDE.Library.Methods.Emissions.Emission_Index_Empirical_Method import  emissions_index_correlation 
+from RCAIDE.Framework.Analyses    import Process 
+from RCAIDE.Library.Methods.Emissions.Emission_Index_Empirical_Method import *  
 from .Emissions            import Emissions 
   
 
@@ -27,26 +28,41 @@ class Emission_Index_Correlation_Method(Emissions):
     
             Source:
             None 
-            """             
+            """ 
+
+        # build the evaluation process
+        compute                         = Process()  
+        compute.emissions               = None  
+        self.process.compute            = compute        
+                
         return
             
+    def initialize(self):   
+        compute.emissions  = evaluate_correlation_emissions_indices
+        return 
 
-    def evaluate_emissions(self,segment):
+
+    def evaluate(self,state):
         """The default evaluate function.
 
         Assumptions:
         None
 
         Source:
-        None 
+        N/A
 
         Inputs:
-        self   - emissions analyses 
-        state  - flight conditions 
+        None
 
         Outputs:
-        results  
-        """      
-        # unpack  
-        emissions_index_correlation(self, segment)  
-        return
+        results   <RCAIDE data class>
+
+        Properties Used:
+        self.settings
+        self.geometry
+        """          
+        settings = self.settings
+        geometry = self.geometry 
+        results  = self.process.compute(state,settings,geometry)
+
+        return results             

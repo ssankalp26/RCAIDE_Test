@@ -1,10 +1,37 @@
+# RCAIDE/Library/Methods/Emissions/evaluate_correlation_emissions_indices.py
+#  
+# Created:  Jul 2024, M. Clarke
 
-
-def evaluate_CRN_EI_surrogate(emissions_analysis,segment): 
+# ----------------------------------------------------------------------------------------------------------------------
+#  IMPORT
+# ----------------------------------------------------------------------------------------------------------------------
+import  RCAIDE
+from RCAIDE.Framework.Core import Data 
  
-    # unpack
-    state           = segment.state
-    vehicle         = emissions_analysis.geometry 
+# package imports
+import numpy as np
+
+# ----------------------------------------------------------------------------------------------------------------------
+#  evaluate_correlation_emissions_indices
+# ---------------------------------------------------------------------------------------------------------------------- 
+def evaluate_correlation_emissions_indices(state,settings,vehicle):
+    """ Computes the CO2 equivalent emissions from aircraft propulsors with combustor compoments
+    using emissions indices correlated to various fuels
+    
+    Assumtion:
+    None
+    
+    Source
+    None
+    
+    Args:
+    emissions_analysis 
+    segment
+    
+    Returns:
+    None  
+    """    
+    # unpack 
     I               = state.numerics.time.integrate
     
     NOx_total  = 0 * state.ones_row(1)  
@@ -36,11 +63,11 @@ def evaluate_CRN_EI_surrogate(emissions_analysis,segment):
                                     mdot = propulsor_results.fuel_flow_rate
                                      
                                     # Integrate them over the entire segment
-                                    NOx_total         +=  
-                                    CO2_total         +=  
-                                    SO2_total         +=  
-                                    H2O_total         +=  
-                                    Soot_total        +=  
+                                    NOx_total         += np.dot(I,mdot*EI_NOx)
+                                    CO2_total         += np.dot(I,mdot*EI_CO2)
+                                    SO2_total         += np.dot(I,mdot*EI_SO2)
+                                    H2O_total         += np.dot(I,mdot*EI_H2O) 
+                                    Soot_total        += np.dot(I,mdot*EI_Soot)
                                      
          
     flight_range    =  state.conditions.frames.inertial.aircraft_range 
@@ -64,4 +91,3 @@ def evaluate_CRN_EI_surrogate(emissions_analysis,segment):
     state.conditions.emissions =  emissions
     return   
 
-     

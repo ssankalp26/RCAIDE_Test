@@ -65,6 +65,8 @@ def train_CRN_EI_surrogates(emissions):
         for t_i in range(len_T):
             for mdot_i in  range(len_mdot):
                 for far_i in  range(len_far):
+                    
+                    # Call cantera 
                                                      
                     # ------------------------------------------------------------------------------              
                     # ------------------------------ Combustor Inputs ------------------------------              

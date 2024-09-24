@@ -8,4 +8,4 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-from .emissions_index_correlation  import emissions_index_correlation
+from .evaluate_correlation_emissions_indices  import evaluate_correlation_emissions_indices

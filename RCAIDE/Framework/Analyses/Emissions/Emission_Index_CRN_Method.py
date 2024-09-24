@@ -9,7 +9,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 from RCAIDE.Framework.Core import  Data 
 from RCAIDE.Framework.Analyses    import Process 
-from RCAIDE.Library.Methods.Emissions.Chemical_Reactor_Network_Method import evaluate_CRN_EI_surrogate ,  build_CRN_EI_surrogates, train_CRN_EI_surrogates
+from RCAIDE.Library.Methods.Emissions.Chemical_Reactor_Network_Method import * 
 from .Emissions            import Emissions 
   
 import numpy as  np
@@ -40,25 +40,56 @@ class Emission_Index_CRN_Method(Emissions):
         self.training.fuel_to_air_ratio = np.linspace(0.01, 0.1, 10)
         
         # surrogoate models                 
-        self.surrogates                  = Data()  
+        self.surrogates                  = Data() 
+
+        # build the evaluation process
+        compute                         = Process()  
+        compute.emissions               = None  
+        self.process.compute            = compute        
         
         return
+    
+    def initialize(self):  
+        use_surrogate   = self.settings.use_surrogate  
 
-    def initialize(self):     
+        # If we are using the surrogate
+        if use_surrogate == True: 
+            # sample training data
+            train_CRN_EI_surrogates(self)
 
-        # Train surrogate  
-        train_CRN_EI_surrogates(self)
+            # build surrogate
+            build_CRN_EI_surrogates(self)  
 
-        # build surrogate
-        build_CRN_EI_surrogates(self)  
-     
+        # build the evaluation process
+        compute   =  self.process.compute                  
+        if use_surrogate == True: 
+            compute.emissions  = evaluate_CRN_emission_indices_surrogate
+        else:
+            compute.emissions  = evaluate_CRN_emission_indices_no_surrogate
         return 
-        
-            
-    def evaluate_emissions(self,segment):
-        """The default evaluate function. 
-        results  
-        """      
-        # unpack  
-        evaluate_CRN_EI_surrogate(self, segment)  
-        return
+
+
+    def evaluate(self,state):
+        """The default evaluate function.
+
+        Assumptions:
+        None
+
+        Source:
+        N/A
+
+        Inputs:
+        None
+
+        Outputs:
+        results   <RCAIDE data class>
+
+        Properties Used:
+        self.settings
+        self.geometry
+        """          
+        settings = self.settings
+        geometry = self.vehicle
+        results  = self.process.compute(state,settings,geometry)
+
+        return results
