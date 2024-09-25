@@ -28,9 +28,8 @@ class Emissions(Analysis):
             Source:
             None 
             """                   
-        self.tag    = 'Emissions'        
-  
-        self.geometry = Data()
+        self.tag      = 'Emissions'    
+        self.vehicle  = Data()
         self.settings = Data() 
     
         

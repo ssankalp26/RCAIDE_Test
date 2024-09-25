@@ -27,7 +27,7 @@ def train_CRN_EI_surrogates(emissions):
     
     vehicle        = emissions.vehicle
     for network in vehicle.networks:  
-        for fuel_line in network.fuel_line:
+        for fuel_line in network.fuel_lines:
             for propulsor in  fuel_line.propulsors:
 
                 if  isinstance(propulsor,RCAIDE.Library.Components.Propulsors.Turbofan) or \

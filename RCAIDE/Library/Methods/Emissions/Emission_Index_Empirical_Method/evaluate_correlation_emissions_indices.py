@@ -32,8 +32,7 @@ def evaluate_correlation_emissions_indices(state,settings,vehicle):
     None  
     """    
     # unpack 
-    I               = state.numerics.time.integrate
-    
+    I          = state.numerics.dimensionless.integrate 
     NOx_total  = 0 * state.ones_row(1)  
     CO2_total  = 0 * state.ones_row(1) 
     SO2_total  = 0 * state.ones_row(1) 
@@ -82,11 +81,11 @@ def evaluate_correlation_emissions_indices(state,settings,vehicle):
     emissions.total.SO2       = SO2_total   * fuel.global_warming_potential_100.SO2  
     emissions.total.Soot      = Soot_total  * fuel.global_warming_potential_100.Soot 
     emissions.total.Contrails = Contrails_total   
-    emissions.index.NOx       = EI_NOx
-    emissions.index.CO2       = EI_CO2 
-    emissions.index.H2O       = EI_H2O
-    emissions.index.SO2       = EI_SO2
-    emissions.index.Soot      = EI_Soot
+    emissions.index.NOx       = EI_NOx   * state.ones_row(1)
+    emissions.index.CO2       = EI_CO2   * state.ones_row(1)
+    emissions.index.H2O       = EI_H2O   * state.ones_row(1)
+    emissions.index.SO2       = EI_SO2   * state.ones_row(1)
+    emissions.index.Soot      = EI_Soot  * state.ones_row(1)
     
     state.conditions.emissions =  emissions
     return   

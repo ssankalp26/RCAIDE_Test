@@ -30,8 +30,8 @@ def main():
     use_surrogate     =  [True, False]
     
     
-    true_EI_CO2s =  [0, 0, 0]
-    true_EI_H2Os =  [0, 0, 0]
+    true_EI_CO2s =  [3.16, 0, 0]
+    true_EI_H2Os =  [1.34, 0, 0]
     i =  0
     for em in  range(2):
         for sur in  range(2):
@@ -57,8 +57,8 @@ def main():
                 results = missions.base_mission.evaluate()
                 
                 # check results
-                EI_CO2         = results.segment.cruise.conditions.emissions.index.CO2
-                EI_H2O         = results.segment.cruise.conditions.emissions.index.H2O  
+                EI_CO2         = results.segments.cruise.conditions.emissions.index.CO2[0,0]
+                EI_H2O         = results.segments.cruise.conditions.emissions.index.H2O[0,0]  
                 true_EI_CO2    = true_EI_CO2s[i]
                 true_EI_H2O    = true_EI_H2Os[i]   
                 diff_EI_CO2    = np.abs(EI_CO2 - true_EI_CO2)
@@ -114,9 +114,8 @@ def base_analysis(vehicle,emissions_method, use_surrogate):
     if emissions_method == "Emission_Index_Correlation_Method":
         emissions = RCAIDE.Framework.Analyses.Emissions.Emission_Index_Correlation_Method()
     elif emissions_method == "Emission_Index_CRN_Method":
-        emissions = RCAIDE.Framework.Analyses.Emissions.Emission_Index_CRN_Method()
-        if use_surrogate:
-            emissions.settings.use_surrogate = False
+        emissions = RCAIDE.Framework.Analyses.Emissions.Emission_Index_CRN_Method() 
+        emissions.settings.use_surrogate = use_surrogate
     emissions.vehicle = vehicle          
     analyses.append(emissions)
         

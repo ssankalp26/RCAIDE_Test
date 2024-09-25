@@ -45,21 +45,21 @@ def evaluate_cantera(combustor,T,P,mdot,FAR):
     sigma_phi               = phi_sign*S_PZ                                         # [-]       Primary Zone Equivalence Ratio standard deviation                                                                                                                                                      
     
     if high_fidelity_kin_mech:                                                               
-        dict_fuel           = combustor.fuel.fuel_chemical_properties  # [-]       Fuel species and corresponding mole fractions for full fuel model
+        dict_fuel           = combustor.fuel_data.fuel_chemical_properties  # [-]       Fuel species and corresponding mole fractions for full fuel model
     else:                                                                                      
-        dict_fuel           = combustor.fuel.fuel_surrogate_chemical_properties              # [-]       Fuel species and corresponding mole fractions for surrogate fuel model 
+        dict_fuel           = combustor.fuel_data.fuel_surrogate_chemical_properties              # [-]       Fuel species and corresponding mole fractions for surrogate fuel model 
     
-    dict_oxy                = combustor.fuel.air_chemical_properties              # [-]       Air species and corresponding mole fractions     
+    dict_oxy                = combustor.fuel_data.air_chemical_properties              # [-]       Air species and corresponding mole fractions     
     
     if high_fidelity_kin_mech:                                                                           
-        list_sp             = combustor.fuel.species_list             # [-]       Fuel species for Emission Index analysis
+        list_sp             = combustor.fuel_data.species_list             # [-]       Fuel species for Emission Index analysis
     else:                                                                                       
-        list_sp             = combustor.fuel.surrogate_species_list                                   # [-]       Fuel species for Emission Index analysis
+        list_sp             = combustor.fuel_data.surrogate_species_list                                   # [-]       Fuel species for Emission Index analysis
     
     col_names = ['EI_' +str(sp) for sp in list_sp] # [-]       Define output variables 
     df                      = pd.DataFrame(columns=col_names)                       # [-]       Assign output variables space to df
     
-    gas, EI = combustor(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_stag_0, FAR, m_dot_fuel, m_dot_air, N_PZ, A_PZ, L_PZ, phi_sign, phi_SZ, A_SZ, L_SZ, f_air_PZ, N_SZ, sigma_phi) # [-]       Run combustor function
+    gas, EI = combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_stag_0, FAR, m_dot_fuel, m_dot_air, N_PZ, A_PZ, L_PZ, phi_sign, phi_SZ, A_SZ, L_SZ, f_air_PZ, N_SZ, sigma_phi) # [-]       Run combustor function
     
     sp_idx                  = [gas.species_index(sp) for sp in list_sp]             # [-]       Retrieve the species index
     data_n                  = list(EI[sp_idx])                                      # [-]       Assign output variables  
@@ -78,7 +78,7 @@ def evaluate_cantera(combustor,T,P,mdot,FAR):
     
     return results
 
-def combustor(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_stag_0, FAR, FAR_TO,FAR_st, m_dot_fuel, m_dot_fuel_TO, m_dot_air_id, m_dot_air_TO, N_PZ,V_PZ, phi_PZ_des, S_PZ, phi_SZ_des_1, phi_SZ_des_2, phi_SZ_des_3,F_SC, A_SZ, L_SZ):
+def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_stag_0, FAR, m_dot_fuel, m_dot_air, N_PZ, A_PZ, L_PZ, phi_sign, phi_SZ, A_SZ, L_SZ, f_air_PZ, N_SZ, sigma_phi):
 
     # ------------------------------------------------------------------------------
     # ----------------------------- Initial Parameters -----------------------------

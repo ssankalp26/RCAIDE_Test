@@ -48,6 +48,7 @@ class Emission_Index_CRN_Method(Emissions):
         # build the evaluation process
         compute                         = Process()  
         compute.emissions               = None  
+        self.process                    = Process()
         self.process.compute            = compute        
         
         return
@@ -72,7 +73,7 @@ class Emission_Index_CRN_Method(Emissions):
         return 
 
 
-    def evaluate(self,state):
+    def evaluate(self,segment):
         """The default evaluate function.
 
         Assumptions:
@@ -89,10 +90,11 @@ class Emission_Index_CRN_Method(Emissions):
 
         Properties Used:
         self.settings
-        self.geometry
+        self.vehicle
         """          
         settings = self.settings
-        geometry = self.geometry
-        results  = self.process.compute(state,settings,geometry)
+        vehicle  = self.vehicle
+        state    = segment.state 
+        results  = self.process.compute(state,settings,vehicle)
 
         return results
