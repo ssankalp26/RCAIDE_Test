@@ -165,6 +165,8 @@ def mission_setup(analyses):
     segment     = Segments.Cruise.Constant_Mach_Constant_Altitude(base_segment)
     segment.tag = "cruise" 
     segment.analyses.extend( analyses.cruise ) 
+    segment.altitude                                      = 36000. * Units.ft
+    segment.altitude_start                                = 36000. * Units.ft
     segment.altitude_end                                  = 36000. * Units.ft
     segment.mach_number                                   = 0.78
     segment.distance                                      = 500 * Units.km  

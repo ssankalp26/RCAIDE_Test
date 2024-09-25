@@ -234,7 +234,9 @@ def design_turbofan(turbofan):
     turbofan_conditions.core_nozzle_exit_velocity                = core_nozzle_conditions.outputs.velocity 
     turbofan_conditions.fuel_to_air_ratio                        = combustor_conditions.outputs.fuel_to_air_ratio 
     turbofan_conditions.total_temperature_reference              = lpc_conditions.outputs.stagnation_temperature
-    turbofan_conditions.total_pressure_reference                 = lpc_conditions.outputs.stagnation_pressure 
+    turbofan_conditions.total_pressure_reference                 = lpc_conditions.outputs.stagnation_pressure
+    turbofan_conditions.flow_through_core                        = 1./(1.+bypass_ratio) #scaled constant to turn on core thrust computation
+    turbofan_conditions.flow_through_fan                         = bypass_ratio/(1.+bypass_ratio) #scaled constant to turn on fan thrust computation        
 
     # Step 22: Size the core of the turbofan  
     size_core(turbofan,turbofan_conditions,conditions) 
