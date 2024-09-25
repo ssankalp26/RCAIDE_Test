@@ -16,7 +16,7 @@ from RCAIDE.Framework.Core                                       import  Data
 from RCAIDE.Library.Components.Wings                             import All_Moving_Surface
 from RCAIDE.Library.Components.Fuselages                         import Fuselage 
 from RCAIDE.Library.Methods.Aerodynamics.Vortex_Lattice_Method   import postprocess_VD, make_VLM_wings , deflect_control_surface
-from RCAIDE.Library.Methods.Geometry.Airfoil     import import_airfoil_geometry
+from RCAIDE.Library.Methods.Geometry.Airfoil                     import import_airfoil_geometry
  
 
 # ----------------------------------------------------------------------
