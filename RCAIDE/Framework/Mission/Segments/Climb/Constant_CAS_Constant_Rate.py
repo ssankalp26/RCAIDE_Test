@@ -9,9 +9,9 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE imports 
-from RCAIDE.Framework.Core                                     import Units 
-from RCAIDE.Framework.Mission.Segments.Evaluate       import Evaluate
-from RCAIDE.Library.Methods.Mission                          import Common,Segments
+from RCAIDE.Framework.Core                                   import Units 
+from RCAIDE.Framework.Mission.Segments.Evaluate              import Evaluate
+from RCAIDE.Library.Mission                          import Common,Segments
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Constant CAS Constant Rate
@@ -53,7 +53,7 @@ class Constant_CAS_Constant_Rate(Evaluate):
         self.altitude_end         = 10. * Units.km
         self.climb_rate           = 3.  * Units.m / Units.s
         self.calibrated_air_speed = None
-        self.true_course_angle    = 0.0 * Units.degrees  
+        self.true_course          = 0.0 * Units.degrees  
         
         # -------------------------------------------------------------------------------------------------------------- 
         #  Mission specific processes 
@@ -64,7 +64,7 @@ class Constant_CAS_Constant_Rate(Evaluate):
         iterate                            = self.process.iterate
         iterate.unknowns.controls          = Common.Unpack_Unknowns.control_surfaces
         iterate.unknowns.mission           = Common.Unpack_Unknowns.orientation
-        iterate.residuals.flight_dynamics  = Common.Residuals.climb_descent_flight_dynamics
+        iterate.residuals.flight_dynamics  = Common.Residuals.flight_dynamics
         
         return
        

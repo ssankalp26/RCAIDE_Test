@@ -10,7 +10,7 @@
  
 from RCAIDE.Framework.Core                                 import Units 
 from RCAIDE.Framework.Mission.Segments.Evaluate   import Evaluate 
-from RCAIDE.Library.Methods.Mission                      import Common,Segments
+from RCAIDE.Library.Mission                      import Common,Segments
 
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Linear_Mach_Constant_Rate
@@ -55,7 +55,7 @@ class Linear_Mach_Constant_Rate(Evaluate):
         self.descent_rate      = 3.  * Units.m / Units.s
         self.mach_number_end   = 0.7
         self.mach_number_start = None
-        self.true_course_angle = 0.0 * Units.degrees  
+        self.true_course       = 0.0 * Units.degrees  
         
         # -------------------------------------------------------------------------------------------------------------- 
         #  Mission specific processes 
@@ -66,7 +66,7 @@ class Linear_Mach_Constant_Rate(Evaluate):
         iterate                            = self.process.iterate   
         iterate.unknowns.mission           = Common.Unpack_Unknowns.orientation
         iterate.unknowns.controls          = Common.Unpack_Unknowns.control_surfaces
-        iterate.residuals.flight_dynamics  = Common.Residuals.climb_descent_flight_dynamics
+        iterate.residuals.flight_dynamics  = Common.Residuals.flight_dynamics
 
         return
 

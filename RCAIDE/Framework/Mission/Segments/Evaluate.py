@@ -11,7 +11,7 @@
 # RCAIDE imports  
 from RCAIDE.Framework.Mission.Segments         import Segment
 from RCAIDE.Framework.Mission.Common.Results   import Results
-from RCAIDE.Library.Methods.Mission            import Common , Solver 
+from RCAIDE.Library.Mission            import Common , Solver 
 from RCAIDE.Framework.Analyses                 import Process  
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ class Evaluate(Segment):
         
         # conditions
         self.temperature_deviation                = 0.0
-        self.sideslip_angle                       = 0.0
+        self.sideslip_angle                       = 0.0 
         self.state.conditions.update(Results())
         
         # ---------------------------------------------------------------
@@ -126,6 +126,7 @@ class Evaluate(Segment):
         post_process.inertial_position  = Common.Update.inertial_horizontal_position
         post_process.battery_age        = Common.Update.battery_age  
         post_process.noise              = Common.Update.noise
+        post_process.emissions          = Common.Update.emissions
         
         return
 

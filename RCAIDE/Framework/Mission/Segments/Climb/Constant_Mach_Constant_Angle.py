@@ -11,7 +11,7 @@
 # RCAIDE imports 
 from RCAIDE.Framework.Core                                     import Units 
 from RCAIDE.Framework.Mission.Segments.Evaluate       import Evaluate
-from RCAIDE.Library.Methods.Mission                          import Common,Segments
+from RCAIDE.Library.Mission                          import Common,Segments
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Constant_Mach_Constant_Angle
@@ -55,7 +55,7 @@ class Constant_Mach_Constant_Angle(Evaluate):
         self.altitude_end      = 10. * Units.km
         self.climb_angle       = 3.  * Units.deg
         self.mach_number       = None
-        self.true_course_angle = 0.0 * Units.degrees 
+        self.true_course       = 0.0 * Units.degrees 
 
         # -------------------------------------------------------------------------------------------------------------- 
         #  Unique Mission Unknowns and Residuals

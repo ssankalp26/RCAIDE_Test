@@ -42,7 +42,7 @@ def airfoil_analysis(airfoil_geometry,alpha,Re_L,initial_momentum_thickness=1E-5
     Inputs: 
     airfoil_geometry   - airfoil geometry points                                                             [unitless]
     alpha              - angle of attacks                                                                    [radians]
-    Re_L               - Reynolds numbers                                                                     [unitless]
+    Re_L               - Reynolds numbers                                                                    [unitless]
     batch_analysis     - boolean : If True: the specified number of angle of attacks and Reynolds            [boolean]
                                   numbers are used to create a table of 2-D results for each combination
                                   Note: Can only accomodate one airfoil

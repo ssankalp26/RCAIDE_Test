@@ -11,7 +11,7 @@
 # RCAIDE imports 
 from RCAIDE.Framework.Core                                     import Units 
 from RCAIDE.Framework.Mission.Segments.Evaluate       import Evaluate
-from RCAIDE.Library.Methods.Mission                          import Common,Segments
+from RCAIDE.Library.Mission                          import Common,Segments
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Linear_Mach_Constant_Rate
@@ -55,7 +55,7 @@ class Linear_Mach_Constant_Rate(Evaluate):
         self.climb_rate        = 3.  * Units.m / Units.s
         self.mach_number_end   = 0.7
         self.mach_number_start = 0.8
-        self.true_course_angle = 0.0 * Units.degrees    
+        self.true_course       = 0.0 * Units.degrees    
       
         # -------------------------------------------------------------------------------------------------------------- 
         #  Mission specific processes 
@@ -64,7 +64,7 @@ class Linear_Mach_Constant_Rate(Evaluate):
         initialize.differentials_altitude  = Common.Initialize.differentials_altitude
         initialize.conditions              = Segments.Climb.Linear_Mach_Constant_Rate.initialize_conditions  
         iterate                            = self.process.iterate
-        iterate.residuals.flight_dynamics  = Common.Residuals.climb_descent_flight_dynamics
+        iterate.residuals.flight_dynamics  = Common.Residuals.flight_dynamics
         iterate.unknowns.mission           = Common.Unpack_Unknowns.orientation   
         
         return

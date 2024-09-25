@@ -170,9 +170,10 @@ def generate_3d_blade_points(rotor,n_points,dim,i,aircraftRefFrame=True):
     xp      = (- MCA_2d + xpts*b_2d - airfoil_le_offset)     # x-coord of airfoil
     yp      = r_2d*np.ones_like(xp)                          # radial location
     zp      = zpts*(t_2d/max_t2d)                            # former airfoil y coord
-
-    rotor_vel_to_body = rotor.prop_vel_to_body()
-    cpts              = len(rotor_vel_to_body[:,0,0])
+     
+    commanded_thrust_vector      = np.zeros((1,1))
+    rotor_vel_to_body,orientaion = rotor.prop_vel_to_body(commanded_thrust_vector)
+    cpts                         = len(rotor_vel_to_body[:,0,0])
 
     matrix        = np.zeros((len(zp),n_points,3)) # radial location, airfoil pts (same y)
     matrix[:,:,0] = xp
@@ -221,6 +222,11 @@ def generate_3d_blade_points(rotor,n_points,dim,i,aircraftRefFrame=True):
     G.X  = mat[:,:,:,0] + origin[0][0]
     G.Y  = mat[:,:,:,1] + origin[0][1]
     G.Z  = mat[:,:,:,2] + origin[0][2]
+
+    G.PTS = np.zeros((cpts,len(zp),n_points,3))    
+    G.PTS[:,:,:,0] =  mat[:,:,:,0] + origin[0][0]    
+    G.PTS[:,:,:,1] =  mat[:,:,:,1] + origin[0][1]    
+    G.PTS[:,:,:,2] =  mat[:,:,:,2] + origin[0][2]    
 
     # store points
     G.XA1  = mat[:,:-1,:-1,0] + origin[0][0]

@@ -11,7 +11,7 @@
 # RCAIDE imports
 from RCAIDE.Framework.Core                                      import Units , Data 
 from RCAIDE.Framework.Mission.Segments.Evaluate        import Evaluate
-from RCAIDE.Library.Methods.Mission.Common                    import Residuals , Unpack_Unknowns, Update
+from RCAIDE.Library.Mission.Common                    import Residuals , Unpack_Unknowns, Update
  
 # ----------------------------------------------------------------------------------------------------------------------
 #  Ground
@@ -65,7 +65,7 @@ class Ground(Evaluate):
         self.velocity_start       = 0.0
         self.velocity_end         = 0.0 
         self.altitude             = 0.0
-        self.true_course_angle    = 0.0 * Units.degrees      
+        self.true_course          = 0.0 * Units.degrees      
 
         # -------------------------------------------------------------------------------------------------------------- 
         #  Mission Conditions 
@@ -80,7 +80,7 @@ class Ground(Evaluate):
         #  Mission Specific Unknowns and Residuals 
         # --------------------------------------------------------------------------------------------------------------       
         iterate.unknowns.mission           = Unpack_Unknowns.ground
-        iterate.residuals.flight_dynamics  = Residuals.ground_flight_dynamics
+        iterate.residuals.flight_dynamics  = Residuals.flight_dynamics
         
         # -------------------------------------------------------------------------------------------------------------- 
         #  Mission specific processes 

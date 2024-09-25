@@ -58,10 +58,7 @@ def single_airfoil():
     airfoil_properties_4 = airfoil_analysis(airfoil_geometry_4,AoA_rad,Re_vals)
     
     airfoil_geometry_5   = compute_naca_4series(airfoil_file,npoints5)
-    airfoil_properties_5 = airfoil_analysis(airfoil_geometry_5,AoA_rad,Re_vals)
-    
-    
-    
+    airfoil_properties_5 = airfoil_analysis(airfoil_geometry_5,AoA_rad,Re_vals)  
     
     # ------------------------------------------------
     # Print Convergence
@@ -179,9 +176,7 @@ def single_airfoil():
     print(npoints2, '-', npoints1, 'panels :', conv_diff_cm_invisc[0])
     print(npoints3, '-', npoints2, 'panels :', conv_diff_cm_invisc[1])
     print(npoints4, '-', npoints3, 'panels :', conv_diff_cm_invisc[2])
-    print(npoints5, '-', npoints4, 'panels :', conv_diff_cm_invisc[3])
-    
-    
+    print(npoints5, '-', npoints4, 'panels :', conv_diff_cm_invisc[3]) 
     
     
     # ------------------------------------------------
