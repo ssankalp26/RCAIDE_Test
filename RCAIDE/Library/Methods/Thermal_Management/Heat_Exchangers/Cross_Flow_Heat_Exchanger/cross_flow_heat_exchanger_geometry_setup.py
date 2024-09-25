@@ -11,7 +11,7 @@ import RCAIDE
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Cross Flow Heat Exchanger Geometry Setup 
 # ----------------------------------------------------------------------------------------------------------------------   
-def cross_flow_heat_exchanger_geometry_setup(HEX): 
+def cross_flow_heat_exchanger_geometry_setup(HEX, battery): 
     """ Modifies geometry of Cross Flow Heat Exchanger  
           
           Inputs:  
@@ -26,16 +26,22 @@ def cross_flow_heat_exchanger_geometry_setup(HEX):
           Source:
              None
     """            
-    vehicle                                        = RCAIDE.Vehicle()  
-    net                                            = RCAIDE.Framework.Networks.Electric()  
-    bus                                            = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus()
-    bat                                            = RCAIDE.Library.Components.Energy.Sources.Batteries.Lithium_Ion_NMC()   
-     
+    vehicle                                                                  = RCAIDE.Vehicle()  
+    net                                                                      = RCAIDE.Framework.Networks.Electric()
+    bus                                                                      = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus()
+    bus.battery_modules.append(battery)                
+    coolant_line                                                             = RCAIDE.Library.Components.Energy.Distributors.Coolant_Line(bus)     
+    # Just to create an empty container for the Heat Exchanger
+    RCAIDE.Library.Components.Thermal_Management.Batteries.Liquid_Cooled_Wavy_Channel(coolant_line)
+    
     HEX.coolant_temperature_of_hot_fluid                  = 313 # Temperature from reservior
-    bat.thermal_management_system.heat_exchanger_system   = HEX 
-    bus.battery_modules.append(bat)
-    net.busses.append(bus) 
-    vehicle.append_energy_network(net)
+    coolant_line.heat_exchangers.cross_flow_hex           = HEX     
+    
+    net.busses.append(bus)
+    net.coolant_lines.append(coolant_line) 
+    vehicle.append_energy_network(net) 
+    
+
     
     configs                             = RCAIDE.Library.Components.Configs.Config.Container()
     base_config                         = RCAIDE.Library.Components.Configs.Config(vehicle)  

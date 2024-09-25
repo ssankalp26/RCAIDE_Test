@@ -99,7 +99,6 @@ class Electric(Network):
             if bus.active:             
                 avionics              = bus.avionics
                 payload               = bus.payload  
-                battery_modules       = bus.battery_modules
 
                 # Avionics Power Consumtion
                 avionics_conditions = state.conditions.energy[bus.tag][avionics.tag]
@@ -113,15 +112,16 @@ class Electric(Network):
                 bus_voltage = bus.voltage * state.ones_row(1)
 
                 if recharging_flag:
-                    avionics_power         = (avionics_conditions.power*bus.power_split_ratio)/len(battery_modules)* state.ones_row(1)
-                    payload_power          = (payload_conditions.power*bus.power_split_ratio)/len(battery_modules)* state.ones_row(1)            
-                    total_esc_power        = 0 * state.ones_row(1)     
-                    charging_power         = (state.conditions.energy[bus.tag].battery_modules[battery.tag].pack.charging_current*bus_voltage*bus.power_split_ratio)/len(battery_modules)
+                    avionics_power         = (avionics_conditions.power*bus.power_split_ratio)* state.ones_row(1)
+                    payload_power          = (payload_conditions.power*bus.power_split_ratio)* state.ones_row(1)            
+                    total_esc_power        = 0 * state.ones_row(1)
+
+                    charging_power         = (bus.charging_current*bus_voltage*bus.power_split_ratio)
 
                     # append bus outputs to battery
                     bus_conditions                    = state.conditions.energy[bus.tag]
                     bus_conditions.power_draw         = ((avionics_power + payload_power + total_esc_power) - charging_power)/bus.efficiency
-                    bus_conditions.current_draw       = bus_conditions.power_draw/bus_voltage
+                    bus_conditions.current_draw       = -bus_conditions.power_draw/bus_voltage
 
                 else:       
                     # compute energy consumption of each battery on bus 
@@ -158,60 +158,33 @@ class Electric(Network):
 
         time               = state.conditions.frames.inertial.time[:,0] 
         delta_t            = np.diff(time)
-        for t_idx in range(state.numerics.number_of_control_points):
-        # Charging Calculations        
-            if recharging_flag:
-                for bus in  busses: 
-                    stored_results_flag  = False
-                    stored_battery_tag   = None                          
-                    for battery in  bus.battery_modules:                   
-                        if bus.identical_batteries == False:
-                            # run analysis  
-                            stored_results_flag, stored_battery_tag =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t, recharging_flag)
-                        else:             
-                            if stored_results_flag == False: 
-                                # run propulsor analysis 
-                                stored_results_flag, stored_battery_tag  =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t, recharging_flag)
-                            else:
-                                # use previous propulsor results 
-                                battery.reuse_stored_data(state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag,recharging_flag)
-                        for coolant_line in  coolant_lines:
-                            if t_idx != state.numerics.number_of_control_points-1:
-                                for tag, item in  coolant_line.items(): 
-                                    if tag == 'heat_exchangers':
-                                        for heat_exchanger in  item:
-                                            heat_exchanger.compute_heat_exchanger_performance(state,coolant_line,delta_t[t_idx],t_idx)
-                                    if tag == 'reservoirs':
-                                        for reservoir in  item:
-                                            reservoir.compute_reservior_coolant_temperature(state,coolant_line,delta_t[t_idx],t_idx)
-            # Discharging Calculations        
-            else:
-                for bus in  busses:
-                    stored_results_flag  = False
-                    stored_battery_tag   = None                          
-                    for battery in  bus.battery_modules:                   
-                        if bus.identical_batteries == False:
-                            # run analysis  
-                            stored_results_flag, stored_battery_tag =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t, recharging_flag)
-                        else:             
-                            if stored_results_flag == False: 
-                                # run propulsor analysis 
-                                stored_results_flag, stored_battery_tag  =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t, recharging_flag)
-                            else:
-                                # use previous propulsor results 
-                                battery.reuse_stored_data(state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag,recharging_flag)
+        for t_idx in range(state.numerics.number_of_control_points):    
+            for bus in  busses:
+                stored_results_flag  = False
+                stored_battery_tag   = None                          
+                for battery in  bus.battery_modules:                   
+                    if bus.identical_batteries == False:
+                        # run analysis  
+                        stored_results_flag, stored_battery_tag =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t, recharging_flag)
+                    else:             
+                        if stored_results_flag == False: 
+                            # run propulsor analysis 
+                            stored_results_flag, stored_battery_tag  =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t, recharging_flag)
+                        else:
+                            # use previous propulsor results 
+                            battery.reuse_stored_data(state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag,recharging_flag)
 
-                    # Thermal Management Calculations                    
-                    for coolant_line in  coolant_lines:
-                        if t_idx != state.numerics.number_of_control_points-1:
-                            for tag, item in  coolant_line.items(): 
-                                if tag == 'heat_exchangers':
-                                    for heat_exchanger in  item:
-                                        heat_exchanger.compute_heat_exchanger_performance(state,coolant_line,delta_t[t_idx],t_idx)
-                                if tag == 'reservoirs':
-                                    for reservoir in  item:
-                                        reservoir.compute_reservior_coolant_temperature(state,coolant_line,delta_t[t_idx],t_idx)      
-                    bus.compute_distributor_conditions(state)
+                # Thermal Management Calculations                    
+                for coolant_line in  coolant_lines:
+                    if t_idx != state.numerics.number_of_control_points-1:
+                        for tag, item in  coolant_line.items(): 
+                            if tag == 'heat_exchangers':
+                                for heat_exchanger in  item:
+                                    heat_exchanger.compute_heat_exchanger_performance(state,coolant_line,delta_t[t_idx],t_idx)
+                            if tag == 'reservoirs':
+                                for reservoir in  item:
+                                    reservoir.compute_reservior_coolant_temperature(state,coolant_line,delta_t[t_idx],t_idx)      
+                bus.compute_distributor_conditions(state)
 
 
         if reverse_thrust ==  True:

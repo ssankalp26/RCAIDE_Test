@@ -61,7 +61,7 @@ def modify_wavy_channel_HAS(nexus):
     """        
     battery_list       = list(nexus.hrs_configurations.optimized.networks.electric.busses.bus.battery_modules.keys())
     battery       = nexus.hrs_configurations.optimized.networks.electric.busses.bus.battery_modules[battery_list[0]]
-    has_opt       = battery.thermal_management_system.heat_acquisition_system
+    has_opt       = nexus.hrs_configurations.optimized.networks.electric.coolant_lines.coolant_line.battery_modules[battery.tag].thermal_management_system.heat_acquisition_system
 
     # ------------------------------------------------------------------------------------------------------------------------
     # Unpack paramters  
@@ -77,9 +77,9 @@ def modify_wavy_channel_HAS(nexus):
     h_cell    = battery.cell.height                      
     A_cell    = np.pi*d_cell*h_cell    
     T_bat     = has_opt.design_battery_operating_temperature
-    Q_pack    = has_opt.design_heat_removed 
-    N_mod     = battery.pack.number_of_modules
-    Q_module  = Q_pack/N_mod 
+    Q_module    = has_opt.design_heat_removed 
+    #N_mod     = battery.pack.number_of_modules
+    #Q_module  = Q_pack/N_mod 
     
     # Channel 
     channel          = has_opt.channel
@@ -97,7 +97,7 @@ def modify_wavy_channel_HAS(nexus):
 
 
     # Considering a lumped mass model  
-    N_cells = battery.module.geometrtic_configuration.parallel_count*battery.module.geometrtic_configuration.normal_count
+    N_cells = battery.electrical_configuration.parallel*battery.electrical_configuration.series
     
     # Contact Surface area of the channel 
     A_chan = 2*N_cells*(theta)*A_cell 
@@ -108,7 +108,7 @@ def modify_wavy_channel_HAS(nexus):
     
 
     #Length of Channel   
-    L_chan  = (battery.module.geometrtic_configuration.normal_count*new_normal_spacing)*battery.module.geometrtic_configuration.parallel_count
+    L_chan  = (battery.geometrtic_configuration.normal_count*new_normal_spacing)*battery.geometrtic_configuration.parallel_count
     L_extra  = 3*d_cell
     L_chan   = (N_cells*d_cell)+L_extra 
 
@@ -172,8 +172,8 @@ def modify_wavy_channel_HAS(nexus):
     Q_convec = U_total*A_chan*T_lm*eff_HAS   
 
     # line level properties for optmization 
-    has_opt.mass_properties.mass       = total_mass*N_mod
-    has_opt.design_power_draw          = Power*N_mod
+    has_opt.mass_properties.mass       = total_mass
+    has_opt.design_power_draw          = Power
     has_opt.heat_removed               = Q_convec 
     has_opt.heat_generated             = Q_module 
     has_opt.coolant_outlet_temperature = T_o
@@ -205,8 +205,8 @@ def post_process(nexus):
     """            
     
     summary              = nexus.summary  
-    battery_list         = list(nexus.hrs_configurations.optimized.networks.electric.busses.bus.battery_modules.keys())
-    battery              = nexus.hrs_configurations.optimized.networks.electric.busses.bus.battery_modules[battery_list[0]]
+    battery_list         = list(nexus.hrs_configurations.optimized.networks.electric.coolant_lines.coolant_line.battery_modules.keys())
+    battery              = nexus.hrs_configurations.optimized.networks.electric.coolant_lines.coolant_line.battery_modules[battery_list[0]]
     has_opt              = battery.thermal_management_system.heat_acquisition_system 
     Q_line_rem           = has_opt.heat_removed
     Q_line_gen           = has_opt.heat_generated  

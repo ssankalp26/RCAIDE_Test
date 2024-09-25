@@ -47,7 +47,7 @@ def design_cross_flow_heat_exchanger(HEX,HAS,battery, single_side_contact=True, 
     elapsed_time         = round((tf-ti)/60,2)
     print('HEX sizing optimization Simulation Time: ' + str(elapsed_time) + ' mins')    
  
-    HEX_opt = optimization_problem.hex_configurations.optimized.networks.electric.busses.bus.battery_modules.lithium_ion_nmc.thermal_management_system.heat_exchanger_system 
+    HEX_opt = optimization_problem.hex_configurations.optimized.networks.electric.coolant_lines.coolant_line.heat_exchangers.cross_flow_hex
     HEX.design_air_inlet_pressure     = output[0]
     HEX.design_coolant_inlet_pressure = output[1]
     HEX.design_air_mass_flow_rate     = output[2]
@@ -60,7 +60,7 @@ def design_cross_flow_heat_exchanger(HEX,HAS,battery, single_side_contact=True, 
     return HEX
 
 ## @ingroup Methods-Thermal_Management-Batteries-Sizing
-def crossflow_heat_exchanger_design_problem_setup(HEX,HAS,print_iterations): 
+def crossflow_heat_exchanger_design_problem_setup(HEX,battery,print_iterations): 
     """ Sets up cross flow heat exchanger optimization problem including design variables,
         constraints and objective function using RCAIDE's Nexus optimization framework.
         Appends methodolody of planform modification to Nexus.
@@ -120,7 +120,7 @@ def crossflow_heat_exchanger_design_problem_setup(HEX,HAS,print_iterations):
     #  Aliases
     # ------------------------------------------------------------------- 
     aliases = [] 
-    btms = 'hex_configurations.optimized.networks.electric.busses.bus.battery_modules.lithium_ion_nmc.thermal_management_system.heat_exchanger_system'  
+    btms = 'hex_configurations.optimized.networks.electric.coolant_lines.coolant_line.heat_exchangers.cross_flow_hex'
     aliases.append([ 'm_dot_c'     , btms + '.air_flow_rate' ]) 
     aliases.append([ 'm_dot_c'     , btms + '.coolant_flow_rate' ]) 
     aliases.append([ 'p_c_1'       , btms + '.air_inlet_pressure' ])       
@@ -134,8 +134,7 @@ def crossflow_heat_exchanger_design_problem_setup(HEX,HAS,print_iterations):
     # -------------------------------------------------------------------
     #  Vehicles
     # ------------------------------------------------------------------- 
-    nexus.hex_configurations = cross_flow_heat_exchanger_geometry_setup(HEX) # removed HAS as they are decoupled SAI 
-
+    nexus.hex_configurations = cross_flow_heat_exchanger_geometry_setup(HEX, battery) 
     # -------------------------------------------------------------------
     #  Analyses
     # -------------------------------------------------------------------

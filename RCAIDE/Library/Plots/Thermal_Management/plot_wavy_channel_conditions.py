@@ -89,9 +89,9 @@ def plot_wavy_channel_conditions(wavy_channel, results, coolant_line, save_figur
                           
         b_i += 1 
             
-    if show_legend:          
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
-        leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})     
+    #if show_legend:          
+        #leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        #leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})     
     
     # Adjusting the sub-plots for legend 
     fig.subplots_adjust(top=0.8) 

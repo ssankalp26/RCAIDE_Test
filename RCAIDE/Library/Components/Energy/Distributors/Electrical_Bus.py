@@ -41,8 +41,12 @@ class Electrical_Bus(Component):
         self.active                        = True
         self.efficiency                    = 1.0
         self.voltage                       = 0.0 
-        self.charging_power                = 0.0
+        #self.charging_power                = 0.0 to be deleted 
+        self.capacity_Ah                   = 0.0
         self.power_split_ratio             = 1.0
+        self.charging_current              = 0.0
+        self.nominal_capacity              = 0.0
+        self.Charging_C_Rate                = 0.0 
         
     def append_operating_conditions(self, segment):
         append_bus_conditions(self, segment)
