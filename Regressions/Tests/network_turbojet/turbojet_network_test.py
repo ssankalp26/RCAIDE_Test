@@ -93,20 +93,20 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
     aerodynamics                                       = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method()
-    aerodynamics.geometry                              = vehicle
+    aerodynamics.vehicle                              = vehicle
     aerodynamics.settings.number_of_spanwise_vortices  = 5
     aerodynamics.settings.number_of_chordwise_vortices = 2       
     aerodynamics.settings.model_fuselage               = True
     aerodynamics.settings.drag_coefficient_increment   = 0.0000
     analyses.append(aerodynamics)
 
+
     # ------------------------------------------------------------------
-    #  Energy
+    #  Emissions
     emissions = RCAIDE.Framework.Analyses.Emissions.Emission_Index_Correlation_Method()
-    emissions.geometry = vehicle          
+    emissions.vehicle = vehicle          
     analyses.append(emissions)
-        
-    
+  
     # ------------------------------------------------------------------
     #  Energy
     energy= RCAIDE.Framework.Analyses.Energy.Energy()
@@ -144,38 +144,7 @@ def plot_mission(results):
     plot_drag_components(results) 
  
     plot_CO2e_emissions(results)    
-    return
-
-def simple_sizing(configs):
-    
-    base = configs.base
-    base.pull_base()
-    
-    # zero fuel weight
-    base.mass_properties.max_zero_fuel = 0.9 * base.mass_properties.max_takeoff 
-    
-    # fuselage seats
-    base.fuselages['fuselage'].number_coach_seats = base.passengers
-    
-    # diff the new data
-    base.store_diff()
-    
-    # ------------------------------------------------------------------
-    #   Landing Configuration
-    # ------------------------------------------------------------------
-    landing = configs.landing
-    
-    # make sure base data is current
-    landing.pull_base()
-    
-    # landing weight
-    landing.mass_properties.landing = 0.85 * base.mass_properties.takeoff
-    
-    # diff the new data
-    landing.store_diff()
-    
-    # done!
-    return
+    return 
 
 # ----------------------------------------------------------------------
 #   Define the Mission
