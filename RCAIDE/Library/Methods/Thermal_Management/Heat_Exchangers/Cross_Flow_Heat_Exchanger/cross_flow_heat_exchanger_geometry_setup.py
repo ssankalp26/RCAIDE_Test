@@ -6,12 +6,13 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 # RCAIDE imports 
-import RCAIDE     
+import RCAIDE
+from copy import  deepcopy
 
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Cross Flow Heat Exchanger Geometry Setup 
 # ----------------------------------------------------------------------------------------------------------------------   
-def cross_flow_heat_exchanger_geometry_setup(HEX, battery): 
+def cross_flow_heat_exchanger_geometry_setup(HEX,coolant_line_base): 
     """ Modifies geometry of Cross Flow Heat Exchanger  
           
           Inputs:  
@@ -28,16 +29,16 @@ def cross_flow_heat_exchanger_geometry_setup(HEX, battery):
     """            
     vehicle                                                                  = RCAIDE.Vehicle()  
     net                                                                      = RCAIDE.Framework.Networks.Electric()
-    bus                                                                      = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus()
-    bus.battery_modules.append(battery)                
-    coolant_line                                                             = RCAIDE.Library.Components.Energy.Distributors.Coolant_Line(bus)     
+    #bus                                                                      = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus()
+    #bus.battery_modules.append(battery)                
+    coolant_line                                                             = deepcopy(coolant_line_base) 
     # Just to create an empty container for the Heat Exchanger
     RCAIDE.Library.Components.Thermal_Management.Batteries.Liquid_Cooled_Wavy_Channel(coolant_line)
     
-    HEX.coolant_temperature_of_hot_fluid                  = 313 # Temperature from reservior
+    HEX.coolant_temperature_of_hot_fluid                  = 313
+    HEX.design_heat_removed                               = 75000  # add loop 
     coolant_line.heat_exchangers.cross_flow_hex           = HEX     
-    
-    net.busses.append(bus)
+
     net.coolant_lines.append(coolant_line) 
     vehicle.append_energy_network(net) 
     

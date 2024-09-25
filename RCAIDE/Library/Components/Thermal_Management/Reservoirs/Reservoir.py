@@ -39,9 +39,9 @@ class Reservoir(Component):
         self.tag                          = 'coolant_reservoir'
         self.material                     = Polyetherimide()
         self.coolant                      = Glycol_Water()
-        self.length                       = 0.5                                      # [m]
-        self.width                        = 0.5                                      # [m]
-        self.height                       = 0.5                                      # [m]
+        self.length                       = 5                                     # [m]
+        self.width                        = 5                                     # [m]
+        self.height                       = 5                                     # [m]
         self.thickness                    = 5e-3                                     # [m] 
         self.surface_area                 = 2*(self.length*self.width+self.width*
                                                self.height+self.length*self.height)  # [m^2]

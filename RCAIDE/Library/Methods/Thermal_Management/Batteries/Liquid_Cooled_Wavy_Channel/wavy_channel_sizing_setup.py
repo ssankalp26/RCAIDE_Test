@@ -219,7 +219,7 @@ def post_process(nexus):
     spacing                      = new_normal_spacing + new_parallel_spacing
     spacing                      = spacing*100
     total_mass                   = has_opt.mass_properties.mass/100
-    Power                        = has_opt.design_power_draw
+    Power                        = has_opt.design_power_draw * 10
     summary.mass_power_objective =  (spacing**2+Power**2 + total_mass**2)**(0.5)  
 
     # calculate heat constraint  

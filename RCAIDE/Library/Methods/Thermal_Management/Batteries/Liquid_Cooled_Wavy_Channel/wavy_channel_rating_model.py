@@ -93,7 +93,7 @@ def  wavy_channel_rating_model(HAS,battery,coolant_line,Q_heat_gen,T_cell,state,
     A_chan   = 2*N_cells_geometric_config*(theta)*A_cell  
 
     #Length of Channel   
-    L_extra  = Np_module_cells*d_cell
+    L_extra  =  battery.geometrtic_configuration.parallel_count*d_cell
     L_chan   = (N_cells_geometric_config*d_cell)+L_extra 
 
     # Hydraulic diameter    

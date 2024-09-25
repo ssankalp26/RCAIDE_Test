@@ -44,7 +44,7 @@ class Cross_Flow_Heat_Exchanger(Component):
         self.tag                                                    = 'cross_flow_heat_exchanger'
         self.coolant                                                = Glycol_Water() 
         self.air                                                    = Air() 
-
+        self.design_heat_removed   =  0.0
         # heat exchanger: thermophysical properties                        
         self.heat_exchanger_efficiency                              = 0.8381
         self.density                                                = 8440   # kg/m^3
