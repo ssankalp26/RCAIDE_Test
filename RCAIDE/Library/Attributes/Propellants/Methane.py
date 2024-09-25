@@ -20,10 +20,9 @@ class Methane(Propellant):
         """This sets the default values.
     
         Assumptions:
-            None
+            Density at -162C, 1 atm
         
-        Source: 
-    
+        Source:  
         """    
         self.tag                       = 'Methane'
         self.reactant                  = 'O2'

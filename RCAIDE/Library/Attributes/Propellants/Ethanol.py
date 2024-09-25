@@ -20,7 +20,7 @@ class Ethanol(Propellant):
         """This sets the default values.
     
         Assumptions:
-            None
+            Density at 15C, 1 atm
         
         Source: 
     
