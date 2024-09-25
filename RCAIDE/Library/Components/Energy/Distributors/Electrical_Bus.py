@@ -36,7 +36,8 @@ class Electrical_Bus(Component):
         self.solar_panel                   = None 
         self.avionics                      = RCAIDE.Library.Components.Systems.Avionics()
         self.payload                       = RCAIDE.Library.Components.Payloads.Payload()        
-        self.identical_propulsors          = True  
+        self.identical_propulsors          = True
+        self.identical_batteries           = True  
         self.active                        = True
         self.efficiency                    = 1.0
         self.voltage                       = 0.0 

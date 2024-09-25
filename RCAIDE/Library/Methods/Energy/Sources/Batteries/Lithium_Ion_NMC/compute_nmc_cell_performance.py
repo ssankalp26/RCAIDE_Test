@@ -8,7 +8,8 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 from RCAIDE.Framework.Core                       import Units 
-import numpy as np  
+import numpy as np
+from copy import  deepcopy
  
 # ----------------------------------------------------------------------------------------------------------------------
 # compute_nmc_cell_performance
@@ -84,7 +85,7 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
     P_bus              = bus_conditions.power_draw
     
     # Battery Conditions
-    battery_conditions = state.conditions.energy[bus.tag][battery.tag]  
+    battery_conditions = state.conditions.energy[bus.tag].battery_modules[battery.tag]  
    
     E_max              = battery_conditions.maximum_initial_energy * battery_conditions.cell.capacity_fade_factor
     E_module           = battery_conditions.energy
@@ -119,12 +120,13 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
     # Compute battery electrical properties 
     # --------------------------------------------------------------------------------- 
     # Calculate the current going into one cell  
-    power_split_ratio =  battery.power_split_ratio
+    #power_split_ratio =  battery.power_split_ratio
     
     # Calculate the current going into one cell  
     n_series          = battery.electrical_configuration.series  
     n_parallel        = battery.electrical_configuration.parallel 
     n_total           = battery.electrical_configuration.total
+    no_modules        =  len(bus.battery_modules)
     
     # ---------------------------------------------------------------------------------
     # Examine Thermal Management System
@@ -142,13 +144,14 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
     # ---------------------------------------------------------------------------------------------------
     # Current State 
     # ---------------------------------------------------------------------------------------------------
-    I_module[t_idx]      = I_bus[t_idx] /power_split_ratio 
+    I_module[t_idx]      = I_bus[t_idx] #/power_split_ratio
+    
     I_cell[t_idx]        = I_module[t_idx] / n_parallel   
 
     # ---------------------------------------------------------------------------------
     # Compute battery cell temperature 
     # ---------------------------------------------------------------------------------
-    R_0_module[t_idx]                       =  (0.01483*(SOC_cell[t_idx]**2) - 0.02518*SOC_cell[t_idx] + 0.1036) *battery_conditions.cell.resistance_growth_factor  
+    R_0_module[t_idx]                       =  (0.01483*(SOC_cell[t_idx]**2) - 0.02518*SOC_cell[t_idx] + 0.1036) #*battery_conditions.cell.resistance_growth_factor  
     R_0_module[t_idx][R_0_module[t_idx]<0]  = 0. 
 
     # Determine temperature increase         
@@ -169,13 +172,14 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
     V_oc_cell[t_idx]           = V_ul_cell[t_idx] + (I_cell[t_idx] * R_0_module[t_idx])              
 
     # Effective Power flowing through battery 
-    P_module[t_idx]         = P_cell[t_idx]  - np.abs(R_0_module[t_idx]) 
+    P_module[t_idx]         = P_bus[t_idx] /no_modules  - np.abs(Q_heat_module[t_idx]) 
 
     # store remaining variables 
     #I_pack[t_idx]          = I_module[t_idx] *  power_split_ratio
     V_oc_module[t_idx]      = V_oc_cell[t_idx]*n_series 
     V_ul_module[t_idx]      = V_ul_cell[t_idx]*n_series  
     T_module[t_idx]         = T_cell[t_idx]   # Assume the cell temperature is the temperature of the module
+    #P_module[t_idx]         = P_bus[t_idx] / no_modules
     P_cell[t_idx]           = P_module[t_idx]/n_total  
     E_cell[t_idx]           = E_module[t_idx]/n_total  
 
@@ -201,12 +205,36 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
         DOD_cell[t_idx+1]                             = 1 - SOC_cell[t_idx+1]  
     
         # Determine new charge throughput (the amount of charge gone through the battery)
-        Q_cell[t_idx+1]    = Q_cell[t_idx] + I_cell[t_idx]*delta_t[t_idx]/Units.hr      
+        Q_cell[t_idx+1]    = Q_cell[t_idx] + I_cell[t_idx]*delta_t[t_idx]/Units.hr
+        
+    stored_results_flag     = True
+    stored_battery_tag     = battery.tag  
+        
+    return stored_results_flag, stored_battery_tag
 
-    return 
 
+def reuse_stored_nmc_cell_data(battery,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag,battery_discharge_flag):
+    '''Reuses results from one propulsor for identical batteries
+    
+    Assumptions: 
+    N/A
 
+    Source:
+    N/A
 
+    Inputs:  
+    
+
+    Outputs:  
+    
+    Properties Used: 
+    N.A.        
+    '''
+   
+    state.conditions.energy[bus.tag].battery_modules[battery.tag] = deepcopy(state.conditions.energy[bus.tag].battery_modules[stored_battery_tag])
+    
+        
+    return
 
 ## @ingroup Methods-Energy-Sources-Lithium_Ion_NMC
 def compute_nmc_cell_state(battery_data,SOC,T,I):
@@ -247,3 +275,4 @@ def compute_nmc_cell_state(battery_data,SOC,T,I):
     V_ul           = np.atleast_2d(battery_data.Voltage(pts)[:,1]).T  
     
     return V_ul
+

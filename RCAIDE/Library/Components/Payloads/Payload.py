@@ -42,6 +42,7 @@ class Payload(Component):
         Properties Used:
         N/A
         """            
+        self.tag        = 'Payload'
         self.power_draw = 0.0
          
     def append_operating_conditions(self,segment,bus): 

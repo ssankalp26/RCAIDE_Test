@@ -69,7 +69,7 @@ def compute_generic_li_cell_performance(battery,state,bus,coolant_lines,t_idx, d
     
 
     # Unpack varibles 
-    battery_conditions = state.conditions.energy[bus.tag][battery.tag]       
+    battery_conditions = state.conditions.energy[bus.tag].battery_modules[battery.tag]       
     I_bat              = battery_conditions.pack.current_draw
     P_bat              = battery_conditions.pack.power_draw
     cell_mass          = battery.cell.mass    

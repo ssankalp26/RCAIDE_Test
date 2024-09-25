@@ -68,7 +68,7 @@ def compute_lfp_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
     """ 
      
     # Unpack varibles 
-    battery_conditions = state.conditions.energy[bus.tag][battery.tag]    
+    battery_conditions = state.conditions.energy[bus.tag].battery_modules[battery.tag]    
     btms               = battery.thermal_management_system  
     I_bat              = battery_conditions.pack.current_draw
     P_bat              = battery_conditions.pack.power_draw   

@@ -11,8 +11,7 @@
 import RCAIDE
 from RCAIDE.Framework.Core                                            import Units , Data
 from .Generic_Battery_Module                                          import Generic_Battery_Module   
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Lithium_Ion_NMC  import compute_nmc_cell_performance, update_nmc_cell_age
-
+from RCAIDE.Library.Methods.Energy.Sources.Batteries.Lithium_Ion_NMC  import *
 # package imports 
 import numpy as np
 import os 
@@ -61,8 +60,6 @@ class Lithium_Ion_NMC(Generic_Battery_Module):
         # ----------------------------------------------------------------------------------------------------------------------
         
         self.tag                                         = 'lithium_ion_nmc'
-        self.power_split_ratio                           = None
-        self.number_of_cells                             = 1
         self.maximum_energy                              = 0.0
         self.maximum_power                               = 0.0
         self.maximum_voltage                             = 0.0
@@ -72,10 +69,11 @@ class Lithium_Ion_NMC(Generic_Battery_Module):
         self.electrical_configuration.series             = 1
         self.electrical_configuration.parallel           = 1   
         self.electrical_configuration.total              = 1
+        self.number_of_cells                             = self.electrical_configuration.series * self.electrical_configuration.parallel
         
         self.geometrtic_configuration                    = Data() 
-        self.geometrtic_configuration.normal_count       = 1       # number of cells normal to flow
-        self.geometrtic_configuration.parallel_count     = 1       # number of cells parallel to flow      
+        self.geometrtic_configuration.normal_count       = self.electrical_configuration.series 
+        self.geometrtic_configuration.parallel_count     = self.electrical_configuration.parallel
         self.geometrtic_configuration.normal_spacing     = 0.02
         self.geometrtic_configuration.parallel_spacing   = 0.02
         
@@ -134,9 +132,14 @@ class Lithium_Ion_NMC(Generic_Battery_Module):
         Returns: 
             None
         """        
-        compute_nmc_cell_performance(self,state,bus,coolant_lines, t_idx,delta_t,discharge) 
+        stored_results_flag, stored_battery_tag =  compute_nmc_cell_performance(self,state,bus,coolant_lines, t_idx,delta_t,discharge) 
         
-        return 
+        return stored_results_flag, stored_battery_tag
+    
+    def reuse_stored_data(self,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag,discharge= True):
+        reuse_stored_nmc_cell_data(self,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag, discharge)
+        return
+        
     
     def compute_voltage(self,battery_conditions):  
         """ Computes the voltage of a single NMC cell or a battery pack of NMC cells   

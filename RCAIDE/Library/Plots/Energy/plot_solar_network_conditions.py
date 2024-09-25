@@ -58,7 +58,7 @@ def plot_solar_network_conditions(results,
                 fig = plt.figure(save_filename + '_' + battery.tag)
                 fig.set_size_inches(width,height)    
                 for i in range(len(results.segments)):  
-                    battery_conditions  = results.segments[i].conditions.energy[bus.tag][battery.tag]  
+                    battery_conditions  = results.segments[i].conditions.energy[bus.tag].battery_modules[battery.tag]  
                     time                = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min 
                     flux                = results.segments[i].conditions.energy.solar_flux[:,0]
                     charge              = battery_conditions.pack.power[:,0]

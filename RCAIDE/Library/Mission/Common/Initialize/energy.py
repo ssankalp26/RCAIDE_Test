@@ -34,8 +34,8 @@ def energy(segment):
         # if network has busses 
         if 'busses' in network: 
             for bus in network.busses:
-                for battery in bus.battery_modules:
-                    battery.append_battery_segment_conditions(bus, conditions, segment)
+                for battery_module in  bus.battery_modules:
+                    battery_module.append_battery_segment_conditions(bus, conditions, segment)
             for coolant_line in  network.coolant_lines:
                 for tag, item in  coolant_line.items(): 
                     if tag == 'battery_modules':
@@ -61,3 +61,5 @@ def energy(segment):
                         fuel_tank_conditions.mass[:,0]   = segment.analyses.energy.vehicle.networks[network.tag].fuel_lines[fuel_line.tag].fuel_tanks[fuel_tank.tag].fuel.mass_properties.mass
             
                     
+def run_append_battery_segment_conditions(battery, bus, conditions, segment):
+    battery.append_battery_segment_conditions(bus, conditions, segment)

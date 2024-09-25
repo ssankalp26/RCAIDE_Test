@@ -67,7 +67,7 @@ def plot_battery_pack_C_rates(results,
                 fig.set_size_inches(width,height)  
                 for i in range(len(results.segments)):
                     time                = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min 
-                    battery_conditions  = results.segments[i].conditions.energy[bus.tag][battery.tag]   
+                    battery_conditions  = results.segments[i].conditions.energy[bus.tag].battery_modules[battery.tag]   
                     pack_energy         = battery_conditions.pack.energy[:,0]
                     pack_volts          = battery_conditions.pack.voltage_under_load[:,0] 
                     pack_current        = battery_conditions.pack.current[:,0] 
