@@ -24,6 +24,8 @@ modules = [
     'Tests/analysis_noise/empirical_jet_noise_test.py',     
     'Tests/analysis_noise/noise_hemisphere_test.py', 
     'Tests/analysis_stability/vlm_pertubation_test.py', 
+    'Tests/analysis_weights/operating_empty_weight_test.py',
+    'Tests/analysis_weights/cg_and_moi_test.py',
     'Tests/geometry_airfoils/airfoil_import_test.py', 
     'Tests/geometry_airfoils/airfoil_interpolation_test.py',    
     'Tests/mission_segments/segment_test.py',     
