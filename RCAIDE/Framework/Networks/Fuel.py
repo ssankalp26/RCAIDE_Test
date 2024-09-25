@@ -45,7 +45,7 @@ class Fuel(Network):
             N/A
         """           
 
-        self.tag    = 'fuel'  
+        self.tag    = 'fuel' 
         
     # linking the different network components
     def evaluate(self,state,center_of_gravity):

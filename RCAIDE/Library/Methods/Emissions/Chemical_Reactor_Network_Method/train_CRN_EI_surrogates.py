@@ -5,14 +5,14 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE imports
-import  RCAIDE
-from RCAIDE.Framework.Core import  Data
+import RCAIDE
+from   RCAIDE.Framework.Core import  Data
 import RCAIDE.Library.Methods.Emissions.Chemical_Reactor_Network_Method.evaluate_cantera as evaluate_cantera
 
 # package imports    
 import numpy    as  np
-import cantera               as ct 
-import pandas                as pd
+import cantera  as ct 
+import pandas   as pd
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Train Cantera Model 
@@ -25,7 +25,7 @@ def train_CRN_EI_surrogates(emissions):
     mdot           = emissions.training.air_mass_flowrate
     FAR            = emissions.training.fuel_to_air_ratio
     
-    vehicle =  emissions.vehicle
+    vehicle        = emissions.vehicle
     for network in vehicle.networks:  
         for fuel_line in network.fuel_line:
             for propulsor in  fuel_line.propulsors:
@@ -36,9 +36,8 @@ def train_CRN_EI_surrogates(emissions):
                     isinstance(propulsor,RCAIDE.Library.Components.Propulsors.ICE_Propeller):            
                     combustor = propulsor.combustor              
                 else:
-                    combustor =  False 
+                    combustor = False 
             
-    
     len_P    =  len(P)
     len_T    =  len(T)
     len_mdot =  len(mdot)
@@ -68,10 +67,10 @@ def train_CRN_EI_surrogates(emissions):
                     EI_NO [p_i, t_i, mdot_i,far_i] = results.EI_NO 
                     EI_NO2[p_i, t_i, mdot_i,far_i] = results.EI_NO2
     
-    training.EI_CO2 =  EI_CO2
-    training.EI_CO =   EI_CO
-    training.EI_H2O =  EI_H2O
-    training.EI_NO =   EI_NO
-    training.EI_NO2 =  EI_NO2
+    emissions.training.EI_CO2 =  EI_CO2
+    emissions.training.EI_CO =   EI_CO
+    emissions.training.EI_H2O =  EI_H2O
+    emissions.training.EI_NO =   EI_NO
+    emissions.training.EI_NO2 =  EI_NO2
     
     return 

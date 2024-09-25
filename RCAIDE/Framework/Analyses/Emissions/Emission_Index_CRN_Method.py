@@ -10,7 +10,7 @@
 from RCAIDE.Framework.Core import  Data 
 from RCAIDE.Framework.Analyses    import Process 
 from RCAIDE.Library.Methods.Emissions.Chemical_Reactor_Network_Method import * 
-from .Emissions            import Emissions 
+from RCAIDE.Framework.Analyses.Emissions            import Emissions 
   
 import numpy as  np
 
@@ -35,9 +35,12 @@ class Emission_Index_CRN_Method(Emissions):
         # conditions table, used for surrogate model training
         self.training                   = Data()
         self.training.pressure          = np.linspace(5,30, 10) *1E5
-        self.training.temperature       = np.linspace(600, 1000, 10) 
-        self.training.air_mass_flowrate = np.linspace(1E-3, 1E2, 10) 
-        self.training.fuel_to_air_ratio = np.linspace(0.01, 0.1, 10)
+        #self.training.temperature       = np.linspace(600, 1000, 10) 
+        #self.training.air_mass_flowrate = np.linspace(1E-3, 1E2, 10) 
+        #self.training.fuel_to_air_ratio = np.linspace(0.01, 0.1, 10)
+        self.training.temperature       = np.linspace(600, 1000, 3) 
+        self.training.air_mass_flowrate = np.linspace(1E-3, 1E2, 3) 
+        self.training.fuel_to_air_ratio = np.linspace(0.01, 0.1, 3)        
         
         # surrogoate models                 
         self.surrogates                  = Data() 

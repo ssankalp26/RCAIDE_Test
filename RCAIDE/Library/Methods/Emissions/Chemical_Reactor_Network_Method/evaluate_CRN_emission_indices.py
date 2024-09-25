@@ -22,121 +22,131 @@ def evaluate_CRN_emission_indices_no_surrogate(state,settings,vehicle):
     # unpack  
     I               = state.numerics.time.integrate
     
-    NOx_total  = 0 * state.ones_row(1)  
-    CO2_total  = 0 * state.ones_row(1) 
-    SO2_total  = 0 * state.ones_row(1) 
-    H2O_total  = 0 * state.ones_row(1) 
-    Soot_total = 0 * state.ones_row(1) 
+    CO2_total = 0 * state.ones_row(1)  
+    CO_total  = 0 * state.ones_row(1) 
+    H2O_total = 0 * state.ones_row(1) 
+    NO_total  = 0 * state.ones_row(1) 
+    NO2_total = 0 * state.ones_row(1) 
 
     for network in vehicle.networks:  
         for fuel_line in network.fuel_lines:
-            if fuel_line.active: 
-                for fuel_tank in fuel_line.fuel_tanks:
-                    mdot = 0. * state.ones_row(1)   
+            if fuel_line.active:  
                     for propulsor in fuel_line.propulsors:
-                        for source in (propulsor.active_fuel_tanks):
-                            if fuel_tank.tag == source:  
-                                propulsor_results =  state.conditions.energy[fuel_line.tag][propulsor.tag]
-                                fuel =  fuel_tank.fuel
-                                if (type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turbofan) or \
-                                    type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turboshaft or \
-                                    type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turbojet:    
-                         
-                                    EI_NOx  = fuel.emission_indices.NOx
-                                    EI_CO2  = fuel.emission_indices.CO2 
-                                    EI_H2O  = fuel.emission_indices.H2O
-                                    EI_SO2  = fuel.emission_indices.SO2
-                                    EI_Soot = fuel.emission_indices.Soot  
+                        if propulsor.active == True: 
+                            if (type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turbofan) or \
+                                type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turboshaft or \
+                                type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turbojet:    
+                            
+                                combustor = propulsor.combustor
+                            
+                                # unpack component conditions
+                                n_cp = state.numerics.number_of_control_points 
+                                propulsor_conditions     = state.conditions.energy[fuel_line.tag][propulsor.tag] 
+                                combustor_conditions    = propulsor_conditions[combustor.tag]  
+
+                                
+                                T = combustor_conditions.inputs.stagnation_temperature
+                                P = combustor_conditions.inputs.stagnation_pressure 
+                                mdot = propulsor_conditions.core_mass_flow_rate 
+                                FAR = combustor_conditions.outputs.fuel_to_air_ratio 
+
+                                EI_CO2_p  = 0 * state.ones_row(1)   
+                                EI_CO_p  = 0 * state.ones_row(1)  
+                                EI_H2O_p  = 0 * state.ones_row(1)  
+                                EI_NO_p  = 0 * state.ones_row(1)  
+                                EI_NO2_p   = 0 * state.ones_row(1)                              
+                                                         
+                                for t_idx in range(n_cp):
+                                    # Call cantera 
+                                    results = evaluate_cantera(combustor,P[0,t_idx],T[0,t_idx],mdot[0,t_idx],FAR[0,t_idx])
                                     
-                                    mdot = propulsor_results.fuel_flow_rate
-                                     
-                                    # Integrate them over the entire segment
-                                    # CALL CANTERA 
-         
-    flight_range    =  state.conditions.frames.inertial.aircraft_range 
-    Contrails_total =  (flight_range -   flight_range[0]) /1000 * fuel.global_warming_potential_100.Contrails
+                                    EI_CO2_p[0,t_idx] = results.EI_CO2
+                                    EI_CO_p[0,t_idx] =  results.EI_CO 
+                                    EI_H2O_p[0,t_idx] = results.EI_H2O
+                                    EI_NO_p[0,t_idx] =  results.EI_NO 
+                                    EI_NO2_p[0,t_idx] = results.EI_NO2 
+                                      
+                                CO2_total  += np.dot(I,mdot*EI_CO2_p)
+                                CO_total   += np.dot(I,mdot *EI_CO_p )
+                                H2O_total  += np.dot(I,mdot*EI_H2O_p)
+                                NO_total   += np.dot(I,mdot *EI_NO_p ) 
+                                NO2_total  += np.dot(I,mdot *EI_NO2_p)
 
     emissions                 = Data()
     emissions.total           = Data()
     emissions.index           = Data() 
-    emissions.total.NOx       = NOx_total   * fuel.global_warming_potential_100.NOx 
-    emissions.total.CO2       = CO2_total   * fuel.global_warming_potential_100.CO2
-    emissions.total.H2O       = H2O_total   * fuel.global_warming_potential_100.H2O  
-    emissions.total.SO2       = SO2_total   * fuel.global_warming_potential_100.SO2  
-    emissions.total.Soot      = Soot_total  * fuel.global_warming_potential_100.Soot 
-    emissions.total.Contrails = Contrails_total   
-    emissions.index.NOx       = EI_NOx
-    emissions.index.CO2       = EI_CO2 
-    emissions.index.H2O       = EI_H2O
-    emissions.index.SO2       = EI_SO2
-    emissions.index.Soot      = EI_Soot
+    emissions.total.CO2      = CO2_total  * combustor.fuel.global_warming_potential_100.NOx 
+    emissions.total.CO       = CO_total   * combustor.fuel.global_warming_potential_100.CO2
+    emissions.total.H2O      = H2O_total  * combustor.fuel.global_warming_potential_100.H2O  
+    emissions.total.NO       = NO_total   * combustor.fuel.global_warming_potential_100.SO2  
+    emissions.total.NO2      = NO2_total  * combustor.fuel.global_warming_potential_100.Soot  
+    emissions.index.CO2     = EI_CO2_p
+    emissions.index.CO      = EI_CO_p 
+    emissions.index.H2O     = EI_H2O_p
+    emissions.index.NO      = EI_NO_p 
+    emissions.index.NO2     = EI_NO2_p
     
     state.conditions.emissions =  emissions
     return    
     
 
 def evaluate_CRN_emission_indices_surrogate(state,settings,vehicle): 
- 
   
-    # unpack  
-    I               = state.numerics.time.integrate
+    I          = state.numerics.time.integrate
+    surrogates = state.analyses.emissions.surrogates
     
-    NOx_total  = 0 * state.ones_row(1)  
-    CO2_total  = 0 * state.ones_row(1) 
-    SO2_total  = 0 * state.ones_row(1) 
-    H2O_total  = 0 * state.ones_row(1) 
-    Soot_total = 0 * state.ones_row(1) 
+    CO2_total = 0 * state.ones_row(1)  
+    CO_total  = 0 * state.ones_row(1) 
+    H2O_total = 0 * state.ones_row(1) 
+    NO_total  = 0 * state.ones_row(1) 
+    NO2_total = 0 * state.ones_row(1) 
 
     for network in vehicle.networks:  
         for fuel_line in network.fuel_lines:
-            if fuel_line.active: 
-                for fuel_tank in fuel_line.fuel_tanks:
-                    mdot = 0. * state.ones_row(1)   
+            if fuel_line.active:  
                     for propulsor in fuel_line.propulsors:
-                        for source in (propulsor.active_fuel_tanks):
-                            if fuel_tank.tag == source:  
-                                propulsor_results =  state.conditions.energy[fuel_line.tag][propulsor.tag]
-                                fuel =  fuel_tank.fuel
-                                if (type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turbofan) or \
-                                    type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turboshaft or \
-                                    type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turbojet:    
-                                    combustor =  propulsor.combustor
+                        if propulsor.active == True: 
+                            if (type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turbofan) or \
+                                type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turboshaft or \
+                                type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turbojet:    
+                            
+                                combustor = propulsor.combustor
+                            
+                                # unpack component conditions
+                                propulsor_conditions     = state.conditions.energy[fuel_line.tag][propulsor.tag] 
+                                combustor_conditions    = propulsor_conditions[combustor.tag]  
 
-                                    # CALL CANTERA SURROGATE
-                                    EI_results = evaluate_cantera(combustor,T,P,mdot,FAR)
-                                    
-                                    EI_NOx  = EI_results.NOx
-                                    EI_CO2  = EI_results.CO2 
-                                    EI_H2O  = EI_results.H2O
-                                    EI_SO2  = EI_results.SO2
-                                    EI_Soot = EI_results.Soot  
-                                    
-                                    mdot = propulsor_results.fuel_flow_rate 
-                                    
-                                    NOx_total  += np.dot(I,mdot*EI_NOx)
-                                    CO2_total  += np.dot(I,mdot*EI_CO2)
-                                    SO2_total  += np.dot(I,mdot*EI_SO2)
-                                    H2O_total  += np.dot(I,mdot*EI_H2O) 
-                                    Soot_total += np.dot(I,mdot*EI_Soot)
-                                     
-         
-    flight_range    =  state.conditions.frames.inertial.aircraft_range 
-    Contrails_total =  (flight_range -   flight_range[0]) /1000 * fuel.global_warming_potential_100.Contrails
+                                T = combustor_conditions.inputs.stagnation_temperature
+                                P = combustor_conditions.inputs.stagnation_pressure 
+                                mdot = propulsor_conditions.core_mass_flow_rate 
+                                FAR = combustor_conditions.outputs.fuel_to_air_ratio 
+                                
+                                pts = np.hstack((T,P,mdot,FAR ))
+                                
+                                #results = evaluate_cantera(combustor,pts)
+
+                                EI_CO2_p  = surrogates.EI_CO2(pts)
+                                EI_CO_p   = surrogates.EI_CO(pts) 
+                                EI_H2O_p  = surrogates.EI_H2O(pts) 
+                                EI_NO_p   = surrogates.EI_NO(pts) 
+                                EI_NO2_p  = surrogates.EI_NO2(pts)        
+                                      
+                                CO2_total += np.dot(I,mdot*EI_CO2_p)
+                                CO_total  += np.dot(I,mdot *EI_CO_p )
+                                H2O_total += np.dot(I,mdot*EI_H2O_p)
+                                NO_total  += np.dot(I,mdot *EI_NO_p ) 
+                                NO2_total += np.dot(I,mdot *EI_NO2_p)
 
     emissions                 = Data()
     emissions.total           = Data()
     emissions.index           = Data() 
-    emissions.total.NOx       = NOx_total   * fuel.global_warming_potential_100.NOx 
-    emissions.total.CO2       = CO2_total   * fuel.global_warming_potential_100.CO2
-    emissions.total.H2O       = H2O_total   * fuel.global_warming_potential_100.H2O  
-    emissions.total.SO2       = SO2_total   * fuel.global_warming_potential_100.SO2  
-    emissions.total.Soot      = Soot_total  * fuel.global_warming_potential_100.Soot 
-    emissions.total.Contrails = Contrails_total   
-    emissions.index.NOx       = EI_NOx
-    emissions.index.CO2       = EI_CO2 
-    emissions.index.H2O       = EI_H2O
-    emissions.index.SO2       = EI_SO2
-    emissions.index.Soot      = EI_Soot
+    emissions.total.CO2       = CO2_total  * combustor.fuel.global_warming_potential_100.CO2
+    emissions.total.H2O       = H2O_total  * combustor.fuel.global_warming_potential_100.H2O   
+    emissions.index.CO2       = EI_CO2_p
+    emissions.index.CO        = EI_CO_p 
+    emissions.index.H2O       = EI_H2O_p
+    emissions.index.NO        = EI_NO_p 
+    emissions.index.NO2       = EI_NO2_p
     
     state.conditions.emissions =  emissions
     return   
