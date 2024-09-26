@@ -95,7 +95,8 @@ def append_battery_conditions(battery,segment,bus):
               
     bus_results.battery_modules[battery.tag].cell.heat_energy_generated      = 0 * ones_row(1)    
               
-    bus_results.battery_modules[battery.tag].cell.energy                     = 0 * ones_row(1)         
+    bus_results.battery_modules[battery.tag].cell.energy                     = 0 * ones_row(1)
+    bus_results.battery_modules[battery.tag].energy                     = 0 * ones_row(1)      
                
     bus_results.battery_modules[battery.tag].cell.cycle_in_day               = 0
     bus_results.battery_modules[battery.tag].cell.resistance_growth_factor   = 1.

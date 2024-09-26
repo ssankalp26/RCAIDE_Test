@@ -80,6 +80,7 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
     
     # Bus Conditions
     bus_conditions     =  state.conditions.energy[bus.tag]
+    #bus_config         =  bus.battery_module_electric_configuration
     
     I_bus              = bus_conditions.current_draw
     P_bus              = bus_conditions.power_draw
@@ -97,7 +98,7 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
     P_cell             = battery_conditions.cell.power
     
     R_0_module         = battery_conditions.internal_resistance
-    #R_0_cell          = battery_conditions.cell.internal_resistance
+    R_0_cell           = battery_conditions.cell.internal_resistance
     
     Q_heat_module      = battery_conditions.heat_energy_generated
     Q_heat_cell        = battery_conditions.cell.heat_energy_generated
@@ -118,10 +119,7 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
     
     # ---------------------------------------------------------------------------------
     # Compute battery electrical properties 
-    # --------------------------------------------------------------------------------- 
-    # Calculate the current going into one cell  
-    #power_split_ratio =  battery.power_split_ratio
-    
+    # -------------------------------------------------------------------------    
     # Calculate the current going into one cell  
     n_series          = battery.electrical_configuration.series  
     n_parallel        = battery.electrical_configuration.parallel 
@@ -144,15 +142,18 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
     # ---------------------------------------------------------------------------------------------------
     # Current State 
     # ---------------------------------------------------------------------------------------------------
-    I_module[t_idx]      = I_bus[t_idx] #/power_split_ratio
-    
+    #if bus_config is 'Series':
+        #I_module[t_idx]      = I_bus[t_idx]
+    #elif bus_config is  'Parallel':
+        #I_module[t_idx]      = I_bus[t_idx] / len(bus.battery_modules)
+    I_module[t_idx]      = I_bus[t_idx]    
     I_cell[t_idx]        = I_module[t_idx] / n_parallel   
 
     # ---------------------------------------------------------------------------------
     # Compute battery cell temperature 
     # ---------------------------------------------------------------------------------
-    R_0_module[t_idx]                       =  (0.01483*(SOC_cell[t_idx]**2) - 0.02518*SOC_cell[t_idx] + 0.1036) #*battery_conditions.cell.resistance_growth_factor  
-    R_0_module[t_idx][R_0_module[t_idx]<0]  = 0. 
+    R_0_cell[t_idx]                     =  (0.01483*(SOC_cell[t_idx]**2) - 0.02518*SOC_cell[t_idx] + 0.1036) *battery_conditions.cell.resistance_growth_factor  
+    R_0_cell[t_idx][R_0_cell[t_idx]<0]  = 0. 
 
     # Determine temperature increase         
     sigma                 = 139 # Electrical conductivity
@@ -167,21 +168,19 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
     Q_heat_cell[t_idx]    = (q_dot_joule + q_dot_entropy)*As_cell 
     Q_heat_module[t_idx]  = Q_heat_cell[t_idx]*n_total  
 
-    V_ul_cell[t_idx]           = compute_nmc_cell_state(battery_data,SOC_cell[t_idx],T_cell[t_idx],I_cell[t_idx]) 
+    V_ul_cell[t_idx]      = compute_nmc_cell_state(battery_data,SOC_cell[t_idx],T_cell[t_idx],I_cell[t_idx]) 
 
-    V_oc_cell[t_idx]           = V_ul_cell[t_idx] + (I_cell[t_idx] * R_0_module[t_idx])              
+    V_oc_cell[t_idx]      = V_ul_cell[t_idx] + (I_cell[t_idx] * R_0_cell[t_idx])              
 
     # Effective Power flowing through battery 
-    P_module[t_idx]         = P_bus[t_idx] /no_modules  - np.abs(Q_heat_module[t_idx]) 
+    P_module[t_idx]       = P_bus[t_idx] /no_modules  - np.abs(Q_heat_module[t_idx]) 
 
     # store remaining variables 
-    #I_pack[t_idx]          = I_module[t_idx] *  power_split_ratio
-    V_oc_module[t_idx]      = V_oc_cell[t_idx]*n_series 
-    V_ul_module[t_idx]      = V_ul_cell[t_idx]*n_series  
-    T_module[t_idx]         = T_cell[t_idx]   # Assume the cell temperature is the temperature of the module
-    #P_module[t_idx]         = P_bus[t_idx] / no_modules
-    P_cell[t_idx]           = P_module[t_idx]/n_total  
-    E_cell[t_idx]           = E_module[t_idx]/n_total  
+    V_oc_module[t_idx]     = V_oc_cell[t_idx]*n_series 
+    V_ul_module[t_idx]     = V_ul_cell[t_idx]*n_series  
+    T_module[t_idx]        = T_cell[t_idx]   # Assume the cell temperature is the temperature of the module
+    P_cell[t_idx]          = P_module[t_idx]/n_total  
+    E_cell[t_idx]          = E_module[t_idx]/n_total  
 
     # ---------------------------------------------------------------------------------------------------     
     # Future State 
@@ -190,11 +189,11 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
 
         # Compute cell temperature
         if HAS is not None:
-            T_cell[t_idx+1] = HAS.compute_thermal_performance(battery,coolant_line, Q_heat_cell[t_idx],T_cell[t_idx],state,delta_t[t_idx],t_idx)
+            T_cell[t_idx+1]  = HAS.compute_thermal_performance(battery,coolant_line, Q_heat_cell[t_idx],T_cell[t_idx],state,delta_t[t_idx],t_idx)
         else:
             # Considers a thermally insulated system and the heat piles on in the system
-            dT_dt                 = Q_heat_cell[t_idx]/(cell_mass*Cp)
-            T_cell[t_idx+1]       =  T_cell[t_idx] + dT_dt*delta_t[t_idx]
+            dT_dt             = Q_heat_cell[t_idx]/(cell_mass*Cp)
+            T_cell[t_idx+1]    =  T_cell[t_idx] + dT_dt*delta_t[t_idx]
             
         # Compute state of charge and depth of discarge of the battery
         E_module[t_idx+1]                             = E_module[t_idx] -P_module[t_idx]*delta_t[t_idx] 

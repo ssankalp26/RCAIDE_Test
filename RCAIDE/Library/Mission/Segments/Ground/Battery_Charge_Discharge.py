@@ -3,10 +3,11 @@
 # 
 # 
 # Created:  Jul 2023, M. Clarke 
- 
+import RCAIDE 
 from RCAIDE.Framework.Core import  Units
 import  numpy as  np
  
+
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Initialize Conditions
 # ----------------------------------------------------------------------------------------------------------------------  
@@ -31,18 +32,20 @@ def initialize_conditions(segment):
     N/A
     """    
     t_nondim   = segment.state.numerics.dimensionless.control_points
-    conditions = segment.state.conditions   
-    time =  0 
-    for network in segment.analyses.energy.vehicle.networks:
-        for bus in  network.busses:
-            time           =  np.max((1-segment.state.initials.conditions.energy[bus.tag].SOC[-1] / bus.charging_c_rate )*Units.hrs  , time)
-            
-    # dimensionalize time
-    t_initial = conditions.frames.inertial.time[0,0]
-    t_nondim  = segment.state.numerics.dimensionless.control_points
-    
-    #segment.state.
-    charging_time      = t_nondim * ( time ) + t_initial
-    
-    segment.state.conditions.frames.inertial.time[:,0] = charging_time[:,0] 
-
+    if isinstance(segment, RCAIDE.Framework.Mission.Segments.Ground.Battery_Recharge):
+        time =  0 
+        for network in segment.analyses.energy.vehicle.networks:
+            for bus in  network.busses:
+                time           =  np.max((1-segment.state.initials.conditions.energy[bus.tag].SOC[-1] / bus.charging_c_rate )*Units.hrs  , time)
+                # dimensionalize time
+                t_initial = segment.state.conditions.frames.inertial.time[0,0]
+                t_nondim  = segment.state.numerics.dimensionless.control_points
+                #segment.state.
+                charging_time      = t_nondim * ( time ) + t_initial
+                segment.state.conditions.frames.inertial.time[:,0] = charging_time[:,0]
+    else:
+        t_initial = segment.state.conditions.frames.inertial.time[0,0]
+        t_nondim  = segment.state.numerics.dimensionless.control_points
+        time      = t_nondim * ( segment.time ) + t_initial
+        
+        segment.state.conditions.frames.inertial.time[:,0] = time[:,0] 

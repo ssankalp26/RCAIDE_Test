@@ -30,22 +30,22 @@ class Electrical_Bus(Component):
         Source:
             None
         """                
-        self.tag                           = 'bus' 
-        self.battery_modules               = Container()
-        self.propulsors                    = Container() 
-        self.solar_panel                   = None 
-        self.avionics                      = RCAIDE.Library.Components.Systems.Avionics()
-        self.payload                       = RCAIDE.Library.Components.Payloads.Payload()        
-        self.identical_propulsors          = True
-        self.identical_batteries           = True  
-        self.active                        = True
-        self.efficiency                    = 1.0
-        self.voltage                       = 0.0 
-        self.capacity                  = 0.0
-        self.power_split_ratio             = 1.0
-        self.charging_current              = 0.0
-        self.nominal_capacity              = 0.0
-        self.charging_c_rate               = 0.0 
+        self.tag                                   = 'bus' 
+        self.battery_modules                       = Container()
+        self.propulsors                            = Container() 
+        self.solar_panel                           = None 
+        self.avionics                              = RCAIDE.Library.Components.Systems.Avionics()
+        self.payload                               = RCAIDE.Library.Components.Payloads.Payload()        
+        self.identical_propulsors                  = True
+        self.identical_batteries                   = True  
+        self.active                                = True
+        self.efficiency                            = 1.0
+        self.voltage                               = 0.0 
+        self.power_split_ratio                     = 1.0
+        self.charging_current                      = 0.0
+        self.nominal_capacity                      = 0.0
+        self.charging_c_rate                       = 0.0
+        self.battery_module_electric_configuration = None 
         
     def append_operating_conditions(self, segment):
         append_bus_conditions(self, segment)
