@@ -39,7 +39,7 @@ class Emission_Index_CRN_Method(Emissions):
         #self.training.air_mass_flowrate = np.linspace(1E-3, 1E2, 10) 
         #self.training.fuel_to_air_ratio = np.linspace(0.01, 0.1, 10)
         self.training.temperature       = np.linspace(600, 1000, 3) 
-        self.training.air_mass_flowrate = np.linspace(1E-3, 1E2, 3) 
+        self.training.air_mass_flowrate = np.linspace(1E1, 1E2, 3) 
         self.training.fuel_to_air_ratio = np.linspace(0.01, 0.1, 3)        
         
         # surrogoate models                 

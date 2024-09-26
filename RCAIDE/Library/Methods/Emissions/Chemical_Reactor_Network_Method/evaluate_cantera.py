@@ -9,6 +9,7 @@ from   RCAIDE.Framework.Core import Data
 import cantera               as ct 
 import pandas                as pd
 import numpy                 as np
+import sys
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  evaluate_cantera
@@ -83,24 +84,20 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     # ------------------------------------------------------------------------------
     # ----------------------------- Initial Parameters -----------------------------
     # ------------------------------------------------------------------------------    
-
-    f_air_PZ                = (m_dot_fuel_TO*F_SC)/(phi_PZ_des*m_dot_air_TO*FAR_st) # [-]       Fraction of total air present in the combustor that enters the Primary Zone
+      
     f_air_SZ                = 1 - f_air_PZ                                          # [-]       Fraction of total air present in the combustor that enters the Secondary Zone  
-    m_dot_air_PZ            = f_air_PZ*m_dot_air_id                                 # [kg/s]    Air mass flow going through the Primary Zone
-    m_dot_air_SZ            = (f_air_SZ*m_dot_air_id)/3                             # [kg/s]    Air mass flow going through each dilution air inlet (3 inlets)
-    phi_sign                = ((m_dot_fuel*F_SC)/m_dot_air_PZ)/(FAR_st)             # [-]       Mean Equivalence Ratio
-    sigma_phi               = S_PZ*phi_sign                                         # [-]       Standard deviation of the Equivalence Ratio    
-    m_dot_air_PSR           = m_dot_air_PZ                                          # [kg/s]    Air mass flow going through each PSR
-    m_dot_fuel_PSR          = m_dot_fuel                                            # [kg/s]    Fuel mass flow going through each PSR
-    V_PZ_PSR                = V_PZ/N_PZ                                             # [m**3]    Volume of each PSR
+    m_dot_air_PSR           = f_air_PZ*m_dot_air                                    # [kg/s]    Air mass flow going through each PSR  
+    m_dot_fuel_PSR          = m_dot_fuel                                            # [kg/s]    Fuel mass flow going through each PSR    
+    m_dot_air_SZ            = (f_air_SZ*m_dot_air)/N_SZ                             # [kg/s]    Air mass flow going through each dilution air inlet (3 inlets)
+    V_PZ_PSR                = (A_PZ*L_PZ)/N_PZ                                      # [m**3]    Volume of each PSR
     phi_PSR                 = np.linspace(0.001, 2*phi_sign, N_PZ)                  # [-]       Distribution of Equivalence Ratio through the PSRs
     Delta_phi               = np.abs(phi_PSR[0] - phi_PSR[1])                       # [-]       Difference between two subsequent Equivalence Ratios
     comp_fuel               = list(dict_fuel.keys())                                # [-]       Fuel components
-
+    
     # ------------------------------------------------------------------------------
     # ----------------------------------- PSR #1 -----------------------------------
     # ------------------------------------------------------------------------------ 
-
+    
     f_PZ_1                  = (1 / (np.sqrt(2 * np.pi) * sigma_phi)) * np.exp((-(phi_PSR[0] - phi_sign) ** 2) / (2 * sigma_phi ** 2)) * Delta_phi # [-]       Fraction of mass flow entering the PSR at the PSR equivalence ratio 
     if high_fidelity_kin_mech:                                                                           
         Fuel_1              = ct.Solution('Jet_A_High_Fidelity.yaml')               # [-]       Import full fuel kinematic mechanism
@@ -124,11 +121,11 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     sim_PSR_1               = ct.ReactorNet([PSR_1])                                # [-]       Set the PSR simulation
     sim_PSR_1.advance(t_res_PSR_1)                                                  # [-]       Run the simulation until the residence time is reached
     Y_fuel_1                = Fuel_1[comp_fuel].Y                                   # [-]       Store mass fractions inside the PSR
-
+    
     # ------------------------------------------------------------------------------
     # ----------------------------------- PSR #2 -----------------------------------
     # ------------------------------------------------------------------------------ 
-
+    
     f_PZ_2                  = (1 / (np.sqrt(2 * np.pi) * sigma_phi)) * np.exp((-(phi_PSR[1] - phi_sign) ** 2) / (2 * sigma_phi ** 2)) * Delta_phi # [-]       Fraction of mass flow entering the PSR at the PSR equivalence ratio 
     if high_fidelity_kin_mech:                                                                           
         Fuel_2              = ct.Solution('Jet_A_High_Fidelity.yaml')               # [-]       Import full fuel kinematic mechanism
@@ -151,11 +148,11 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     sim_PSR_2               = ct.ReactorNet([PSR_2])                                # [-]       Set the PSR simulation
     sim_PSR_2.advance(t_res_PSR_2)                                                  # [-]       Run the simulation until the residence time is reached
     Y_fuel_2                = Fuel_2[comp_fuel].Y                                   # [-]       Store mass fractions inside the PSR
-
+    
     # ------------------------------------------------------------------------------
     # ----------------------------------- PSR #3 -----------------------------------
     # ------------------------------------------------------------------------------ 
-
+    
     f_PZ_3                  = (1 / (np.sqrt(2 * np.pi) * sigma_phi)) * np.exp((-(phi_PSR[2] - phi_sign) ** 2) / (2 * sigma_phi ** 2)) * Delta_phi # [-]       Fraction of mass flow entering the PSR at the PSR equivalence ratio 
     if high_fidelity_kin_mech:                                                                           
         Fuel_3              = ct.Solution('Jet_A_High_Fidelity.yaml')               # [-]       Import full fuel kinematic mechanism
@@ -179,11 +176,11 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     sim_PSR_3               = ct.ReactorNet([PSR_3])                                # [-]       Set the PSR simulation
     sim_PSR_3.advance(t_res_PSR_3)                                                  # [-]       Run the simulation until the residence time is reached
     Y_fuel_3                = Fuel_3[comp_fuel].Y                                   # [-]       Store mass fractions inside the PSR
-
+    
     # ------------------------------------------------------------------------------
     # ----------------------------------- PSR #4 -----------------------------------
     # ------------------------------------------------------------------------------ 
-
+    
     f_PZ_4                  = (1 / (np.sqrt(2 * np.pi) * sigma_phi)) * np.exp((-(phi_PSR[3] - phi_sign) ** 2) / (2 * sigma_phi ** 2)) * Delta_phi # [-]       Fraction of mass flow entering the PSR at the PSR equivalence ratio 
     if high_fidelity_kin_mech:                                                                           
         Fuel_4              = ct.Solution('Jet_A_High_Fidelity.yaml')               # [-]       Import full fuel kinematic mechanism
@@ -206,11 +203,11 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     sim_PSR_4               = ct.ReactorNet([PSR_4])                                # [-]       Set the PSR simulation
     sim_PSR_4.advance(t_res_PSR_4)                                                  # [-]       Run the simulation until the residence time is reached
     Y_fuel_4                = Fuel_4[comp_fuel].Y                                   # [-]       Store mass fractions inside the PSR
-
+    
     # ------------------------------------------------------------------------------
     # ----------------------------------- PSR #5 -----------------------------------
     # ------------------------------------------------------------------------------ 
-
+    
     f_PZ_5                  = (1 / (np.sqrt(2 * np.pi) * sigma_phi)) * np.exp((-(phi_PSR[4] - phi_sign) ** 2) / (2 * sigma_phi ** 2)) * Delta_phi # [-]       Fraction of mass flow entering the PSR at the PSR equivalence ratio 
     if high_fidelity_kin_mech:                                                                           
         Fuel_5              = ct.Solution('Jet_A_High_Fidelity.yaml')               # [-]       Import full fuel kinematic mechanism
@@ -234,11 +231,11 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     sim_PSR_5               = ct.ReactorNet([PSR_5])                                # [-]       Set the PSR simulation
     sim_PSR_5.advance(t_res_PSR_5)                                                  # [-]       Run the simulation until the residence time is reached
     Y_fuel_5                = Fuel_5[comp_fuel].Y                                   # [-]       Store mass fractions inside the PSR
-
+    
     # ------------------------------------------------------------------------------
     # ----------------------------------- PSR #6 -----------------------------------
     # ------------------------------------------------------------------------------ 
-
+    
     f_PZ_6                  = (1 / (np.sqrt(2 * np.pi) * sigma_phi)) * np.exp((-(phi_PSR[5] - phi_sign) ** 2) / (2 * sigma_phi ** 2)) * Delta_phi # [-]       Fraction of mass flow entering the PSR at the PSR equivalence ratio 
     if high_fidelity_kin_mech:                                                                           
         Fuel_6              = ct.Solution('Jet_A_High_Fidelity.yaml')               # [-]       Import full fuel kinematic mechanism
@@ -261,7 +258,7 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     sim_PSR_6               = ct.ReactorNet([PSR_6])                                # [-]       Set the PSR simulation
     sim_PSR_6.advance(t_res_PSR_6)                                                  # [-]       Run the simulation until the residence time is reached
     Y_fuel_6                = Fuel_6[comp_fuel].Y                                   # [-]       Store mass fractions inside the PSR
-
+    
     # ------------------------------------------------------------------------------
     # ----------------------------------- PSR #7 -----------------------------------
     # ------------------------------------------------------------------------------ 
@@ -289,11 +286,11 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     sim_PSR_7               = ct.ReactorNet([PSR_7])                                # [-]       Set the PSR simulation
     sim_PSR_7.advance(t_res_PSR_7)                                                  # [-]       Run the simulation until the residence time is reached
     Y_fuel_7                = Fuel_7[comp_fuel].Y                                   # [-]       Store mass fractions inside the PSR
-
+    
     # ------------------------------------------------------------------------------
     # ----------------------------------- PSR #8 -----------------------------------
     # ------------------------------------------------------------------------------ 
-
+    
     f_PZ_8                  = (1 / (np.sqrt(2 * np.pi) * sigma_phi)) * np.exp((-(phi_PSR[7] - phi_sign) ** 2) / (2 * sigma_phi ** 2)) * Delta_phi # [-]       Fraction of mass flow entering the PSR at the PSR equivalence ratio 
     if high_fidelity_kin_mech:                                                                           
         Fuel_8              = ct.Solution('Jet_A_High_Fidelity.yaml')               # [-]       Import full fuel kinematic mechanism
@@ -316,50 +313,50 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     sim_PSR_8               = ct.ReactorNet([PSR_8])                                # [-]       Set the PSR simulation
     sim_PSR_8.advance(t_res_PSR_8)                                                  # [-]       Run the simulation until the residence time is reached
     Y_fuel_8                = Fuel_8[comp_fuel].Y                                   # [-]       Store mass fractions inside the PSR
-
+    
     # ------------------------------------------------------------------------------
     # --------------------------------- Mixing 1-2 ---------------------------------
     # ------------------------------------------------------------------------------     
-
+    
     mixer_1234              = ct.IdealGasReactor(Fuel_1)                            # [-]       Create the reactor for the downstream mixer
     outlet_12               = ct.MassFlowController(mixer_12, mixer_1234, mdot = (mass_flow_rate_1 + mass_flow_rate_2)) # [-]       Connect the mixer with the downstream mixer     
     sim_mixer_12            = ct.ReactorNet([mixer_12])                             # [-]       Set the mixer simulation  
     sim_mixer_12.advance_to_steady_state()                                          # [-]       Run the simulation until it reaches steady state
-
+    
     # ------------------------------------------------------------------------------
     # --------------------------------- Mixing 3-4 ---------------------------------
     # ------------------------------------------------------------------------------     
-
+    
     outlet_34               = ct.MassFlowController(mixer_34, mixer_1234, mdot = (mass_flow_rate_3 + mass_flow_rate_4)) # [-]       Connect the mixer with the downstream mixer
     sim_mixer_34            = ct.ReactorNet([mixer_34])                             # [-]       Set the mixer simulation  
     sim_mixer_34.advance_to_steady_state()                                          # [-]       Run the simulation until it reaches steady state
-
+    
     # ------------------------------------------------------------------------------
     # --------------------------------- Mixing 5-6 ---------------------------------
     # ------------------------------------------------------------------------------     
-
+    
     mixer_5678              = ct.IdealGasReactor(Fuel_5)                            # [-]       Create the reactor for the downstream mixer
     outlet_56               = ct.MassFlowController(mixer_56, mixer_5678, mdot = (mass_flow_rate_5 + mass_flow_rate_6)) # [-]       Connect the mixer with the downstream mixer     
     sim_mixer_56            = ct.ReactorNet([mixer_56])                             # [-]       Set the mixer simulation  
     sim_mixer_56.advance_to_steady_state()                                          # [-]       Run the simulation until it reaches steady state
-
+    
     # ------------------------------------------------------------------------------
     # --------------------------------- Mixing 7-8 ---------------------------------
     # ------------------------------------------------------------------------------     
-
+    
     outlet_78               = ct.MassFlowController(mixer_78, mixer_5678, mdot = (mass_flow_rate_7 + mass_flow_rate_8)) # [-]       Connect the mixer with the downstream mixer
     sim_mixer_78            = ct.ReactorNet([mixer_78])                             # [-]       Set the mixer simulation  
     sim_mixer_78.advance_to_steady_state()                                          # [-]       Run the simulation until it reaches steady state
-
+    
     # ------------------------------------------------------------------------------
     # ------------------------------- Mixing 1-2-3-4 -------------------------------
     # ------------------------------------------------------------------------------     
-
+    
     mixer_12345678          = ct.IdealGasReactor(Fuel_1)                            # [-]       Create the reactor for the downstream mixer
     outlet_1234             = ct.MassFlowController(mixer_1234, mixer_12345678, mdot = (mass_flow_rate_1 + mass_flow_rate_2 + mass_flow_rate_3 + mass_flow_rate_4)) # [-]       Connect the mixer with the downstream mixer     
     sim_mixer_1234          = ct.ReactorNet([mixer_1234])                           # [-]       Set the mixer simulation  
     sim_mixer_1234.advance_to_steady_state()                                        # [-]       Run the simulation until it reaches steady state
-
+    
     # ------------------------------------------------------------------------------
     # ------------------------------- Mixing 5-6-7-8 -------------------------------
     # ------------------------------------------------------------------------------     
@@ -367,7 +364,7 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     outlet_5678             = ct.MassFlowController(mixer_5678, mixer_12345678, mdot = (mass_flow_rate_5 + mass_flow_rate_6 + mass_flow_rate_7 + mass_flow_rate_8)) # [-]       Connect the mixer with the downstream mixer     
     sim_mixer_5678          = ct.ReactorNet([mixer_5678])                           # [-]       Set the mixer simulation  
     sim_mixer_5678.advance_to_steady_state()                                        # [-]       Run the simulation until it reaches steady state
-
+    
     # ------------------------------------------------------------------------------
     # --------------------------- Mixing 1-2-3-4-5-6-7-8 ---------------------------
     # ------------------------------------------------------------------------------     
@@ -376,7 +373,7 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     outlet_12345678         = ct.MassFlowController(mixer_12345678, mixer_air_1, mdot = (mass_flow_rate_1 + mass_flow_rate_2 + mass_flow_rate_3 + mass_flow_rate_4 + mass_flow_rate_5 + mass_flow_rate_6 + mass_flow_rate_7 + mass_flow_rate_8)) # [-]       Connect the mixer with the downstream mixer     
     sim_mixer_12345678      = ct.ReactorNet([mixer_12345678])                       # [-]       Set the mixer simulation  
     sim_mixer_12345678.advance_to_steady_state()                                    # [-]       Run the simulation until it reaches steady state
-
+    
     # ------------------------------------------------------------------------------
     # -------------------------------- Mixing 1-Air --------------------------------
     # ------------------------------------------------------------------------------     
@@ -392,18 +389,18 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     outlet_air_1            = ct.MassFlowController(mixer_air_1, PFR_1, mdot=m_dot_air_1) # [-]       Connect the mixer with the downstream PFR with the same mass flow rate           
     sim_mixer_air_1         = ct.ReactorNet([mixer_air_1])                          # [-]       Set the mixer simulation  
     sim_mixer_air_1.advance_to_steady_state()                                       # [-]       Run the simulation until it reaches steady state
-
+    
     # ------------------------------------------------------------------------------
     # ----------------------------------- PFR #1 -----------------------------------
     # ------------------------------------------------------------------------------ 
-
+    
     mixer_air_2             = ct.IdealGasReactor(Fuel_1)                            # [-]       Create the reactor for the downstream mixer
     outlet_PFR_1            = ct.MassFlowController(PFR_1, mixer_air_2, mdot=m_dot_air_1) # [-]       Connect the PFR with the downstream mixer                                 
     t_res_PFR_1             = (Fuel_1.density * PFR_1.volume) / (m_dot_air_1)       # [s]       Compute the residence time inside the PFR           
-    Fuel_1.set_equivalence_ratio(phi_SZ_des_1, fuel=dict_fuel, oxidizer=dict_oxy)   # [-]       Set the euivalence ratio inside the PFR
+    Fuel_1.set_equivalence_ratio(phi_SZ, fuel=dict_fuel, oxidizer=dict_oxy)   # [-]       Set the euivalence ratio inside the PFR
     sim_PFR_1               = ct.ReactorNet([PFR_1])                                # [-]       Set the PFR simulation
     sim_PFR_1.advance(t_res_PFR_1)                                                  # [-]       Run the simulation until the residence time is reached
-
+    
     # ------------------------------------------------------------------------------
     # -------------------------------- Mixing 2-Air --------------------------------
     # ------------------------------------------------------------------------------     
@@ -419,18 +416,18 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     outlet_air_2            = ct.MassFlowController(mixer_air_2, PFR_2, mdot=m_dot_air_2) # [-]       Connect the mixer with the downstream PFR with the same mass flow rate  
     sim_mixer_air_2         = ct.ReactorNet([mixer_air_2])                          # [-]       Set the mixer simulation  
     sim_mixer_air_2.advance_to_steady_state()                                       # [-]       Run the simulation until it reaches steady state
-
+                                                                                    
     # ------------------------------------------------------------------------------
     # ----------------------------------- PFR #2 -----------------------------------
     # ------------------------------------------------------------------------------ 
-
+    
     mixer_air_3             = ct.IdealGasReactor(Fuel_1)                            # [-]       Create the reactor for the downstream mixer
     outlet_PFR_2            = ct.MassFlowController(PFR_2, mixer_air_3, mdot=m_dot_air_2) # [-]       Connect the PFR with the downstream mixer                                                               
     t_res_PFR_2             = (Fuel_1.density * PFR_2.volume) / (m_dot_air_2)       # [s]       Compute the residence time inside the PFR           
-    Fuel_1.set_equivalence_ratio(phi_SZ_des_2, fuel=dict_fuel, oxidizer=dict_oxy)   # [-]       Set the euivalence ratio inside the PFR 
+    Fuel_1.set_equivalence_ratio(phi_SZ, fuel=dict_fuel, oxidizer=dict_oxy)   # [-]       Set the euivalence ratio inside the PFR 
     sim_PFR_2               = ct.ReactorNet([PFR_2])                                # [-]       Set the PFR simulation
     sim_PFR_2.advance(t_res_PFR_2)                                                  # [-]       Run the simulation until the residence time is reached
-
+    
     # ------------------------------------------------------------------------------
     # -------------------------------- Mixing 3-Air --------------------------------
     # ------------------------------------------------------------------------------     
@@ -446,13 +443,13 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     outlet_air_3            = ct.MassFlowController(mixer_air_3, PFR_3, mdot=m_dot_air_3) # [-]       Connect the mixer with the downstream PFR with the same mass flow rate  
     sim_mixer_air_3         = ct.ReactorNet([mixer_air_3])                          # [-]       Set the mixer simulation  
     sim_mixer_air_3.advance_to_steady_state()                                       # [-]       Run the simulation until it reaches steady state
-
+    
     # ------------------------------------------------------------------------------
     # ----------------------------------- PFR #3 -----------------------------------
     # ------------------------------------------------------------------------------ 
-
+                                                           
     t_res_PFR_3             = (Fuel_1.density * PFR_3.volume) / (m_dot_air_3)       # [s]       Compute the residence time inside the PFR           
-    Fuel_1.set_equivalence_ratio(phi_SZ_des_3, fuel=dict_fuel, oxidizer=dict_oxy)   # [-]       Set the euivalence ratio inside the PFR  
+    Fuel_1.set_equivalence_ratio(phi_SZ, fuel=dict_fuel, oxidizer=dict_oxy)   # [-]       Set the euivalence ratio inside the PFR  
     sim_PFR_3               = ct.ReactorNet([PFR_3])                                # [-]       Set the PFR simulation                 
     sim_PFR_3.advance(t_res_PFR_3)                                                  # [-]       Run the simulation until the residence time is reached
 
@@ -460,7 +457,7 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     # ---------------------------- Additional computations -------------------------
     # ------------------------------------------------------------------------------    
 
-    m_dot_input_combustor   = m_dot_fuel + m_dot_air_id                             # [kg/s]    Total mass flow rate entering a single combustor (air + fuel)
+    m_dot_input_combustor   = m_dot_fuel + m_dot_air                             # [kg/s]    Total mass flow rate entering a single combustor (air + fuel)
     Emission_Index          = Fuel_1.Y * (m_dot_input_combustor)/m_dot_fuel         # [-]       Computation of the Emission Index   
 
     return (Fuel_1, Emission_Index)  

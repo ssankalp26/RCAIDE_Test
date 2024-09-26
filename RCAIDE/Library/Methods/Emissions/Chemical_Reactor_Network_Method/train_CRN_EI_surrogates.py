@@ -59,7 +59,7 @@ def train_CRN_EI_surrogates(emissions):
                 for far_i in  range(len_far):
                     
                     # Call cantera 
-                    results = evaluate_cantera(combustor,P[p_i],T[t_i],mdot[mdot_i],FAR[far_i])
+                    results = evaluate_cantera(combustor,T[t_i],P[p_i],mdot[mdot_i],FAR[far_i])
                     
                     EI_CO2[p_i, t_i, mdot_i,far_i] = results.EI_CO2
                     EI_CO [p_i, t_i, mdot_i,far_i] = results.EI_CO 
