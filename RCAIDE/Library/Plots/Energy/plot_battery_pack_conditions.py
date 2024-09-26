@@ -64,7 +64,7 @@ def plot_battery_pack_conditions(results,
     fig.set_size_inches(width,height) 
     axis_0 = plt.subplot(1,1,1)
     axis_1 = plt.subplot(3,2,1)
-    axis_2 = plt.subplot(3,2,2) 
+    axis_2 = plt.subplot(3,2,2)
     axis_3 = plt.subplot(3,2,3) 
     axis_4 = plt.subplot(3,2,4)
     axis_5 = plt.subplot(3,2,5) 
@@ -81,13 +81,13 @@ def plot_battery_pack_conditions(results,
                 for i in range(len(results.segments)): 
                     time                = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min 
                     bus_results         = results.segments[i].conditions.energy[bus.tag] 
-                    battery_conditions  = bus_results[battery.tag] 
-                    pack_power          = battery_conditions.pack.power[:,0]
-                    pack_energy         = battery_conditions.pack.energy[:,0]
-                    pack_volts          = battery_conditions.pack.voltage_under_load[:,0] 
-                    pack_current        = battery_conditions.pack.current[:,0]
-                    pack_SOC            = battery_conditions.cell.state_of_charge[:,0] 
-                    pack_temperature    = battery_conditions.pack.temperature[:,0]  
+                    
+                    pack_energy         = bus_results.energy[:,0] 
+                    pack_power          = bus_results.power_draw[:,0]
+                    pack_volts          = bus_results.voltage_under_load [:,0] 
+                    pack_current        = bus_results.current_draw[:,0]
+                    pack_SOC            = bus_results.SOC[:,0] 
+                    pack_temperature    = bus_results.temperature[:,0]  
             
                     segment_tag  =  results.segments[i].tag
                     segment_name = segment_tag.replace('_', ' ')  
@@ -98,11 +98,11 @@ def plot_battery_pack_conditions(results,
                     axis_1.set_ylabel(r'SOC')
                     axis_1.set_ylim([0,1.1])
                     set_axes(axis_1)     
-                     
+                    
                     axis_2.plot(time, (pack_energy/1000)/Units.Wh, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
                     axis_2.set_ylabel(r'Energy (kW-hr)')
-                    set_axes(axis_2) 
-             
+                    set_axes(axis_2)
+                    
                     axis_3.plot(time, pack_current, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
                     axis_3.set_ylabel(r'Current (A)')
                     set_axes(axis_3)  

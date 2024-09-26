@@ -147,7 +147,7 @@ class Lithium_Ion_LFP(Generic_Battery_Module):
             None
         """              
 
-        return battery_conditions.pack.voltage_under_load 
+        return battery_conditions.voltage_under_load 
     
     def update_battery_age(self,segment,increment_battery_age_by_one_day = False):   
         """ This does nothing. """

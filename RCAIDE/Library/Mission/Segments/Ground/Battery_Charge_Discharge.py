@@ -33,10 +33,10 @@ def initialize_conditions(segment):
     """    
     t_nondim   = segment.state.numerics.dimensionless.control_points
     if isinstance(segment, RCAIDE.Framework.Mission.Segments.Ground.Battery_Recharge):
-        time =  0 
         for network in segment.analyses.energy.vehicle.networks:
+            time =  0 
             for bus in  network.busses:
-                time           =  np.max((1-segment.state.initials.conditions.energy[bus.tag].SOC[-1] / bus.charging_c_rate )*Units.hrs  , time)
+                time           =  max((1-segment.state.initials.conditions.energy[bus.tag].SOC[-1] / bus.charging_c_rate )*Units.hrs  , time)
                 # dimensionalize time
                 t_initial = segment.state.conditions.frames.inertial.time[0,0]
                 t_nondim  = segment.state.numerics.dimensionless.control_points

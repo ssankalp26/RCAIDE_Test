@@ -63,7 +63,6 @@ def lithium_ion_battery_test(Ereq,Preq):
 
     bus,state            = set_up_conditions(battery_li_ion)
     bus_conditions     = state.conditions.energy[bus.tag]
-    battery_conditions =  state.conditions.energy[bus.tag].battery_modules[battery_li_ion.tag]
     bus_conditions.current_draw =  np.array([[100],[100]])*Units.amps
     bus_conditions.power_draw   =  np.array([[Preq/2.] ,[ Preq]])
     coolant_lines                        = []
@@ -120,7 +119,7 @@ def lithium_ion_battery_test(Ereq,Preq):
             V_ul_diff   = np.abs(V_ul - V_ul_true[j,i])
             print('Under load voltage difference')
             print(V_ul_diff)
-            #assert np.abs((V_ul_diff)/V_ul_true[j,i]) < 1e-6 
+            assert np.abs((V_ul_diff)/V_ul_true[j,i]) < 1e-6 
             
             # Temperature Regression
             bat_temp        = results.segments[1].conditions.energy.bus.battery_modules[battery_chemistry[i]].cell.temperature[2][0]  

@@ -40,6 +40,8 @@ def append_bus_conditions(bus,segment):
     segment.state.conditions.energy[bus.tag].voltage_under_load    = 0 * ones_row(1) 
     segment.state.conditions.energy[bus.tag].heat_energy_generated = 0 * ones_row(1) 
     segment.state.conditions.energy[bus.tag].efficiency            = 0 * ones_row(1)
+    segment.state.conditions.energy[bus.tag].temperature           = 0 * ones_row(1)
+    segment.state.conditions.energy[bus.tag].energy                = 0 * ones_row(1)
     
     # TO BE INCLUDED IN NEAR FUTURE
     #if bus.battery_module_electric_configuration is 'Series':
