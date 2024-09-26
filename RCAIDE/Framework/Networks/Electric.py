@@ -115,7 +115,7 @@ class Electric(Network):
                     avionics_power         = (avionics_conditions.power*bus.power_split_ratio)* state.ones_row(1)
                     payload_power          = (payload_conditions.power*bus.power_split_ratio)* state.ones_row(1)            
                     total_esc_power        = 0 * state.ones_row(1)
-
+                    bus.charging_current   = bus.nominal_capacity * bus.charging_c_rate 
                     charging_power         = (bus.charging_current*bus_voltage*bus.power_split_ratio)
 
                     # append bus outputs to battery

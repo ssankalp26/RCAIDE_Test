@@ -107,12 +107,12 @@ def append_battery_conditions(battery,segment,bus):
         segment.state.unknowns['recharge']          =  0* ones_row(1)  
         segment.state.residuals.network['recharge'] =  0* ones_row(1) 
             
-        bus_results.battery_modules[battery.tag].charging_current = segment.current * ones_row(1)  
-    elif type(segment) == RCAIDE.Framework.Mission.Segments.Ground.Battery_Discharge:
-        segment.state.conditions.energy.recharging  = False 
-        segment.state.unknowns['discharge']          =  0* ones_row(1)  
-        segment.state.residuals.network['discharge'] =  0* ones_row(1) 
-        bus_results.battery_modules[battery.tag].charging_current = -segment.current * ones_row(1)
+        #bus_results.battery_modules[battery.tag].charging_current = segment.current * ones_row(1)  
+    #elif type(segment) == RCAIDE.Framework.Mission.Segments.Ground.Battery_Discharge:
+        #segment.state.conditions.energy.recharging  = False 
+        #segment.state.unknowns['discharge']          =  0* ones_row(1)  
+        #segment.state.residuals.network['discharge'] =  0* ones_row(1) 
+        #bus_results.battery_modules[battery.tag].charging_current = -segment.current * ones_row(1)
     else:
         segment.state.conditions.energy.recharging  = False 
         

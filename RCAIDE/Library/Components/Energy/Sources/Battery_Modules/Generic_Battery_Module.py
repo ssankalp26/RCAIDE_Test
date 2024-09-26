@@ -34,7 +34,7 @@ class Generic_Battery_Module(Component):
         self.current_energy                         = 0.0
         self.current_capacitor_charge               = 0.0
         
-        self.capacity_Ah                            = 0.0
+        self.capacity                           = 0.0
         self.nominal_capacity                       = 0.0
 
         self.mass_properties.volume                 = Data()
