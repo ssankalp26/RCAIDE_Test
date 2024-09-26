@@ -34,13 +34,14 @@ class Emission_Index_CRN_Method(Emissions):
 
         # conditions table, used for surrogate model training
         self.training                   = Data()
-        self.training.pressure          = np.linspace(5,30, 10) *1E5
+        #self.training.pressure          = np.linspace(1,3, 10) *1E6
         #self.training.temperature       = np.linspace(600, 1000, 10) 
         #self.training.air_mass_flowrate = np.linspace(1E-3, 1E2, 10) 
         #self.training.fuel_to_air_ratio = np.linspace(0.01, 0.1, 10)
-        self.training.temperature       = np.linspace(600, 1000, 3) 
-        self.training.air_mass_flowrate = np.linspace(1E1, 1E2, 3) 
-        self.training.fuel_to_air_ratio = np.linspace(0.01, 0.1, 3)        
+        self.training.pressure          = np.linspace(10,30, 3) *1E6
+        self.training.temperature       = np.linspace(700, 900, 3) 
+        self.training.air_mass_flowrate = np.linspace(10, 60, 3) 
+        self.training.fuel_to_air_ratio = np.linspace(0.01, 0.05, 3)        
         
         # surrogoate models                 
         self.surrogates                  = Data() 
