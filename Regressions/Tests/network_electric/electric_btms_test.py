@@ -111,7 +111,7 @@ def base_analysis(vehicle):
     
     
     aerodynamics = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
-    aerodynamics.geometry                            = vehicle
+    aerodynamics.vehicle                             = vehicle
     aerodynamics.settings.drag_coefficient_increment = drag_area/vehicle.reference_area
     analyses.append(aerodynamics)
 
