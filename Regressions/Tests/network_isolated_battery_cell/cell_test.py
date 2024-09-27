@@ -58,8 +58,8 @@ def lithium_sulphur_battery_test(Ereq,Preq):
     return 
 
 def test_ragone(Ereq,Preq):  
-    battery_li_ion                        = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_LFP() 
-    battery_li_ion.outputs                = Data()  
+    battery_li_ion                   = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_LFP() 
+    battery_li_ion.outputs           = Data()  
     battery_li_ion.maximum_voltage   = battery_li_ion.cell.maximum_voltage
     test_find_ragone_optimum(battery_li_ion,Ereq,Preq)   
     test_initialize_from_mass(battery_li_ion,20*Units.kg)
@@ -93,7 +93,7 @@ def lithium_ion_battery_test():
     fixed_bus_voltage = False 
     for j in range(len(curr)):      
         for i in range(len(battery_chemistry)):   
-            vehicle  = vehicle_setup(curr[j],battery_chemistry[i],fixed_bus_voltage) 
+            vehicle  = vehicle_setup(curr[j],C_rat[j],battery_chemistry[i],fixed_bus_voltage) 
             
             # Set up vehicle configs
             configs  = configs_setup(vehicle)
@@ -216,9 +216,8 @@ def mission_setup(analyses,vehicle,battery_chemistry,current,mAh):
     segment.tag                             = 'Discharge_1' 
     segment.time                            = time/2  
     segment.initial_battery_state_of_charge = 1  
-    mission.append_segment(segment)         
+    mission.append_segment(segment)
     
-
     segment                                = Segments.Ground.Battery_Discharge(base_segment) 
     segment.tag                            = 'Discharge_2'
     segment.analyses.extend(analyses.base)   

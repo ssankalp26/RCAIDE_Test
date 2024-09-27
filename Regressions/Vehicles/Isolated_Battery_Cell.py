@@ -15,7 +15,7 @@ from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common   import initialize_
 #  Build the Vehicle
 # ----------------------------------------------------------------------------------------------------------------------   
 
-def vehicle_setup(current,cell_chemistry,fixed_bus_voltage): 
+def vehicle_setup(current,C_rat,cell_chemistry,fixed_bus_voltage): 
 
     vehicle                       = RCAIDE.Vehicle() 
     vehicle.tag                   = 'battery'   
@@ -45,9 +45,10 @@ def vehicle_setup(current,cell_chemistry,fixed_bus_voltage):
     # Payload 
     #------------------------------------------------------------------------------------------------------------------------------------  
     payload                      = RCAIDE.Library.Components.Payloads.Payload()
-    payload.power_draw           = current * bus.voltage # Watts
+    payload.power_draw           = current * bus.voltage  
     payload.mass_properties.mass = 1.0 * Units.kg
     bus.payload                  = payload 
+    bus.charging_c_rate          = C_rat
       
     # append bus   
     net.busses.append(bus) 
