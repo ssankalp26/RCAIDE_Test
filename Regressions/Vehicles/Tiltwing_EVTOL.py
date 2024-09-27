@@ -260,7 +260,7 @@ def vehicle_setup():
     # Define Lift Propulsor Container 
     lift_propulsor                                = RCAIDE.Library.Components.Propulsors.Electric_Rotor()
     lift_propulsor.tag                            = 'lift_propulsor'     
-    lift_propulsor.active_batteries               = ['bus_battery']          
+    lift_propulsor.active_busses                  = ['bus']          
               
     # Electronic Speed Controller           
     prop_rotor_esc                                = RCAIDE.Library.Components.Energy.Modulators.Electronic_Speed_Controller()
