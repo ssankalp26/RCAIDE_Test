@@ -91,8 +91,7 @@ class Electric(Network):
         coolant_lines   = self.coolant_lines
         total_thrust    = 0. * state.ones_row(3) 
         total_power     = 0. * state.ones_row(1) 
-        total_moment    = 0. * state.ones_row(3) 
-        recharging_flag = conditions.energy.recharging 
+        total_moment    = 0. * state.ones_row(3)  
         reverse_thrust  = self.reverse_thrust
 
         for bus in busses:
@@ -111,7 +110,7 @@ class Electric(Network):
                 # Bus Voltage 
                 bus_voltage = bus.voltage * state.ones_row(1)
 
-                if recharging_flag:
+                if conditions.energy.recharging:
                     avionics_power         = (avionics_conditions.power*bus.power_split_ratio)* state.ones_row(1)
                     payload_power          = (payload_conditions.power*bus.power_split_ratio)* state.ones_row(1)            
                     total_esc_power        = 0 * state.ones_row(1)
@@ -165,14 +164,14 @@ class Electric(Network):
                 for battery in  bus.battery_modules:                   
                     if bus.identical_batteries == False:
                         # run analysis  
-                        stored_results_flag, stored_battery_tag =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t, recharging_flag)
+                        stored_results_flag, stored_battery_tag =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
                     else:             
                         if stored_results_flag == False: 
                             # run battery analysis 
-                            stored_results_flag, stored_battery_tag  =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t, recharging_flag)
+                            stored_results_flag, stored_battery_tag  =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
                         else:
                             # use previous battery results 
-                            battery.reuse_stored_data(state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag,recharging_flag)
+                            battery.reuse_stored_data(state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag)
 
                 # Thermal Management Calculations                    
                 for coolant_line in  coolant_lines:

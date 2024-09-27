@@ -15,7 +15,7 @@ from copy import deepcopy
 # compute_nmc_cell_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Energy-Sources-Batteries-Lithium_Ion_LFP
-def compute_lfp_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,battery_discharge_flag): 
+def compute_lfp_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t): 
     """This is an electric cycle model for 18650 lithium-iron_phosphate battery cells. It
        models losses based on an empirical correlation Based on method taken 
        from Datta and Johnson.
@@ -153,7 +153,7 @@ def compute_lfp_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
     V_oc_cell[t_idx][V_oc_cell[t_idx] > V_max_cell] = V_max_cell
          
     # Voltage under load:
-    if battery_discharge_flag:
+    if state.conditions.energy.recharging:
         V_ul_cell[t_idx]    = V_oc_cell[t_idx]  - I_cell[t_idx]*R_0_cell[t_idx]
     else: 
         V_ul_cell[t_idx]    = V_oc_cell[t_idx]  + I_cell[t_idx]*R_0_cell[t_idx]
@@ -207,7 +207,7 @@ def compute_lfp_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
     stored_battery_tag     = battery.tag  
         
     return stored_results_flag, stored_battery_tag
-def reuse_stored_lfp_cell_data(battery,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag,battery_discharge_flag):
+def reuse_stored_lfp_cell_data(battery,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag):
     '''Reuses results from one propulsor for identical batteries
     
     Assumptions: 

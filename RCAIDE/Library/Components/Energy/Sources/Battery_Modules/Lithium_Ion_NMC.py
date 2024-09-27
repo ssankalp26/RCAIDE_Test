@@ -113,7 +113,7 @@ class Lithium_Ion_NMC(Generic_Battery_Module):
 
         return  
     
-    def energy_calc(self,state,bus,coolant_lines, t_idx, delta_t, discharge= True): 
+    def energy_calc(self,state,bus,coolant_lines, t_idx, delta_t): 
         """Computes the state of the NMC battery cell.
            
         Assumptions:
@@ -131,12 +131,12 @@ class Lithium_Ion_NMC(Generic_Battery_Module):
         Returns: 
             None
         """        
-        stored_results_flag, stored_battery_tag =  compute_nmc_cell_performance(self,state,bus,coolant_lines, t_idx,delta_t,discharge) 
+        stored_results_flag, stored_battery_tag =  compute_nmc_cell_performance(self,state,bus,coolant_lines, t_idx,delta_t) 
         
         return stored_results_flag, stored_battery_tag
     
-    def reuse_stored_data(self,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag,discharge= True):
-        reuse_stored_nmc_cell_data(self,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag, discharge)
+    def reuse_stored_data(self,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag):
+        reuse_stored_nmc_cell_data(self,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag)
         return
         
     

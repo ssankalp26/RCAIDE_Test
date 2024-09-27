@@ -14,7 +14,7 @@ from copy import  deepcopy
 # ----------------------------------------------------------------------------------------------------------------------
 # compute_nmc_cell_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
-def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,battery_discharge_flag): 
+def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t): 
     '''This is an electric cycle model for 18650 lithium-nickel-manganese-cobalt-oxide
        battery cells. The model uses experimental data performed
        by the Automotive Industrial Systems Company of Panasonic Group 
@@ -212,7 +212,7 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
     return stored_results_flag, stored_battery_tag
 
 
-def reuse_stored_nmc_cell_data(battery,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag,battery_discharge_flag):
+def reuse_stored_nmc_cell_data(battery,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag):
     '''Reuses results from one propulsor for identical batteries
     
     Assumptions: 
