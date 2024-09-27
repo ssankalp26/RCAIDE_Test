@@ -15,7 +15,7 @@ from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common   import initialize_
 #  Build the Vehicle
 # ----------------------------------------------------------------------------------------------------------------------   
 
-def vehicle_setup(current,cell_chemistry,fixed_bus_voltage): 
+def vehicle_setup(current,C_rat,cell_chemistry,fixed_bus_voltage): 
 
     vehicle                       = RCAIDE.Vehicle() 
     vehicle.tag                   = 'battery'   
@@ -34,13 +34,22 @@ def vehicle_setup(current,cell_chemistry,fixed_bus_voltage):
  
     # Battery    
     if cell_chemistry == 'lithium_ion_nmc': 
-        battery = RCAIDE.Library.Components.Energy.Sources.Batteries.Lithium_Ion_NMC()
+        battery = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC()
     elif cell_chemistry == 'lithium_ion_lfp': 
-        battery = RCAIDE.Library.Components.Energy.Sources.Batteries.Lithium_Ion_LFP()  
-    net.voltage                                 = battery.cell.nominal_voltage 
+        battery = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_LFP()   
     initialize_from_circuit_configuration(battery)  
-    bus.voltage                      =  battery.pack.maximum_voltage  
-    bus.batteries.append(battery)                                
+    bus.voltage                      =  battery.maximum_voltage  
+    bus.battery_modules.append(battery)
+    bus.charging_c_rate =  1
+    bus.nominal_capacity =  battery.cell.nominal_capacity
+    #------------------------------------------------------------------------------------------------------------------------------------           
+    # Payload 
+    #------------------------------------------------------------------------------------------------------------------------------------  
+    payload                      = RCAIDE.Library.Components.Payloads.Payload()
+    payload.power_draw           = current * bus.voltage  
+    payload.mass_properties.mass = 1.0 * Units.kg
+    bus.payload                  = payload 
+    bus.charging_c_rate          = C_rat
       
     # append bus   
     net.busses.append(bus) 
@@ -55,7 +64,14 @@ def vehicle_setup(current,cell_chemistry,fixed_bus_voltage):
 
 def configs_setup(vehicle): 
     configs         = RCAIDE.Library.Components.Configs.Config.Container()  
-    base_config     = RCAIDE.Library.Components.Configs.Config(vehicle)
-    base_config.tag = 'base' 
-    configs.append(base_config)   
+    discharge_config     = RCAIDE.Library.Components.Configs.Config(vehicle)
+    discharge_config.tag = 'discharge' 
+    configs.append(discharge_config)
+    
+    charge_config     = RCAIDE.Library.Components.Configs.Config(vehicle)
+    charge_config.tag = 'charge'
+    charge_config.networks.electric.busses.bus.payload.power_draw =  0
+    configs.append(charge_config)
+   
+    
     return configs 

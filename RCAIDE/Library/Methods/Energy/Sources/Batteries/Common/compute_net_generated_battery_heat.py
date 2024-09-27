@@ -52,7 +52,7 @@ def compute_net_generated_battery_heat(n_total,battery,Q_heat_gen,numerics):
     D_cell                   = battery.cell.diameter                     
     H_cell                   = battery.cell.height     
     T_ambient                = battery.ambient_temperature 
-    T_current                = battery.pack.temperature      
+    T_current                = battery.temperature      
     T_cell                   = battery.cell.temperature       
     cell_mass                = battery.cell.mass    
     Cp                       = battery.cell.specific_heat_capacity       

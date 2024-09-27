@@ -7,7 +7,8 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 # RCAIDE imports 
-import RCAIDE     
+import RCAIDE
+from RCAIDE.Framework.Core        import Data
 
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Wavy Channel Geometry Setup 
@@ -29,12 +30,18 @@ def wavy_channel_geometry_setup(HAS,battery):
              None
     """     
     vehicle                                                   = RCAIDE.Vehicle()  
-    net                                                       = RCAIDE.Framework.Networks.Electric()  
-    bus                                                       = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus()     
-    battery.thermal_management_system.heat_acquisition_system = HAS 
-    bus.batteries.append(battery)
-    net.busses.append(bus) 
+    net                                                       = RCAIDE.Framework.Networks.Electric()
+    bus                                                       = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus()
+    bus.battery_modules.append(battery)
+    coolant_line                                                          = RCAIDE.Library.Components.Energy.Distributors.Coolant_Line(bus)     
+    coolant_line.battery_modules[battery.tag].thermal_management_system   = Data() 
+
+    coolant_line.battery_modules[battery.tag].thermal_management_system.heat_acquisition_system = HAS 
+
+    net.busses.append(bus)
+    net.coolant_lines.append(coolant_line) 
     vehicle.append_energy_network(net) 
+    
     configs                                                     = RCAIDE.Library.Components.Configs.Config.Container()
     base_config                                                 = RCAIDE.Library.Components.Configs.Config(vehicle)  
     config                                                      = RCAIDE.Library.Components.Configs.Config(base_config)

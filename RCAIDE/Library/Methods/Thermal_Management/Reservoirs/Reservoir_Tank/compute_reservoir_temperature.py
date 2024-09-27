@@ -45,7 +45,7 @@ def compute_reservoir_temperature(reservoir,state,coolant_line,delta_t,t_idx):
     # Heat Transfer properties
     conductivity               = reservoir.material.conductivity / 10
     sigma                       = 5.69e-8   #Stefan Boltzman Constant
-    h                           = 1        #[W/m^2-k]
+    h                           = 50        #[W/m^2-k]
     emissivity_air              = 0.9
     
 

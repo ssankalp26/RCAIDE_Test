@@ -14,14 +14,14 @@ from RCAIDE.Framework.Core import Units
 #  METHOD
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Energy-Sources-Battery-Common
-def initialize_from_circuit_configuration(battery,module_weight_factor = 1.42):  
-    """Calculate pack level properties of battery using cell 
+def initialize_from_circuit_configuration(battery_module,module_weight_factor = 1.42):  
+    """Calculate module level properties of battery module using cell 
     properties and module configuraton
     
     Assumptions:
-    Total battery pack mass contains build-up factor (1.42) for battery casing,
-    internal wires, thermal management system and battery management system 
-    Factor computed using information of battery properties for X-57 Maxwell 
+    Total battery module pack mass contains build-up factor (1.42) for battery module casing,
+    internal wires, thermal management system and battery module management system 
+    Factor computed using information of battery module properties for X-57 Maxwell 
     Aircraft
     
     Source:
@@ -31,33 +31,31 @@ def initialize_from_circuit_configuration(battery,module_weight_factor = 1.42):
 
     Inputs:
     mass              
-    battery.cell
+    battery_module.cell
       nominal_capacity        [amp-hours]            
       nominal_voltage         [volts]
       pack_config             [unitless]
       mass                    [kilograms]
                           
     Outputs:              
-     battery.             
+     battery_module.             
        maximum_energy         [watt-hours]
        maximum_power              [watts]
        initial_maximum_energy [watt-hours]
        specific_energy        [watt-hours/kilogram]
        charging_voltage       [volts]
-       charging_current       [amps]
        mass_properties.    
         mass                  [kilograms] 
     """    
-    amp_hour_rating                             = battery.cell.nominal_capacity    
-    nominal_voltage                             = battery.cell.nominal_voltage       
-    total_battery_assemply_mass                 = battery.cell.mass * battery.pack.electrical_configuration.series * battery.pack.electrical_configuration.parallel   
-    battery.mass_properties.mass                = total_battery_assemply_mass*module_weight_factor  
-    battery.specific_energy                     = (amp_hour_rating*nominal_voltage)/battery.cell.mass  * Units.Wh/Units.kg   
-    battery.pack.maximum_energy                 = total_battery_assemply_mass*battery.specific_energy    
-    battery.specific_power                      = battery.specific_energy/battery.cell.nominal_capacity 
-    battery.pack.maximum_power                  = battery.specific_power*battery.mass_properties.mass  
-    battery.pack.maximum_voltage                = battery.cell.maximum_voltage  * battery.pack.electrical_configuration.series   
-    battery.pack.initial_maximum_energy         = battery.pack.maximum_energy      
-    battery.charging_voltage                    = battery.cell.charging_voltage * battery.pack.electrical_configuration.series     
-    battery.charging_current                    = battery.cell.charging_current * battery.pack.electrical_configuration.parallel  
-    battery.pack.electrical_configuration.total = battery.pack.electrical_configuration.series * battery.pack.electrical_configuration.parallel        
+    amp_hour_rating                               = battery_module.cell.nominal_capacity    
+    nominal_voltage                               = battery_module.cell.nominal_voltage
+    maximum_voltage                               = battery_module.cell.maximum_voltage   
+    total_battery_assemply_mass                   = battery_module.cell.mass * battery_module.electrical_configuration.series * battery_module.electrical_configuration.parallel   
+    battery_module.mass_properties.mass           = total_battery_assemply_mass*module_weight_factor  
+    battery_module.specific_energy                = (amp_hour_rating*maximum_voltage)/battery_module.cell.mass  * Units.Wh/Units.kg
+    battery_module.maximum_energy                 = total_battery_assemply_mass*battery_module.specific_energy    
+    battery_module.specific_power                 = battery_module.specific_energy/battery_module.cell.nominal_capacity 
+    battery_module.maximum_power                  = battery_module.specific_power*battery_module.mass_properties.mass  
+    battery_module.maximum_voltage                = battery_module.cell.maximum_voltage  * battery_module.electrical_configuration.series   
+    battery_module.initial_maximum_energy         = battery_module.maximum_energy      
+    battery_module.electrical_configuration.total = battery_module.electrical_configuration.series * battery_module.electrical_configuration.parallel        
