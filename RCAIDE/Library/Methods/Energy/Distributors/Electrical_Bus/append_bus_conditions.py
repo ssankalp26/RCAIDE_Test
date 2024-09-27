@@ -11,7 +11,6 @@ from RCAIDE.Framework.Mission.Common     import   Conditions
 # ----------------------------------------------------------------------------------------------------------------------
 #  METHODS
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Energy-Sources-Battery 
 def append_bus_conditions(bus,segment): 
     """ Appends the initial bus conditions
         
@@ -35,7 +34,7 @@ def append_bus_conditions(bus,segment):
     segment.state.conditions.energy[bus.tag].power_draw            = 0 * ones_row(1)
     segment.state.conditions.energy[bus.tag].SOC                   = 0 * ones_row(1) 
     segment.state.conditions.energy[bus.tag].current_draw          = 0 * ones_row(1)
-    segment.state.conditions.energy[bus.tag].charging_current      =  0 * ones_row(1)
+    segment.state.conditions.energy[bus.tag].charging_current      = 0 * ones_row(1)
     segment.state.conditions.energy[bus.tag].voltage_open_circuit  = 0 * ones_row(1)
     segment.state.conditions.energy[bus.tag].voltage_under_load    = 0 * ones_row(1) 
     segment.state.conditions.energy[bus.tag].heat_energy_generated = 0 * ones_row(1) 

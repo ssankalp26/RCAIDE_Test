@@ -59,7 +59,3 @@ def energy(segment):
                         fuel_tank_conditions.mass[:,0]   = fuel_tank_initials.mass[-1,0]
                     else: 
                         fuel_tank_conditions.mass[:,0]   = segment.analyses.energy.vehicle.networks[network.tag].fuel_lines[fuel_line.tag].fuel_tanks[fuel_tank.tag].fuel.mass_properties.mass
-            
-                    
-def run_append_battery_segment_conditions(battery, bus, conditions, segment):
-    battery.append_battery_segment_conditions(bus, conditions, segment)

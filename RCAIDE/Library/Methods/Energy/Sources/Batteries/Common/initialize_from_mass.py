@@ -45,6 +45,3 @@ def initialize_from_mass(battery,module_weight_factor = 1.42 ):
     battery.electrical_configuration.series   = n_series
     battery.electrical_configuration.parallel = n_parallel 
     battery.electrical_configuration.total    = n_parallel*n_series      
-    #battery.charging_voltage                       = battery.cell.charging_voltage * battery.pack.electrical_configuration.series     
-    #battery.charging_current                       = battery.cell.charging_current * battery.pack.electrical_configuration.parallel
-    # Can I delete this from REGRESSIONS??????

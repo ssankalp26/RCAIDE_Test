@@ -49,6 +49,7 @@ class Battery_Recharge(Evaluate):
         #   User Inputs
         # --------------------------------------------------------------
         self.altitude                      = None
+        self.time                          = 1.0 * Units.seconds
         self.overcharge_contingency        = 1.10
         self.true_course                   = 0.0 * Units.degrees  
          

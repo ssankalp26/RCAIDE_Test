@@ -78,8 +78,6 @@ def modify_wavy_channel_HAS(nexus):
     A_cell    = np.pi*d_cell*h_cell    
     T_bat     = has_opt.design_battery_operating_temperature
     Q_module    = has_opt.design_heat_removed 
-    #N_mod     = battery.pack.number_of_modules
-    #Q_module  = Q_pack/N_mod 
     
     # Channel 
     channel          = has_opt.channel

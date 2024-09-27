@@ -168,10 +168,10 @@ class Electric(Network):
                         stored_results_flag, stored_battery_tag =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t, recharging_flag)
                     else:             
                         if stored_results_flag == False: 
-                            # run propulsor analysis 
+                            # run battery analysis 
                             stored_results_flag, stored_battery_tag  =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t, recharging_flag)
                         else:
-                            # use previous propulsor results 
+                            # use previous battery results 
                             battery.reuse_stored_data(state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag,recharging_flag)
 
                 # Thermal Management Calculations                    
@@ -344,6 +344,5 @@ class Electric(Network):
 
         return segment
     __call__ = evaluate 
-def run_energy_calc(battery, state, bus, coolant_lines, t_idx, delta_t, recharging_flag):
-    bus.battery_modules[battery.tag].energy_calc(state, bus, coolant_lines, t_idx, delta_t, recharging_flag)
+
 

@@ -53,7 +53,4 @@ class Electrical_Bus(Component):
     
     def compute_distributor_conditions(self,state):
         compute_bus_conditions(self, state)
-        return 
-        
-        
-         
+        return    
