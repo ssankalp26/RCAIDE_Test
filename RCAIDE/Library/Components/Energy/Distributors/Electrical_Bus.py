@@ -42,7 +42,6 @@ class Electrical_Bus(Component):
         self.efficiency                            = 1.0
         self.voltage                               = 0.0 
         self.power_split_ratio                     = 1.0
-        self.charging_current                      = 0.0
         self.nominal_capacity                      = 0.0
         self.charging_c_rate                       = 0.0
         self.battery_module_electric_configuration = None 

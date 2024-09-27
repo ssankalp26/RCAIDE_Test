@@ -44,7 +44,6 @@ def initialize_from_circuit_configuration(battery_module,module_weight_factor = 
        initial_maximum_energy [watt-hours]
        specific_energy        [watt-hours/kilogram]
        charging_voltage       [volts]
-       charging_current       [amps]
        mass_properties.    
         mass                  [kilograms] 
     """    

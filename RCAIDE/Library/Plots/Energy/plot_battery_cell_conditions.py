@@ -63,7 +63,7 @@ def plot_battery_cell_conditions(results,
             if bus.identical_batteries:
                 for i, battery in enumerate(bus.battery_modules):
                     if i == 0:
-                        fig = plt.figure('Identical'+ save_filename + battery.tag)
+                        fig = plt.figure('Identical_'+ save_filename + battery.tag)
                         fig.set_size_inches(width,height)
                         # get line colors for plots 
                         line_colors   = cm.inferno(np.linspace(0,0.9,len(results.segments)))     
