@@ -8,8 +8,8 @@
 from   RCAIDE.Framework.Core import Data  
 import cantera               as ct 
 import pandas                as pd
-import numpy                 as np
-import sys
+import numpy                 as np 
+import os 
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  evaluate_cantera
@@ -47,10 +47,13 @@ def evaluate_cantera(combustor,T,P,mdot,FAR):
     
     if high_fidelity_kin_mech:                                                               
         dict_fuel           = combustor.fuel_data.fuel_chemical_properties  # [-]       Fuel species and corresponding mole fractions for full fuel model
+        kinetics_model      = combustor.fuel_data.chemical_kinetics
     else:                                                                                      
-        dict_fuel           = combustor.fuel_data.fuel_surrogate_chemical_properties              # [-]       Fuel species and corresponding mole fractions for surrogate fuel model 
-    
-    dict_oxy                = combustor.fuel_data.air_chemical_properties              # [-]       Air species and corresponding mole fractions     
+        dict_fuel           = combustor.fuel_data.fuel_surrogate_chemical_properties              # [-]       Fuel species and corresponding mole fractions for surrogate fuel model
+        kinetics_model      = combustor.fuel_data.surrogate_chemical_kinetics
+        
+    dict_oxy                = combustor.fuel_data.air_chemical_properties              # [-]       Air species and corresponding mole fractions
+    oxidizer_model          = combustor.fuel_data.oxidizer
     
     if high_fidelity_kin_mech:                                                                           
         list_sp             = combustor.fuel_data.species_list             # [-]       Fuel species for Emission Index analysis
@@ -60,7 +63,7 @@ def evaluate_cantera(combustor,T,P,mdot,FAR):
     col_names = ['EI_' +str(sp) for sp in list_sp] # [-]       Define output variables 
     df                      = pd.DataFrame(columns=col_names)                       # [-]       Assign output variables space to df
     
-    gas, EI = combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_stag_0, FAR, m_dot_fuel, m_dot_air, N_PZ, A_PZ, L_PZ, phi_sign, phi_SZ, A_SZ, L_SZ, f_air_PZ, N_SZ, sigma_phi) # [-]       Run combustor function
+    gas, EI = combustor_model(kinetics_model,oxidizer_model,high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_stag_0, FAR, m_dot_fuel, m_dot_air, N_PZ, A_PZ, L_PZ, phi_sign, phi_SZ, A_SZ, L_SZ, f_air_PZ, N_SZ, sigma_phi) # [-]       Run combustor function
     
     sp_idx                  = [gas.species_index(sp) for sp in list_sp]             # [-]       Retrieve the species index
     data_n                  = list(EI[sp_idx])                                      # [-]       Assign output variables  
@@ -79,7 +82,12 @@ def evaluate_cantera(combustor,T,P,mdot,FAR):
     
     return results
 
-def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_stag_0, FAR, m_dot_fuel, m_dot_air, N_PZ, A_PZ, L_PZ, phi_sign, phi_SZ, A_SZ, L_SZ, f_air_PZ, N_SZ, sigma_phi):
+def combustor_model(kinetics_model,oxidizer_model,high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_stag_0, FAR, m_dot_fuel, m_dot_air, N_PZ, A_PZ, L_PZ, phi_sign, phi_SZ, A_SZ, L_SZ, f_air_PZ, N_SZ, sigma_phi):
+
+
+    ospath    = os.path.abspath(__file__)
+    separator = os.path.sep
+    rel_path  = os.path.dirname(ospath) + separator + "Data" + separator      
 
     # ------------------------------------------------------------------------------
     # ----------------------------- Initial Parameters -----------------------------
@@ -98,11 +106,8 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     # ----------------------------------- PSR #1 -----------------------------------
     # ------------------------------------------------------------------------------ 
     
-    f_PZ_1                  = (1 / (np.sqrt(2 * np.pi) * sigma_phi)) * np.exp((-(phi_PSR[0] - phi_sign) ** 2) / (2 * sigma_phi ** 2)) * Delta_phi # [-]       Fraction of mass flow entering the PSR at the PSR equivalence ratio 
-    if high_fidelity_kin_mech:                                                                           
-        Fuel_1              = ct.Solution('C:/Users/Matteo/Documents/UIUC/RCAIDE_UIUC/RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network_Method/Jet_A_High_Fidelity.yaml')               # [-]       Import full fuel kinematic mechanism
-    else:                                                                                       
-        Fuel_1              = ct.Solution('C:/Users/Matteo/Documents/UIUC/RCAIDE_UIUC/RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network_Method/Jet_A_Low_Fidelity.yaml')                # [-]       Import surrogate fuel kinematic mechanism
+    f_PZ_1                  = (1 / (np.sqrt(2 * np.pi) * sigma_phi)) * np.exp((-(phi_PSR[0] - phi_sign) ** 2) / (2 * sigma_phi ** 2)) * Delta_phi # [-]       Fraction of mass flow entering the PSR at the PSR equivalence ratio                                                                                       
+    Fuel_1                  = ct.Solution(rel_path+kinetics_model)                  # [-]       Import surrogate fuel kinematic mechanism
     Fuel_1.TP               = T_stag_0, P_stag_0                                    # [-]       Set the fuel temperature and pressure
     Fuel_1.set_equivalence_ratio(phi_PSR[0], fuel=dict_fuel, oxidizer=dict_oxy)     # [-]       Set the euivalence ratio inside the PSR
     Fuel_1.equilibrate('HP')                                                        # [-]       Fix the specific enthalpy and pressure 
@@ -127,10 +132,7 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     # ------------------------------------------------------------------------------ 
     
     f_PZ_2                  = (1 / (np.sqrt(2 * np.pi) * sigma_phi)) * np.exp((-(phi_PSR[1] - phi_sign) ** 2) / (2 * sigma_phi ** 2)) * Delta_phi # [-]       Fraction of mass flow entering the PSR at the PSR equivalence ratio 
-    if high_fidelity_kin_mech:                                                                           
-        Fuel_2              = ct.Solution('C:/Users/Matteo/Documents/UIUC/RCAIDE_UIUC/RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network_Method/Jet_A_High_Fidelity.yaml')               # [-]       Import full fuel kinematic mechanism
-    else:                                                                                       
-        Fuel_2              = ct.Solution('C:/Users/Matteo/Documents/UIUC/RCAIDE_UIUC/RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network_Method/Jet_A_Low_Fidelity.yaml')                # [-]       Import surrogate fuel kinematic mechanism
+    Fuel_2                  = ct.Solution(rel_path+kinetics_model)                           # [-]       Import surrogate fuel kinematic mechanism           
     Fuel_2.TP               = T_stag_0, P_stag_0                                    # [-]       Set the fuel temperature and pressure
     Fuel_2.set_equivalence_ratio(phi_PSR[1], fuel=dict_fuel, oxidizer=dict_oxy)     # [-]       Set the euivalence ratio inside the PSR
     Fuel_2.equilibrate('HP')                                                        # [-]       Fix the specific enthalpy and pressure 
@@ -154,10 +156,7 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     # ------------------------------------------------------------------------------ 
     
     f_PZ_3                  = (1 / (np.sqrt(2 * np.pi) * sigma_phi)) * np.exp((-(phi_PSR[2] - phi_sign) ** 2) / (2 * sigma_phi ** 2)) * Delta_phi # [-]       Fraction of mass flow entering the PSR at the PSR equivalence ratio 
-    if high_fidelity_kin_mech:                                                                           
-        Fuel_3              = ct.Solution('C:/Users/Matteo/Documents/UIUC/RCAIDE_UIUC/RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network_Method/Jet_A_High_Fidelity.yaml')               # [-]       Import full fuel kinematic mechanism
-    else:                                                                                       
-        Fuel_3              = ct.Solution('C:/Users/Matteo/Documents/UIUC/RCAIDE_UIUC/RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network_Method/Jet_A_Low_Fidelity.yaml')                # [-]       Import surrogate fuel kinematic mechanism
+    Fuel_3                 = ct.Solution(rel_path+kinetics_model)                           # [-]       Import surrogate fuel kinematic mechanism           
     Fuel_3.TP               = T_stag_0, P_stag_0                                    # [-]       Set the fuel temperature and pressure
     Fuel_3.set_equivalence_ratio(phi_PSR[2], fuel=dict_fuel, oxidizer=dict_oxy)     # [-]       Set the euivalence ratio inside the PSR
     Fuel_3.equilibrate('HP')                                                        # [-]       Fix the specific enthalpy and pressure 
@@ -182,10 +181,7 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     # ------------------------------------------------------------------------------ 
     
     f_PZ_4                  = (1 / (np.sqrt(2 * np.pi) * sigma_phi)) * np.exp((-(phi_PSR[3] - phi_sign) ** 2) / (2 * sigma_phi ** 2)) * Delta_phi # [-]       Fraction of mass flow entering the PSR at the PSR equivalence ratio 
-    if high_fidelity_kin_mech:                                                                           
-        Fuel_4              = ct.Solution('C:/Users/Matteo/Documents/UIUC/RCAIDE_UIUC/RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network_Method/Jet_A_High_Fidelity.yaml')               # [-]       Import full fuel kinematic mechanism
-    else:                                                                                       
-        Fuel_4              = ct.Solution('C:/Users/Matteo/Documents/UIUC/RCAIDE_UIUC/RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network_Method/Jet_A_Low_Fidelity.yaml')                # [-]       Import surrogate fuel kinematic mechanism
+    Fuel_4                  = ct.Solution(rel_path+kinetics_model)                  # [-]       Import surrogate fuel kinematic mechanism       
     Fuel_4.TP               = T_stag_0, P_stag_0                                    # [-]       Set the fuel temperature and pressure
     Fuel_4.set_equivalence_ratio(phi_PSR[3], fuel=dict_fuel, oxidizer=dict_oxy)     # [-]       Set the euivalence ratio inside the PSR
     Fuel_4.equilibrate('HP')                                                        # [-]       Fix the specific enthalpy and pressure 
@@ -209,10 +205,7 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     # ------------------------------------------------------------------------------ 
     
     f_PZ_5                  = (1 / (np.sqrt(2 * np.pi) * sigma_phi)) * np.exp((-(phi_PSR[4] - phi_sign) ** 2) / (2 * sigma_phi ** 2)) * Delta_phi # [-]       Fraction of mass flow entering the PSR at the PSR equivalence ratio 
-    if high_fidelity_kin_mech:                                                                           
-        Fuel_5              = ct.Solution('C:/Users/Matteo/Documents/UIUC/RCAIDE_UIUC/RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network_Method/Jet_A_High_Fidelity.yaml')               # [-]       Import full fuel kinematic mechanism
-    else:                                                                                       
-        Fuel_5              = ct.Solution('C:/Users/Matteo/Documents/UIUC/RCAIDE_UIUC/RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network_Method/Jet_A_Low_Fidelity.yaml')                # [-]       Import surrogate fuel kinematic mechanism
+    Fuel_5                  = ct.Solution(rel_path+kinetics_model)                  # [-]       Import surrogate fuel kinematic mechanism  
     Fuel_5.TP               = T_stag_0, P_stag_0                                    # [-]       Set the fuel temperature and pressure
     Fuel_5.set_equivalence_ratio(phi_PSR[4], fuel=dict_fuel, oxidizer=dict_oxy)     # [-]       Set the euivalence ratio inside the PSR
     Fuel_5.equilibrate('HP')                                                        # [-]       Fix the specific enthalpy and pressure 
@@ -237,10 +230,7 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     # ------------------------------------------------------------------------------ 
     
     f_PZ_6                  = (1 / (np.sqrt(2 * np.pi) * sigma_phi)) * np.exp((-(phi_PSR[5] - phi_sign) ** 2) / (2 * sigma_phi ** 2)) * Delta_phi # [-]       Fraction of mass flow entering the PSR at the PSR equivalence ratio 
-    if high_fidelity_kin_mech:                                                                           
-        Fuel_6              = ct.Solution('C:/Users/Matteo/Documents/UIUC/RCAIDE_UIUC/RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network_Method/Jet_A_High_Fidelity.yaml')               # [-]       Import full fuel kinematic mechanism
-    else:                                                                                       
-        Fuel_6              = ct.Solution('C:/Users/Matteo/Documents/UIUC/RCAIDE_UIUC/RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network_Method/Jet_A_Low_Fidelity.yaml')                # [-]       Import surrogate fuel kinematic mechanism
+    Fuel_6                  = ct.Solution(rel_path+kinetics_model)                  # [-]       Import surrogate fuel kinematic mechanism  
     Fuel_6.TP               = T_stag_0, P_stag_0                                    # [-]       Set the fuel temperature and pressure
     Fuel_6.set_equivalence_ratio(phi_PSR[5], fuel=dict_fuel, oxidizer=dict_oxy)     # [-]       Set the euivalence ratio inside the PSR
     Fuel_6.equilibrate('HP')                                                        # [-]       Fix the specific enthalpy and pressure 
@@ -264,10 +254,7 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     # ------------------------------------------------------------------------------ 
 
     f_PZ_7                  = (1 / (np.sqrt(2 * np.pi) * sigma_phi)) * np.exp((-(phi_PSR[6] - phi_sign) ** 2) / (2 * sigma_phi ** 2)) * Delta_phi # [-]       Fraction of mass flow entering the PSR at the PSR equivalence ratio 
-    if high_fidelity_kin_mech:                                                                           
-        Fuel_7              = ct.Solution('C:/Users/Matteo/Documents/UIUC/RCAIDE_UIUC/RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network_Method/Jet_A_High_Fidelity.yaml')               # [-]       Import full fuel kinematic mechanism
-    else:                                                                                       
-        Fuel_7              = ct.Solution('C:/Users/Matteo/Documents/UIUC/RCAIDE_UIUC/RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network_Method/Jet_A_Low_Fidelity.yaml')                # [-]       Import surrogate fuel kinematic mechanism
+    Fuel_7                  = ct.Solution(rel_path+kinetics_model)                  # [-]       Import surrogate fuel kinematic mechanism  
     Fuel_7.TP               = T_stag_0, P_stag_0                                    # [-]       Set the fuel temperature and pressure
     Fuel_7.set_equivalence_ratio(phi_PSR[6], fuel=dict_fuel, oxidizer=dict_oxy)     # [-]       Set the euivalence ratio inside the PSR
     Fuel_7.equilibrate('HP')                                                        # [-]       Fix the specific enthalpy and pressure 
@@ -292,10 +279,7 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     # ------------------------------------------------------------------------------ 
     
     f_PZ_8                  = (1 / (np.sqrt(2 * np.pi) * sigma_phi)) * np.exp((-(phi_PSR[7] - phi_sign) ** 2) / (2 * sigma_phi ** 2)) * Delta_phi # [-]       Fraction of mass flow entering the PSR at the PSR equivalence ratio 
-    if high_fidelity_kin_mech:                                                                           
-        Fuel_8              = ct.Solution('C:/Users/Matteo/Documents/UIUC/RCAIDE_UIUC/RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network_Method/Jet_A_High_Fidelity.yaml')               # [-]       Import full fuel kinematic mechanism
-    else:                                                                                       
-        Fuel_8              = ct.Solution('C:/Users/Matteo/Documents/UIUC/RCAIDE_UIUC/RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network_Method/Jet_A_Low_Fidelity.yaml')                # [-]       Import surrogate fuel kinematic mechanism
+    Fuel_8                  = ct.Solution(rel_path+kinetics_model)                  # [-]       Import surrogate fuel kinematic mechanism  
     Fuel_8.TP               = T_stag_0, P_stag_0                                    # [-]       Set the fuel temperature and pressure
     Fuel_8.set_equivalence_ratio(phi_PSR[7], fuel=dict_fuel, oxidizer=dict_oxy)     # [-]       Set the euivalence ratio inside the PSR
     Fuel_8.equilibrate('HP')                                                        # [-]       Fix the specific enthalpy and pressure 
@@ -376,9 +360,8 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     
     # ------------------------------------------------------------------------------
     # -------------------------------- Mixing 1-Air --------------------------------
-    # ------------------------------------------------------------------------------     
-
-    Air_1                   = ct.Solution('C:/Users/Matteo/Documents/UIUC/RCAIDE_UIUC/RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network_Method/Air.yaml')                               # [-]       Import air kinematic mechanism
+    # ------------------------------------------------------------------------------      
+    Air_1                   = ct.Solution(rel_path+oxidizer_model)                  # [-]       Import air kinematic mechanism
     Air_1.TPX               = T_stag_0, P_stag_0, dict_oxy                          # [-]       Set the air temperature, pressure and mole fractions
     rho_air_1               = Air_1.density                                         # [kg/m**3] Fuel density
     res_air_1               = ct.Reservoir(Air_1)                                   # [-]       Create a resevoir for the air upstream of the mixer
@@ -404,8 +387,7 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     # ------------------------------------------------------------------------------
     # -------------------------------- Mixing 2-Air --------------------------------
     # ------------------------------------------------------------------------------     
-
-    Air_2                   = ct.Solution('C:/Users/Matteo/Documents/UIUC/RCAIDE_UIUC/RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network_Method/Air.yaml')                               # [-]       Import air kinematic mechanism
+    Air_2                   = ct.Solution(rel_path+oxidizer_model)                  # [-]       Import air kinematic mechanism
     Air_2.TPX               = T_stag_0, P_stag_0, dict_oxy                          # [-]       Set the air temperature, pressure and mole fractions
     rho_air_2               = Air_2.density                                         # [kg/m**3] Fuel density
     res_air_2               = ct.Reservoir(Air_2)                                   # [-]       Create a resevoir for the air upstream of the mixer
@@ -431,8 +413,7 @@ def combustor_model(high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_sta
     # ------------------------------------------------------------------------------
     # -------------------------------- Mixing 3-Air --------------------------------
     # ------------------------------------------------------------------------------     
-
-    Air_3                   = ct.Solution('C:/Users/Matteo/Documents/UIUC/RCAIDE_UIUC/RCAIDE/Library/Methods/Emissions/Chemical_Reactor_Network_Method/Air.yaml')                               # [-]       Import air kinematic mechanism
+    Air_3                   = ct.Solution(rel_path+oxidizer_model)                  # [-]       Import air kinematic mechanism
     Air_3.TPX               = T_stag_0, P_stag_0, dict_oxy                          # [-]       Set the air temperature, pressure and mole fractions
     rho_air_3               = Air_3.density                                         # [kg/m**3] Fuel density
     res_air_3               = ct.Reservoir(Air_3)                                   # [-]       Create a resevoir for the air upstream of the mixer

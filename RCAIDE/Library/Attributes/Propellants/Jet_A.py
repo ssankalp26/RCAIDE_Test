@@ -9,9 +9,7 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
 
 from .Propellant import Propellant
-from RCAIDE.Framework.Core import Data
-import cantera as ct
-import  os
+from RCAIDE.Framework.Core import Data  
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Jet_A1 Propellant Class
 # ----------------------------------------------------------------------------------------------------------------------  
@@ -47,13 +45,10 @@ class Jet_A(Propellant):
         self.fuel_chemical_properties              = {'NC10H22':0.16449, 'NC12H26':0.34308, 'NC16H34':0.10335, 'IC8H18':0.08630, 'NC7H14':0.07945, 'C6H5C2H5': 0.07348, 'C6H5C4H9': 0.05812, 'C10H7CH3': 0.10972}      # [2] More accurate kinetic mechanism, slower simulation    
         self.air_chemical_properties               = {'O2':0.2095, 'N2':0.7809, 'AR':0.0096}
         self.surrogate_species_list                = ['CO', 'CO2', 'H2O']
-        self.species_list                          = ['CO', 'CO2', 'H2O', 'NO', 'NO2', 'CSOLID']
-    
-        ospath    = os.path.abspath(__file__)
-        separator = os.path.sep
-        rel_path  = os.path.dirname(ospath) + separator      
-        self.surrogate_chemical_kinetics           = ct.Solution(rel_path+'Jet_A_Surrogate.yaml')
-        self.chemical_kinetics                     = ct.Solution(rel_path+'Jet_A.yaml') 
+        self.species_list                          = ['CO', 'CO2', 'H2O', 'NO', 'NO2', 'CSOLID']   
+        self.surrogate_chemical_kinetics           = 'Jet_A_Surrogate.yaml'
+        self.chemical_kinetics                     = 'Jet_A.yaml'
+        self.oxidizer                              = 'Air.yaml'
 
         # critical temperatures   
         self.temperatures.flash           = 311.15                 # K
