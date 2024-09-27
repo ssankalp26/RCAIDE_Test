@@ -8,6 +8,7 @@
 import  RCAIDE
 from RCAIDE.Framework.Core import Data
 import RCAIDE.Library.Methods.Emissions.Chemical_Reactor_Network_Method.evaluate_cantera as evaluate_cantera 
+import RCAIDE.Library.Methods.Emissions.Chemical_Reactor_Network_Method.evaluate_cantera_2 as evaluate_cantera_2
 
  
 # package imports
@@ -59,6 +60,7 @@ def evaluate_CRN_emission_indices_no_surrogate(state,settings,vehicle):
                                 for t_idx in range(n_cp):
                                     # Call cantera 
                                     results = evaluate_cantera(combustor,P[0,t_idx],T[0,t_idx],mdot[0,t_idx],FAR[0,t_idx])
+                                    results = evaluate_cantera_2(combustor,P[0,t_idx],T[0,t_idx],mdot[0,t_idx],FAR[0,t_idx])
                                     
                                     EI_CO2_p[0,t_idx] = results.EI_CO2
                                     EI_CO_p[0,t_idx] =  results.EI_CO 

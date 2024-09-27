@@ -332,6 +332,16 @@ def combustor_model(kinetics_model,oxidizer_model,high_fidelity_kin_mech, dict_f
     sim_mixer_78            = ct.ReactorNet([mixer_78])                             # [-]       Set the mixer simulation  
     sim_mixer_78.advance_to_steady_state()                                          # [-]       Run the simulation until it reaches steady state
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     # ------------------------------------------------------------------------------
     # ------------------------------- Mixing 1-2-3-4 -------------------------------
     # ------------------------------------------------------------------------------     
@@ -349,6 +359,13 @@ def combustor_model(kinetics_model,oxidizer_model,high_fidelity_kin_mech, dict_f
     sim_mixer_5678          = ct.ReactorNet([mixer_5678])                           # [-]       Set the mixer simulation  
     sim_mixer_5678.advance_to_steady_state()                                        # [-]       Run the simulation until it reaches steady state
     
+    
+    
+    
+    
+    
+    
+    
     # ------------------------------------------------------------------------------
     # --------------------------- Mixing 1-2-3-4-5-6-7-8 ---------------------------
     # ------------------------------------------------------------------------------     
@@ -357,6 +374,11 @@ def combustor_model(kinetics_model,oxidizer_model,high_fidelity_kin_mech, dict_f
     outlet_12345678         = ct.MassFlowController(mixer_12345678, mixer_air_1, mdot = (mass_flow_rate_1 + mass_flow_rate_2 + mass_flow_rate_3 + mass_flow_rate_4 + mass_flow_rate_5 + mass_flow_rate_6 + mass_flow_rate_7 + mass_flow_rate_8)) # [-]       Connect the mixer with the downstream mixer     
     sim_mixer_12345678      = ct.ReactorNet([mixer_12345678])                       # [-]       Set the mixer simulation  
     sim_mixer_12345678.advance_to_steady_state()                                    # [-]       Run the simulation until it reaches steady state
+    
+    
+    
+    
+    
     
     # ------------------------------------------------------------------------------
     # -------------------------------- Mixing 1-Air --------------------------------
