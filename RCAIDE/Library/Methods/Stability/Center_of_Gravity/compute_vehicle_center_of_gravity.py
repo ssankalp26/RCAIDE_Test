@@ -8,8 +8,10 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
 
 # RCAIDE imports 
-from Legacy.trunk.S.Components import Physical_Component 
+from Legacy.trunk.S.Components import Physical_Component
+from Legacy.trunk.S.Components.Energy import Energy_Component # Added this
 from RCAIDE.Library.Components import Component 
+from RCAIDE.Library.Methods.Weights.mass_and_intertia_functions import *   # Updated : 
 from RCAIDE.Library.Methods.Stability.Common import * 
 from .compute_component_centers_of_gravity import compute_component_centers_of_gravity
 
