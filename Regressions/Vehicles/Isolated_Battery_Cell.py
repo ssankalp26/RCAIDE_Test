@@ -40,7 +40,7 @@ def vehicle_setup(current,cell_chemistry,fixed_bus_voltage):
     initialize_from_circuit_configuration(battery)  
     bus.voltage                      =  battery.maximum_voltage  
     bus.battery_modules.append(battery)
-
+    bus.charging_c_rate =  1
     #------------------------------------------------------------------------------------------------------------------------------------           
     # Payload 
     #------------------------------------------------------------------------------------------------------------------------------------  
