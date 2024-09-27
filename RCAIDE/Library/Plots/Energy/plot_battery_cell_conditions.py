@@ -123,9 +123,7 @@ def plot_battery_cell_conditions(results,
                         b_i += 1
                         if show_legend:      
                             leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
-                            leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})                             
-                                                       
-                                      
+                            leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})                                                    
             else:
                 for _, battery in enumerate(bus.battery_modules):
                     fig = plt.figure(save_filename + battery.tag)
