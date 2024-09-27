@@ -139,11 +139,7 @@ def compute_lfp_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
 
     # ---------------------------------------------------------------------------------------------------
     # Current State 
-    # ---------------------------------------------------------------------------------------------------
-    #if bus_config is 'Series':
-        #I_module[t_idx]      = I_bus[t_idx]
-    #elif bus_config is  'Parallel':
-        #I_module[t_idx]      = I_bus[t_idx] / len(bus.battery_modules)
+    # --------------------------------------------------------------------------------------------------- 
     I_module[t_idx]      = I_bus[t_idx]    
     I_cell[t_idx]        = I_module[t_idx] / n_parallel   
 
@@ -193,7 +189,7 @@ def compute_lfp_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t,
             T_cell[t_idx+1]  = HAS.compute_thermal_performance(battery,coolant_line, Q_heat_cell[t_idx],T_cell[t_idx],state,delta_t[t_idx],t_idx)
         else:
             # Considers a thermally insulated system and the heat piles on in the system
-            dT_dt             = Q_heat_cell[t_idx]/(cell_mass*Cp)
+            dT_dt              = Q_heat_cell[t_idx]/(cell_mass*Cp)
             T_cell[t_idx+1]    =  T_cell[t_idx] + dT_dt*delta_t[t_idx]
             
         # Compute state of charge and depth of discarge of the battery

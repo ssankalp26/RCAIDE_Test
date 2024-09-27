@@ -36,11 +36,18 @@ def vehicle_setup(current,cell_chemistry,fixed_bus_voltage):
     if cell_chemistry == 'lithium_ion_nmc': 
         battery = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC()
     elif cell_chemistry == 'lithium_ion_lfp': 
-        battery = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_LFP()  
-    net.voltage                                 = battery.cell.nominal_voltage 
+        battery = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_LFP()   
     initialize_from_circuit_configuration(battery)  
     bus.voltage                      =  battery.maximum_voltage  
-    bus.battery_modules.append(battery)                                
+    bus.battery_modules.append(battery)
+
+    #------------------------------------------------------------------------------------------------------------------------------------           
+    # Payload 
+    #------------------------------------------------------------------------------------------------------------------------------------  
+    payload                      = RCAIDE.Library.Components.Payloads.Payload()
+    payload.power_draw           = current * bus.voltage # Watts
+    payload.mass_properties.mass = 1.0 * Units.kg
+    bus.payload                  = payload 
       
     # append bus   
     net.busses.append(bus) 

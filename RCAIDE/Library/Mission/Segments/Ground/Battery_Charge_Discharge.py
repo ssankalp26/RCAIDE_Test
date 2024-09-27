@@ -36,16 +36,13 @@ def initialize_conditions(segment):
         for network in segment.analyses.energy.vehicle.networks:
             time =  0 
             for bus in  network.busses:
-                time           =  max((1-segment.state.initials.conditions.energy[bus.tag].SOC[-1] / bus.charging_c_rate )*Units.hrs  , time)
-                # dimensionalize time
-                t_initial = segment.state.conditions.frames.inertial.time[0,0]
-                t_nondim  = segment.state.numerics.dimensionless.control_points
-                #segment.state.
-                charging_time      = t_nondim * ( time ) + t_initial
+                time           =  max((1-segment.state.initials.conditions.energy[bus.tag].SOC[-1] / bus.charging_c_rate )*Units.hrs  , time) 
+                t_initial     = segment.state.conditions.frames.inertial.time[0,0]
+                t_nondim      = segment.state.numerics.dimensionless.control_points 
+                charging_time = t_nondim * ( time ) + t_initial
                 segment.state.conditions.frames.inertial.time[:,0] = charging_time[:,0]
     else:
         t_initial = segment.state.conditions.frames.inertial.time[0,0]
         t_nondim  = segment.state.numerics.dimensionless.control_points
-        time      = t_nondim * ( segment.time ) + t_initial
-        
+        time      = t_nondim * ( segment.time ) + t_initial 
         segment.state.conditions.frames.inertial.time[:,0] = time[:,0] 
