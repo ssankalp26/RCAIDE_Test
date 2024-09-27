@@ -33,6 +33,3 @@ class Lithium_Air(Generic_Battery_Module):
         self.cell.specific_energy  = 2000.     *Units.Wh/Units.kg    # convert to Joules/kg
         self.cell.specific_power   = 0.66      *Units.kW/Units.kg    # convert to W/kg
         self.cell.mass_gain_factor = (1.92E-4) /Units.Wh
-       
-            
-  

@@ -343,5 +343,3 @@ class Electric(Network):
 
         return segment
     __call__ = evaluate 
-
-

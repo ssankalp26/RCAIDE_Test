@@ -16,7 +16,7 @@ from .angular_acceleration             import angular_acceleration
 from .aerodynamics                     import aerodynamics
 from .altitude                         import altitude
 from .atmosphere                       import atmosphere
-from .battery_age                      import battery_age
+from .energy                           import energy
 from .differentials_time               import differentials_time
 from .forces                           import forces
 from .noise                            import noise

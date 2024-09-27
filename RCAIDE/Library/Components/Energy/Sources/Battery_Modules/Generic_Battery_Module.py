@@ -1,4 +1,3 @@
-## @ingroup Library-Compoments-Energy-Batteries
 # RCAIDE/Library/Compoments/Energy/Sources/Battery_Modules/Generic_Battery_Module.py
 # 
 # 
@@ -60,5 +59,3 @@ class Generic_Battery_Module(Component):
     def append_battery_segment_conditions(self,bus, conditions, segment):
         append_battery_segment_conditions(self,bus, conditions, segment)
         return
-
- 
