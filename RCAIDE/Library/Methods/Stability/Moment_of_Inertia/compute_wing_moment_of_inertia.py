@@ -41,7 +41,7 @@ def compute_wing_moment_of_inertia(wing, mass=0,  center_of_gravity=[[0, 0, 0]],
     b = wing.spans.total / 2 # half-span of the wing
     A = wing.sweeps.quarter_chord * np.pi / 180 # sweep angle in radians (located at quarter chord)
     dihedral = wing.dihedral * np.pi /180 # Wing dihedral. Converts it to radians
-    origin_wing = wing.origin + [[cr / 4], [0], [0]] # moves the origin of the wing to the quarter chord of the root airfoil.
+    origin_wing = wing.origin + np.array([[cr / 4], [0], [0]]) # moves the origin of the wing to the quarter chord of the root airfoil.
     
     # ----------------------------------------------------------------------------------------------------------------------
     # Fuel Tank Values
@@ -97,7 +97,7 @@ def compute_wing_moment_of_inertia(wing, mass=0,  center_of_gravity=[[0, 0, 0]],
     Ixy = -1 * delta * b * mass * (4 * b * kf * v0 * np.tan(A) + kd * v1) / (20 * ka * v0)
     Ixz = 0  # Ixz, Iyz are 0
     Iyz = 0  # Ixz, Iyz are 0
-    I_wing_sys = [[Ixx, -Ixy, -Ixz], [-Ixy, Iyy, -Iyz], [-Ixz, -Iyz, Izz]] # inertia tensor in the wing system
+    I_wing_sys = np.array([[Ixx, -Ixy, -Ixz], [-Ixy, Iyy, -Iyz], [-Ixz, -Iyz, Izz]]) # inertia tensor in the wing system
     
     # Dihedral. -1*dihedral for the right wing
     R = np.array([[1, 0, 0], [0, np.cos(-1*dihedral), -1 * np.sin(-1*dihedral)], [0, np.sin(-1*dihedral), np.cos(-1*dihedral)]])
