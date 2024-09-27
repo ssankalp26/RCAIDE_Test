@@ -55,7 +55,6 @@ class Generic_Battery_Module(Component):
         append_battery_conditions(self,segment,bus)  
         return
     
-    
     def append_battery_segment_conditions(self,bus, conditions, segment):
         append_battery_segment_conditions(self,bus, conditions, segment)
         return

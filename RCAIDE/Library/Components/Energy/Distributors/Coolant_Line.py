@@ -31,7 +31,7 @@ class Coolant_Line(Component):
     def __init__ (self, distributor=None):
         
         """This initializes empty containers to add heat acqusition systems
-           for battery_modules that are present on a particular bus.
+           for battery modules that are present on a particular bus.
     
         Assumptions:
             None

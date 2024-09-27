@@ -108,9 +108,6 @@ class Lithium_Ion_NMC(Generic_Battery_Module):
         battery_raw_data                      = load_battery_results()                                                   
         self.cell.discharge_performance_map   = create_discharge_performance_map(battery_raw_data)  
 
-  
-
-
         return  
     
     def energy_calc(self,state,bus,coolant_lines, t_idx, delta_t): 

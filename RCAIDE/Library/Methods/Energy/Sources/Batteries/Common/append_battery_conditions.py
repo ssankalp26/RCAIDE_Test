@@ -79,23 +79,23 @@ def append_battery_conditions(battery,segment,bus):
     bus_results.battery_modules[battery.tag].internal_resistance       = 0 * ones_row(1)
     bus_results.battery_modules[battery.tag].cell.internal_resistance  = 0 * ones_row(1)
          
-    bus_results.battery_modules[battery.tag].voltage_under_load       = 0 * ones_row(1)
-    bus_results.battery_modules[battery.tag].cell.voltage_under_load  = 0 * ones_row(1)
+    bus_results.battery_modules[battery.tag].voltage_under_load         = 0 * ones_row(1)
+    bus_results.battery_modules[battery.tag].cell.voltage_under_load    = 0 * ones_row(1)
      
-    bus_results.battery_modules[battery.tag].power           = 0 * ones_row(1)
-    bus_results.battery_modules[battery.tag].cell.power      = 0 * ones_row(1)   
+    bus_results.battery_modules[battery.tag].power                      = 0 * ones_row(1)
+    bus_results.battery_modules[battery.tag].cell.power                 = 0 * ones_row(1)   
               
-    bus_results.battery_modules[battery.tag].power_draw      = 0 * ones_row(1)    
-    bus_results.battery_modules[battery.tag].current_draw    = 0 * ones_row(1)
+    bus_results.battery_modules[battery.tag].power_draw                 = 0 * ones_row(1)    
+    bus_results.battery_modules[battery.tag].current_draw               = 0 * ones_row(1)
               
-    bus_results.battery_modules[battery.tag].current        = 0 * ones_row(1)
-    bus_results.battery_modules[battery.tag].cell.current   = 0 * ones_row(1)  
+    bus_results.battery_modules[battery.tag].current                    = 0 * ones_row(1)
+    bus_results.battery_modules[battery.tag].cell.current               = 0 * ones_row(1)  
                
-    bus_results.battery_modules[battery.tag].heat_energy_generated       = 0 * ones_row(1)   
-    bus_results.battery_modules[battery.tag].cell.heat_energy_generated  = 0 * ones_row(1)    
+    bus_results.battery_modules[battery.tag].heat_energy_generated      = 0 * ones_row(1)   
+    bus_results.battery_modules[battery.tag].cell.heat_energy_generated = 0 * ones_row(1)    
               
-    bus_results.battery_modules[battery.tag].cell.energy      = 0 * ones_row(1)
-    bus_results.battery_modules[battery.tag].energy           = 0 * ones_row(1)      
+    bus_results.battery_modules[battery.tag].cell.energy                = 0 * ones_row(1)
+    bus_results.battery_modules[battery.tag].energy                     = 0 * ones_row(1)      
                
     bus_results.battery_modules[battery.tag].cell.cycle_in_day               = 0
     bus_results.battery_modules[battery.tag].cell.resistance_growth_factor   = 1.

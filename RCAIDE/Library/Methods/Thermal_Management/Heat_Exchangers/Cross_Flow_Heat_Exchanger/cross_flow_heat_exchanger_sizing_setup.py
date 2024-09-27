@@ -399,7 +399,7 @@ def post_process(nexus):
               
               
           Assumptions: 
-             N/A 
+             The mass of the HEX is scaled for the optimzier. 
         
           Source:
              None

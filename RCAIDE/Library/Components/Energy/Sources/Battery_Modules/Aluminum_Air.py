@@ -33,7 +33,7 @@ class Aluminum_Air(Generic_Battery_Module):
         self.tag                         = 'Aluminum Air'
         self.cell.specific_energy        = 1300.*Units.Wh/Units.kg    # convert to Joules/kg
         self.cell.specific_power         = 0.2*Units.kW/Units.kg      # convert to W/kg
-        self.mass_gain_factor       = 0.000110145*Units.kg/Units.Wh
+        self.mass_gain_factor            = 0.000110145*Units.kg/Units.Wh
         self.cell.water_mass_gain_factor = 0.000123913*Units.kg/Units.Wh
         self.cell.aluminum_mass_factor   = 0.000123828*Units.kg/Units.Wh # aluminum consumed per energy
         self.cell.ragone.const_1         = 0.8439*Units.kW/Units.kg

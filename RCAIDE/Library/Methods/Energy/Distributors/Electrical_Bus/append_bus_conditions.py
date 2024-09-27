@@ -55,7 +55,5 @@ def append_bus_conditions(bus,segment):
             #bus.voltage +=  battery_module.voltage
             #bus.capacity =  battery_module.capacity        
     #else: raise Exception("Define how the battery modules are connected on the bus")
-        
-        
-        
+   
     return    

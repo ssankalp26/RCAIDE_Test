@@ -59,7 +59,7 @@ def modify_wavy_channel_HAS(nexus):
           Source:
              None
     """        
-    battery_list       = list(nexus.hrs_configurations.optimized.networks.electric.busses.bus.battery_modules.keys())
+    battery_list  = list(nexus.hrs_configurations.optimized.networks.electric.busses.bus.battery_modules.keys())
     battery       = nexus.hrs_configurations.optimized.networks.electric.busses.bus.battery_modules[battery_list[0]]
     has_opt       = nexus.hrs_configurations.optimized.networks.electric.coolant_lines.coolant_line.battery_modules[battery.tag].thermal_management_system.heat_acquisition_system
 
@@ -77,7 +77,7 @@ def modify_wavy_channel_HAS(nexus):
     h_cell    = battery.cell.height                      
     A_cell    = np.pi*d_cell*h_cell    
     T_bat     = has_opt.design_battery_operating_temperature
-    Q_module    = has_opt.design_heat_removed 
+    Q_module  = has_opt.design_heat_removed 
     
     # Channel 
     channel          = has_opt.channel
@@ -104,7 +104,6 @@ def modify_wavy_channel_HAS(nexus):
     new_normal_spacing  = 2 * (d_cell + d) * np.sin(theta/2)
     new_parllel_spacing  = (d_cell + d) * np.cos(theta/2)
     
-
     #Length of Channel   
     L_chan  = (battery.geometrtic_configuration.normal_count*new_normal_spacing)*battery.geometrtic_configuration.parallel_count
     L_extra  = 3*d_cell
@@ -196,7 +195,7 @@ def post_process(nexus):
               
               
           Assumptions: 
-             N/A 
+            Factors were applied to mass and power to scale it for the optimizer in lines 218, 219.
         
           Source:
              None

@@ -29,7 +29,7 @@ def energy(segment):
 
     conditions = segment.state.conditions.energy
     
-    # loop through battery_modules in networks
+    # loop through battery modules in networks
     for network in segment.analyses.energy.vehicle.networks:  
         # if network has busses 
         if 'busses' in network: 

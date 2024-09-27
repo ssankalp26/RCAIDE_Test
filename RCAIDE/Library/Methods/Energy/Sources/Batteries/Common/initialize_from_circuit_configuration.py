@@ -15,13 +15,13 @@ from RCAIDE.Framework.Core import Units
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Energy-Sources-Battery-Common
 def initialize_from_circuit_configuration(battery_module,module_weight_factor = 1.42):  
-    """Calculate module level properties of battery_module using cell 
+    """Calculate module level properties of battery module using cell 
     properties and module configuraton
     
     Assumptions:
-    Total battery_module pack mass contains build-up factor (1.42) for battery_module casing,
-    internal wires, thermal management system and battery_module management system 
-    Factor computed using information of battery_module properties for X-57 Maxwell 
+    Total battery module pack mass contains build-up factor (1.42) for battery module casing,
+    internal wires, thermal management system and battery module management system 
+    Factor computed using information of battery module properties for X-57 Maxwell 
     Aircraft
     
     Source:

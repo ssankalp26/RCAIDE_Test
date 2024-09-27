@@ -183,8 +183,6 @@ class Electric(Network):
                             if tag == 'reservoirs':
                                 for reservoir in  item:
                                     reservoir.compute_reservior_coolant_temperature(state,coolant_line,delta_t[t_idx],t_idx)
-                                    
-        bus.compute_distributor_conditions(state)
         
         if reverse_thrust ==  True:
             total_thrust =  total_thrust * -1     

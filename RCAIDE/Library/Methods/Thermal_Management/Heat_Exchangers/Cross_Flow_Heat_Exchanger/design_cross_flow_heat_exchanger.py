@@ -67,7 +67,7 @@ def crossflow_heat_exchanger_design_problem_setup(HEX,coolant_line,print_iterati
         Appends methodolody of planform modification to Nexus.
           Inputs:
              HEX     - heat exchanger data structure            [None]
-             coolant_line     - heat acqusition data structure           [None]
+             coolant_line     - Coolant Line data structure           [None]
              
           Outputs: 
               nexus    - RCAIDE's optimization framework [None]
