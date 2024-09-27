@@ -182,10 +182,10 @@ class Electric(Network):
                                     heat_exchanger.compute_heat_exchanger_performance(state,coolant_line,delta_t[t_idx],t_idx)
                             if tag == 'reservoirs':
                                 for reservoir in  item:
-                                    reservoir.compute_reservior_coolant_temperature(state,coolant_line,delta_t[t_idx],t_idx)      
-                bus.compute_distributor_conditions(state)
-
-
+                                    reservoir.compute_reservior_coolant_temperature(state,coolant_line,delta_t[t_idx],t_idx)
+                                    
+        bus.compute_distributor_conditions(state)
+        
         if reverse_thrust ==  True:
             total_thrust =  total_thrust * -1     
             total_moment =  total_moment* -1                    

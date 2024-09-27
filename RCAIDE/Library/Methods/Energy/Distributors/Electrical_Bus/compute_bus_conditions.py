@@ -28,6 +28,13 @@ def compute_bus_conditions(bus,state):
     
     bus_conditions                         = state.conditions.energy[bus.tag]
     
+    # Reinitalizig for each guess by mission solver so that the values do not add up for each iteration
+    bus_conditions.voltage_open_circuit    = 0*bus_conditions.voltage_open_circuit 
+    bus_conditions.voltage_under_load      = 0*bus_conditions.voltage_under_load   
+    bus_conditions.heat_energy_generated   = 0*bus_conditions.heat_energy_generated
+    bus_conditions.temperature             = 0*bus_conditions.temperature          
+    bus_conditions.energy                  = 0*bus_conditions.energy               
+
     for battery_module in  bus.battery_modules:
         bm_conditions                          =  bus_conditions.battery_modules[battery_module.tag]
         bus_conditions.voltage_open_circuit    += bm_conditions.voltage_open_circuit

@@ -18,7 +18,7 @@ import numpy as np
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------   
 ## @ingroup Library-Plots-Energy
-def plot_battery_pack_C_rates(results,
+def plot_bus_C_rates(results,
                         save_figure   = False,
                         show_legend   = True,
                         save_filename = "Battery_Pack_C_Rates",
