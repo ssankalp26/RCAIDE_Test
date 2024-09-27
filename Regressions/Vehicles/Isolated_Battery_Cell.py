@@ -41,6 +41,7 @@ def vehicle_setup(current,C_rat,cell_chemistry,fixed_bus_voltage):
     bus.voltage                      =  battery.maximum_voltage  
     bus.battery_modules.append(battery)
     bus.charging_c_rate =  1
+    bus.nominal_capacity =  battery.cell.nominal_capacity
     #------------------------------------------------------------------------------------------------------------------------------------           
     # Payload 
     #------------------------------------------------------------------------------------------------------------------------------------  
