@@ -25,7 +25,7 @@ def plot_airfoil_boundary_layer_properties(ap,
                                            show_legend = False,
                                            file_type = ".png",
                                            save_filename = 'Airfoil_with_Boundary_Layers', 
-                                           width = 12, height = 7):
+                                           width = 8, height = 6):
     """Plots viscous distributions
     
     Assumptions:

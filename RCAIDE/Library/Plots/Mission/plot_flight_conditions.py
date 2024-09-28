@@ -23,7 +23,7 @@ def plot_flight_conditions(results,
                            show_legend=True,
                            save_filename = "Flight Conditions",
                            file_type = ".png",
-                           width = 12, height = 7): 
+                           width = 8, height = 6): 
 
     """This plots the flights the conditions
 

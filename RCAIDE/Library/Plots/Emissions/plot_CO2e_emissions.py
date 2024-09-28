@@ -21,7 +21,7 @@ def plot_CO2e_emissions(results,
                              show_legend = True,
                              save_filename = "CO2e_Emissions" ,
                              file_type = ".png",
-                             width = 12, height = 7):
+                             width = 8, height = 6):
     """  
  
     """

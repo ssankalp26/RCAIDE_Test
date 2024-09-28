@@ -100,7 +100,7 @@ def base_analysis(vehicle,microphone_terrain_data,geospacial_data):
  
     #  Noise Analysis   
     noise = RCAIDE.Framework.Analyses.Noise.Frequency_Domain_Buildup()   
-    noise.geometry = vehicle
+    noise.vehicle = vehicle
     noise.settings.mean_sea_level_altitude          = False  
     noise.settings.aircraft_departure_location      = geospacial_data.departure_location   
     noise.settings.aircraft_destination_location    = geospacial_data.destination_location       

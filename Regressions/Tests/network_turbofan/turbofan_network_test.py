@@ -128,7 +128,7 @@ def mission_setup(analyses):
   
     Segments = RCAIDE.Framework.Mission.Segments 
     base_segment = Segments.Segment()
-
+    base_segment.state.numerics.number_control_points  = 4     
 
     # ------------------------------------------------------------------
     #   First Climb Segment: Constant Speed Constant Rate  

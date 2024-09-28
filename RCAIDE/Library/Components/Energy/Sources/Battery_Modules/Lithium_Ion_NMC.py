@@ -62,8 +62,7 @@ class Lithium_Ion_NMC(Generic_Battery_Module):
         self.tag                                         = 'lithium_ion_nmc'
         self.maximum_energy                              = 0.0
         self.maximum_power                               = 0.0
-        self.maximum_voltage                             = 0.0
-        
+        self.maximum_voltage                             = 0.0 
         
         self.electrical_configuration                    = Data()
         self.electrical_configuration.series             = 1
@@ -97,8 +96,7 @@ class Lithium_Ion_NMC(Generic_Battery_Module):
         self.cell.watt_hour_rating            = self.cell.nominal_capacity  * self.cell.nominal_voltage                          # [Watt-hours]      
         self.cell.specific_energy             = self.cell.watt_hour_rating*Units.Wh/self.cell.mass                               # [J/kg]
         self.cell.specific_power              = self.cell.specific_energy/self.cell.nominal_capacity                             # [W/kg]   
-        self.cell.resistance                  = 0.025                                                                            # [Ohms]
-                                                                                                                                 
+        self.cell.resistance                  = 0.025                                                                            # [Ohms] 
                                                             
         self.cell.specific_heat_capacity      = 1108                                                                             # [J/kgK]    
         self.cell.radial_thermal_conductivity = 0.4                                                                              # [J/kgK]  

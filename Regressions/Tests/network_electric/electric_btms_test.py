@@ -150,13 +150,7 @@ def mission_setup(analyses):
     # unpack Segments module
     Segments = RCAIDE.Framework.Mission.Segments  
     base_segment = Segments.Segment()
-    base_segment.temperature_deviation  = 15
-    # VSTALL Calculation  
-    vehicle        = analyses.base.aerodynamics.geometry
-    vehicle_mass   = vehicle.mass_properties.max_takeoff
-    reference_area = vehicle.reference_area 
-    Vstall         = estimate_stall_speed(vehicle_mass,reference_area,altitude = 0.0,maximum_lift_coefficient = 1.2)
-    
+    base_segment.temperature_deviation  = 15 
 
     # ------------------------------------------------------------------
     #   Cruise Segment: constant Speed, constant altitude

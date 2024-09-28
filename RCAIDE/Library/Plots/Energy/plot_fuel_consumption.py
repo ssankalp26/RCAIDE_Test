@@ -22,7 +22,7 @@ def plot_fuel_consumption(results,
                     show_legend=True,
                     save_filename = "Aircraft_Fuel_Burnt",
                     file_type = ".png",
-                    width = 12, height = 7): 
+                    width = 8, height = 6): 
 
     """This plots aircraft fuel usage
     

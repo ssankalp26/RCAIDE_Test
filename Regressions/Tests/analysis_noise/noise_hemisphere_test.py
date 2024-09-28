@@ -71,7 +71,7 @@ def base_analysis(vehicle):
     #  Noise Analysis 
     # ------------------------------------------------------------------   
     noise = RCAIDE.Framework.Analyses.Noise.Frequency_Domain_Buildup()   
-    noise.geometry = vehicle
+    noise.vehicle = vehicle
     noise.settings.noise_hemisphere                       = True 
     noise.settings.noise_hemisphere_radius                = 20          
     noise.settings.noise_hemisphere_microphone_resolution = 3
@@ -194,7 +194,7 @@ def plot_results(results,regression_plotting_flag):
                           max_noise_level  = 90, 
                           noise_scale_label= 'SPL [dBA]',
                           save_filename    = "Noise_Hemisphere_With_Aircraft", 
-                          vehicle          = results.segments.cruise.analyses.aerodynamics.geometry,
+                          vehicle          = results.segments.cruise.analyses.aerodynamics.vehicle,
                           show_figure      = regression_plotting_flag)      
     
      

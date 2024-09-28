@@ -110,7 +110,7 @@ def base_analysis(vehicle, configs):
     stability.settings.model_nacelle                = True
         
     stability.configuration                         = configs
-    stability.geometry                              = vehicle
+    stability.vehicle                               = vehicle
     analyses.append(stability)
 
     # ------------------------------------------------------------------

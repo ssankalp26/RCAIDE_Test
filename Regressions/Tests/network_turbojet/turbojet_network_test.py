@@ -103,7 +103,7 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     #  Energy
     emissions = RCAIDE.Framework.Analyses.Emissions.Emission_Index_Correlation_Method()
-    emissions.geometry = vehicle          
+    emissions.vehicle = vehicle          
     analyses.append(emissions)
         
     
@@ -145,38 +145,7 @@ def plot_mission(results):
  
     plot_CO2e_emissions(results)    
     return
-
-def simple_sizing(configs):
-    
-    base = configs.base
-    base.pull_base()
-    
-    # zero fuel weight
-    base.mass_properties.max_zero_fuel = 0.9 * base.mass_properties.max_takeoff 
-    
-    # fuselage seats
-    base.fuselages['fuselage'].number_coach_seats = base.passengers
-    
-    # diff the new data
-    base.store_diff()
-    
-    # ------------------------------------------------------------------
-    #   Landing Configuration
-    # ------------------------------------------------------------------
-    landing = configs.landing
-    
-    # make sure base data is current
-    landing.pull_base()
-    
-    # landing weight
-    landing.mass_properties.landing = 0.85 * base.mass_properties.takeoff
-    
-    # diff the new data
-    landing.store_diff()
-    
-    # done!
-    return
-
+ 
 # ----------------------------------------------------------------------
 #   Define the Mission
 # ----------------------------------------------------------------------
@@ -193,6 +162,7 @@ def mission_setup(analyses):
     # unpack Segments module
     Segments = RCAIDE.Framework.Mission.Segments 
     base_segment = Segments.Segment()
+    base_segment.state.numerics.number_control_points  = 4   
     
     # ------------------------------------------------------------------
     #   First Climb Segment: constant Mach, constant segment angle 

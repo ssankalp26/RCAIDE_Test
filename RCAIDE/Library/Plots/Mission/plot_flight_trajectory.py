@@ -24,7 +24,7 @@ def plot_flight_trajectory(results,
                            show_legend   = True,
                            save_filename = "Flight_Trajectory",
                            file_type = ".png",
-                           width = 12, height = 7):
+                           width = 8, height = 6):
     """This plots the 3D flight trajectory of the aircraft.
 
     Assumptions:

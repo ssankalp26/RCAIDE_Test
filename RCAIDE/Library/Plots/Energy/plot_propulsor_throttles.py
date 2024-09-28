@@ -22,7 +22,7 @@ def plot_propulsor_throttles(results,
                              show_legend = True,
                              save_filename = "Propulsor_Throttles" ,
                              file_type = ".png",
-                             width = 12, height = 7):
+                             width = 8, height = 6):
     """This plots the altitude, specific fuel consumption and vehicle weight.
 
     Assumptions:

@@ -22,7 +22,7 @@ def plot_longitudinal_stability(results,
                              show_legend=True,
                              save_filename = "Longitudinal_Stability",
                              file_type = ".png",
-                             width = 12, height = 7):
+                             width = 8, height = 6):
     """This plots the static stability characteristics of an aircraft 
     """  
 

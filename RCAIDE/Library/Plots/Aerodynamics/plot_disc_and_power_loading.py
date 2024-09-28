@@ -24,7 +24,7 @@ def plot_disc_and_power_loading(results,
                             show_legend = True,
                             save_filename="Disc_And_Power_Loading",
                             file_type = ".png",
-                            width = 12, height = 7):
+                            width = 8, height = 6):
     """Plots rotor disc and power loadings
 
     Assumptions:

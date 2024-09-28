@@ -24,7 +24,7 @@ def plot_bus_conditions(results,
                                  show_legend = True,
                                  save_filename="Bus_Conditions",
                                  file_type=".png",
-                                 width = 12, height = 7):
+                                 width = 8, height = 6):
     """Plots the pack-level conditions of the battery throughout flight.
 
     Assumptions:

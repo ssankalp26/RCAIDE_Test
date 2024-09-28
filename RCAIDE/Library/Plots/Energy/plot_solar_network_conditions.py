@@ -23,7 +23,7 @@ def plot_solar_network_conditions(results,
                     show_legend   = True,
                     save_filename = "Solar_Flux",
                     file_type     = ".png",
-                    width = 12, height = 7):
+                    width = 8, height = 6):
     """This plots the solar flux and power train performance of an solar powered aircraft
 
     Assumptions:

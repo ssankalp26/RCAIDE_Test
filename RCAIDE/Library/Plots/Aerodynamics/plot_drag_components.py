@@ -22,7 +22,7 @@ def plot_drag_components(results,
                          show_legend= True,
                          save_filename="Drag_Components",
                          file_type=".png",
-                        width = 12, height = 7):
+                        width = 8, height = 6):
     """This plots the drag components of the aircraft
     
     Assumptions:

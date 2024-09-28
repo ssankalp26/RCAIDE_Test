@@ -23,7 +23,7 @@ def plot_rotor_conditions(results,
                         show_legend=True,
                         save_filename = "Rotor_Conditions",
                         file_type = ".png",
-                        width = 12, height = 7):
+                        width = 8, height = 6):
     """This plots the electric driven network propeller efficiencies 
 
     Assumptions:

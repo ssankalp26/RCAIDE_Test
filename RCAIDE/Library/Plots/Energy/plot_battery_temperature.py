@@ -23,7 +23,7 @@ def plot_battery_temperature(results,
                                   show_legend = True,
                                   save_filename = "Battery_Temperature",
                                   file_type = ".png",
-                                  width = 12, height = 7):
+                                  width = 8, height = 6):
     """Plots the cell-level conditions of the battery throughout flight.
 
     Assumptions:

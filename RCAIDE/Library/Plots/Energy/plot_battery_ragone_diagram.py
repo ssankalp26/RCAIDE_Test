@@ -22,7 +22,7 @@ def plot_battery_ragone_diagram(battery,
                           save_figure   = False, 
                           save_filename = "Ragone_Plot",
                           file_type     =  ".png",
-                          width = 12, height = 7):
+                          width = 8, height = 6):
     """Plots the pack-level conditions of the battery throughout flight.
 
     Assumptions:

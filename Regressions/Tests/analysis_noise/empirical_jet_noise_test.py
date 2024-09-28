@@ -80,7 +80,7 @@ def base_analysis(vehicle):
     #  Noise Analysis
     # ------------------------------------------------------------------
     noise = RCAIDE.Framework.Analyses.Noise.Correlation_Buildup()   
-    noise.geometry = vehicle          
+    noise.vehicle = vehicle          
     analyses.append(noise)
 
     # ------------------------------------------------------------------
@@ -128,6 +128,7 @@ def baseline_mission_setup(analyses):
     mission.tag  = 'base_mission' 
     Segments     = RCAIDE.Framework.Mission.Segments 
     base_segment = Segments.Segment() 
+    base_segment.state.numerics.number_control_points  = 4   
 
     # -------------------   -----------------------------------------------
     #   Mission for Landing Noise
