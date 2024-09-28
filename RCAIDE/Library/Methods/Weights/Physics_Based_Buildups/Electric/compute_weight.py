@@ -199,7 +199,7 @@ def compute_weight(vehicle,
             weight.avionics                                        += bus.avionics.mass_properties.mass      
  
                         
-            for battery in bus.batteries: 
+            for battery in bus.battery_modules: 
                 weight.battery                                            += battery.mass_properties.mass * Units.kg 
         
             # Servo, Hub and BRS Weights

@@ -297,10 +297,10 @@ def plot_results(results):
     plot_propulsor_throttles(results)
     
     # Plot Aircraft Electronics
-    plot_battery_pack_conditions(results) 
+    plot_bus_conditions(results) 
     plot_battery_temperature(results)
     plot_battery_cell_conditions(results) 
-    plot_battery_pack_C_rates(results)
+    plot_bus_C_rates(results)
     plot_battery_degradation(results) 
     
     # Plot Propeller Conditions 

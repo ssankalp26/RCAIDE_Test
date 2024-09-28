@@ -124,7 +124,7 @@ class Evaluate(Segment):
         # -------------------------------------------------------------- 
         post_process                    = self.process.post_process   
         post_process.inertial_position  = Common.Update.linear_inertial_horizontal_position
-        post_process.battery_age        = Common.Update.battery_age  
+        post_process.energy             = Common.Update.energy 
         post_process.noise              = Common.Update.noise
         post_process.emissions          = Common.Update.emissions
         

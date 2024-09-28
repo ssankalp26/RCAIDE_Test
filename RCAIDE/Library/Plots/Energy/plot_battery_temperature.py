@@ -68,17 +68,18 @@ def plot_battery_temperature(results,
     for network in results.segments[0].analyses.energy.vehicle.networks: 
         busses  = network.busses
         for bus in busses: 
-            for battery in bus.batteries:  
+            for battery in bus.battery_modules:  
                 axis_0.plot(np.zeros(2),np.zeros(2), color = line_colors[0], marker = ps.markers[b_i], linewidth = ps.line_width,label= battery.tag) 
                 axis_0.grid(False)
                 axis_0.axis('off')
                 
-                for i in range(len(results.segments)):  
+                for i in range(len(results.segments)):
+                    bus_results         = results.segments[i].conditions.energy[bus.tag]
                     time                = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min                      
-                    battery_conditions  = results.segments[i].conditions.energy[bus.tag][battery.tag]  
+                    battery_conditions  = results.segments[i].conditions.energy[bus.tag].battery_modules[battery.tag]  
                     cell_temp           = battery_conditions.cell.temperature[:,0]
                     cell_charge         = battery_conditions.cell.charge_throughput[:,0]
-                    pack_Q              = battery_conditions.pack.heat_energy_generated[:,0]
+                    pack_Q              = bus_results.heat_energy_generated[:,0]
             
                     segment_tag  =  results.segments[i].tag
                     segment_name = segment_tag.replace('_', ' ')   

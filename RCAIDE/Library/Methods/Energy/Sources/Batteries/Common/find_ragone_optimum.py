@@ -51,8 +51,8 @@ def find_ragone_optimum(battery, energy, power): #adds a battery that is optimiz
     N/A  
     """ 
     
-    lb = battery.ragone.lower_bound
-    ub = battery.ragone.upper_bound
+    lb = battery.cell.ragone.lower_bound
+    ub = battery.cell.ragone.upper_bound
 
     #optimize!
     specific_energy_opt = sp.optimize.fminbound(find_ragone_properties, lb, ub, args=( battery, energy, power), xtol=1e-12)
