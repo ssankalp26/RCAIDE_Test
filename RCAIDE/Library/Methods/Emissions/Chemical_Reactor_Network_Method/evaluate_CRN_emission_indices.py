@@ -7,8 +7,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 import  RCAIDE
 from RCAIDE.Framework.Core import Data
-import RCAIDE.Library.Methods.Emissions.Chemical_Reactor_Network_Method.evaluate_cantera as evaluate_cantera 
-import RCAIDE.Library.Methods.Emissions.Chemical_Reactor_Network_Method.evaluate_cantera_2 as evaluate_cantera_2
+import RCAIDE.Library.Methods.Emissions.Chemical_Reactor_Network_Method.evaluate_cantera as evaluate_cantera  
 
  
 # package imports
