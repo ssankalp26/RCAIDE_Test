@@ -45,21 +45,20 @@ def evaluate_CRN_emission_indices_no_surrogate(state,settings,vehicle):
                                 combustor_conditions    = propulsor_conditions[combustor.tag]  
 
                                 
-                                T = combustor_conditions.inputs.stagnation_temperature
-                                P = combustor_conditions.inputs.stagnation_pressure 
+                                T    = combustor_conditions.inputs.stagnation_temperature
+                                P    = combustor_conditions.inputs.stagnation_pressure 
                                 mdot = propulsor_conditions.core_mass_flow_rate 
-                                FAR = combustor_conditions.outputs.fuel_to_air_ratio 
+                                FAR  = combustor_conditions.outputs.fuel_to_air_ratio 
 
-                                EI_CO2_p  = 0 * state.ones_row(1)   
-                                EI_CO_p  = 0 * state.ones_row(1)  
-                                EI_H2O_p  = 0 * state.ones_row(1)  
-                                EI_NO_p  = 0 * state.ones_row(1)  
+                                EI_CO2_p   = 0 * state.ones_row(1)   
+                                EI_CO_p    = 0 * state.ones_row(1)  
+                                EI_H2O_p   = 0 * state.ones_row(1)  
+                                EI_NO_p    = 0 * state.ones_row(1)  
                                 EI_NO2_p   = 0 * state.ones_row(1)                              
                                                          
                                 for t_idx in range(n_cp):
                                     # Call cantera 
                                     results = evaluate_cantera(combustor,P[0,t_idx],T[0,t_idx],mdot[0,t_idx],FAR[0,t_idx])
-                                    results = evaluate_cantera_2(combustor,P[0,t_idx],T[0,t_idx],mdot[0,t_idx],FAR[0,t_idx])
                                     
                                     EI_CO2_p[0,t_idx] = results.EI_CO2
                                     EI_CO_p[0,t_idx] =  results.EI_CO 
