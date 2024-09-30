@@ -259,10 +259,7 @@ def harmonic_noise_plane(harmonics_blade,harmonics_load,conditions,propulsor_con
     
     # [control point, microphones, rotors, radial distribution, blade harmonics, load harmonics, chordwise coordinate]
     fL_k_7         = np.tile(fL_k[:,None,:,None,0:num_h_l,:],(1,num_mic,1,num_h_b,1,1))
-    fD_k_7         = np.tile(fD_k[:,None,:,None,0:num_h_l,:],(1,num_mic,1,num_h_b,1,1))   
-      
-    
-    S_r            = np.tile(np.linalg.norm(coordinates.X_hub_r[:,:,0,:,:], axis = 3)[:,:,:,None],(1,1,1,num_h_b))  
+    fD_k_7         = np.tile(fD_k[:,None,:,None,0:num_h_l,:],(1,num_mic,1,num_h_b,1,1))
     
     
     # frequency domain source function for drag and lift

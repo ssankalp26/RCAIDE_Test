@@ -73,8 +73,6 @@ def compute_airfoil_aerodynamics(beta,c,r,R,B,Wa,Wt,a,nu,airfoils,a_loc,ctrl_pts
             # return the 2D Cl and CDval of shape (ctrl_pts, Nr, Na)
             Cl         = np.zeros((ctrl_pts,Nr,Na))
             Cdval      = np.zeros((ctrl_pts,Nr,Na))
-            alpha_disc = np.zeros((ctrl_pts,Nr,Na))
-            Re_disc    = np.zeros((ctrl_pts,Nr,Na)) 
             
             for jj,airfoil in enumerate(airfoils):
                 pd                   = airfoil.polars
@@ -83,8 +81,8 @@ def compute_airfoil_aerodynamics(beta,c,r,R,B,Wa,Wt,a,nu,airfoils,a_loc,ctrl_pts
                 locs                 = np.where(np.array(a_loc) == jj )
                 Cl[:,locs,:]         = Cl_af[:,locs,:]
                 Cdval[:,locs,:]      = Cdval_af[:,locs,:]
-                alpha_disc[:,locs,:] = alpha
-                Re_disc[:,locs,:]    = Re
+            alpha_disc           = alpha
+            Re_disc              = Re
         else:
             # return the 1D Cl and CDval of shape (ctrl_pts, Nr)
             Cl         = np.zeros((ctrl_pts,Nr))
