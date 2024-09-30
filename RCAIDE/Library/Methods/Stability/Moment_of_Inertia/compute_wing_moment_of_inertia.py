@@ -1,6 +1,6 @@
 # RCAIDE/Library/Methods/Stability/Moment_of_Inertia/compute_wing_moment_of_inertia.py 
 # 
-# Created:  Dec 2023, M. Clarke  
+# Created:  September 2023, A. Molloy  
  
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
@@ -15,45 +15,63 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Compute Wing Moment of Intertia
 # ----------------------------------------------------------------------------------------------------------------------  
-def compute_wing_moment_of_inertia(wing, mass=0,  center_of_gravity=[[0, 0, 0]], fuel_flag=False):
-    '''
-    
+def compute_wing_moment_of_inertia(wing, mass = 0,  center_of_gravity = [[0, 0, 0]], fuel_flag = False):
+    ''' computes the moment of inertia tensor for a wing about a given center of gravity.
+    Includes the ability to modela  wing fuel tank as a condensed wing
+
+    Assumptions:
+    - Wing is solid
+    - Wing has a constant density
+
+    Source:
     [1] Moulton, B. C., and Hunsaker, D. F., “Simplified Mass and Inertial Estimates for Aircraft with Components
     of Constant Density,” AIAA SCITECH 2023 Forum, January 2023, AIAA-2023-2432 DOI: 10.2514/
     6.2023-2432
     
-    
-    
-    Fuel tank references: These were used to estimate the length percentages. 
+    [2] Fuel tank references: These were used to estimate the length percentages. 
     - https://assets.publishing.service.gov.uk/media/5422fa1aed915d13710007a1/2-2007_G-YMME.pdf
     - https://oat.aero/2023/03/17/airbus-a380-general-familiarisation-fuel-storage/
     - http://www.b737.org.uk/fuel.htm
     - https://slideplayer.com/slide/3854059/
     
+    Inputs:
+    - Wing
+    - Wing mass
+    - Center of gravity
+    - Fuel flag (whether the wing is considered a fuel tank or not)
+
+    Outputs:
+    - wing moment of inertia tensor
+
+    Properties Used:
+    N/A
     '''
     # ----------------------------------------------------------------------------------------------------------------------
-    # Distribute properties of the wing
+    # Setup: 
     # ----------------------------------------------------------------------------------------------------------------------
-    tr = wing.thickness_to_chord # root thickness as percent of chord
-    tt = wing.thickness_to_chord #tip thickness as a percent of chord
-    ct = wing.chords.tip # tip chord 
-    cr = wing.chords.root # root chord
-    b = wing.spans.total / 2 # half-span of the wing
-    A = wing.sweeps.quarter_chord * np.pi / 180 # sweep angle in radians (located at quarter chord)
-    dihedral = wing.dihedral * np.pi /180 # Wing dihedral. Converts it to radians
+    tr          = wing.thickness_to_chord # root thickness as percent of chord
+    tt          = wing.thickness_to_chord #tip thickness as a percent of chord
+    ct          = wing.chords.tip # tip chord 
+    cr          = wing.chords.root # root chord
+    b           = wing.spans.total / 2 # half-span of the wing
+    A           = wing.sweeps.quarter_chord # sweep angle (located at quarter chord)
+    dihedral    = wing.dihedral # Wing dihedral
     origin_wing = wing.origin + np.array([[cr / 4], [0], [0]]) # moves the origin of the wing to the quarter chord of the root airfoil.
     
-    # ----------------------------------------------------------------------------------------------------------------------
-    # Fuel Tank Values
-    # ----------------------------------------------------------------------------------------------------------------------
-    if fuel_flag:
-        b = b * 0.8 # Wing fuel tank is 80% span of the entire wing
-        ct = (0.8 * (ct - cr) + cr)* 0.6 # Wing fuel tank has 60% of the chord 80% down the wing. Assumes linear relation ebtween cr and ct 
-        cr = cr * 0.6 # Wing tank has 60% of the chord of the root chord
-        origin_wing = origin_wing + np.array([[cr * 0.0125], [0], [0]])  # wing fuel tank is set about 10% back in the wing. THis is a correction that considers the quarter chord location of the main wing and the smaller section. 
+    if wing.symmetric: # Splits the wing weight between the two wings if the wing is symmetric.
+        mass = mass * 0.5
     
     # ----------------------------------------------------------------------------------------------------------------------
-    # Constants. These values adn equations are defined in Moulton and Hunsaker [1]
+    # Fuel Tank Values. The percentages come from [2]
+    # ----------------------------------------------------------------------------------------------------------------------
+    if fuel_flag:
+        b           = b * 0.8 # Wing fuel tank is 80% span of the entire wing
+        ct          = (0.8 * (ct - cr) + cr)* 0.6 # Wing fuel tank has 60% of the chord 80% down the wing. Assumes linear relation ebtween cr and ct 
+        cr          = cr * 0.6 # Wing tank has 60% of the chord of the root chord
+        origin_wing = origin_wing + np.array([[cr * 0.0125], [0], [0]])  # wing fuel tank is set about 10% back in the wing. This is a correction that considers the quarter chord location of the main wing and the smaller section. 
+    
+    # ----------------------------------------------------------------------------------------------------------------------
+    # Constants. These values and equations are defined in Moulton and Hunsaker [1]
     # ----------------------------------------------------------------------------------------------------------------------
     # Airfoil constants. a0-a4 values help define the thickness distribution for a NACA 4-digit airfoil. This holds for all NACA airfoils 
     a0 = 2.969
@@ -62,7 +80,7 @@ def compute_wing_moment_of_inertia(wing, mass=0,  center_of_gravity=[[0, 0, 0]],
     a3 = 2.843
     a4 = -1.015
     
-    # Integration constants. These constants are defined in the paper.
+    # Integration constants. These constants are defined in [1].
     ka = tr * (3 * cr ** 2 + 2 * cr * ct + ct ** 2) + tt * (cr ** 2 + 2 * cr * ct + 3 * ct ** 2)
     kd = (tr * (ct + cr) * (2 * cr ** 2 + cr * ct + 2 * ct ** 2)
           + tt * (cr ** 3 + 3 * cr ** 2 * ct + 6 * cr * ct ** 2 + 10 * ct ** 3))
@@ -91,57 +109,55 @@ def compute_wing_moment_of_inertia(wing, mass=0,  center_of_gravity=[[0, 0, 0]],
     # ----------------------------------------------------------------------------------------------------------------------
     delta = 1 # 1 for right wing, -1 for left wing. Assumes all non-symmetric wings are right-wings.
     
-    Ixx = mass * (56 * b ** 2 * kf * v0 + kg * v3) / (280 * ka * v0)
-    Iyy = mass * (84 * b * (2 * b * kf * v0 * np.tan(A) ** 2 + kd * v1 * np.tan(A)) + 49 * ke * v2 + 3 * kg * v3) / (840 * ka * v0)
-    Izz = mass * (12 * b * (2 * b * (np.tan(A) ** 2 + 1) * kf * v0 + kd * v1 * np.tan(A)) + 7 * ke * v2) / (120 * ka * v0)
-    Ixy = -1 * delta * b * mass * (4 * b * kf * v0 * np.tan(A) + kd * v1) / (20 * ka * v0)
-    Ixz = 0  # Ixz, Iyz are 0
-    Iyz = 0  # Ixz, Iyz are 0
+    Ixx        = mass * (56 * b ** 2 * kf * v0 + kg * v3) / (280 * ka * v0)
+    Iyy        = mass * (84 * b * (2 * b * kf * v0 * np.tan(A) ** 2 + kd * v1 * np.tan(A)) + 49 * ke * v2 + 3 * kg * v3) / (840 * ka * v0)
+    Izz        = mass * (12 * b * (2 * b * (np.tan(A) ** 2 + 1) * kf * v0 + kd * v1 * np.tan(A)) + 7 * ke * v2) / (120 * ka * v0)
+    Ixy        = -1 * delta * b * mass * (4 * b * kf * v0 * np.tan(A) + kd * v1) / (20 * ka * v0)
+    Ixz        = 0  # Ixz, Iyz are 0
+    Iyz        = 0  # Ixz, Iyz are 0
     I_wing_sys = np.array([[Ixx, -Ixy, -Ixz], [-Ixy, Iyy, -Iyz], [-Ixz, -Iyz, Izz]]) # inertia tensor in the wing system
     
     # Dihedral. -1*dihedral for the right wing
-    R = np.array([[1, 0, 0], [0, np.cos(-1*dihedral), -1 * np.sin(-1*dihedral)], [0, np.sin(-1*dihedral), np.cos(-1*dihedral)]])
+    R       = np.array([[1, 0, 0], [0, np.cos(-1*dihedral), -1 * np.sin(-1*dihedral)], [0, np.sin(-1*dihedral), np.cos(-1*dihedral)]])
     I_local = R *I_wing_sys *np.transpose(R) 
       
     # ----------------------------------------------------------------------------------------------------------------------
     # Symmetric Wing
     # ----------------------------------------------------------------------------------------------------------------------
     if wing.symmetric: # wing is symmetric
-        print("symmetric wing")
         
         # Rotation matrix for dihedral. Note no -1*dihedral for the symmetric wing
         R = np.array([[1, 0, 0], [0, np.cos(dihedral), -1 * np.sin(dihedral)], [0, np.sin(dihedral), np.cos(dihedral)]])        
         
-        delta = -1 # left wing
-        Ixx = mass * (56 * b ** 2 * kf * v0 + kg * v3) / (280 * ka * v0)
-        Iyy = mass * (84 * b * (2 * b * kf * v0 * np.tan(A) ** 2 + kd * v1 * np.tan(A)) + 49 * ke * v2 + 3 * kg * v3) / (840 * ka * v0)
-        Izz = mass * (12 * b * (2 * b * (np.tan(A) ** 2 + 1) * kf * v0 + kd * v1 * np.tan(A)) + 7 * ke * v2) / (120 * ka * v0)
-        Ixy = -1 * delta * b * mass * (4 * b * kf * v0 * np.tan(A) + kd * v1) / (20 * ka * v0)
+        # Inertia matrix in local wing frame
+        delta        = -1 # left wing
+        Ixx          = mass * (56 * b ** 2 * kf * v0 + kg * v3) / (280 * ka * v0)
+        Iyy          = mass * (84 * b * (2 * b * kf * v0 * np.tan(A) ** 2 + kd * v1 * np.tan(A)) + 49 * ke * v2 + 3 * kg * v3) / (840 * ka * v0)
+        Izz          = mass * (12 * b * (2 * b * (np.tan(A) ** 2 + 1) * kf * v0 + kd * v1 * np.tan(A)) + 7 * ke * v2) / (120 * ka * v0)
+        Ixy          = -1 * delta * b * mass * (4 * b * kf * v0 * np.tan(A) + kd * v1) / (20 * ka * v0)
         I_local_left = np.array([[Ixx, -Ixy, -Ixz], [-Ixy, Iyy, -Iyz], [-Ixz, -Iyz, Izz]])
         
+        # Dihedral rotation
         I_local_left = R *I_local_left * np.transpose(R)
-        
-        I_local = I_local + I_local_left # Add the left wing inertia tensor if wing is symmetric
+        I_local      = I_local + I_local_left # Add the left wing inertia tensor if wing is symmetric
     
     # ----------------------------------------------------------------------------------------------------------------------
     # Vertical Surface
     # ----------------------------------------------------------------------------------------------------------------------
     if wing.vertical: # If it is a vertical tail
-        R = np.array([[1, 0, 0], [0, 0, 1], [0, -1, 0]]) # Rotation matrix for a vertical surface
-
-        I_rotated = np.array([[Ixx, Ixy, Ixz], [Ixy, Iyy, Iyz], [Ixz, Iyz, Izz]]) # Inertia matrix in the unrotated frame
-        I_local = R * I_rotated * np.transpose(R) # Rotation of ienrtia matrix to a vertical frame of reference         
+        R         = np.array([[1, 0, 0], [0, 0, 1], [0, -1, 0]]) # Rotation matrix for a vertical surface
+        I_local   = R * I_local * np.transpose(R) # Rotation of inertia matrix to a vertical frame of reference         
     
     # ----------------------------------------------------------------------------------------------------------------------
-    # RCAIDE Coordinate system. Local system is flipped 180 deg from RCAIDE coordinate system convention. 
+    # RCAIDE Coordinate system. (Local system is flipped 180 deg from RCAIDE coordinate system convention.)
     # ----------------------------------------------------------------------------------------------------------------------
-    Rr = np.array([[-1, 0, 0], [0, 1, 0], [0, 0, -1]])
+    Rr       = np.array([[-1, 0, 0], [0, 1, 0], [0, 0, -1]])
     I_RCAIDE = Rr * I_local * np.transpose(Rr)
     
     # ----------------------------------------------------------------------------------------------------------------------
     # Global Coordinate System
     # ----------------------------------------------------------------------------------------------------------------------
-    s = np.array(center_of_gravity) - np.array(origin_wing) # Vector for the parallel axis theorem
+    s        = np.array(center_of_gravity) - np.array(origin_wing) # Vector for the parallel axis theorem
     I_global = np.array(I_RCAIDE) + mass * (np.array(np.dot(s[0], s[0])) * np.array(np.identity(3)) - s * np.transpose(s))
     
     return I_global  

@@ -8,6 +8,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 from .compute_wing_moment_of_inertia     import compute_wing_moment_of_inertia
-from .compute_cuboid_moment_of_inertia   import compute_cubiod_moment_of_inertia
+from .compute_cuboid_moment_of_inertia   import compute_cuboid_moment_of_inertia
 from .compute_fuselage_moment_of_inertia import compute_fuselage_moment_of_inertia
 from .compute_cylinder_moment_of_inertia import compute_cylinder_moment_of_inertia
+from .calculate_aircraft_MOI             import calculate_aircraft_MOI
