@@ -14,7 +14,7 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  evaluate_correlation_emissions_indices
 # ---------------------------------------------------------------------------------------------------------------------- 
-def evaluate_correlation_emissions_indices(state,settings,vehicle):
+def evaluate_correlation_emissions_indices(segment,settings,vehicle):
     """ Computes the CO2 equivalent emissions from aircraft propulsors with combustor compoments
     using emissions indices correlated to various fuels
     
@@ -31,7 +31,8 @@ def evaluate_correlation_emissions_indices(state,settings,vehicle):
     Returns:
     None  
     """    
-    # unpack 
+    # unpack
+    state      = segment.state
     I          = state.numerics.dimensionless.integrate 
     NOx_total  = 0 * state.ones_row(1)  
     CO2_total  = 0 * state.ones_row(1) 

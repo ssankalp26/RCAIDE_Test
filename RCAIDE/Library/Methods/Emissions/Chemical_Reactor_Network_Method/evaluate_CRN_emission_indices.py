@@ -16,10 +16,11 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  evaluate_correlation_emissions_indices
 # ---------------------------------------------------------------------------------------------------------------------- 
-def evaluate_CRN_emission_indices_no_surrogate(state,settings,vehicle):
+def evaluate_CRN_emission_indices_no_surrogate(segment,settings,vehicle):
   
-    # unpack  
-    I               = state.numerics.time.integrate
+    # unpack
+    state     = segment.state
+    I         = state.numerics.time.integrate
     
     CO2_total = 0 * state.ones_row(1)  
     CO_total  = 0 * state.ones_row(1) 
@@ -92,7 +93,7 @@ def evaluate_CRN_emission_indices_no_surrogate(state,settings,vehicle):
 def evaluate_CRN_emission_indices_surrogate(segment,settings,vehicle): 
   
     I          = segment.state.numerics.time.integrate
-    surrogates = segment.state.analyses.emissions.surrogates
+    surrogates = segment.analyses.emissions.surrogates
     
     CO2_total = 0 * segment.state.ones_row(1)  
     CO_total  = 0 * segment.state.ones_row(1) 
@@ -112,7 +113,7 @@ def evaluate_CRN_emission_indices_surrogate(segment,settings,vehicle):
                                 combustor = propulsor.combustor
                             
                                 # unpack component conditions
-                                propulsor_conditions     = segment.state.conditions.energy[fuel_line.tag][propulsor.tag] 
+                                propulsor_conditions    = segment.state.conditions.energy[fuel_line.tag][propulsor.tag] 
                                 combustor_conditions    = propulsor_conditions[combustor.tag]  
 
                                 T = combustor_conditions.inputs.stagnation_temperature

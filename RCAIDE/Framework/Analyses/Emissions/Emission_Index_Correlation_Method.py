@@ -64,8 +64,7 @@ class Emission_Index_Correlation_Method(Emissions):
         self.vehicle
         """          
         settings = self.settings
-        vehicle  = self.vehicle 
-        state    = segment.state 
-        results  = self.process.compute(state,settings,vehicle)
+        vehicle  = self.vehicle   
+        results  = self.process.compute(segment,settings,vehicle)
 
         return results             
