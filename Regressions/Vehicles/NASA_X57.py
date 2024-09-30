@@ -46,7 +46,7 @@ def vehicle_setup():
     vehicle.systems.control               = "fully powered"
     vehicle.systems.accessories           = "commuter"    
     
-    cruise_speed                          = 135.*Units['mp    origin_wing = wing.originh']    
+    cruise_speed                          = 135.*Units['mph']    
     altitude                              = 2500. * Units.ft
     atmo                                  = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
     freestream                            = atmo.compute_values (0.)

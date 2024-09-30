@@ -71,7 +71,7 @@ def base_analysis(vehicle):
     #  Noise Analysis 
     # ------------------------------------------------------------------   
     noise = RCAIDE.Framework.Analyses.Noise.Frequency_Domain_Buildup()   
-    noise.geometry = vehicle
+    noise.vehicle = vehicle
     noise.settings.noise_hemisphere                       = True 
     noise.settings.noise_hemisphere_radius                = 20          
     noise.settings.noise_hemisphere_microphone_resolution = 3
