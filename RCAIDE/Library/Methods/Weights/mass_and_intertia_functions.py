@@ -28,8 +28,11 @@ def sum_moment(component):
             total_moment += Moment
             total_mass   += Mass
         elif isinstance(Comp,Component): 
-            global_cg_loc = Comp.mass_properties.center_of_gravity + Comp.origin 
-            total_moment += Comp.mass_properties.mass*global_cg_loc 
+            global_cg_loc = np.array(Comp.mass_properties.center_of_gravity) + np.array(Comp.origin)             
+            if Comp.mass_properties.center_of_gravity[0][0] == 0:
+                pass
+            else:
+                total_moment += Comp.mass_properties.mass*global_cg_loc 
             total_mass   += Comp.mass_properties.mass     
             
     return total_moment , total_mass
