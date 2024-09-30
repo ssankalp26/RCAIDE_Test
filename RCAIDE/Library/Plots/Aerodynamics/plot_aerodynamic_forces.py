@@ -56,8 +56,20 @@ def plot_aerodynamic_forces(results,
     # get line colors for plots 
     line_colors   = cm.inferno(np.linspace(0,0.9,len(results.segments)))     
     
-    fig   = plt.figure(save_filename)
-    fig.set_size_inches(width,height)
+    fig1   = plt.figure(save_filename+'_Power')
+    fig1.set_size_inches(width,height)
+    fig2   = plt.figure(save_filename+'_Thrust')
+    fig2.set_size_inches(width,height)
+    fig3   = plt.figure(save_filename+'_Lift')
+    fig3.set_size_inches(width,height)
+    fig4   = plt.figure(save_filename+'_Drag')
+    fig4.set_size_inches(width,height)
+    
+    axis_1 = fig1.add_subplot(1, 1, 1)
+    axis_2 = fig2.add_subplot(1, 1, 1)
+    axis_3 = fig3.add_subplot(1, 1, 1)
+    axis_4 = fig4.add_subplot(1, 1, 1)
+    
     
     for i in range(len(results.segments)): 
         time   = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min
@@ -70,24 +82,22 @@ def plot_aerodynamic_forces(results,
         segment_tag  =  results.segments[i].tag
         segment_name = segment_tag.replace('_', ' ')
         
-        # power 
-        axis_1 = plt.subplot(2,2,1)
+        # power
+        axis_1.set_xlabel('Time (mins)')
         axis_1.set_ylabel(r'Power (MW)')
         axis_1.plot(time,Power/1E6, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name) 
         set_axes(axis_1)                
         
-        axis_2 = plt.subplot(2,2,2)
-        axis_2.plot(time, Thrust/1000, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width) 
+        axis_2.set_xlabel('Time (mins)')
         axis_2.set_ylabel(r'Thrust (kN)')
+        axis_2.plot(time, Thrust/1000, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)         
         set_axes(axis_2) 
 
-        axis_3 = plt.subplot(2,2,3)
         axis_3.plot(time, Lift/1000, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)
         axis_3.set_xlabel('Time (mins)')
         axis_3.set_ylabel(r'Lift (kN)')
         set_axes(axis_3) 
         
-        axis_4 = plt.subplot(2,2,4)
         axis_4.plot(time,Drag/1000 , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)
         axis_4.set_xlabel('Time (mins)')
         axis_4.set_ylabel(r'Drag (kN)')
@@ -95,16 +105,26 @@ def plot_aerodynamic_forces(results,
         
  
     if show_legend:    
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
-        leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
+        leg1 =  fig1.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5)
+        leg2 =  fig2.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5)
+        leg3 =  fig3.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5)
+        leg4 =  fig4.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
+        leg2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
+        leg3.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
+        leg4.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})   
     
     # Adjusting the sub-plots for legend 
-    fig.subplots_adjust(top=0.8)
+    fig1.subplots_adjust(top=0.8)
+    fig2.subplots_adjust(top=0.8)
+    fig3.subplots_adjust(top=0.8)
+    fig4.subplots_adjust(top=0.8)
     
     # set title of plot 
-    title_text    = 'Aerodynamic Forces'      
-    fig.suptitle(title_text)
     
     if save_figure:
-        plt.savefig(save_filename + file_type)   
-    return fig 
+        fig1.savefig(save_filename + '_Power' + file_type)
+        fig2.savefig(save_filename + '_Thrust' + file_type)
+        fig3.savefig(save_filename + '_Lift' + file_type)
+        fig4.savefig(save_filename + '_Drag' + file_type)  
+    return fig1,fig2,fig3,fig4 
