@@ -17,7 +17,6 @@ import numpy as np
 #  evaluate_correlation_emissions_indices
 # ---------------------------------------------------------------------------------------------------------------------- 
 def evaluate_CRN_emission_indices_no_surrogate(state,settings,vehicle):
-
   
     # unpack  
     I               = state.numerics.time.integrate
@@ -90,16 +89,16 @@ def evaluate_CRN_emission_indices_no_surrogate(state,settings,vehicle):
     return    
     
 
-def evaluate_CRN_emission_indices_surrogate(state,settings,vehicle): 
+def evaluate_CRN_emission_indices_surrogate(segment,settings,vehicle): 
   
-    I          = state.numerics.time.integrate
-    surrogates = state.analyses.emissions.surrogates
+    I          = segment.state.numerics.time.integrate
+    surrogates = segment.state.analyses.emissions.surrogates
     
-    CO2_total = 0 * state.ones_row(1)  
-    CO_total  = 0 * state.ones_row(1) 
-    H2O_total = 0 * state.ones_row(1) 
-    NO_total  = 0 * state.ones_row(1) 
-    NO2_total = 0 * state.ones_row(1) 
+    CO2_total = 0 * segment.state.ones_row(1)  
+    CO_total  = 0 * segment.state.ones_row(1) 
+    H2O_total = 0 * segment.state.ones_row(1) 
+    NO_total  = 0 * segment.state.ones_row(1) 
+    NO2_total = 0 * segment.state.ones_row(1) 
 
     for network in vehicle.networks:  
         for fuel_line in network.fuel_lines:
@@ -113,7 +112,7 @@ def evaluate_CRN_emission_indices_surrogate(state,settings,vehicle):
                                 combustor = propulsor.combustor
                             
                                 # unpack component conditions
-                                propulsor_conditions     = state.conditions.energy[fuel_line.tag][propulsor.tag] 
+                                propulsor_conditions     = segment.state.conditions.energy[fuel_line.tag][propulsor.tag] 
                                 combustor_conditions    = propulsor_conditions[combustor.tag]  
 
                                 T = combustor_conditions.inputs.stagnation_temperature
@@ -148,7 +147,7 @@ def evaluate_CRN_emission_indices_surrogate(state,settings,vehicle):
     emissions.index.NO        = EI_NO_p 
     emissions.index.NO2       = EI_NO2_p
     
-    state.conditions.emissions =  emissions
+    segment.state.conditions.emissions =  emissions
     return   
 
      
