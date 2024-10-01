@@ -79,23 +79,23 @@ def plot_aerodynamic_coefficients(results,
                        
         segment_tag  =  results.segments[i].tag
         segment_name = segment_tag.replace('_', ' ')
-        axis_1.plot(time, aoa, color = line_colors[i], marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
+        axis_1.plot(time, aoa, color = line_colors[i], marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name, markersize = ps.marker_size)
         axis_1.set_ylabel(r'AoA (deg)') 
         axis_1.set_xlabel('Time (mins)')        
         axis_1.set_ylim([-5,15])
         set_axes(axis_1)    
         
-        axis_2.plot(time, l_d, color = line_colors[i], marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name) 
+        axis_2.plot(time, l_d, color = line_colors[i], marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name, markersize = ps.marker_size) 
         axis_2.set_ylabel(r'L/D')
         axis_2.set_xlabel('Time (mins)')
         set_axes(axis_2) 
 
-        axis_3.plot(time, cl, color = line_colors[i], marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
+        axis_3.plot(time, cl, color = line_colors[i], marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name, markersize = ps.marker_size)
         axis_3.set_xlabel('Time (mins)')
         axis_3.set_ylabel(r'$C_L$')
         set_axes(axis_3) 
         
-        axis_4.plot(time, cd, color = line_colors[i], marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
+        axis_4.plot(time, cd, color = line_colors[i], marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name, markersize = ps.marker_size)
         axis_4.set_xlabel('Time (mins)')
         axis_4.set_ylabel(r'$C_D$')
         axis_4.set_ylim([0,0.1])

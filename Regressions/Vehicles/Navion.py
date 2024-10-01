@@ -296,9 +296,9 @@ def vehicle_setup():
     fuel                                        = RCAIDE.Library.Attributes.Propellants.Aviation_Gasoline()
     fuel.mass_properties                        = RCAIDE.Library.Components.Mass_Properties() 
     fuel.number_of_tanks                        = 1.
-    fuel.origin                                 = wing.origin
+    fuel.origin                                 = [[1.652555594, 0.,-0.6006666]]
     fuel.internal_volume                        = fuel.mass_properties.mass/fuel.density #all of the fuel volume is internal
-    fuel.mass_properties.center_of_gravity      = wing.mass_properties.center_of_gravity
+    fuel.mass_properties.center_of_gravity      = [1.852555594, 0., 6006666 ] 
     fuel.mass_properties.mass                   = 319 *Units.lbs
     vehicle.fuel                                = fuel
 
@@ -317,10 +317,10 @@ def vehicle_setup():
     #  Fuel Tank & Fuel
     #------------------------------------------------------------------------------------------------------------------------------------       
     fuel_tank                                   = RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Fuel_Tank()
-    fuel_tank.origin                            = wing.origin  
+    fuel_tank.origin                            = [[1.652555594, 0.,-0.6006666]] 
     fuel                                        = RCAIDE.Library.Attributes.Propellants.Aviation_Gasoline() 
     fuel.mass_properties.mass                   = 319 *Units.lbs 
-    fuel.mass_properties.center_of_gravity      = wing.mass_properties.center_of_gravity
+    fuel.mass_properties.center_of_gravity      = [1.852555594, 0., 6006666 ]  # Aerodynamic Center
     fuel.internal_volume                        = fuel.mass_properties.mass/fuel.density  
     fuel_tank.fuel                              = fuel     
     fuel_line.fuel_tanks.append(fuel_tank)  
