@@ -62,15 +62,18 @@ def plot_bus_C_rates(results,
     for network in results.segments[0].analyses.energy.vehicle.networks: 
         busses  = network.busses
         for bus in busses:    
-            fig = plt.figure(save_filename + '_' + bus.tag)
-            fig.set_size_inches(width,height)  
+            fig_1 = plt.figure('Instantaneous_' + save_filename + '_' + bus.tag)
+            fig_2 = plt.figure('Nominal_'       + save_filename + '_' + bus.tag)
+            fig_1.set_size_inches(width,height)  
+            fig_2.set_size_inches(width,height)  
+            axis_1 = fig_1.add_subplot(1,1,1)
+            axis_2 = fig_2.add_subplot(1,1,1)
             for i in range(len(results.segments)):
                 time                = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min 
                 bus_results         = results.segments[i].conditions.energy[bus.tag] 
                 pack_energy         = bus_results.energy[:,0]
                 pack_volts          = bus_results.voltage_under_load[:,0] 
-                pack_current        = bus_results.current_draw[:,0] 
-        
+                pack_current        = bus_results.current_draw[:,0]  
                 pack_battery_amp_hr = (pack_energy/ Units.Wh )/pack_volts
                 pack_C_instant      = pack_current/pack_battery_amp_hr
                 pack_C_nominal      = pack_current/np.max(pack_battery_amp_hr) 
@@ -78,29 +81,27 @@ def plot_bus_C_rates(results,
                 segment_tag  =  results.segments[i].tag
                 segment_name = segment_tag.replace('_', ' ') 
                  
-                axis_1 = plt.subplot(2,1,1)
                 axis_1.plot(time, pack_C_instant, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name)
                 axis_1.set_ylabel(r'Inst. C-Rate (C)')
                 axis_1.set_xlabel('Time (mins)')
                 set_axes(axis_1)     
                 
-                axis_2 = plt.subplot(2,1,2)
-                axis_2.plot(time, pack_C_nominal, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)
+                axis_2.plot(time, pack_C_nominal, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name)
                 axis_2.set_ylabel(r'Nom. C-Rate (C)')
                 axis_2.set_xlabel('Time (mins)')
                 set_axes(axis_2)   
 
             if show_legend:
-                leg =  fig.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
-                leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
+                leg_1 =  fig_1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+                leg_2 =  fig_2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+                leg_1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
+                leg_2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
             
             # Adjusting the sub-plots for legend 
-            fig.subplots_adjust(top=0.8)
-            
-            # set title of plot 
-            title_text    = 'Battery Pack C-Rates: ' + bus.tag    
-            fig.suptitle(title_text)
+            fig_1.subplots_adjust(top=0.8)
+            fig_2.subplots_adjust(top=0.8)             
             
             if save_figure:
-                plt.savefig(save_filename + '_' + bus.tag + file_type)   
-    return fig 
+                fig_1.savefig('Instantaneous_' + save_filename + '_' + bus.tag + file_type) 
+                fig_2.savefig('Nominal_'       + save_filename + '_' + bus.tag + file_type)   
+    return fig_1,fig_2
