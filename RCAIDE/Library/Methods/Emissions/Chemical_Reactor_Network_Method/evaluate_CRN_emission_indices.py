@@ -125,11 +125,11 @@ def evaluate_CRN_emission_indices_surrogate(segment,settings,vehicle):
                                 
                                 #results = evaluate_cantera(combustor,pts)
 
-                                EI_CO2_p  = surrogates.EI_CO2(pts)
-                                EI_CO_p   = surrogates.EI_CO(pts) 
-                                EI_H2O_p  = surrogates.EI_H2O(pts) 
-                                EI_NO_p   = surrogates.EI_NO(pts) 
-                                EI_NO2_p  = surrogates.EI_NO2(pts)        
+                                EI_CO2_p  = np.atleast_2d(surrogates.EI_CO2(pts)).T
+                                EI_CO_p   = np.atleast_2d(surrogates.EI_CO(pts)).T 
+                                EI_H2O_p  = np.atleast_2d(surrogates.EI_H2O(pts)).T 
+                                EI_NO_p   = np.atleast_2d(surrogates.EI_NO(pts)).T 
+                                EI_NO2_p  = np.atleast_2d(surrogates.EI_NO2(pts)).T        
                                       
                                 CO2_total += np.dot(I,mdot*EI_CO2_p)
                                 CO_total  += np.dot(I,mdot *EI_CO_p )

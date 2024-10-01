@@ -16,9 +16,7 @@ from scipy.interpolate  import RegularGridInterpolator
 def build_CRN_EI_surrogates(emissions):
      
     surrogates                            = emissions.surrogates
-    training                              = emissions.training 
-                                                                
-    surrogates                            = Data()
+    training                              = emissions.training  
     pressure_data                         = training.pressure         
     temperature_data                      = training.temperature      
     air_mass_flowrate_data                = training.air_mass_flowrate

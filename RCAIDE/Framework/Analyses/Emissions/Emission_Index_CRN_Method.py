@@ -40,7 +40,7 @@ class Emission_Index_CRN_Method(Emissions):
         self.training.fuel_to_air_ratio = np.linspace(0.01, 0.05, 1)        
         
         # surrogoate models                 
-        self.surrogates                  = Data() 
+        self.surrogates                 = Data() 
 
         # build the evaluation process
         compute                         = Process()  
