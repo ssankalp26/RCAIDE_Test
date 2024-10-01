@@ -92,6 +92,7 @@ def plot_drag_components(results,
     
     # Adjusting the sub-plots for legend 
     fig.subplots_adjust(top=0.8)
+    fig.tight_layout()     
      
     if save_figure:
         fig.savefig(save_filename + file_type)   

@@ -37,18 +37,7 @@ def main():
     for i , battery_type in enumerate(battery_types):
         for j , btms_type in enumerate(btms_types):
             vehicle  = vehicle_setup(battery_type, btms_type)
-
-            # plot vehicle 
-            plot_3d_vehicle(vehicle, 
-                            min_x_axis_limit            = -5,
-                            max_x_axis_limit            = 15,
-                            min_y_axis_limit            = -10,
-                            max_y_axis_limit            = 10,
-                            min_z_axis_limit            = -10,
-                            max_z_axis_limit            = 10,
-                            show_figure                 = False 
-                            )           
-        
+            
             # Set up configs
             configs  = configs_setup(vehicle)
         
@@ -65,8 +54,9 @@ def main():
             error =  abs(CL - CL_true) /CL_true
             assert(abs(error)<1e-6)
              
-            # plot the results 
-            plot_mission(results)
+            # plot the results
+            if i == 0 and  j == 0: 
+                plot_mission(results)
 
     return
     
@@ -197,9 +187,9 @@ def plot_mission(results):
     
     plot_battery_cell_conditions(results)
     
-    plot_thermal_management_component(results)
+    #plot_thermal_management_component(results)
 
-    plot_battery_degradation(results)
+    #plot_battery_degradation(results)
     
     return
 

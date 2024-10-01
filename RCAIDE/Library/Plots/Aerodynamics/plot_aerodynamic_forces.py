@@ -56,19 +56,19 @@ def plot_aerodynamic_forces(results,
     # get line colors for plots 
     line_colors   = cm.inferno(np.linspace(0,0.9,len(results.segments)))     
     
-    fig1   = plt.figure(save_filename+'_Power')
-    fig1.set_size_inches(width,height)
-    fig2   = plt.figure(save_filename+'_Thrust')
-    fig2.set_size_inches(width,height)
-    fig3   = plt.figure(save_filename+'_Lift')
-    fig3.set_size_inches(width,height)
-    fig4   = plt.figure(save_filename+'_Drag')
-    fig4.set_size_inches(width,height)
+    fig_1   = plt.figure(save_filename+'_Power')
+    fig_1.set_size_inches(width,height)
+    fig_2   = plt.figure(save_filename+'_Thrust')
+    fig_2.set_size_inches(width,height)
+    fig_3   = plt.figure(save_filename+'_Lift')
+    fig_3.set_size_inches(width,height)
+    fig_4   = plt.figure(save_filename+'_Drag')
+    fig_4.set_size_inches(width,height)
     
-    axis_1 = fig1.add_subplot(1, 1, 1)
-    axis_2 = fig2.add_subplot(1, 1, 1)
-    axis_3 = fig3.add_subplot(1, 1, 1)
-    axis_4 = fig4.add_subplot(1, 1, 1)
+    axis_1 = fig_1.add_subplot(1, 1, 1)
+    axis_2 = fig_2.add_subplot(1, 1, 1)
+    axis_3 = fig_3.add_subplot(1, 1, 1)
+    axis_4 = fig_4.add_subplot(1, 1, 1)
     
     
     for i in range(len(results.segments)): 
@@ -105,26 +105,28 @@ def plot_aerodynamic_forces(results,
         
  
     if show_legend:    
-        leg1 =  fig1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
-        leg2 =  fig2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
-        leg3 =  fig3.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
-        leg4 =  fig4.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg1 =  fig_1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
+        leg2 =  fig_2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
+        leg3 =  fig_3.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
+        leg4 =  fig_4.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
         leg1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
         leg2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
         leg3.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
         leg4.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})   
     
     # Adjusting the sub-plots for legend 
-    fig1.subplots_adjust(top=0.8)
-    fig2.subplots_adjust(top=0.8)
-    fig3.subplots_adjust(top=0.8)
-    fig4.subplots_adjust(top=0.8)
+    fig_1.subplots_adjust(top=0.8)
+    fig_2.subplots_adjust(top=0.8)
+    fig_3.subplots_adjust(top=0.8)
+    fig_4.subplots_adjust(top=0.8)
     
-    # set title of plot 
-    
+    fig_1.tight_layout()    
+    fig_2.tight_layout()    
+    fig_3.tight_layout()    
+    fig_4.tight_layout()     
     if save_figure:
-        fig1.savefig(save_filename + '_Power' + file_type)
-        fig2.savefig(save_filename + '_Thrust' + file_type)
-        fig3.savefig(save_filename + '_Lift' + file_type)
-        fig4.savefig(save_filename + '_Drag' + file_type)  
-    return fig1,fig2,fig3,fig4 
+        fig_1.savefig(save_filename + '_Power' + file_type)
+        fig_2.savefig(save_filename + '_Thrust' + file_type)
+        fig_3.savefig(save_filename + '_Lift' + file_type)
+        fig_4.savefig(save_filename + '_Drag' + file_type)  
+    return fig_1,fig_2,fig_3,fig_4 

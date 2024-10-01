@@ -21,6 +21,7 @@ import numpy as np
 def plot_rotor_disc_inflow(prop,velocities, grid_points, 
                            save_filename = "Rotor_Disc_Inflow",
                            file_type = ".png",
+                           save_figure = False, 
                            width = 8, height = 6):
 
     """Plots rotor disc inflow velocities
@@ -137,5 +138,17 @@ def plot_rotor_disc_inflow(prop,velocities, grid_points,
     axis_2.set_title("Spanwise Velocity, v")
     axis_3.set_title("Downwash Velocity, w")
     axis_4.set_title("Total Velocity") 
-    
+
+
+    fig_1.tight_layout()    
+    fig_2.tight_layout()    
+    fig_3.tight_layout()    
+    fig_4.tight_layout()     
+         
+    if save_figure:
+        fig_1.savefig(save_filename + file_type) 
+        fig_2.savefig(save_filename + file_type) 
+        fig_3.savefig(save_filename + file_type) 
+        fig_4.savefig(save_filename + file_type)
+        
     return fig_1,fig_2,fig_3, fig_4

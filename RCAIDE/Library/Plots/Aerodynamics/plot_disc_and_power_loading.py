@@ -92,7 +92,8 @@ def plot_disc_and_power_loading(results,
     fig_1.subplots_adjust(top=0.8) 
     fig_2.subplots_adjust(top=0.8) 
     
-    # set title of plot  
+    fig_1.tight_layout()    
+    fig_2.tight_layout()     
     if save_figure:
         fig_1.savefig(save_filename + file_type)  
         fig_2.savefig(save_filename + file_type)  

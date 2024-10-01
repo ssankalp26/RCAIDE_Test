@@ -64,15 +64,15 @@ def plot_flight_conditions(results,
     # get line colors for plots 
     line_colors   = cm.inferno(np.linspace(0,0.9,len(results.segments)))     
      
-    fig1   = plt.figure(save_filename + "_Altitude")
-    fig2   = plt.figure(save_filename + "_Airspeed")
-    fig3   = plt.figure(save_filename + "_Range")
-    fig4   = plt.figure(save_filename + "_Pitch_Angle")
+    fig_1   = plt.figure(save_filename + "_Altitude")
+    fig_2   = plt.figure(save_filename + "_Airspeed")
+    fig_3   = plt.figure(save_filename + "_Range")
+    fig_4   = plt.figure(save_filename + "_Pitch_Angle")
     
-    fig1.set_size_inches(width,height)
-    fig2.set_size_inches(width,height)
-    fig3.set_size_inches(width,height)
-    fig4.set_size_inches(width,height)
+    fig_1.set_size_inches(width,height)
+    fig_2.set_size_inches(width,height)
+    fig_3.set_size_inches(width,height)
+    fig_4.set_size_inches(width,height)
     for i in range(len(results.segments)): 
         time     = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min
         airspeed = results.segments[i].conditions.freestream.velocity[:,0] /   Units['mph']
@@ -107,10 +107,10 @@ def plot_flight_conditions(results,
          
     
     if show_legend:        
-        leg1 =  fig1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
-        leg2 =  fig2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
-        leg3 =  fig3.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
-        leg4 =  fig4.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
+        leg1 =  fig_1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
+        leg2 =  fig_2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
+        leg3 =  fig_3.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
+        leg4 =  fig_4.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
         
         leg1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
         leg2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
@@ -118,14 +118,18 @@ def plot_flight_conditions(results,
         leg4.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'}) 
     
     # Adjusting the sub-plots for legend 
-    fig1.subplots_adjust(top=0.8)
-    fig2.subplots_adjust(top=0.8)
-    fig3.subplots_adjust(top=0.8)
-    fig4.subplots_adjust(top=0.8)
-    
+    fig_1.subplots_adjust(top=0.8)
+    fig_2.subplots_adjust(top=0.8)
+    fig_3.subplots_adjust(top=0.8)
+    fig_4.subplots_adjust(top=0.8) 
+
+    fig_1.tight_layout()    
+    fig_2.tight_layout()    
+    fig_3.tight_layout()    
+    fig_4.tight_layout()    
     if save_figure:
-        fig1.savefig(save_filename + "_Altitude"+ file_type)
-        fig2.savefig(save_filename + "_Airspeed"+ file_type)
-        fig3.savefig(save_filename + "_Range"+ file_type)
-        fig4.savefig(save_filename + "_Pitch_Angle"+ file_type)  
-    return  fig1, fig2,  fig3,  fig4
+        fig_1.savefig(save_filename + "_Altitude"+ file_type)
+        fig_2.savefig(save_filename + "_Airspeed"+ file_type)
+        fig_3.savefig(save_filename + "_Range"+ file_type)
+        fig_4.savefig(save_filename + "_Pitch_Angle"+ file_type)  
+    return  fig_1, fig_2,  fig_3,  fig_4

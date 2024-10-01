@@ -536,7 +536,7 @@ def vehicle_setup(cell_chemistry, btms_type):
     #------------------------------------------------------------------------------------------------------------------------------------   
     starboard_propulsor                              = RCAIDE.Library.Components.Propulsors.Electric_Rotor()  
     starboard_propulsor.tag                          = 'starboard_propulsor'
-    starboard_propulsor.active_bus             = ['li_ion_battery']   
+    starboard_propulsor.active_bus                   = ['li_ion_battery']   
   
     # Electronic Speed Controller       
     esc                                              = RCAIDE.Library.Components.Energy.Modulators.Electronic_Speed_Controller()

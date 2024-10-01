@@ -21,7 +21,7 @@ import numpy as np
 def plot_battery_cell_conditions(results,
                                   save_figure = False,
                                   show_legend = True,
-                                  save_filename = "Battery_Cell_Conditions_",
+                                  save_filename = "Battery_Cell_Conditions",
                                   file_type = ".png",
                                   width = 8, height = 6):
     """Plots the cell-level conditions of the battery throughout flight.
@@ -63,12 +63,12 @@ def plot_battery_cell_conditions(results,
             if bus.identical_batteries:
                 for i, battery in enumerate(bus.battery_modules):
                     if i == 0:
-                        fig_1 = plt.figure(battery.tag + '_' + save_filename + '_SOC')
-                        fig_2 = plt.figure(battery.tag + '_' + save_filename + '_Energy')
-                        fig_3 = plt.figure(battery.tag + '_' + save_filename + '_Current')
-                        fig_4 = plt.figure(battery.tag + '_' + save_filename + '_Power')
-                        fig_5 = plt.figure(battery.tag + '_' + save_filename + '_Voltage')
-                        fig_6 = plt.figure(battery.tag + '_' + save_filename + '_Temperature')
+                        fig_1 = plt.figure(battery.tag + '_SOC')
+                        fig_2 = plt.figure(battery.tag + '_Energy')
+                        fig_3 = plt.figure(battery.tag + '_Current')
+                        fig_4 = plt.figure(battery.tag + '_Power')
+                        fig_5 = plt.figure(battery.tag + '_Voltage')
+                        fig_6 = plt.figure(battery.tag + '_Temperature')
                         fig_1.set_size_inches(width,height)
                         fig_2.set_size_inches(width,height)
                         fig_3.set_size_inches(width,height)
@@ -146,12 +146,12 @@ def plot_battery_cell_conditions(results,
             else:
                 for _, battery in enumerate(bus.battery_modules):
 
-                    fig_1 = plt.figure(battery.tag + '_' + save_filename + '_SOC')
-                    fig_2 = plt.figure(battery.tag + '_' + save_filename + '_Energy')
-                    fig_3 = plt.figure(battery.tag + '_' + save_filename + '_Current')
-                    fig_4 = plt.figure(battery.tag + '_' + save_filename + '_Power')
-                    fig_5 = plt.figure(battery.tag + '_' + save_filename + '_Voltage')
-                    fig_6 = plt.figure(battery.tag + '_' + save_filename + '_Temperature')
+                    fig_1 = plt.figure(battery.tag + '_SOC')
+                    fig_2 = plt.figure(battery.tag + '_Energy')
+                    fig_3 = plt.figure(battery.tag + '_Current')
+                    fig_4 = plt.figure(battery.tag + '_Power')
+                    fig_5 = plt.figure(battery.tag + '_Voltage')
+                    fig_6 = plt.figure(battery.tag + '_Temperature')
                     fig_1.set_size_inches(width,height)
                     fig_2.set_size_inches(width,height)
                     fig_3.set_size_inches(width,height)
@@ -235,7 +235,14 @@ def plot_battery_cell_conditions(results,
     fig_3.subplots_adjust(top=0.8)  
     fig_4.subplots_adjust(top=0.8)  
     fig_5.subplots_adjust(top=0.8)  
-    fig_6.subplots_adjust(top=0.8)  
+    fig_6.subplots_adjust(top=0.8)
+    
+    fig_1.tight_layout()    
+    fig_2.tight_layout()    
+    fig_3.tight_layout()    
+    fig_4.tight_layout()    
+    fig_5.tight_layout()    
+    fig_6.tight_layout()  
     
     if save_figure:
         fig_1.savefig(battery.tag + '_' + save_filename + '_SOC' + file_type)

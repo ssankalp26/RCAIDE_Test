@@ -74,12 +74,12 @@ def plot_battery_degradation(results,
                             resistance_growth[i]  = battery_conditions.cell.resistance_growth_factor
                             charge_throughput[i]  = battery_conditions.cell.charge_throughput[-1,0]  
     
-                        fig_1 = plt.figure(battery.tag  + save_filename + '_' + 'Energy_1')
-                        fig_2 = plt.figure(battery.tag  + save_filename + '_' + 'Energy_2')
-                        fig_3 = plt.figure(battery.tag  + save_filename + '_' + 'Energy_3')
-                        fig_4 = plt.figure(battery.tag  + save_filename + '_' + 'Resistance_1')
-                        fig_5 = plt.figure(battery.tag  + save_filename + '_' + 'Resistance_2')
-                        fig_6 = plt.figure(battery.tag  + save_filename + '_' + 'Resistance_3')
+                        fig_1 = plt.figure(battery.tag  + '_'+ save_filename + '_Energy_1')
+                        fig_2 = plt.figure(battery.tag  + '_'+ save_filename + '_Energy_2')
+                        fig_3 = plt.figure(battery.tag  + '_'+ save_filename + '_Energy_3')
+                        fig_4 = plt.figure(battery.tag  + '_'+ save_filename + '_Resistance_1')
+                        fig_5 = plt.figure(battery.tag  + '_'+ save_filename + '_Resistance_2')
+                        fig_6 = plt.figure(battery.tag  + '_'+ save_filename + '_Resistance_3')
                         fig_1.set_size_inches(width,height)  
                         fig_2.set_size_inches(width,height)  
                         fig_3.set_size_inches(width,height)  

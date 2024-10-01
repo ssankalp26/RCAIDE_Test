@@ -99,11 +99,7 @@ def plot_flight_forces_and_moments(results,
     
     # Adjusting the sub-plots for legend 
     fig.tight_layout()
-    fig.subplots_adjust(top=0.8) 
-    
-    # set title of plot 
-    title_text    = 'Intertial Forces and Moments'      
-    fig.suptitle(title_text)
+    fig.subplots_adjust(top=0.8)         
     
     if save_figure:
         plt.savefig(save_filename + file_type)   

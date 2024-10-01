@@ -57,15 +57,15 @@ def plot_airfoil_polars(polar_data,
                   'axes.titlesize': ps.title_font_size}
     plt.rcParams.update(parameters)
       
-    fig1   = plt.figure(save_filename + "_Cl")
-    fig2   = plt.figure(save_filename + "_Cd")
-    fig3   = plt.figure(save_filename + "_Cm")
-    fig4   = plt.figure(save_filename + "_Cl/Cd")
+    fig_1   = plt.figure(save_filename + "_Cl")
+    fig_2   = plt.figure(save_filename + "_Cd")
+    fig_3   = plt.figure(save_filename + "_Cm")
+    fig_4   = plt.figure(save_filename + "_Cl/Cd")
     
-    fig1.set_size_inches(width,height)
-    fig2.set_size_inches(width,height)
-    fig3.set_size_inches(width,height)
-    fig4.set_size_inches(width,height) 
+    fig_1.set_size_inches(width,height)
+    fig_2.set_size_inches(width,height)
+    fig_3.set_size_inches(width,height)
+    fig_4.set_size_inches(width,height) 
                
     axis_1 = plt.subplot(1,1,1)
     axis_2 = plt.subplot(1,1,1)    
@@ -94,11 +94,11 @@ def plot_airfoil_polars(polar_data,
     set_axes(axis_4) 
             
     if save_figure:
-        fig1.savefig(save_filename + "_Cl" + file_type)
-        fig2.savefig(save_filename + "_Cd" + file_type)
-        fig3.savefig(save_filename + "_Cm" + file_type)
-        fig4.savefig(save_filename + "_Cl/Cd" + file_type)  
-    return  fig1, fig2, fig3, fig4
+        fig_1.savefig(save_filename + "_Cl" + file_type)
+        fig_2.savefig(save_filename + "_Cd" + file_type)
+        fig_3.savefig(save_filename + "_Cm" + file_type)
+        fig_4.savefig(save_filename + "_Cl/Cd" + file_type)  
+    return  fig_1, fig_2, fig_3, fig_4
      
      
      

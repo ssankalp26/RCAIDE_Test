@@ -64,15 +64,15 @@ def plot_airfoil_polar_files(polar_data,
     # get line colors for plots 
     line_colors   = cm.inferno(np.linspace(0,0.9,n_Re))     
      
-    fig1   = plt.figure(save_filename + "_Cl_vs_Alpha")
-    fig2   = plt.figure(save_filename + "_Cd_vs_Alpha")
-    fig3   = plt.figure(save_filename + "_Cl_vs_Cd")
-    fig4   = plt.figure(save_filename + "_Cl/Cd_vs_Alpha")
+    fig_1   = plt.figure(save_filename + "_Cl_vs_Alpha")
+    fig_2   = plt.figure(save_filename + "_Cd_vs_Alpha")
+    fig_3   = plt.figure(save_filename + "_Cl_vs_Cd")
+    fig_4   = plt.figure(save_filename + "_Cl/Cd_vs_Alpha")
     
-    fig1.set_size_inches(width,height) 
-    fig2.set_size_inches(width,height)
-    fig3.set_size_inches(width,height)
-    fig4.set_size_inches(width,height)
+    fig_1.set_size_inches(width,height) 
+    fig_2.set_size_inches(width,height)
+    fig_3.set_size_inches(width,height)
+    fig_4.set_size_inches(width,height)
     
     axis_1 = plt.subplot(1,1,1)
     axis_2 = plt.subplot(1,1,1)
@@ -104,8 +104,8 @@ def plot_airfoil_polar_files(polar_data,
         set_axes(axis_4)   
     
     if save_figure:
-        fig1.savefig(save_filename + "_Cl_vs_Alpha"+ file_type)
-        fig2.savefig(save_filename + "_Cd_vs_Alpha"+ file_type)
-        fig3.savefig(save_filename + "_Cl_vs_Cd"+ file_type)
-        fig4.savefig(save_filename + "_Cl/Cd_vs_Alpha"+ file_type)   
-    return fig1, fig2, fig3, fig4
+        fig_1.savefig(save_filename + "_Cl_vs_Alpha"+ file_type)
+        fig_2.savefig(save_filename + "_Cd_vs_Alpha"+ file_type)
+        fig_3.savefig(save_filename + "_Cl_vs_Cd"+ file_type)
+        fig_4.savefig(save_filename + "_Cl/Cd_vs_Alpha"+ file_type)   
+    return fig_1, fig_2, fig_3, fig_4

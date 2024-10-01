@@ -63,12 +63,9 @@ def plot_battery_ragone_diagram(battery,
     axis_1.plot(esp_plot/(Units.Wh/Units.kg),psp_plot/(Units.kW/Units.kg), color = 'black', marker = ps.markers[0], linewidth = ps.line_width, label= battery.tag) 
     axis_1.set_ylabel('Specific Power (kW/kg)')
     axis_1.set_xlabel('Specific Energy (W-h/kg)')
-    set_axes(axis_1)       
-     
-    # set title of plot 
-    title_text    = 'Battery Ragone Plot'      
-    fig.suptitle(title_text)
+    set_axes(axis_1)
     
+    fig.tight_layout()    
     if save_figure:
         plt.savefig(save_filename + file_type)   
     return  fig 

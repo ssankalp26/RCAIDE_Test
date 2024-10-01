@@ -56,7 +56,7 @@ class Lithium_Ion_LFP(Generic_Battery_Module):
         # ----------------------------------------------------------------------------------------------------------------------
         #  Module Level Properties
         # ----------------------------------------------------------------------------------------------------------------------        
-        self.tag                              = 'lithium_ion_lfp' 
+        self.tag                                               = 'lithium_ion_lfp' 
         self.power_split_ratio                                 = None
         self.number_of_cells                                   = 1
         self.maximum_energy                                    = 0.0

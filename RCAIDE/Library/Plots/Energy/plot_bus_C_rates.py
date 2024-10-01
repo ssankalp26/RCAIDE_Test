@@ -100,7 +100,9 @@ def plot_bus_C_rates(results,
             # Adjusting the sub-plots for legend 
             fig_1.subplots_adjust(top=0.8)
             fig_2.subplots_adjust(top=0.8)             
-            
+        
+            fig_1.tight_layout()    
+            fig_2.tight_layout()                 
             if save_figure:
                 fig_1.savefig('Instantaneous_' + save_filename + '_' + bus.tag + file_type) 
                 fig_2.savefig('Nominal_'       + save_filename + '_' + bus.tag + file_type)   

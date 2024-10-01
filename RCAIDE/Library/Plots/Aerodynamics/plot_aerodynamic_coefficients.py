@@ -116,6 +116,10 @@ def plot_aerodynamic_coefficients(results,
     fig_2.subplots_adjust(top=0.8) 
     fig_3.subplots_adjust(top=0.8) 
     fig_4.subplots_adjust(top=0.8) 
+    fig_1.tight_layout()    
+    fig_2.tight_layout()    
+    fig_3.tight_layout()    
+    fig_4.tight_layout()    
     
     if save_figure:
         fig_1.savefig(save_filename + '_AoA' + file_type)  

@@ -60,15 +60,15 @@ def plot_flight_trajectory(results,
                   'axes.titlesize': ps.title_font_size}
     plt.rcParams.update(parameters) 
         
-    fig1 = plt.figure(save_filename+"_Distance")
-    fig2 = plt.figure(save_filename + "_x_vs_y")
-    fig3 = plt.figure(save_filename+"_z_vs_time")
-    fig4 = plt.figure(save_filename+"_3D")
+    fig_1 = plt.figure(save_filename+"_Distance")
+    fig_2 = plt.figure(save_filename + "_x_vs_y")
+    fig_3 = plt.figure(save_filename+"_z_vs_time")
+    fig_4 = plt.figure(save_filename+"_3D")
     
-    fig1.set_size_inches(width,height)
-    fig2.set_size_inches(width,height)
-    fig3.set_size_inches(width,height)
-    fig4.set_size_inches(width,height) 
+    fig_1.set_size_inches(width,height)
+    fig_2.set_size_inches(width,height)
+    fig_3.set_size_inches(width,height)
+    fig_4.set_size_inches(width,height) 
      
     # get line colors for plots 
     line_colors   = cm.inferno(np.linspace(0,0.9,len(results.segments)))    
@@ -114,15 +114,20 @@ def plot_flight_trajectory(results,
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
     # Adjusting the sub-plots for legend 
-    fig1.subplots_adjust(top=0.8)
-    fig2.subplots_adjust(top=0.8)
-    fig3.subplots_adjust(top=0.8)
-    fig4.subplots_adjust(top=0.8)
+    fig_1.subplots_adjust(top=0.8)
+    fig_2.subplots_adjust(top=0.8)
+    fig_3.subplots_adjust(top=0.8)
+    fig_4.subplots_adjust(top=0.8)
+
+    fig_1.tight_layout()    
+    fig_2.tight_layout()    
+    fig_3.tight_layout()    
+    fig_4.tight_layout()
     
     if save_figure:
-        fig1.savefig(save_filename + file_type)
-        fig2.savefig(save_filename + file_type)
-        fig3.savefig(save_filename + file_type)
-        fig4.savefig(save_filename + file_type)  
+        fig_1.savefig(save_filename + file_type)
+        fig_2.savefig(save_filename + file_type)
+        fig_3.savefig(save_filename + file_type)
+        fig_4.savefig(save_filename + file_type)  
              
     return fig         
