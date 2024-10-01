@@ -56,12 +56,18 @@ def plot_altitude_sfc_weight(results,
     # get line colors for plots 
     line_colors   = cm.inferno(np.linspace(0,0.9,len(results.segments)))      
      
-    fig   = plt.figure(save_filename)
-    fig.set_size_inches(width,height) 
-    axis_1 = plt.subplot(2,2,1)
-    axis_2 = plt.subplot(2,2,2)
-    axis_3 = plt.subplot(2,2,3)
-    axis_4 = plt.subplot(2,2,4)
+    fig_1   = plt.figure(save_filename + '_Throttle' )
+    fig_2   = plt.figure(save_filename + '_Weight' )
+    fig_3   = plt.figure(save_filename + '_SFC' )
+    fig_4   = plt.figure(save_filename + '_Fuel_Flow_Rate' )
+    fig_1.set_size_inches(width,height) 
+    fig_2.set_size_inches(width,height) 
+    fig_3.set_size_inches(width,height) 
+    fig_4.set_size_inches(width,height) 
+    axis_1 = fig_1.add_subplot(1,1,1)
+    axis_2 = fig_2.add_subplot(1,1,1)
+    axis_3 = fig_3.add_subplot(1,1,1)
+    axis_4 = fig_4.add_subplot(1,1,1)
     
     for i in range(len(results.segments)): 
         time     = results.segments[i].conditions.frames.inertial.time[:, 0] / Units.min
@@ -101,7 +107,8 @@ def plot_altitude_sfc_weight(results,
             axis_2.plot(time, Weight/1000 , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name) 
         else:
             axis_2.plot(time, Weight/1000 , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width) 
-        axis_2.set_ylabel(r'Weight (kN)')  
+        axis_2.set_ylabel(r'Weight (kN)')
+        axis_2.set_xlabel('Time (mins)')
         set_axes(axis_2) 
 
         axis_3.plot(time, sfc, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)
@@ -112,20 +119,27 @@ def plot_altitude_sfc_weight(results,
         axis_4.plot(time, mdot, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)
         axis_4.set_xlabel('Time (mins)')
         axis_4.set_ylabel(r'Fuel Rate (kg/s)')
-        set_axes(axis_4)         
-        
+        set_axes(axis_4)     
     
     if show_legend:
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
-        leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
+        leg_1 =  fig_1.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg_2 =  fig_2.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg_3 =  fig_3.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg_4 =  fig_4.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg_1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'}) 
+        leg_2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
+        leg_3.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'}) 
+        leg_4.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})   
     
     # Adjusting the sub-plots for legend 
-    fig.subplots_adjust(top=0.8)
-    
-    # set title of plot 
-    title_text    = 'Throttle, Fuel Consumption and Weight'      
-    fig.suptitle(title_text)
+    fig_1.subplots_adjust(top=0.8)
+    fig_2.subplots_adjust(top=0.8)
+    fig_3.subplots_adjust(top=0.8)
+    fig_4.subplots_adjust(top=0.8) 
     
     if save_figure:
-        plt.savefig(save_filename + file_type)   
-    return fig 
+        fig_1.savefig(save_filename + file_type)   
+        fig_2.savefig(save_filename + file_type)   
+        fig_3.savefig(save_filename + file_type)   
+        fig_4.savefig(save_filename + file_type)    
+    return fig_1,fig_2,fig_3,fig_4 
