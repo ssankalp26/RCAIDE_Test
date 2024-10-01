@@ -38,10 +38,10 @@ def train_CRN_EI_surrogates(emissions):
                 else:
                     combustor = False 
             
-    len_P    =  len(P)
-    len_T    =  len(T)
-    len_mdot =  len(mdot)
-    len_far  =  len(FAR) 
+    len_P    = len(P)
+    len_T    = len(T)
+    len_mdot = len(mdot)
+    len_far  = len(FAR) 
     
     EI_CO2 = np.zeros((len_P,len_T,len_mdot,len_far))
     EI_CO  = np.zeros((len_P,len_T,len_mdot,len_far))
@@ -67,10 +67,10 @@ def train_CRN_EI_surrogates(emissions):
                     EI_NO [p_i, t_i, mdot_i,far_i] = results.EI_NO 
                     EI_NO2[p_i, t_i, mdot_i,far_i] = results.EI_NO2
     
-    emissions.training.EI_CO2 =  EI_CO2
-    emissions.training.EI_CO =   EI_CO
-    emissions.training.EI_H2O =  EI_H2O
-    emissions.training.EI_NO =   EI_NO
-    emissions.training.EI_NO2 =  EI_NO2
+    emissions.training.EI_CO2 = EI_CO2
+    emissions.training.EI_CO =  EI_CO
+    emissions.training.EI_H2O = EI_H2O
+    emissions.training.EI_NO =  EI_NO
+    emissions.training.EI_NO2 = EI_NO2
     
     return 

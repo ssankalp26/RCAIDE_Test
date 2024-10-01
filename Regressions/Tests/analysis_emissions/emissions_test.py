@@ -30,8 +30,8 @@ def main():
     use_surrogate     =  [True, False]
     
     
-    true_EI_CO2s =  [3.16, 0, 0]
-    true_EI_H2Os =  [1.34, 0, 0]
+    true_EI_CO2s =  [3.16, 3.0996295865239563, 3.1371106320136155]
+    true_EI_H2Os =  [1.34, 1.1911420639654764, 1.2053455595806213]
     i =  0
     for em in  range(2):
         for sur in  range(2):
@@ -64,10 +64,10 @@ def main():
                 diff_EI_CO2    = np.abs(EI_CO2 - true_EI_CO2)
                 diff_EI_H2O    = np.abs(EI_H2O - true_EI_H2O)
                 print('EI CO2 Error: ',diff_EI_CO2)
-                #assert (diff_EI_CO2/true_EI_CO2) < 1e-6
+                assert (diff_EI_CO2/true_EI_CO2) < 1e-6
                 print('EI H2O Error: ',diff_EI_H2O)
-                #assert (diff_EI_H2O/true_EI_H2O) < 1e-6
-                i += 0
+                assert (diff_EI_H2O/true_EI_H2O) < 1e-6
+                i += 1
              
     return 
 

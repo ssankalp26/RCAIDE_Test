@@ -55,7 +55,9 @@ def evaluate_cantera(combustor,T,P,mdot,FAR):
     phi_SZ                  = combustor.phi_SZ                                      # [-]       Equivalence Ratio for PFR    phi_PZ_des              = 0.6                                                   # [-]       Primary Zone Design Equivalence Ratio
     S_PZ                    = combustor.S_PZ                                        # [-]       Mixing parameter, used to define the Equivalence Ratio standard deviation  
     F_SC                    = combustor.F_SC                                        # [-]       Fuel scaler
-    
+    PSR_1st_mixers          = combustor.number_of_assigned_PSR_1st_mixers           # [-]       Number of PSR assigned to the first row of mixers  
+    PSR_2nd_mixers          = combustor.number_of_assigned_PSR_2nd_mixers           # [-]       Number of mixers assigned to the second row of mixers                                           
+         
     m_dot_fuel_tot          = m_dot_air_tot*FAR                                     # [kg/s]    Fuel mass flow going through all combustors
     m_dot_air               = m_dot_air_tot/N_comb                                  # [kg/s]    Air mass flow inside each combustor, scaled inside each PSR to vary the Equivalence Ratio
     m_dot_fuel              = m_dot_fuel_tot/N_comb                                 # [kg/s]    Fuel mass flow inside each combustor                                                                                                                                                                    
@@ -79,7 +81,7 @@ def evaluate_cantera(combustor,T,P,mdot,FAR):
     col_names               = ['EI_' +str(sp) for sp in list_sp]                    # [-]       Define output variables 
     df                      = pd.DataFrame(columns=col_names)                       # [-]       Assign output variables space to df
     
-    gas, EI = combustor_model(kinetics_model,oxidizer_model,high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_stag_0, FAR, m_dot_fuel, m_dot_air, N_PZ, A_PZ, L_PZ, phi_sign, phi_SZ, A_SZ, L_SZ, f_air_PZ, N_SZ, sigma_phi) # [-]       Run combustor function
+    gas, EI = combustor_model(kinetics_model,oxidizer_model,high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_stag_0, FAR, m_dot_fuel, m_dot_air, N_PZ, A_PZ, L_PZ, phi_sign, phi_SZ, A_SZ, L_SZ, f_air_PZ, N_SZ, sigma_phi, PSR_1st_mixers, PSR_2nd_mixers) # [-]       Run combustor function
     
     sp_idx                  = [gas.species_index(sp) for sp in list_sp]             # [-]       Retrieve the species index
     data_n                  = list(EI[sp_idx])                                      # [-]       Assign output variables  
@@ -98,7 +100,7 @@ def evaluate_cantera(combustor,T,P,mdot,FAR):
     
     return results
 
-def combustor_model(kinetics_model,oxidizer_model,high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_stag_0, FAR, m_dot_fuel, m_dot_air, N_PZ, A_PZ, L_PZ, phi_sign, phi_SZ, A_SZ, L_SZ, f_air_PZ, N_SZ, sigma_phi):
+def combustor_model(kinetics_model,oxidizer_model,high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_stag_0, FAR, m_dot_fuel, m_dot_air, N_PZ, A_PZ, L_PZ, phi_sign, phi_SZ, A_SZ, L_SZ, f_air_PZ, N_SZ, sigma_phi, PSR_1st_mixers, PSR_2nd_mixers):
 
     ospath    = os.path.abspath(__file__)
     separator = os.path.sep
@@ -124,9 +126,6 @@ def combustor_model(kinetics_model,oxidizer_model,high_fidelity_kin_mech, dict_f
     mass_flow_rates         = []                                                    # [-]       Create a list for the mass flow rate inside each PSR
     mixer_list              = []                                                    # [-]       Create a list for the mixers inside each PSR
     
-    number_of_assigned_PSR_1st_mixers = 2                                           # [-]       Number of PSR assigned to the first row of mixers
-    number_of_assigned_PSR_2nd_mixers = 2                                           # [-]       Number of mixers assigned to the second row of mixers
-    
     m_i = 0                                                                         # [-]       Initialize the index of the mixer
        
     for PSR_i in range(N_PZ):     
@@ -140,7 +139,7 @@ def combustor_model(kinetics_model,oxidizer_model,high_fidelity_kin_mech, dict_f
         m_dot_fuel_PSRl                        = m_dot_fuel_PSR * f_PZ_1            # [kg/s]    Fuel mass flow inside the PSR
         mass_flow_rates.append(m_dot_fuel_PSRl + m_dot_air_PSRl)                    # [kg/s]    Total mass flow inside the PSR  
         upstream                          = ct.Reservoir(Fuel_list[PSR_i])          # [-]       Create a resevoir for the Fuel upstream of the PSR
-        if PSR_i % number_of_assigned_PSR_1st_mixers == 0:
+        if PSR_i % PSR_1st_mixers == 0:
             mixer_list.append(ct.IdealGasReactor(Fuel_list[PSR_i]))                 # [-]       Create the reactor for the downstream mixer
         
         PSR                               = ct.IdealGasReactor(Fuel_list[PSR_i])    # [-]       Create the reactor for the PSR 
@@ -152,16 +151,16 @@ def combustor_model(kinetics_model,oxidizer_model,high_fidelity_kin_mech, dict_f
         sim_PSR                           = ct.ReactorNet([PSR])                    # [-]       Set the PSR simulation
         sim_PSR.advance(t_res_PSR)                                                  # [-]       Run the simulation until the residence time is reached 
            
-        if PSR_i % number_of_assigned_PSR_1st_mixers != 0:                          # [-]       If the number of PSR / number of PSRs assigned to the mixer is different from 0
+        if PSR_i % PSR_1st_mixers != 0:                                             # [-]       If the number of PSR / number of PSRs assigned to the mixer is different from 0
             m_i += 1                                                                # [-]       Increase the index of the mixer
         
     mass_flow_rates =  np.array(mass_flow_rates)                                    # [-]       Create array of mass flow rates
     mixer_list_2    =  []                                                           # [-]       Initialize the list of mixers in the second talk
     idx   =  0                                                                      # [-]       Initialize the first index
     idx_2 =  0                                                                      # [-]       Initialize the second index
-    for mixer_i in range(0, N_PZ, int(N_PZ/number_of_assigned_PSR_2nd_mixers)): 
+    for mixer_i in range(0, N_PZ, int(N_PZ/PSR_2nd_mixers)): 
         mixer_list_2.append(ct.IdealGasReactor(Fuel_list[mixer_i]))                 # [-]       Create the reactor for the downstream mixer        
-        for n in range(int(N_PZ/number_of_assigned_PSR_1st_mixers/number_of_assigned_PSR_2nd_mixers)):
+        for n in range(int(N_PZ/PSR_1st_mixers/PSR_2nd_mixers)):
             start_index =  mixer_i +  n * 2                                         # [-]       Define the starting index
             end_index   =  mixer_i + ( n + 1 ) * 2                                  # [-]       Define the ending index
             outlet      =  ct.MassFlowController(mixer_list[idx_2], mixer_list_2[idx], mdot = np.sum(mass_flow_rates[start_index:end_index])) # [-]       Connect the mixer with the downstream mixer     
