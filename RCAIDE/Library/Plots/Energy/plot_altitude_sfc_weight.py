@@ -93,20 +93,17 @@ def plot_altitude_sfc_weight(results,
                         if j == 0: 
                             axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name  )
                         else:
-                            axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)  
+                            axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name)  
                 for fuel_line in fuel_lines:  
                     for j ,  propulsor in enumerate(fuel_line.propulsors):
                         eta = results.segments[i].conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0]
-                        eta = results.segments[i].conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0]  
-                        if j == 0: 
-                            axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name   )
-                        else:
-                            axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)  
+                        eta = results.segments[i].conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0]   
+                        axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name  )  
         
         if i == 0:
             axis_2.plot(time, Weight/1000 , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name) 
         else:
-            axis_2.plot(time, Weight/1000 , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width) 
+            axis_2.plot(time, Weight/1000 , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name) 
         axis_2.set_ylabel(r'Weight (kN)')
         axis_2.set_xlabel('Time (mins)')
         set_axes(axis_2) 
