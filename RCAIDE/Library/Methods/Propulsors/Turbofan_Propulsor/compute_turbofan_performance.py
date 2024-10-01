@@ -91,7 +91,7 @@ def compute_turbofan_performance(turbofan,state,fuel_line,center_of_gravity= [[0
     inlet_nozzle_conditions.inputs.static_temperature                 = ram_conditions.outputs.static_temperature
     inlet_nozzle_conditions.inputs.static_pressure                    = ram_conditions.outputs.static_pressure
     inlet_nozzle_conditions.inputs.mach_number                        = ram_conditions.outputs.mach_number
-    inlet_nozzle.working_fluid                                        = turbofan.working_fluid
+    inlet_nozzle.working_fluid                                        = ram.working_fluid
 
     # Flow through the inlet nozzle
     compute_compression_nozzle_performance(inlet_nozzle,inlet_nozzle_conditions,conditions)
@@ -110,10 +110,10 @@ def compute_turbofan_performance(turbofan,state,fuel_line,center_of_gravity= [[0
     # Link low pressure compressor to the inlet nozzle
     lpc_conditions.inputs.stagnation_temperature  = fan_conditions.outputs.stagnation_temperature
     lpc_conditions.inputs.stagnation_pressure     = fan_conditions.outputs.stagnation_pressure
-    lpc_conditions.inputs.static_temperature                          = fan_conditions.outputs.static_temperature
-    lpc_conditions.inputs.static_pressure                             = fan_conditions.outputs.static_pressure
-    lpc_conditions.inputs.mach_number                                 = fan_conditions.outputs.mach_number  
-    low_pressure_compressor.working_fluid                             = turbofan.working_fluid
+    lpc_conditions.inputs.static_temperature      = fan_conditions.outputs.static_temperature
+    lpc_conditions.inputs.static_pressure         = fan_conditions.outputs.static_pressure
+    lpc_conditions.inputs.mach_number             = fan_conditions.outputs.mach_number  
+    low_pressure_compressor.working_fluid         = turbofan.working_fluid
         
     # Flow through the low pressure compressor
     compute_compressor_performance(low_pressure_compressor,lpc_conditions,conditions)
@@ -121,22 +121,21 @@ def compute_turbofan_performance(turbofan,state,fuel_line,center_of_gravity= [[0
     # Link the high pressure compressor to the low pressure compressor
     hpc_conditions.inputs.stagnation_temperature = lpc_conditions.outputs.stagnation_temperature
     hpc_conditions.inputs.stagnation_pressure    = lpc_conditions.outputs.stagnation_pressure
-    hpc_conditions.inputs.static_temperature                          = lpc_conditions.outputs.static_temperature
-    hpc_conditions.inputs.static_pressure                             = lpc_conditions.outputs.static_pressure
-    hpc_conditions.inputs.mach_number                                 = lpc_conditions.outputs.mach_number  
-    high_pressure_compressor.working_fluid                            = turbofan.working_fluid    
+    hpc_conditions.inputs.static_temperature     = lpc_conditions.outputs.static_temperature
+    hpc_conditions.inputs.static_pressure        = lpc_conditions.outputs.static_pressure
+    hpc_conditions.inputs.mach_number            = lpc_conditions.outputs.mach_number  
+    high_pressure_compressor.working_fluid       = low_pressure_compressor.working_fluid    
         
     # Flow through the high pressure compressor
     compute_compressor_performance(high_pressure_compressor,hpc_conditions,conditions)
 
     # Link the combustor to the high pressure compressor
-    #combustor_conditions.inputs.air_mass_flow                         = (U0 * rho * np.pi * (turbofan.engine_diameter ** 2) / 4)/(1 + turbofan.bypass_ratio )
     combustor_conditions.inputs.stagnation_temperature                = hpc_conditions.outputs.stagnation_temperature
     combustor_conditions.inputs.stagnation_pressure                   = hpc_conditions.outputs.stagnation_pressure
     combustor_conditions.inputs.static_temperature                    = hpc_conditions.outputs.static_temperature
     combustor_conditions.inputs.static_pressure                       = hpc_conditions.outputs.static_pressure
     combustor_conditions.inputs.mach_number                           = hpc_conditions.outputs.mach_number  
-    combustor.working_fluid                                           = turbofan.working_fluid     
+    combustor.working_fluid                                           = high_pressure_compressor.working_fluid     
         
     # Flow through the high pressor compressor 
     compute_combustor_performance(combustor,combustor_conditions,conditions)
@@ -161,15 +160,11 @@ def compute_turbofan_performance(turbofan,state,fuel_line,center_of_gravity= [[0
     hpt_conditions.inputs.fuel_to_air_ratio         = combustor_conditions.outputs.fuel_to_air_ratio
     hpt_conditions.inputs.static_temperature        = combustor_conditions.outputs.static_temperature
     hpt_conditions.inputs.static_pressure           = combustor_conditions.outputs.static_pressure
-    hpt_conditions.inputs.mach_number               = combustor_conditions.outputs.mach_number       
-        
-    # Link the high pressuer turbine to the high pressure compressor
-    hpt_conditions.inputs.compressor                = hpc_conditions.outputs
-
-    # Link the high pressure turbine to the fan
+    hpt_conditions.inputs.mach_number               = combustor_conditions.outputs.mach_number  
+    hpt_conditions.inputs.compressor                = hpc_conditions.outputs 
     hpt_conditions.inputs.fan                       = fan_conditions.outputs
     hpt_conditions.inputs.bypass_ratio              = 0.0 #set to zero to ensure that fan not linked here 
-    high_pressure_turbine.working_fluid             = turbofan.working_fluid 
+    high_pressure_turbine.working_fluid             = combustor.working_fluid 
         
     # Flow through the high pressure turbine
     compute_turbine_performance(high_pressure_turbine,hpt_conditions,conditions)
@@ -180,13 +175,11 @@ def compute_turbofan_performance(turbofan,state,fuel_line,center_of_gravity= [[0
     lpt_conditions.inputs.static_temperature         = hpt_conditions.outputs.static_temperature
     lpt_conditions.inputs.static_pressure            = hpt_conditions.outputs.static_pressure  
     lpt_conditions.inputs.mach_number                = hpt_conditions.outputs.mach_number    
-    low_pressure_turbine.working_fluid               = turbofan.working_fluid    
-    
-    # Link the low pressure turbine to the low_pressure_compresor
     lpt_conditions.inputs.compressor                 = lpc_conditions.outputs 
     lpt_conditions.inputs.fuel_to_air_ratio          = combustor_conditions.outputs.fuel_to_air_ratio 
     lpt_conditions.inputs.fan                        = fan_conditions.outputs  
     lpt_conditions.inputs.bypass_ratio               = bypass_ratio
+    low_pressure_turbine.working_fluid               = high_pressure_turbine.working_fluid  
 
     # Flow through the low pressure turbine
     compute_turbine_performance(low_pressure_turbine,lpt_conditions,conditions)
