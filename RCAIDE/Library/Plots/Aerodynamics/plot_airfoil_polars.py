@@ -72,22 +72,22 @@ def plot_airfoil_polars(polar_data,
     axis_3 = plt.subplot(1,1,1)
     axis_4 = plt.subplot(1,1,1)
     
-    axis_1.plot(alpha, CL, color = ps.color, marker = ps.markers[0], linewidth = ps.line_width, label = 'Re = '+Re_val)
+    axis_1.plot(alpha, CL, color = ps.color, marker = ps.markers[0], linewidth = ps.line_width, label = 'Re = '+Re_val, markersize = ps.marker_size)
     axis_1.set_xlabel('AoA [deg]')
     axis_1.set_ylabel(r'$C_l$')
     set_axes(axis_1)    
   
-    axis_2.plot(alpha, CD, color = ps.color, marker = ps.markers[0], linewidth = ps.line_width)
+    axis_2.plot(alpha, CD, color = ps.color, marker = ps.markers[0], linewidth = ps.line_width, label = 'Re = '+Re_val, markersize = ps.marker_size)
     axis_2.set_xlabel('AoA [deg]')
     axis_2.set_ylabel(r'$C_d$')
     set_axes(axis_2) 
 
-    axis_3.plot(alpha, CM, color = ps.color, marker = ps.markers[0], linewidth = ps.line_width)
+    axis_3.plot(alpha, CM, color = ps.color, marker = ps.markers[0], linewidth = ps.line_width, label = 'Re = '+Re_val, markersize = ps.marker_size)
     axis_3.set_xlabel('AoA [deg]') 
     axis_3.set_ylabel(r'$C_m$')
     set_axes(axis_3) 
     
-    axis_4.plot(alpha, CL/CD, color = ps.color, marker = ps.markers[0], linewidth = ps.line_width)
+    axis_4.plot(alpha, CL/CD, color = ps.color, marker = ps.markers[0], linewidth = ps.line_width, label = 'Re = '+Re_val, markersize = ps.marker_size)
     axis_4.set_xlabel('AoA [deg]')
     axis_4.set_ylabel(r'Cl/Cd')
     axis_4.set_ylim([-20,20])

@@ -56,11 +56,15 @@ def plot_rotor_disc_inflow(prop,velocities, grid_points):
     levels = np.linspace(vmin,vmax, 21)
     
     # plot the grid point velocities
-    fig  = plt.figure(figsize=(10,8))
-    ax1 = plt.subplot(221)
-    ax2 = plt.subplot(222)
-    ax3 = plt.subplot(223)
-    ax4 = plt.subplot(224)
+    fig1  = plt.figure(figsize=(10,8))
+    fig2  = plt.figure(figsize=(10,8))
+    fig3  = plt.figure(figsize=(10,8))
+    fig4  = plt.figure(figsize=(10,8))
+    
+    ax1 = plt.subplot(1,1,1)
+    ax2 = plt.subplot(1,1,1)
+    ax3 = plt.subplot(1,1,1)
+    ax4 = plt.subplot(1,1,1)
     
     c1 = ax1.tricontourf(y,z, u, levels=levels, vmax=vmax, vmin=vmin, cmap='seismic')
     plt.colorbar(c1, ax=ax1)#, orientation="horizontal")           
@@ -125,6 +129,6 @@ def plot_rotor_disc_inflow(prop,velocities, grid_points):
     ax3.set_title("Downwash Velocity, w")
     ax4.set_title("Total Velocity")
     
-    fig.suptitle("Induced Velocities at Rotor")
-    
-    return fig 
+
+ 
+    return fig1, fig2,fig3,fig4

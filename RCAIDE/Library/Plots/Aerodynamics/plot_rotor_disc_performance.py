@@ -62,40 +62,45 @@ def plot_rotor_disc_performance(prop,outputs,i=0,title=None,save_figure=False):
     cm  = 'jet'
     
     # plot the grid point velocities
-    fig  = plt.figure(figsize=(4,4))
-    ax0  = fig.add_subplot(231, polar=True)
+    fig0  = plt.figure(figsize=(1,1))
+    fig1  = plt.figure(figsize=(1,1))
+    fig2  = plt.figure(figsize=(1,1))
+    fig3  = plt.figure(figsize=(1,1))
+    fig4  = plt.figure(figsize=(1,1))
+    
+    ax0  = fig0.add_subplot(111, polar=True)
     p0   = ax0.contourf(psi, r, T,lev,cmap=cm)
     ax0.set_title('Thrust Distribution',pad=15)      
     ax0.set_rorigin(0)
     ax0.set_yticklabels([])
     plt.colorbar(p0, ax=ax0)
      
-    ax1  = fig.add_subplot(232, polar=True)   
+    ax1  = fig1.add_subplot(232, polar=True)   
     p1   = ax1.contourf(psi, r, Q,lev,cmap=cm) 
     ax1.set_title('Torque Distribution',pad=15) 
     ax1.set_rorigin(0)
     ax1.set_yticklabels([])    
     plt.colorbar(p1, ax=ax1)
      
-    ax2  = fig.add_subplot(233, polar=True)       
+    ax2  = fig2.add_subplot(233, polar=True)       
     p2   = ax2.contourf(psi, r, alf,lev,cmap=cm) 
     ax2.set_title('Local Blade Angle (deg)',pad=15) 
     ax2.set_rorigin(0)
     ax2.set_yticklabels([])
     plt.colorbar(p2, ax=ax2)
  
-    ax3  = fig.add_subplot(234, polar=True)       
+    ax3  = fig3.add_subplot(234, polar=True)       
     p3   = ax3.contourf(psi, r, va,lev,cmap=cm) 
     ax3.set_title('Va',pad=15) 
     ax3.set_rorigin(0)
     ax3.set_yticklabels([])
     plt.colorbar(p3, ax=ax3)    
      
-    ax4  = fig.add_subplot(235, polar=True)       
+    ax4  = fig4.add_subplot(235, polar=True)       
     p4   = ax4.contourf(psi, r, vt,lev,cmap=cm) 
     ax4.set_title('Vt',pad=15) 
     ax4.set_rorigin(0)
     ax4.set_yticklabels([])
     plt.colorbar(p4, ax=ax4)   
  
-    return fig 
+    return fig0, fig1, fig2, fig3, fig4

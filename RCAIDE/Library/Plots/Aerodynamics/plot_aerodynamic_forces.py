@@ -85,20 +85,20 @@ def plot_aerodynamic_forces(results,
         # power
         axis_1.set_xlabel('Time (mins)')
         axis_1.set_ylabel(r'Power (MW)')
-        axis_1.plot(time,Power/1E6, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name) 
+        axis_1.plot(time,Power/1E6, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name,markersize = ps.marker_size) 
         set_axes(axis_1)                
         
         axis_2.set_xlabel('Time (mins)')
         axis_2.set_ylabel(r'Thrust (kN)')
-        axis_2.plot(time, Thrust/1000, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name)         
+        axis_2.plot(time, Thrust/1000, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name,markersize = ps.marker_size)         
         set_axes(axis_2) 
 
-        axis_3.plot(time, Lift/1000, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name)
+        axis_3.plot(time, Lift/1000, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name,markersize = ps.marker_size)
         axis_3.set_xlabel('Time (mins)')
         axis_3.set_ylabel(r'Lift (kN)')
         set_axes(axis_3) 
         
-        axis_4.plot(time,Drag/1000 , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name)
+        axis_4.plot(time,Drag/1000 , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name,markersize = ps.marker_size)
         axis_4.set_xlabel('Time (mins)')
         axis_4.set_ylabel(r'Drag (kN)')
         set_axes(axis_4)  
