@@ -535,8 +535,7 @@ def vehicle_setup(cell_chemistry, btms_type):
     #  Starboard Propulsor
     #------------------------------------------------------------------------------------------------------------------------------------   
     starboard_propulsor                              = RCAIDE.Library.Components.Propulsors.Electric_Rotor()  
-    starboard_propulsor.tag                          = 'starboard_propulsor'
-    starboard_propulsor.active_bus                   = ['li_ion_battery']   
+    starboard_propulsor.tag                          = 'starboard_propulsor' 
   
     # Electronic Speed Controller       
     esc                                              = RCAIDE.Library.Components.Energy.Modulators.Electronic_Speed_Controller()
@@ -595,8 +594,7 @@ def vehicle_setup(cell_chemistry, btms_type):
     # Port Propulsor
     #------------------------------------------------------------------------------------------------------------------------------------   
     port_propulsor                             = RCAIDE.Library.Components.Propulsors.Electric_Rotor() 
-    port_propulsor.tag                         = "port_propulsor"
-    port_propulsor.active_busses               = ['bus']   
+    port_propulsor.tag                         = "port_propulsor" 
             
     esc_2                                      = deepcopy(esc)
     esc_2.origin                               = [[3.8, -2.8129,1.22 ]]        

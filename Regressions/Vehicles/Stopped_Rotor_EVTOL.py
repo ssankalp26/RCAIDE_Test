@@ -421,8 +421,7 @@ def vehicle_setup() :
     #------------------------------------------------------------------------------------------------------------------------------------       
     # Define Forward Propulsor Container 
     cruise_propulsor_1                                     = RCAIDE.Library.Components.Propulsors.Electric_Rotor()
-    cruise_propulsor_1.tag                                 = 'cruise_propulsor_1' 
-    cruise_propulsor_1.active_bus                          = ['cruise_bus']   
+    cruise_propulsor_1.tag                                 = 'cruise_propulsor_1'  
                  
     # Electronic Speed Controller                     
     propeller_esc                                          = RCAIDE.Library.Components.Energy.Modulators.Electronic_Speed_Controller() 
@@ -622,8 +621,7 @@ def vehicle_setup() :
      
     # Define Lift Propulsor Container 
     lift_propulsor_1                                       = RCAIDE.Library.Components.Propulsors.Electric_Rotor()
-    lift_propulsor_1.tag                                   = 'lift_propulsor_1'     
-    lift_propulsor_1.active_busses                         = ['lift_bus']          
+    lift_propulsor_1.tag                                   = 'lift_propulsor_1'        
               
     # Electronic Speed Controller           
     lift_rotor_esc                                         = RCAIDE.Library.Components.Energy.Modulators.Electronic_Speed_Controller() 
