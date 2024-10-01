@@ -1,5 +1,4 @@
-## @ingroup Library-Missions-Common-Update
-# RCAIDE/Library/Missions/Common/Update/battery_age.py
+# RCAIDE/Library/Missions/Common/Update/energy.py
 # 
 # 
 # Created:  Jul 2023, M. Clarke 
@@ -8,7 +7,7 @@
 #  Update Battery Age
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Library-Missions-Common-Update
-def battery_age(segment):  
+def energy(segment):  
     """Updates battery age based on operating conditions, cell temperature and time of operation.
        Source: 
        Cell specific. See individual battery cell for more details
@@ -32,7 +31,8 @@ def battery_age(segment):
         if 'busses' in network: 
             busses  = network.busses
             for bus in busses:
-                for battery in bus.batteries: 
+                bus.compute_distributor_conditions(segment.state)
+                for battery in bus.battery_modules: 
                     increment_day = segment.increment_battery_age_by_one_day
-                    battery_conditions  = segment.conditions.energy[bus.tag][battery.tag] 
+                    battery_conditions  = segment.conditions.energy[bus.tag].battery_modules[battery.tag] 
                     battery.update_battery_age(battery_conditions,increment_battery_age_by_one_day = increment_day) 

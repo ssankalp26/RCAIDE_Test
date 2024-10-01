@@ -175,8 +175,13 @@ def compute_operating_empty_weight(vehicle, miscelleneous_weight_factor   = 1.1)
             bus.avionics.mass_properties.center_of_gravity[0][0]   = 0.0
             weight.avionics += bus.avionics.mass_properties.mass   
                         
+<<<<<<< HEAD:RCAIDE/Library/Methods/Weights/Physics_Based_Buildups/Electric/compute_operating_empty_weight.py
             for battery in bus.batteries: 
                 weight.battery += battery.mass_properties.mass * Units.kg 
+=======
+            for battery in bus.battery_modules: 
+                weight.battery                                            += battery.mass_properties.mass * Units.kg 
+>>>>>>> 42165ad86d788a72a8e2711cd410700702655591:RCAIDE/Library/Methods/Weights/Physics_Based_Buildups/Electric/compute_weight.py
         
             # Servo, Hub and BRS Weights
             lift_rotor_hub_weight   = 4.   * Units.kg

@@ -16,7 +16,7 @@ from .Network                                             import Network
 from RCAIDE.Library.Methods.Propulsors.Common.compute_avionics_power_draw import compute_avionics_power_draw
 from RCAIDE.Library.Methods.Propulsors.Common.compute_payload_power_draw  import compute_payload_power_draw
 # Python imports
-import  numpy as  np 
+import  numpy as  np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  All Electric
@@ -31,7 +31,7 @@ class Electric(Network):
         connected to a coolant line.
         The network adds additional unknowns and residuals to the mission to determinge 
         the torque matching between motors and rotors in each propulsor group.
-         
+
 
         Assumptions:
         The y axis rotation is used for rotating the rotor about the Y-axis for tilt rotors and tiltwings
@@ -58,7 +58,7 @@ class Electric(Network):
             N/A
         """         
 
-        self.tag                          = 'electric'
+        self.tag                          = 'electric_network'
         self.system_voltage               = None   
         self.reverse_thrust               = False
         self.wing_mounted                 = True        
@@ -91,15 +91,13 @@ class Electric(Network):
         coolant_lines   = self.coolant_lines
         total_thrust    = 0. * state.ones_row(3) 
         total_power     = 0. * state.ones_row(1) 
-        total_moment    = 0. * state.ones_row(3) 
-        recharging_flag = conditions.energy.recharging 
+        total_moment    = 0. * state.ones_row(3)  
         reverse_thrust  = self.reverse_thrust
 
         for bus in busses:
             if bus.active:             
-                avionics        = bus.avionics
-                payload         = bus.payload  
-                batteries       = bus.batteries
+                avionics              = bus.avionics
+                payload               = bus.payload  
 
                 # Avionics Power Consumtion
                 avionics_conditions = state.conditions.energy[bus.tag][avionics.tag]
@@ -112,85 +110,80 @@ class Electric(Network):
                 # Bus Voltage 
                 bus_voltage = bus.voltage * state.ones_row(1)
 
-                if recharging_flag:
-                    for battery in batteries: 
-                        # append compoment power to bus 
-                        avionics_power         = (avionics_conditions.power*battery.bus_power_split_ratio)/len(batteries)* state.ones_row(1)
-                        payload_power          = (payload_conditions.power*battery.bus_power_split_ratio)/len(batteries)* state.ones_row(1)            
-                        total_esc_power        = 0 * state.ones_row(1)     
-                        charging_power         = (state.conditions.energy[bus.tag][battery.tag].pack.charging_current*bus_voltage*battery.bus_power_split_ratio)/len(batteries)
+                if conditions.energy.recharging:
+                    avionics_power         = (avionics_conditions.power*bus.power_split_ratio)* state.ones_row(1)
+                    payload_power          = (payload_conditions.power*bus.power_split_ratio)* state.ones_row(1)            
+                    total_esc_power        = 0 * state.ones_row(1)
+                    bus.charging_current   = bus.nominal_capacity * bus.charging_c_rate 
+                    charging_power         = (bus.charging_current*bus_voltage*bus.power_split_ratio)
 
-                        # append bus outputs to battery
-                        battery_conditions                   = state.conditions.energy[bus.tag][battery.tag] 
-                        battery_conditions.pack.power_draw   = ((avionics_power + payload_power + total_esc_power) - charging_power)/bus.efficiency
-                        battery_conditions.pack.current_draw = -battery_conditions.pack.power_draw/bus_voltage
+                    # append bus outputs to battery
+                    bus_conditions                    = state.conditions.energy[bus.tag]
+                    bus_conditions.power_draw         = ((avionics_power + payload_power + total_esc_power) - charging_power)/bus.efficiency
+                    bus_conditions.current_draw       = -bus_conditions.power_draw/bus_voltage
 
                 else:       
-                    # compute energy consumption of each battery on bus  
-                    for battery in batteries: 
-                        stored_results_flag  = False
-                        stored_propulsor_tag = None 
-                        for propulsor in bus.propulsors:  
-                            if propulsor.active == True:  
-                                if bus.identical_propulsors == False:
-                                    # run analysis  
+                    # compute energy consumption of each battery on bus 
+                    stored_results_flag  = False
+                    stored_propulsor_tag = None 
+                    for propulsor in bus.propulsors:  
+                        if propulsor.active == True:  
+                            if bus.identical_propulsors == False:
+                                # run analysis  
+                                T,M,P,stored_results_flag,stored_propulsor_tag = propulsor.compute_performance(state,bus,bus_voltage,center_of_gravity)
+                            else:             
+                                if stored_results_flag == False: 
+                                    # run propulsor analysis 
                                     T,M,P,stored_results_flag,stored_propulsor_tag = propulsor.compute_performance(state,bus,bus_voltage,center_of_gravity)
-                                else:             
-                                    if stored_results_flag == False: 
-                                        # run propulsor analysis 
-                                        T,M,P,stored_results_flag,stored_propulsor_tag = propulsor.compute_performance(state,bus,bus_voltage,center_of_gravity)
-                                    else:
-                                        # use previous propulsor results 
-                                        T,M,P = propulsor.reuse_stored_data(state,bus,stored_propulsor_tag,center_of_gravity)
+                                else:
+                                    # use previous propulsor results 
+                                    T,M,P = propulsor.reuse_stored_data(state,bus,stored_propulsor_tag,center_of_gravity)
 
-                                total_thrust += T   
-                                total_moment += M   
-                                total_power  += P 
+                            total_thrust += T   
+                            total_moment += M   
+                            total_power  += P 
 
-                        # compute power from each componemnt 
-                        avionics_power  = (avionics_conditions.power*battery.bus_power_split_ratio)/len(batteries)* state.ones_row(1) 
-                        payload_power   = (payload_conditions.power*battery.bus_power_split_ratio)/len(batteries) * state.ones_row(1)   
-                        charging_power  = (state.conditions.energy[bus.tag][battery.tag].pack.charging_current*bus_voltage*battery.bus_power_split_ratio)/len(batteries) 
-                        total_esc_power = total_power*battery.bus_power_split_ratio  
+                    # compute power from each componemnt 
+                    avionics_power  = (avionics_conditions.power*bus.power_split_ratio)* state.ones_row(1) 
+                    payload_power   = (payload_conditions.power*bus.power_split_ratio)* state.ones_row(1)   
+                    charging_power  = (state.conditions.energy[bus.tag].regenerative_power*bus_voltage*bus.power_split_ratio) 
+                    total_esc_power = total_power*bus.power_split_ratio  
 
-                        # append bus outputs to battery 
-                        battery_conditions                    = state.conditions.energy[bus.tag][battery.tag] 
-                        battery_conditions.pack.power_draw    = ((avionics_power + payload_power + total_esc_power) - charging_power)/bus.efficiency
-                        battery_conditions.pack.current_draw  = battery_conditions.pack.power_draw/bus_voltage
-                       
-        
+                    # append bus outputs to battery 
+                    bus_conditions                    = state.conditions.energy[bus.tag]
+                    bus_conditions.power_draw         = ((avionics_power + payload_power + total_esc_power) - charging_power)/bus.efficiency
+                    bus_conditions.current_draw       = bus_conditions.power_draw/bus_voltage
+
+
         time               = state.conditions.frames.inertial.time[:,0] 
         delta_t            = np.diff(time)
-        for t_idx in range(state.numerics.number_of_control_points):
-            if recharging_flag:
-                for bus in  busses:
-                    for battery in  bus.batteries:
-                        battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t, recharging_flag)
-                        for coolant_line in  coolant_lines:
-                            if t_idx != state.numerics.number_of_control_points-1:
-                                for tag, item in  coolant_line.items(): 
-                                    if tag == 'heat_exchangers':
-                                        for heat_exchanger in  item:
-                                                heat_exchanger.compute_heat_exchanger_performance(state,coolant_line,delta_t[t_idx],t_idx)
-                                    if tag == 'reservoirs':
-                                        for reservoir in  item:
-                                            reservoir.compute_reservior_coolant_temperature(state,coolant_line,delta_t[t_idx],t_idx)                     
-            else:
-                for bus in  busses:
-                    for battery in  bus.batteries:
-                        battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t, recharging_flag)
-                    for coolant_line in  coolant_lines:
-                        if t_idx != state.numerics.number_of_control_points-1:
-                            for tag, item in  coolant_line.items(): 
-                                if tag == 'heat_exchangers':
-                                    for heat_exchanger in  item:
-                                            heat_exchanger.compute_heat_exchanger_performance(state,coolant_line,delta_t[t_idx],t_idx)
-                                if tag == 'reservoirs':
-                                    for reservoir in  item:
-                                        reservoir.compute_reservior_coolant_temperature(state,coolant_line,delta_t[t_idx],t_idx)      
-                                
+        for t_idx in range(state.numerics.number_of_control_points):    
+            for bus in  busses:
+                stored_results_flag  = False
+                stored_battery_tag   = None                          
+                for battery in  bus.battery_modules:                   
+                    if bus.identical_batteries == False:
+                        # run analysis  
+                        stored_results_flag, stored_battery_tag =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
+                    else:             
+                        if stored_results_flag == False: 
+                            # run battery analysis 
+                            stored_results_flag, stored_battery_tag  =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
+                        else:
+                            # use previous battery results 
+                            battery.reuse_stored_data(state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag)
 
-
+                # Thermal Management Calculations                    
+                for coolant_line in  coolant_lines:
+                    if t_idx != state.numerics.number_of_control_points-1:
+                        for tag, item in  coolant_line.items(): 
+                            if tag == 'heat_exchangers':
+                                for heat_exchanger in  item:
+                                    heat_exchanger.compute_heat_exchanger_performance(state,coolant_line,delta_t[t_idx],t_idx)
+                            if tag == 'reservoirs':
+                                for reservoir in  item:
+                                    reservoir.compute_reservior_coolant_temperature(state,coolant_line,delta_t[t_idx],t_idx)
+        
         if reverse_thrust ==  True:
             total_thrust =  total_thrust * -1     
             total_moment =  total_moment* -1                    
@@ -199,10 +192,9 @@ class Electric(Network):
         conditions.energy.thrust_moment_vector = total_moment
         conditions.energy.vehicle_mass_rate    = state.ones_row(1)*0.0  
 
-        return   
-        
-        
-        
+        return
+
+
 
 
     def unpack_unknowns(self,segment):
@@ -236,7 +228,7 @@ class Electric(Network):
                 reference_propulsor = bus.propulsors[list(bus.propulsors.keys())[0]]                 
                 for propulsor in  bus.propulsors: 
                     propulsor.unpack_propulsor_unknowns(reference_propulsor,segment,bus)
-                    
+
         return     
 
     def residuals(self,segment):
@@ -308,8 +300,9 @@ class Electric(Network):
             # ------------------------------------------------------------------------------------------------------
             # Assign network-specific  residuals, unknowns and results data structures
             # ------------------------------------------------------------------------------------------------------ 
+            bus.append_operating_conditions(segment)
             for tag, item in  bus.items():
-                if tag == 'batteries':
+                if tag == 'battery_modules':
                     for battery in item:
                         battery.append_operating_conditions(segment,bus)
                 elif tag == 'propulsors':  
@@ -321,7 +314,7 @@ class Electric(Network):
                                 sub_item.append_operating_conditions(segment,bus,propulsor)  
                 elif issubclass(type(item), RCAIDE.Library.Components.Component):
                     item.append_operating_conditions(segment,bus)
-                   
+
         for coolant_line_i, coolant_line in enumerate(coolant_lines):  
             # ------------------------------------------------------------------------------------------------------            
             # Create coolant_lines results data structure  
@@ -331,7 +324,7 @@ class Electric(Network):
             # Assign network-specific  residuals, unknowns and results data structures
             # ------------------------------------------------------------------------------------------------------ 
             for tag, item in  coolant_line.items(): 
-                if tag == 'batteries':
+                if tag == 'battery_modules':
                     for battery in item:
                         for btms in  battery:
                             btms.append_operating_conditions(segment,coolant_line)
@@ -347,5 +340,4 @@ class Electric(Network):
         segment.process.iterate.residuals.network           = self.residuals        
 
         return segment
-
     __call__ = evaluate 

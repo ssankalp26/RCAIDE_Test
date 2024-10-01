@@ -441,53 +441,53 @@ def vehicle_setup(cell_chemistry, btms_type):
         #------------------------------------------------------------------------------------------------------------------------------------           
         # Battery
         #------------------------------------------------------------------------------------------------------------------------------------  
-        bat                                                    = RCAIDE.Library.Components.Energy.Sources.Batteries.Lithium_Ion_NMC()
-        bat.pack.electrical_configuration.series               = 120  
-        bat.pack.electrical_configuration.parallel             = 210   #250
-        bat.cell.nominal_capacity                              = 3.8  
-        initialize_from_circuit_configuration(bat,module_weight_factor = 1.25)  
-        bat.pack.number_of_modules                           = 12
-        bat.module.geometrtic_configuration.total              = bat.pack.electrical_configuration.total
-        bat.module.voltage                                     = bat.pack.maximum_voltage/bat.pack.number_of_modules # assumes modules are connected in parallel, must be less than max_module_voltage (~50) /safety_factor (~ 1.5)  
-        bat.module.geometrtic_configuration.normal_count       = bat.module.geometrtic_configuration.total/bat.pack.number_of_modules / 50
-        bat.module.geometrtic_configuration.parallel_count     = 50
-        bus.voltage                                            = bat.pack.maximum_voltage
-        bus.batteries.append(bat)
-        
+        bat_module                                             = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC()
+        bat_module.electrical_configuration.series             = 10
+        bat_module.electrical_configuration.parallel           = 210
+        bat_module.cell.nominal_capacity                       = 3.8
+        initialize_from_circuit_configuration(bat_module,module_weight_factor = 1.25)  
+        bat_module.geometrtic_configuration.total              = bat_module.electrical_configuration.parallel*bat_module.electrical_configuration.series  
+        bat_module.voltage                                     = bat_module.maximum_voltage 
+        bat_module.geometrtic_configuration.normal_count       = 42
+        bat_module.geometrtic_configuration.parallel_count     = 50
+        bat_module.nominal_capacity                            = bat_module.cell.nominal_capacity* bat_module.electrical_configuration.parallel
+    
+        for _ in range(12):
+            bat_copy = deepcopy(bat_module)
+            bus.battery_modules.append(bat_copy)
+
+        bus.battery_module_electric_configuration = 'Series'
+        bus.charging_c_rate                       = 1
+        bus.nominal_capacity = 0
+        for battery_module in  bus.battery_modules:
+            bus.voltage  +=   battery_module.voltage
+            bus.nominal_capacity =  max(battery_module.nominal_capacity, bus.nominal_capacity)        
+
     elif cell_chemistry == 'lithium_ion_lfp':
         #------------------------------------------------------------------------------------------------------------------------------------           
         # Battery
         #------------------------------------------------------------------------------------------------------------------------------------          
-        bat                                                    = RCAIDE.Library.Components.Energy.Sources.Batteries.Lithium_Ion_LFP()
-        bat.pack.electrical_configuration.series               = 120  
-        bat.pack.electrical_configuration.parallel             = 210   #250
-        bat.cell.nominal_capacity                              = 3.8  
-        initialize_from_circuit_configuration(bat,module_weight_factor = 1.25)  
-        bat.pack.number_of_modules                           = 12
-        bat.module.geometrtic_configuration.total              = bat.pack.electrical_configuration.total
-        bat.module.voltage                                     = bat.pack.maximum_voltage/bat.pack.number_of_modules # assumes modules are connected in parallel, must be less than max_module_voltage (~50) /safety_factor (~ 1.5)  
-        bat.module.geometrtic_configuration.normal_count       = bat.module.geometrtic_configuration.total/bat.pack.number_of_modules / 50
-        bat.module.geometrtic_configuration.parallel_count     = 50
-        bus.voltage                                            = bat.pack.maximum_voltage
-        bus.batteries.append(bat)
+            bat_module                                             = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_LFP()
+            bat_module.electrical_configuration.series             = 10
+            bat_module.electrical_configuration.parallel           = 210
+            bat_module.cell.nominal_capacity                       = 3.8
+            initialize_from_circuit_configuration(bat_module,module_weight_factor = 1.25)  
+            bat_module.geometrtic_configuration.total              = bat_module.electrical_configuration.parallel*bat_module.electrical_configuration.series  
+            bat_module.voltage                                     = bat_module.maximum_voltage 
+            bat_module.geometrtic_configuration.normal_count       = 42
+            bat_module.geometrtic_configuration.parallel_count     = 50
+            bat_module.nominal_capacity                            = bat_module.cell.nominal_capacity* bat_module.electrical_configuration.parallel
         
-    elif cell_chemistry == 'lithium_ion_generic':
-        #------------------------------------------------------------------------------------------------------------------------------------           
-        # Battery
-        #------------------------------------------------------------------------------------------------------------------------------------          
-        bat                                                    = RCAIDE.Library.Components.Energy.Sources.Batteries.Lithium_Ion_Generic()
-        bat.pack.electrical_configuration.series               = 120  
-        bat.pack.electrical_configuration.parallel             = 210   #250
-        bat.cell.nominal_capacity                              = 3.8  
-        initialize_from_circuit_configuration(bat,module_weight_factor = 1.25)  
-        bat.pack.number_of_modules                           = 12
-        bat.module.geometrtic_configuration.total              = bat.pack.electrical_configuration.total
-        bat.module.voltage                                     = bat.pack.maximum_voltage/bat.pack.number_of_modules # assumes modules are connected in parallel, must be less than max_module_voltage (~50) /safety_factor (~ 1.5)  
-        bat.module.geometrtic_configuration.normal_count       = bat.module.geometrtic_configuration.total/bat.pack.number_of_modules / 50
-        bat.module.geometrtic_configuration.parallel_count     = 50
-        bus.voltage                                            = bat.pack.maximum_voltage
-        bus.batteries.append(bat)
-   
+            for _ in range(12):
+                bat_copy = deepcopy(bat_module)
+                bus.battery_modules.append(bat_copy)
+        
+            bus.battery_module_electric_configuration = 'Series'
+            bus.charging_c_rate                       = 1
+            bus.nominal_capacity = 0
+            for battery_module in  bus.battery_modules:
+                bus.voltage  +=   battery_module.voltage
+                bus.nominal_capacity =  max(battery_module.nominal_capacity, bus.nominal_capacity)   
    
     if btms_type ==  None:
         pass
@@ -503,20 +503,23 @@ def vehicle_setup(cell_chemistry, btms_type):
         atmo_data                                              = atmosphere.compute_values(altitude = HAS.design_altitude)     
         HAS.coolant_inlet_temperature                          = atmo_data.temperature[0,0]  
         HAS.design_battery_operating_temperature               = 313
-        HAS.design_heat_removed                                = 50000  
-        HAS                                                    = design_wavy_channel(HAS,bat) 
-        coolant_line.batteries[bat.tag].append(HAS)        
+        HAS.design_heat_removed                                = 50000 /len(bus.battery_modules) 
+        HAS                                                    = design_wavy_channel(HAS,bat_module) 
         
+        for battery_module in bus.battery_modules:
+            coolant_line.battery_modules[battery_module.tag].append(HAS)
+            
         # Battery Heat Exchanger               
         HEX                                                    = RCAIDE.Library.Components.Thermal_Management.Heat_Exchangers.Cross_Flow_Heat_Exchanger() 
         HEX.design_altitude                                    = 2500. * Units.feet 
         HEX.inlet_temperature_of_cold_fluid                    = atmo_data.temperature[0,0]   
-        HEX                                                    = design_cross_flow_heat_exchanger(HEX,HAS,bat)    
+        HEX                                                    = design_cross_flow_heat_exchanger(HEX,coolant_line,bat_module)     
         coolant_line.heat_exchangers.append(HEX)
         
         # Reservoir for Battery TMS
         RES                                                    = RCAIDE.Library.Components.Thermal_Management.Reservoirs.Reservoir()
         coolant_line.reservoirs.append(RES)
+        
     elif btms_type == 'Air_Cooled':
         ##------------------------------------------------------------------------------------------------------------------------------------  
         # Coolant Line
@@ -525,14 +528,15 @@ def vehicle_setup(cell_chemistry, btms_type):
         net.coolant_lines.append(coolant_line)
         HAS                                         = RCAIDE.Library.Components.Thermal_Management.Batteries.Air_Cooled() 
         HAS.convective_heat_transfer_coefficient    = 7.17
-        coolant_line.batteries[bat.tag].append(HAS)
+        for battery_module in bus.battery_modules:
+            coolant_line.battery_modules[battery_module.tag].append(HAS)
         
     #------------------------------------------------------------------------------------------------------------------------------------  
     #  Starboard Propulsor
     #------------------------------------------------------------------------------------------------------------------------------------   
     starboard_propulsor                              = RCAIDE.Library.Components.Propulsors.Electric_Rotor()  
     starboard_propulsor.tag                          = 'starboard_propulsor'
-    starboard_propulsor.active_batteries             = ['li_ion_battery']   
+    starboard_propulsor.active_bus             = ['li_ion_battery']   
   
     # Electronic Speed Controller       
     esc                                              = RCAIDE.Library.Components.Energy.Modulators.Electronic_Speed_Controller()
@@ -575,7 +579,7 @@ def vehicle_setup(cell_chemistry, btms_type):
     motor                                            = RCAIDE.Library.Components.Propulsors.Converters.DC_Motor()
     motor.efficiency                                 = 0.98
     motor.origin                                     = [[4.0,2.8129,1.22 ]]   
-    motor.nominal_voltage                            = bat.pack.maximum_voltage 
+    motor.nominal_voltage                            = bus.voltage 
     motor.no_load_current                            = 1
     motor.rotor_radius                               = propeller.tip_radius
     motor.design_torque                              = propeller.cruise.design_torque 
@@ -592,7 +596,7 @@ def vehicle_setup(cell_chemistry, btms_type):
     #------------------------------------------------------------------------------------------------------------------------------------   
     port_propulsor                             = RCAIDE.Library.Components.Propulsors.Electric_Rotor() 
     port_propulsor.tag                         = "port_propulsor"
-    port_propulsor.active_batteries            = ['li_ion_battery']   
+    port_propulsor.active_busses               = ['bus']   
             
     esc_2                                      = deepcopy(esc)
     esc_2.origin                               = [[3.8, -2.8129,1.22 ]]        

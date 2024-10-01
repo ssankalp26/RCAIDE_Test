@@ -57,7 +57,7 @@ def modify_crossflow_hex_size(nexus):
           Source:
              None
     """           
-    hex_opt       = nexus.hex_configurations.optimized.networks.electric.busses.bus.batteries.lithium_ion_nmc.thermal_management_system.heat_exchanger_system
+    hex_opt       = nexus.hex_configurations.optimized.networks.electric.coolant_lines.coolant_line.heat_exchangers.cross_flow_hex
   
     # ------------------------------------------------------------------------------------------------------------------------
     # Unpack paramters  
@@ -363,7 +363,7 @@ def modify_crossflow_hex_size(nexus):
     hex_opt.power_draw                      = P_hex 
     hex_opt.air_frontal_area                = A_f_c
     hex_opt.pressure_diff_air               = delta_p_c_updated
-    
+    hex_opt.heat_removed                   =  -C_h * (T_o_h - T_i_h)
    
  
     return nexus   
@@ -399,15 +399,15 @@ def post_process(nexus):
               
               
           Assumptions: 
-             N/A 
+             The mass of the HEX is scaled for the optimzier. 
         
           Source:
              None
     """        
     
     summary              = nexus.summary  
-    battery              = nexus.hex_configurations.optimized.networks.electric.busses.bus.batteries.lithium_ion_nmc       
-    hex_opt              = battery.thermal_management_system.heat_exchanger_system
+    hex_opt              = nexus.hex_configurations.optimized.networks.electric.coolant_lines.coolant_line.heat_exchangers.cross_flow_hex     
+                 
   
     # -------------------------------------------------------
     # Objective 
@@ -416,7 +416,7 @@ def post_process(nexus):
     mass    = hex_opt.heat_exchanger_mass*1000
     
     
-    summary.mass_power_objective =  (power**2 + mass**2)**(0.5)
+    summary.mass_power_objective = (power**2 + mass**2)**(0.5)
     
 
     # -------------------------------------------------------
@@ -424,5 +424,6 @@ def post_process(nexus):
     # -------------------------------------------------------       
     summary.stack_height           = hex_opt.stack_height           
     summary.stack_width            = hex_opt.stack_width                     
-    summary.stack_length           = hex_opt.stack_length      
+    summary.stack_length           = hex_opt.stack_length
+    summary.heat_residual          =  abs(hex_opt.heat_removed - hex_opt.design_heat_removed)   
     return nexus     

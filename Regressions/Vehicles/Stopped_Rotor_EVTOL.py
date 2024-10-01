@@ -396,18 +396,27 @@ def vehicle_setup() :
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Bus Battery
     #------------------------------------------------------------------------------------------------------------------------------------ 
-    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Batteries.Lithium_Ion_NMC() 
+    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC()
+    number_of_modules                                      = 14 
     bat.tag                                                = 'cruise_bus_battery'
-    bat.pack.electrical_configuration.series               = 140   
-    bat.pack.electrical_configuration.parallel             = 60
+    bat.electrical_configuration.series                     = 10   
+    bat.electrical_configuration.parallel                   = 60
     initialize_from_circuit_configuration(bat)  
-    bat.module.number_of_modules                           = 14 
-    bat.module.geometrtic_configuration.total              = bat.pack.electrical_configuration.total
-    bat.module.voltage                                     = bat.pack.maximum_voltage/bat.module.number_of_modules 
-    bat.module.geometrtic_configuration.normal_count       = 25
-    bat.module.geometrtic_configuration.parallel_count     = 40 
-    cruise_bus.voltage                                     =  bat.pack.maximum_voltage  
-    cruise_bus.batteries.append(bat)      
+   
+    bat.geometrtic_configuration.total                      = bat.electrical_configuration.total
+    bat.voltage                                             = bat.maximum_voltage 
+    bat.geometrtic_configuration.normal_count               = 25
+    bat.geometrtic_configuration.parallel_count             = 40 
+     
+    for _ in range(number_of_modules):
+        cruise_bus.battery_modules.append(deepcopy(bat))    
+    cruise_bus.charging_c_rate  = 1
+    cruise_bus.nominal_capacity = 0
+    
+    for battery_module in  cruise_bus.battery_modules:
+        cruise_bus.voltage  +=   battery_module.voltage
+        cruise_bus.nominal_capacity =  max(battery_module.nominal_capacity, cruise_bus.nominal_capacity)   
+   
     
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Forward Bus Propulsors  
@@ -415,7 +424,7 @@ def vehicle_setup() :
     # Define Forward Propulsor Container 
     cruise_propulsor_1                                     = RCAIDE.Library.Components.Propulsors.Electric_Rotor()
     cruise_propulsor_1.tag                                 = 'cruise_propulsor_1' 
-    cruise_propulsor_1.active_batteries                    = ['cruise_bus_battery']   
+    cruise_propulsor_1.active_bus                          = ['cruise_bus']   
                  
     # Electronic Speed Controller                     
     propeller_esc                                          = RCAIDE.Library.Components.Energy.Modulators.Electronic_Speed_Controller() 
@@ -463,7 +472,7 @@ def vehicle_setup() :
     propeller_motor.efficiency                             = 0.95
     propeller_motor.tag                                    = 'propeller_motor_1'  
     propeller_motor.origin                                 = [[6.583, 1.300,  1.092 ]] 
-    propeller_motor.nominal_voltage                        = bat.pack.maximum_voltage 
+    propeller_motor.nominal_voltage                        = cruise_bus.voltage 
     propeller_motor.origin                                 = propeller.origin
     propeller_motor.propeller_radius                       = propeller.tip_radius 
     propeller_motor.no_load_current                        = 0.001
@@ -589,18 +598,25 @@ def vehicle_setup() :
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Bus Battery
     #------------------------------------------------------------------------------------------------------------------------------------ 
-    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Batteries.Lithium_Ion_NMC() 
+    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC()
+    number_of_modules                                      = 14 
     bat.tag                                                = 'lift_bus_battery'
-    bat.pack.electrical_configuration.series               = 140   
-    bat.pack.electrical_configuration.parallel             = 20
+    bat.electrical_configuration.series                    = 10   
+    bat.electrical_configuration.parallel                  = 20
     initialize_from_circuit_configuration(bat)  
-    bat.module.number_of_modules                           = 14 
-    bat.module.geometrtic_configuration.total              = bat.pack.electrical_configuration.total
-    bat.module.voltage                                     = bat.pack.maximum_voltage/bat.module.number_of_modules 
-    bat.module.geometrtic_configuration.normal_count       = 25
-    bat.module.geometrtic_configuration.parallel_count     = 40 
-    lift_bus.voltage                                       =  bat.pack.maximum_voltage  
-    lift_bus.batteries.append(bat)      
+    bat.geometrtic_configuration.total                      = bat.electrical_configuration.total
+    bat.voltage                                             = bat.maximum_voltage 
+    bat.geometrtic_configuration.normal_count               = 25
+    bat.geometrtic_configuration.parallel_count             = 40 
+
+    for _ in range(number_of_modules):
+        lift_bus.battery_modules.append(deepcopy(bat))    
+    lift_bus.charging_c_rate  = 1
+
+    lift_bus.nominal_capacity = 0    
+    for battery_module in  lift_bus.battery_modules:
+        lift_bus.voltage  +=   battery_module.voltage
+        lift_bus.nominal_capacity =  max(battery_module.nominal_capacity, lift_bus.nominal_capacity)       
     
 
     #------------------------------------------------------------------------------------------------------------------------------------  
@@ -610,7 +626,7 @@ def vehicle_setup() :
     # Define Lift Propulsor Container 
     lift_propulsor_1                                       = RCAIDE.Library.Components.Propulsors.Electric_Rotor()
     lift_propulsor_1.tag                                   = 'lift_propulsor_1'     
-    lift_propulsor_1.active_batteries                      = ['lift_bus_battery']          
+    lift_propulsor_1.active_busses                      = ['lift_bus']          
               
     # Electronic Speed Controller           
     lift_rotor_esc                                         = RCAIDE.Library.Components.Energy.Modulators.Electronic_Speed_Controller() 
@@ -654,7 +670,7 @@ def vehicle_setup() :
     #------------------------------------------------------------------------------------------------------------------------------------    
     lift_rotor_motor                                       = RCAIDE.Library.Components.Propulsors.Converters.DC_Motor()
     lift_rotor_motor.efficiency                            = 0.9
-    lift_rotor_motor.nominal_voltage                       = bat.pack.maximum_voltage*3/4  
+    lift_rotor_motor.nominal_voltage                       = lift_bus.voltage*3/4  
     lift_rotor_motor.origin                                = [[-0.073 ,  1.950 , 1.2]]
     lift_rotor_motor.propeller_radius                      = lift_rotor.tip_radius
     lift_rotor_motor.tag                                   = 'lift_rotor_motor_1' 
