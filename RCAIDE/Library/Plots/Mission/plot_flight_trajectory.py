@@ -60,8 +60,15 @@ def plot_flight_trajectory(results,
                   'axes.titlesize': ps.title_font_size}
     plt.rcParams.update(parameters) 
         
-    fig = plt.figure(save_filename)
-    fig.set_size_inches(width,height) 
+    fig1 = plt.figure(save_filename+"_Distance")
+    fig2 = plt.figure(save_filename + "_x_vs_y")
+    fig3 = plt.figure(save_filename+"_z_vs_time")
+    fig4 = plt.figure(save_filename+"_3D")
+    
+    fig1.set_size_inches(width,height)
+    fig2.set_size_inches(width,height)
+    fig3.set_size_inches(width,height)
+    fig4.set_size_inches(width,height) 
      
     # get line colors for plots 
     line_colors   = cm.inferno(np.linspace(0,0.9,len(results.segments)))    
@@ -76,44 +83,46 @@ def plot_flight_trajectory(results,
         segment_tag  =  results.segments[i].tag
         segment_name = segment_tag.replace('_', ' ')
         
-        axes = plt.subplot(2,2,1)
-        axes.plot( time , Range, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width , label = segment_name)
-        axes.set_ylabel('Distance (nmi)')
-        axes.set_xlabel('Time (min)')
-        set_axes(axes)            
+        axes1 = plt.subplot(1,1,1)
+        axes1.plot( time , Range, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width , label = segment_name, markersize = ps.marker_size)
+        axes1.set_ylabel('Distance (nmi)')
+        axes1.set_xlabel('Time (min)')
+        set_axes(axes1)            
 
-        axes = plt.subplot(2,2,2)
-        axes.plot(x, y , line_color, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width )
-        axes.set_xlabel('x (m)')
-        axes.set_ylabel('y (m)')
-        set_axes(axes)
+        axes2 = plt.subplot(1,1,1)
+        axes2.plot(x, y , line_color, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name , markersize = ps.marker_size)
+        axes2.set_xlabel('x (m)')
+        axes2.set_ylabel('y (m)')
+        set_axes(axes2)
 
-        axes = plt.subplot(2,2,3)
-        axes.plot( time , z, line_color , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width )
-        axes.set_ylabel('z (m)')
-        axes.set_xlabel('Time (min)')
-        set_axes(axes)   
+        axes3 = plt.subplot(1,1,1)
+        axes3.plot( time , z, line_color , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name , markersize = ps.marker_size)
+        axes3.set_ylabel('z (m)')
+        axes3.set_xlabel('Time (min)')
+        set_axes(axes3)   
         
-        axes = plt.subplot(2,2,4, projection='3d') 
-        axes.scatter(x, y, z, marker='o',color =  line_colors[i])
-        axes.set_xlabel('x')
-        axes.set_ylabel('y')
-        axes.set_zlabel('z')
-        axes.set_box_aspect([1,1,1])
-        set_axes(axes)         
+        axes4 = plt.subplot(1,1,1, projection='3d') 
+        axes4.scatter(x, y, z, marker='o',color =  line_colors[i], label = segment_name, markersize = ps.marker_size)
+        axes4.set_xlabel('x')
+        axes4.set_ylabel('y')
+        axes4.set_zlabel('z')
+        axes4.set_box_aspect([1,1,1])
+        set_axes(axes4)         
         
     if show_legend:        
         leg =  fig.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
     # Adjusting the sub-plots for legend 
-    fig.subplots_adjust(top=0.8)
-    
-    # set title of plot 
-    title_text    = 'Flight Trajectory'      
-    fig.suptitle(title_text)
+    fig1.subplots_adjust(top=0.8)
+    fig2.subplots_adjust(top=0.8)
+    fig3.subplots_adjust(top=0.8)
+    fig4.subplots_adjust(top=0.8)
     
     if save_figure:
-        plt.savefig(save_filename + file_type)   
+        fig1.savefig(save_filename + file_type)
+        fig2.savefig(save_filename + file_type)
+        fig3.savefig(save_filename + file_type)
+        fig4.savefig(save_filename + file_type)  
              
     return fig         
