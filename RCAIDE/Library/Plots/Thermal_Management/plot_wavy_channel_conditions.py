@@ -73,21 +73,18 @@ def plot_wavy_channel_conditions(wavy_channel, results, coolant_line, save_figur
         power                           = wavy_channel_conditions.power[:,0]         
         segment_tag                     = results.segments[i].tag
         segment_name                    = segment_tag.replace('_', ' ') 
-
-        if b_i == 0:                
-            axis_1.plot(time, outlet_coolant_temperature, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width, label = segment_name)
-        else:
-            axis_1.plot(time, outlet_coolant_temperature, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+ 
+        axis_1.plot(time, outlet_coolant_temperature, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name) 
         axis_1.set_ylabel(r'Coolant Temp. (K)') 
         axis_1.set_xlabel(r'Time (mins)')
         set_axes(axis_1)     
          
-        axis_2.plot(time, coolant_mass_flow_rate, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+        axis_2.plot(time, coolant_mass_flow_rate, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
         axis_2.set_ylabel(r'Coolant $\dot{m}$ (kg/s)')
         axis_2.set_xlabel(r'Time (mins)')
         set_axes(axis_2) 
  
-        axis_3.plot(time, power, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+        axis_3.plot(time, power, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
         axis_3.set_ylabel(r'Power (W)')
         axis_3.set_xlabel(r'Time (mins)')
         set_axes(axis_3)   
@@ -95,11 +92,11 @@ def plot_wavy_channel_conditions(wavy_channel, results, coolant_line, save_figur
     b_i += 1 
             
     if show_legend:          
-        leg_1 =  fig_1.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg_1 =  fig_1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
         leg_1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})   
-        leg_2 =  fig_2.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg_2 =  fig_2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
         leg_2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
-        leg_3 =  fig_2.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg_3 =  fig_2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
         leg_3.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})      
     
     # Adjusting the sub-plots for legend 

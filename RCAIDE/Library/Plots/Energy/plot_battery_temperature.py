@@ -83,26 +83,26 @@ def plot_battery_temperature(results,
             
                     segment_tag  =  results.segments[i].tag
                     segment_name = segment_tag.replace('_', ' ')    
-                    axis_1.plot(time,cell_temp, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width, label = segment_name) 
+                    axis_1.plot(time,cell_temp, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name) 
                     axis_1.set_ylabel(r'Temperature (K)') 
                     axis_1.set_xlabel('Time (mins)')
                     set_axes(axis_1)        
                     
-                    axis_2.plot(time, cell_charge, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width, label = segment_name)
+                    axis_2.plot(time, cell_charge, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
                     axis_2.set_xlabel('Time (mins)')
                     axis_2.set_ylabel(r'Charge Throughput (Ah)')
                     set_axes(axis_2)   
 
-                    axis_3.plot(time, pack_Q/1000, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width, label = segment_name)   
+                    axis_3.plot(time, pack_Q/1000, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)   
                     axis_3.set_xlabel('Time (mins)')
                     axis_3.set_ylabel(r'$\dot{Q}_{heat}$ (kW)')
                     set_axes(axis_3)
                 b_i += 1
     
     if show_legend:           
-        leg_1 =  fig_1.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
-        leg_2 =  fig_2.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
-        leg_3 =  fig_3.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg_1 =  fig_1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_2 =  fig_2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_3 =  fig_3.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
         leg_1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'}) 
         leg_2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'}) 
         leg_3.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    

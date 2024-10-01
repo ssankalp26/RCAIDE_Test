@@ -60,22 +60,28 @@ def plot_bus_conditions(results,
     line_colors   = cm.inferno(np.linspace(0,0.9,len(results.segments)))     
 
 
-    fig = plt.figure(save_filename)
-    fig.set_size_inches(width,height) 
-    axis_0 = plt.subplot(1,1,1)
-    axis_1 = plt.subplot(3,2,1)
-    axis_2 = plt.subplot(3,2,2)
-    axis_3 = plt.subplot(3,2,3) 
-    axis_4 = plt.subplot(3,2,4)
-    axis_5 = plt.subplot(3,2,5) 
-    axis_6 = plt.subplot(3,2,6)      
+    fig_1 = plt.figure(save_filename + '_SOC')
+    fig_2 = plt.figure(save_filename + '_Energy')
+    fig_3 = plt.figure(save_filename + '_Current')
+    fig_4 = plt.figure(save_filename + '_Power')
+    fig_5 = plt.figure(save_filename + '_Voltage')
+    fig_6 = plt.figure(save_filename + '_Temperature')
+    fig_1.set_size_inches(width,height)  
+    fig_2.set_size_inches(width,height)  
+    fig_3.set_size_inches(width,height)  
+    fig_4.set_size_inches(width,height)  
+    fig_5.set_size_inches(width,height)  
+    fig_6.set_size_inches(width,height)  
+    axis_1 = fig_1.add_subplot(1,1,1)
+    axis_2 = fig_2.add_subplot(1,1,1)
+    axis_3 = fig_3.add_subplot(1,1,1) 
+    axis_4 = fig_4.add_subplot(1,1,1)
+    axis_5 = fig_5.add_subplot(1,1,1) 
+    axis_6 = fig_6.add_subplot(1,1,1)      
     b_i = 0 
     for network in results.segments[0].analyses.energy.vehicle.networks: 
         busses  = network.busses
-        for bus in busses: 
-            axis_0.plot(np.zeros(2),np.zeros(2), color = line_colors[0], marker = ps.markers[b_i], linewidth = ps.line_width) 
-            axis_0.grid(False)
-            axis_0.axis('off')  
+        for bus in busses:  
            
             for i in range(len(results.segments)): 
                 time                = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min 
@@ -88,52 +94,70 @@ def plot_bus_conditions(results,
                 pack_temperature    = bus_results.temperature[:,0]  
         
                 segment_tag  =  results.segments[i].tag
-                segment_name = segment_tag.replace('_', ' ')  
-                if b_i == 0:
-                    axis_1.plot(time, pack_SOC, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width, label = segment_name)
-                else:
-                    axis_1.plot(time, pack_SOC, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+                segment_name = segment_tag.replace('_', ' ')   
+                axis_1.plot(time, pack_SOC, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name) 
                 axis_1.set_ylabel(r'SOC')
+                axis_1.set_xlabel('Time (mins)')
                 axis_1.set_ylim([0,1.1])
                 set_axes(axis_1)     
                 
-                axis_2.plot(time, (pack_energy/1000)/Units.Wh, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+                axis_2.plot(time, (pack_energy/1000)/Units.Wh, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name) 
                 axis_2.set_ylabel(r'Energy (kW-hr)')
+                axis_2.set_xlabel('Time (mins)')
                 set_axes(axis_2)
                 
-                axis_3.plot(time, pack_current, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+                axis_3.plot(time, pack_current, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name) 
                 axis_3.set_ylabel(r'Current (A)')
+                axis_3.set_xlabel('Time (mins)')
                 set_axes(axis_3)  
          
                 axis_4.plot(time, pack_power/1000, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
                 axis_4.set_ylabel(r'Power (kW)')
+                axis_4.set_xlabel('Time (mins)')
                 set_axes(axis_4)     
                  
-                axis_5.plot(time, pack_volts, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width) 
+                axis_5.plot(time, pack_volts, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name) 
                 axis_5.set_ylabel(r'Voltage (V)')
                 axis_5.set_xlabel('Time (mins)')
                 set_axes(axis_5) 
          
-                axis_6.plot(time, pack_temperature, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+                axis_6.plot(time, pack_temperature, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name) 
                 axis_6.set_ylabel(r'Temperature, $\degree$C')
+                axis_6.set_xlabel('Time (mins)')
                 set_axes(axis_6)   
 
             b_i += 1 
             
     if show_legend:      
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
-        leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})      
+        leg_1 =  fig_1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_2 =  fig_2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_3 =  fig_3.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_4 =  fig_4.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_5 =  fig_5.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_6 =  fig_6.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})     
+        leg_2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})     
+        leg_3.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})     
+        leg_4.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})     
+        leg_5.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})     
+        leg_6.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})      
     
     # Adjusting the sub-plots for legend 
-    fig.subplots_adjust(top=0.8) 
-    
-    # set title of plot 
-    title_text   = 'Battery Pack Conditions'       
-    fig.suptitle(title_text) 
+    fig_1.subplots_adjust(top=0.8) 
+    fig_2.subplots_adjust(top=0.8) 
+    fig_3.subplots_adjust(top=0.8) 
+    fig_4.subplots_adjust(top=0.8) 
+    fig_5.subplots_adjust(top=0.8) 
+    fig_6.subplots_adjust(top=0.8)   
     
     if save_figure:
-        plt.savefig(save_filename + bus.tag + file_type)
+        fig_1.savefig(bus.tag + 'Conditions_SOC' + file_type)
+        fig_2.savefig(bus.tag + 'Conditions_Energy' + file_type)
+        fig_3.savefig(bus.tag + 'Conditions_Current' + file_type)
+        fig_4.savefig(bus.tag + 'Conditions_Power'  + file_type)
+        fig_5.savefig(bus.tag + 'Conditions_Voltage' + file_type)
+        fig_6.savefig(bus.tag + 'Conditions_Temperature' + file_type)
    
-    return fig 
+    return fig_1,fig_2, fig_3, fig_4, fig_5, fig_6
 
 

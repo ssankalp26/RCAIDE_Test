@@ -94,32 +94,32 @@ def plot_battery_degradation(results,
                         axis_5 = fig_5.add_subplot(1,1,1)
                         axis_6 = fig_6.add_subplot(1,1,1) 
                         
-                        axis_1.plot(charge_throughput, capacity_fade, color = ps.color , marker = ps.markers[0], linewidth = ps.line_width ) 
+                        axis_1.plot(charge_throughput, capacity_fade, color = ps.color , marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width ) 
                         axis_1.set_ylabel('$E/E_0$')
                         axis_1.set_xlabel('Ah')
                         set_axes(axis_1)      
                     
-                        axis_2.plot(time_hrs, capacity_fade, color = ps.color, marker = ps.markers[0], linewidth = ps.line_width ) 
+                        axis_2.plot(time_hrs, capacity_fade, color = ps.color, marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width ) 
                         axis_2.set_ylabel('$E/E_0$')
                         axis_2.set_xlabel('Time (hrs)')
                         set_axes(axis_2)     
                     
-                        axis_3.plot(cycle_day, capacity_fade, color = ps.color, marker = ps.markers[0], linewidth = ps.line_width ) 
+                        axis_3.plot(cycle_day, capacity_fade, color = ps.color, marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width ) 
                         axis_3.set_ylabel('$E/E_0$')
                         axis_3.set_xlabel('Time (days)')
                         set_axes(axis_3)
                         
-                        axis_4.plot(charge_throughput, resistance_growth, color = ps.color, marker = ps.markers[0], linewidth = ps.line_width )
+                        axis_4.plot(charge_throughput, resistance_growth, color = ps.color, marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width )
                         axis_4.set_ylabel('$R/R_0$')
                         axis_4.set_xlabel('Ah')
                         set_axes(axis_4)      
                     
-                        axis_5.plot(time_hrs, resistance_growth, color = ps.color, marker = ps.markers[0], linewidth = ps.line_width )
+                        axis_5.plot(time_hrs, resistance_growth, color = ps.color, marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width )
                         axis_5.set_ylabel('$R/R_0$')
                         axis_5.set_xlabel('Time (hrs)')
                         set_axes(axis_5)     
                     
-                        axis_6.plot(cycle_day, resistance_growth, color = ps.color, marker = ps.markers[0], linewidth = ps.line_width )
+                        axis_6.plot(cycle_day, resistance_growth, color = ps.color, marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width )
                         axis_6.set_ylabel('$R/R_0$')
                         axis_6.set_xlabel('Time (days)')
                         set_axes(axis_6)             
@@ -176,33 +176,33 @@ def plot_battery_degradation(results,
                         resistance_growth[i]  = battery_conditions.cell.resistance_growth_factor
                         charge_throughput[i]  = battery_conditions.cell.charge_throughput[-1,0]  
               
-                    axis_1.plot(charge_throughput, capacity_fade, color = ps.color , marker = ps.markers[0], linewidth = ps.line_width ) 
+                    axis_1.plot(charge_throughput, capacity_fade, color = ps.color , marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width ) 
                     axis_1.set_ylabel('$E/E_0$')
                     axis_1.set_xlabel('Ah')
                     set_axes(axis_1)      
                  
-                    axis_2.plot(time_hrs, capacity_fade, color = ps.color, marker = ps.markers[0], linewidth = ps.line_width ) 
+                    axis_2.plot(time_hrs, capacity_fade, color = ps.color, marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width ) 
                     axis_2.set_ylabel('$E/E_0$')
                     axis_2.set_xlabel('Time (hrs)')
                     set_axes(axis_2)     
                  
-                    axis_3.plot(cycle_day, capacity_fade, color = ps.color, marker = ps.markers[0], linewidth = ps.line_width ) 
+                    axis_3.plot(cycle_day, capacity_fade, color = ps.color, marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width ) 
                     axis_3.set_ylabel('$E/E_0$')
                     axis_3.set_xlabel('Time (days)')
                     set_axes(axis_3)     
                  
-                    axis_4.plot(charge_throughput, resistance_growth, color = ps.color, marker = ps.markers[0], linewidth = ps.line_width )
+                    axis_4.plot(charge_throughput, resistance_growth, color = ps.color, marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width )
                     axis_4.set_ylabel('$R/R_0$')
                     axis_4.set_xlabel('Ah')
                     set_axes(axis_4)      
                  
-                    axis_5.plot(time_hrs, resistance_growth, color = ps.color, marker = ps.markers[0], linewidth = ps.line_width )
+                    axis_5.plot(time_hrs, resistance_growth, color = ps.color, marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width )
                     axis_5.set_ylabel('$R/R_0$')
                     axis_5.set_xlabel('Time (hrs)')
                     set_axes(axis_5)     
                 
                     axis_6 = plt.subplot(3,2,6) 
-                    axis_6.plot(cycle_day, resistance_growth, color = ps.color, marker = ps.markers[0], linewidth = ps.line_width )
+                    axis_6.plot(cycle_day, resistance_growth, color = ps.color, marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width )
                     axis_6.set_ylabel('$R/R_0$')
                     axis_6.set_xlabel('Time (days)')
                     set_axes(axis_6)       

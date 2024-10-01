@@ -82,7 +82,7 @@ def plot_electric_propulsor_efficiencies(results,
     if show_legend:    
         h, l = axis_1.get_legend_handles_labels()
         #axis_1.legend(h, l)            
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg =  fig.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
     # Adjusting the sub-plots for legend 

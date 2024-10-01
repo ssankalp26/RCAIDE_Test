@@ -105,10 +105,10 @@ def plot_aerodynamic_forces(results,
         
  
     if show_legend:    
-        leg1 =  fig1.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5)
-        leg2 =  fig2.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5)
-        leg3 =  fig3.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5)
-        leg4 =  fig4.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg1 =  fig1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
+        leg2 =  fig2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
+        leg3 =  fig3.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
+        leg4 =  fig4.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
         leg1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
         leg2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
         leg3.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
