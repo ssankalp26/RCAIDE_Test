@@ -84,33 +84,33 @@ def main():
                 single_pt_CL_1,     single_pt_CL_2,     loiter_1_CL,   loiter_2_CL, reserve_1_CL,reserve_2_CL,
                 descent_throttle_3,  landing_thrust]
         for val in data:
-            print(val)
+            print(val) 
     
     # Truth values
-    takeoff_thrust_truth     = 134345.66568322046
-    climb_throttle_1_truth   = 1.064430625438011
-    climb_throttle_2_truth   = 0.9426131601628407
-    climb_throttle_3_truth   = 0.5
-    climb_throttle_4_truth   = 0.5948007458587288
-    climb_throttle_5_truth   = 0.6214708059169162
-    climb_throttle_6_truth   = 1.0158275244172275
-    climb_throttle_7_truth   = 1.1748005560120827
-    climb_throttle_8_truth   = 0.5261578071733618
-    climb_throttle_9_truth   = 0.5828155819981968
-    climb_10_CL_truth        = 0.3347037103221548
-    cruise_CL_1_truth        = 0.7117434749324403
-    cruise_CL_2_truth        = 0.6877935428613456
-    cruise_CL_3_truth        = 0.7842190259732682
-    descent_throttle_1_truth = 0.3987250018011816
-    descent_throttle_2_truth = 0.5
-    single_pt_CL_1_truth     = 0.010323140809804471
-    single_pt_CL_2_truth     = 0.018358028996711694
-    loiter_1_CL_truth        = 0.5013740069428855
-    loiter_2_CL_truth        = 0.5013694232821315
-    reserve_1_CL_truth       = 0.34673286250080215
-    reserve_2_CL_truth       = 0.3401664118270215
-    descent_throttle_3_truth = 0.1330281782216745
-    landing_thrust_truth     = 12727.161869285535
+    takeoff_thrust_truth     = 99134.27996755976 
+    climb_throttle_1_truth   = 1.6807731422835253 
+    climb_throttle_2_truth   = 1.3802422472208669 
+    climb_throttle_3_truth   = 0.5 
+    climb_throttle_4_truth   = 0.8679225480622763 
+    climb_throttle_5_truth   = 0.8141566430665748 
+    climb_throttle_6_truth   = 1.1762742666064576 
+    climb_throttle_7_truth   = 1.332670357416255 
+    climb_throttle_8_truth   = 0.6090416731871708 
+    climb_throttle_9_truth   = 0.949481595486631 
+    climb_10_CL_truth        = -0.32447887650544344 
+    cruise_CL_1_truth        = 0.6942226103682735 
+    cruise_CL_2_truth        = 0.6893540984026312 
+    cruise_CL_3_truth        = 0.7515285258841712 
+    descent_throttle_1_truth = 0.11281363311739535 
+    descent_throttle_2_truth = 0.5 
+    single_pt_CL_1_truth     = 0.010323140809804471 
+    single_pt_CL_2_truth     = 0.011976421119820658 
+    loiter_1_CL_truth        = 0.4972556337809547 
+    loiter_2_CL_truth        = 0.497249302471441 
+    reserve_1_CL_truth       = 0.337109672814828 
+    reserve_2_CL_truth       = 0.32875061802741673 
+    descent_throttle_3_truth = 0.1517809038164061 
+    landing_thrust_truth     = 10914.920312664697  
     
     # Store errors 
     error = Data()
@@ -217,7 +217,7 @@ def mission_setup(analyses):
   
     Segments = RCAIDE.Framework.Mission.Segments 
     base_segment = Segments.Segment()
-    base_segment.state.numerics.number_control_points = 4  
+    base_segment.state.numerics.number_of_control_points = 4  
  
     # ------------------------------------------------------------------------------------------------------------------------------------ 
     #   Takeoff Roll
@@ -474,10 +474,11 @@ def mission_setup(analyses):
     segment = Segments.Cruise.Constant_Throttle_Constant_Altitude(base_segment)
     segment.tag = "cruise_2" 
     segment.analyses.extend(analyses.base)  
+    segment.state.numerics.number_of_control_points = 12 
     segment.altitude                                            = 11. * Units.km  
-    segment.air_speed_end                                       = 200 * Units.m / Units.s 
-    segment.throttle                                            = 0.4
-    segment.distance                                            = 500 * Units.km  
+    segment.air_speed_end                                       = 215 * Units.m / Units.s  
+    segment.throttle                                            = 0.75
+    segment.distance                                            = 200 * Units.km  
           
     # define flight dynamics to model       
     segment.flight_dynamics.force_x                             = True  
@@ -740,7 +741,7 @@ def mission_setup(analyses):
     segment.air_speed_end                                  = 150 * Units.knots
     segment.throttle                                       = 0
     segment.distance                                       = 10 * Units.km 
-    segment.state.numerics.number_control_points           = 2
+    segment.state.numerics.number_of_control_points           = 2
     segment.state.numerics.max_evaluations                 = 10  
     
     # define flight dynamics to model 

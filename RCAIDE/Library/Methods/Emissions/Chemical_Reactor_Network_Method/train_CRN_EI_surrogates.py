@@ -5,18 +5,11 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE imports
-import RCAIDE
-from   RCAIDE.Framework.Core import  Data
-import RCAIDE.Library.Methods.Emissions.Chemical_Reactor_Network_Method.evaluate_cantera as evaluate_cantera 
+import RCAIDE 
+from RCAIDE.Library.Methods.Emissions.Chemical_Reactor_Network_Method.evaluate_cantera import evaluate_cantera 
 
 # package imports    
-import numpy    as np 
-import pandas   as pd
-
-try: 
-    import cantera  as ct     
-except ImportError:
-    print('cantera required: run pip install cantera')
+import numpy    as np  
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Train Cantera Model 

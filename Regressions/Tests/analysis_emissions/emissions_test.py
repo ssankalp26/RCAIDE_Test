@@ -29,6 +29,12 @@ def main():
     emissions_methods = ['Emission_Index_Correlation_Method', 'Emission_Index_CRN_Method']
     use_surrogate     =  [True, False]
     
+    cantera_installation = False 
+    try: 
+        import cantera as ct
+        cantera_installation == True 
+    except:
+        pass 
     
     true_EI_CO2s =  [3.16, 3.0996295865239563, 3.1371106320136155]
     true_EI_H2Os =  [1.34, 1.1911420639654764, 1.2053455595806213]
@@ -63,10 +69,14 @@ def main():
                 true_EI_H2O    = true_EI_H2Os[i]   
                 diff_EI_CO2    = np.abs(EI_CO2 - true_EI_CO2)
                 diff_EI_H2O    = np.abs(EI_H2O - true_EI_H2O)
-                print('EI CO2 Error: ',diff_EI_CO2)
-                assert (diff_EI_CO2/true_EI_CO2) < 1e-1
-                print('EI H2O Error: ',diff_EI_H2O)
-                assert (diff_EI_H2O/true_EI_H2O) < 1e-1
+                
+                if cantera_installation == False and  i > 0:
+                    pass
+                else:
+                    print('EI CO2 Error: ',diff_EI_CO2)
+                    assert (diff_EI_CO2/true_EI_CO2) < 1e-1
+                    print('EI H2O Error: ',diff_EI_H2O)
+                    assert (diff_EI_H2O/true_EI_H2O) < 1e-1
                 i += 1
              
     return 
@@ -173,7 +183,7 @@ def mission_setup(analyses):
     segment.altitude_end                                  = 36000. * Units.ft
     segment.mach_number                                   = 0.78
     segment.distance                                      = 500 * Units.km  
-    segment.state.numerics.number_control_points          = 4   
+    segment.state.numerics.number_of_control_points       = 2   
     
     # define flight dynamics to model 
     segment.flight_dynamics.force_x                       = True  

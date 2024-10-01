@@ -10,11 +10,6 @@ import pandas                as pd
 import numpy                 as np
 import os
 
-try: 
-    import cantera               as ct     
-except ImportError:
-    print('cantera required: run pip install cantera')
-
 # ----------------------------------------------------------------------------------------------------------------------
 #  evaluate_cantera
 # ----------------------------------------------------------------------------------------------------------------------   
@@ -83,30 +78,48 @@ def evaluate_cantera(combustor,T,P,mdot,FAR):
     col_names               = ['EI_' +str(sp) for sp in list_sp]                    # [-]       Define output variables 
     df                      = pd.DataFrame(columns=col_names)                       # [-]       Assign output variables space to df
     
-    gas, EI = combustor_model(kinetics_model,oxidizer_model,high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_stag_0, FAR, m_dot_fuel, m_dot_air, N_PZ, A_PZ, L_PZ, phi_sign, phi_SZ, A_SZ, L_SZ, f_air_PZ, N_SZ, sigma_phi, PSR_1st_mixers, PSR_2nd_mixers) # [-]       Run combustor function
     
-    sp_idx                  = [gas.species_index(sp) for sp in list_sp]             # [-]       Retrieve the species index
-    data_n                  = list(EI[sp_idx])                                      # [-]       Assign output variables  
-    df.loc[0]               = data_n                                                # [-]       Assign output variables to df 
-    
-    results                 = Data()                                                # [-]       Create results data structure
-    results.EI_CO2          = df.loc[0, 'EI_CO2']                                   # [-]       Assign CO2 Emission Index to the results data structure
-    results.EI_CO           = df.loc[0, 'EI_CO']                                    # [-]       Assign CO Emission Index to the results data structure
-    results.EI_H2O          = df.loc[0, 'EI_H2O']                                   # [-]       Assign H2O Emission Index to the results data structure
-    results.EI_NO           = 0                                                     # [-]       Assign NO Emission Index to the results data structure
-    results.EI_NO2          = 0                                                     # [-]       Assign NO2 Emission Index to the results data structure   
-    
-    if high_fidelity_kin_mech:   
-        results.EI_NO       = df.loc[0, 'EI_NO']                                    # [-]       Assign NO Emission Index to the results data structure
-        results.EI_NO2      = df.loc[0, 'EI_NO2']                                   # [-]       Assign NO2 Emission Index to the results data structure
-    
+    try: 
+        import cantera as ct 
+        gas, EI = combustor_model(ct,kinetics_model,oxidizer_model,high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_stag_0, FAR, m_dot_fuel, m_dot_air, N_PZ, A_PZ, L_PZ, phi_sign, phi_SZ, A_SZ, L_SZ, f_air_PZ, N_SZ, sigma_phi, PSR_1st_mixers, PSR_2nd_mixers) # [-]       Run combustor function
+        
+        sp_idx                  = [gas.species_index(sp) for sp in list_sp]             # [-]       Retrieve the species index
+        data_n                  = list(EI[sp_idx])                                      # [-]       Assign output variables  
+        df.loc[0]               = data_n                                                # [-]       Assign output variables to df 
+        
+        results                 = Data()                                                # [-]       Create results data structure
+        results.EI_CO2          = df.loc[0, 'EI_CO2']                                   # [-]       Assign CO2 Emission Index to the results data structure
+        results.EI_CO           = df.loc[0, 'EI_CO']                                    # [-]       Assign CO Emission Index to the results data structure
+        results.EI_H2O          = df.loc[0, 'EI_H2O']                                   # [-]       Assign H2O Emission Index to the results data structure
+        results.EI_NO           = 0                                                     # [-]       Assign NO Emission Index to the results data structure
+        results.EI_NO2          = 0                                                     # [-]       Assign NO2 Emission Index to the results data structure   
+        
+        if high_fidelity_kin_mech:   
+            results.EI_NO       = df.loc[0, 'EI_NO']                                    # [-]       Assign NO Emission Index to the results data structure
+            results.EI_NO2      = df.loc[0, 'EI_NO2']                                   # [-]       Assign NO2 Emission Index to the results data structure
+ 
+    except ImportError:
+        print('cantera required: run pip install cantera') 
+        results                 = Data()                                               
+        results.EI_CO2          = 0                               
+        results.EI_CO           = 0                               
+        results.EI_H2O          = 0                               
+        results.EI_NO           = 0                                                    
+        results.EI_NO2          = 0                                                    
+        
+        if high_fidelity_kin_mech:   
+            results.EI_NO       = 0                                 
+            results.EI_NO2      = 0                                 
+     
+
     return results
 
-def combustor_model(kinetics_model,oxidizer_model,high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_stag_0, FAR, m_dot_fuel, m_dot_air, N_PZ, A_PZ, L_PZ, phi_sign, phi_SZ, A_SZ, L_SZ, f_air_PZ, N_SZ, sigma_phi, PSR_1st_mixers, PSR_2nd_mixers):
+def combustor_model(ct, kinetics_model,oxidizer_model,high_fidelity_kin_mech, dict_fuel, dict_oxy, T_stag_0, P_stag_0, FAR, m_dot_fuel, m_dot_air, N_PZ, A_PZ, L_PZ, phi_sign, phi_SZ, A_SZ, L_SZ, f_air_PZ, N_SZ, sigma_phi, PSR_1st_mixers, PSR_2nd_mixers):
 
     ospath    = os.path.abspath(__file__)
     separator = os.path.sep
-    rel_path  = os.path.dirname(ospath) + separator + "Data" + separator      
+    rel_path  = os.path.dirname(ospath) + separator + "Data" + separator
+    
 
     # ------------------------------------------------------------------------------
     # ----------------------------- Initial Parameters -----------------------------
