@@ -84,26 +84,37 @@ def compute_operating_empty_weight(vehicle, miscelleneous_weight_factor   = 1.1)
     weight.wings             = Data()
     weight.wings_total       = 0.0
 
-    vehicle.payload.passengers  = RCAIDE.Library.Components.Component()
-    vehicle.payload.baggage     = RCAIDE.Library.Components.Component()
-    vehicle.payload.cargo       = RCAIDE.Library.Components.Component()
-    control_systems             = RCAIDE.Library.Components.Component()
-    electrical_systems          = RCAIDE.Library.Components.Component()
-    furnishings                 = RCAIDE.Library.Components.Component()
-    air_conditioner             = RCAIDE.Library.Components.Component()
-    fuel                        = RCAIDE.Library.Components.Component()
-    apu                         = RCAIDE.Library.Components.Component()
-    hydraulics                  = RCAIDE.Library.Components.Component()
-    avionics                    = RCAIDE.Library.Components.Systems.Avionics()
-    optionals                   = RCAIDE.Library.Components.Component()
+
+    control_systems                                  = RCAIDE.Library.Components.Component()
+    control_systems.tag                              = 'control_systems'  
+    electrical_systems                               = RCAIDE.Library.Components.Component()
+    electrical_systems.tag                           = 'electrical_systems'
+    furnishings                                      = RCAIDE.Library.Components.Component()
+    furnishings.tag                                  = 'furnishings'
+    air_conditioner                                  = RCAIDE.Library.Components.Component() 
+    air_conditioner.tag                              = 'air_conditioner'
+    apu                                              = RCAIDE.Library.Components.Component()
+    apu.tag                                          = 'apu'
+    hydraulics                                       = RCAIDE.Library.Components.Component()
+    hydraulics.tag                                   = 'hydraulics'
+    avionics                                         = RCAIDE.Library.Components.Systems.Avionics()
+    optionals                                        = RCAIDE.Library.Components.Component()
+    optionals.tag                                    = 'optionals'
+    
+
+    vehicle.payload.passengers      = RCAIDE.Library.Components.Component()
+    vehicle.payload.passengers.tag  = 'passengers'  
+    vehicle.payload.baggage         = RCAIDE.Library.Components.Component()
+    vehicle.payload.baggage.tag     = 'baggage'
+    vehicle.payload.cargo           = RCAIDE.Library.Components.Component()   
+    vehicle.payload.cargo.tag       = 'cargo'
 
     # assign components to vehicle
     vehicle.systems.control_systems    = control_systems
     vehicle.systems.electrical_systems = electrical_systems
     vehicle.systems.avionics           = avionics
     vehicle.systems.furnishings        = furnishings
-    vehicle.systems.air_conditioner    = air_conditioner
-    vehicle.systems.fuel               = fuel
+    vehicle.systems.air_conditioner    = air_conditioner 
     vehicle.systems.apu                = apu
     vehicle.systems.hydraulics         = hydraulics
     vehicle.systems.optionals          = optionals 
@@ -174,14 +185,9 @@ def compute_operating_empty_weight(vehicle, miscelleneous_weight_factor   = 1.1)
                 bus.avionics.origin[0][0]                          = 0.4 * nose_length
             bus.avionics.mass_properties.center_of_gravity[0][0]   = 0.0
             weight.avionics += bus.avionics.mass_properties.mass   
-                        
-<<<<<<< HEAD:RCAIDE/Library/Methods/Weights/Physics_Based_Buildups/Electric/compute_operating_empty_weight.py
+                         
             for battery in bus.batteries: 
-                weight.battery += battery.mass_properties.mass * Units.kg 
-=======
-            for battery in bus.battery_modules: 
-                weight.battery                                            += battery.mass_properties.mass * Units.kg 
->>>>>>> 42165ad86d788a72a8e2711cd410700702655591:RCAIDE/Library/Methods/Weights/Physics_Based_Buildups/Electric/compute_weight.py
+                weight.battery += battery.mass_properties.mass * Units.kg  
         
             # Servo, Hub and BRS Weights
             lift_rotor_hub_weight   = 4.   * Units.kg

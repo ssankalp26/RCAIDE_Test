@@ -201,13 +201,15 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
                           
             if turbofan_flag:
                 W_engine_jet            = Propulsion.compute_jet_engine_weight(thrust_sls)
-                W_propulsion            = Propulsion.integrated_propulsion(W_engine_jet,number_of_jet_engines)
+                W_propulsion            = Propulsion.integrated_propulsion(W_engine_jet,number_of_jet_engines) 
+                propulsor.mass_properties.mass = W_propulsion
                 W_energy_network_total  += W_propulsion
     
             if piston_engine_flag:           
                 W_engine_piston          = Propulsion.compute_piston_engine_weight(rated_power)
-                W_propulsion             = Propulsion.integrated_propulsion_general_aviation(W_engine_piston,number_of_piston_engines)
-                W_energy_network_total  += W_propulsion   
+                W_propulsion             = Propulsion.integrated_propulsion_general_aviation(W_engine_piston,number_of_piston_engines) 
+                propulsor.mass_properties.mass = W_propulsion
+                W_energy_network_total  += W_propulsion
          
             for fuel_tank in fuel_line.fuel_tanks: 
                 m_fuel_tank     = fuel_tank.fuel.mass_properties.mass
@@ -233,7 +235,6 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
                     motor_mass = propulsor.motor.mass_properties.mass       
                     W_energy_network_cumulative  += motor_mass
                 
-        network.mass_properties.mass = W_energy_network_total
         W_energy_network_cumulative += W_energy_network_total
         number_of_engines           +=  number_of_jet_engines +  number_of_piston_engines
     
@@ -387,14 +388,18 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
                 for fuel_tank in fuel_line.fuel_tanks:
                     fuel_weight =  total_fuel_weight/number_of_tanks  
                     fuel_tank.fuel.mass_properties.mass = fuel_weight     
+      
+    control_systems                                  = RCAIDE.Library.Components.Component()
+    control_systems.tag                              = 'control_systems'  
+    electrical_systems                               = RCAIDE.Library.Components.Component()
+    electrical_systems.tag                           = 'electrical_systems'
+    furnishings                                      = RCAIDE.Library.Components.Component()
+    furnishings.tag                                  = 'furnishings'
+    air_conditioner                                  = RCAIDE.Library.Components.Component() 
+    air_conditioner.tag                              = 'air_conditioner' 
+    hydraulics                                       = RCAIDE.Library.Components.Component()
+    hydraulics.tag                                   = 'hydraulics' 
     
-
-    control_systems     = RCAIDE.Library.Components.Component()
-    electrical_systems  = RCAIDE.Library.Components.Component()
-    furnishings         = RCAIDE.Library.Components.Component()
-    air_conditioner     = RCAIDE.Library.Components.Component() 
-    hydraulics          = RCAIDE.Library.Components.Component()
-
     if not hasattr(vehicle.landing_gear, 'nose'):
         vehicle.landing_gear.nose       = RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()
     vehicle.landing_gear.nose.mass  = output.structural_breakdown.nose_landing_gear

@@ -99,9 +99,11 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
             for propulsor in fuel_line.propulsors:
                 if type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbofan:
                     no_of_engines  += 1
-                    thrust_sls     = propulsor.sealevel_static_thrust
-                    W_engine_jet   = Propulsion.compute_jet_engine_weight(thrust_sls)
-                    W_propulsion   += Propulsion.integrated_propulsion(W_engine_jet)
+                    thrust_sls            = propulsor.sealevel_static_thrust
+                    W_engine_jet          = Propulsion.compute_jet_engine_weight(thrust_sls)
+                    total_propulsor_mass  = Propulsion.integrated_propulsion(W_engine_jet)
+                    propulsor.mass_properties.mass = total_propulsor_mass
+                    W_propulsion   += total_propulsor_mass
             for fuel_tank in fuel_line.fuel_tanks:
                 number_of_tanks +=  1
         for bus in network.busses: 
@@ -110,9 +112,9 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
                     no_of_engines  += 1
                     thrust_sls      = propulsor.sealevel_static_thrust
                     W_engine_jet    = Propulsion.compute_jet_engine_weight(thrust_sls)
-                    W_propulsion   += Propulsion.integrated_propulsion(W_engine_jet)                     
- 
-        network.mass_properties.mass = W_propulsion
+                    total_propulsor_mass  = Propulsion.integrated_propulsion(W_engine_jet)    
+                    propulsor.mass_properties.mass = total_propulsor_mass
+                    W_propulsion   += total_propulsor_mass          
         
     # Compute Wing Weight 
     for wing in vehicle.wings:
@@ -202,13 +204,20 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
                     fuel_tank.fuel.mass_properties.mass = fuel_weight   
      
     control_systems                                  = RCAIDE.Library.Components.Component()
+    control_systems.tag                              = 'control_systems'  
     electrical_systems                               = RCAIDE.Library.Components.Component()
+    electrical_systems.tag                           = 'electrical_systems'
     furnishings                                      = RCAIDE.Library.Components.Component()
+    furnishings.tag                                  = 'furnishings'
     air_conditioner                                  = RCAIDE.Library.Components.Component() 
+    air_conditioner.tag                              = 'air_conditioner'
     apu                                              = RCAIDE.Library.Components.Component()
+    apu.tag                                          = 'apu'
     hydraulics                                       = RCAIDE.Library.Components.Component()
+    hydraulics.tag                                   = 'hydraulics'
     avionics                                         = RCAIDE.Library.Components.Systems.Avionics()
     optionals                                        = RCAIDE.Library.Components.Component()
+    optionals.tag                                    = 'optionals'
          
     vehicle.landing_gear.nose                        = RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear()
     vehicle.landing_gear.nose.mass                   = output.structural_breakdown.nose_landing_gear

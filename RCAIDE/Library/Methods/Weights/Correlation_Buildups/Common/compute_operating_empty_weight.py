@@ -161,12 +161,15 @@ def compute_operating_empty_weight(vehicle,settings=None,
     
     
     vehicle.payload.passengers                      = RCAIDE.Library.Components.Component()
+    vehicle.payload.passengers.tag                  = 'passengers'
     vehicle.payload.passengers.mass_properties.mass = payload.passengers
     
     vehicle.payload.baggage                         = RCAIDE.Library.Components.Component()
+    vehicle.payload.baggage.tag                     = 'baggage'
     vehicle.payload.baggage.mass_properties.mass    = payload.baggage
     
     vehicle.payload.cargo                           = RCAIDE.Library.Components.Component() 
+    vehicle.payload.cargo.tag                       = 'cargo'   
     vehicle.payload.cargo.mass_properties.mass      = payload.cargo    
 
     ##-------------------------------------------------------------------------------             
@@ -252,7 +255,7 @@ def compute_operating_empty_weight(vehicle,settings=None,
                         W_engine_jet                   = Propulsion.compute_jet_engine_weight(thrust_sls)
                         total_propulsor_mass           = Propulsion.integrated_propulsion(W_engine_jet) 
                         propulsor.mass_properties.mass = total_propulsor_mass 
-                        W_energy_network_total  += total_propulsor_mass 
+                        W_energy_network_total         += total_propulsor_mass 
                         number_of_engines += 1             
                  
         # Electric-Powered Propulsors  
@@ -272,8 +275,7 @@ def compute_operating_empty_weight(vehicle,settings=None,
                     motor_mass = propulsor.motor.mass_properties.mass                            
                     W_energy_network.motors += motor_mass 
                     W_energy_network_total  += motor_mass
-                  
-    network.mass_properties.mass = W_energy_network_total
+                   
     W_energy_network_cumulative += W_energy_network_total
     
     ##-------------------------------------------------------------------------------                 
@@ -439,20 +441,30 @@ def compute_operating_empty_weight(vehicle,settings=None,
         vehicle.landing_gear.main   =  RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear()   
     vehicle.landing_gear.main.mass  = output.structural_breakdown.main_landing_gear  
 
+
+
     control_systems                         = RCAIDE.Library.Components.Component()
+    control_systems.tag                     = 'control_systems'  
     control_systems.mass_properties.mass    = output.systems_breakdown.control_systems
     electrical_systems                      = RCAIDE.Library.Components.Component()
+    electrical_systems.tag                  = 'electrical_systems'
     electrical_systems.mass_properties.mass = output.systems_breakdown.electrical
     furnishings                             = RCAIDE.Library.Components.Component()
+    furnishings.tag                         = 'furnishings'
     furnishings.mass_properties.mass        = output.systems_breakdown.furnish
-    avionics                                = RCAIDE.Library.Components.Systems.Avionics()
-    avionics.mass_properties.mass           = output.systems_breakdown.avionics + output.systems_breakdown.instruments
     air_conditioner                         = RCAIDE.Library.Components.Component() 
+    air_conditioner.tag                     = 'air_conditioner'
     air_conditioner.mass_properties.mass    = output.systems_breakdown.air_conditioner
     apu                                     = RCAIDE.Library.Components.Component()
+    apu.tag                                 = 'apu'
     apu.mass_properties.mass                = output.systems_breakdown.apu
     hydraulics                              = RCAIDE.Library.Components.Component()
+    hydraulics.tag                          = 'hydraulics' 
     hydraulics.mass_properties.mass         = output.systems_breakdown.hydraulics
+    avionics                                = RCAIDE.Library.Components.Systems.Avionics()
+    avionics.mass_properties.mass           = output.systems_breakdown.avionics + output.systems_breakdown.instruments
+    optionals                               = RCAIDE.Library.Components.Component()
+    optionals.tag                           = 'optionals'
     optionals                               = RCAIDE.Library.Components.Component()
     optionals.mass_properties.mass          = output.operational_items.operating_items_less_crew
     
