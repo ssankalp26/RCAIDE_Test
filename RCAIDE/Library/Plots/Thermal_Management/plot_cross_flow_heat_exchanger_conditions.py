@@ -88,32 +88,32 @@ def plot_cross_flow_heat_exchanger_conditions(cross_flow_hex, results, coolant_l
         segment_tag  = results.segments[i].tag
         segment_name = segment_tag.replace('_', ' ') 
  
-        axis_1.plot(time, effectiveness_HEX, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width, label = segment_name) 
+        axis_1.plot(time, effectiveness_HEX, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name) 
         axis_1.set_ylabel(r'Effectiveness') 
         axis_1.set_xlabel(r'Time (mins)')
         set_axes(axis_1)      
 
-        axis_2.plot(time,  inlet_air_temperature, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+        axis_2.plot(time,  inlet_air_temperature, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
         axis_2.set_ylabel(r'Air Temp. (K)') 
         axis_2.set_xlabel(r'Time (mins)')
         set_axes(axis_2)    
         
-        axis_3.plot(time, coolant_mass_flow_rate, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+        axis_3.plot(time, coolant_mass_flow_rate, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
         axis_3.set_ylabel(r'Coolant $\dot{m}$ (kg/s)')
         axis_3.set_xlabel(r'Time (mins)')
         set_axes(axis_3) 
 
-        axis_4.plot(time, air_mass_flow_rate, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+        axis_4.plot(time, air_mass_flow_rate, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
         axis_4.set_ylabel(r'Air $\dot{m}$ (kg/s)')
         axis_4.set_xlabel(r'Time (mins)')
         set_axes(axis_4)                               
  
-        axis_5.plot(time, power/1000, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+        axis_5.plot(time, power/1000, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
         axis_5.set_ylabel(r'Power (KW)')
         axis_5.set_xlabel(r'Time (mins)')
         set_axes(axis_5)    
 
-        axis_6.plot(time, inlet_air_pressure/10e6 , color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+        axis_6.plot(time, inlet_air_pressure/10e6 , color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
         axis_6.set_ylabel(r'Air Pres. (MPa)')
         axis_6.set_xlabel(r'Time (mins)')
         set_axes(axis_6) 
@@ -122,12 +122,12 @@ def plot_cross_flow_heat_exchanger_conditions(cross_flow_hex, results, coolant_l
         b_i += 1 
             
     if show_legend:     
-        leg_1 =  fig_1.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
-        leg_2 =  fig_2.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
-        leg_3 =  fig_3.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
-        leg_4 =  fig_4.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
-        leg_5 =  fig_5.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
-        leg_6 =  fig_6.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg_1 =  fig_1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_2 =  fig_2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_3 =  fig_3.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_4 =  fig_4.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_5 =  fig_5.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_6 =  fig_6.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
         leg_1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'}) 
         leg_2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'}) 
         leg_3.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'}) 

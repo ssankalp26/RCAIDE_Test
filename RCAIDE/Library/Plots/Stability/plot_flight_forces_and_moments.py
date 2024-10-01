@@ -94,7 +94,7 @@ def plot_flight_forces_and_moments(results,
         set_axes(axis_6)   
  
     if show_legend:    
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg =  fig.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
     # Adjusting the sub-plots for legend 

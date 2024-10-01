@@ -89,40 +89,33 @@ def plot_altitude_sfc_weight(results,
                 fuel_lines  = network.fuel_lines 
                 for bus in busses:
                     for j ,  propulsor in enumerate(bus.propulsors):
-                        eta = results.segments[i].conditions.energy[bus.tag][propulsor.tag].throttle[:,0]  
-                        if j == 0: 
-                            axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name  )
-                        else:
-                            axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name)  
+                        eta = results.segments[i].conditions.energy[bus.tag][propulsor.tag].throttle[:,0]   
+                        axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)  
                 for fuel_line in fuel_lines:  
-                    for j ,  propulsor in enumerate(fuel_line.propulsors):
-                        eta = results.segments[i].conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0]
+                    for j ,  propulsor in enumerate(fuel_line.propulsors): 
                         eta = results.segments[i].conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0]   
-                        axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name  )  
-        
-        if i == 0:
-            axis_2.plot(time, Weight/1000 , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name) 
-        else:
-            axis_2.plot(time, Weight/1000 , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name) 
+                        axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name  )  
+         
+        axis_2.plot(time, Weight/1000 , color = line_colors[i], marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name) 
         axis_2.set_ylabel(r'Weight (kN)')
         axis_2.set_xlabel('Time (mins)')
         set_axes(axis_2) 
 
-        axis_3.plot(time, sfc, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)
+        axis_3.plot(time, sfc, color = line_colors[i], marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
         axis_3.set_xlabel('Time (mins)')
         axis_3.set_ylabel(r'SFC (lb/lbf-hr)')
         set_axes(axis_3) 
 
-        axis_4.plot(time, mdot, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)
+        axis_4.plot(time, mdot, color = line_colors[i], marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
         axis_4.set_xlabel('Time (mins)')
         axis_4.set_ylabel(r'Fuel Rate (kg/s)')
         set_axes(axis_4)     
     
     if show_legend:
-        leg_1 =  fig_1.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
-        leg_2 =  fig_2.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
-        leg_3 =  fig_3.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
-        leg_4 =  fig_4.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg_1 =  fig_1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_2 =  fig_2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_3 =  fig_3.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_4 =  fig_4.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
         leg_1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'}) 
         leg_2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
         leg_3.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'}) 

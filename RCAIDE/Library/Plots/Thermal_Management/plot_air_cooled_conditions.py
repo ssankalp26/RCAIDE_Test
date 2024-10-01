@@ -65,12 +65,12 @@ def plot_air_cooled_conditions(air_cooled, results, coolant_line, save_figure,sh
         segment_name               = segment_tag.replace('_', ' ') 
 
                          
-        axis_1.plot(time, effectiveness, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width, label = segment_name)
+        axis_1.plot(time, effectiveness, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
         axis_1.set_ylabel(r'Effectiveness') 
         axis_1.set_xlabel(r'Time (mins)')
         set_axes(axis_1)     
          
-        axis_2.plot(time, total_heat_removed, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+        axis_2.plot(time, total_heat_removed, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
         axis_2.set_ylabel(r'Heat Removed (W)')
         axis_2.set_xlabel(r'Time (mins)')
         set_axes(axis_2) 
@@ -78,11 +78,10 @@ def plot_air_cooled_conditions(air_cooled, results, coolant_line, save_figure,sh
         b_i += 1 
             
     if show_legend:    
-        leg_1 =  fig_1.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
-        leg_2 =  fig_2.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg_1 =  fig_1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_2 =  fig_2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
         leg_1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})  
-        leg_2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})  
-       
+        leg_2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})   
     
     # Adjusting the sub-plots for legend 
     fig_1.subplots_adjust(top=0.8) 
