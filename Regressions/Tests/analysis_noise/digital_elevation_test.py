@@ -26,7 +26,7 @@ from NASA_X57    import vehicle_setup, configs_setup
 #   Main
 # ---------------------------------------------------------------------- 
 def main():    
-    microphone_terrain_data =  generate_terrain_elevated_microphone_locations(topography_file   ='LA_Metropolitan_Area.txt',
+    microphone_terrain_data =  generate_terrain_elevated_microphone_locations(topography_file='LA_Metropolitan_Area.txt',
                                                            ground_microphone_x_resolution    = 201,  
                                                            ground_microphone_y_resolution    = 101, 
                                                            ground_microphone_x_stencil       = 1,   
