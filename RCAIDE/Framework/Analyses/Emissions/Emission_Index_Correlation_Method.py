@@ -17,18 +17,20 @@ from .Emissions            import Emissions
 # ----------------------------------------------------------------------------------------------------------------------
 ## @ingroup Analyses-Emissions
 class Emission_Index_Correlation_Method(Emissions): 
-    """ Emissions Index Correlation Method
+    """ 
+    Emissions Index Correlation Method
     """    
     
     def __defaults__(self): 
-        """This sets the default values and methods for the analysis.
+        """
+        This sets the default values and methods for the analysis.
     
-            Assumptions:
-            None
+        Assumptions:
+        None
     
-            Source:
-            None 
-            """ 
+        Source:
+        None 
+        """ 
 
         # build the evaluation process
         compute                         = Process()  
@@ -39,13 +41,25 @@ class Emission_Index_Correlation_Method(Emissions):
         return
             
     def initialize(self):   
+        """
+        This function computes the emissions of different species from the Emission Indices 
+        available in literature.
+    
+        Assumptions:
+        None
+    
+        Source:
+        None 
+        """         
+        
         compute   =  self.process.compute     
         compute.emissions  = evaluate_correlation_emissions_indices
         return 
 
 
     def evaluate(self,segment):
-        """The default evaluate function.
+        """
+        The default evaluate function.
 
         Assumptions:
         None

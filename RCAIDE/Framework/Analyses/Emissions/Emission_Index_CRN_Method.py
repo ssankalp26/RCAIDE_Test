@@ -19,18 +19,20 @@ import numpy as  np
 # ----------------------------------------------------------------------------------------------------------------------
 ## @ingroup Analyses-Emissions
 class Emission_Index_CRN_Method(Emissions): 
-    """ Emissions Index Chemical Reactor Network Method
+    """ 
+    Emissions Index Chemical Reactor Network Method
     """    
     
     def __defaults__(self): 
-        """This sets the default values and methods for the analysis.
+        """
+        This sets the default values and methods for the analysis.
     
-            Assumptions:
-            None
+        Assumptions:
+        None
     
-            Source:
-            None 
-            """
+        Source:
+        None 
+        """
 
         # conditions table, used for surrogate model training
         self.training                   = Data() 
@@ -50,7 +52,23 @@ class Emission_Index_CRN_Method(Emissions):
         
         return
     
-    def initialize(self):  
+    def initialize(self):
+        
+        """
+        This function defines the analysis of the combustor emisisons with the CRN method.
+        If a surrogate is selected, a function to train the data is executed, followed by
+        the surrogate definition. Consequently, the emissions of different species is 
+        retrieved from the surrogate Emission Indexes.
+        If the surrogate is not required, the Emission Index is computed directly from the
+        CRN method.
+    
+        Assumptions:
+        None
+    
+        Source:
+        None 
+        """        
+        
         use_surrogate   = self.settings.use_surrogate  
 
         # If we are using the surrogate

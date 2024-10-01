@@ -31,7 +31,7 @@ def evaluate_surrogate(state,settings,vehicle):
         aerodynamics : VLM analysis  [unitless]
         state        : flight conditions     [unitless]
         settings     : VLM analysis settings [unitless]
-        vehicle     : vehicle configuration [unitless] 
+        vehicle      : vehicle configuration [unitless] 
         
     Returns: 
         None  

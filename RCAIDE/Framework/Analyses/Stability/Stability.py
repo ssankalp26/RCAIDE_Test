@@ -37,8 +37,8 @@ class Stability(Analysis):
         Properties Used:
         N/A
         """   
-        self.tag     = 'stability'
-        self.vehicle = Data()
+        self.tag      = 'stability'
+        self.vehicle  = Data()
         self.settings = Data()
  
         return
