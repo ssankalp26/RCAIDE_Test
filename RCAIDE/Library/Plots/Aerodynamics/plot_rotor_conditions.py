@@ -123,22 +123,22 @@ def plot_propulsor_data(results,distributor,propulsor,axis_1,axis_2,axis_3,axis_
         angle        =  bus_results[propulsor.tag].commanded_thrust_vector_angle[:,0]  
         segment_tag  =  results.segments[i].tag
         segment_name = segment_tag.replace('_', ' ')  
-        axis_1.plot(time,rpm, color = line_colors[i], marker = ps.markers[pi] , marker = ps.markers[0] , linewidth = ps.line_width, label = segment_name) 
+        axis_1.plot(time,rpm, color = line_colors[i], marker = ps.markers[pi],markersize = ps.marker_size , linewidth = ps.line_width, label = segment_name) 
         axis_1.set_ylabel(r'RPM')
         axis_1.set_xlabel('Time (mins)')
         set_axes(axis_1)    
          
-        axis_2.plot(time, angle/Units.degrees, color = line_colors[i], marker = ps.markers[pi] , marker = ps.markers[0] , linewidth = ps.line_width, label = segment_name)
+        axis_2.plot(time, angle/Units.degrees, color = line_colors[i], marker = ps.markers[pi] ,markersize = ps.marker_size , linewidth = ps.line_width, label = segment_name)
         axis_2.set_ylabel(r'Rotor Angle')
         axis_2.set_xlabel('Time (mins)')
         set_axes(axis_2) 
  
-        axis_3.plot(time,thrust, color = line_colors[i], marker = ps.markers[pi] , marker = ps.markers[0], linewidth = ps.line_width, label = segment_name)
+        axis_3.plot(time,thrust, color = line_colors[i], marker = ps.markers[pi],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
         axis_3.set_ylabel(r'Thrust (N)')
         axis_3.set_xlabel('Time (mins)')
         set_axes(axis_3) 
          
-        axis_4.plot(time,torque, color = line_colors[i], marker = ps.markers[pi] , marker = ps.markers[0], linewidth = ps.line_width, label = segment_name)
+        axis_4.plot(time,torque, color = line_colors[i], marker = ps.markers[pi] ,markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
         axis_4.set_ylabel(r'Torque (N-m)')
         axis_4.set_xlabel('Time (mins)')
         set_axes(axis_4)     
