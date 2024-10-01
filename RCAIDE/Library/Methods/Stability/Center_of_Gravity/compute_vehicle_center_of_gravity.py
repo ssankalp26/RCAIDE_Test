@@ -7,9 +7,7 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-# RCAIDE imports 
-from Legacy.trunk.S.Components import Physical_Component
-from Legacy.trunk.S.Components.Energy import Energy_Component # Added this
+# RCAIDE imports   
 from RCAIDE.Library.Components import Component 
 from RCAIDE.Library.Methods.Weights.mass_and_intertia_functions import *   # Updated : 
 from RCAIDE.Library.Methods.Stability.Common import * 
@@ -52,25 +50,25 @@ def compute_vehicle_center_of_gravity(vehicle):
 
     for key in vehicle.keys():
         item = vehicle[key]
-        if isinstance(item,Physical_Component.Container) or isinstance(item,Component.Container):
+        if isinstance(item,Component.Container):
             Moment, Mass  = sum_moment(item)  
             total_moment += Moment
             total_mass   += Mass 
-    for network in vehicle.networks:
-        for net_key in network.keys():
-            net_item = network[net_key] 
-            if isinstance(net_item,Energy_Component.Container):
-                Moment, Mass  = sum_moment(net_item)  
-                total_moment += Moment
-                total_mass   += Mass  
-        for bus in network.busses: 
-            Moment, Mass  = sum_moment(bus)  
-            total_moment += Moment
-            total_mass   += Mass   
-        for fuel_line in network.fuel_lines: 
-            Moment, Mass  = sum_moment(fuel_line)  
-            total_moment += Moment
-            total_mass   += Mass            
+    #for network in vehicle.networks:
+        #for net_key in network.keys():
+            #net_item = network[net_key] 
+            #if isinstance(net_item,Energy_Component.Container):
+                #Moment, Mass  = sum_moment(net_item)  
+                #total_moment += Moment
+                #total_mass   += Mass  
+        #for bus in network.busses: 
+            #Moment, Mass  = sum_moment(bus)  
+            #total_moment += Moment
+            #total_mass   += Mass   
+        #for fuel_line in network.fuel_lines: 
+            #Moment, Mass  = sum_moment(fuel_line)  
+            #total_moment += Moment
+            #total_mass   += Mass            
             
     vehicle.mass_properties.center_of_gravity = total_moment/total_mass 
             

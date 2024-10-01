@@ -248,9 +248,11 @@ def compute_operating_empty_weight(vehicle,settings=None,
                     number_of_tanks +=  1
                 for propulsor in fuel_line.propulsors:
                     if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan):
-                        thrust_sls  = propulsor.sealevel_static_thrust  
-                        W_engine_jet = Propulsion.compute_jet_engine_weight(thrust_sls)
-                        W_energy_network_total  += Propulsion.integrated_propulsion(W_engine_jet) 
+                        thrust_sls                     = propulsor.sealevel_static_thrust  
+                        W_engine_jet                   = Propulsion.compute_jet_engine_weight(thrust_sls)
+                        total_propulsor_mass           = Propulsion.integrated_propulsion(W_engine_jet) 
+                        propulsor.mass_properties.mass = total_propulsor_mass 
+                        W_energy_network_total  += total_propulsor_mass 
                         number_of_engines += 1             
                  
         # Electric-Powered Propulsors  

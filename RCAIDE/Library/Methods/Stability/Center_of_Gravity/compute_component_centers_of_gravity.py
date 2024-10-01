@@ -52,8 +52,7 @@ def compute_component_centers_of_gravity(vehicle, nose_load = 0.06):
             wing.sweeps.leading_edge = convert_sweep(wing,old_ref_chord_fraction = 0.25 ,new_ref_chord_fraction = 0.0)
         
         if isinstance(wing,C.Wings.Main_Wing):
-                wing.mass_properties.center_of_gravity[0][0] = .05*wing.chords.mean_aerodynamic +wing.aerodynamic_center[0]             
-                
+                wing.mass_properties.center_of_gravity[0][0] = .05*wing.chords.mean_aerodynamic +wing.aerodynamic_center[0]           
             
         elif isinstance(wing,C.Wings.Horizontal_Tail):
             chord_length_h_tail_35_percent_semi_span  = compute_chord_length_from_span_location(wing,.35*wing.spans.projected*.5)
@@ -76,12 +75,37 @@ def compute_component_centers_of_gravity(vehicle, nose_load = 0.06):
     # Go through all the networks
     network_moment = 0.
     network_mass   = 0.
-    for net in vehicle.networks:  
-        for key,Comp in net.items():
-            if isinstance(Comp,Component):
-                network_moment += net[key].mass_properties.mass*(np.sum(np.array(net[key].origin),axis=0) +
-                                                                     net[key].mass_properties.center_of_gravity)
-                network_mass   += net[key].mass_properties.mass*len(net[key].origin)
+    for network in vehicle.networks:
+        for bus in network.busses:
+            for tag, item in  bus.items():
+                if tag == 'batteries':
+                    for sub_tag, sub_item in  item.items():
+                        if isinstance(sub_item,Component):
+                            network_moment += sub_item.mass_properties.mass*(np.array(sub_item.origin) + np.array( sub_item.mass_properties.center_of_gravity))
+                            network_mass   += sub_item.mass_properties.mass 
+                elif tag == 'propulsors':
+                    for sub_tag, sub_item in  item.items():
+                        if isinstance(sub_item,Component):
+                            network_moment += sub_item.mass_properties.mass*(np.array(sub_item.origin) + np.array( sub_item.mass_properties.center_of_gravity))
+                            network_mass   += sub_item.mass_properties.mass 
+                elif isinstance(item,Component):
+                    network_moment += item.mass_properties.mass*(np.array(item.origin) + np.array(item.mass_properties.center_of_gravity))
+                    network_mass   += item.mass_properties.mass                                     
+        for fuel_line in network.fuel_lines:
+            for tag, item in  fuel_line.items(): 
+                if tag == 'fuel_lines':
+                    for sub_tag, sub_item in  item.items():
+                        if isinstance(sub_item,Component):
+                            network_moment += sub_item.mass_properties.mass*(np.array(sub_item.origin) + np.array( sub_item.mass_properties.center_of_gravity))
+                            network_mass   += sub_item.mass_properties.mass
+                elif tag == 'propulsors':
+                    for sub_tag, sub_item in  item.items():
+                        if isinstance(sub_item,Component):
+                            network_moment += sub_item.mass_properties.mass*(np.array(sub_item.origin) + np.array( sub_item.mass_properties.center_of_gravity))
+                            network_mass   += sub_item.mass_properties.mass 
+                elif isinstance(item,Component):
+                    network_moment += item.mass_properties.mass*(np.array(item.origin) + np.array(item.mass_properties.center_of_gravity))
+                    network_mass   += item.mass_properties.mass             
 
     if network_mass!= 0.:
         propulsion_cg = network_moment/network_mass
@@ -183,9 +207,7 @@ def compute_component_centers_of_gravity(vehicle, nose_load = 0.06):
         control_systems.mass_properties.center_of_gravity[0][0]    = vehicle.wings.main_wing.mass_properties.center_of_gravity[0][0] + \
             .1*vehicle.wings.main_wing.chords.mean_aerodynamic 
     except:
-        pass         
-    
-    
+        pass       
 
     try:   
         electrical_systems                                         = vehicle.systems.electrical_systems
