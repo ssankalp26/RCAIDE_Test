@@ -111,7 +111,7 @@ def base_analysis(vehicle):
     
     
     aerodynamics = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
-    aerodynamics.geometry                            = vehicle
+    aerodynamics.vehicle                             = vehicle
     aerodynamics.settings.drag_coefficient_increment = drag_area/vehicle.reference_area
     analyses.append(aerodynamics)
 
@@ -152,7 +152,7 @@ def mission_setup(analyses):
     base_segment = Segments.Segment()
     base_segment.temperature_deviation  = 15
     # VSTALL Calculation  
-    vehicle        = analyses.base.aerodynamics.geometry
+    vehicle        = analyses.base.aerodynamics.vehicle
     vehicle_mass   = vehicle.mass_properties.max_takeoff
     reference_area = vehicle.reference_area 
     Vstall         = estimate_stall_speed(vehicle_mass,reference_area,altitude = 0.0,maximum_lift_coefficient = 1.2)
