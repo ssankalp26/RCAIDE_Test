@@ -239,12 +239,7 @@ def import_tests():
     try:
         import geopy
     except ImportError:
-        raise ImportError('geopy is required for this package')
-
-    try:
-        import cantera
-    except ImportError:
-        raise ImportError('cantera is required for this package')    
+        raise ImportError('geopy is required for this package') 
     
     try:
         import importlib_metadata

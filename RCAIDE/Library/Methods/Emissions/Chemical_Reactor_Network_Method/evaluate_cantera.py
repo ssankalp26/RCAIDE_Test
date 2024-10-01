@@ -6,17 +6,19 @@
 
 # RCAIDE imports
 from   RCAIDE.Framework.Core import Data  
-import cantera               as ct 
 import pandas                as pd
 import numpy                 as np
-import os 
+import os
+
+try: 
+    import cantera               as ct     
+except ImportError:
+    print('cantera required: run pip install cantera')
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  evaluate_cantera
-# ----------------------------------------------------------------------------------------------------------------------  
-
-def evaluate_cantera(combustor,T,P,mdot,FAR):
-    
+# ----------------------------------------------------------------------------------------------------------------------   
+def evaluate_cantera(combustor,T,P,mdot,FAR): 
     '''
     This model estimates the Emission Index of various species deriving 
     from the combustion of fuel. The model is based on a Chemical Reactor 

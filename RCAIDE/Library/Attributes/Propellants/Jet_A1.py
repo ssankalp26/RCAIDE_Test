@@ -9,8 +9,7 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
 
 from .Propellant import Propellant
-from RCAIDE.Framework.Core import Data
-import cantera as ct
+from RCAIDE.Framework.Core import Data 
 import  os
 
 # ---------------------------------------------------------------------------------------------------------------------- 
