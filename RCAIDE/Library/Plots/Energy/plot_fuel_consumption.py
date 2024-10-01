@@ -78,30 +78,24 @@ def plot_fuel_consumption(results,
             fuel     = segment.conditions.weights.fuel_mass[:,0]
             alt_fuel = segment.conditions.weights.additional_fuel_mass[:,0]
 
-            if i == 0:
-
+            if i == 0: 
                 plot_fuel     = np.negative(fuel)
-                plot_alt_fuel = np.negative(alt_fuel)
-
+                plot_alt_fuel = np.negative(alt_fuel) 
                 axes.plot( time , plot_fuel , 'ro-', marker = ps.markers[0], linewidth = ps.line_width , label = 'fuel')
                 axes.plot( time , plot_alt_fuel , 'bo-', marker = ps.markers[0], linewidth = ps.line_width, label = 'additional fuel' )
-                axes.plot( time , np.add(plot_fuel, plot_alt_fuel), 'go-', marker = ps.markers[0], linewidth = ps.line_width, label = 'total fuel' )
-
+                axes.plot( time , np.add(plot_fuel, plot_alt_fuel), 'go-', marker = ps.markers[0], linewidth = ps.line_width, label = 'total fuel' ) 
                 axes.legend(loc='center right')   
 
             else:
                 prev_seg_fuel       += results.segments[i-1].conditions.weights.fuel_mass[-1]
-                prev_seg_extra_fuel += results.segments[i-1].conditions.weights.additional_fuel_mass[-1]
-
+                prev_seg_extra_fuel += results.segments[i-1].conditions.weights.additional_fuel_mass[-1] 
                 current_fuel         = np.add(fuel, prev_seg_fuel)
-                current_alt_fuel     = np.add(alt_fuel, prev_seg_extra_fuel)
-
+                current_alt_fuel     = np.add(alt_fuel, prev_seg_extra_fuel) 
                 axes.plot( time , np.negative(current_fuel)  , 'ro-' , marker = ps.markers[0], linewidth = ps.line_width)
                 axes.plot( time , np.negative(current_alt_fuel ), 'bo-', marker = ps.markers[0], linewidth = ps.line_width)
                 axes.plot( time , np.negative(current_fuel + current_alt_fuel), 'go-', marker = ps.markers[0], linewidth = ps.line_width)
 
-        else:
-            
+        else: 
             initial_weight  = results.segments[0].conditions.weights.total_mass[:,0][0] 
             fuel            = results.segments[i].conditions.weights.total_mass[:,0]
             time            = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min 
@@ -109,8 +103,7 @@ def plot_fuel_consumption(results,
             axes.plot( time, total_fuel, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name)
 
     axes.set_ylabel('Fuel (kg)')
-    axes.set_xlabel('Time (min)')
-
+    axes.set_xlabel('Time (min)') 
     set_axes(axes)  
 
     if show_legend:    
@@ -118,11 +111,7 @@ def plot_fuel_consumption(results,
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
     # Adjusting the sub-plots for legend 
-    fig.subplots_adjust(top=0.8)
-    
-    # set title of plot 
-    title_text    = 'Aircraft Fuel Burnt'      
-    fig.suptitle(title_text) 
+    fig.subplots_adjust(top=0.8) 
 
     if save_figure:
         plt.savefig(save_filename + file_type)  

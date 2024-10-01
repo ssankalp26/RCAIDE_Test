@@ -73,20 +73,14 @@ def plot_propulsor_throttles(results,
             fuel_lines  = network.fuel_lines 
             for bus in busses:
                 for j ,  propulsor in enumerate(bus.propulsors):
-                    eta = results.segments[i].conditions.energy[bus.tag][propulsor.tag].throttle[:,0]  
-                    if j == 0: 
-                        axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name + ': '+ propulsor.tag )
-                    else:
-                        axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width) 
+                    eta = results.segments[i].conditions.energy[bus.tag][propulsor.tag].throttle[:,0]   
+                    axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width,markersize = ps.marker_size, label = segment_name + ': '+ propulsor.tag ) 
                             
             for fuel_line in fuel_lines:  
                 for j ,  propulsor in enumerate(fuel_line.propulsors):
                     eta = results.segments[i].conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0]
-                    eta = results.segments[i].conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0]  
-                    if j == 0: 
-                        axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name + ': '+ propulsor.tag )
-                    else:
-                        axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)
+                    eta = results.segments[i].conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0]   
+                    axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width,markersize = ps.marker_size, label = segment_name + ': '+ propulsor.tag ) 
                                  
     
     if show_legend:
@@ -94,12 +88,8 @@ def plot_propulsor_throttles(results,
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
     # Adjusting the sub-plots for legend 
-    fig.subplots_adjust(top=0.8)
-    
-    # set title of plot 
-    title_text    = 'Throttle'      
-    fig.suptitle(title_text)
+    fig.subplots_adjust(top=0.8) 
     
     if save_figure:
-        plt.savefig(save_filename + file_type)   
+        fig.savefig(save_filename + file_type)   
     return fig 
