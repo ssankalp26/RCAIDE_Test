@@ -477,14 +477,13 @@ def mission_setup(analyses):
     segment = Segments.Cruise.Constant_Throttle_Constant_Altitude(base_segment)
     segment.tag = "cruise_2" 
     segment.analyses.extend(analyses.base)  
+    segment.state.numerics.number_of_control_points                        = 12 
     segment.altitude                                                       = 11. * Units.km  
-    segment.air_speed_end                                                  = 200 * Units.m / Units.s 
-    segment.throttle                                                       = 0.4
-    segment.distance                                                       = 500 * Units.km
-
-    base_segment.state.numerics.number_of_control_points = 4      
-                      
-    # define flight dynamics to model                   
+    segment.air_speed_end                                                  = 215 * Units.m / Units.s  
+    segment.throttle                                                       = 0.75
+    segment.distance                                                       = 200 * Units.km  
+                     
+    # define flight dynamics to model                  
     segment.flight_dynamics.force_x                                        = True  
     segment.flight_dynamics.force_z                                        = True     
           
@@ -497,7 +496,7 @@ def mission_setup(analyses):
     segment.assigned_control_variables.acceleration.initial_guess_values   = [[-1]] 
     segment.assigned_control_variables.body_angle.active                   = True   
     segment.assigned_control_variables.body_angle.initial_guess            = True 
-    segment.assigned_control_variables.body_angle.initial_guess_values     = [[0*Units.degrees]]   
+    segment.assigned_control_variables.body_angle.initial_guess_values     = [[0*Units.degrees]]     
         
     mission.append_segment(segment)   
     
@@ -554,20 +553,20 @@ def mission_setup(analyses):
     segment     = Segments.Cruise.Curved_Constant_Radius_Constant_Speed_Constant_Altitude(base_segment)
     segment.tag = "curved_cruise" 
     segment.analyses.extend( analyses.base )   
-    segment.altitude                                                            = 5  * Units.km  
-    segment.air_speed                                                           = 240 * Units['mph']
-    segment.turn_radius                                                         = 1000 * Units.mile  
-    segment.start_true_course                                                   = 10 * Units.degrees 
-    segment.turn_angle                                                          = -1.0 * Units.degrees # + indicated right hand turn, negative indicates left-hand turn
+    segment.altitude                                                  = 5  * Units.km  
+    segment.air_speed                                                 = 240 * Units['mph']
+    segment.turn_radius                                               = 1000 * Units.mile  
+    segment.start_true_course                                         = 10 * Units.degrees 
+    segment.turn_angle                                                = -1.0 * Units.degrees # + indicated right hand turn, negative indicates left-hand turn
     
     # define flight dynamics to model 
-    segment.flight_dynamics.force_x                                             = True    
-    segment.flight_dynamics.force_z                                             = True    
+    segment.flight_dynamics.force_x                                   = True    
+    segment.flight_dynamics.force_z                                   = True    
                 
     # define flight controls              
-    segment.assigned_control_variables.throttle.active                          = True           
-    segment.assigned_control_variables.throttle.assigned_propulsors             = [['starboard_propulsor','port_propulsor']]   
-    segment.assigned_control_variables.body_angle.active                        = True   
+    segment.assigned_control_variables.throttle.active                = True           
+    segment.assigned_control_variables.throttle.assigned_propulsors   = [['starboard_propulsor','port_propulsor']]   
+    segment.assigned_control_variables.body_angle.active              = True   
     
     mission.append_segment(segment)
     
@@ -639,12 +638,12 @@ def mission_setup(analyses):
     segment = Segments.Cruise.Constant_Dynamic_Pressure_Constant_Altitude_Loiter(base_segment)
     segment.tag = "loiter_1" 
     segment.analyses.extend(analyses.base) 
-    segment.altitude                                                  = 2500  * Units.feet
-    segment.dynamic_pressure                                          = 12000 * Units.pascals  
+    segment.altitude                                                 = 2500  * Units.feet
+    segment.dynamic_pressure                                         = 12000 * Units.pascals  
                 
     # define flight dynamics to model             
-    segment.flight_dynamics.force_x                                   = True  
-    segment.flight_dynamics.force_z                                   = True     
+    segment.flight_dynamics.force_x                                  = True  
+    segment.flight_dynamics.force_z                                  = True     
     
     # define flight controls 
     segment.assigned_control_variables.throttle.active               = True           

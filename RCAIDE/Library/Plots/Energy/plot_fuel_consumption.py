@@ -72,9 +72,7 @@ def plot_fuel_consumption(results,
         segment_tag  =  results.segments[i].tag
         segment_name = segment_tag.replace('_', ' ')        
 
-        if "has_additional_fuel" in segment.conditions.weights and segment.conditions.weights.has_additional_fuel == True:
-
-
+        if "has_additional_fuel" in segment.conditions.weights and segment.conditions.weights.has_additional_fuel == True: 
             fuel     = segment.conditions.weights.fuel_mass[:,0]
             alt_fuel = segment.conditions.weights.additional_fuel_mass[:,0]
 

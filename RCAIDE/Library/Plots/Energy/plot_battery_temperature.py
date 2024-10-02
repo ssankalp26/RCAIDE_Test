@@ -66,38 +66,44 @@ def plot_battery_temperature(results,
     fig_3.set_size_inches(width,height)  
     axis_1 = fig_1.add_subplot(1,1,1)
     axis_2 = fig_2.add_subplot(1,1,1) 
-    axis_3 = fig_3.add_subplot(1,1,1)     
-    b_i = 0 
+    axis_3 = fig_3.add_subplot(1,1,1)
+    
     for network in results.segments[0].analyses.energy.vehicle.networks: 
         busses  = network.busses
         for bus in busses: 
-            for battery in bus.battery_modules:   
-                
-                for i in range(len(results.segments)):
-                    bus_results         = results.segments[i].conditions.energy[bus.tag]
-                    time                = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min                      
-                    battery_conditions  = results.segments[i].conditions.energy[bus.tag].battery_modules[battery.tag]  
-                    cell_temp           = battery_conditions.cell.temperature[:,0]
-                    cell_charge         = battery_conditions.cell.charge_throughput[:,0]
-                    pack_Q              = bus_results.heat_energy_generated[:,0]
-            
-                    segment_tag  =  results.segments[i].tag
-                    segment_name = segment_tag.replace('_', ' ')    
-                    axis_1.plot(time,cell_temp, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name) 
-                    axis_1.set_ylabel(r'Temperature (K)') 
-                    axis_1.set_xlabel('Time (mins)')
-                    set_axes(axis_1)        
-                    
-                    axis_2.plot(time, cell_charge, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
-                    axis_2.set_xlabel('Time (mins)')
-                    axis_2.set_ylabel(r'Charge Throughput (Ah)')
-                    set_axes(axis_2)   
-
-                    axis_3.plot(time, pack_Q/1000, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)   
-                    axis_3.set_xlabel('Time (mins)')
-                    axis_3.set_ylabel(r'$\dot{Q}_{heat}$ (kW)')
-                    set_axes(axis_3)
-                b_i += 1
+            for b_i, battery in enumerate(bus.battery_modules):
+                if b_i == 0 or bus.identical_batteries == False:                
+                    for i in range(len(results.segments)):
+                        bus_results         = results.segments[i].conditions.energy[bus.tag]
+                        time                = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min                      
+                        battery_conditions  = results.segments[i].conditions.energy[bus.tag].battery_modules[battery.tag]  
+                        cell_temp           = battery_conditions.cell.temperature[:,0]
+                        cell_charge         = battery_conditions.cell.charge_throughput[:,0]
+                        pack_Q              = bus_results.heat_energy_generated[:,0]
+                        
+                        if i == 0: 
+                            axis_1.plot(time,cell_temp, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name) 
+                        else:
+                            axis_1.plot(time,cell_temp, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width) 
+                        axis_1.set_ylabel(r'Temperature (K)') 
+                        axis_1.set_xlabel('Time (mins)')
+                        set_axes(axis_1)
+                        
+                        if i == 0: 
+                            axis_2.plot(time, cell_charge, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
+                        else:
+                            axis_2.plot(time, cell_charge, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width )
+                        axis_2.set_xlabel('Time (mins)')
+                        axis_2.set_ylabel(r'Charge Throughput (Ah)')
+                        set_axes(axis_2)
+                        
+                        if i == 0: 
+                            axis_3.plot(time, pack_Q/1000, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
+                        else:
+                            axis_3.plot(time, pack_Q/1000, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width )   
+                        axis_3.set_xlabel('Time (mins)')
+                        axis_3.set_ylabel(r'$\dot{Q}_{heat}$ (kW)')
+                        set_axes(axis_3) 
     
     if show_legend:           
         leg_1 =  fig_1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 

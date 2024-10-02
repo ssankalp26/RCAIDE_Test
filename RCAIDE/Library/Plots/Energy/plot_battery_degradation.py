@@ -51,7 +51,29 @@ def plot_battery_degradation(results,
                   'xtick.labelsize': ps.axis_font_size,
                   'ytick.labelsize': ps.axis_font_size,
                   'axes.titlesize': ps.title_font_size}
-    plt.rcParams.update(parameters) 
+    plt.rcParams.update(parameters)
+    
+
+
+    fig_1 = plt.figure(battery.tag  + '_'+ save_filename + '_Energy_1')
+    fig_2 = plt.figure(battery.tag  + '_'+ save_filename + '_Energy_2')
+    fig_3 = plt.figure(battery.tag  + '_'+ save_filename + '_Energy_3')
+    fig_4 = plt.figure(battery.tag  + '_'+ save_filename + '_Resistance_1')
+    fig_5 = plt.figure(battery.tag  + '_'+ save_filename + '_Resistance_2')
+    fig_6 = plt.figure(battery.tag  + '_'+ save_filename + '_Resistance_3')
+    fig_1.set_size_inches(width,height)  
+    fig_2.set_size_inches(width,height)  
+    fig_3.set_size_inches(width,height)  
+    fig_4.set_size_inches(width,height)
+    fig_5.set_size_inches(width,height)  
+    fig_6.set_size_inches(width,height)
+    
+    axis_1 = fig_1.add_subplot(1,1,1)
+    axis_2 = fig_2.add_subplot(1,1,1)
+    axis_3 = fig_3.add_subplot(1,1,1) 
+    axis_4 = fig_4.add_subplot(1,1,1)
+    axis_5 = fig_5.add_subplot(1,1,1)
+    axis_6 = fig_6.add_subplot(1,1,1)  
 
     for network in results.segments[0].analyses.energy.vehicle.networks: 
         busses  = network.busses
@@ -72,29 +94,9 @@ def plot_battery_degradation(results,
                             cycle_day[i]          = battery_conditions.cell.cycle_in_day
                             capacity_fade[i]      = battery_conditions.cell.capacity_fade_factor
                             resistance_growth[i]  = battery_conditions.cell.resistance_growth_factor
-                            charge_throughput[i]  = battery_conditions.cell.charge_throughput[-1,0]  
-    
-                        fig_1 = plt.figure(battery.tag  + '_'+ save_filename + '_Energy_1')
-                        fig_2 = plt.figure(battery.tag  + '_'+ save_filename + '_Energy_2')
-                        fig_3 = plt.figure(battery.tag  + '_'+ save_filename + '_Energy_3')
-                        fig_4 = plt.figure(battery.tag  + '_'+ save_filename + '_Resistance_1')
-                        fig_5 = plt.figure(battery.tag  + '_'+ save_filename + '_Resistance_2')
-                        fig_6 = plt.figure(battery.tag  + '_'+ save_filename + '_Resistance_3')
-                        fig_1.set_size_inches(width,height)  
-                        fig_2.set_size_inches(width,height)  
-                        fig_3.set_size_inches(width,height)  
-                        fig_4.set_size_inches(width,height)
-                        fig_5.set_size_inches(width,height)  
-                        fig_6.set_size_inches(width,height)
-                        
-                        axis_1 = fig_1.add_subplot(1,1,1)
-                        axis_2 = fig_2.add_subplot(1,1,1)
-                        axis_3 = fig_3.add_subplot(1,1,1) 
-                        axis_4 = fig_4.add_subplot(1,1,1)
-                        axis_5 = fig_5.add_subplot(1,1,1)
-                        axis_6 = fig_6.add_subplot(1,1,1) 
-                        
-                        axis_1.plot(charge_throughput, capacity_fade, color = ps.color , marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width ) 
+                            charge_throughput[i]  = battery_conditions.cell.charge_throughput[-1,0]
+                            
+                        axis_1.plot(charge_throughput, capacity_fade, color = ps.color , marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width , label = battery.tag) 
                         axis_1.set_ylabel('$E/E_0$')
                         axis_1.set_xlabel('Ah')
                         set_axes(axis_1)      
@@ -124,43 +126,8 @@ def plot_battery_degradation(results,
                         axis_6.set_xlabel('Time (days)')
                         set_axes(axis_6)             
                              
-                        fig_1.tight_layout()    
-                        fig_2.tight_layout()    
-                        fig_3.tight_layout()    
-                        fig_4.tight_layout()    
-                        fig_5.tight_layout()    
-                        fig_6.tight_layout()    
-                        if save_figure:    
-                            fig_1.savefig(save_filename + '_'+ battery.tag + file_type) 
-                            fig_2.savefig(save_filename + '_'+ battery.tag + file_type) 
-                            fig_3.savefig(save_filename + '_'+ battery.tag + file_type) 
-                            fig_4.savefig(save_filename + '_'+ battery.tag + file_type) 
-                            fig_5.savefig(save_filename + '_'+ battery.tag + file_type) 
-                            fig_6.savefig(save_filename + '_'+ battery.tag + file_type)  
-                
             else: 
-                for battery in bus.battery_modules:
-
-                    fig_1 = plt.figure(battery.tag  + save_filename + '_' + 'Energy_1')
-                    fig_2 = plt.figure(battery.tag  + save_filename + '_' + 'Energy_2')
-                    fig_3 = plt.figure(battery.tag  + save_filename + '_' + 'Energy_3')
-                    fig_4 = plt.figure(battery.tag  + save_filename + '_' + 'Resistance_1')
-                    fig_5 = plt.figure(battery.tag  + save_filename + '_' + 'Resistance_2')
-                    fig_6 = plt.figure(battery.tag  + save_filename + '_' + 'Resistance_3')
-                    fig_1.set_size_inches(width,height)  
-                    fig_2.set_size_inches(width,height)  
-                    fig_3.set_size_inches(width,height)  
-                    fig_4.set_size_inches(width,height)
-                    fig_5.set_size_inches(width,height)  
-                    fig_6.set_size_inches(width,height)
-
-                    axis_1 = fig_1.add_subplot(1,1,1)
-                    axis_2 = fig_2.add_subplot(1,1,1)
-                    axis_3 = fig_3.add_subplot(1,1,1) 
-                    axis_4 = fig_4.add_subplot(1,1,1)
-                    axis_5 = fig_5.add_subplot(1,1,1)
-                    axis_6 = fig_6.add_subplot(1,1,1)
-                    
+                for battery in bus.battery_modules: 
                     num_segs          = len(results.segments)
                     time_hrs          = np.zeros(num_segs)  
                     capacity_fade     = np.zeros_like(time_hrs)
@@ -176,7 +143,7 @@ def plot_battery_degradation(results,
                         resistance_growth[i]  = battery_conditions.cell.resistance_growth_factor
                         charge_throughput[i]  = battery_conditions.cell.charge_throughput[-1,0]  
               
-                    axis_1.plot(charge_throughput, capacity_fade, color = ps.color , marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width ) 
+                    axis_1.plot(charge_throughput, capacity_fade, color = ps.color , marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width, label = battery.tag) 
                     axis_1.set_ylabel('$E/E_0$')
                     axis_1.set_xlabel('Ah')
                     set_axes(axis_1)      
@@ -200,26 +167,25 @@ def plot_battery_degradation(results,
                     axis_5.set_ylabel('$R/R_0$')
                     axis_5.set_xlabel('Time (hrs)')
                     set_axes(axis_5)     
-                
-                    axis_6 = plt.subplot(3,2,6) 
+                 
                     axis_6.plot(cycle_day, resistance_growth, color = ps.color, marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width )
                     axis_6.set_ylabel('$R/R_0$')
                     axis_6.set_xlabel('Time (days)')
                     set_axes(axis_6)       
                     
-                    fig_1.tight_layout()    
-                    fig_2.tight_layout()    
-                    fig_3.tight_layout()    
-                    fig_4.tight_layout()    
-                    fig_5.tight_layout()    
-                    fig_6.tight_layout()    
-                    if save_figure:    
-                        fig_1.savefig(save_filename + '_'+ battery.tag + file_type) 
-                        fig_2.savefig(save_filename + '_'+ battery.tag + file_type) 
-                        fig_3.savefig(save_filename + '_'+ battery.tag + file_type) 
-                        fig_4.savefig(save_filename + '_'+ battery.tag + file_type) 
-                        fig_5.savefig(save_filename + '_'+ battery.tag + file_type) 
-                        fig_6.savefig(save_filename + '_'+ battery.tag + file_type)  
-        
+    fig_1.tight_layout()    
+    fig_2.tight_layout()    
+    fig_3.tight_layout()    
+    fig_4.tight_layout()    
+    fig_5.tight_layout()    
+    fig_6.tight_layout()    
+    if save_figure:    
+        fig_1.savefig(save_filename + '_'+ battery.tag + file_type) 
+        fig_2.savefig(save_filename + '_'+ battery.tag + file_type) 
+        fig_3.savefig(save_filename + '_'+ battery.tag + file_type) 
+        fig_4.savefig(save_filename + '_'+ battery.tag + file_type) 
+        fig_5.savefig(save_filename + '_'+ battery.tag + file_type) 
+        fig_6.savefig(save_filename + '_'+ battery.tag + file_type)  
+
     return fig_1, fig_2, fig_3, fig_4, fig_5, fig_6
 
