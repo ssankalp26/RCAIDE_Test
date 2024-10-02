@@ -441,7 +441,28 @@ def mission_setup(analyses ):
                                                                              'lift_rotor_propulsor_5','lift_rotor_propulsor_6','lift_rotor_propulsor_7','lift_rotor_propulsor_8']]
     segment.assigned_control_variables.body_angle.active             = True 
         
-    mission.append_segment(segment)        
+    mission.append_segment(segment)
+    
+
+    #------------------------------------------------------------------------------------------------------------------------------------ 
+    # Vertical Descent 
+    #------------------------------------------------------------------------------------------------------------------------------------ 
+    segment                                               = Segments.Vertical_Flight.Descent(base_segment)
+    segment.tag                                           = "Vertical_Descent" 
+    segment.analyses.extend( analyses.vertical_flight)     
+    segment.altitude_start                                = 300.0 * Units.ft   
+    segment.altitude_end                                  = 0.   * Units.ft  
+    segment.descent_rate                                  = 300. * Units['ft/min']  
+    
+    # define flight dynamics to model  
+    segment.flight_dynamics.force_z                       = True     
+    
+    # define flight controls 
+    segment.assigned_control_variables.throttle.active               = True           
+    segment.assigned_control_variables.throttle.assigned_propulsors  = [['lift_propulsor_1','lift_propulsor_2','lift_propulsor_3','lift_propulsor_4',
+                                                              'lift_propulsor_5','lift_propulsor_6','lift_propulsor_7','lift_propulsor_8']] 
+            
+    mission.append_segment(segment)       
      
     return mission
 
