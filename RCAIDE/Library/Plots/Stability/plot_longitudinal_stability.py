@@ -38,27 +38,27 @@ def plot_longitudinal_stability(results,
     # get line colors for plots 
     line_colors   = cm.inferno(np.linspace(0,0.9,len(results.segments)))     
      
-    fig1   = plt.figure(save_filename+"_Cm")
-    fig2   = plt.figure(save_filename+"_Cm/Alpha")
-    fig3   = plt.figure(save_filename+"_Static_Margin")
-    fig4   = plt.figure(save_filename+"_Elevator_Deflection")
-    fig5   = plt.figure(save_filename+"_Cm/delta")
-    fig6   = plt.figure(save_filename+"_Cl_Alpha")
+    fig_1   = plt.figure(save_filename+"_Cm")
+    fig_2   = plt.figure(save_filename+"_Cm/Alpha")
+    fig_3   = plt.figure(save_filename+"_Static_Margin")
+    fig_4   = plt.figure(save_filename+"_Elevator_Deflection")
+    fig_5   = plt.figure(save_filename+"_Cm/delta")
+    fig_6   = plt.figure(save_filename+"_Cl_Alpha")
     
-    fig1.set_size_inches(width,height)
-    fig2.set_size_inches(width,height)
-    fig3.set_size_inches(width,height)
-    fig4.set_size_inches(width,height)
-    fig5.set_size_inches(width,height)
-    fig6.set_size_inches(width,height)
+    fig_1.set_size_inches(width,height)
+    fig_2.set_size_inches(width,height)
+    fig_3.set_size_inches(width,height)
+    fig_4.set_size_inches(width,height)
+    fig_5.set_size_inches(width,height)
+    fig_6.set_size_inches(width,height)
     
 
-    axis_1 = plt.subplot(1,1,1)    
-    axis_2 = plt.subplot(1,1,1) 
-    axis_3 = plt.subplot(1,1,1)  
-    axis_4 = plt.subplot(1,1,1)  
-    axis_5 = plt.subplot(1,1,1)
-    axis_6 = plt.subplot(1,1,1) 
+    axis_1 = fig_1.add_subplot(1,1,1)    
+    axis_2 = fig_2.add_subplot(1,1,1) 
+    axis_3 = fig_3.add_subplot(1,1,1)  
+    axis_4 = fig_4.add_subplot(1,1,1)  
+    axis_5 = fig_5.add_subplot(1,1,1)
+    axis_6 = fig_6.add_subplot(1,1,1) 
     
     for i in range(len(results.segments)): 
         time       = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min
@@ -108,12 +108,12 @@ def plot_longitudinal_stability(results,
         set_axes(axis_6)    
         
     if show_legend:
-        leg1 =  fig1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
-        leg2 =  fig2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
-        leg3 =  fig3.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
-        leg4 =  fig4.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
-        leg5 =  fig5.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
-        leg6 =  fig6.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
+        leg1 =  fig_1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
+        leg2 =  fig_2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
+        leg3 =  fig_3.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
+        leg4 =  fig_4.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
+        leg5 =  fig_5.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
+        leg6 =  fig_6.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
         
         leg1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
         leg2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
@@ -124,26 +124,26 @@ def plot_longitudinal_stability(results,
     
           
     # Adjusting the sub-plots for legend  
-    fig1.tight_layout()
-    fig2.tight_layout()
-    fig3.tight_layout()
-    fig4.tight_layout()
-    fig5.tight_layout()
-    fig6.tight_layout()
+    fig_1.tight_layout()
+    fig_2.tight_layout()
+    fig_3.tight_layout()
+    fig_4.tight_layout()
+    fig_5.tight_layout()
+    fig_6.tight_layout()
     
-    fig1.subplots_adjust(top=0.8)
-    fig2.subplots_adjust(top=0.8)
-    fig3.subplots_adjust(top=0.8)
-    fig4.subplots_adjust(top=0.8)
-    fig5.subplots_adjust(top=0.8)
-    fig6.subplots_adjust(top=0.8) 
+    fig_1.subplots_adjust(top=0.8)
+    fig_2.subplots_adjust(top=0.8)
+    fig_3.subplots_adjust(top=0.8)
+    fig_4.subplots_adjust(top=0.8)
+    fig_5.subplots_adjust(top=0.8)
+    fig_6.subplots_adjust(top=0.8) 
  
     if save_figure:
-        fig1.savefig(save_filename +"_Cm"+ file_type)
-        fig2.savefig(save_filename +"_Cm/Alpha"+ file_type)
-        fig3.savefig(save_filename +"_Static_Margin"+ file_type)
-        fig4.savefig(save_filename +"_Elevator_Deflection"+ file_type)
-        fig5.savefig(save_filename +"_Cm/delta"+ file_type)
-        fig6.savefig(save_filename +"_Cl_Alpha"+ file_type)   
-    return fig1,fig2,fig3,fig4,fig5,fig6 
+        fig_1.savefig(save_filename +"_Cm"+ file_type)
+        fig_2.savefig(save_filename +"_Cm/Alpha"+ file_type)
+        fig_3.savefig(save_filename +"_Static_Margin"+ file_type)
+        fig_4.savefig(save_filename +"_Elevator_Deflection"+ file_type)
+        fig_5.savefig(save_filename +"_Cm/delta"+ file_type)
+        fig_6.savefig(save_filename +"_Cl_Alpha"+ file_type)   
+    return fig_1,fig_2,fig_3,fig_4,fig_5,fig_6 
  

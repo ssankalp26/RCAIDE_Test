@@ -52,8 +52,8 @@ def plot_air_cooled_conditions(air_cooled, results, coolant_line, save_figure,sh
     fig_2 = plt.figure(save_filename + '_Heat_Removed')
     fig_1.set_size_inches(width,height)  
     fig_2.set_size_inches(width,height)  
-    axis_1 = plt.subplot(1,1,1)
-    axis_2 = plt.subplot(1,1,1)        
+    axis_1 = fig_1.add_subplot(1,1,1)
+    axis_2 = fig_2.add_subplot(1,1,1)        
     b_i = 0  
    
     for i in range(len(results.segments)):  

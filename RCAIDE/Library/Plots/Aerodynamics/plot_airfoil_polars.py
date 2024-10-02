@@ -67,10 +67,10 @@ def plot_airfoil_polars(polar_data,
     fig_3.set_size_inches(width,height)
     fig_4.set_size_inches(width,height) 
                
-    axis_1 = plt.subplot(1,1,1)
-    axis_2 = plt.subplot(1,1,1)    
-    axis_3 = plt.subplot(1,1,1)
-    axis_4 = plt.subplot(1,1,1)
+    axis_1 = fig_1.add_subplot(1,1,1)
+    axis_2 = fig_2.add_subplot(1,1,1)    
+    axis_3 = fig_3.add_subplot(1,1,1)
+    axis_4 = fig_4.add_subplot(1,1,1)
     
     axis_1.plot(alpha, CL, color = ps.color, marker = ps.markers[0], linewidth = ps.line_width, label = 'Re = '+Re_val, markersize = ps.marker_size)
     axis_1.set_xlabel('AoA [deg]')

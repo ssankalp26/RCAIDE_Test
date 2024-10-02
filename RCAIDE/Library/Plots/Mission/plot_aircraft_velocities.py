@@ -66,6 +66,11 @@ def plot_aircraft_velocities(results,
     fig_2.set_size_inches(width,height)
     fig_3.set_size_inches(width,height)
     fig_4.set_size_inches(width,height)
+
+    axis_1 = fig_1.add_subplot(1,1,1) 
+    axis_2 = fig_2.add_subplot(1,1,1)    
+    axis_3 = fig_3.add_subplot(1,1,1)
+    axis_4 = fig_4.add_subplot(1,1,1)
     
     for i in range(len(results.segments)): 
         time     = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min
@@ -79,25 +84,21 @@ def plot_aircraft_velocities(results,
              
         segment_tag  =  results.segments[i].tag
         segment_name = segment_tag.replace('_', ' ')
-        axis_1 = plt.subplot(1,1,1)
         axis_1.plot(time, velocity, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name,markersize = ps.marker_size)
         axis_1.set_ylabel(r'True Airspeed (kts)')
         axis_1.set_xlabel('Time (mins)')        
         set_axes(axis_1)    
         
-        axis_2 = plt.subplot(1,1,1)
         axis_2.plot(time, EAS, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width,markersize = ps.marker_size, label = segment_name) 
         axis_2.set_ylabel(r'Equiv. Airspeed (kts)')
         axis_2.set_xlabel('Time (mins)')
         set_axes(axis_2) 
-
-        axis_3 = plt.subplot(1,1,1)
+ 
         axis_3.plot(time, CAS, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width,markersize = ps.marker_size, label = segment_name)
         axis_3.set_xlabel('Time (mins)')
         axis_3.set_ylabel(r'Calibrated Airspeed (kts)')
         set_axes(axis_3) 
         
-        axis_4 = plt.subplot(1,1,1)
         axis_4.plot(time, mach, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width,markersize = ps.marker_size, label = segment_name)
         axis_4.set_xlabel('Time (mins)')
         axis_4.set_ylabel(r'Mach Number')

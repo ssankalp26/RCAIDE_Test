@@ -47,10 +47,10 @@ def plot_fuel_consumption(results,
     # get plotting style 
     ps      = plot_style()  
 
-    parameters = {'axes.labelsize': ps.axis_font_size,
+    parameters = {'axis_1.labelsize': ps.axis_font_size,
                   'xtick.labelsize': ps.axis_font_size,
                   'ytick.labelsize': ps.axis_font_size,
-                  'axes.titlesize': ps.title_font_size}
+                  'axis_1.titlesize': ps.title_font_size}
     plt.rcParams.update(parameters)
      
     # get line colors for plots 
@@ -63,7 +63,7 @@ def plot_fuel_consumption(results,
     prev_seg_extra_fuel = 0
     total_fuel          = 0
 
-    axes = plt.subplot(1,1,1)
+    axis_1 = fig.add_subplot(1,1,1)
             
     for i in range(len(results.segments)):
 
@@ -79,30 +79,30 @@ def plot_fuel_consumption(results,
             if i == 0: 
                 plot_fuel     = np.negative(fuel)
                 plot_alt_fuel = np.negative(alt_fuel) 
-                axes.plot( time , plot_fuel , 'ro-', marker = ps.markers[0], linewidth = ps.line_width , label = 'fuel')
-                axes.plot( time , plot_alt_fuel , 'bo-', marker = ps.markers[0], linewidth = ps.line_width, label = 'additional fuel' )
-                axes.plot( time , np.add(plot_fuel, plot_alt_fuel), 'go-', marker = ps.markers[0], linewidth = ps.line_width, label = 'total fuel' ) 
-                axes.legend(loc='center right')   
+                axis_1.plot( time , plot_fuel , 'ro-', marker = ps.markers[0], linewidth = ps.line_width , label = 'fuel')
+                axis_1.plot( time , plot_alt_fuel , 'bo-', marker = ps.markers[0], linewidth = ps.line_width, label = 'additional fuel' )
+                axis_1.plot( time , np.add(plot_fuel, plot_alt_fuel), 'go-', marker = ps.markers[0], linewidth = ps.line_width, label = 'total fuel' ) 
+                axis_1.legend(loc='center right')   
 
             else:
                 prev_seg_fuel       += results.segments[i-1].conditions.weights.fuel_mass[-1]
                 prev_seg_extra_fuel += results.segments[i-1].conditions.weights.additional_fuel_mass[-1] 
                 current_fuel         = np.add(fuel, prev_seg_fuel)
                 current_alt_fuel     = np.add(alt_fuel, prev_seg_extra_fuel) 
-                axes.plot( time , np.negative(current_fuel)  , 'ro-' , marker = ps.markers[0], linewidth = ps.line_width)
-                axes.plot( time , np.negative(current_alt_fuel ), 'bo-', marker = ps.markers[0], linewidth = ps.line_width)
-                axes.plot( time , np.negative(current_fuel + current_alt_fuel), 'go-', marker = ps.markers[0], linewidth = ps.line_width)
+                axis_1.plot( time , np.negative(current_fuel)  , 'ro-' , marker = ps.markers[0], linewidth = ps.line_width)
+                axis_1.plot( time , np.negative(current_alt_fuel ), 'bo-', marker = ps.markers[0], linewidth = ps.line_width)
+                axis_1.plot( time , np.negative(current_fuel + current_alt_fuel), 'go-', marker = ps.markers[0], linewidth = ps.line_width)
 
         else: 
             initial_weight  = results.segments[0].conditions.weights.total_mass[:,0][0] 
             fuel            = results.segments[i].conditions.weights.total_mass[:,0]
             time            = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min 
             total_fuel      = np.negative(results.segments[i].conditions.weights.total_mass[:,0] - initial_weight )
-            axes.plot( time, total_fuel, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name)
+            axis_1.plot( time, total_fuel, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name)
 
-    axes.set_ylabel('Fuel (kg)')
-    axes.set_xlabel('Time (min)') 
-    set_axes(axes)  
+    axis_1.set_ylabel('Fuel (kg)')
+    axis_1.set_xlabel('Time (min)') 
+    set_axes(axis_1)  
 
     if show_legend:    
         leg =  fig.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 

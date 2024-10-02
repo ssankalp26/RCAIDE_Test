@@ -74,10 +74,10 @@ def plot_airfoil_polar_files(polar_data,
     fig_3.set_size_inches(width,height)
     fig_4.set_size_inches(width,height)
     
-    axis_1 = plt.subplot(1,1,1)
-    axis_2 = plt.subplot(1,1,1)
-    axis_3 = plt.subplot(1,1,1)
-    axis_4 = plt.subplot(1,1,1)    
+    axis_1 = fig_1.add_subplot(1,1,1)
+    axis_2 = fig_2.add_subplot(1,1,1)
+    axis_3 = fig_3.add_subplot(1,1,1)
+    axis_4 = fig_4.add_subplot(1,1,1)    
     
     for j in range(n_Re):
         

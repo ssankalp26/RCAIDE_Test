@@ -50,7 +50,7 @@ def plot_reservoir_conditions(reservoir, results, coolant_line, save_figure,show
 
     fig = plt.figure(save_filename)
     fig.set_size_inches(width,height)  
-    axis_1 = plt.subplot(1,1,1)
+    axis_1 = fig.add_subplot(1,1,1)
     set_axes(axis_1)     
              
     b_i = 0  

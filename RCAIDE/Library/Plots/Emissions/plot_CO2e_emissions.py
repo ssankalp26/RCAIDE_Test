@@ -36,7 +36,7 @@ def plot_CO2e_emissions(results,
       
     fig   = plt.figure(save_filename)
     fig.set_size_inches(width,height) 
-    axis_1 = plt.subplot(1,1,1)
+    axis_1 = fig.add_subplot(1,1,1)
 
     line_colors   = cm.inferno(np.linspace(0,0.9,len(results.segments)))
     

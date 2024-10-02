@@ -73,6 +73,12 @@ def plot_flight_trajectory(results,
     # get line colors for plots 
     line_colors   = cm.inferno(np.linspace(0,0.9,len(results.segments)))    
      
+
+    axis_1 = fig_1.add_subplot(1,1,1) 
+    axis_2 = fig_2.add_subplot(1,1,1)    
+    axis_3 = fig_3.add_subplot(1,1,1)
+    axis_4 = fig_4.add_subplot(111, projection='3d')
+    
     for i in range(len(results.segments)): 
         time     = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min
         Range    = results.segments[i].conditions.frames.inertial.aircraft_range[:,0]/Units.nmi
@@ -82,36 +88,38 @@ def plot_flight_trajectory(results,
 
         segment_tag  =  results.segments[i].tag
         segment_name = segment_tag.replace('_', ' ')
+         
+        axis_1.plot( time , Range, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width , label = segment_name, markersize = ps.marker_size)
+        axis_1.set_ylabel('Distance (nmi)')
+        axis_1.set_xlabel('Time (min)')
+        set_axes(axis_1)            
+ 
+        axis_2.plot(x, y , line_color, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name , markersize = ps.marker_size)
+        axis_2.set_xlabel('x (m)')
+        axis_2.set_ylabel('y (m)')
+        set_axes(axis_2)
+ 
+        axis_3.plot( time , z, line_color , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name , markersize = ps.marker_size)
+        axis_3.set_ylabel('z (m)')
+        axis_3.set_xlabel('Time (min)')
+        set_axes(axis_3)
         
-        axes1 = plt.subplot(1,1,1)
-        axes1.plot( time , Range, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width , label = segment_name, markersize = ps.marker_size)
-        axes1.set_ylabel('Distance (nmi)')
-        axes1.set_xlabel('Time (min)')
-        set_axes(axes1)            
-
-        axes2 = plt.subplot(1,1,1)
-        axes2.plot(x, y , line_color, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name , markersize = ps.marker_size)
-        axes2.set_xlabel('x (m)')
-        axes2.set_ylabel('y (m)')
-        set_axes(axes2)
-
-        axes3 = plt.subplot(1,1,1)
-        axes3.plot( time , z, line_color , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name , markersize = ps.marker_size)
-        axes3.set_ylabel('z (m)')
-        axes3.set_xlabel('Time (min)')
-        set_axes(axes3)   
-        
-        axes4 = plt.subplot(1,1,1, projection='3d') 
-        axes4.scatter(x, y, z, marker='o',color =  line_colors[i], label = segment_name, markersize = ps.marker_size)
-        axes4.set_xlabel('x')
-        axes4.set_ylabel('y')
-        axes4.set_zlabel('z')
-        axes4.set_box_aspect([1,1,1])
-        set_axes(axes4)         
+        axis_4.scatter(x, y, z, marker='o',c=  line_colors[i],s = ps.marker_size)
+        axis_4.set_xlabel('x')
+        axis_4.set_ylabel('y')
+        axis_4.set_zlabel('z')
+        axis_4.set_box_aspect([1,1,1])
+        set_axes(axis_4)         
         
     if show_legend:        
-        leg =  fig.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
-        leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
+        leg_1 =  fig_1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_2 =  fig_2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_3 =  fig_3.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_4 =  fig_4.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})  
+        leg_2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})  
+        leg_3.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})  
+        leg_4.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
     # Adjusting the sub-plots for legend 
     fig_1.subplots_adjust(top=0.8)
@@ -130,4 +138,4 @@ def plot_flight_trajectory(results,
         fig_3.savefig(save_filename + file_type)
         fig_4.savefig(save_filename + file_type)  
              
-    return fig         
+    return fig_1,fig_2,fig_3,fig_4         

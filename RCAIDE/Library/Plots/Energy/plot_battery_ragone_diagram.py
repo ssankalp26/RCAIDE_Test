@@ -57,7 +57,7 @@ def plot_battery_ragone_diagram(battery,
     fig   = plt.figure(save_filename)
     fig.set_size_inches(width,height)  
         
-    axis_1 = plt.subplot(1,1,1)
+    axis_1 = fig.add_subplot(1,1,1)
     esp_plot = np.linspace(battery.cell.ragone.lower_bound, battery.cell.ragone.upper_bound,50)
     psp_plot = battery.cell.ragone.const_1*10**(esp_plot*battery.cell.ragone.const_2)
     axis_1.plot(esp_plot/(Units.Wh/Units.kg),psp_plot/(Units.kW/Units.kg), color = 'black', marker = ps.markers[0], linewidth = ps.line_width, label= battery.tag) 

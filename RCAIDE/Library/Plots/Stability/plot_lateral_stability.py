@@ -38,17 +38,17 @@ def plot_lateral_stability(results,
     # get line colors for plots 
     line_colors   = cm.inferno(np.linspace(0,0.9,len(results.segments)))     
      
-    fig1   = plt.figure(save_filename+"_Bank_Angle")
-    fig2   = plt.figure(save_filename+"_Aileron_Deflection")
-    fig3   = plt.figure(save_filename+"_Rudder_Deflection")
+    fig_1   = plt.figure(save_filename+"_Bank_Angle")
+    fig_2   = plt.figure(save_filename+"_Aileron_Deflection")
+    fig_3   = plt.figure(save_filename+"_Rudder_Deflection")
     
-    fig1.set_size_inches(width,height)
-    fig2.set_size_inches(width,height)
-    fig3.set_size_inches(width,height)
+    fig_1.set_size_inches(width,height)
+    fig_2.set_size_inches(width,height)
+    fig_3.set_size_inches(width,height)
     
-    axis_1 = plt.subplot(1,1,1) 
-    axis_2 = plt.subplot(1,1,1)  
-    axis_3 = plt.subplot(1,1,1)    
+    axis_1 = fig_1.add_subplot(1,1,1) 
+    axis_2 = fig_2.add_subplot(1,1,1)  
+    axis_3 = fig_3.add_subplot(1,1,1)    
     
     for i in range(len(results.segments)): 
         time     = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min  
@@ -74,25 +74,25 @@ def plot_lateral_stability(results,
         set_axes(axis_3)         
          
     if show_legend:
-        leg1 =  fig1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
-        leg2 =  fig2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
-        leg3 =  fig3.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
+        leg1 =  fig_1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
+        leg2 =  fig_2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
+        leg3 =  fig_3.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5)
         
         leg1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
         leg2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
         leg3.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})   
     
     # Adjusting the sub-plots for legend
-    fig1.tight_layout()
-    fig2.tight_layout()
-    fig3.tight_layout()
+    fig_1.tight_layout()
+    fig_2.tight_layout()
+    fig_3.tight_layout()
     
-    fig1.subplots_adjust(top=0.8)
-    fig2.subplots_adjust(top=0.8)
-    fig3.subplots_adjust(top=0.8)  
+    fig_1.subplots_adjust(top=0.8)
+    fig_2.subplots_adjust(top=0.8)
+    fig_3.subplots_adjust(top=0.8)  
  
     if save_figure:
-        fig1.savefig(save_filename + "_Bank_Angle" + file_type)
-        fig2.savefig(save_filename + "_Aileron_Deflection" + file_type)
-        fig3.savefig(save_filename + "_Rudder_Deflection" + file_type)   
-    return fig1,fig2,fig3 
+        fig_1.savefig(save_filename + "_Bank_Angle" + file_type)
+        fig_2.savefig(save_filename + "_Aileron_Deflection" + file_type)
+        fig_3.savefig(save_filename + "_Rudder_Deflection" + file_type)   
+    return fig_1,fig_2,fig_3 

@@ -61,8 +61,8 @@ def plot_disc_and_power_loading(results,
     fig_2 = plt.figure(save_filename + 'Power_Loading')
     fig_1.set_size_inches(width,height)  
     fig_2.set_size_inches(width,height) 
-    axis_1 = plt.subplot(1,1,1)
-    axis_2 = plt.subplot(1,1,1)   
+    axis_1 = fig_1.add_subplot(1,1,1)
+    axis_2 = fig_2.add_subplot(1,1,1)   
     pi     = 0 
     for network in results.segments[0].analyses.energy.vehicle.networks:  
         if 'busses' in network: 
