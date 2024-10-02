@@ -9,5 +9,6 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-from .Emissions                         import  Emissions
+from .Emissions                         import Emissions
 from .Emission_Index_Correlation_Method import Emission_Index_Correlation_Method
+from .Emission_Index_CRN_Method         import Emission_Index_CRN_Method

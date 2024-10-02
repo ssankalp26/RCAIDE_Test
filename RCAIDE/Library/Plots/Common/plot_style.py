@@ -44,9 +44,10 @@ def plot_style():
     plot_parameters.marker_size      = 10 
     plot_parameters.legend_font_size = 12
     plot_parameters.axis_font_size   = 14
-    plot_parameters.title_font_size  = 18   
-    plot_parameters.markers          = ['.', ',', 'o', 'v', '^', '<', '>', '1', '2', '3', '4', '8', 's', 'p', '*', 'h'\
-                                         , 'H', '+', 'x', 'D', 'd', '|', '_', 'P', 'X', 'd', 'v', '>', 's', '^', 'o']
+    plot_parameters.title_font_size  = 18    
+    plot_parameters.markers          = ['o', 's', '^', 'X', 'd', 'v', 'P', '>','.', ',', 'o', 'v', '^', '<',\
+                                        '>', '1', '2', '3', '4', '8', 's', 'p', '*', 'h'\
+                                         , 'H', '+', 'x', 'D', 'd', '|', '_'] 
     plot_parameters.color            = 'black'
     
     return plot_parameters

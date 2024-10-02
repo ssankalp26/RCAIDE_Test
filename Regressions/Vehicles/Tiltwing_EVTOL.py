@@ -237,8 +237,8 @@ def vehicle_setup():
     bat.geometrtic_configuration.total                      = bat.electrical_configuration.total
     bat.voltage                                             = bat.maximum_voltage 
     bat.geometrtic_configuration.normal_count               = 20
-    bat.geometrtic_configuration.parallel_count             = 24 
-     
+    bat.geometrtic_configuration.parallel_count             = 24  
+    
     for _ in range(number_of_modules):
         bus.battery_modules.append(deepcopy(bat))    
     bus.charging_c_rate  = 1
@@ -246,12 +246,7 @@ def vehicle_setup():
     
     for battery_module in  bus.battery_modules:
         bus.voltage  +=   battery_module.voltage
-        bus.nominal_capacity =  max(battery_module.nominal_capacity, bus.nominal_capacity)       
-    
-    
-    
-    
-     
+        bus.nominal_capacity =  max(battery_module.nominal_capacity, bus.nominal_capacity)   
     
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Lift Propulsors 
@@ -363,7 +358,6 @@ def vehicle_setup():
     avionics.power_draw             = 10. # Watts  
     avionics.mass_properties.mass   = 1.0 * Units.kg
     bus.avionics                    = avionics    
-
    
     network.busses.append(bus)
     
@@ -386,11 +380,6 @@ def vehicle_setup():
     print(breakdown) 
 
     return vehicle
-
-# ----------------------------------------------------------------------
-#   Define the Configurations
-# ---------------------------------------------------------------------
-
 
 # ----------------------------------------------------------------------
 #   Define the Configurations
@@ -442,8 +431,7 @@ def configs_setup(vehicle):
             for propulsor in  bus.propulsors:
                 propulsor.rotor.orientation_euler_angles =  [0, vector_angle, 0]
                 propulsor.rotor.pitch_command   = propulsor.rotor.hover.design_pitch_command * 0.5 
-    configs.append(config)
-    
+    configs.append(config) 
 
     # ------------------------------------------------------------------
     #   Hover-to-Cruise Configuration
@@ -477,8 +465,7 @@ def configs_setup(vehicle):
             for propulsor in  bus.propulsors:
                 propulsor.rotor.orientation_euler_angles =  [0, vector_angle, 0]
                 propulsor.rotor.pitch_command   = propulsor.rotor.cruise.design_pitch_command  
-    configs.append(config)    
-      
+    configs.append(config)     
     
     # ------------------------------------------------------------------
     #   
@@ -495,8 +482,7 @@ def configs_setup(vehicle):
             for propulsor in  bus.propulsors:
                 propulsor.rotor.orientation_euler_angles =  [0, vector_angle, 0]
                 propulsor.rotor.pitch_command   = propulsor.rotor.cruise.design_pitch_command * 0.5
-    configs.append(config) 
-    
+    configs.append(config)  
 
     # ------------------------------------------------------------------
     #   Hover Configuration

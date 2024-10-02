@@ -30,18 +30,6 @@ def main():
 
     # vehicle data
     vehicle  = vehicle_setup()
-
-    # plot vehicle 
-    plot_3d_vehicle(vehicle, 
-                    min_x_axis_limit            = 0,
-                    max_x_axis_limit            = 60,
-                    min_y_axis_limit            = -30,
-                    max_y_axis_limit            = 30,
-                    min_z_axis_limit            = -30,
-                    max_z_axis_limit            = 30,
-                    show_figure                 = False 
-                    )         
-        
     
     # Set up vehicle configs
     configs  = configs_setup(vehicle)
@@ -93,20 +81,20 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
     aerodynamics                                       = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method()
-    aerodynamics.geometry                              = vehicle
+    aerodynamics.vehicle                              = vehicle
     aerodynamics.settings.number_of_spanwise_vortices  = 5
     aerodynamics.settings.number_of_chordwise_vortices = 2       
     aerodynamics.settings.model_fuselage               = True
     aerodynamics.settings.drag_coefficient_increment   = 0.0000
     analyses.append(aerodynamics)
 
+
     # ------------------------------------------------------------------
-    #  Energy
+    #  Emissions
     emissions = RCAIDE.Framework.Analyses.Emissions.Emission_Index_Correlation_Method()
-    emissions.geometry = vehicle          
+    emissions.vehicle = vehicle          
     analyses.append(emissions)
-        
-    
+  
     # ------------------------------------------------------------------
     #  Energy
     energy= RCAIDE.Framework.Analyses.Energy.Energy()
@@ -144,38 +132,7 @@ def plot_mission(results):
     plot_drag_components(results) 
  
     plot_CO2e_emissions(results)    
-    return
-
-def simple_sizing(configs):
-    
-    base = configs.base
-    base.pull_base()
-    
-    # zero fuel weight
-    base.mass_properties.max_zero_fuel = 0.9 * base.mass_properties.max_takeoff 
-    
-    # fuselage seats
-    base.fuselages['fuselage'].number_coach_seats = base.passengers
-    
-    # diff the new data
-    base.store_diff()
-    
-    # ------------------------------------------------------------------
-    #   Landing Configuration
-    # ------------------------------------------------------------------
-    landing = configs.landing
-    
-    # make sure base data is current
-    landing.pull_base()
-    
-    # landing weight
-    landing.mass_properties.landing = 0.85 * base.mass_properties.takeoff
-    
-    # diff the new data
-    landing.store_diff()
-    
-    # done!
-    return
+    return 
 
 # ----------------------------------------------------------------------
 #   Define the Mission
@@ -360,7 +317,7 @@ def mission_setup(analyses):
     segment.analyses.extend( analyses.cruise ) 
     segment.mach_number                                   = 2.02
     segment.distance                                      = 10. * Units.nmi
-    segment.state.numerics.number_control_points          = 4  
+    segment.state.numerics.number_of_control_points          = 4  
     
     # define flight dynamics to model 
     segment.flight_dynamics.force_x                       = True  
