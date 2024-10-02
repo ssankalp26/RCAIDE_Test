@@ -121,19 +121,20 @@ def plot_flight_forces_and_moments(results,
         leg_5.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'}) 
         leg_6.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
+    fig_1.tight_layout()
+    fig_2.tight_layout()
+    fig_3.tight_layout()
+    fig_4.tight_layout()
+    fig_5.tight_layout()
+    fig_6.tight_layout()
+        
     # Adjusting the sub-plots for legend 
     fig_1.subplots_adjust(top=0.8)  
     fig_2.subplots_adjust(top=0.8) 
     fig_3.subplots_adjust(top=0.8) 
     fig_4.subplots_adjust(top=0.8) 
     fig_5.subplots_adjust(top=0.8) 
-    fig_6.subplots_adjust(top=0.8) 
-    fig_1.tight_layout()
-    fig_2.tight_layout()
-    fig_3.tight_layout()
-    fig_4.tight_layout()
-    fig_5.tight_layout()
-    fig_6.tight_layout()       
+    fig_6.subplots_adjust(top=0.8)        
     
     if save_figure:
         fig_1.savefig(save_filename + '_X_Force' + file_type)  
