@@ -85,13 +85,13 @@ def plot_electric_propulsor_efficiencies(results,
         leg_3.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
     # Adjusting the sub-plots for legend 
-    fig_1.subplots_adjust(top=0.8) 
-    fig_2.subplots_adjust(top=0.8) 
-    fig_3.subplots_adjust(top=0.8) 
     fig_1.tight_layout()    
     fig_2.tight_layout()    
     fig_3.tight_layout()     
      
+    fig_1.subplots_adjust(top=0.8) 
+    fig_2.subplots_adjust(top=0.8) 
+    fig_3.subplots_adjust(top=0.8) 
     if save_figure:
         fig_1.savefig(save_filename + file_type) 
         fig_2.savefig(save_filename + file_type) 

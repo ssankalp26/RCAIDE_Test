@@ -102,10 +102,12 @@ def plot_battery_module_C_rates(results,
         leg_1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})  
         leg_2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'}) 
  
+    
+    fig_1.tight_layout()    
+    fig_2.tight_layout()
+        
     fig_1.subplots_adjust(top=0.8) 
     fig_2.subplots_adjust(top=0.8)  
-    fig_1.tight_layout()    
-    fig_2.tight_layout()     
     
     if save_figure:
         fig_1.savefig('Instantaneous_'+ save_filename +  '_'+battery.tag +  file_type) 

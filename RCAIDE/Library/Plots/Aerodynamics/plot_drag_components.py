@@ -91,8 +91,8 @@ def plot_drag_components(results,
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
     # Adjusting the sub-plots for legend 
+    fig.tight_layout()
     fig.subplots_adjust(top=0.8)
-    fig.tight_layout()     
      
     if save_figure:
         fig.savefig(save_filename + file_type)   

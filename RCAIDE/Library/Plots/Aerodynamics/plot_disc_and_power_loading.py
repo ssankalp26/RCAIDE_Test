@@ -89,11 +89,12 @@ def plot_disc_and_power_loading(results,
         leg_2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})   
     
     # Adjusting the sub-plots for legend 
-    fig_1.subplots_adjust(top=0.8) 
-    fig_2.subplots_adjust(top=0.8) 
-    
     fig_1.tight_layout()    
     fig_2.tight_layout()     
+    
+    fig_1.subplots_adjust(top=0.8) 
+    fig_2.subplots_adjust(top=0.8) 
+        
     if save_figure:
         fig_1.savefig(save_filename + file_type)  
         fig_2.savefig(save_filename + file_type)  
