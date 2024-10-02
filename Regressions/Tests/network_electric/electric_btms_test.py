@@ -195,7 +195,6 @@ def missions_setup(mission):
     return missions 
 
 def plot_results(results):
-
     # Plots fligh conditions 
     plot_flight_conditions(results) 
     
@@ -205,19 +204,18 @@ def plot_results(results):
     plot_propulsor_throttles(results)
     
     # Plot Aircraft Electronics
-    plot_battery_pack_conditions(results) 
+    plot_battery_module_conditions(results) 
     plot_battery_temperature(results)
     plot_battery_cell_conditions(results) 
-    plot_battery_pack_C_rates(results)
+    plot_bus_C_rates(results)
     plot_battery_degradation(results) 
-    plot_thermal_management_component(results)
     
     # Plot Propeller Conditions 
     plot_rotor_conditions(results) 
     plot_disc_and_power_loading(results)
     
     # Plot Electric Motor and Propeller Efficiencies 
-    plot_electric_propulsor_efficiencies(results)      
+    plot_electric_propulsor_efficiencies(results)
     
     return
 

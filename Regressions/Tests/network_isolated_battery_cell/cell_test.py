@@ -37,66 +37,63 @@ def main():
     # Lithium Sulfur Test 
     lithium_sulphur_battery_test(Ereq,Preq)
     
+    # test ragone 
+    test_ragone(Ereq,Preq)
+        
     # Lithium-Ion Test
-    lithium_ion_battery_test(Ereq,Preq)
+    lithium_ion_battery_test()
     return 
      
 def aluminum_air_battery_test(Ereq,Preq): 
-    battery_al_air                 = RCAIDE.Library.Components.Energy.Sources.Batteries.Aluminum_Air()    
+    battery_al_air                 = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Aluminum_Air()    
     test_initialize_from_energy_and_power(battery_al_air, Ereq, Preq)
     test_mass_gain(battery_al_air, Preq)
     return 
    
 def lithium_sulphur_battery_test(Ereq,Preq):   
-    battery_li_s                   = RCAIDE.Library.Components.Energy.Sources.Batteries.Lithium_Sulfur()
+    battery_li_s                   = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Sulfur()
     specific_energy_guess          = 400*Units.Wh/Units.kg 
     test_find_ragone_properties(specific_energy_guess,battery_li_s, Ereq,Preq) 
     plot_battery_ragone_diagram(battery_li_s,   save_filename =  'lithium_sulfur')     
     return 
 
-def lithium_ion_battery_test(Ereq,Preq):  
-    battery_li_ion                        = RCAIDE.Library.Components.Energy.Sources.Batteries.Lithium_Ion_LFP() 
-    battery_li_ion.outputs                = Data()  
-    battery_li_ion.pack.maximum_voltage   = battery_li_ion.cell.maximum_voltage
+def test_ragone(Ereq,Preq):  
+    battery_li_ion                   = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_LFP() 
+    battery_li_ion.outputs           = Data()  
+    battery_li_ion.maximum_voltage   = battery_li_ion.cell.maximum_voltage
     test_find_ragone_optimum(battery_li_ion,Ereq,Preq)   
     test_initialize_from_mass(battery_li_ion,20*Units.kg)
 
-    bus,state            = set_up_conditions(battery_li_ion)
-    battery_conditions =  state.conditions.energy[bus.tag][battery_li_ion.tag]
-    battery_conditions.pack.current_draw =  np.array([[100],[100]])*Units.amps
-    battery_conditions.pack.power_draw   =  np.array([[Preq/2.] ,[ Preq]])
-    coolant_lines                        = []
-    time               = state.conditions.frames.inertial.time[:,0] 
-    delta_t            = np.diff(time)
-    for t_idx in range(state.numerics.number_of_control_points):    
-        battery_li_ion.energy_calc(state,bus,coolant_lines, t_idx, delta_t) 
-        plot_battery_ragone_diagram(battery_li_ion, save_filename =  'lithium_ion')
-         
-        battery_chemistry     = ['lithium_ion_nmc','lithium_ion_lfp'] 
-        marker                = ['s' ,'o' ,'P']
-        linestyles            = ['-','--',':']
-        linecolors            = cm.inferno(np.linspace(0.2,0.8,3))    
-        curr                  = [1.5,3]  
-        C_rat                 = [0.5,1]  
-        marker_size           = 5 
-        mAh                   = np.array([3550,1500]) 
-        V_ul_true             = np.array([[3.975183741087232,3.6014784556230786], [3.91835673395705,3.6144686722140595]])
-        bat_temp_true         = np.array([[292.3879080392878,288.85811904395115], [296.3978928496251,289.567165791677]])  
-     
-        plt.rcParams.update({'font.size': 12})
-        fig1 = plt.figure('Cell Test') 
-        fig1.set_size_inches(12,7)   
-        axes1  = fig1.add_subplot(3,2,1)
-        axes2  = fig1.add_subplot(3,2,2)  
-        axes3  = fig1.add_subplot(3,2,3) 
-        axes4  = fig1.add_subplot(3,2,4) 
-        axes5  = fig1.add_subplot(3,2,5) 
-        axes6  = fig1.add_subplot(3,2,6) 
-        
+
+def lithium_ion_battery_test():    
+    
+    # Operating conditions for battery 
+    curr                  = [1.5,3]  
+    C_rat                 = [0.5,1]  
+    marker_size           = 5 
+    mAh                   = np.array([3550,1500]) 
+    V_ul_true             = np.array([[3.979089016769657,3.6014269379449155], [3.92220237090634,3.6143636985487304]])
+    bat_temp_true         = np.array([[292.3915600365144,288.85765659521235], [296.40173907355614,289.5653131904246]])  
+
+    # PLot parameters 
+    marker                = ['s' ,'o' ,'P']
+    linestyles            = ['-','--',':']
+    linecolors            = cm.inferno(np.linspace(0.2,0.8,3))     
+    plt.rcParams.update({'font.size': 12})
+    fig1 = plt.figure('Cell Test') 
+    fig1.set_size_inches(12,7)   
+    axes1  = fig1.add_subplot(3,2,1)
+    axes2  = fig1.add_subplot(3,2,2)  
+    axes3  = fig1.add_subplot(3,2,3) 
+    axes4  = fig1.add_subplot(3,2,4) 
+    axes5  = fig1.add_subplot(3,2,5) 
+    axes6  = fig1.add_subplot(3,2,6)  
+
+    battery_chemistry     = ['lithium_ion_nmc','lithium_ion_lfp']    
     fixed_bus_voltage = False 
     for j in range(len(curr)):      
         for i in range(len(battery_chemistry)):   
-            vehicle  = vehicle_setup(curr[j],battery_chemistry[i],fixed_bus_voltage) 
+            vehicle  = vehicle_setup(curr[j],C_rat[j],battery_chemistry[i],fixed_bus_voltage) 
             
             # Set up vehicle configs
             configs  = configs_setup(vehicle)
@@ -114,7 +111,7 @@ def lithium_ion_battery_test(Ereq,Preq):
             results = missions.base_mission.evaluate()  
             
             # Voltage Regression
-            V_ul        = results.segments[0].conditions.energy.bus[battery_chemistry[i]].pack.voltage_under_load[2][0]   
+            V_ul        = results.segments[0].conditions.energy.bus.battery_modules[battery_chemistry[i]].voltage_under_load[2][0]   
             print('Under load voltage: ' + str(V_ul))
             V_ul_diff   = np.abs(V_ul - V_ul_true[j,i])
             print('Under load voltage difference')
@@ -122,18 +119,18 @@ def lithium_ion_battery_test(Ereq,Preq):
             assert np.abs((V_ul_diff)/V_ul_true[j,i]) < 1e-6 
             
             # Temperature Regression
-            bat_temp        = results.segments[1].conditions.energy.bus[battery_chemistry[i]].cell.temperature[2][0]  
-            print('cell temperature: ' + str(bat_temp))
+            bat_temp        = results.segments[1].conditions.energy.bus.battery_modules[battery_chemistry[i]].cell.temperature[2][0]  
+            print('Cell temperature: ' + str(bat_temp))
             bat_temp_diff   = np.abs(bat_temp  - bat_temp_true[j,i]) 
             print('cell temperature difference')
             print(bat_temp_diff)
             assert np.abs((bat_temp_diff)/bat_temp_true[j,i]) < 1e-6
        
             for segment in results.segments.values(): 
-                volts         = segment.conditions.energy.bus[battery_chemistry[i]].pack.voltage_under_load[:,0] 
-                SOC           = segment.conditions.energy.bus[battery_chemistry[i]].cell.state_of_charge[:,0]   
-                cell_temp     = segment.conditions.energy.bus[battery_chemistry[i]].cell.temperature[:,0]   
-                Amp_Hrs       = segment.conditions.energy.bus[battery_chemistry[i]].cell.charge_throughput[:,0]                   
+                volts         = segment.conditions.energy.bus.voltage_under_load[:,0] 
+                SOC           = segment.conditions.energy.bus.battery_modules[battery_chemistry[i]].cell.state_of_charge[:,0]   
+                cell_temp     = segment.conditions.energy.bus.battery_modules[battery_chemistry[i]].cell.temperature[:,0]   
+                Amp_Hrs       = segment.conditions.energy.bus.battery_modules[battery_chemistry[i]].cell.charge_throughput[:,0]                   
                   
                 if battery_chemistry[i] == 'lithium_ion_nmc':
                     axes1.plot(Amp_Hrs , volts , marker= marker[i], linestyle = linestyles[i],  color= linecolors[j]  , markersize=marker_size   ,label = battery_chemistry[i] + ': '+ str(C_rat[j]) + ' C') 
@@ -171,55 +168,7 @@ def lithium_ion_battery_test(Ereq,Preq):
     axes6.set_ylim([273,320])
     axes6.set_xlim([0,7])  
     
-    return 
-
-def set_up_conditions(battery_li_ion):           
-    
-    bus                                                                                = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus()  
-    state                                                                              = Conditions()  
-    state.numerics                                                                     = Conditions()
-    state.numerics.time                                                                = Conditions() 
-    state.numerics.time.integrate                                                      = np.array([[0, 0],[0, 10]])
-    state.numerics.time.differentiate                                                  = np.array([[0, 0],[0, 1]])
-    state.numerics.time.control_points                                                 = np.array([[0], [1]]) 
-    state.numerics.number_of_control_points                                            = 2
-    state.conditions                                                                   = Conditions() 
-    state.conditions.freestream                                                        = None
-    state.conditions.frames                                                            = Conditions()  
-    state.conditions.frames.inertial                                                   = Conditions() 
-    state.conditions.frames.inertial.time                                              = np.array([[0],[1]])  
-    state.conditions.energy                                                            = Conditions()   
-    state.conditions.energy[bus.tag]                                                   = Conditions()
-    state.conditions.energy[bus.tag][battery_li_ion.tag]                               = Conditions()
-    state.conditions.energy[bus.tag][battery_li_ion.tag]                               = Conditions() 
-    state.conditions.energy[bus.tag][battery_li_ion.tag].pack                          = Conditions() 
-    state.conditions.energy[bus.tag][battery_li_ion.tag].cell                          = Conditions() 
-    state.conditions.energy[bus.tag][battery_li_ion.tag].pack.energy                   = np.zeros((2,1))   
-    state.conditions.energy[bus.tag][battery_li_ion.tag].pack.power_draw               = np.zeros((2,1))   
-    state.conditions.energy[bus.tag][battery_li_ion.tag].pack.current                  = np.zeros((2,1))   
-    state.conditions.energy[bus.tag][battery_li_ion.tag].pack.current_draw             = np.zeros((2,1))   
-    state.conditions.energy[bus.tag][battery_li_ion.tag].pack.voltage_open_circuit     = np.zeros((2,1))  
-    state.conditions.energy[bus.tag][battery_li_ion.tag].pack.voltage_under_load       = np.zeros((2,1))  
-    state.conditions.energy[bus.tag][battery_li_ion.tag].pack.power                    = np.zeros((2,1))   
-    state.conditions.energy[bus.tag][battery_li_ion.tag].pack.temperature              = np.zeros((2,1))   
-    state.conditions.energy[bus.tag][battery_li_ion.tag].pack.heat_energy_generated    = np.zeros((2,1))   
-    state.conditions.energy[bus.tag][battery_li_ion.tag].pack.internal_resistance      = np.zeros((2,1))   
-    state.conditions.energy[bus.tag][battery_li_ion.tag].cell.heat_energy_generated    = np.zeros((2,1))    
-    state.conditions.energy[bus.tag][battery_li_ion.tag].cell.state_of_charge          = np.zeros((2,1))   
-    state.conditions.energy[bus.tag][battery_li_ion.tag].cell.power                    = np.zeros((2,1))         
-    state.conditions.energy[bus.tag][battery_li_ion.tag].cell.energy                   = np.array([[battery_li_ion.pack.maximum_energy], [battery_li_ion.pack.maximum_energy]])   
-    state.conditions.energy[bus.tag][battery_li_ion.tag].cell.voltage_under_load       = np.zeros((2,1))         
-    state.conditions.energy[bus.tag][battery_li_ion.tag].cell.voltage_open_circuit     = np.zeros((2,1))        
-    state.conditions.energy[bus.tag][battery_li_ion.tag].cell.current                  = np.zeros((2,1))         
-    state.conditions.energy[bus.tag][battery_li_ion.tag].cell.temperature              = np.zeros((2,1))         
-    state.conditions.energy[bus.tag][battery_li_ion.tag].cell.charge_throughput        = np.zeros((2,1))         
-    state.conditions.energy[bus.tag][battery_li_ion.tag].cell.depth_of_discharge       = np.zeros((2,1))
-    state.conditions.energy[bus.tag][battery_li_ion.tag].pack.maximum_initial_energy   = battery_li_ion.pack.maximum_energy
-    state.conditions.energy[bus.tag][battery_li_ion.tag].cell.cycle_in_day             = 0 
-    state.conditions.energy[bus.tag][battery_li_ion.tag].cell.resistance_growth_factor = 1.
-    state.conditions.energy[bus.tag][battery_li_ion.tag].cell.capacity_fade_factor     = 1.   
-                                                                                                                                                   
-    return bus,state  
+    return  
  
 def analyses_setup(configs):
 
@@ -263,28 +212,22 @@ def mission_setup(analyses,vehicle,battery_chemistry,current,mAh):
         
     # Discharge Segment 
     segment                                 = Segments.Ground.Battery_Discharge(base_segment) 
-    segment.analyses.extend(analyses.base)  
+    segment.analyses.extend(analyses.discharge)  
     segment.tag                             = 'Discharge_1' 
-    segment.time                            = time/2 
-    segment.current                         = current
+    segment.time                            = time/2  
     segment.initial_battery_state_of_charge = 1  
-    mission.append_segment(segment)         
+    mission.append_segment(segment)
     
-
     segment                                = Segments.Ground.Battery_Discharge(base_segment) 
     segment.tag                            = 'Discharge_2'
-    segment.analyses.extend(analyses.base)  
-    segment.current                        = current
+    segment.analyses.extend(analyses.discharge)   
     segment.time                           = time/2  
-    mission.append_segment(segment)         
-            
+    mission.append_segment(segment)        
     
     # Charge Segment 
     segment                                = Segments.Ground.Battery_Recharge(base_segment)      
-    segment.analyses.extend(analyses.base) 
-    segment.tag                            = 'Recharge'
-    segment.current                        = current
-    segment.time                           = time     
+    segment.analyses.extend(analyses.charge) 
+    segment.tag                            = 'Recharge' 
     mission.append_segment(segment)   
 
     return mission 
@@ -322,7 +265,7 @@ def test_find_ragone_optimum(battery, energy, power):
     find_ragone_optimum(battery,energy,power)
     print(battery)
     print('specific_energy (Wh/kg) = ',battery.specific_energy/(Units.Wh/Units.kg))
-    print('max_energy [W-h]=', battery.pack.maximum_energy/Units.Wh)
+    print('max_energy [W-h]=', battery.maximum_energy/Units.Wh)
     return
 
 def test_initialize_from_mass(battery,mass):

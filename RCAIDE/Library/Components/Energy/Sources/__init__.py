@@ -9,5 +9,5 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 ## @ingroup Energy 
-from . import Batteries
+from . import Battery_Modules
 from . import Fuel_Tanks 

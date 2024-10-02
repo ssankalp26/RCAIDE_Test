@@ -18,10 +18,10 @@ import numpy as np
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------   
 ## @ingroup Library-Plots-Energy
-def plot_battery_cell_conditions(results,
+def plot_battery_module_conditions(results,
                                   save_figure = False,
                                   show_legend = True,
-                                  save_filename = "Battery_Cell_Conditions_",
+                                  save_filename = "Battery_Module_Conditions_",
                                   file_type = ".png",
                                   width = 12, height = 7):
     """Plots the cell-level conditions of the battery throughout flight.
@@ -145,13 +145,13 @@ def plot_battery_cell_conditions(results,
                     for i in range(len(results.segments)):  
                         time    = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min    
                         battery_conditions  = results.segments[i].conditions.energy[bus.tag].battery_modules[battery.tag]    
-                        cell_power          = battery_conditions.cell.power[:,0]
-                        cell_energy         = battery_conditions.cell.energy[:,0]
-                        cell_volts          = battery_conditions.cell.voltage_under_load[:,0]
-                        cell_volts_oc       = battery_conditions.cell.voltage_open_circuit[:,0]
-                        cell_current        = battery_conditions.cell.current[:,0]
-                        cell_SOC            = battery_conditions.cell.state_of_charge[:,0]   
-                        cell_temperature    = battery_conditions.cell.temperature[:,0]  
+                        cell_power          = battery_conditions.power[:,0]
+                        cell_energy         = battery_conditions.energy[:,0]
+                        cell_volts          = battery_conditions.voltage_under_load[:,0]
+                        cell_volts_oc       = battery_conditions.voltage_open_circuit[:,0]
+                        cell_current        = battery_conditions.current[:,0]
+                        cell_SOC            = battery_conditions.state_of_charge[:,0]   
+                        cell_temperature    = battery_conditions.temperature[:,0]  
                 
                         segment_tag  = results.segments[i].tag
                         segment_name = segment_tag.replace('_', ' ') 
@@ -195,7 +195,7 @@ def plot_battery_cell_conditions(results,
     fig.subplots_adjust(top=0.8) 
     
     # set title of plot 
-    title_text   = 'Battery Cell Conditions'       
+    title_text   = 'Battery Module Conditions'       
     fig.suptitle(title_text) 
     
     if save_figure:

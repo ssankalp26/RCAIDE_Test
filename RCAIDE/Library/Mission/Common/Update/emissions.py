@@ -24,8 +24,8 @@ def emissions(segment):
         Properties Used:
         N/A
                     
-    """ 
+    """   
     emissions_model = segment.analyses.emissions
     
     if emissions_model:
-        emissions_model(segment)    
+        emissions_model.evaluate_emissions(segment)    

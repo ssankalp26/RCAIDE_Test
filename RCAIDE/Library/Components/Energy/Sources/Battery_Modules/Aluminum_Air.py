@@ -10,13 +10,13 @@
 
  # RCAIDE imports
 from RCAIDE.Framework.Core import Units
-from .Battery    import Battery
+from .Generic_Battery_Module    import Generic_Battery_Module
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Aluminum_Air
 # ----------------------------------------------------------------------------------------------------------------------   
 ## @ingroup Library-Compoments-Energy-Batteries
-class Aluminum_Air(Battery):
+class Aluminum_Air(Generic_Battery_Module):
     """ Aluminum-Air battery cell. Specifies discharge/specific energy characteristics specific to
     aluminum-air batteries. Also includes parameters related to consumption of aluminum, oxygen, and water
     """ 
@@ -29,13 +29,14 @@ class Aluminum_Air(Battery):
         
         Source:
             None
-        """    
-        self.specific_energy        = 1300.*Units.Wh/Units.kg    # convert to Joules/kg
-        self.specific_power         = 0.2*Units.kW/Units.kg      # convert to W/kg
-        self.mass_gain_factor       = 0.000110145*Units.kg/Units.Wh
-        self.water_mass_gain_factor = 0.000123913*Units.kg/Units.Wh
-        self.aluminum_mass_factor   = 0.000123828*Units.kg/Units.Wh # aluminum consumed per energy
-        self.ragone.const_1         = 0.8439*Units.kW/Units.kg
-        self.ragone.const_2         = -4.8647e-004/(Units.Wh/Units.kg)
-        self.ragone.lower_bound     = 1100.*Units.Wh/Units.kg
-        self.ragone.upper_bound     = 1600.*Units.Wh/Units.kg
+        """
+        self.tag                         = 'Aluminum Air'
+        self.cell.specific_energy        = 1300.*Units.Wh/Units.kg    # convert to Joules/kg
+        self.cell.specific_power         = 0.2*Units.kW/Units.kg      # convert to W/kg
+        self.mass_gain_factor            = 0.000110145*Units.kg/Units.Wh
+        self.cell.water_mass_gain_factor = 0.000123913*Units.kg/Units.Wh
+        self.cell.aluminum_mass_factor   = 0.000123828*Units.kg/Units.Wh # aluminum consumed per energy
+        self.cell.ragone.const_1         = 0.8439*Units.kW/Units.kg
+        self.cell.ragone.const_2         = -4.8647e-004/(Units.Wh/Units.kg)
+        self.cell.ragone.lower_bound     = 1100.*Units.Wh/Units.kg
+        self.cell.ragone.upper_bound     = 1600.*Units.Wh/Units.kg
