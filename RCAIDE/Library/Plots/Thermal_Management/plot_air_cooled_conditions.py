@@ -83,13 +83,13 @@ def plot_air_cooled_conditions(air_cooled, results, coolant_line, save_figure,sh
         leg_1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})  
         leg_2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})   
     
+    fig_1.tight_layout()    
+    fig_2.tight_layout()     
+    
     # Adjusting the sub-plots for legend 
     fig_1.subplots_adjust(top=0.8) 
     fig_2.subplots_adjust(top=0.8)  
 
-    fig_1.tight_layout()    
-    fig_2.tight_layout()     
-    
     if save_figure:
         fig_1.savefig(save_filename + air_cooled.tag + file_type)    
         fig_2.savefig(save_filename + air_cooled.tag + file_type)    
