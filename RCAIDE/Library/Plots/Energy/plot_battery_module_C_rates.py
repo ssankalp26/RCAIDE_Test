@@ -23,8 +23,8 @@ def plot_battery_module_C_rates(results,
                         show_legend   = True,
                         save_filename = "Battery_Module_C_Rates",
                         file_type     =".png",
-                        width         = 12,
-                        height        = 7): 
+                        width         = 8,
+                        height        = 6):
     """Plots the module-level conditions of the battery throughout flight.
 
     Assumptions:
