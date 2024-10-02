@@ -55,7 +55,7 @@ class Sequential_Segments(Segments.Segment.Container):
         self.process.initialize.aero                           = aerodynamics
         self.process.initialize.stability                      = stability
         self.process.initialize.energy                         = energy
-        self.process.initialize.emission                       = emissions
+        self.process.initialize.emissions                      = emissions
         self.process.initialize.set_residuals_and_unknowns     = set_residuals_and_unknowns
  
         #   Converge 

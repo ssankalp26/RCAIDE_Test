@@ -1,5 +1,5 @@
 ## @ingroup Library-Plots-Energy
-# RCAIDE/Library/Plots/Energy/plot_battery_cell_conditions.py
+# RCAIDE/Library/Plots/Energy/plot_battery_module_conditions.py
 # 
 # 
 # Created:  Jul 2023, M. Clarke

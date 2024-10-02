@@ -100,13 +100,13 @@ def plot_cross_flow_heat_exchanger_conditions(cross_flow_hex, results, coolant_l
         axis_4.set_ylabel(r'Air $\dot{m}$ (kg/s)')
         set_axes(axis_4)                               
  
-        axis_5.plot(time, power, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
-        axis_5.set_ylabel(r'HEX Power (W)')
+        axis_5.plot(time, power/1000, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+        axis_5.set_ylabel(r'HEX Power (KW)')
         axis_5.set_xlabel(r'Time (mins)')
         set_axes(axis_5)    
 
-        axis_6.plot(time, inlet_air_pressure , color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
-        axis_6.set_ylabel(r'Air Pres. (Pa)')
+        axis_6.plot(time, inlet_air_pressure/10e6 , color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+        axis_6.set_ylabel(r'Air Pres. (MPa)')
         axis_6.set_xlabel(r'Time (mins)')
         set_axes(axis_6) 
  

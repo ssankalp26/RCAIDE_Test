@@ -246,12 +246,7 @@ def vehicle_setup():
     
     for battery_module in  bus.battery_modules:
         bus.voltage  +=   battery_module.voltage
-        bus.nominal_capacity =  max(battery_module.nominal_capacity, bus.nominal_capacity)       
-    
-    
-    
-    
-     
+        bus.nominal_capacity =  max(battery_module.nominal_capacity, bus.nominal_capacity)   
     
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Lift Propulsors 
@@ -391,11 +386,6 @@ def vehicle_setup():
 #   Define the Configurations
 # ---------------------------------------------------------------------
 
-
-# ----------------------------------------------------------------------
-#   Define the Configurations
-# ---------------------------------------------------------------------
-
 def configs_setup(vehicle):
     '''
     The configration set up below the scheduling of the nacelle angle and vehicle speed.
@@ -442,8 +432,7 @@ def configs_setup(vehicle):
             for propulsor in  bus.propulsors:
                 propulsor.rotor.orientation_euler_angles =  [0, vector_angle, 0]
                 propulsor.rotor.pitch_command   = propulsor.rotor.hover.design_pitch_command * 0.5 
-    configs.append(config)
-    
+    configs.append(config) 
 
     # ------------------------------------------------------------------
     #   Hover-to-Cruise Configuration
@@ -477,8 +466,7 @@ def configs_setup(vehicle):
             for propulsor in  bus.propulsors:
                 propulsor.rotor.orientation_euler_angles =  [0, vector_angle, 0]
                 propulsor.rotor.pitch_command   = propulsor.rotor.cruise.design_pitch_command  
-    configs.append(config)    
-      
+    configs.append(config)     
     
     # ------------------------------------------------------------------
     #   
@@ -495,8 +483,7 @@ def configs_setup(vehicle):
             for propulsor in  bus.propulsors:
                 propulsor.rotor.orientation_euler_angles =  [0, vector_angle, 0]
                 propulsor.rotor.pitch_command   = propulsor.rotor.cruise.design_pitch_command * 0.5
-    configs.append(config) 
-    
+    configs.append(config)  
 
     # ------------------------------------------------------------------
     #   Hover Configuration
