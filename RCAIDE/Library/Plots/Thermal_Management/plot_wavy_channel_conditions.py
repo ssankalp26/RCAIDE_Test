@@ -99,13 +99,15 @@ def plot_wavy_channel_conditions(wavy_channel, results, coolant_line, save_figur
         leg_3 =  fig_2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
         leg_3.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})      
     
+    fig_1.tight_layout()    
+    fig_2.tight_layout()    
+    fig_3.tight_layout()
+        
     # Adjusting the sub-plots for legend 
     fig_1.subplots_adjust(top=0.8) 
     fig_2.subplots_adjust(top=0.8) 
     fig_3.subplots_adjust(top=0.8)
-    fig_1.tight_layout()    
-    fig_2.tight_layout()    
-    fig_3.tight_layout()    
+    
     
     if save_figure:
         fig_1.savefig(wavy_channel.tag + 'Coolant_Temp' + file_type) 

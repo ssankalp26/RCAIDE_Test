@@ -70,10 +70,11 @@ def plot_reservoir_conditions(reservoir, results, coolant_line, save_figure,show
         leg =  fig.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
                     
-    # Adjusting the sub-plots for legend 
-    fig.subplots_adjust(top=0.8)
     fig.tight_layout()
     
+    # Adjusting the sub-plots for legend 
+    fig.subplots_adjust(top=0.8)
+
     if save_figure:
         plt.savefig(save_filename + reservoir.tag + file_type)    
     return fig 
