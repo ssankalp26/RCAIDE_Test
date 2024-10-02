@@ -70,18 +70,18 @@ def main():
             print(val)
     
     # Truth values
-    vertical_climb_throttle_truth                       = 0.6076504419441053
-    hover_throttle_truth                                = 0.6044572977444364
-    vertical_climb_2_throttle_truth                     = 0.6079718628008569
-    vertical_transition_throttle_truth                  = 0.6043028366156381
-    low_speed_climb_transition_throttle_truth           = 0.5411198887621672
-    high_speed_climb_transition_throttle_truth          = 0.3163340311366646
-    cruise_throttle_truth                               = 0.33153148526487025
+    vertical_climb_throttle_truth                       = 0.6076504419441733
+    hover_throttle_truth                                = 0.604457297744355
+    vertical_climb_2_throttle_truth                     = 0.6079718628006788
+    vertical_transition_throttle_truth                  = 0.6043028366155772
+    low_speed_climb_transition_throttle_truth           = 0.541119888762097
+    high_speed_climb_transition_throttle_truth          = 0.31633403113666203
+    cruise_throttle_truth                               = 0.3315314855551311
     descent_throttle_truth                              = 0.3123412690545646
-    reserve_climb_throttle_truth                        = 0.2923889200977024
-    reserve_cruise_throttle_truth                       = 0.30689740485385486
-    reserve_descent_throttle_truth                      = 0.28269327552102963
-    vertical_descent_throttle_truth                     = 0.5981164666860272
+    reserve_climb_throttle_truth                        = 0.29238892009771306
+    reserve_cruise_throttle_truth                       = 0.30689740477333227
+    reserve_descent_throttle_truth                      = 0.2826932755219456
+    vertical_descent_throttle_truth                     = 0.5981164666860272  
     
     # Store errors 
     error = Data()

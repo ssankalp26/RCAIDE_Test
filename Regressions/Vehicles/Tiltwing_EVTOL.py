@@ -246,15 +246,6 @@ def vehicle_setup():
     
     for battery_module in  bus.battery_modules:
         bus.voltage  +=   battery_module.voltage
-        bus.nominal_capacity =  max(battery_module.nominal_capacity, bus.nominal_capacity)  
-     
-    for _ in range(number_of_modules):
-        bus.battery_modules.append(deepcopy(bat))    
-    bus.charging_c_rate  = 1
-    bus.nominal_capacity = 0
-    
-    for battery_module in  bus.battery_modules:
-        bus.voltage  +=   battery_module.voltage
         bus.nominal_capacity =  max(battery_module.nominal_capacity, bus.nominal_capacity)   
     
     #------------------------------------------------------------------------------------------------------------------------------------  
@@ -367,7 +358,6 @@ def vehicle_setup():
     avionics.power_draw             = 10. # Watts  
     avionics.mass_properties.mass   = 1.0 * Units.kg
     bus.avionics                    = avionics    
-
    
     network.busses.append(bus)
     
