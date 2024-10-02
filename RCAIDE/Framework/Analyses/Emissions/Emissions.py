@@ -10,6 +10,7 @@
 
 from RCAIDE.Framework.Core import Data
 from RCAIDE.Framework.Analyses import Analysis
+import  numpy as  np
 
 # ----------------------------------------------------------------------
 #  Emissions
@@ -27,11 +28,10 @@ class Emissions(Analysis):
             Source:
             None 
             """                   
-        self.tag      = 'Emissions'        
-  
+        self.tag      = 'Emissions'    
         self.vehicle  = Data()
-        self.settings = Data()
-        
+        self.settings = Data() 
+    
         
     def evaluate(self,state):
         """The default evaluate function.

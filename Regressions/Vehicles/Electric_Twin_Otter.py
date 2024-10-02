@@ -456,8 +456,8 @@ def vehicle_setup(cell_chemistry, btms_type):
             bat_copy = deepcopy(bat_module)
             bus.battery_modules.append(bat_copy)
 
-        bus.battery_module_electric_configuration = 'Series'
-        bus.charging_c_rate                       = 2
+        bus.battery_module_electric_configuration = 'Series' 
+        bus.charging_c_rate  = 1 
         bus.nominal_capacity = 0
         for battery_module in  bus.battery_modules:
             bus.voltage  +=   battery_module.voltage
@@ -483,7 +483,7 @@ def vehicle_setup(cell_chemistry, btms_type):
                 bus.battery_modules.append(bat_copy)
         
             bus.battery_module_electric_configuration = 'Series'
-            bus.charging_c_rate                       = 2
+            bus.charging_c_rate                       = 1
             bus.nominal_capacity = 0
             for battery_module in  bus.battery_modules:
                 bus.voltage  +=   battery_module.voltage
@@ -535,7 +535,8 @@ def vehicle_setup(cell_chemistry, btms_type):
     #  Starboard Propulsor
     #------------------------------------------------------------------------------------------------------------------------------------   
     starboard_propulsor                              = RCAIDE.Library.Components.Propulsors.Electric_Rotor()  
-    starboard_propulsor.tag                          = 'starboard_propulsor' 
+    starboard_propulsor.tag                          = 'starboard_propulsor'
+    starboard_propulsor.active_bus             = ['li_ion_battery']   
   
     # Electronic Speed Controller       
     esc                                              = RCAIDE.Library.Components.Energy.Modulators.Electronic_Speed_Controller()
@@ -594,7 +595,8 @@ def vehicle_setup(cell_chemistry, btms_type):
     # Port Propulsor
     #------------------------------------------------------------------------------------------------------------------------------------   
     port_propulsor                             = RCAIDE.Library.Components.Propulsors.Electric_Rotor() 
-    port_propulsor.tag                         = "port_propulsor" 
+    port_propulsor.tag                         = "port_propulsor"
+    port_propulsor.active_busses               = ['bus']   
             
     esc_2                                      = deepcopy(esc)
     esc_2.origin                               = [[3.8, -2.8129,1.22 ]]        

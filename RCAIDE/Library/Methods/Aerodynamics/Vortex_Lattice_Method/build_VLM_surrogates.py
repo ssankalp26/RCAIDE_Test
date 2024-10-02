@@ -61,7 +61,7 @@ def build_surrogate(aerodynamics, training):
    
     surrogates.Clift_wing_alpha = Data()
     surrogates.Cdrag_wing_alpha = Data() 
-    for wing in vehicle.wings: 
+    for wing in  vehicle.wings: 
         surrogates.Clift_wing_alpha[wing.tag] = RegularGridInterpolator((AoA_data ,mach_data),training.Clift_wing_alpha[wing.tag]        ,method = 'linear',   bounds_error=False, fill_value=None) 
         surrogates.Cdrag_wing_alpha[wing.tag] = RegularGridInterpolator((AoA_data ,mach_data),training.Cdrag_wing_alpha[wing.tag]        ,method = 'linear',   bounds_error=False, fill_value=None) 
      

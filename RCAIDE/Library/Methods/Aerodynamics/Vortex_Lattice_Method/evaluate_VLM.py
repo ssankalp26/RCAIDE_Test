@@ -18,7 +18,7 @@ import numpy                                                     as np
 #  Vortex_Lattice
 # ----------------------------------------------------------------------------------------------------------------------
 ## @ingroup Library-Methods-Stability  
-def evaluate_surrogate(state,settings,geometry):
+def evaluate_surrogate(state,settings,vehicle):
     """Evaluates surrogates forces and moments using built surrogates 
     
     Assumptions:
@@ -31,7 +31,7 @@ def evaluate_surrogate(state,settings,geometry):
         aerodynamics : VLM analysis  [unitless]
         state        : flight conditions     [unitless]
         settings     : VLM analysis settings [unitless]
-        geometry     : vehicle configuration [unitless] 
+        vehicle      : vehicle configuration [unitless] 
         
     Returns: 
         None  
@@ -54,7 +54,7 @@ def evaluate_surrogate(state,settings,geometry):
     delta_s = np.zeros_like(Mach)
     delta_f = np.zeros_like(Mach)
     
-    for wing in geometry.wings: 
+    for wing in vehicle.wings: 
         for control_surface in wing.control_surfaces:  
             if type(control_surface) == RCAIDE.Library.Components.Wings.Control_Surfaces.Aileron:
                 if trim ==  True: 
@@ -77,7 +77,7 @@ def evaluate_surrogate(state,settings,geometry):
                 delta_f        = np.ones_like(Mach) * control_surface.deflection
     
  
-    geometry      = aerodynamics.vehicle 
+    vehicle       = aerodynamics.vehicle 
     hsub_min      = aerodynamics.hsub_min
     hsub_max      = aerodynamics.hsub_max
     hsup_min      = aerodynamics.hsup_min
@@ -485,7 +485,7 @@ def evaluate_surrogate(state,settings,geometry):
     conditions.static_stability.derivatives.CN_q        = compute_stability_derivative(sub_sur.dCN_dq, trans_sur.dCN_dq, sup_sur.dCN_dq, h_sub,h_sup,Mach)
     conditions.static_stability.derivatives.CN_r        = compute_stability_derivative(sub_sur.dCN_dr, trans_sur.dCN_dr, sup_sur.dCN_dr, h_sub,h_sup,Mach) 
 
-    for wing in geometry.wings:   
+    for wing in vehicle.wings:   
         inviscid_wing_lifts = compute_coefficient(sub_sur.Clift_wing_alpha[wing.tag],trans_sur.Clift_wing_alpha[wing.tag],sup_sur.Cdrag_wing_alpha[wing.tag],h_sub,h_sup,Mach,pts_alpha)
         inviscid_wing_drags = compute_coefficient(sub_sur.Cdrag_wing_alpha[wing.tag],trans_sur.Cdrag_wing_alpha[wing.tag],sup_sur.Cdrag_wing_alpha[wing.tag],h_sub,h_sup,Mach,pts_alpha)
         # Pack 
@@ -499,7 +499,7 @@ def evaluate_surrogate(state,settings,geometry):
     return
 
  
-def evaluate_no_surrogate(state,settings,geometry):
+def evaluate_no_surrogate(state,settings,vehicle):
     """Evaluates forces and moments directly using VLM.
     
     Assumptions:
@@ -512,7 +512,7 @@ def evaluate_no_surrogate(state,settings,geometry):
         aerodynamics       : VLM analysis          [unitless]
         state      : flight conditions     [unitless]
         settings   : VLM analysis settings [unitless]
-        geometry   : vehicle configuration [unitless] 
+        vehicle    : vehicle configuration [unitless] 
         
     Returns: 
         None  
@@ -520,14 +520,14 @@ def evaluate_no_surrogate(state,settings,geometry):
 
     # unpack 
     conditions     = state.conditions 
-    results        = VLM(conditions,settings,geometry)   
+    results        = VLM(conditions,settings,vehicle)   
 
     # Dimensionalize the lift and drag for each wing
-    areas            = geometry.vortex_distribution.wing_areas
+    areas            = vehicle.vortex_distribution.wing_areas
     dim_wing_lifts   = results.CL_wing * areas
     dim_wing_drags   = results.CDi_wing * areas  
     i = 0 
-    for wing in geometry.wings:
+    for wing in vehicle.wings:
         ref = wing.areas.reference
         if wing.symmetric:
             Clift_wing  = np.atleast_2d(np.sum(dim_wing_lifts[:,i:(i+2)],axis=1)).T/ref

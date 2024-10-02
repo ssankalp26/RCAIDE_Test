@@ -1186,7 +1186,7 @@ def evaluate_VLM(conditions,settings,vehicle):
     Args: 
         conditions : flight conditions     [unitless]
         settings   : VLM analysis settings [unitless]
-        vehicle   : vehicle configuration [unitless] 
+        vehicle    : vehicle configuration [unitless] 
         
     Returns: 
         None  
@@ -1217,7 +1217,7 @@ def evaluate_VLM(conditions,settings,vehicle):
     
 
     # Dimensionalize the lift and drag for each wing
-    areas = vehicle.vortex_distribution.wing_areas
+    areas          = vehicle.vortex_distribution.wing_areas
     dim_wing_lifts = Clift_w  * areas
     dim_wing_drags = Cdrag_w * areas
     

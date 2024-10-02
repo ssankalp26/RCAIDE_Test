@@ -28,4 +28,4 @@ def emissions(segment):
     emissions_model = segment.analyses.emissions
     
     if emissions_model:
-        emissions_model.evaluate_emissions(segment)    
+        emissions_model.evaluate(segment)    

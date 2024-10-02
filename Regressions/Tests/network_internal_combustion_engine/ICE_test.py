@@ -95,7 +95,7 @@ def mission_setup(analyses):
     segment.altitude                                = 12000. * Units.feet
     segment.air_speed                               = 119.   * Units.knots
     segment.distance                                = 10 * Units.nautical_mile  
-    segment.state.numerics.number_control_points    = 4   
+    segment.state.numerics.number_of_control_points    = 4   
     
     # define flight dynamics to model 
     segment.flight_dynamics.force_x                       = True  
@@ -127,7 +127,7 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
     aerodynamics = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
-    aerodynamics.vehicle                             = vehicle
+    aerodynamics.vehicle                            = vehicle
     aerodynamics.settings.drag_coefficient_increment = 0.0000
     analyses.append(aerodynamics) 
 

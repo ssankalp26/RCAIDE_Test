@@ -1,5 +1,4 @@
-## @ingroup Analyses-Emissions
-# RCAIDE/Framework/Analyses/Emissions/Emission_Index_Correlation_Method.py
+# RCAIDE/Library/Methods/Emissions/evaluate_correlation_emissions_indices.py
 #  
 # Created:  Jul 2024, M. Clarke
 
@@ -13,9 +12,9 @@ from RCAIDE.Framework.Core import Data
 import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
-#  emissions_index_correlation
+#  evaluate_correlation_emissions_indices
 # ---------------------------------------------------------------------------------------------------------------------- 
-def emissions_index_correlation(emissions_analysis,segment):
+def evaluate_correlation_emissions_indices(segment,settings,vehicle):
     """ Computes the CO2 equivalent emissions from aircraft propulsors with combustor compoments
     using emissions indices correlated to various fuels
     
@@ -33,10 +32,8 @@ def emissions_index_correlation(emissions_analysis,segment):
     None  
     """    
     # unpack
-    state           = segment.state
-    vehicle         = emissions_analysis.vehicle 
-    I               = state.numerics.time.integrate
-    
+    state      = segment.state
+    I          = state.numerics.dimensionless.integrate 
     NOx_total  = 0 * state.ones_row(1)  
     CO2_total  = 0 * state.ones_row(1) 
     SO2_total  = 0 * state.ones_row(1) 
@@ -66,11 +63,11 @@ def emissions_index_correlation(emissions_analysis,segment):
                                     mdot = propulsor_results.fuel_flow_rate
                                      
                                     # Integrate them over the entire segment
-                                    NOx_total         += np.dot(I,mdot*EI_NOx)
-                                    CO2_total         += np.dot(I,mdot*EI_CO2)
-                                    SO2_total         += np.dot(I,mdot*EI_SO2)
-                                    H2O_total         += np.dot(I,mdot*EI_H2O) 
-                                    Soot_total        += np.dot(I,mdot*EI_Soot)
+                                    NOx_total  += np.dot(I,mdot*EI_NOx)
+                                    CO2_total  += np.dot(I,mdot*EI_CO2)
+                                    SO2_total  += np.dot(I,mdot*EI_SO2)
+                                    H2O_total  += np.dot(I,mdot*EI_H2O) 
+                                    Soot_total += np.dot(I,mdot*EI_Soot)
                                      
          
     flight_range    =  state.conditions.frames.inertial.aircraft_range 
@@ -85,11 +82,11 @@ def emissions_index_correlation(emissions_analysis,segment):
     emissions.total.SO2       = SO2_total   * fuel.global_warming_potential_100.SO2  
     emissions.total.Soot      = Soot_total  * fuel.global_warming_potential_100.Soot 
     emissions.total.Contrails = Contrails_total   
-    emissions.index.NOx       = EI_NOx
-    emissions.index.CO2       = EI_CO2 
-    emissions.index.H2O       = EI_H2O
-    emissions.index.SO2       = EI_SO2
-    emissions.index.Soot      = EI_Soot
+    emissions.index.NOx       = EI_NOx   * state.ones_row(1)
+    emissions.index.CO2       = EI_CO2   * state.ones_row(1)
+    emissions.index.H2O       = EI_H2O   * state.ones_row(1)
+    emissions.index.SO2       = EI_SO2   * state.ones_row(1)
+    emissions.index.Soot      = EI_Soot  * state.ones_row(1)
     
     state.conditions.emissions =  emissions
     return   

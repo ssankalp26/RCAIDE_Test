@@ -28,16 +28,13 @@ from Electric_Twin_Otter    import vehicle_setup, configs_setup
 def main():           
          
     battery_types = ['lithium_ion_lfp', 'lithium_ion_nmc']
-    btms_types    = ['Liquid_Cooled_Wavy_Channel', 'Air_Cooled', None]
-    
-    CL_true       = [0.63136618]
-    
-     
+    btms_types    = ['Liquid_Cooled_Wavy_Channel', 'Air_Cooled', None] 
+    CL_true       = [0.63136618] 
     # vehicle data
     for i , battery_type in enumerate(battery_types):
         for j , btms_type in enumerate(btms_types):
-            vehicle  = vehicle_setup(battery_type, btms_type)
-            
+            vehicle  = vehicle_setup(battery_type, btms_type) 
+        
             # Set up configs
             configs  = configs_setup(vehicle)
         
@@ -54,9 +51,8 @@ def main():
             error =  abs(CL - CL_true) /CL_true
             assert(abs(error)<1e-6)
              
-            # plot the results
-            if i == 0 and  j == 0: 
-                plot_mission(results)
+            # plot the results 
+            plot_results(results)
 
     return
     
@@ -140,7 +136,13 @@ def mission_setup(analyses):
     # unpack Segments module
     Segments = RCAIDE.Framework.Mission.Segments  
     base_segment = Segments.Segment()
-    base_segment.temperature_deviation  = 15 
+    base_segment.temperature_deviation  = 15
+    # VSTALL Calculation  
+    vehicle        = analyses.base.aerodynamics.vehicle
+    vehicle_mass   = vehicle.mass_properties.max_takeoff
+    reference_area = vehicle.reference_area 
+    Vstall         = estimate_stall_speed(vehicle_mass,reference_area,altitude = 0.0,maximum_lift_coefficient = 1.2)
+    
 
     # ------------------------------------------------------------------
     #   Cruise Segment: constant Speed, constant altitude
@@ -163,9 +165,19 @@ def mission_setup(analyses):
     segment.assigned_control_variables.body_angle.active             = True                  
           
     mission.append_segment(segment)    
-
-
-   
+ 
+    # ------------------------------------------------------------------
+    #  Charge Segment: 
+    # ------------------------------------------------------------------  
+    # Charge Model 
+    segment                                         = Segments.Ground.Battery_Recharge(base_segment)     
+    segment.analyses.extend(analyses.base)              
+    segment.tag                                     = 'Recharge' 
+    segment.time                                    = 1 * Units.hr
+    segment.current                                 = 100  
+    segment.increment_battery_age_by_one_day        = True     
+    mission.append_segment(segment)
+    
     # ------------------------------------------------------------------
     #   Mission definition complete    
     # ------------------------------------------------------------------ 
@@ -180,16 +192,30 @@ def missions_setup(mission):
     mission.tag  = 'base_mission'
     missions.append(mission)
  
-    return missions
+    return missions 
 
-def plot_mission(results):
+def plot_results(results):
+    # Plots fligh conditions 
+    plot_flight_conditions(results) 
     
-    
-    plot_battery_cell_conditions(results)
-    
-    #plot_thermal_management_component(results)
+    # Plot arcraft trajectory
+    plot_flight_trajectory(results)   
 
-    #plot_battery_degradation(results)
+    plot_propulsor_throttles(results)
+    
+    # Plot Aircraft Electronics
+    plot_battery_module_conditions(results) 
+    plot_battery_temperature(results)
+    plot_battery_cell_conditions(results) 
+    plot_battery_module_C_rates(results)
+    plot_battery_degradation(results) 
+    
+    # Plot Propeller Conditions 
+    plot_rotor_conditions(results) 
+    plot_disc_and_power_loading(results)
+    
+    # Plot Electric Motor and Propeller Efficiencies 
+    plot_electric_propulsor_efficiencies(results)
     
     return
 

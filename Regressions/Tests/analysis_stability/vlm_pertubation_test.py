@@ -170,15 +170,15 @@ def mission_setup(analyses):
     segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment) 
     segment.tag = "climb"        
     segment.analyses.extend( analyses.base )      
-    segment.altitude_start                                = 0.0 * Units.feet
-    segment.altitude_end                                  = 12000 * Units.feet
-    segment.air_speed                                     = 120 * Units['mph']
-    segment.climb_rate                                    = 1000* Units['ft/min']
-    segment.sideslip_angle                                = 1 * Units.degrees
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                       = True    
-    segment.flight_dynamics.force_z                       = True    
+    segment.altitude_start                                                      = 0.0 * Units.feet
+    segment.altitude_end                                                        = 12000 * Units.feet
+    segment.air_speed                                                           = 120 * Units['mph']
+    segment.climb_rate                                                          = 1000* Units['ft/min']
+    segment.sideslip_angle                                                      = 1 * Units.degrees
+                          
+    # define flight dynamics to model                       
+    segment.flight_dynamics.force_x                                             = True    
+    segment.flight_dynamics.force_z                                             = True    
                 
     # define flight controls               
     segment.assigned_control_variables.throttle.active                          = True           
@@ -186,15 +186,15 @@ def mission_setup(analyses):
     segment.assigned_control_variables.body_angle.active                        = True   
     
     # Longidinal Flight Mechanics
-    segment.flight_dynamics.moment_y                                 = True 
+    segment.flight_dynamics.moment_y                                            = True 
     segment.assigned_control_variables.elevator_deflection.active               = True    
     segment.assigned_control_variables.elevator_deflection.assigned_surfaces    = [['elevator']]
     segment.assigned_control_variables.elevator_deflection.initial_guess_values = [[0]]     
    
     # Lateral Flight Mechanics 
-    segment.flight_dynamics.force_y                                  = True     
-    segment.flight_dynamics.moment_x                                 = True
-    segment.flight_dynamics.moment_z                                 = True 
+    segment.flight_dynamics.force_y                                             = True     
+    segment.flight_dynamics.moment_x                                            = True
+    segment.flight_dynamics.moment_z                                            = True 
     segment.assigned_control_variables.aileron_deflection.active                = True    
     segment.assigned_control_variables.aileron_deflection.assigned_surfaces     = [['aileron']]
     segment.assigned_control_variables.aileron_deflection.initial_guess_values  = [[0]] 

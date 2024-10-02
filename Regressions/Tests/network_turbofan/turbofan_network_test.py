@@ -88,7 +88,7 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
     aerodynamics          = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
-    aerodynamics.vehicle  = vehicle
+    aerodynamics.vehicle = vehicle
     aerodynamics.settings.number_of_spanwise_vortices   = 25
     aerodynamics.settings.number_of_chordwise_vortices  = 5     
     analyses.append(aerodynamics)   
@@ -128,7 +128,7 @@ def mission_setup(analyses):
   
     Segments = RCAIDE.Framework.Mission.Segments 
     base_segment = Segments.Segment()
-    base_segment.state.numerics.number_control_points  = 4     
+
 
     # ------------------------------------------------------------------
     #   First Climb Segment: Constant Speed Constant Rate  
