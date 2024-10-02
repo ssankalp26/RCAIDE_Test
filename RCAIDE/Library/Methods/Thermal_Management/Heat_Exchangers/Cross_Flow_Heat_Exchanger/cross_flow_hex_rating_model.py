@@ -285,10 +285,12 @@ def cross_flow_hex_rating_model(HEX,state,bus,coolant_line, delta_t,t_idx):
     
     if state.conditions.freestream.velocity[t_idx] > HEX.minimum_air_speed:
         P_air    = 0
-        cooling_drag(state, HEX,coolant_line,t_idx,fan_operation=False)        
+        
+        #cooling_drag(state, HEX,coolant_line,t_idx,fan_operation=False)        
     else:
         P_air    = ((m_dot_c*delta_p_c[iteraion_counter_1]/rho_c_m))/HEX.fan.efficiency
-        cooling_drag(state, HEX,coolant_line,t_idx,fan_operation = True)        
+        
+        # cooling_drag(state, HEX,coolant_line,t_idx,fan_operation = True)        
         
     P_hex     = P_air+P_coolant
     

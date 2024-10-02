@@ -38,7 +38,6 @@ def total_drag(state,settings,geometry):
     induced_total         = drag.induced.total            
     compressibility_total = drag.compressible.total     
     miscellaneous_drag    = drag.miscellaneous.total
-    drag.cooling.total    = drag.cooling.total / geometry.reference_area
     cooling_drag          = drag.cooling.total 
 
     # untrimmed drag 
