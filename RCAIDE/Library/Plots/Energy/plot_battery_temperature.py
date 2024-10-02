@@ -82,7 +82,7 @@ def plot_battery_temperature(results,
                         pack_Q              = bus_results.heat_energy_generated[:,0]
                         
                         if i == 0: 
-                            axis_1.plot(time,cell_temp, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name) 
+                            axis_1.plot(time,cell_temp, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = battery.tag) 
                         else:
                             axis_1.plot(time,cell_temp, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width) 
                         axis_1.set_ylabel(r'Temperature (K)') 
@@ -90,7 +90,7 @@ def plot_battery_temperature(results,
                         set_axes(axis_1)
                         
                         if i == 0: 
-                            axis_2.plot(time, cell_charge, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
+                            axis_2.plot(time, cell_charge, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = battery.tag)
                         else:
                             axis_2.plot(time, cell_charge, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width )
                         axis_2.set_xlabel('Time (mins)')
@@ -98,7 +98,7 @@ def plot_battery_temperature(results,
                         set_axes(axis_2)
                         
                         if i == 0: 
-                            axis_3.plot(time, pack_Q/1000, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
+                            axis_3.plot(time, pack_Q/1000, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = battery.tag)
                         else:
                             axis_3.plot(time, pack_Q/1000, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width )   
                         axis_3.set_xlabel('Time (mins)')

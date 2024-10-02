@@ -41,7 +41,7 @@ def plot_style():
     plot_parameters                  = Data()
     plot_parameters.line_width       = 2 
     plot_parameters.line_style       = '-'
-    plot_parameters.marker_size      = 15
+    plot_parameters.marker_size      = 8
     plot_parameters.legend_font_size = 12
     plot_parameters.axis_font_size   = 14
     plot_parameters.title_font_size  = 18    

@@ -157,19 +157,19 @@ def plot_battery_cell_conditions(results,
  
     
     # Adjusting the sub-plots for legend 
+    fig_1.tight_layout()    
+    fig_2.tight_layout()    
+    fig_3.tight_layout()    
+    fig_4.tight_layout()    
+    fig_5.tight_layout()    
+    fig_6.tight_layout()   
+    
     fig_1.subplots_adjust(top=0.8)  
     fig_2.subplots_adjust(top=0.8)  
     fig_3.subplots_adjust(top=0.8)  
     fig_4.subplots_adjust(top=0.8)  
     fig_5.subplots_adjust(top=0.8)  
     fig_6.subplots_adjust(top=0.8)
-    
-    fig_1.tight_layout()    
-    fig_2.tight_layout()    
-    fig_3.tight_layout()    
-    fig_4.tight_layout()    
-    fig_5.tight_layout()    
-    fig_6.tight_layout()  
     
     if save_figure:
         fig_1.savefig(battery.tag + '_' + save_filename + '_SOC' + file_type)
