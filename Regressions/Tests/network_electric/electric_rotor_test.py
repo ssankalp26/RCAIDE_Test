@@ -33,7 +33,9 @@ def main():
     diff_CL                 = np.abs(lift_coefficient  - lift_coefficient_true) 
     print('CL difference: ' +  str(diff_CL)) 
     assert np.abs((lift_coefficient  - lift_coefficient_true)/lift_coefficient_true) < 1e-6 
-              
+             
+    return
+ 
 if __name__ == '__main__': 
     main()    
     plt.show()

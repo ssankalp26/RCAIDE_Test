@@ -237,7 +237,16 @@ def vehicle_setup():
     bat.geometrtic_configuration.total                      = bat.electrical_configuration.total
     bat.voltage                                             = bat.maximum_voltage 
     bat.geometrtic_configuration.normal_count               = 20
-    bat.geometrtic_configuration.parallel_count             = 24 
+    bat.geometrtic_configuration.parallel_count             = 24  
+    
+    for _ in range(number_of_modules):
+        bus.battery_modules.append(deepcopy(bat))    
+    bus.charging_c_rate  = 1
+    bus.nominal_capacity = 0
+    
+    for battery_module in  bus.battery_modules:
+        bus.voltage  +=   battery_module.voltage
+        bus.nominal_capacity =  max(battery_module.nominal_capacity, bus.nominal_capacity)  
      
     for _ in range(number_of_modules):
         bus.battery_modules.append(deepcopy(bat))    
