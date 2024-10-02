@@ -91,7 +91,7 @@ def plot_battery_module_conditions(results,
                         module_energy         = battery_conditions.energy[:,0]
                         module_volts          = battery_conditions.voltage_under_load[:,0] 
                         module_current        = battery_conditions.current[:,0]
-                        module_SOC            = battery_conditions.state_of_charge[:,0]   
+                        module_SOC            = battery_conditions.cell.state_of_charge[:,0]   
                         module_temperature    = battery_conditions.temperature[:,0]   
                         
                         if i == 0: 
