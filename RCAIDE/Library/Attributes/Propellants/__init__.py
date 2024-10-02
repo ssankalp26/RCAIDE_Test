@@ -23,3 +23,4 @@ from .Ethanol            import Ethanol
 from .Liquid_Hydrogen    import Liquid_Hydrogen
 from .LH2                import LH2
 from .RP1                import RP1
+from .Butanol		 	 import Butanol
