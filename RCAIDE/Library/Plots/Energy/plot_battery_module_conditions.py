@@ -23,7 +23,7 @@ def plot_battery_module_conditions(results,
                                   show_legend = True,
                                   save_filename = "Battery_Module_Conditions_",
                                   file_type = ".png",
-                                  width = 12, height = 7):
+                                  width = 8, height = 6):
     """Plots the cell-level conditions of the battery throughout flight.
 
     Assumptions:
