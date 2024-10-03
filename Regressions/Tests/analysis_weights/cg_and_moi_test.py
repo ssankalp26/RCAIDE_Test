@@ -1,8 +1,8 @@
 # cg_and_moi_test.py   
 from RCAIDE.Framework.Core import Units,  Data ,  Container 
 
-from Legacy.trunk.S.Input_Output.SUAVE.load    import load as load_results
-from Legacy.trunk.S.Input_Output.SUAVE.archive import archive as save_results 
+from RCAIDE.load import load as load_results
+from RCAIDE.save import save as save_results 
 
 import numpy as  np 
 import sys

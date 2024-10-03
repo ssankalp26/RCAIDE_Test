@@ -313,15 +313,13 @@ def compute_operating_empty_weight(vehicle,settings=None,
     
     for wing in vehicle.wings:
         if isinstance(wing, Wings.Main_Wing): 
-            if method_type == 'RCAIDE':
-                W_wing = Common.compute_main_wing_weight(vehicle, wing, Al_rho, Al_sigma)
-            elif method_type == 'FLOPS Simple' or method_type == 'FLOPS Complex':
+            if method_type == 'FLOPS Simple' or method_type == 'FLOPS Complex':
                 complexity = method_type.split()[1]
                 W_wing = FLOPS.compute_wing_weight(vehicle, wing, WPOD, complexity, settings, num_main_wings)
             elif method_type == 'Raymer':
-                W_wing = Raymer.compute_main_wing_weight(vehicle, wing)
+                W_wing = Raymer.compute_main_wing_weight(vehicle, wing) 
             else:
-                raise ValueError("This weight method is not yet implemented")
+                W_wing = Common.compute_main_wing_weight(vehicle, wing, Al_rho, Al_sigma) 
             # Apply weight factor
             W_wing = W_wing * (1. - W_factors.main_wing) * (1. - W_factors.structural)
             if np.isnan(W_wing):
