@@ -408,13 +408,25 @@ def vehicle_setup():
     fuel_tank                                   = RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Fuel_Tank()
     fuel_tank.origin                            = [[13.0,0,-1.]]
     
-    # fuel 
-    fuel                                        = RCAIDE.Library.Attributes.Propellants.Aviation_Gasoline()   
-    fuel.mass_properties.mass                   = vehicle.mass_properties.max_takeoff-vehicle.mass_properties.max_fuel
-    fuel.origin                                 = [[13.0,0,-1.]]      
-    fuel.mass_properties.center_of_gravity      = [[13.0,0,-1.]]
-    fuel.internal_volume                        = fuel.mass_properties.mass/fuel.density  
-    fuel_tank.fuel                              = fuel
+    # for purposes of the regression, initialize all fuels
+    fuel_1                                      = RCAIDE.Library.Attributes.Propellants.Aviation_Gasoline() 
+    fuel_2                                      = RCAIDE.Library.Attributes.Propellants.Ethane() 
+    fuel_3                                      = RCAIDE.Library.Attributes.Propellants.Ethanol() 
+    fuel_4                                      = RCAIDE.Library.Attributes.Propellants.Propanol() 
+    fuel_5                                      = RCAIDE.Library.Attributes.Propellants.Propane()
+    fuel_6                                      = RCAIDE.Library.Attributes.Propellants.Alcohol_Mixture()
+    fuel_7                                      = RCAIDE.Library.Attributes.Propellants.Alkane_Mixture()
+    fuel_8                                      = RCAIDE.Library.Attributes.Propellants.Liquid_Natural_Gas()
+    fuel_9                                      = RCAIDE.Library.Attributes.Propellants.Butanol()
+    fuel_10                                     = RCAIDE.Library.Attributes.Propellants.Jet_A1()
+    
+    # append correct fuel
+    fuel_11                                     = RCAIDE.Library.Attributes.Propellants.Jet_A()  
+    fuel_11.mass_properties.mass                = vehicle.mass_properties.max_takeoff-vehicle.mass_properties.max_fuel
+    fuel_11.origin                              = [[13.0,0,-1.]]      
+    fuel_11.mass_properties.center_of_gravity   = [[13.0,0,-1.]]
+    fuel_11.internal_volume                     = fuel_11.mass_properties.mass/fuel_11.density  
+    fuel_tank.fuel                              = fuel_11
     fuel_line.fuel_tanks.append(fuel_tank) 
     
 

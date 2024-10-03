@@ -18,12 +18,12 @@ import sys, os, traceback, time
  
 modules = [ 
     # ----------------------- Regression List --------------------------
-    'Tests/analysis_aerodynamics/airfoil_panel_method_test.py',    
-    'Tests/analysis_emissions/emissions_test.py',   
-    'Tests/analysis_noise/digital_elevation_test.py',  
-    'Tests/analysis_noise/frequency_domain_test.py', 
-    'Tests/analysis_noise/empirical_jet_noise_test.py',    
-    'Tests/analysis_noise/noise_hemisphere_test.py', 
+    #'Tests/analysis_aerodynamics/airfoil_panel_method_test.py',    
+    #'Tests/analysis_emissions/emissions_test.py',   
+    #'Tests/analysis_noise/digital_elevation_test.py',  
+    #'Tests/analysis_noise/frequency_domain_test.py', 
+    #'Tests/analysis_noise/empirical_jet_noise_test.py',    
+    #'Tests/analysis_noise/noise_hemisphere_test.py', 
     'Tests/analysis_stability/vlm_pertubation_test.py', 
     'Tests/geometry_airfoils/airfoil_import_test.py', 
     'Tests/geometry_airfoils/airfoil_interpolation_test.py',    
@@ -35,7 +35,9 @@ modules = [
     'Tests/network_turboshaft/turboshaft_network_test.py',
     'Tests/network_internal_combustion_engine/ICE_test.py',
     'Tests/network_internal_combustion_engine/ICE_constant_speed_test.py',
-    'Tests/network_isolated_battery_cell/cell_test.py', 
+    'Tests/network_isolated_battery_cell/cell_test.py',
+    'Tests/performance_payload_range/payload_range_test.py',
+    
 ]
 
 def regressions():

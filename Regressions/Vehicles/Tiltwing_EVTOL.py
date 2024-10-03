@@ -17,8 +17,7 @@ from RCAIDE.Library.Plots                                                      i
  
 import os
 import numpy as np 
-from copy import deepcopy
-import pickle   
+from copy import deepcopy 
 
 def vehicle_setup(): 
     
