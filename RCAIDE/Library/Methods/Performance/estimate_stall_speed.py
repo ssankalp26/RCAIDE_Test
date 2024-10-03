@@ -17,8 +17,7 @@ import numpy as np
 #------------------------------------------------------------------------------
 # Stall Speed Estimation
 #------------------------------------------------------------------------------ 
-def estimate_stall_speed(vehicle_mass,reference_area,altitude,maximum_lift_coefficient):
-
+def estimate_stall_speed(vehicle_mass,reference_area,altitude,maximum_lift_coefficient): 
     """Calculates the stall speed of an aircraft at a given altitude and a maximum lift coefficient.
 
         Sources:
@@ -40,6 +39,6 @@ def estimate_stall_speed(vehicle_mass,reference_area,altitude,maximum_lift_coeff
     g       = 9.81 
     atmo    = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
     rho     = atmo.compute_values(altitude,0.).density 
-    V_stall = float(np.sqrt(2.*vehicle_mass*g/(rho*reference_area*maximum_lift_coefficient)))  
+    V_stall = float(np.sqrt((2.*vehicle_mass*g)/(rho*reference_area*maximum_lift_coefficient)))  
     
     return V_stall

@@ -21,12 +21,24 @@ from matplotlib import pyplot as plt
 #  Calculate vehicle Payload Range Diagram
 # ----------------------------------------------------------------------  
 def payload_range_diagram(vehicle,mission,cruise_segment_tag,reserves=0., plot_diagram = True, fuel_name=None):  
-    '''
-    
-    
-    
-    
-    '''
+    """Calculates and plots the payload range diagram for an aircraft by modifying the cruise segment and weights of the aicraft .
+
+        Sources:
+        N/A
+
+        Assumptions:
+        None 
+
+        Inputs:
+            vehicle             data structure for aircraft                  [-]
+            mission             data structure for mission                   [-] 
+            cruise_segment_tag  string of cruise segment                     [string]
+            reserves            reserve fuel                                 [unitless] 
+            
+        Outputs: 
+            payload_range       data structure of payload range properties   [m/s]
+    """ 
+      
     for network in vehicle.networks:
         if type(network) == RCAIDE.Framework.Networks.Fuel:
             payload_range  =  conventional_payload_range_diagram(vehicle,mission,cruise_segment_tag,reserves,plot_diagram,fuel_name) 
@@ -35,12 +47,24 @@ def payload_range_diagram(vehicle,mission,cruise_segment_tag,reserves=0., plot_d
     return payload_range 
              
 def conventional_payload_range_diagram(vehicle,mission,cruise_segment_tag,reserves,plot_diagram, fuel_name): 
-    '''
-    
-    
-    
-    
-    '''
+    """Calculates and plots the payload range diagram for a fuel-bases aircraft by modifying the
+    cruise segment range and weights of the aicraft .
+
+        Sources:
+        N/A
+
+        Assumptions:
+        None 
+
+        Inputs:
+            vehicle             data structure for aircraft                  [-]
+            mission             data structure for mission                   [-] 
+            cruise_segment_tag  string of cruise segment                     [string]
+            reserves            reserve fuel                                 [unitless] 
+            
+        Outputs: 
+            payload_range       data structure of payload range properties   [m/s]
+    """ 
     #unpack
     mass = vehicle.mass_properties
     if not mass.operating_empty:
@@ -157,6 +181,7 @@ def conventional_payload_range_diagram(vehicle,mission,cruise_segment_tag,reserv
                       'axes.titlesize': ps.title_font_size}
         plt.rcParams.update(parameters)
         
+        if fuel_name ==  None: 
             fig  = plt.figure('Fuel_Payload_Range_Diagram')
         else:
             fig  = plt.figure('Fuel_Payload_Range_Diagram for ' + fuel_name)
@@ -171,11 +196,24 @@ def conventional_payload_range_diagram(vehicle,mission,cruise_segment_tag,reserv
     return payload_range 
  
 def electric_payload_range_diagram(vehicle,mission,cruise_segment_tag,plot_diagram):
-    '''
-    
-    
-    '''
+    """Calculates and plots the payload range diagram for an electric aircraft by modifying the
+    cruise segment distance and payload weight of the aicraft .
 
+        Sources:
+        N/A
+
+        Assumptions:
+        None 
+
+        Inputs:
+            vehicle             data structure for aircraft                  [-]
+            mission             data structure for mission                   [-] 
+            cruise_segment_tag  string of cruise segment                     [string]
+            reserves            reserve fuel                                 [unitless] 
+            
+        Outputs: 
+            payload_range       data structure of payload range properties   [m/s]
+    """ 
     mass = vehicle.mass_properties
     if not mass.operating_empty:
         print("Error calculating Payload Range Diagram: vehicle Operating Empty Weight is undefined.")
