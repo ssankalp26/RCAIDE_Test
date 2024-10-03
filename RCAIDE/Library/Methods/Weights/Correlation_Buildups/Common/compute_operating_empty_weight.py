@@ -136,7 +136,7 @@ def compute_operating_empty_weight(vehicle,settings=None,
     
     Wings = RCAIDE.Library.Components.Wings  
     if method_type == 'FLOPS Simple' or method_type == 'FLOPS Complex':
-        if vehicle.flight_envelope == None:
+        if vehicle.flight_envelope.design_mach_number  == None: # Added design mach number
             raise ValueError("FLOPS requires a design mach number for sizing!")
         if vehicle.flight_envelope.design_range  == None:
             raise ValueError("FLOPS requires a design range for sizing!")
