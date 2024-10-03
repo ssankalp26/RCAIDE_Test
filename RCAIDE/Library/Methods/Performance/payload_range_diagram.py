@@ -19,15 +19,15 @@ from matplotlib import pyplot as plt
 # ----------------------------------------------------------------------
 #  Calculate vehicle Payload Range Diagram
 # ---------------------------------------------------------------------- 
-def payload_range_diagram(vehicle,mission,cruise_segment_tag,reserves=0., plot_diagram = True): 
+def payload_range_diagram(vehicle,mission,cruise_segment_tag,reserves=0., plot_diagram = True, fuel_name=None): 
     for network in vehicle.networks:
         if type(network) == RCAIDE.Framework.Networks.Fuel:
-            payload_range  =  conventional_payload_range_diagram(vehicle,mission,cruise_segment_tag,reserves,plot_diagram) 
+            payload_range  =  conventional_payload_range_diagram(vehicle,mission,cruise_segment_tag,reserves,plot_diagram,fuel_name) 
         elif type(network) == RCAIDE.Framework.Networks.Electric:
             payload_range  =  electric_payload_range_diagram(vehicle,mission,cruise_segment_tag,plot_diagram)
     return payload_range 
             
-def conventional_payload_range_diagram(vehicle,mission,cruise_segment_tag,reserves,plot_diagram):
+def conventional_payload_range_diagram(vehicle,mission,cruise_segment_tag,reserves,plot_diagram, fuel_name):
     #unpack
     masses = vehicle.mass_properties
     if not masses.operating_empty:
@@ -138,7 +138,7 @@ def conventional_payload_range_diagram(vehicle,mission,cruise_segment_tag,reserv
     
     if plot_diagram: 
 
-        title = "Payload Range Diagram"
+        title = "Payload Range Diagram for " + fuel_name
         plt.figure(0)
         plt.plot(R,PLD,'r')
         plt.xlabel('Range (nm)'); plt.ylabel('Payload (kg)'); plt.title(title)
