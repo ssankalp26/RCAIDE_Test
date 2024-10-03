@@ -11,7 +11,7 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Compute Net Convected Heat 
 # ---------------------------------------------------------------------------------------------------------------------- 
-def air_cooled_performance(HAS,battery,coolant_line, Q_heat_gen,T_cell,state,delta_t,t_idx):
+def air_cooled_performance(HAS,battery,bus,coolant_line, Q_heat_gen,T_cell,state,delta_t,t_idx):
     '''Computes the net heat removed by direct air heat acquisition system.
 
     Assumptions:

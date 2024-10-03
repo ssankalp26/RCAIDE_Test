@@ -33,7 +33,8 @@ class Electric_Rotor(Propulsor):
         self.tag                          = 'electric_rotor'    
         self.motor                        = None
         self.rotor                        = None 
-        self.electronic_speed_controller  = None   
+        self.electronic_speed_controller  = None
+        self.active_busses                = None
  
 
     def append_operating_conditions(self,segment,bus,add_additional_network_equation = False):
