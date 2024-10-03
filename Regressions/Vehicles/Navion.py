@@ -1,9 +1,9 @@
-''' 
-  Navion.py
-  
-  Created: June 2024, M Clarke 
+# Navion.py
+# 
+# Created: Dec 2021, M. Clarke
 
-'''
+""" setup file for a mission with a Navion
+"""
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
@@ -11,7 +11,7 @@ import RCAIDE
 from RCAIDE.Framework.Core import Units   
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor import design_propeller
 from RCAIDE.Library.Methods.Geometry.Planform  import segment_properties
-from RCAIDE.Library.Plots        import *  
+from RCAIDE.Library.Plots       import *  
 
 # python imports 
 import os 
@@ -22,13 +22,16 @@ import numpy as np
 # ----------------------------------------------------------------------
 
 def vehicle_setup(): 
-    
-    #------------------------------------------------------------------------------------------------------------------------------------
-    # ################################################# Vehicle-level Properties ########################################################  
-    #------------------------------------------------------------------------------------------------------------------------------------
+       # ------------------------------------------------------------------
+    #   Initialize the Vehicle
+    # ------------------------------------------------------------------ 
     vehicle     = RCAIDE.Vehicle()
     vehicle.tag = 'Navion' 
- 
+
+    # ------------------------------------------------------------------
+    #   Vehicle-level Properties
+    # ------------------------------------------------------------------
+
     # mass properties
     vehicle.mass_properties.max_takeoff               = 2948 * Units.pounds
     vehicle.mass_properties.takeoff                   = 2948 * Units.pounds
@@ -37,11 +40,7 @@ def vehicle_setup():
     vehicle.envelope.ultimate_load                    = 5.7
     vehicle.envelope.limit_load                       = 3.8
     vehicle.reference_area                            = 17.112 
-    vehicle.passengers                                = 2
-
-    #------------------------------------------------------------------------------------------------------------------------------------
-    # ######################################################## Wings ####################################################################  
-    #------------------------------------------------------------------------------------------------------------------------------------    
+    vehicle.passengers                                = 2 
     # ------------------------------------------------------------------        
     #   Main Wing
     # ------------------------------------------------------------------   
@@ -125,7 +124,8 @@ def vehicle_setup():
     wing.append_control_surface(aileron)      
 
     # add to vehicle
-    vehicle.append_component(wing)  
+    vehicle.append_component(wing) 
+    
 
     # ------------------------------------------------------------------        
     #  Horizontal Stabilizer
@@ -288,11 +288,24 @@ def vehicle_setup():
     
     # add to vehicle
     vehicle.append_component(fuselage)
-    
-    #------------------------------------------------------------------------------------------------------------------------------------
-    # ########################################################  Energy Network  ######################################################### 
-    #------------------------------------------------------------------------------------------------------------------------------------
-    # define network 
+ 
+    # ------------------------------------------------------------------
+    #   Fuel
+    # ------------------------------------------------------------------    
+    # define fuel weight needed to size fuel system
+    fuel                                        = RCAIDE.Library.Attributes.Propellants.Aviation_Gasoline()
+    fuel.mass_properties                        = RCAIDE.Library.Components.Mass_Properties() 
+    fuel.number_of_tanks                        = 1.
+    fuel.origin                                 = [[1.652555594, 0.,-0.6006666]]
+    fuel.internal_volume                        = fuel.mass_properties.mass/fuel.density #all of the fuel volume is internal
+    fuel.mass_properties.center_of_gravity      = [1.852555594, 0., 6006666 ] 
+    fuel.mass_properties.mass                   = 319 *Units.lbs
+    vehicle.fuel                                = fuel
+
+
+
+
+    # ########################################################  Energy Network  #########################################################  
     net                                         = RCAIDE.Framework.Networks.Fuel()   
 
     #------------------------------------------------------------------------------------------------------------------------------------  
@@ -304,10 +317,10 @@ def vehicle_setup():
     #  Fuel Tank & Fuel
     #------------------------------------------------------------------------------------------------------------------------------------       
     fuel_tank                                   = RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Fuel_Tank()
-    fuel_tank.origin                            = wing.origin  
+    fuel_tank.origin                            = [[1.652555594, 0.,-0.6006666]] 
     fuel                                        = RCAIDE.Library.Attributes.Propellants.Aviation_Gasoline() 
     fuel.mass_properties.mass                   = 319 *Units.lbs 
-    fuel.mass_properties.center_of_gravity      = wing.mass_properties.center_of_gravity
+    fuel.mass_properties.center_of_gravity      = [1.852555594, 0., 6006666 ]  # Aerodynamic Center
     fuel.internal_volume                        = fuel.mass_properties.mass/fuel.density  
     fuel_tank.fuel                              = fuel     
     fuel_line.fuel_tanks.append(fuel_tank)  

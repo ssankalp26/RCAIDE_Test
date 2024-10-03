@@ -406,13 +406,13 @@ def vehicle_setup():
     #  Fuel Tank & Fuel
     #------------------------------------------------------------------------------------------------------------------------------------   
     fuel_tank                                   = RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Fuel_Tank()
-    fuel_tank.origin                            = wing.origin 
+    fuel_tank.origin                            = [[13.0,0,-1.]]
     
     # fuel 
     fuel                                        = RCAIDE.Library.Attributes.Propellants.Aviation_Gasoline()   
     fuel.mass_properties.mass                   = vehicle.mass_properties.max_takeoff-vehicle.mass_properties.max_fuel
-    fuel.origin                                 = vehicle.wings.main_wing.mass_properties.center_of_gravity      
-    fuel.mass_properties.center_of_gravity      = vehicle.wings.main_wing.aerodynamic_center
+    fuel.origin                                 = [[13.0,0,-1.]]      
+    fuel.mass_properties.center_of_gravity      = [[13.0,0,-1.]]
     fuel.internal_volume                        = fuel.mass_properties.mass/fuel.density  
     fuel_tank.fuel                              = fuel
     fuel_line.fuel_tanks.append(fuel_tank) 

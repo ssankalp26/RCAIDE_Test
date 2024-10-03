@@ -346,26 +346,36 @@ def vehicle_setup():
     #------------------------------------------------------------------------------------------------------------------------------------           
     # Battery
     #------------------------------------------------------------------------------------------------------------------------------------  
-    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Batteries.Lithium_Ion_NMC()
+    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC()
+    number_of_modules                                      = 14 
     bat.tag                                                = 'li_ion_battery'
-    bat.pack.electrical_configuration.series               = 140   
-    bat.pack.electrical_configuration.parallel             = 100
+    bat.electrical_configuration.series                     = 10   
+    bat.electrical_configuration.parallel             = 60
     initialize_from_circuit_configuration(bat)  
-    bat.module.number_of_modules                           = 14  
-    bat.module.geometrtic_configuration.total              = bat.pack.electrical_configuration.total
-    bat.module.voltage                                     = bat.pack.maximum_voltage/bat.module.number_of_modules # assumes modules are connected in parallel, must be less than max_module_voltage (~50) /safety_factor (~ 1.5)  
-    bat.module.geometrtic_configuration.normal_count       = 24
-    bat.module.geometrtic_configuration.parallel_count     = 40     
-    bus.voltage                                            = bat.pack.maximum_voltage  
-    bus.batteries.append(bat)            
+   
+    bat.geometrtic_configuration.total                      = bat.electrical_configuration.total
+    bat.voltage                                             = bat.maximum_voltage 
+    bat.geometrtic_configuration.normal_count               = 24
+    bat.geometrtic_configuration.parallel_count             = 40 
+     
+    for _ in range(number_of_modules):
+        bus.battery_modules.append(deepcopy(bat))    
+    
+    bus.charging_c_rate  = 1
+    bus.nominal_capacity = 0
+    for battery_module in  bus.battery_modules:
+        bus.voltage  +=   battery_module.voltage
+        bus.nominal_capacity =  max(battery_module.nominal_capacity, bus.nominal_capacity)       
+    
+    
+    
     
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     #  Starboard Propulsor
     #------------------------------------------------------------------------------------------------------------------------------------   
     starboard_propulsor                              = RCAIDE.Library.Components.Propulsors.Electric_Rotor()  
-    starboard_propulsor.tag                          = 'starboard_propulsor'
-    starboard_propulsor.active_batteries             = ['li_ion_battery']   
+    starboard_propulsor.tag                          = 'starboard_propulsor' 
   
     # Electronic Speed Controller       
     esc                                              = RCAIDE.Library.Components.Energy.Modulators.Electronic_Speed_Controller()
@@ -404,7 +414,7 @@ def vehicle_setup():
     motor                                            = RCAIDE.Library.Components.Propulsors.Converters.DC_Motor()
     motor.efficiency                                 = 0.98
     motor.origin                                     = [[2.,  2.5, 0.95]]
-    motor.nominal_voltage                            = bat.pack.maximum_voltage*0.5
+    motor.nominal_voltage                            = bus.voltage*0.5
     motor.no_load_current                            = 1
     motor.rotor_radius                               = propeller.tip_radius
     motor.design_torque                              = propeller.cruise.design_torque
@@ -482,8 +492,7 @@ def vehicle_setup():
     # Port Propulsor
     #------------------------------------------------------------------------------------------------------------------------------------   
     port_propulsor                             = RCAIDE.Library.Components.Propulsors.Electric_Rotor() 
-    port_propulsor.tag                         = "port_propulsor"
-    port_propulsor.active_batteries            = ['li_ion_battery']   
+    port_propulsor.tag                         = "port_propulsor" 
             
     esc_2                                      = deepcopy(esc)
     esc_2.origin                               = [[2., -2.5, 0.95]]      

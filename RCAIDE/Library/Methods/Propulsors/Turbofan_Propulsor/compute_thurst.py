@@ -19,12 +19,12 @@ import numpy as np
 def compute_thrust(turbofan,turbofan_conditions,conditions):
     """Computes thrust and other properties of the turbofan listed below: 
     turbofan.  
-      .outputs.thrust                           (numpy.ndarray): thrust                     [N] 
-      .outputs.thrust_specific_fuel_consumption (numpy.ndarray): TSFC                       [N/N-s] 
-      .outputs.non_dimensional_thrust           (numpy.ndarray): non-dim thurst             [unitless] 
-      .outputs.core_mass_flow_rate              (numpy.ndarray): core nozzle mass flow rate [kg/s] 
-      .outputs.fuel_flow_rate                   (numpy.ndarray): fuel flow rate             [kg/s] 
-      .outputs.power                            (numpy.ndarray): power                      [W] 
+      .outputs.thrust                                    (numpy.ndarray): thrust                               [N] 
+      .outputs.thrust_specific_fuel_consumption          (numpy.ndarray): TSFC                                 [N/N-s] 
+      .outputs.non_dimensional_thrust                    (numpy.ndarray): non-dim thurst                       [unitless] 
+      .outputs.core_mass_flow_rate                       (numpy.ndarray): core nozzle mass flow rate           [kg/s] 
+      .outputs.fuel_flow_rate                            (numpy.ndarray): fuel flow rate                       [kg/s] 
+      .outputs.power                                     (numpy.ndarray): power                                [W] 
       
     Assumptions:
         Perfect gas
@@ -35,27 +35,27 @@ def compute_thrust(turbofan,turbofan_conditions,conditions):
 
     Args: 
         conditions. 
-           freestream.isentropic_expansion_factor                (float): isentropic expansion factor   [unitless]  
-           freestream.specific_heat_at_constant_pressure         (float): speific heat                  [J/(kg K)] 
-           freestream.velocity                           (numpy.ndarray): freestream velocity           [m/s] 
-           freestream.speed_of_sound                     (numpy.ndarray): freestream speed_of_sound     [m/s] 
-           freestream.mach_number                        (numpy.ndarray): freestream mach_number        [unitless] 
-           freestream.pressure                           (numpy.ndarray): freestream pressure           [Pa] 
-           freestream.gravity                            (numpy.ndarray): freestream gravity            [m/s^2] 
-           propulsion.throttle                           (numpy.ndarray): throttle                      [unitless] 
+           freestream.isentropic_expansion_factor                (float): isentropic expansion factor          [unitless]  
+           freestream.specific_heat_at_constant_pressure         (float): speific heat                         [J/(kg K)] 
+           freestream.velocity                           (numpy.ndarray): freestream velocity                  [m/s] 
+           freestream.speed_of_sound                     (numpy.ndarray): freestream speed_of_sound            [m/s] 
+           freestream.mach_number                        (numpy.ndarray): freestream mach_number               [unitless] 
+           freestream.pressure                           (numpy.ndarray): freestream pressure                  [Pa] 
+           freestream.gravity                            (numpy.ndarray): freestream gravity                   [m/s^2] 
+           propulsion.throttle                           (numpy.ndarray): throttle                             [unitless] 
         turbofan 
-           ..fuel_to_air_ratio                          (float): fuel_to_air_ratio                    [unitless] 
-           ..total_temperature_reference                (float): total_temperature_reference          [K] 
-           ..total_pressure_reference                   (float): total_pressure_reference             [Pa]    
-           .core_nozzle.velocity                      (numpy.ndarray): turbofan core nozzle velocity        [m/s] 
-           .core_nozzle.static_pressure               (numpy.ndarray): turbofan core nozzle static pressure [Pa] 
-           .core_nozzle.area_ratio                            (float): turbofan core nozzle area ratio      [unitless] 
-           .fan_nozzle.velocity                       (numpy.ndarray): turbofan fan nozzle velocity         [m/s] 
-           .fan_nozzle.static_pressure                (numpy.ndarray): turbofan fan nozzle static pressure  [Pa] 
-           .fan_nozzle.area_ratio                             (float): turbofan fan nozzle area ratio       [unitless]   
-           .reference_temperature                             (float): reference_temperature                [K] 
-           .reference_pressure                                (float): reference_pressure                   [Pa] 
-           .compressor_nondimensional_massflow                (float): non-dim mass flow rate               [unitless]
+           .fuel_to_air_ratio                                    (float): fuel_to_air_ratio                    [unitless] 
+           .total_temperature_reference                          (float): total_temperature_reference          [K] 
+           .total_pressure_reference                             (float): total_pressure_reference             [Pa]    
+           .core_nozzle.velocity                         (numpy.ndarray): turbofan core nozzle velocity        [m/s] 
+           .core_nozzle.static_pressure                  (numpy.ndarray): turbofan core nozzle static pressure [Pa] 
+           .core_nozzle.area_ratio                               (float): turbofan core nozzle area ratio      [unitless] 
+           .fan_nozzle.velocity                          (numpy.ndarray): turbofan fan nozzle velocity         [m/s] 
+           .fan_nozzle.static_pressure                   (numpy.ndarray): turbofan fan nozzle static pressure  [Pa] 
+           .fan_nozzle.area_ratio                                (float): turbofan fan nozzle area ratio       [unitless]   
+           .reference_temperature                                (float): reference_temperature                [K] 
+           .reference_pressure                                   (float): reference_pressure                   [Pa] 
+           .compressor_nondimensional_massflow                   (float): non-dim mass flow rate               [unitless]
       
     Returns:
         None

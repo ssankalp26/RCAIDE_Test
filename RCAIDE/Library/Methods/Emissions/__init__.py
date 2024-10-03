@@ -8,4 +8,5 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-from .emissions_index_correlation import emissions_index_correlation
+from .Emission_Index_Empirical_Method import *
+from .Chemical_Reactor_Network_Method  import *

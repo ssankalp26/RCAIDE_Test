@@ -50,56 +50,67 @@ def plot_wavy_channel_conditions(wavy_channel, results, coolant_line, save_figur
     plt.rcParams.update(parameters)
      
     # get line colors for plots 
-    line_colors   = cm.inferno(np.linspace(0,0.9,len(results.segments)))     
-
-    fig = plt.figure(save_filename)
-    fig.set_size_inches(width,height) 
-    axis_0 = plt.subplot(1,1,1)
-    axis_1 = plt.subplot(2,2,1)
-    axis_2 = plt.subplot(2,2,2) 
-    axis_3 = plt.subplot(2,2,3)          
-    b_i = 0 
-   
-    axis_0.plot(np.zeros(2),np.nan*np.zeros(2), color = line_colors[0], marker = ps.markers[b_i], linewidth = ps.line_width, label = wavy_channel.tag) 
-    axis_0.grid(False)
-    axis_0.axis('off')  
-   
+    line_colors   = cm.inferno(np.linspace(0,0.9,len(results.segments)))
+    
+    fig_1 = plt.figure(save_filename + '_Coolant_Temp' )
+    fig_2 = plt.figure(save_filename + '_Coolant_Flowrate')
+    fig_3 = plt.figure(save_filename + '_Power')
+    fig_1.set_size_inches(width,height)
+    fig_2.set_size_inches(width,height)
+    fig_3.set_size_inches(width,height)
+     
+    axis_1 = fig_1.add_subplot(1,1,1)
+    axis_2 = fig_2.add_subplot(1,1,1) 
+    axis_3 = fig_3.add_subplot(1,1,1)
+    
+    b_i = 0  
+    
     for i in range(len(results.segments)):  
-        time                       = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min    
+        time                            = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min    
         wavy_channel_conditions         = results.segments[i].conditions.energy[coolant_line.tag][wavy_channel.tag]   
-        outlet_coolant_temperature = wavy_channel_conditions.outlet_coolant_temperature[:,0]
-        coolant_mass_flow_rate     = wavy_channel_conditions.coolant_mass_flow_rate[:,0]
-        power                      = wavy_channel_conditions.power[:,0]         
-        segment_tag                = results.segments[i].tag
-        segment_name               = segment_tag.replace('_', ' ') 
-
-                         
-        axis_1.plot(time, outlet_coolant_temperature, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width, label = segment_name)
+        outlet_coolant_temperature      = wavy_channel_conditions.outlet_coolant_temperature[:,0]
+        coolant_mass_flow_rate          = wavy_channel_conditions.coolant_mass_flow_rate[:,0]
+        power                           = wavy_channel_conditions.power[:,0]         
+        segment_tag                     = results.segments[i].tag
+        segment_name                    = segment_tag.replace('_', ' ') 
+ 
+        axis_1.plot(time, outlet_coolant_temperature, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name) 
         axis_1.set_ylabel(r'Coolant Temp. (K)') 
+        axis_1.set_xlabel(r'Time (mins)')
         set_axes(axis_1)     
          
-        axis_2.plot(time, coolant_mass_flow_rate, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+        axis_2.plot(time, coolant_mass_flow_rate, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
         axis_2.set_ylabel(r'Coolant $\dot{m}$ (kg/s)')
+        axis_2.set_xlabel(r'Time (mins)')
         set_axes(axis_2) 
  
-        axis_3.plot(time, power, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
-        axis_3.set_ylabel(r'HAS Power (W)')
+        axis_3.plot(time, power, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
+        axis_3.set_ylabel(r'Power (W)')
         axis_3.set_xlabel(r'Time (mins)')
         set_axes(axis_3)   
                           
-        b_i += 1 
+    b_i += 1 
             
     if show_legend:          
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
-        leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})     
+        leg_1 =  fig_1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})   
+        leg_2 =  fig_2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
+        leg_3 =  fig_2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_3.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})      
     
+    fig_1.tight_layout()    
+    fig_2.tight_layout()    
+    fig_3.tight_layout()
+        
     # Adjusting the sub-plots for legend 
-    fig.subplots_adjust(top=0.8) 
+    fig_1.subplots_adjust(top=0.8) 
+    fig_2.subplots_adjust(top=0.8) 
+    fig_3.subplots_adjust(top=0.8)
     
-    # set title of plot 
-    title_text   = 'Wavy_Channel_Properties'       
-    fig.suptitle(title_text) 
     
     if save_figure:
-        plt.savefig(save_filename + wavy_channel.tag + file_type)    
-    return fig 
+        fig_1.savefig(wavy_channel.tag + 'Coolant_Temp' + file_type) 
+        fig_2.savefig(wavy_channel.tag + 'Coolant_Flowrate' + file_type) 
+        fig_3.savefig(wavy_channel.tag + 'Power' + file_type)    
+    return fig_1,  fig_2, fig_3

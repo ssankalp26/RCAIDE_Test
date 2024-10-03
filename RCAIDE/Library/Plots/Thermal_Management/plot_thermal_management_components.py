@@ -30,11 +30,17 @@ def plot_thermal_management_component(results,
     
     for network in  results.segments[0].analyses.energy.vehicle.networks:
         for coolant_line in  network.coolant_lines:
-            for tag, item in  coolant_line.items(): 
-                if tag == 'batteries':
-                    for battery in item:
-                        for btms in  battery:
-                            btms.plot_operating_conditions(results,coolant_line,save_figure,show_legend,btms.tag,file_type,width, height)
+            for tag, item in  coolant_line.items():
+                if coolant_line.identical_batteries:
+                    if tag == 'battery_modules':
+                            for i, battery in enumerate(item):
+                                for btms in  (battery):
+                                    if i ==  0:
+                                        btms.plot_operating_conditions(results,coolant_line,save_figure,show_legend,btms.tag,file_type,width, height)
+                else:
+                    for _, battery in enumerate(item):
+                            for btms in  (battery):
+                                btms.plot_operating_conditions(results,coolant_line,save_figure,show_legend,btms.tag,file_type,width, height)
                 if tag == 'heat_exchangers':
                     for heat_exchanger in  item:
                         heat_exchanger.plot_operating_conditions(results,coolant_line,save_figure,show_legend,heat_exchanger.tag,file_type,width, height)

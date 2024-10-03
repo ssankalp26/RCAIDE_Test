@@ -57,42 +57,46 @@ def main():
     reserve_climb_throttle                       = results.segments.reserve_climb.conditions.energy['bus']['lift_rotor_propulsor_1'].throttle[3][0]  
     reserve_cruise_throttle                      = results.segments.reserve_cruise.conditions.energy['bus']['lift_rotor_propulsor_1'].throttle[3][0]
     reserve_descent_throttle                     = results.segments.reserve_descent.conditions.energy['bus']['lift_rotor_propulsor_1'].throttle[3][0] 
+    vertical_descent_throttle                    = results.segments.vertical_descent.conditions.energy['bus']['lift_rotor_propulsor_1'].throttle[3][0] 
     
     #print values for resetting regression
     show_vals = True
     if show_vals:
         data = [vertical_climb_throttle,  hover_throttle,  vertical_climb_2_throttle ,  vertical_transition_throttle ,              
                 low_speed_climb_transition_throttle,   high_speed_climb_transition_throttle, cruise_throttle,                            
-                descent_throttle,    reserve_climb_throttle,  reserve_cruise_throttle,  reserve_descent_throttle,   ]
+                descent_throttle,    reserve_climb_throttle,  reserve_cruise_throttle,  reserve_descent_throttle,
+                vertical_descent_throttle ]
         for val in data:
             print(val)
     
     # Truth values
-    vertical_climb_throttle_truth                       = 0.6076504419441053
-    hover_throttle_truth                                = 0.6044572977444364
-    vertical_climb_2_throttle_truth                     = 0.6079718628008569
-    vertical_transition_throttle_truth                  = 0.6043028366156381
-    low_speed_climb_transition_throttle_truth           = 0.5411198887621672
-    high_speed_climb_transition_throttle_truth          = 0.3163340311366646
-    cruise_throttle_truth                               = 0.33153148526487025
+    vertical_climb_throttle_truth                       = 0.6076504419441733
+    hover_throttle_truth                                = 0.604457297744355
+    vertical_climb_2_throttle_truth                     = 0.6079718628006788
+    vertical_transition_throttle_truth                  = 0.6043028366155772
+    low_speed_climb_transition_throttle_truth           = 0.541119888762097
+    high_speed_climb_transition_throttle_truth          = 0.31633403113666203
+    cruise_throttle_truth                               = 0.3315314855551311
     descent_throttle_truth                              = 0.3123412690545646
-    reserve_climb_throttle_truth                        = 0.2923889200977024
-    reserve_cruise_throttle_truth                       = 0.30689740485385486
-    reserve_descent_throttle_truth                      = 0.28269327552102963
+    reserve_climb_throttle_truth                        = 0.29238892009771306
+    reserve_cruise_throttle_truth                       = 0.30689740477333227
+    reserve_descent_throttle_truth                      = 0.2826932755219456
+    vertical_descent_throttle_truth                     = 0.5981164666860272  
     
     # Store errors 
     error = Data()
-    error.vertical_climb_throttle                     = np.max(np.abs( vertical_climb_throttle_truth                        - vertical_climb_throttle                     )/ vertical_climb_throttle_truth                    )
-    error.hover_throttle                              = np.max(np.abs( hover_throttle_truth                                 - hover_throttle                              )/ hover_throttle_truth                             )
-    error.vertical_climb_2_throttle                   = np.max(np.abs( vertical_climb_2_throttle_truth                      - vertical_climb_2_throttle                   )/ vertical_climb_2_throttle_truth                  )
-    error.vertical_transition_throttle                = np.max(np.abs( vertical_transition_throttle_truth                   - vertical_transition_throttle                )/ vertical_transition_throttle_truth               )
-    error.low_speed_climb_transition_throttle         = np.max(np.abs( low_speed_climb_transition_throttle_truth            - low_speed_climb_transition_throttle         )/ low_speed_climb_transition_throttle_truth        )
-    error.high_speed_climb_transition_throttle        = np.max(np.abs( high_speed_climb_transition_throttle_truth           - high_speed_climb_transition_throttle        )/ high_speed_climb_transition_throttle_truth       )
-    error.cruise_throttle                             = np.max(np.abs( cruise_throttle_truth                                - cruise_throttle                             )/ cruise_throttle_truth                            )
-    error.descent_throttle                            = np.max(np.abs( descent_throttle_truth                               - descent_throttle                            )/ descent_throttle_truth                           )
-    error.reserve_climb_throttle                      = np.max(np.abs( reserve_climb_throttle_truth                         - reserve_climb_throttle                      )/ reserve_climb_throttle_truth                     )
-    error.reserve_cruise_throttle                     = np.max(np.abs( reserve_cruise_throttle_truth                        - reserve_cruise_throttle                     )/ reserve_cruise_throttle_truth                    )
-    error.reserve_descent_throttle                    = np.max(np.abs( reserve_descent_throttle_truth                       - reserve_descent_throttle                     )/ reserve_descent_throttle_truth               )
+    error.vertical_climb_throttle                     = np.max(np.abs( vertical_climb_throttle_truth              - vertical_climb_throttle             )/ vertical_climb_throttle_truth                    )
+    error.hover_throttle                              = np.max(np.abs( hover_throttle_truth                       - hover_throttle                      )/ hover_throttle_truth                             )
+    error.vertical_climb_2_throttle                   = np.max(np.abs( vertical_climb_2_throttle_truth            - vertical_climb_2_throttle           )/ vertical_climb_2_throttle_truth                  )
+    error.vertical_transition_throttle                = np.max(np.abs( vertical_transition_throttle_truth         - vertical_transition_throttle        )/ vertical_transition_throttle_truth               )
+    error.low_speed_climb_transition_throttle         = np.max(np.abs( low_speed_climb_transition_throttle_truth  - low_speed_climb_transition_throttle )/ low_speed_climb_transition_throttle_truth        )
+    error.high_speed_climb_transition_throttle        = np.max(np.abs( high_speed_climb_transition_throttle_truth - high_speed_climb_transition_throttle)/ high_speed_climb_transition_throttle_truth       )
+    error.cruise_throttle                             = np.max(np.abs( cruise_throttle_truth                      - cruise_throttle                     )/ cruise_throttle_truth                            )
+    error.descent_throttle                            = np.max(np.abs( descent_throttle_truth                     - descent_throttle                    )/ descent_throttle_truth                           )
+    error.reserve_climb_throttle                      = np.max(np.abs( reserve_climb_throttle_truth               - reserve_climb_throttle              )/ reserve_climb_throttle_truth                     )
+    error.reserve_cruise_throttle                     = np.max(np.abs( reserve_cruise_throttle_truth              - reserve_cruise_throttle             )/ reserve_cruise_throttle_truth                    )
+    error.reserve_descent_throttle                    = np.max(np.abs( reserve_descent_throttle_truth             - reserve_descent_throttle            )/ reserve_cruise_throttle_truth                    )
+    error.vertical_descent_throttle                   = np.max(np.abs( vertical_descent_throttle_truth            - vertical_descent_throttle           )/ vertical_descent_throttle_truth                  )
  
     print('Errors:')
     print(error)
@@ -132,7 +136,7 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
     aerodynamics          = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
-    aerodynamics.geometry = vehicle
+    aerodynamics.vehicle = vehicle
     aerodynamics.settings.drag_coefficient_increment = 0.0000
     analyses.append(aerodynamics)   
 
@@ -441,7 +445,28 @@ def mission_setup(analyses ):
                                                                              'lift_rotor_propulsor_5','lift_rotor_propulsor_6','lift_rotor_propulsor_7','lift_rotor_propulsor_8']]
     segment.assigned_control_variables.body_angle.active             = True 
         
-    mission.append_segment(segment)        
+    mission.append_segment(segment)
+    
+
+    #------------------------------------------------------------------------------------------------------------------------------------ 
+    # Vertical Descent 
+    #------------------------------------------------------------------------------------------------------------------------------------ 
+    segment                                                         = Segments.Vertical_Flight.Descent(base_segment)
+    segment.tag                                                     = "Vertical_Descent" 
+    segment.analyses.extend( analyses.vertical_descent)               
+    segment.altitude_start                                          = 100.0 * Units.ft   
+    segment.altitude_end                                            = 0.   * Units.ft  
+    segment.descent_rate                                            = 200. * Units['ft/min']  
+                  
+    # define flight dynamics to model              
+    segment.flight_dynamics.force_z                                  = True     
+    
+    # define flight controls 
+    segment.assigned_control_variables.throttle.active               = True           
+    segment.assigned_control_variables.throttle.assigned_propulsors  = [['lift_rotor_propulsor_1','lift_rotor_propulsor_2','lift_rotor_propulsor_3','lift_rotor_propulsor_4',
+                                                                             'lift_rotor_propulsor_5','lift_rotor_propulsor_6','lift_rotor_propulsor_7','lift_rotor_propulsor_8']]  
+            
+    mission.append_segment(segment)       
      
     return mission
 
@@ -469,11 +494,11 @@ def plot_results(results):
 
     plot_propulsor_throttles(results)
     
-    # Plot Aircraft Electronics
-    plot_battery_pack_conditions(results) 
+    # Plot Aircraft Electronics 
+    plot_battery_module_conditions(results) 
     plot_battery_temperature(results)
     plot_battery_cell_conditions(results) 
-    plot_battery_pack_C_rates(results)
+    plot_battery_module_C_rates(results) 
     plot_battery_degradation(results) 
     
     # Plot Propeller Conditions 

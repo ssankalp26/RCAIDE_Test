@@ -39,6 +39,7 @@ class Turbofan(Propulsor):
         self.core_nozzle                              = None 
         self.fan_nozzle                               = None  
         self.active_fuel_tanks                        = None         
+        self.engine_diameter                          = 0.0      
         self.engine_length                            = 0.0
         self.engine_height                            = 0.5     # Engine centerline heigh above the ground plane
         self.exa                                      = 1       # distance from fan face to fan exit/ fan diameter)

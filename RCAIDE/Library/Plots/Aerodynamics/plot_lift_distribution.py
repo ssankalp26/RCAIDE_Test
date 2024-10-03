@@ -19,7 +19,7 @@ def plot_lift_distribution(results,vehicle,
                            save_figure = False,
                            save_filename = "Lift_Distribution",
                            file_type = ".png",
-                           width = 12, height = 7):
+                           width = 8, height = 6):
     """This plots the sectional lift distrubtion at all control points
      on all lifting surfaces of the aircraft
 

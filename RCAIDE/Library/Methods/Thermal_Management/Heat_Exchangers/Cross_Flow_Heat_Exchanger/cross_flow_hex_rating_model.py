@@ -105,7 +105,7 @@ def cross_flow_hex_rating_model(HEX,state,coolant_line, delta_t,t_idx):
     m_dot_h         = HEX.design_coolant_mass_flow_rate#*turndown_ratio
     m_dot_c         = HEX.design_air_mass_flow_rate#*turndown_ratio 
     P_i_c           = HEX.design_air_inlet_pressure#*turndown_ratio
-    P_i_h           = HEX.design_coolant_inlet_pressure* 0.1#*turndown_ratio 
+    P_i_h           = HEX.design_coolant_inlet_pressure#*turndown_ratio 
     rho_c_i         = air.compute_density(T_i_h,P_i_c)
     rho_h_i         = coolant.compute_density(T_i_h)  
      

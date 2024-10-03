@@ -52,8 +52,8 @@ def compute_compression_nozzle_performance(compression_nozzle,nozzle_conditions,
     """
 
     # Unpack conditions
-    gamma   = conditions.freestream.isentropic_expansion_factor
-    Cp      = conditions.freestream.specific_heat_at_constant_pressure
+    #gamma   = conditions.freestream.isentropic_expansion_factor
+    #Cp      = conditions.freestream.specific_heat_at_constant_pressure
     P0      = conditions.freestream.pressure
     M0      = conditions.freestream.mach_number 
 
@@ -64,6 +64,17 @@ def compute_compression_nozzle_performance(compression_nozzle,nozzle_conditions,
     eta_p_old               = compression_nozzle.polytropic_efficiency
     eta_rec                 = compression_nozzle.pressure_recovery
     compressibility_effects = compression_nozzle.compressibility_effects
+    
+    # Unpack ram inputs
+    working_fluid           = compression_nozzle.working_fluid
+ 
+    # Compute the working fluid properties  
+    T0     = nozzle_conditions.inputs.static_temperature
+    P0     = nozzle_conditions.inputs.static_pressure   
+    M0     = nozzle_conditions.inputs.mach_number 
+    gamma  = working_fluid.compute_gamma(T0,P0) 
+    Cp     = working_fluid.compute_cp(T0,P0)  
+    a      = working_fluid.compute_speed_of_sound(T0,P0)    
  
     # Compute output stagnation quantities
     Pt_out  = Pt_in*PR*eta_rec
@@ -73,45 +84,46 @@ def compute_compression_nozzle_performance(compression_nozzle,nozzle_conditions,
     if compressibility_effects: 
         # initilize arrays
         Pt_out   = np.ones_like(Tt_in)
-        Mach     = np.ones_like(Tt_in)
+        M_out     = np.ones_like(Tt_in)
         T_out    = np.ones_like(Tt_in)
         P_out    = np.ones_like(Tt_in)
 
-        # if Inlet Mach <= 1.0, use isentropic relations
-        i_low          = M0 <= 1.0
-        Pt_out[i_low]  = Pt_in[i_low]*PR
-        Mach[i_low]    = np.sqrt( (((Pt_out[i_low]/P0[i_low])**((gamma[i_low]-1.)/gamma[i_low]))-1.) *2./(gamma[i_low]-1.) ) 
-        T_out[i_low]   = Tt_out[i_low]/(1.+(gamma[i_low]-1.)/2.*Mach[i_low]*Mach[i_low])
+        if M_out <= 1.0: # use isentropic relations
+            i_low          = M0 <= 1.0
+            Pt_out[i_low]  = Pt_in[i_low]*PR
+            M_out[i_low]    = np.sqrt( (((Pt_out[i_low]/P0[i_low])**((gamma[i_low]-1.)/gamma[i_low]))-1.) *2./(gamma[i_low]-1.) ) 
+            T_out[i_low]   = Tt_out[i_low]/(1.+(gamma[i_low]-1.)/2.*M_out[i_low]*M_out[i_low])
+            P_out[i_low]   = Pt_out[i_low]/((1.+(gamma[i_low]-1.)/2.*M_out[i_low]*M_out[i_low])**(gamma[i_low]/(gamma[i_low]-1.)))
 
-        # if Inlet Mach > 1.0, use normal shock
-        i_high         = M0 > 1.0
-        Mach[i_high]   = np.sqrt((1.+(gamma[i_high]-1.)/2.*M0[i_high]**2.)/(gamma[i_high]*M0[i_high]**2-(gamma[i_high]-1.)/2.))
-        T_out[i_high]  = Tt_out[i_high]/(1.+(gamma[i_high]-1.)/2*Mach[i_high]*Mach[i_high])
-        Pt_out[i_high] = PR*Pt_in[i_high]*((((gamma[i_high]+1.)*(M0[i_high]**2.))/((gamma[i_high]-1.)*\
-                        M0[i_high]**2.+2.))**(gamma[i_high]/(gamma[i_high]-1.)))*((gamma[i_high]+1.)/(2.*gamma[i_high]*\
-                        M0[i_high]**2.-(gamma[i_high]-1.)))**(1./(gamma[i_high]-1.))
-        P_out[i_high]  = Pt_out[i_high]*(1.+(gamma[i_high]-1.)/2.*Mach[i_high]**2.)**(-gamma[i_high]/(gamma[i_high]-1.))
+        else: # use normal shock
+            i_high         = M0 > 1.0
+            M_out[i_high]   = np.sqrt((1.+(gamma[i_high]-1.)/2.*M0[i_high]**2.)/(gamma[i_high]*M0[i_high]**2-(gamma[i_high]-1.)/2.))
+            T_out[i_high]  = Tt_out[i_high]/(1.+(gamma[i_high]-1.)/2*M_out[i_high]*M_out[i_high])
+            Pt_out[i_high] = PR*Pt_in[i_high]*((((gamma[i_high]+1.)*(M0[i_high]**2.))/((gamma[i_high]-1.)*\
+                            M0[i_high]**2.+2.))**(gamma[i_high]/(gamma[i_high]-1.)))*((gamma[i_high]+1.)/(2.*gamma[i_high]*\
+                            M0[i_high]**2.-(gamma[i_high]-1.)))**(1./(gamma[i_high]-1.))
+            P_out[i_high]  = Pt_out[i_high]/(1.+(gamma[i_high]-1.)/2.*M_out[i_high]**2.)**(gamma[i_high]/(gamma[i_high]-1.))
     else:
         Pt_out  = Pt_in*PR*eta_rec 
         if np.any(Pt_out<P0): # in case pressures go too low
             warn('Pt_out goes too low',RuntimeWarning)
             Pt_out[Pt_out<P0] = P0[Pt_out<P0] 
-        Mach   = np.sqrt( (((Pt_out/P0)**((gamma-1.)/gamma))-1.) *2./(gamma-1.) )
-        T_out  = Tt_out/(1.+(gamma-1.)/2.*Mach*Mach)
+        M_out   = np.sqrt( (((Pt_out/P0)**((gamma-1.)/gamma))-1.) *2./(gamma-1.) )
+        T_out  = Tt_out/(1.+(gamma-1.)/2.*M_out*M_out)
+        P_out  = Pt_out/(1.+(gamma-1.)/2.*M_out*M_out)**(gamma/(gamma-1.))
         
     # Compute exit ethalpy and velocity  
     h_out   = Cp*T_out
     u_out   = np.sqrt(2.*(ht_out-h_out))
 
     # Pack computed quantities into outputs
-    nozzle_conditions.outputs.mach_number             = Mach
-    nozzle_conditions.outputs.static_temperature      = T_out
-    nozzle_conditions.outputs.static_enthalpy         = h_out
+    nozzle_conditions.outputs.mach_number             = M_out
     nozzle_conditions.outputs.velocity                = u_out
-    nozzle_conditions.outputs.stagnation_temperature  = Tt_out
-    nozzle_conditions.outputs.stagnation_pressure     = Pt_out
-    nozzle_conditions.outputs.stagnation_temperature  = Tt_out
-    nozzle_conditions.outputs.stagnation_pressure     = Pt_out
+    nozzle_conditions.outputs.static_enthalpy         = h_out
+    nozzle_conditions.outputs.static_temperature      = T_out
+    nozzle_conditions.outputs.static_pressure         = P_out
     nozzle_conditions.outputs.stagnation_enthalpy     = ht_out
+    nozzle_conditions.outputs.stagnation_temperature  = Tt_out
+    nozzle_conditions.outputs.stagnation_pressure     = Pt_out
     
     return 

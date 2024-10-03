@@ -46,9 +46,17 @@ def compute_combustor_performance(combustor,combustor_conditions,conditions):
       
     Returns:
         None
-    """          
-    # unpacking the values from conditions 
-    Cp      =  conditions.freestream.specific_heat_at_constant_pressure 
+    """ 
+    T0                      = combustor_conditions.inputs.static_temperature
+    P0                      = combustor_conditions.inputs.static_pressure  
+    M0                      = combustor_conditions.inputs.mach_number 
+                                 
+    # Unpack ram inputs         
+    working_fluid           = combustor.working_fluid
+ 
+    # Compute the working fluid properties 
+    gamma  = working_fluid.compute_gamma(T0,P0) 
+    Cp     = working_fluid.compute_cp(T0,P0) 
     
     # unpacking the values form inputs
     Tt_in    = combustor_conditions.inputs.stagnation_temperature
@@ -72,10 +80,16 @@ def compute_combustor_performance(combustor,combustor_conditions,conditions):
     # Computing the exit static and stagnation conditions
     ht_out  = Tt4 * Cp
     
+    T_out     = Tt4/(1.+(gamma-1.)/2.*M0*M0)
+    P_out     = Pt_out/((1.+(gamma-1.)/2.*M0*M0)**(gamma/(gamma-1.)))     
+    
     # Pack results 
     combustor_conditions.outputs.stagnation_temperature  = Tt4
     combustor_conditions.outputs.stagnation_pressure     = Pt_out
     combustor_conditions.outputs.stagnation_enthalpy     = ht_out
-    combustor_conditions.outputs.fuel_to_air_ratio       = f 
+    combustor_conditions.outputs.fuel_to_air_ratio       = f
+    combustor_conditions.outputs.static_temperature      = T_out
+    combustor_conditions.outputs.static_pressure         = P_out 
+    combustor_conditions.outputs.mach_number             = M0 
     
     return 
