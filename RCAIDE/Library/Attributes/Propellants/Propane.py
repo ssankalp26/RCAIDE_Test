@@ -23,7 +23,6 @@ class Propane(Propellant):
             None
         
         Source: 
-    
         """    
         self.tag                       = 'Propane'
         self.reactant                  = 'O2'

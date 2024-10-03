@@ -19,8 +19,8 @@ from matplotlib import pyplot as plt
  
 # ----------------------------------------------------------------------
 #  Calculate vehicle Payload Range Diagram
-# ---------------------------------------------------------------------- 
-def payload_range_diagram(vehicle,mission,cruise_segment_tag,reserves=0., plot_diagram = True):
+# ----------------------------------------------------------------------  
+def payload_range_diagram(vehicle,mission,cruise_segment_tag,reserves=0., plot_diagram = True, fuel_name=None):  
     '''
     
     
@@ -29,12 +29,12 @@ def payload_range_diagram(vehicle,mission,cruise_segment_tag,reserves=0., plot_d
     '''
     for network in vehicle.networks:
         if type(network) == RCAIDE.Framework.Networks.Fuel:
-            payload_range  =  conventional_payload_range_diagram(vehicle,mission,cruise_segment_tag,reserves,plot_diagram) 
+            payload_range  =  conventional_payload_range_diagram(vehicle,mission,cruise_segment_tag,reserves,plot_diagram,fuel_name) 
         elif type(network) == RCAIDE.Framework.Networks.Electric:
             payload_range  =  electric_payload_range_diagram(vehicle,mission,cruise_segment_tag,plot_diagram)
     return payload_range 
-            
-def conventional_payload_range_diagram(vehicle,mission,cruise_segment_tag,reserves,plot_diagram):
+             
+def conventional_payload_range_diagram(vehicle,mission,cruise_segment_tag,reserves,plot_diagram, fuel_name): 
     '''
     
     
@@ -146,7 +146,7 @@ def conventional_payload_range_diagram(vehicle,mission,cruise_segment_tag,reserv
     payload_range.fuel           = np.array(FUEL)
     payload_range.takeoff_weight = np.array(TOW)
     payload_range.reserves       = reserves
-    
+     
     if plot_diagram:  
         # get plotting style 
         ps      = plot_style()  
@@ -157,14 +157,14 @@ def conventional_payload_range_diagram(vehicle,mission,cruise_segment_tag,reserv
                       'axes.titlesize': ps.title_font_size}
         plt.rcParams.update(parameters)
     
-        fig  = plt.figure('Fuel_Payload_Range_Diagram')
+        fig  = plt.figure('Fuel_Payload_Range_Diagram ' + fuel_name)
         axis = fig.add_subplot(1,1,1)
         axis.plot(payload_range.range /Units.nmi,payload_range.payload,color = 'k', linewidth = ps.line_width )
         axis.set_xlabel('Range (nautical miles)')
         axis.set_ylabel('Payload (kg)')
         axis.set_title("Fuel Payload Range Diagram") 
         fig.tight_layout()
-        set_axes(axis)
+        set_axes(axis) 
 
     return payload_range 
  
