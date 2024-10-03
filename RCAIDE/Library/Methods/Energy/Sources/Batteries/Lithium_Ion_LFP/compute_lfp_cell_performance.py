@@ -186,7 +186,7 @@ def compute_lfp_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
 
        # Compute cell temperature
         if HAS is not None:
-            T_cell[t_idx+1]  = HAS.compute_thermal_performance(battery,coolant_line, Q_heat_cell[t_idx],T_cell[t_idx],state,delta_t[t_idx],t_idx)
+            T_cell[t_idx+1]  = HAS.compute_thermal_performance(battery,bus,coolant_line,Q_heat_cell[t_idx],T_cell[t_idx],state,delta_t[t_idx],t_idx)
         else:
             # Considers a thermally insulated system and the heat piles on in the system
             dT_dt              = Q_heat_cell[t_idx]/(cell_mass*Cp)

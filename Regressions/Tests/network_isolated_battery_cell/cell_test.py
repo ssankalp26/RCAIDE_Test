@@ -72,7 +72,7 @@ def lithium_ion_battery_test():
     C_rat                 = [0.5,1]  
     marker_size           = 5 
     mAh                   = np.array([3550,1500]) 
-    V_ul_true             = np.array([[3.979089016769657,3.6014269379449155], [3.92220237090634,3.6143636985487304]])
+    V_ul_true             = np.array([[3.9778965026962454,3.6014269379449155], [3.92220237090634,3.6143636985487304]])
     bat_temp_true         = np.array([[292.3915600365144,288.85765659521235], [296.40173907355614,289.5653131904246]])  
 
     # PLot parameters 
@@ -116,6 +116,7 @@ def lithium_ion_battery_test():
             V_ul_diff   = np.abs(V_ul - V_ul_true[j,i])
             print('Under load voltage difference')
             print(V_ul_diff)
+
             assert np.abs((V_ul_diff)/V_ul_true[j,i]) < 1e-6 
             
             # Temperature Regression
