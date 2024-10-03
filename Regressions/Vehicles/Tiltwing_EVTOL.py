@@ -13,13 +13,16 @@ from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion            i
 from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor                     import design_motor
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor                        import design_prop_rotor ,design_prop_rotor 
 from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Electric            import compute_weight , converge_weight 
-from RCAIDE.Library.Plots                                                      import *       
+from RCAIDE.Library.Plots                                                      import *     
+
+from RCAIDE.load    import load as load_rotor
+from RCAIDE.save    import save as save_rotor  
  
 import os
 import numpy as np 
 from copy import deepcopy 
 
-def vehicle_setup(): 
+def vehicle_setup(new_regression=True): 
     
     #------------------------------------------------------------------------------------------------------------------------------------
     # ################################################# Vehicle-level Properties ########################################################  
@@ -257,6 +260,7 @@ def vehicle_setup():
     # Lift Rotor Design
     g                                             = 9.81                                    # gravitational acceleration   
     Hover_Load                                    = vehicle.mass_properties.takeoff*g *1.1  # hover load   
+
     prop_rotor                                    = RCAIDE.Library.Components.Propulsors.Converters.Prop_Rotor()   
     prop_rotor.tag                                = 'prop_rotor'   
     prop_rotor.tip_radius                         = 0.8875
@@ -283,10 +287,20 @@ def vehicle_setup():
                                                      rel_path + 'Airfoils' + separator + 'Polars' + separator + 'NACA_4412_polar_Re_5000000.txt',
                                                      rel_path + 'Airfoils' + separator + 'Polars' + separator + 'NACA_4412_polar_Re_7500000.txt' ]
     prop_rotor.append_airfoil(airfoil)                
-    prop_rotor.airfoil_polar_stations             = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]   
-    design_prop_rotor(prop_rotor)
-    lift_propulsor.rotor                          = prop_rotor 
-     
+    prop_rotor.airfoil_polar_stations             = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]    
+    if  new_regression:
+        design_prop_rotor(prop_rotor)
+        save_rotor(prop_rotor, 'vahana_tilt_rotor_geometry.res')
+    else:
+        regression_prop_rotor = deepcopy(prop_rotor)
+        design_prop_rotor(regression_prop_rotor, iterations=2)
+        loaded_prop_rotor = load_rotor('vahana_tilt_rotor_geometry.res')
+        
+        for key,item in prop_rotor.items():
+            prop_rotor[key] = loaded_prop_rotor[key] 
+        prop_rotor.Wake   = RCAIDE.Framework.Analyses.Propulsion.Rotor_Wake_Fidelity_Zero()         
+            
+    lift_propulsor.rotor =  prop_rotor
     
     #------------------------------------------------------------------------------------------------------------------------------------               
     # Lift Rotor Motor  

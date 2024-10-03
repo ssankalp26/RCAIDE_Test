@@ -16,6 +16,8 @@ from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor                     i
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor                        import design_propeller ,design_lift_rotor 
 from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Electric            import compute_weight , converge_weight 
 from RCAIDE.Library.Plots                                                      import *       
+from RCAIDE.load    import load as load_rotor
+from RCAIDE.save    import save as save_rotor  
  
 import os
 import numpy as np 
@@ -24,7 +26,7 @@ from copy import deepcopy
 # ----------------------------------------------------------------------
 #   Build the Vehicle
 # ----------------------------------------------------------------------
-def vehicle_setup() : 
+def vehicle_setup(new_regression=True) : 
     
     #------------------------------------------------------------------------------------------------------------------------------------
     # ################################################# Vehicle-level Properties ########################################################  
@@ -645,9 +647,20 @@ def vehicle_setup() :
                                                               rel_path + 'Airfoils' + separator + 'Polars' + separator + 'NACA_4412_polar_Re_5000000.txt',
                                                               rel_path + 'Airfoils' + separator + 'Polars' + separator + 'NACA_4412_polar_Re_7500000.txt' ]
     lift_rotor.append_airfoil(airfoil)                         
-    lift_rotor.airfoil_polar_stations                      = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]  
-    lift_rotor                                             = design_lift_rotor(lift_rotor,iterations = 20) 
-    lift_propulsor_1.rotor                                 = lift_rotor      
+    lift_rotor.airfoil_polar_stations                      = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]    
+    if  new_regression:
+        design_lift_rotor(lift_rotor)
+        save_rotor(lift_rotor, 'stopped_rotor_geometry.res')
+    else:
+        regression_lift_rotor = deepcopy(lift_rotor)
+        design_lift_rotor(regression_lift_rotor,iterations = 2)
+        loaded_lift_rotor = load_rotor('stopped_rotor_geometry.res')
+        
+        for key,item in lift_rotor.items():
+            lift_rotor[key] = loaded_lift_rotor[key] 
+        lift_rotor.Wake   = RCAIDE.Framework.Analyses.Propulsion.Rotor_Wake_Fidelity_Zero()         
+            
+    lift_propulsor_1.rotor =  lift_rotor          
     
     #------------------------------------------------------------------------------------------------------------------------------------               
     # Lift Rotor Motor  
