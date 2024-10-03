@@ -156,8 +156,10 @@ def conventional_payload_range_diagram(vehicle,mission,cruise_segment_tag,reserv
                       'ytick.labelsize': ps.axis_font_size,
                       'axes.titlesize': ps.title_font_size}
         plt.rcParams.update(parameters)
-    
-        fig  = plt.figure('Fuel_Payload_Range_Diagram ' + fuel_name)
+        
+            fig  = plt.figure('Fuel_Payload_Range_Diagram')
+        else:
+            fig  = plt.figure('Fuel_Payload_Range_Diagram for ' + fuel_name)
         axis = fig.add_subplot(1,1,1)
         axis.plot(payload_range.range /Units.nmi,payload_range.payload,color = 'k', linewidth = ps.line_width )
         axis.set_xlabel('Range (nautical miles)')
