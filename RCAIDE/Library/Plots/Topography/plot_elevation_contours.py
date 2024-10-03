@@ -28,7 +28,7 @@ def plot_elevation_contours(topography_file,
                             show_legend = True,
                             save_filename = "Elevation_Contours",
                             file_type = ".png",
-                            width = 12, height = 7): 
+                            width = 8, height = 6): 
     
 
     """This plots the elevation contours

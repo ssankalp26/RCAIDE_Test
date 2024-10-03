@@ -108,7 +108,7 @@ class Evaluate(Segment):
         iterate.conditions.gravity               = Common.Update.gravity
         iterate.conditions.freestream            = Common.Update.freestream
         iterate.conditions.orientations          = Common.Update.orientations
-        iterate.conditions.energy                = Common.Update.thrust
+        iterate.conditions.thrust                = Common.Update.thrust
         iterate.conditions.aerodynamics          = Common.Update.aerodynamics
         iterate.conditions.stability             = Common.Update.stability
         iterate.conditions.weights               = Common.Update.weights
@@ -123,8 +123,8 @@ class Evaluate(Segment):
         #  Post Process   
         # -------------------------------------------------------------- 
         post_process                    = self.process.post_process   
-        post_process.inertial_position  = Common.Update.inertial_horizontal_position
-        post_process.battery_age        = Common.Update.battery_age  
+        post_process.inertial_position  = Common.Update.linear_inertial_horizontal_position
+        post_process.energy             = Common.Update.energy 
         post_process.noise              = Common.Update.noise
         post_process.emissions          = Common.Update.emissions
         

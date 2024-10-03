@@ -54,7 +54,7 @@ def  wavy_channel_rating_model(HAS,battery,coolant_line,Q_heat_gen,T_cell,state,
     for reservoir in  coolant_line.reservoirs:
         T_inlet                  = state.conditions.energy.coolant_line[reservoir.tag].coolant_temperature[t_idx, 0] 
     #turndown_ratio           = battery_conditions.thermal_management_system.HAS.percent_operation[t_idx,0] 
-    T_cell                   = state.conditions.energy.bus[battery.tag].cell.temperature[t_idx, 0]  
+    T_cell                   = state.conditions.energy.bus.battery_modules[battery.tag].cell.temperature[t_idx, 0]  
     heat_transfer_efficiency = HAS.heat_transfer_efficiency   
 
     # Coolant Properties
@@ -70,14 +70,12 @@ def  wavy_channel_rating_model(HAS,battery,coolant_line,Q_heat_gen,T_cell,state,
     d_cell                      = battery.cell.diameter                    
     h_cell                      = battery.cell.height                      
     A_cell                      = np.pi*d_cell*h_cell 
-    N_cells                     = battery.module.geometrtic_configuration.parallel_count*battery.module.geometrtic_configuration.normal_count  # these are the number of cells in a given module right?  
+    N_cells_geometric_config    = battery.geometrtic_configuration.parallel_count*battery.geometrtic_configuration.normal_count  
     cell_mass                   = battery.cell.mass 
-    Nn_module_cells             = battery.module.geometrtic_configuration.normal_count            
-    Np_module_cells             = battery.module.geometrtic_configuration.parallel_count    
-    number_of_modules           = battery.pack.number_of_modules 
+    Nn_module_cells             = battery.electrical_configuration.series            
+    Np_module_cells             = battery.electrical_configuration.parallel
     number_of_cells_in_module   = Nn_module_cells*Np_module_cells   
     Q_module                    = Q_heat_gen*number_of_cells_in_module
-    Q_pack                      = Q_module*number_of_modules 
     Cp_bat                      = battery.cell.specific_heat_capacity
     
     
@@ -92,11 +90,11 @@ def  wavy_channel_rating_model(HAS,battery,coolant_line,Q_heat_gen,T_cell,state,
     n_pump    = 0.7 
     
     # Contact Surface area of the channel 
-    A_chan   = 2*N_cells*(theta)*A_cell  
+    A_chan   = 2*N_cells_geometric_config*(theta)*A_cell  
 
     #Length of Channel   
-    L_extra  = battery.module.geometrtic_configuration.parallel_count*d_cell
-    L_chan   = (N_cells*d_cell)+L_extra 
+    L_extra  =  battery.geometrtic_configuration.parallel_count*d_cell
+    L_chan   = (N_cells_geometric_config*d_cell)+L_extra 
 
     # Hydraulic diameter    
     dh   = (4*c*d)/(2*(c+d))   
@@ -144,7 +142,7 @@ def  wavy_channel_rating_model(HAS,battery,coolant_line,Q_heat_gen,T_cell,state,
         heat_transfer_efficiency      = (T_o - T_inlet) / (T_cell - T_inlet)
         
         # Calculate the Power consumed
-        Power   = number_of_modules*Pump.compute_power_consumed(dp, rho, m_coolant, n_pump) 
+        Power   = Pump.compute_power_consumed(dp, rho, m_coolant, n_pump) 
         
         # Update temperature of Battery Pack
         P_net                   = Q_module - Q_convec 
@@ -165,7 +163,7 @@ def  wavy_channel_rating_model(HAS,battery,coolant_line,Q_heat_gen,T_cell,state,
         heat_transfer_efficiency      = (T_o - T_inlet) / (T_cell - T_inlet)
             
         # Calculate the Power consumed
-        Power   = number_of_modules*Pump.compute_power_consumed(dp, rho, m_coolant, n_pump) 
+        Power   = Pump.compute_power_consumed(dp, rho, m_coolant, n_pump) 
             
         # Update temperature of Battery Pack
         P_net                   = Q_convec + Q_module
@@ -175,13 +173,13 @@ def  wavy_channel_rating_model(HAS,battery,coolant_line,Q_heat_gen,T_cell,state,
         P_net = 0
         Q_convec = 0
         T_o = T_inlet
-        Power   = number_of_modules*Pump.compute_power_consumed(dp, rho, m_coolant, n_pump)         
+        Power   = Pump.compute_power_consumed(dp, rho, m_coolant, n_pump)         
         
         
-    dT_dt                   = P_net/(cell_mass*N_cells*Cp_bat)
+    dT_dt                   = P_net/(cell_mass*N_cells_geometric_config*Cp_bat)
     T_cell_new              = T_cell + dT_dt*delta_t 
    
-    state.conditions.energy[coolant_line.tag][HAS.tag].heat_removed[t_idx+1]               = Q_convec*number_of_modules
+    state.conditions.energy[coolant_line.tag][HAS.tag].heat_removed[t_idx+1]               = Q_convec
     state.conditions.energy[coolant_line.tag][HAS.tag].outlet_coolant_temperature[t_idx+1] = T_o
     state.conditions.energy[coolant_line.tag][HAS.tag].coolant_mass_flow_rate[t_idx+1]     = m_coolant
     state.conditions.energy[coolant_line.tag][HAS.tag].effectiveness[t_idx+1]              = heat_transfer_efficiency

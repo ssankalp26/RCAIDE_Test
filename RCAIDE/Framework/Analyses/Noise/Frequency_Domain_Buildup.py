@@ -6,15 +6,13 @@
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
-# ----------------------------------------------------------------------------------------------------------------------
-import  RCAIDE
-from .Noise      import Noise    
-
+# ----------------------------------------------------------------------------------------------------------------------  
 # noise imports    
 from RCAIDE.Library.Methods.Noise.Common.decibel_arithmetic                           import SPL_arithmetic
 from RCAIDE.Library.Methods.Noise.Common.generate_microphone_locations                import generate_zero_elevation_microphone_locations, generate_noise_hemisphere_microphone_locations
 from RCAIDE.Library.Methods.Noise.Common.compute_relative_noise_evaluation_locations  import compute_relative_noise_evaluation_locations  
-from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.compute_rotor_noise  import compute_rotor_noise
+from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.compute_rotor_noise  import compute_rotor_noise 
+from .Noise      import Noise   
 
 # package imports
 import numpy as np
@@ -64,7 +62,6 @@ class Frequency_Domain_Buildup(Noise):
         
         # Initialize quantities
         settings                                        = self.settings
-        settings.fidelity                               = 'point_source' # can be 'point_source', 'line_source' or 'plane_source'         
         settings.harmonics                              = np.arange(1,30) 
         settings.flyover                                = False    
         settings.approach                               = False
@@ -85,14 +82,14 @@ class Frequency_Domain_Buildup(Noise):
         settings.ground_microphone_min_x                = 1E-6
         settings.ground_microphone_max_x                = 5000 
         settings.ground_microphone_min_y                = 1E-6
-        settings.ground_microphone_max_y                = 450
-        settings.airfoil_number_of_points               = 201
+        settings.ground_microphone_max_y                = 450  
         
         settings.noise_hemisphere                       = False 
         settings.noise_hemisphere_radius                = 20 
         settings.noise_hemisphere_microphone_resolution = 20
         settings.noise_hemisphere_phi_angle_bounds      = np.array([0,np.pi])
         settings.noise_hemisphere_theta_angle_bounds    = np.array([0,2*np.pi])
+         
                 
         # settings for acoustic frequency resolution
         settings.center_frequencies                   = np.array([16,20,25,31.5,40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, \
@@ -106,7 +103,7 @@ class Frequency_Domain_Buildup(Noise):
         return
             
     def evaluate_noise(self,segment):
-        """ Process vehicle to setup geometry, condititon and configuration
+        """ Process vehicle to setup vehicle, condititon and configuration
     
         Assumptions:
         None
@@ -122,55 +119,52 @@ class Frequency_Domain_Buildup(Noise):
         None
     
         Properties Used:
-        self.geometry
-        """ 
+        self.vehicle
+        """         
+    
         # unpack 
-        settings      = self.settings
-        geometry      = self.geometry
+        config        = segment.analyses.noise.vehicle 
+        settings      = self.settings  
         conditions    = segment.state.conditions  
         dim_cf        = len(settings.center_frequencies ) 
-        ctrl_pts      = len(conditions.freestream.density) 
-    
+        ctrl_pts      = int(segment.state.numerics.number_of_control_points) 
+        
         # generate noise valuation points
         if settings.noise_hemisphere == True:
             generate_noise_hemisphere_microphone_locations(settings)     
-    
+            
         elif type(settings.ground_microphone_locations) is not np.ndarray: 
             generate_zero_elevation_microphone_locations(settings)     
-    
-        RML,AGML,num_gm_mic,mic_stencil = compute_relative_noise_evaluation_locations(settings,conditions)
-    
+        
+        RML,EGML,AGML,num_gm_mic,mic_stencil = compute_relative_noise_evaluation_locations(settings,segment)
+          
         # append microphone locations to conditions  
-        conditions.noise.ground_microphone_stencil_locations   = mic_stencil         
+        conditions.noise.ground_microphone_stencil_locations   = mic_stencil        
+        conditions.noise.evaluated_ground_microphone_locations = EGML       
         conditions.noise.absolute_ground_microphone_locations  = AGML
         conditions.noise.number_of_ground_microphones          = num_gm_mic 
-        conditions.noise.relative_microphone_locations         = RML  
-    
+        conditions.noise.relative_microphone_locations         = RML 
+        conditions.noise.total_number_of_microphones           = num_gm_mic 
+        
         # create empty arrays for results      
         total_SPL_dBA          = np.ones((ctrl_pts,num_gm_mic))*1E-16 
         total_SPL_spectra      = np.ones((ctrl_pts,num_gm_mic,dim_cf))*1E-16  
-    
+         
         # iterate through sources and iteratively add rotor noise 
-        for network in geometry.networks: 
-            for bus in network.busses:
-                for propulsor in  bus.propulsors: 
-                    for sub_tag , sub_item in  propulsor.items():
-                        if isinstance(sub_item,RCAIDE.Library.Components.Propulsors.Converters.Rotor):
-                            compute_rotor_noise(bus,propulsor,sub_item,conditions,settings) 
-                            total_SPL_dBA     = SPL_arithmetic(np.concatenate((total_SPL_dBA[:,None,:],conditions.noise[bus.tag][propulsor.tag][sub_item.tag].SPL_dBA[:,None,:]),axis =1),sum_axis=1)
-                            total_SPL_spectra = SPL_arithmetic(np.concatenate((total_SPL_spectra[:,None,:,:],conditions.noise[bus.tag][propulsor.tag][sub_item.tag].SPL_1_3_spectrum[:,None,:,:]),axis =1),sum_axis=1) 
-    
-    
-            for fuel_line in network.fuel_lines:
-                for propulsor in  fuel_line.propulsors: 
-                    for sub_tag , sub_item in  propulsor.items():
-                        if isinstance(sub_item,RCAIDE.Library.Components.Propulsors.Converters.Rotor):
-                            compute_rotor_noise(fuel_line,propulsor,sub_item,conditions,settings) 
-                            total_SPL_dBA     = SPL_arithmetic(np.concatenate((total_SPL_dBA[:,None,:],conditions.noise[fuel_line.tag][propulsor.tag][sub_item.tag].SPL_dBA[:,None,:]),axis =1),sum_axis=1)
-                            total_SPL_spectra = SPL_arithmetic(np.concatenate((total_SPL_spectra[:,None,:,:],conditions.noise[fuel_line.tag][propulsor.tag][sub_item.tag].SPL_1_3_spectrum[:,None,:,:]),axis =1),sum_axis=1) 
-    
-    
+        for network in config.networks:
+            for tag , item in  network.items():
+                if (tag == 'busses') or (tag == 'fuel_line'): 
+                    for distributor in item: 
+                        for propulsor in distributor.propulsors:
+                            for sub_tag , sub_item in  propulsor.items():
+                                if (sub_tag == 'rotor') or (sub_tag == 'propeller'):  
+                                    compute_rotor_noise(distributor,propulsor,segment,settings) 
+                                    total_SPL_dBA     = SPL_arithmetic(np.concatenate((total_SPL_dBA[:,None,:],conditions.noise[distributor.tag][propulsor.tag][sub_item.tag].SPL_dBA[:,None,:]),axis =1),sum_axis=1)
+                                    total_SPL_spectra = SPL_arithmetic(np.concatenate((total_SPL_spectra[:,None,:,:],conditions.noise[distributor.tag][propulsor.tag][sub_item.tag].SPL_1_3_spectrum[:,None,:,:]),axis =1),sum_axis=1) 
+                             
         conditions.noise.total_SPL_dBA              = total_SPL_dBA
         conditions.noise.total_SPL_1_3_spectrum_dBA = total_SPL_spectra
+        
         return
-          
+    
+    
