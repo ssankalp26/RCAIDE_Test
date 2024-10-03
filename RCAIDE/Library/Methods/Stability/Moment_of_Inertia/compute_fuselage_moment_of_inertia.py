@@ -44,7 +44,7 @@ def compute_fuselage_moment_of_inertia(fuselage,center_of_gravity):
     # ----------------------------------------------------------------------------------------------------------------------   
     # Setup
     # ----------------------------------------------------------------------------------------------------------------------       
-    mass_fuselage = fuselage.mass_properties.mass
+    mass_fuselage = 1 * fuselage.mass_properties.mass
     radius_outer  = fuselage.effective_diameter / 2
     radius_inner  = 0.85 * fuselage.effective_diameter / 2 # Assume the inner radius is 85 % of the outer radius    
     center_length = fuselage.lengths.total - fuselage.lengths.nose - fuselage.lengths.tail     # Length of the cylinder (found by subtracting the tail and nose lengths from the total length)
@@ -117,7 +117,7 @@ def compute_fuselage_moment_of_inertia(fuselage,center_of_gravity):
     # Add cone to the fuselage inertia tensor
     I_total = np.array(I_total) + np.array(I_global)
     
-    return I_total
+    return I_total,  mass_fuselage
 
 def Volume_Fraction(radius_outer, radius_inner, center_length, tail_length):
     '''

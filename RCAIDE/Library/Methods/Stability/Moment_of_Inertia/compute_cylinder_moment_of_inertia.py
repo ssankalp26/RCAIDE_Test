@@ -62,4 +62,4 @@ def compute_cylinder_moment_of_inertia(origin,mass,length_outer,radius_outer,len
     s        = np.array(center_of_gravity) - np.array(origin) # Vector between component and the CG    
     I_global = np.array(I) + mass * (np.array(np.dot(s[0], s[0])) * np.array(np.identity(3)) - s*np.transpose(s))
     
-    return I_global 
+    return I_global,  mass

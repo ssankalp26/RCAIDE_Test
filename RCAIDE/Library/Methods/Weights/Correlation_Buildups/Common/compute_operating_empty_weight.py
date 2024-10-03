@@ -424,7 +424,7 @@ def compute_operating_empty_weight(vehicle,settings=None,
     output.operating_empty      = output.empty + output.operational_items.total
     output.zero_fuel_weight     = output.operating_empty + output.payload_breakdown.total
     output.max_takeoff          = vehicle.mass_properties.max_takeoff
-    total_fuel_weight           = vehicle.mass_properties.max_takeoff - output.zero_fuel_weight
+    total_fuel_weight           = 0.6 * (vehicle.mass_properties.max_takeoff - output.zero_fuel_weight) # This was changed
     
     # assume fuel is equally distributed in fuel tanks
     if update_fuel_weight:

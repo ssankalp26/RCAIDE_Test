@@ -160,5 +160,5 @@ def compute_wing_moment_of_inertia(wing, mass = 0,  center_of_gravity = [[0, 0, 
     s        = np.array(center_of_gravity) - np.array(origin_wing) # Vector for the parallel axis theorem
     I_global = np.array(I_RCAIDE) + mass * (np.array(np.dot(s[0], s[0])) * np.array(np.identity(3)) - s * np.transpose(s))
     
-    return I_global  
+    return I_global,  mass
 
