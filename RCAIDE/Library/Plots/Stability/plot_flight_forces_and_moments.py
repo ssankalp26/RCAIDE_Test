@@ -22,7 +22,8 @@ def plot_flight_forces_and_moments(results,
                              show_legend   = True,
                              save_filename = "Intertial_Forces_and_Moments",
                              file_type     = ".png",
-                             width = 12, height = 8):
+                             width         = 8,
+                             height        = 6):
     """This plots the aerodynamic forces 
     """ 
 
