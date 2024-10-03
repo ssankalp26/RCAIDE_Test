@@ -39,8 +39,7 @@ def vehicle_setup(current,C_rat,cell_chemistry,fixed_bus_voltage):
         battery = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_LFP()   
     initialize_from_circuit_configuration(battery)  
     bus.voltage                      =  battery.maximum_voltage  
-    bus.battery_modules.append(battery)
-    bus.charging_c_rate =  1
+    bus.battery_modules.append(battery) 
     bus.nominal_capacity =  battery.cell.nominal_capacity
     #------------------------------------------------------------------------------------------------------------------------------------           
     # Payload 

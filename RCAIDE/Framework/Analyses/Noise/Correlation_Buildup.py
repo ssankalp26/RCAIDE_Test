@@ -116,8 +116,7 @@ class Correlation_Buildup(Noise):
         Outputs:
         None
     
-        Properties Used:
-        self.geometry
+        Properties Used: 
         """         
     
         # unpack 

@@ -44,9 +44,9 @@ class Noise(Analysis):
             Properties Used:
             N/A
             """                   
-        self.tag    = 'Noise'        
+        self.tag      = 'Noise'        
   
-        self.geometry = Data()
+        self.vehicle  = Data()
         self.settings = Data()
         
         

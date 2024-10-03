@@ -224,7 +224,7 @@ class Vortex_Lattice_Method(Stability):
         self.vehicle
         """          
         settings = self.settings
-        vehicle = self.vehicle 
+        vehicle  = self.vehicle 
         results  = self.process.compute(state,settings,vehicle)
         
         return results
