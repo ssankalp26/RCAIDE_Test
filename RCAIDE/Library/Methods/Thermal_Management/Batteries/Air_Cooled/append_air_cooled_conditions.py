@@ -36,6 +36,7 @@ def append_air_cooled_conditions(air_cooled,segment,coolant_line,add_additional_
     segment.state.conditions.energy[coolant_line.tag][air_cooled.tag]                               = Conditions()
     segment.state.conditions.energy[coolant_line.tag][air_cooled.tag].effectiveness                 = 0. * ones_row(1)
     segment.state.conditions.energy[coolant_line.tag][air_cooled.tag].total_heat_removed            = 0. * ones_row(1)
+    segment.state.conditions.energy[coolant_line.tag][air_cooled.tag].power                         = 0. * ones_row(1)
     
     return
 

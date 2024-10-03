@@ -173,6 +173,8 @@ class Vortex_Lattice_Method(Aerodynamics):
         compute.drag.parasite.pylons               = Common.Drag.parasite_drag_pylon
         compute.drag.parasite.total                = Common.Drag.parasite_total
         compute.drag.induced                       = Common.Drag.induced_drag
+        compute.drag.cooling                       = Process()
+        compute.drag.cooling.total                 = Common.Drag.cooling_drag        
         compute.drag.compressibility               = Process() 
         compute.drag.compressibility.total         = Common.Drag.compressibility_drag
         compute.drag.miscellaneous                 = Common.Drag.miscellaneous_drag 

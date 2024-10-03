@@ -42,18 +42,46 @@ def append_bus_conditions(bus,segment):
     segment.state.conditions.energy[bus.tag].temperature           = 0 * ones_row(1)
     segment.state.conditions.energy[bus.tag].energy                = 0 * ones_row(1)
     segment.state.conditions.energy[bus.tag].regenerative_power    = 0 * ones_row(1)
-    
-    # TO BE INCLUDED IN NEAR FUTURE
-    #if bus.battery_module_electric_configuration is 'Series':
-        #bus.nominal_capacity = 0
-        #for battery_module in  bus.battery_modules:
-            #bus.voltage  +=   battery_module.voltages
-            #bus.nominal_capacity =  battery_module.nominal_capacity               
-        
-    #elif bus.battery_module_electric_configuration is 'Parallel':
-        #for battery_module in  bus.battery_modules:
-            #bus.voltage +=  battery_module.voltage
-            #bus.capacity =  battery_module.capacity        
-    #else: raise Exception("Define how the battery modules are connected on the bus")
    
-    return    
+    return
+
+
+def append_bus_segment_conditions(bus,conditions,segment):
+    """Sets the initial bus properties at the start of each 
+        segment as the last point from the previous segment.  
+        It adds the power draw from the thermal management system
+        to the first control point power draw.
+    
+        Assumptions:
+        None
+    
+        Source:
+        N/A
+    
+        Inputs:  
+            bus           (data structure)              [None]
+            conditions    (data structure)              [None]
+            segment       (data structure)              [None]
+        Outputs:
+        None
+    
+        Properties Used:
+        None
+    """    
+
+    bus_conditions             = conditions[bus.tag]
+    ones_row                   = segment.state.ones_row
+    bus_conditions.power_draw  = 0 * ones_row(1)
+    
+    if segment.state.initials:
+        for network in segment.analyses.energy.vehicle.networks:
+            for coolant_line in  network.coolant_lines:
+                for tag, item in  coolant_line.items():
+                    if tag == 'battery_modules':
+                        for battery in item:
+                            for btms in  battery:
+                                bus_conditions.power_draw[0,0]   +=  segment.state.initials.conditions.energy[coolant_line.tag][btms.tag].power[-1] 
+                    if tag == 'heat_exchangers':
+                        for heat_exchanger in  item:                    
+                            bus_conditions.power_draw[0,0]   +=  segment.state.initials.conditions.energy[coolant_line.tag][heat_exchanger.tag].power[-1] 
+    return
