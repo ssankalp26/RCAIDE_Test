@@ -9,8 +9,8 @@ from RCAIDE.Library.Methods.Weights.Correlation_Buildups import Human_Powered   
 from RCAIDE.Library.Methods.Weights.Correlation_Buildups import UAV              as UAV
 from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups import Electric       as Electric
  
-from Legacy.trunk.S.Input_Output.SUAVE.load    import load as load_results
-from Legacy.trunk.S.Input_Output.SUAVE.archive import archive as save_results 
+from RCAIDE.load import load as load_results
+from RCAIDE.save import save as save_results 
 
 import numpy as  np 
 import sys
