@@ -103,7 +103,7 @@ class Frequency_Domain_Buildup(Noise):
         return
             
     def evaluate_noise(self,segment):
-        """ Process vehicle to setup geometry, condititon and configuration
+        """ Process vehicle to setup vehicle, condititon and configuration
     
         Assumptions:
         None
@@ -123,7 +123,7 @@ class Frequency_Domain_Buildup(Noise):
         """         
     
         # unpack 
-        config        = segment.analyses.noise.vehicle
+        config        = segment.analyses.noise.vehicle 
         settings      = self.settings  
         conditions    = segment.state.conditions  
         dim_cf        = len(settings.center_frequencies ) 

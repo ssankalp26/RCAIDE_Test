@@ -65,6 +65,7 @@ def main():
     cruise_CL_2        = results.segments.cruise_2.conditions.aerodynamics.coefficients.lift.total[2][0]
     cruise_CL_3        = results.segments.cruise_3.conditions.aerodynamics.coefficients.lift.total[2][0] 
     descent_throttle_1 = results.segments.descent_1.conditions.energy['fuel_line']['port_propulsor'].throttle[3][0]
+    curved_cruise_CL   = results.segments.curved_cruise.conditions.aerodynamics.coefficients.lift.total[2][0] 
     descent_throttle_2 = results.segments.descent_2.conditions.energy['fuel_line']['port_propulsor'].throttle[3][0]
     single_pt_CL_1     = results.segments.single_point_1.conditions.aerodynamics.coefficients.lift.total[0][0]
     single_pt_CL_2     = results.segments.single_point_2.conditions.aerodynamics.coefficients.lift.total[0][0]     
@@ -80,41 +81,42 @@ def main():
     if show_vals:
         data = [takeoff_thrust, climb_throttle_1,   climb_throttle_2,   climb_throttle_3,   climb_throttle_4,   climb_throttle_5,  
                 climb_throttle_6,   climb_throttle_7,   climb_throttle_8,   climb_throttle_9,   climb_10_CL,  
-                cruise_CL_1,  cruise_CL_2,  cruise_CL_3,        descent_throttle_1, descent_throttle_2,
+                cruise_CL_1,  cruise_CL_2,  cruise_CL_3,   descent_throttle_1,  curved_cruise_CL, descent_throttle_2,
                 single_pt_CL_1,     single_pt_CL_2,     loiter_1_CL,   loiter_2_CL, reserve_1_CL,reserve_2_CL,
                 descent_throttle_3,  landing_thrust]
         for val in data:
             print(val)
     
     # Truth values
-    takeoff_thrust_truth     = 134345.66568322046
-    climb_throttle_1_truth   = 1.064430625438011
-    climb_throttle_2_truth   = 0.9426131601628407
+    takeoff_thrust_truth     = 99134.27996755976
+    climb_throttle_1_truth   = 1.6807731422835253
+    climb_throttle_2_truth   = 1.3802422472208669
     climb_throttle_3_truth   = 0.5
-    climb_throttle_4_truth   = 0.5948007458587288
-    climb_throttle_5_truth   = 0.6214708059169162
-    climb_throttle_6_truth   = 1.0158275244172275
-    climb_throttle_7_truth   = 1.1748005560120827
-    climb_throttle_8_truth   = 0.5261578071733618
-    climb_throttle_9_truth   = 0.5828155819981968
-    climb_10_CL_truth        = 0.3347037103221548
-    cruise_CL_1_truth        = 0.7117434749324403
-    cruise_CL_2_truth        = 0.6877935428613456
-    cruise_CL_3_truth        = 0.7842190259732682
-    descent_throttle_1_truth = 0.3987250018011816
+    climb_throttle_4_truth   = 0.8679225480622763
+    climb_throttle_5_truth   = 0.8141566430665748
+    climb_throttle_6_truth   = 1.1762742666064576
+    climb_throttle_7_truth   = 1.332670357416255
+    climb_throttle_8_truth   = 0.6090416731871708
+    climb_throttle_9_truth   = 0.949481595486631
+    climb_10_CL_truth        = -0.32447887650544344
+    cruise_CL_1_truth        = 0.6942226103682735
+    cruise_CL_2_truth        = 0.6893540984026312
+    cruise_CL_3_truth        = 0.7515285258841712
+    descent_throttle_1_truth = 0.11281363311739535
+    curved_cruise_CL_truth   = 1.3475619201503564
     descent_throttle_2_truth = 0.5
     single_pt_CL_1_truth     = 0.010323140809804471
-    single_pt_CL_2_truth     = 0.018358028996711694
-    loiter_1_CL_truth        = 0.5013740069428855
-    loiter_2_CL_truth        = 0.5013694232821315
-    reserve_1_CL_truth       = 0.34673286250080215
-    reserve_2_CL_truth       = 0.3401664118270215
-    descent_throttle_3_truth = 0.1330281782216745
-    landing_thrust_truth     = 12727.161869285535
+    single_pt_CL_2_truth     = 0.011976421119820706
+    loiter_1_CL_truth        = 0.4950032875951481
+    loiter_2_CL_truth        = 0.4949969847042029
+    reserve_1_CL_truth       = 0.33559370637313746
+    reserve_2_CL_truth       = 0.32725135429473984
+    descent_throttle_3_truth = 0.15043551239042488
+    landing_thrust_truth     = 10914.920312664697
     
     # Store errors 
     error = Data()
-    error.takeoff_thrust     = np.max(np.abs(takeoff_thrust   - takeoff_thrust_truth))  
+    error.takeoff_thrust     = np.max(np.abs(takeoff_thrust       - takeoff_thrust_truth))  
     error.climb_throttle_1   = np.max(np.abs(climb_throttle_1     - climb_throttle_1_truth))  
     error.climb_throttle_2   = np.max(np.abs(climb_throttle_2     - climb_throttle_2_truth))   
     error.climb_throttle_3   = np.max(np.abs(climb_throttle_3     - climb_throttle_3_truth))   
@@ -129,15 +131,16 @@ def main():
     error.cruise_CL_2        = np.max(np.abs(cruise_CL_2          - cruise_CL_2_truth ))      
     error.cruise_CL_3        = np.max(np.abs(cruise_CL_3          - cruise_CL_3_truth ))     
     error.descent_throttle_1 = np.max(np.abs(descent_throttle_1   - descent_throttle_1_truth)) 
+    error.curved_cruise_CL   = np.max(np.abs(curved_cruise_CL     - curved_cruise_CL_truth))
     error.descent_throttle_2 = np.max(np.abs(descent_throttle_2   - descent_throttle_2_truth))
     error.single_pt_CL_1     = np.max(np.abs(single_pt_CL_1       - single_pt_CL_1_truth ))     
     error.single_pt_CL_2     = np.max(np.abs(single_pt_CL_2       - single_pt_CL_2_truth ))  
     error.loiter_1_CL        = np.max(np.abs(loiter_1_CL          - loiter_1_CL_truth ))      
     error.loiter_2_CL        = np.max(np.abs(loiter_2_CL          - loiter_2_CL_truth ))   
-    error.reserve_1_CL       = np.max(np.abs(reserve_1_CL          - reserve_1_CL_truth ))      
-    error.reserve_2_CL       = np.max(np.abs(reserve_2_CL          - reserve_2_CL_truth ))         
+    error.reserve_1_CL       = np.max(np.abs(reserve_1_CL         - reserve_1_CL_truth ))      
+    error.reserve_2_CL       = np.max(np.abs(reserve_2_CL         - reserve_2_CL_truth ))         
     error.descent_throttle_3 = np.max(np.abs(descent_throttle_3   - descent_throttle_3_truth))  
-    error.landing_thrust     = np.max(np.abs(landing_thrust   - landing_thrust_truth))  
+    error.landing_thrust     = np.max(np.abs(landing_thrust       - landing_thrust_truth))
      
     print('Errors:')
     print(error)
@@ -177,8 +180,8 @@ def base_analysis(vehicle):
     analyses.append(weights)
  
     #  Aerodynamics Analysis
-    aerodynamics                                     = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method()
-    aerodynamics.geometry                            = vehicle
+    aerodynamics                                        = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method()
+    aerodynamics.vehicle                                = vehicle
     aerodynamics.settings.number_of_spanwise_vortices   = 5
     aerodynamics.settings.number_of_chordwise_vortices  = 2       
     aerodynamics.settings.drag_coefficient_increment = 0.0000
@@ -217,7 +220,7 @@ def mission_setup(analyses):
   
     Segments = RCAIDE.Framework.Mission.Segments 
     base_segment = Segments.Segment()
-    base_segment.state.numerics.number_control_points = 4  
+    base_segment.state.numerics.number_of_control_points = 4  
  
     # ------------------------------------------------------------------------------------------------------------------------------------ 
     #   Takeoff Roll
@@ -226,10 +229,10 @@ def mission_setup(analyses):
     segment = Segments.Ground.Takeoff(base_segment)
     segment.tag = "Takeoff" 
     segment.analyses.extend( analyses.takeoff )
-    segment.velocity_start           = 100.* Units.knots
-    segment.velocity_end             = 150 * Units.knots
-    segment.friction_coefficient     = 0.04
-    segment.altitude                 = 0.0   
+    segment.velocity_start                                           = 100.* Units.knots
+    segment.velocity_end                                             = 150 * Units.knots
+    segment.friction_coefficient                                     = 0.04
+    segment.altitude                                                 = 0.0   
     mission.append_segment(segment)
     
 
@@ -239,13 +242,13 @@ def mission_setup(analyses):
     segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment)
     segment.tag = "climb_1" 
     segment.analyses.extend( analyses.takeoff )  
-    segment.altitude_end                                  = 1.0  * Units.km
-    segment.air_speed                                     = 150   * Units.knots
-    segment.climb_rate                                    = 10.0  * Units['m/s'] 
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                       = True  
-    segment.flight_dynamics.force_z                       = True     
+    segment.altitude_end                                             = 1.0  * Units.km
+    segment.air_speed                                                = 150   * Units.knots
+    segment.climb_rate                                               = 10.0  * Units['m/s'] 
+                
+    # define flight dynamics to model             
+    segment.flight_dynamics.force_x                                  = True  
+    segment.flight_dynamics.force_z                                  = True     
     
     # define flight controls 
     segment.assigned_control_variables.throttle.active               = True           
@@ -261,13 +264,13 @@ def mission_setup(analyses):
     segment = Segments.Climb.Constant_Dynamic_Pressure_Constant_Angle(base_segment)
     segment.tag = "climb_2"
     segment.analyses.extend( analyses.base )  
-    segment.altitude_end                                  = 2.    * Units.km
-    segment.climb_angle                                   = 5.   * Units.degrees 
-    segment.dynamic_pressure                              = 3800 * Units.pascals  
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                       = True  
-    segment.flight_dynamics.force_z                       = True     
+    segment.altitude_end                                             = 2.    * Units.km
+    segment.climb_angle                                              = 5.   * Units.degrees 
+    segment.dynamic_pressure                                         = 3800 * Units.pascals  
+                
+    # define flight dynamics to model             
+    segment.flight_dynamics.force_x                                  = True  
+    segment.flight_dynamics.force_z                                  = True     
     
     # define flight controls 
     segment.assigned_control_variables.throttle.active               = True           
@@ -283,13 +286,13 @@ def mission_setup(analyses):
     segment = Segments.Climb.Constant_Dynamic_Pressure_Constant_Rate(base_segment)
     segment.tag = "climb_3"
     segment.analyses.extend( analyses.base )  
-    segment.altitude_end                                  = 3.   * Units.km
-    segment.climb_rate                                    = 730. * Units['ft/min']    
-    segment.dynamic_pressure                              = 12000 * Units.pascals
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                       = True  
-    segment.flight_dynamics.force_z                       = True     
+    segment.altitude_end                                             = 3.   * Units.km
+    segment.climb_rate                                               = 730. * Units['ft/min']    
+    segment.dynamic_pressure                                         = 12000 * Units.pascals
+                
+    # define flight dynamics to model             
+    segment.flight_dynamics.force_x                                  = True  
+    segment.flight_dynamics.force_z                                  = True     
     
     # define flight controls 
     segment.assigned_control_variables.throttle.active               = True           
@@ -304,14 +307,14 @@ def mission_setup(analyses):
     segment = Segments.Climb.Constant_Mach_Constant_Angle(base_segment)
     segment.tag = "climb_4"
     segment.analyses.extend( analyses.base )  
-    segment.altitude_start                                 = 3.   * Units.km
-    segment.altitude_end                                   = 4.   * Units.km
-    segment.mach_number                                    = 0.5
-    segment.climb_angle                                    = 3.5 * Units.degrees  
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                       = True  
-    segment.flight_dynamics.force_z                       = True     
+    segment.altitude_start                                           = 3.   * Units.km
+    segment.altitude_end                                             = 4.   * Units.km
+    segment.mach_number                                              = 0.5
+    segment.climb_angle                                              = 3.5 * Units.degrees  
+              
+    # define flight dynamics to model           
+    segment.flight_dynamics.force_x                                  = True  
+    segment.flight_dynamics.force_z                                  = True     
     
     # define flight controls 
     segment.assigned_control_variables.throttle.active               = True           
@@ -326,13 +329,13 @@ def mission_setup(analyses):
     segment = Segments.Climb.Constant_Speed_Constant_Angle(base_segment)
     segment.tag = "climb_5"
     segment.analyses.extend( analyses.base )  
-    segment.altitude_end                                  = 5.    * Units.km
-    segment.air_speed                                     = 180   * Units.m / Units.s
-    segment.climb_angle                                   = 3.    * Units.degrees 
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                       = True  
-    segment.flight_dynamics.force_z                       = True     
+    segment.altitude_end                                             = 5.    * Units.km
+    segment.air_speed                                                = 180   * Units.m / Units.s
+    segment.climb_angle                                              = 3.    * Units.degrees 
+               
+    # define flight dynamics to model            
+    segment.flight_dynamics.force_x                                  = True  
+    segment.flight_dynamics.force_z                                  = True     
     
     # define flight controls 
     segment.assigned_control_variables.throttle.active               = True           
@@ -347,12 +350,12 @@ def mission_setup(analyses):
     segment = Segments.Climb.Constant_Mach_Linear_Altitude(base_segment)
     segment.tag = "climb_6"
     segment.analyses.extend( analyses.base )  
-    segment.altitude_end                                  = 6. * Units.km   
-    segment.mach_number                                   = 0.75   
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                       = True  
-    segment.flight_dynamics.force_z                       = True     
+    segment.altitude_end                                             = 6. * Units.km   
+    segment.mach_number                                              = 0.75   
+                                                           
+    # define flight dynamics to model                      
+    segment.flight_dynamics.force_x                                  = True  
+    segment.flight_dynamics.force_z                                  = True     
     
     # define flight controls 
     segment.assigned_control_variables.throttle.active               = True           
@@ -367,12 +370,12 @@ def mission_setup(analyses):
     segment = Segments.Climb.Constant_Speed_Linear_Altitude(base_segment)
     segment.tag = "climb_7"
     segment.analyses.extend( analyses.base )  
-    segment.altitude_end                                  = 7.    * Units.km   
-    segment.air_speed                                     = 250.2 * Units.m / Units.s 
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                       = True  
-    segment.flight_dynamics.force_z                       = True     
+    segment.altitude_end                                             = 7.    * Units.km   
+    segment.air_speed                                                = 250.2 * Units.m / Units.s 
+                 
+    # define flight dynamics to model              
+    segment.flight_dynamics.force_x                                  = True  
+    segment.flight_dynamics.force_z                                  = True     
     
     # define flight controls 
     segment.assigned_control_variables.throttle.active               = True           
@@ -386,13 +389,13 @@ def mission_setup(analyses):
     segment = Segments.Climb.Constant_EAS_Constant_Rate(base_segment)
     segment.tag = "climb_8"
     segment.analyses.extend( analyses.base )  
-    segment.altitude_end                                 = 8.   * Units.km    
-    segment.equivalent_air_speed                         = 150. * Units.m / Units.s
-    segment.climb_rate                                   = 1.   
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                      = True  
-    segment.flight_dynamics.force_z                      = True     
+    segment.altitude_end                                            = 8.   * Units.km    
+    segment.equivalent_air_speed                                    = 150. * Units.m / Units.s
+    segment.climb_rate                                              = 1.   
+               
+    # define flight dynamics to model            
+    segment.flight_dynamics.force_x                                 = True  
+    segment.flight_dynamics.force_z                                 = True     
     
     # define flight controls 
     segment.assigned_control_variables.throttle.active              = True           
@@ -407,13 +410,13 @@ def mission_setup(analyses):
     segment = Segments.Climb.Constant_CAS_Constant_Rate(base_segment)
     segment.tag = "climb_9"
     segment.analyses.extend( analyses.base )  
-    segment.altitude_end                                 = 10.9 * Units.km    
-    segment.calibrated_air_speed                         = 150. * Units.m / Units.s
-    segment.climb_rate                                   = 1.  
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                      = True  
-    segment.flight_dynamics.force_z                      = True     
+    segment.altitude_end                                            = 10.9 * Units.km    
+    segment.calibrated_air_speed                                    = 150. * Units.m / Units.s
+    segment.climb_rate                                              = 1.  
+               
+    # define flight dynamics to model            
+    segment.flight_dynamics.force_x                                 = True  
+    segment.flight_dynamics.force_z                                 = True     
     
     # define flight controls 
     segment.assigned_control_variables.throttle.active              = True           
@@ -429,13 +432,13 @@ def mission_setup(analyses):
     segment = Segments.Climb.Constant_Throttle_Constant_Speed(base_segment)
     segment.tag = "climb_10"
     segment.analyses.extend( analyses.base )  
-    segment.altitude_end                                 = 11.   * Units.km    
-    segment.air_speed                                    = 150. * Units.m / Units.s
-    segment.throttle                                     = 0.55 
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                      = True  
-    segment.flight_dynamics.force_z                      = True     
+    segment.altitude_end                                                 = 11.   * Units.km    
+    segment.air_speed                                                    = 150. * Units.m / Units.s
+    segment.throttle                                                     = 0.55 
+                     
+    # define flight dynamics to model                  
+    segment.flight_dynamics.force_x                                      = True  
+    segment.flight_dynamics.force_z                                      = True     
     
     # define flight controls 
     segment.assigned_control_variables.wind_angle.active                 = True  
@@ -453,13 +456,13 @@ def mission_setup(analyses):
     segment = Segments.Cruise.Constant_Dynamic_Pressure_Constant_Altitude(base_segment)
     segment.tag = "cruise_1" 
     segment.analyses.extend(analyses.base) 
-    segment.altitude                                      = 11. * Units.km    
-    segment.dynamic_pressure                              = 28000 * Units.pascals   
-    segment.distance                                      = 500 * Units.km  
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                       = True  
-    segment.flight_dynamics.force_z                       = True     
+    segment.altitude                                                 = 11. * Units.km    
+    segment.dynamic_pressure                                         = 28000 * Units.pascals   
+    segment.distance                                                 = 500 * Units.km  
+               
+    # define flight dynamics to model            
+    segment.flight_dynamics.force_x                                  = True  
+    segment.flight_dynamics.force_z                                  = True     
     
     # define flight controls 
     segment.assigned_control_variables.throttle.active               = True           
@@ -474,14 +477,15 @@ def mission_setup(analyses):
     segment = Segments.Cruise.Constant_Throttle_Constant_Altitude(base_segment)
     segment.tag = "cruise_2" 
     segment.analyses.extend(analyses.base)  
-    segment.altitude                                            = 11. * Units.km  
-    segment.air_speed_end                                       = 200 * Units.m / Units.s 
-    segment.throttle                                            = 0.4
-    segment.distance                                            = 500 * Units.km  
-          
-    # define flight dynamics to model       
-    segment.flight_dynamics.force_x                             = True  
-    segment.flight_dynamics.force_z                             = True     
+    segment.state.numerics.number_of_control_points                        = 12 
+    segment.altitude                                                       = 11. * Units.km  
+    segment.air_speed_end                                                  = 215 * Units.m / Units.s  
+    segment.throttle                                                       = 0.75
+    segment.distance                                                       = 200 * Units.km  
+                     
+    # define flight dynamics to model                  
+    segment.flight_dynamics.force_x                                        = True  
+    segment.flight_dynamics.force_z                                        = True     
           
     # define flight controls       
     segment.assigned_control_variables.elapsed_time.active                 = True  
@@ -492,7 +496,7 @@ def mission_setup(analyses):
     segment.assigned_control_variables.acceleration.initial_guess_values   = [[-1]] 
     segment.assigned_control_variables.body_angle.active                   = True   
     segment.assigned_control_variables.body_angle.initial_guess            = True 
-    segment.assigned_control_variables.body_angle.initial_guess_values     = [[0*Units.degrees]]   
+    segment.assigned_control_variables.body_angle.initial_guess_values     = [[0*Units.degrees]]     
         
     mission.append_segment(segment)   
     
@@ -502,14 +506,14 @@ def mission_setup(analyses):
     segment = Segments.Cruise.Constant_Pitch_Rate_Constant_Altitude(base_segment)
     segment.tag = "cruise_3" 
     segment.analyses.extend(analyses.base) 
-    segment.altitude                                     = 11. * Units.km    
-    segment.pitch_rate                                   = 0.0001  * Units['rad/s/s']
-    segment.pitch_final                                  = 4.  * Units.degrees 
-    segment.distance                                     = 500 * Units.km   
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                      = True  
-    segment.flight_dynamics.force_z                      = True     
+    segment.altitude                                                = 11. * Units.km    
+    segment.pitch_rate                                              = 0.0001  * Units['rad/s/s']
+    segment.pitch_final                                             = 4.  * Units.degrees 
+    segment.distance                                                = 500 * Units.km   
+                
+    # define flight dynamics to model             
+    segment.flight_dynamics.force_x                                 = True  
+    segment.flight_dynamics.force_z                                 = True     
     
     # define flight controls 
     segment.assigned_control_variables.throttle.active              = True           
@@ -528,20 +532,44 @@ def mission_setup(analyses):
     segment = Segments.Descent.Constant_Speed_Constant_Angle(base_segment)
     segment.tag = "descent_1" 
     segment.analyses.extend( analyses.base ) 
-    segment.altitude_start                                = 11. * Units.km    
-    segment.air_speed                                     = 150 * Units.m / Units.s 
-    segment.altitude_end                                  = 5  * Units.km  
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                       = True  
-    segment.flight_dynamics.force_z                       = True     
+    segment.altitude_start                                           = 11. * Units.km    
+    segment.air_speed                                                = 150 * Units.m / Units.s 
+    segment.altitude_end                                             = 5  * Units.km  
+                
+    # define flight dynamics to model             
+    segment.flight_dynamics.force_x                                  = True  
+    segment.flight_dynamics.force_z                                  = True     
     
     # define flight controls 
     segment.assigned_control_variables.throttle.active               = True           
     segment.assigned_control_variables.throttle.assigned_propulsors  = [['starboard_propulsor','port_propulsor']] 
     segment.assigned_control_variables.body_angle.active             = True                
     
-    mission.append_segment(segment) 
+    mission.append_segment(segment)
+
+    # ------------------------------------------------------------------------------------------------------------------------------------ 
+    #   Curved Cruise Segment : Constant Radius Constant Speed Constant Altltude
+    # ------------------------------------------------------------------------------------------------------------------------------------  
+    segment     = Segments.Cruise.Curved_Constant_Radius_Constant_Speed_Constant_Altitude(base_segment)
+    segment.tag = "curved_cruise" 
+    segment.analyses.extend( analyses.base )   
+    segment.altitude                                                  = 5  * Units.km  
+    segment.air_speed                                                 = 240 * Units['mph']
+    segment.turn_radius                                               = 1000 * Units.mile  
+    segment.start_true_course                                         = 10 * Units.degrees 
+    segment.turn_angle                                                = -1.0 * Units.degrees # + indicated right hand turn, negative indicates left-hand turn
+    
+    # define flight dynamics to model 
+    segment.flight_dynamics.force_x                                   = True    
+    segment.flight_dynamics.force_z                                   = True    
+                
+    # define flight controls              
+    segment.assigned_control_variables.throttle.active                = True           
+    segment.assigned_control_variables.throttle.assigned_propulsors   = [['starboard_propulsor','port_propulsor']]   
+    segment.assigned_control_variables.body_angle.active              = True   
+    
+    mission.append_segment(segment)
+    
 
     # ------------------------------------------------------------------------------------------------------------------------------------ 
     #   Descent Segment 2: Constant CAS Constant Angle 
@@ -549,13 +577,13 @@ def mission_setup(analyses):
     segment = Segments.Descent.Constant_CAS_Constant_Rate(base_segment)
     segment.tag = "descent_2" 
     segment.analyses.extend( analyses.base ) 
-    segment.altitude_end                                  = 2500. * Units.feet
-    segment.descent_rate                                  = 2.  * Units.m / Units.s
-    segment.calibrated_air_speed                          = 100 * Units.m / Units.s
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                       = True  
-    segment.flight_dynamics.force_z                       = True     
+    segment.altitude_end                                             = 2500. * Units.feet
+    segment.descent_rate                                             = 2.  * Units.m / Units.s
+    segment.calibrated_air_speed                                     = 100 * Units.m / Units.s
+                
+    # define flight dynamics to model             
+    segment.flight_dynamics.force_x                                  = True  
+    segment.flight_dynamics.force_z                                  = True     
     
     # define flight controls 
     segment.assigned_control_variables.throttle.active               = True           
@@ -570,12 +598,12 @@ def mission_setup(analyses):
     segment = Segments.Single_Point.Set_Speed_Set_Altitude(base_segment)
     segment.tag = "single_point_1" 
     segment.analyses.extend(analyses.base) 
-    segment.altitude                                      =  2500. * Units.feet
-    segment.air_speed                                     =  200. * Units['m/s']  
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                       = True  
-    segment.flight_dynamics.force_z                       = True     
+    segment.altitude                                                 =  2500. * Units.feet
+    segment.air_speed                                                =  200. * Units['m/s']  
+               
+    # define flight dynamics to model            
+    segment.flight_dynamics.force_x                                  = True  
+    segment.flight_dynamics.force_z                                  = True     
     
     # define flight controls 
     segment.assigned_control_variables.throttle.active               = True           
@@ -590,13 +618,13 @@ def mission_setup(analyses):
     segment = Segments.Single_Point.Set_Speed_Set_Throttle(base_segment)
     segment.tag = "single_point_2" 
     segment.analyses.extend(analyses.base) 
-    segment.altitude                                      =  2500. * Units.feet
-    segment.air_speed                                     =  200. * Units['m/s']   
-    segment.throttle                                      =  0.5 
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                       = True  
-    segment.flight_dynamics.force_z                       = True     
+    segment.altitude                                                 =  2500. * Units.feet
+    segment.air_speed                                                =  200. * Units['m/s']   
+    segment.throttle                                                 =  0.5 
+               
+    # define flight dynamics to model            
+    segment.flight_dynamics.force_x                                  = True  
+    segment.flight_dynamics.force_z                                  = True     
     
     # define flight controls   
     segment.assigned_control_variables.acceleration.active           = True             
@@ -610,12 +638,12 @@ def mission_setup(analyses):
     segment = Segments.Cruise.Constant_Dynamic_Pressure_Constant_Altitude_Loiter(base_segment)
     segment.tag = "loiter_1" 
     segment.analyses.extend(analyses.base) 
-    segment.altitude                                      = 2500  * Units.feet
-    segment.dynamic_pressure                              = 12000 * Units.pascals  
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                       = True  
-    segment.flight_dynamics.force_z                       = True     
+    segment.altitude                                                 = 2500  * Units.feet
+    segment.dynamic_pressure                                         = 12000 * Units.pascals  
+                
+    # define flight dynamics to model             
+    segment.flight_dynamics.force_x                                  = True  
+    segment.flight_dynamics.force_z                                  = True     
     
     # define flight controls 
     segment.assigned_control_variables.throttle.active               = True           
@@ -632,12 +660,12 @@ def mission_setup(analyses):
     segment = Segments.Cruise.Constant_Dynamic_Pressure_Constant_Altitude_Loiter(base_segment)
     segment.tag = "loiter_2" 
     segment.analyses.extend(analyses.base) 
-    segment.altitude                  = 2500  * Units.feet
-    segment.dynamic_pressure          = 12000 * Units.pascals  
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                       = True  
-    segment.flight_dynamics.force_z                       = True     
+    segment.altitude                                                 = 2500  * Units.feet
+    segment.dynamic_pressure                                         = 12000 * Units.pascals  
+                
+    # define flight dynamics to model             
+    segment.flight_dynamics.force_x                                  = True  
+    segment.flight_dynamics.force_z                                  = True     
     
     # define flight controls 
     segment.assigned_control_variables.throttle.active               = True           
@@ -656,12 +684,12 @@ def mission_setup(analyses):
     segment.tag = "reserve_loiter"
 
     segment.analyses.extend(analyses.cruise) 
-    segment.mach_number                                   = 0.5
-    segment.time                                          = 30.0 * Units.minutes
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                       = True  
-    segment.flight_dynamics.force_z                       = True     
+    segment.mach_number                                              = 0.5
+    segment.time                                                     = 30.0 * Units.minutes
+               
+    # define flight dynamics to model            
+    segment.flight_dynamics.force_x                                  = True  
+    segment.flight_dynamics.force_z                                  = True     
     
     # define flight controls 
     segment.assigned_control_variables.throttle.active               = True           
@@ -679,11 +707,11 @@ def mission_setup(analyses):
     
     segment.analyses.extend( analyses.cruise )
     
-    segment.mach_number                                   = 0.5
-    segment.distance                                      = 140.0 * Units.nautical_mile    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                       = True  
-    segment.flight_dynamics.force_z                       = True     
+    segment.mach_number                                              = 0.5
+    segment.distance                                                 = 140.0 * Units.nautical_mile    
+    # define flight dynamics to model             
+    segment.flight_dynamics.force_x                                  = True  
+    segment.flight_dynamics.force_z                                  = True     
     
     # define flight controls 
     segment.assigned_control_variables.throttle.active               = True           
@@ -698,14 +726,14 @@ def mission_setup(analyses):
     segment = Segments.Descent.Constant_EAS_Constant_Rate(base_segment)
     segment.tag = "descent_3" 
     segment.analyses.extend( analyses.base ) 
-    segment.altitude_start                                = 2500  * Units.feet
-    segment.altitude_end                                  = 0  * Units.feet 
-    segment.descent_rate                                  = 3.  * Units.m / Units.s
-    segment.equivalent_air_speed                          = 100 * Units.m / Units.s 
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                       = True  
-    segment.flight_dynamics.force_z                       = True     
+    segment.altitude_start                                           = 2500  * Units.feet
+    segment.altitude_end                                             = 0  * Units.feet 
+    segment.descent_rate                                             = 3.  * Units.m / Units.s
+    segment.equivalent_air_speed                                     = 100 * Units.m / Units.s 
+                
+    # define flight dynamics to model             
+    segment.flight_dynamics.force_x                                  = True  
+    segment.flight_dynamics.force_z                                  = True     
     
     # define flight controls 
     segment.assigned_control_variables.throttle.active               = True           
@@ -722,10 +750,10 @@ def mission_setup(analyses):
     segment.tag = "Landing"
 
     segment.analyses.extend( analyses.landing )
-    segment.velocity_start                                     = 150 * Units.knots
-    segment.velocity_end                                       = 100 * Units.knots 
-    segment.friction_coefficient                               = 0.4
-    segment.altitude                                           = 0.0 
+    segment.velocity_start                                                = 150 * Units.knots
+    segment.velocity_end                                                  = 100 * Units.knots 
+    segment.friction_coefficient                                          = 0.4
+    segment.altitude                                                      = 0.0 
     segment.assigned_control_variables.elapsed_time.active                = True   
     segment.assigned_control_variables.elapsed_time.initial_guess_values  = [[30.]]  
     mission.append_segment(segment)      
@@ -737,24 +765,24 @@ def mission_setup(analyses):
     segment = Segments.Cruise.Constant_Throttle_Constant_Altitude(base_segment)
     segment.tag = "cruise_non_converged" 
     segment.analyses.extend(analyses.base)    
-    segment.air_speed_end                                  = 150 * Units.knots
-    segment.throttle                                       = 0
-    segment.distance                                       = 10 * Units.km 
-    segment.state.numerics.number_control_points           = 2
-    segment.state.numerics.max_evaluations                 = 10  
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                       = True  
-    segment.flight_dynamics.force_z                       = True     
+    segment.air_speed_end                                            = 150 * Units.knots
+    segment.throttle                                                 = 0
+    segment.distance                                                 = 10 * Units.km 
+    segment.state.numerics.number_of_control_points                  = 2
+    segment.state.numerics.max_evaluations                           = 10  
+                
+    # define flight dynamics to model             
+    segment.flight_dynamics.force_x                                  = True  
+    segment.flight_dynamics.force_z                                  = True     
     
     # define flight controls 
     segment.assigned_control_variables.elapsed_time.active           = True   
     segment.assigned_control_variables.acceleration.active           = True          
     segment.assigned_control_variables.body_angle.active             = True                
     
-    mission.append_segment(segment)     
-
-        
+    mission.append_segment(segment)
+    
+    
     # ------------------------------------------------------------------------------------------------------------------------------------ 
     #   Mission definition complete    
     # ------------------------------------------------------------------------------------------------------------------------------------  

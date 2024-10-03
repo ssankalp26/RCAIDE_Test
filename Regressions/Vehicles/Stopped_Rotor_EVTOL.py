@@ -397,9 +397,9 @@ def vehicle_setup() :
     # Bus Battery
     #------------------------------------------------------------------------------------------------------------------------------------ 
     bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC()
-    number_of_modules                                      = 14 
+    number_of_modules                                      = 1
     bat.tag                                                = 'cruise_bus_battery'
-    bat.electrical_configuration.series                     = 10   
+    bat.electrical_configuration.series                     = 140  
     bat.electrical_configuration.parallel                   = 60
     initialize_from_circuit_configuration(bat)  
    
@@ -409,9 +409,7 @@ def vehicle_setup() :
     bat.geometrtic_configuration.parallel_count             = 40 
      
     for _ in range(number_of_modules):
-        cruise_bus.battery_modules.append(deepcopy(bat))    
-    cruise_bus.charging_c_rate  = 1
-    cruise_bus.nominal_capacity = 0
+        cruise_bus.battery_modules.append(deepcopy(bat))       
     
     for battery_module in  cruise_bus.battery_modules:
         cruise_bus.voltage  +=   battery_module.voltage
@@ -423,8 +421,7 @@ def vehicle_setup() :
     #------------------------------------------------------------------------------------------------------------------------------------       
     # Define Forward Propulsor Container 
     cruise_propulsor_1                                     = RCAIDE.Library.Components.Propulsors.Electric_Rotor()
-    cruise_propulsor_1.tag                                 = 'cruise_propulsor_1' 
-    cruise_propulsor_1.active_bus                          = ['cruise_bus']   
+    cruise_propulsor_1.tag                                 = 'cruise_propulsor_1'  
                  
     # Electronic Speed Controller                     
     propeller_esc                                          = RCAIDE.Library.Components.Energy.Modulators.Electronic_Speed_Controller() 
@@ -599,9 +596,9 @@ def vehicle_setup() :
     # Bus Battery
     #------------------------------------------------------------------------------------------------------------------------------------ 
     bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC()
-    number_of_modules                                      = 14 
+    number_of_modules                                      = 1 
     bat.tag                                                = 'lift_bus_battery'
-    bat.electrical_configuration.series                    = 10   
+    bat.electrical_configuration.series                    = 140   
     bat.electrical_configuration.parallel                  = 20
     initialize_from_circuit_configuration(bat)  
     bat.geometrtic_configuration.total                      = bat.electrical_configuration.total
@@ -610,8 +607,7 @@ def vehicle_setup() :
     bat.geometrtic_configuration.parallel_count             = 40 
 
     for _ in range(number_of_modules):
-        lift_bus.battery_modules.append(deepcopy(bat))    
-    lift_bus.charging_c_rate  = 1
+        lift_bus.battery_modules.append(deepcopy(bat))     
 
     lift_bus.nominal_capacity = 0    
     for battery_module in  lift_bus.battery_modules:
@@ -625,8 +621,7 @@ def vehicle_setup() :
      
     # Define Lift Propulsor Container 
     lift_propulsor_1                                       = RCAIDE.Library.Components.Propulsors.Electric_Rotor()
-    lift_propulsor_1.tag                                   = 'lift_propulsor_1'     
-    lift_propulsor_1.active_busses                      = ['lift_bus']          
+    lift_propulsor_1.tag                                   = 'lift_propulsor_1'        
               
     # Electronic Speed Controller           
     lift_rotor_esc                                         = RCAIDE.Library.Components.Energy.Modulators.Electronic_Speed_Controller() 
@@ -662,7 +657,7 @@ def vehicle_setup() :
                                                               rel_path + 'Airfoils' + separator + 'Polars' + separator + 'NACA_4412_polar_Re_7500000.txt' ]
     lift_rotor.append_airfoil(airfoil)                         
     lift_rotor.airfoil_polar_stations                      = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]  
-    lift_rotor                                             = design_lift_rotor(lift_rotor) 
+    lift_rotor                                             = design_lift_rotor(lift_rotor,iterations = 20) 
     lift_propulsor_1.rotor                                 = lift_rotor      
     
     #------------------------------------------------------------------------------------------------------------------------------------               

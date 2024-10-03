@@ -3,6 +3,11 @@
 # 
 # Created:  Jun 2024, M. Clarke    
 
+# ---------------------------------------------------------------------------------------------------------------------- 
+# Imports 
+# ----------------------------------------------------------------------------------------------------------------------
+import numpy as np
+
 # ----------------------------------------------------------------------------------------------------------------------
 #  Fan 
 # ----------------------------------------------------------------------------------------------------------------------            
@@ -36,23 +41,31 @@ def compute_fan_performance(fan,fan_conditions,conditions):
         None
         
     """        
-    
-    # Unpack flight conditions 
-    gamma     = conditions.freestream.isentropic_expansion_factor
-    Cp        = conditions.freestream.specific_heat_at_constant_pressure
      
     # unpack from fan
-    PR        = fan.pressure_ratio
-    etapold   = fan.polytropic_efficiency
-    Tt_in     = fan_conditions.inputs.stagnation_temperature
-    Pt_in     = fan_conditions.inputs.stagnation_pressure
-     
+    PR                      = fan.pressure_ratio
+    etapold                 = fan.polytropic_efficiency
+    Tt_in                   = fan_conditions.inputs.stagnation_temperature
+    Pt_in                   = fan_conditions.inputs.stagnation_pressure 
+    P0                      = fan_conditions.inputs.static_pressure 
+    T0                      = fan_conditions.inputs.static_temperature
+    M0                      = fan_conditions.inputs.mach_number    
+    
+    # Unpack ram inputs
+    working_fluid           = fan.working_fluid
+ 
+    # Compute the working fluid properties 
+    gamma  = working_fluid.compute_gamma(T0,P0) 
+    Cp     = working_fluid.compute_cp(T0,P0)    
     
     # Compute the output quantities  
     Pt_out    = Pt_in*PR
     Tt_out    = Tt_in*PR**((gamma-1)/(gamma*etapold))
+    T_out     = Tt_out/(1.+(gamma-1.)/2.*M0*M0)
+    P_out     = Pt_out/((1.+(gamma-1.)/2.*M0*M0)**(gamma/(gamma-1.))) 
     ht_out    = Tt_out*Cp   
-    ht_in     = Tt_in*Cp
+    ht_in     = Tt_in*Cp 
+    M_out     = np.sqrt( (((Pt_out/P_out)**((gamma-1.)/gamma))-1.) *2./(gamma-1.) )     
     
     # Compute the work done by the fan (normalized by mass flow i.e. J/(kg/s)
     work_done = ht_out - ht_in
@@ -60,7 +73,10 @@ def compute_fan_performance(fan,fan_conditions,conditions):
     # Store computed quantities into outputs
     fan_conditions.outputs.stagnation_temperature  = Tt_out
     fan_conditions.outputs.stagnation_pressure     = Pt_out
+    fan_conditions.outputs.static_temperature      = T_out
+    fan_conditions.outputs.static_pressure         = P_out    
     fan_conditions.outputs.work_done               = work_done
     fan_conditions.outputs.stagnation_enthalpy     = ht_out
+    fan_conditions.outputs.mach_number             = M_out
     
     return 

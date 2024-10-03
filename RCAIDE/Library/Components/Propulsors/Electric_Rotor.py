@@ -30,8 +30,7 @@ class Electric_Rotor(Propulsor):
     """ 
     def __defaults__(self):    
         # setting the default values
-        self.tag                          = 'electric_rotor'   
-        self.active_busses                = None
+        self.tag                          = 'electric_rotor'    
         self.motor                        = None
         self.rotor                        = None 
         self.electronic_speed_controller  = None   

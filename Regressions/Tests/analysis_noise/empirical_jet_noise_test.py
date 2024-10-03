@@ -38,15 +38,14 @@ def main():
     
     # Set up configs
     configs           = configs_setup(vehicle) 
-    analyses          = analyses_setup(configs) 
-    
+    analyses          = analyses_setup(configs)  
     mission           = baseline_mission_setup(analyses)
     basline_missions  = baseline_missions_setup(mission)     
     baseline_results  = basline_missions.base_mission.evaluate()   
      
     # SPL of rotor check during hover 
     B737_SPL        = np.max(baseline_results.segments.takeoff.conditions.noise.total_SPL_dBA)
-    B737_SPL_true   = 94.66377003071767
+    B737_SPL_true   = 120.52537687607997
     B737_diff_SPL   = np.abs(B737_SPL - B737_SPL_true)
     print('SPL difference: ',B737_diff_SPL)
     assert np.abs((B737_SPL - B737_SPL_true)/B737_SPL_true) < 1e-1    
@@ -71,7 +70,7 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
     # ------------------------------------------------------------------
-    aerodynamics         = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
+    aerodynamics = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
     aerodynamics.vehicle = vehicle
     aerodynamics.settings.drag_coefficient_increment = 0.0000 
     analyses.append(aerodynamics)

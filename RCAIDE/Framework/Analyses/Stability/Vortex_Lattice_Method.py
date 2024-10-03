@@ -61,8 +61,8 @@ class Vortex_Lattice_Method(Stability):
         Properties Used:
         N/A
         """          
-        self.tag                                    = 'Subsonic_Zero_VLM'  
-        self.vehicle                                               = Data()  
+        self.tag                                                    = 'Vortex_Lattice_Method'  
+        self.vehicle                                                = Data()  
         self.process                                                = Process()
         self.process.initialize                                     = Process()  
                    
@@ -224,8 +224,8 @@ class Vortex_Lattice_Method(Stability):
         self.vehicle
         """          
         settings = self.settings
-        geometry = self.vehicle 
-        results  = self.process.compute(state,settings,geometry)
+        vehicle  = self.vehicle 
+        results  = self.process.compute(state,settings,vehicle)
         
         return results
     

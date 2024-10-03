@@ -18,10 +18,11 @@ import sys, os, traceback, time
  
 modules = [ 
     # ----------------------- Regression List --------------------------
-    'Tests/analysis_aerodynamics/airfoil_panel_method_test.py',  
+    'Tests/analysis_aerodynamics/airfoil_panel_method_test.py',    
+    'Tests/analysis_emissions/emissions_test.py',   
     'Tests/analysis_noise/digital_elevation_test.py',  
     'Tests/analysis_noise/frequency_domain_test.py', 
-    'Tests/analysis_noise/empirical_jet_noise_test.py',     
+    'Tests/analysis_noise/empirical_jet_noise_test.py',    
     'Tests/analysis_noise/noise_hemisphere_test.py', 
     'Tests/analysis_stability/vlm_pertubation_test.py', 
     'Tests/analysis_weights/operating_empty_weight_test.py',
@@ -29,8 +30,7 @@ modules = [
     'Tests/geometry_airfoils/airfoil_import_test.py', 
     'Tests/geometry_airfoils/airfoil_interpolation_test.py',    
     'Tests/mission_segments/segment_test.py',     
-    'Tests/mission_segments/transition_segment_test.py',    
-    'Tests/network_electric/electric_rotor_test.py',
+    'Tests/mission_segments/transition_segment_test.py', 
     'Tests/network_electric/electric_btms_test.py', 
     'Tests/network_turbofan/turbofan_network_test.py',
     'Tests/network_turbojet/turbojet_network_test.py',

@@ -80,14 +80,15 @@ def ICE_CS(vehicle):
     fuel_line                                   = RCAIDE.Library.Components.Energy.Distributors.Fuel_Line() 
     
     #------------------------------------------------------------------------------------------------------------------------------------  
-    # Fuel Tank and Fuel
+    # uel Tank and Fuel
     #------------------------------------------------------------------------------------------------------------------------------------   
-    fuel_tank                                         = RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Fuel_Tank() 
-    fuel_tank.origin                                  = vehicle.wings.main_wing.origin  
-    fuel_tank.fuel                                    = RCAIDE.Library.Attributes.Propellants.Aviation_Gasoline() 
-    fuel_tank.fuel.mass_properties.mass               = 319 *Units.lbs 
-    fuel_tank.fuel.mass_properties.center_of_gravity  = vehicle.wings.main_wing.mass_properties.center_of_gravity
-    fuel_tank.volume                                  = fuel_tank.fuel.mass_properties.mass/fuel_tank.fuel.density   
+    fuel_tank                                   = RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Fuel_Tank()
+    fuel_tank.origin                            = vehicle.wings.main_wing.origin  
+    fuel                                        = RCAIDE.Library.Attributes.Propellants.Aviation_Gasoline() 
+    fuel.mass_properties.mass                   = 319 *Units.lbs 
+    fuel.mass_properties.center_of_gravity      =  vehicle.wings.main_wing.mass_properties.center_of_gravity
+    fuel.internal_volume                        = fuel.mass_properties.mass/fuel.density  
+    fuel_tank.fuel                              = fuel  
     fuel_line.fuel_tanks.append(fuel_tank)
 
 
@@ -196,7 +197,7 @@ def mission_setup(analyses):
     # base segment
     base_segment = Segments.Segment()
     ones_row     = base_segment.state.ones_row
-    base_segment.state.numerics.number_control_points    = 3
+    base_segment.state.numerics.number_of_control_points    = 3
 
 
     # ------------------------------------------------------------------    
@@ -244,7 +245,7 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
     aerodynamics = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
-    aerodynamics.vehicle                             = vehicle
+    aerodynamics.vehicle                            = vehicle
     aerodynamics.settings.drag_coefficient_increment = 0.0000
     analyses.append(aerodynamics)
 

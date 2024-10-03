@@ -56,7 +56,7 @@ def main():
     plot_results(results,regression_plotting_flag)   
 
     X57_SPL        = np.max(results.segments.climb.conditions.noise.total_SPL_dBA) 
-    X57_SPL_true   = 55.07572946679936
+    X57_SPL_true   = 44.96663298041959
     X57_diff_SPL   = np.abs(X57_SPL - X57_SPL_true)
     print('Error: ',X57_diff_SPL)
     assert np.abs((X57_SPL - X57_SPL_true)/X57_SPL_true) < 1e-3    
@@ -94,7 +94,7 @@ def base_analysis(vehicle,microphone_terrain_data,geospacial_data):
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
     aerodynamics          = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
-    aerodynamics.vehicle  = vehicle
+    aerodynamics.vehicle = vehicle
     aerodynamics.settings.drag_coefficient_increment = 0.0000
     analyses.append(aerodynamics)   
  
@@ -155,7 +155,7 @@ def mission_setup(analyses,geospacial_data):
     mission.tag   = 'mission' 
     Segments      = RCAIDE.Framework.Mission.Segments  
     base_segment  = Segments.Segment()   
-    base_segment.state.numerics.number_control_points  = 5 
+    base_segment.state.numerics.number_of_control_points  = 5 
     
     # ------------------------------------------------------------------
     #   Departure End of Runway Segment Flight 1 : 

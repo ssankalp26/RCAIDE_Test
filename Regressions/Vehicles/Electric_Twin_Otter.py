@@ -456,8 +456,8 @@ def vehicle_setup(cell_chemistry, btms_type):
             bat_copy = deepcopy(bat_module)
             bus.battery_modules.append(bat_copy)
 
-        bus.battery_module_electric_configuration = 'Series'
-        bus.charging_c_rate                       = 1
+        bus.battery_module_electric_configuration = 'Series' 
+        bus.charging_c_rate  = 1 
         bus.nominal_capacity = 0
         for battery_module in  bus.battery_modules:
             bus.voltage  +=   battery_module.voltage

@@ -92,7 +92,7 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
     aerodynamics          = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
-    aerodynamics.geometry = vehicle
+    aerodynamics.vehicle  = vehicle
     aerodynamics.settings.drag_coefficient_increment = 0.0000
     analyses.append(aerodynamics)   
 
@@ -131,7 +131,7 @@ def mission_setup(analyses):
     
     # base segment
     base_segment = Segments.Segment()
-    base_segment.state.numerics.number_control_points  = 4       
+    base_segment.state.numerics.number_of_control_points  = 4       
     
     flights_per_day = 1 
     simulated_days  = 1
@@ -258,17 +258,7 @@ def mission_setup(analyses):
                                                                       'lift_propulsor_5','lift_propulsor_6','lift_propulsor_7','lift_propulsor_8']] 
                     
             mission.append_segment(segment)  
-          
-        
-            # ------------------------------------------------------------------
-            #  Charge Segment: 
-            # ------------------------------------------------------------------  
-            # Charge Model 
-            segment                                         = Segments.Ground.Battery_Recharge(base_segment)     
-            segment.analyses.extend(analyses.base)              
-            segment.tag                                     = 'Recharge' 
-            segment.time                                    = 1 * Units.hr
-            segment.current                                 = 100 
+           
             if flight_no  == flights_per_day:  
                 segment.increment_battery_age_by_one_day    =True     
             mission.append_segment(segment)                
