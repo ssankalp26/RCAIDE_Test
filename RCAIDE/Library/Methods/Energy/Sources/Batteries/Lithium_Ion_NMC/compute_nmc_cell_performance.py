@@ -78,14 +78,19 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
     Cp                 = battery.cell.specific_heat_capacity       
     battery_data       = battery.cell.discharge_performance_map
     
-    # Bus Conditions
-    bus_conditions     =  state.conditions.energy[bus.tag]
-    #bus_config         =  bus.battery_module_electric_configuration
+    # ---------------------------------------------------------------------------------
+    # Compute Bus electrical properties 
+    # -------------------------------------------------------------------------    
+    bus_conditions              =  state.conditions.energy[bus.tag]
+    bus_config                  =  bus.battery_module_electric_configuration
+    P_bus                       = bus_conditions.power_draw
+    V_bus                       = bus.voltage
+    bus_conditions.current_draw = P_bus/V_bus
+    I_bus                       = bus_conditions.current_draw
     
-    I_bus              = bus_conditions.current_draw
-    P_bus              = bus_conditions.power_draw
-    
-    # Battery Conditions
+    # ---------------------------------------------------------------------------------
+    # Compute Battery Conditions
+    # -------------------------------------------------------------------------    
     battery_conditions = state.conditions.energy[bus.tag].battery_modules[battery.tag]  
    
     E_max              = battery_conditions.maximum_initial_energy * battery_conditions.cell.capacity_fade_factor
@@ -121,10 +126,10 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
     # Compute battery electrical properties 
     # -------------------------------------------------------------------------    
     # Calculate the current going into one cell  
-    n_series          = battery.electrical_configuration.series  
+    n_series          = battery.electrical_configuration.series
     n_parallel        = battery.electrical_configuration.parallel 
     n_total           = battery.electrical_configuration.total
-    no_modules        =  len(bus.battery_modules)
+    no_modules        = len(bus.battery_modules)
     
     # ---------------------------------------------------------------------------------
     # Examine Thermal Management System
@@ -142,11 +147,11 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
     # ---------------------------------------------------------------------------------------------------
     # Current State 
     # ---------------------------------------------------------------------------------------------------
-    #if bus_config is 'Series':
-        #I_module[t_idx]      = I_bus[t_idx]
-    #elif bus_config is  'Parallel':
-        #I_module[t_idx]      = I_bus[t_idx] / len(bus.battery_modules)
-    I_module[t_idx]      = I_bus[t_idx]    
+    if bus_config is 'Series':
+        I_module[t_idx]      = I_bus[t_idx]
+    elif bus_config is  'Parallel':
+        I_module[t_idx]      = I_bus[t_idx] / len(bus.battery_modules)
+
     I_cell[t_idx]        = I_module[t_idx] / n_parallel   
 
     # ---------------------------------------------------------------------------------
@@ -189,7 +194,7 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
 
         # Compute cell temperature
         if HAS is not None:
-            T_cell[t_idx+1]  = HAS.compute_thermal_performance(battery,coolant_line, Q_heat_cell[t_idx],T_cell[t_idx],state,delta_t[t_idx],t_idx)
+            T_cell[t_idx+1]  = HAS.compute_thermal_performance(battery,bus,coolant_line,Q_heat_cell[t_idx],T_cell[t_idx],state,delta_t[t_idx],t_idx)
         else:
             # Considers a thermally insulated system and the heat piles on in the system
             dT_dt              = Q_heat_cell[t_idx]/(cell_mass*Cp)

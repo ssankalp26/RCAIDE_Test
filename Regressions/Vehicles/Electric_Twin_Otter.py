@@ -456,12 +456,9 @@ def vehicle_setup(cell_chemistry, btms_type):
             bat_copy = deepcopy(bat_module)
             bus.battery_modules.append(bat_copy)
 
-        bus.battery_module_electric_configuration = 'Series' 
-        bus.charging_c_rate  = 1 
-        bus.nominal_capacity = 0
-        for battery_module in  bus.battery_modules:
-            bus.voltage  +=   battery_module.voltage
-            bus.nominal_capacity =  max(battery_module.nominal_capacity, bus.nominal_capacity)        
+        bus.battery_module_electric_configuration = 'Series'
+        bus.charging_c_rate                       = 1
+        bus.initialize_bus_electrical_properties()
 
     elif cell_chemistry == 'lithium_ion_lfp':
         #------------------------------------------------------------------------------------------------------------------------------------           
@@ -484,18 +481,15 @@ def vehicle_setup(cell_chemistry, btms_type):
         
             bus.battery_module_electric_configuration = 'Series'
             bus.charging_c_rate                       = 1
-            bus.nominal_capacity = 0
-            for battery_module in  bus.battery_modules:
-                bus.voltage  +=   battery_module.voltage
-                bus.nominal_capacity =  max(battery_module.nominal_capacity, bus.nominal_capacity)   
-   
+            bus.initialize_bus_electrical_properties()
+            
     if btms_type ==  None:
         pass
     elif btms_type ==  'Liquid_Cooled_Wavy_Channel':
         ##------------------------------------------------------------------------------------------------------------------------------------  
         # Coolant Line
         #------------------------------------------------------------------------------------------------------------------------------------  
-        coolant_line                      = RCAIDE.Library.Components.Energy.Distributors.Coolant_Line(bus)
+        coolant_line                                           = RCAIDE.Library.Components.Energy.Distributors.Coolant_Line(bus)
         net.coolant_lines.append(coolant_line)
         HAS                                                    = RCAIDE.Library.Components.Thermal_Management.Batteries.Liquid_Cooled_Wavy_Channel(coolant_line)
         HAS.design_altitude                                    = 2500. * Units.feet  
@@ -536,8 +530,7 @@ def vehicle_setup(cell_chemistry, btms_type):
     #------------------------------------------------------------------------------------------------------------------------------------   
     starboard_propulsor                              = RCAIDE.Library.Components.Propulsors.Electric_Rotor()  
     starboard_propulsor.tag                          = 'starboard_propulsor'
-    starboard_propulsor.active_bus             = ['li_ion_battery']   
-  
+    starboard_propulsor.active_busses                = ['bus']    
     # Electronic Speed Controller       
     esc                                              = RCAIDE.Library.Components.Energy.Modulators.Electronic_Speed_Controller()
     esc.tag                                          = 'esc_1'
@@ -633,6 +626,7 @@ def vehicle_setup(cell_chemistry, btms_type):
 
     # append bus   
     net.busses.append(bus)
+    
     vehicle.append_energy_network(net)
 
     # ------------------------------------------------------------------
