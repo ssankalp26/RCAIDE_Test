@@ -49,6 +49,7 @@ class Electrical_Bus(Component):
     def append_operating_conditions(self, segment):
         append_bus_conditions(self, segment)
         return
+    
     def append_segment_conditions(self, conditions, segment):
         append_bus_segment_conditions(self, conditions, segment)
         return    
@@ -56,6 +57,7 @@ class Electrical_Bus(Component):
     def initialize_bus_electrical_properties(self):
         initialize_bus_electrical_properties(self)
         return
+    
     def compute_distributor_conditions(self,state):
         compute_bus_conditions(self, state)
         return    

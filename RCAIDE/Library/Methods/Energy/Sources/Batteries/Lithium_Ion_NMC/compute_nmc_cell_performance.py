@@ -129,7 +129,7 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
     n_series          = battery.electrical_configuration.series
     n_parallel        = battery.electrical_configuration.parallel 
     n_total           = battery.electrical_configuration.total
-    no_modules        =  len(bus.battery_modules)
+    no_modules        = len(bus.battery_modules)
     
     # ---------------------------------------------------------------------------------
     # Examine Thermal Management System

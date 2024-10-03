@@ -414,7 +414,7 @@ def post_process(nexus):
     # Objective 
     # -------------------------------------------------------   
     power_air     =  hex_opt.power_draw_air    
-    power_coolant =  hex_opt.power_draw_coolant * 10000
+    power_coolant =  hex_opt.power_draw_coolant * 1000
     
     #power   = hex_opt.power_draw 
     mass    = hex_opt.heat_exchanger_mass*1000

@@ -75,14 +75,19 @@ def compute_lfp_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
     cell_mass          = battery.cell.mass    
     Cp                 = battery.cell.specific_heat_capacity       
 
-    # Bus Conditions
-    bus_conditions     =  state.conditions.energy[bus.tag]
-    bus_config         =  bus.battery_module_electric_configuration
-
-    I_bus              = bus_conditions.current_draw
-    P_bus              = bus_conditions.power_draw
-
-    # Battery Conditions
+    # ---------------------------------------------------------------------------------
+    # Compute Bus electrical properties 
+    # -------------------------------------------------------------------------    
+    bus_conditions              =  state.conditions.energy[bus.tag]
+    bus_config                  =  bus.battery_module_electric_configuration
+    P_bus                       = bus_conditions.power_draw
+    V_bus                       = bus.voltage
+    bus_conditions.current_draw = P_bus/V_bus
+    I_bus                       = bus_conditions.current_draw
+    
+    # ---------------------------------------------------------------------------------
+    # Compute Battery Conditions
+    # -------------------------------------------------------------------------    
     battery_conditions = state.conditions.energy[bus.tag].battery_modules[battery.tag]  
 
     E_max              = battery_conditions.maximum_initial_energy * battery_conditions.cell.capacity_fade_factor
@@ -122,7 +127,7 @@ def compute_lfp_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
     n_series          = battery.electrical_configuration.series  
     n_parallel        = battery.electrical_configuration.parallel 
     n_total           = battery.electrical_configuration.total
-    no_modules        =  len(bus.battery_modules)
+    no_modules        = len(bus.battery_modules)
     
     # ---------------------------------------------------------------------------------
     # Examine Thermal Management System
@@ -137,10 +142,14 @@ def compute_lfp_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
                             HAS = btms    
 
 
-    # ---------------------------------------------------------------------------------------------------
+   # ---------------------------------------------------------------------------------------------------
     # Current State 
-    # --------------------------------------------------------------------------------------------------- 
-    I_module[t_idx]      = I_bus[t_idx]    
+    # ---------------------------------------------------------------------------------------------------
+    if bus_config is 'Series':
+        I_module[t_idx]      = I_bus[t_idx]
+    elif bus_config is  'Parallel':
+        I_module[t_idx]      = I_bus[t_idx] / len(bus.battery_modules)
+
     I_cell[t_idx]        = I_module[t_idx] / n_parallel   
 
     # ---------------------------------------------------------------------------------

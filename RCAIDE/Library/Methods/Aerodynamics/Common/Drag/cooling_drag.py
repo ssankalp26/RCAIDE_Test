@@ -15,8 +15,26 @@ import numpy as np
 #  cooling_drag
 # ----------------------------------------------------------------------------------------------------------------------  
 ## @ingroup Methods-Aerodynamics-Common-Drag
-def cooling_drag(state,settings,geometry):#(state,heat_exchanger,coolant_line,t_idx,fan_operation):
+def cooling_drag(state,settings,geometry):
     """
+        Computes the cooling drag based on the results of the Heat Exchanger operation
+
+            Inputs:
+                state.
+                    conditions.freestream.
+                                        density                            [kg/m^3]
+                                        velocity                           [Knots]        
+                                        pressure                           [Pascal]
+                    energy.coolant_line.heat_exchanger.
+                                                    pressure_differential  [Pascal] 
+                                                    mass_flow_hex          [kg/s]
+                    analyses.aerodynamics.vehicle.reference_area           [m^2]
+
+            
+
+            Outputs:
+                cooling_drag                                               [Unitless]
+    
             Assumptions:
             The density across the duct is equal to the freestream density of air. 
             Inlet area is varied based of required inflow required
@@ -24,12 +42,6 @@ def cooling_drag(state,settings,geometry):#(state,heat_exchanger,coolant_line,t_
             Source:
             Brelje, Benjamin & Jasa, John & Martins, Joaquim & Gray, Justin. (2019).
             Development of a conceptual-level thermal management system design capability in OpenConcept. 
-
-            Inputs:
-            Heat Exchanger Design and Operational Properties. 
-
-            Outputs:Cooling Drag 
-            None
 
             Properties Used:
             None
@@ -43,7 +55,7 @@ def cooling_drag(state,settings,geometry):#(state,heat_exchanger,coolant_line,t_
     pressure                   = conditions.freestream.pressure
     reference_area             = state.analyses.aerodynamics.vehicle.reference_area
     
- 
+    # Create an empty array for cooling drag coefficient
     cd_cooling  = np.zeros_like(density)
     
     for network in geometry.networks:
