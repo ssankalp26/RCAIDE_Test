@@ -1,14 +1,18 @@
-# ----------------------------------------------------------------------
-#  Imports
-# ----------------------------------------------------------------------
+# RCAIDE/Frameworks/Analysis/Weights/Weights_Transport.py
+#
+# Created:  Oct 2024, M. Clarke
+
+# ----------------------------------------------------------------------------------------------------------------------
+#  IMPORT
+# ----------------------------------------------------------------------------------------------------------------------
 
 import RCAIDE
 from RCAIDE.Framework.Core import Data 
 from .Weights import Weights
 
-# ----------------------------------------------------------------------
-#  Analysis
-# ---------------------------------------------------------------------- 
+# ----------------------------------------------------------------------------------------------------------------------
+#  Transport Weights Analysis
+# ----------------------------------------------------------------------------------------------------------------------
 class Weights_Transport(Weights):
     """ This is class that evaluates the weight of Transport class aircraft
 
@@ -47,7 +51,7 @@ class Weights_Transport(Weights):
         Properties Used:
         N/A
         """
-        self.tag      = 'transport_weight_analysis'
+        self.tag      = 'weights_transport'
         self.method   = 'RCAIDE'
 
         self.vehicle  = None

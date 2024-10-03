@@ -1,5 +1,5 @@
-# RCAIDE/eVTOL_Vehicle.py
-# # 
+# RCAIDE/EVTOL_Vehicle.py
+#  
 # Created:  Sep 2024, M. Clarke 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -10,10 +10,10 @@ from .Vehicle import Vehicle
 from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Electric.compute_operating_empty_weight import compute_operating_empty_weight
 
 # ---------------------------------------------------------------------------------------------------------------------- 
-#  eVTOL_Vehicle
+#  EVTOL_Vehicle
 # ----------------------------------------------------------------------------------------------------------------------   
-class eVTOL_Vehicle(Vehicle):
-    '''eVTOL Vehicle Class
+class EVTOL_Vehicle(Vehicle):
+    '''EVTOL Vehicle Class
     
     '''
     def __defaults__(self): 

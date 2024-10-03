@@ -1,4 +1,4 @@
-# RCAIDE/Frameworks/Analysis/Weights/Weights_BWB.py
+# RCAIDE/Frameworks/Analysis/Weights/Weights_General_Aviation.py
 #
 # Created:  Oct 2024, M. Clarke
 
@@ -9,10 +9,10 @@ import RCAIDE
 from .Weights import Weights
 
 # ----------------------------------------------------------------------------------------------------------------------
-#  BWB Weights Analysis
+#  General Aviation Weights Analysis
 # ----------------------------------------------------------------------------------------------------------------------
-class Weights_BWB(Weights):
-    """ This is class that evaluates the weight of a BWB aircraft
+class Weights_General_Aviation(Weights):
+    """ This is class that evaluates the weight of a general aviation aircraft
     
     Assumptions:
         None
@@ -27,7 +27,7 @@ class Weights_BWB(Weights):
         None 
     """
     def __defaults__(self):
-        """This sets the default values and methods for the BWB weight analysis.
+        """This sets the default values and methods for the general aviation weight analysis.
     
         Assumptions:
         None
@@ -40,9 +40,8 @@ class Weights_BWB(Weights):
 
         Outputs:
         None 
-        """            
-
-        self.tag      = 'weights_bwb' 
+        """           
+        self.tag      = 'weights_general_aviation'
         self.vehicle  = None    
         self.settings = None        
         
@@ -63,7 +62,7 @@ class Weights_BWB(Weights):
         """
         # unpack
         vehicle = self.vehicle 
-        results = RCAIDE.Library.Methods.Weights.Correlation_Buildups.BWB.compute_operating_empty_weight(vehicle, settings=self.settings)
+        results = RCAIDE.Library.Methods.Weights.Correlation_Buildups.General_Aviation.compute_operating_empty_weight(vehicle, settings=self.settings)
 
         # storing weigth breakdown into vehicle
         vehicle.weight_breakdown = results

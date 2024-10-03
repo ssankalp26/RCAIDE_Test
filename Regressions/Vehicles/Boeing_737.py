@@ -25,7 +25,7 @@ def vehicle_setup():
     #   Initialize the Vehicle
     # ------------------------------------------------------------------    
     
-    vehicle = RCAIDE.Vehicle()
+    vehicle = RCAIDE.Transport_Vehicle()
     vehicle.tag = 'Boeing_737-800'
 
     

@@ -34,7 +34,7 @@ class Human_Powered_Vehicle(Vehicle):
         Properties Used:
         N/A
         """         
-        self.tag  =  'Human_Powered'
+        self.tag  = 'Human_Powered'
         
 
     def operating_empty_weight(self, settings=None, method_type='RCAIDE'): 

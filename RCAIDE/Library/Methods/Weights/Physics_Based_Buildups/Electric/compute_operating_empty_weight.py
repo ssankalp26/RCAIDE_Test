@@ -22,7 +22,7 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 # Compute Operating Empty Weight 
 # ----------------------------------------------------------------------------------------------------------------------
-def compute_operating_empty_weight(vehicle, miscelleneous_weight_factor   = 1.1): 
+def compute_operating_empty_weight(vehicle,settings = None): 
     """ Calculates the empty vehicle mass for an EVTOL-type aircraft including seats,
         avionics, servomotors, ballistic recovery system, rotor and hub assembly,
         transmission, and landing gear. 
@@ -67,7 +67,20 @@ def compute_operating_empty_weight(vehicle, miscelleneous_weight_factor   = 1.1)
                     Payload
 
     """
-
+    
+    if settings == None: 
+        miscelleneous_weight_factor   = 1.1
+        safety_factor                 = 1.5   
+        disk_area_factor              = 1.15     
+        max_thrust_to_weight_ratio    = 1.1
+        max_g_load                    = 3.8
+    else:
+        miscelleneous_weight_factor   = settings.miscelleneous_weight_factor
+        safety_factor                 = settings.safety_factor              
+        disk_area_factor              = settings.disk_area_factor           
+        max_thrust_to_weight_ratio    = settings.max_thrust_to_weight_ratio 
+        max_g_load                    = settings.max_g_load  
+               
     # Set up data structures for RCAIDE weight methods
     weight                   = Data()  
     weight.battery           = 0.0
@@ -125,10 +138,6 @@ def compute_operating_empty_weight(vehicle, miscelleneous_weight_factor   = 1.1)
     MTOW                          = vehicle.mass_properties.max_takeoff
     atmosphere                    = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976() 
     atmo_data                     = atmosphere.compute_values(0, 0) 
-    safety_factor                 = 1.5   
-    disk_area_factor              = 1.15     
-    max_thrust_to_weight_ratio    = 1.1
-    max_g_load                    = 3.8
     rho_ref                       = atmo_data.density 
     maxLift                       = MTOW * max_thrust_to_weight_ratio * 9.81           
     AvgBladeCD                    = 0.012         

@@ -1,7 +1,5 @@
-## @ingroup Analyses-Aerodynamics
 # RCAIDE/Framework/Analyses/Aerodynamics/Vortex_Lattice_Method.py
-# 
-# 
+#  
 # Created:  Jul 2023, M. Clarke
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -21,8 +19,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Vortex_Lattice_Method
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Analyses-Aerodynamics
+# ---------------------------------------------------------------------------------------------------------------------- 
 class Vortex_Lattice_Method(Aerodynamics):
     """This is a subsonic aerodynamic buildup analysis based on the vortex lattice method
 

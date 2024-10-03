@@ -17,7 +17,7 @@ def vehicle_setup():
     # ------------------------------------------------------------------
     #   Initialize the Vehicle
     # ------------------------------------------------------------------        
-    vehicle                                     = RCAIDE.Vehicle()
+    vehicle                                     = RCAIDE.General_Aviation_Vehicle()
     vehicle.tag                                 = 'Cessna_172'
                                                 
     # ------------------------------------------------------------------

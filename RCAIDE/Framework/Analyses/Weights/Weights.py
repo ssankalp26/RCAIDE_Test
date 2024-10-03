@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------
 #  Imports
 # ----------------------------------------------------------------------
-
+import RCAIDE
 from RCAIDE.Framework.Core     import Data
 from RCAIDE.Framework.Analyses import Analysis  
 
@@ -45,17 +45,31 @@ class Weights(Analysis):
         Properties Used:
         N/A
         """           
-        self.tag = 'weights'
+        self.tag      = 'weights' 
+        self.method   = 'RCAIDE'
+
+        self.vehicle  = None
         
-        self.vehicle  = Data()
         self.settings = Data()
+        self.settings.weight_reduction_factors = Data()  
+        self.settings.weight_reduction_factors.main_wing = 0.  # Reduction factors are proportional (.1 is a 10% weight reduction)
+        self.settings.weight_reduction_factors.fuselage  = 0.  # Reduction factors are proportional (.1 is a 10% weight reduction)
+        self.settings.weight_reduction_factors.empennage = 0.  # applied to horizontal and vertical stabilizers
         
-        self.settings.empty = None
-               
+        # FLOPS settings
+        self.settings.FLOPS = Data() 
+        self.settings.FLOPS.aeroelastic_tailoring_factor = 0.   # Aeroelastic tailoring factor [0 no aeroelastic tailoring, 1 maximum aeroelastic tailoring] 
+        self.settings.FLOPS.strut_braced_wing_factor     = 0.   # Wing strut bracing factor [0 for no struts, 1 for struts]
+        self.settings.FLOPS.composite_utilization_factor = 0.5  # Composite utilization factor [0 no composite, 1 full composite]
         
-    def evaluate(self,conditions=None):
+        # Raymer settings
+        self.settings.Raymer = Data()
+        self.settings.Raymer.fuselage_mounted_landing_gear_factor = 1. # 1. if false, 1.12 if true
+                       
+        
+    def evaluate(self):
         """Evaluate the weight analysis.
-    
+
         Assumptions:
         None
 
@@ -63,29 +77,20 @@ class Weights(Analysis):
         N/A
 
         Inputs:
-        self.vehicle           [Data]
-        self.settings          [Data]
-        self.settings.empty    [Data]
+        None
 
         Outputs:
-        self.weight_breakdown  [Data]
-        results                [Data]
-
-        Properties Used:
-        N/A
-        """         
+        results 
+        """
         # unpack
-        vehicle  = self.vehicle
-        settings = self.settings
-        empty    = self.settings.empty
+        vehicle = self.vehicle 
+        results = RCAIDE.Library.Methods.Weights.Correlation_Buildups.Common.compute_operating_empty_weight(vehicle, settings=self.settings)
 
-        # evaluate
-        results = empty(vehicle,settings)
-        
         # storing weigth breakdown into vehicle
-        vehicle.weight_breakdown = results 
+        vehicle.weight_breakdown = results
 
         # updating empty weight
         vehicle.mass_properties.operating_empty = results.empty
-              
-        return results 
+
+        # done!
+        return results        
