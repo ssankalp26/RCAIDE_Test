@@ -15,7 +15,7 @@ def main():
     BWB_Aircraft_Test()
     return
 
-def Transport_Aircraft_Test() 
+def Transport_Aircraft_Test():
     vehicle = Lockheed_C5a.vehicle_setup()
     
     # ------------------------------------------------------------------
