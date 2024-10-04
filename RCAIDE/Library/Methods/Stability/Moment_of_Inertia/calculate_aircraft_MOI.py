@@ -45,7 +45,7 @@ def calculate_aircraft_MOI(vehicle, CG_location):
         I, mass = compute_fuselage_moment_of_inertia(fuselage, CG_location)
         total_MOI += I
         total_mass += mass
-        print(fuselage.tag + " MOI added")
+        print(fuselage.tag + " MOI added. Mass = "+str(mass))
     
     # ------------------------------------------------------------------        
     #  Wing(s)
@@ -54,7 +54,7 @@ def calculate_aircraft_MOI(vehicle, CG_location):
         I, mass = compute_wing_moment_of_inertia(wing, wing.mass_properties.mass,  CG_location)
         total_MOI += I
         total_mass += mass
-        print(wing.tag + " MOI added")
+        print(wing.tag + " MOI added. Mass = "+str(mass))
     
     # ------------------------------------------------------------------        
     #  Energy network
@@ -71,10 +71,10 @@ def calculate_aircraft_MOI(vehicle, CG_location):
                         I, mass = compute_cylinder_moment_of_inertia(item.origin,item.mass_properties.mass, 0, 0, 0,0, CG_location)
                         I_network += I
                         total_mass += mass                        
-                        print(item.tag + " MOI added")
+                        print(item.tag + " MOI added. Mass = "+str(mass))
                 for battery in bus.batteries: 
                     I_network += compute_cuboid_moment_of_inertia(battery.origin, battery.mass_properties.mass, 0, 0, 0, 0, 0, 0, CG_location)
-                    print(battery.tag + " MOI added")
+                    print(battery.tag + " MOI added. Mass = "+str(mass))
         # Fuel network
         for fuel_line in network.fuel_lines:
             # Propulsor
@@ -83,7 +83,7 @@ def calculate_aircraft_MOI(vehicle, CG_location):
                     I, mass= compute_cylinder_moment_of_inertia(propulsor.origin, propulsor.mass_properties.mass, propulsor.engine_length, propulsor.nacelle.diameter/2, 0, 0, CG_location)                    
                     I_network += I
                     total_mass += mass                    
-                    print(propulsor.tag + " MOI added")
+                    print(propulsor.tag + " MOI added. Mass = "+str(mass))
             
             # Fuel tank       
             for fuel_tank in fuel_line.fuel_tanks:
@@ -91,12 +91,12 @@ def calculate_aircraft_MOI(vehicle, CG_location):
                     I, mass = compute_cuboid_moment_of_inertia(fuel_tank.origin, fuel_tank.fuel.mass_properties.mass, fuel_tank.length, fuel_tank.width, fuel_tank.height, 0, 0, 0, CG_location)
                     I_network += I
                     total_mass += mass
-                    print(fuel_tank.tag + " MOI added")
+                    print(fuel_tank.tag + " MOI added. Mass = "+str(mass))
                 if isinstance(fuel_tank,RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Wing_Fuel_Tank): 
                     I, mass = compute_wing_moment_of_inertia(vehicle.wings["main_wing"], fuel_tank.fuel.mass_properties.mass, CG_location, fuel_flag=True)
                     I_network += I
                     total_mass += mass                    
-                    print(fuel_tank.tag + " MOI added")
+                    print(fuel_tank.tag + " MOI added. Mass = "+str(mass))
                 else:
                     pass # TO DO
                         
