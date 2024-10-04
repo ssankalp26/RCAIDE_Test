@@ -67,7 +67,8 @@ def compute_airfoil_aerodynamics(beta,c,r,R,B,Wa,Wt,a,nu,airfoils,a_loc,ctrl_pts
     Re       = (W*c)/nu
 
     # If rotor airfoils are defined, use airfoil surrogate
-    if a_loc != None:  
+    a_loc = np.array(a_loc)
+    if np.any(a_loc) != None:  
         # Compute blade Cl and Cd distribution from the airfoil data 
         if use_2d_analysis:
             # return the 2D Cl and CDval of shape (ctrl_pts, Nr, Na)
@@ -77,7 +78,7 @@ def compute_airfoil_aerodynamics(beta,c,r,R,B,Wa,Wt,a,nu,airfoils,a_loc,ctrl_pts
                 pd              = airfoil.polars
                 Cl_af           = interp2d(Re,alpha,pd.reynolds_numbers, pd.angle_of_attacks, pd.lift_coefficients) 
                 Cdval_af        = interp2d(Re,alpha,pd.reynolds_numbers, pd.angle_of_attacks, pd.drag_coefficients)
-                locs            = np.where(np.array(a_loc) == jj )
+                locs            = np.where(a_loc == jj )
                 Cl[:,locs,:]    = Cl_af[:,locs,:]
                 Cdval[:,locs,:] = Cdval_af[:,locs,:]
         else:
@@ -89,7 +90,7 @@ def compute_airfoil_aerodynamics(beta,c,r,R,B,Wa,Wt,a,nu,airfoils,a_loc,ctrl_pts
                 pd            = airfoil.polars
                 Cl_af         = interp2d(Re,alpha,pd.reynolds_numbers, pd.angle_of_attacks, pd.lift_coefficients)
                 Cdval_af      = interp2d(Re,alpha,pd.reynolds_numbers, pd.angle_of_attacks, pd.drag_coefficients)
-                locs          = np.where(np.array(a_loc) == jj )
+                locs          = np.where(a_loc == jj )
                 Cl[:,locs]    = Cl_af[:,locs]
                 Cdval[:,locs] = Cdval_af[:,locs]
     else:

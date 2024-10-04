@@ -25,7 +25,7 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 ## @ingroup Methods-Weights-Buildups-eVTOL 
 def compute_weight(vehicle, 
-          contingency_factor            = 1.1,
+          contingency_factor            = 1.05,
           speed_of_sound                = 340.294,
           max_tip_mach                  = 0.65,
           disk_area_factor              = 1.15,
@@ -132,6 +132,7 @@ def compute_weight(vehicle,
     weight.avionics     = 15.                       * Units.kg
     weight.landing_gear = MTOW * 0.02               * Units.kg
     weight.ECS          = vehicle.passengers * 7.    * Units.kg
+    weight.payload      += vehicle.mass_properties.max_payload  
 
     # Inputs and other constants
     tipMach        = max_tip_mach
@@ -162,7 +163,7 @@ def compute_weight(vehicle,
                 length_scale = length
                 nose_length  = nose
      
-                            
+                
     #-------------------------------------------------------------------------------
     # Environmental Control System
     #-------------------------------------------------------------------------------

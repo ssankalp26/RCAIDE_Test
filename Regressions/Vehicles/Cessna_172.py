@@ -1,7 +1,10 @@
-# Regressions/Vehicles/Cessna_172.py
-# 
-# 
-# Created:  Jul 2023, M. Clarke 
+''' 
+  Cessna_172.py
+  
+  Created: June 2024, M Clarke 
+
+'''
+
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
@@ -13,18 +16,14 @@ import os
 
 # python imports 
 import numpy as np
-def vehicle_setup(): 
-    # ------------------------------------------------------------------
-    #   Initialize the Vehicle
-    # ------------------------------------------------------------------        
-    vehicle                                     = RCAIDE.Vehicle()
-    vehicle.tag                                 = 'Cessna_172'
-                                                
-    # ------------------------------------------------------------------
-    #   Vehicle-level Properties
-    # ------------------------------------------------------------------    
 
-    # mass properties
+def vehicle_setup(): 
+    
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ################################################# Vehicle-level Properties ########################################################  
+    #------------------------------------------------------------------------------------------------------------------------------------     
+    vehicle                                     = RCAIDE.Vehicle()
+    vehicle.tag                                 = 'Cessna_172' 
     vehicle.mass_properties.max_takeoff         = 2550. * Units.pounds
     vehicle.mass_properties.takeoff             = 2550. * Units.pounds
     vehicle.mass_properties.max_zero_fuel       = 2550. * Units.pounds
@@ -47,9 +46,30 @@ def vehicle_setup():
     vehicle.reference_area                      = 174. * Units.feet**2       
     vehicle.passengers                          = 4
 
-    # ------------------------------------------------------------------        
+
+    
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ##################################################### Landing Gear ################################################################    
+    #------------------------------------------------------------------------------------------------------------------------------------
+    landing_gear                                = RCAIDE.Library.Components.Landing_Gear.Landing_Gear()
+    main_gear                                   = RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear()
+    nose_gear                                   = RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()
+    main_gear.strut_length                      = 12. * Units.inches  
+    nose_gear.strut_length                      = 6. * Units.inches 
+                                                
+    landing_gear.main                           = main_gear
+    landing_gear.nose                           = nose_gear
+                                                
+    #add to vehicle                             
+    vehicle.landing_gear                        = landing_gear 
+
+
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ######################################################## Wings ####################################################################  
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------
     #   Main Wing
-    # ------------------------------------------------------------------        
+    # ------------------------------------------------------------------   
 
     wing                                        = RCAIDE.Library.Components.Wings.Main_Wing()
     wing.tag                                    = 'main_wing'    
@@ -148,10 +168,10 @@ def vehicle_setup():
     vehicle.append_component(wing)
 
 
-    # ------------------------------------------------------------------
-    #  Fuselage
-    # ------------------------------------------------------------------
-
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ########################################################## Fuselage ############################################################### 
+    #------------------------------------------------------------------------------------------------------------------------------------
+    
     fuselage                                    = RCAIDE.Library.Components.Fuselages.Tube_Fuselage() 
     fuselage.number_coach_seats                 = 4.        
     fuselage.differential_pressure              = 8*Units.psi                    # Maximum differential pressure
@@ -177,22 +197,10 @@ def vehicle_setup():
     # add to vehicle
     vehicle.append_component(fuselage)
     
-    # ------------------------------------------------------------------
-    #   Landing gear
-    # ------------------------------------------------------------------  
-    landing_gear                                = RCAIDE.Library.Components.Landing_Gear.Landing_Gear()
-    main_gear                                   = RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear()
-    nose_gear                                   = RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()
-    main_gear.strut_length                      = 12. * Units.inches  
-    nose_gear.strut_length                      = 6. * Units.inches 
-                                                
-    landing_gear.main                           = main_gear
-    landing_gear.nose                           = nose_gear
-                                                
-    #add to vehicle                             
-    vehicle.landing_gear                        = landing_gear
-
-    # ########################################################  Energy Network  #########################################################  
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ########################################################## Energy Network ######################################################### 
+    #------------------------------------------------------------------------------------------------------------------------------------ 
+    #initialize the fuel network
     net                                         = RCAIDE.Framework.Networks.Fuel()   
 
     # add the network to the vehicle

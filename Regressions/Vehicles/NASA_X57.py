@@ -1,7 +1,9 @@
-# Regressions/Vehicles/NASA_X57.py
-# 
-# 
-# Created:  Jul 2023, M. Clarke 
+''' 
+  NASA_X57.py
+  
+  Created: June 2024, M Clarke 
+
+'''
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
@@ -24,21 +26,17 @@ import os
 #   Build the Vehicle
 # ----------------------------------------------------------------------------------------------------------------------
 def vehicle_setup():
-
+    
     #------------------------------------------------------------------------------------------------------------------------------------
-    #   Initialize the Vehicle
+    # ################################################# Vehicle-level Properties ########################################################  
     #------------------------------------------------------------------------------------------------------------------------------------
 
     vehicle = RCAIDE.Vehicle()
-    vehicle.tag = 'X57_Maxwell_Mod2'
-
- 
-    # ################################################# Vehicle-level Properties ########################################################  
-
-    # mass properties
-    vehicle.mass_properties.max_takeoff   = 2550. * Units.pounds
-    vehicle.mass_properties.takeoff       = 2550. * Units.pounds
-    vehicle.mass_properties.max_zero_fuel = 2550. * Units.pounds 
+    vehicle.tag = 'X57_Maxwell_Mod2' 
+    vehicle.mass_properties.max_takeoff   = 2712. * Units.pounds
+    vehicle.mass_properties.takeoff       = 2712. * Units.pounds
+    vehicle.mass_properties.max_zero_fuel = 2712. * Units.pounds 
+    vehicle.mass_properties.max_payload   = 50.  * Units.pounds  # kg
     vehicle.envelope.ultimate_load        = 5.7
     vehicle.envelope.limit_load           = 3.8 
     vehicle.reference_area                = 14.76
@@ -56,10 +54,13 @@ def vehicle_setup():
     vehicle.design_mach_number            =  mach_number
 
          
-    # ##########################################################  Wings ################################################################    
-    #------------------------------------------------------------------------------------------------------------------------------------  
-    #  Main Wing
     #------------------------------------------------------------------------------------------------------------------------------------
+    # ######################################################## Wings ####################################################################  
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------
+    #   Main Wing
+    # ------------------------------------------------------------------
+    
     wing                                  = RCAIDE.Library.Components.Wings.Main_Wing()
     wing.tag                              = 'main_wing' 
     wing.sweeps.quarter_chord             = 0.0 * Units.deg
@@ -332,7 +333,10 @@ def vehicle_setup():
     # add to vehicle
     vehicle.append_component(fuselage)
  
-    # ########################################################  Energy Network  #########################################################  
+    #------------------------------------------------------------------------------------------------------------------------------------  
+    #  Electric Network
+    #------------------------------------------------------------------------------------------------------------------------------------  
+    #initialize the electric network
     net                              = RCAIDE.Framework.Networks.Electric()   
 
     #------------------------------------------------------------------------------------------------------------------------------------  
@@ -344,16 +348,16 @@ def vehicle_setup():
     # Battery
     #------------------------------------------------------------------------------------------------------------------------------------  
     bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC()
-    number_of_modules                                      = 14 
+    number_of_modules                                      = 8 
     bat.tag                                                = 'li_ion_battery'
-    bat.electrical_configuration.series                     = 10   
-    bat.electrical_configuration.parallel             = 60
+    bat.electrical_configuration.series                    = 16   
+    bat.electrical_configuration.parallel                  = 40
     initialize_from_circuit_configuration(bat)  
    
     bat.geometrtic_configuration.total                      = bat.electrical_configuration.total
     bat.voltage                                             = bat.maximum_voltage 
-    bat.geometrtic_configuration.normal_count               = 24
-    bat.geometrtic_configuration.parallel_count             = 40 
+    bat.geometrtic_configuration.normal_count               = 20
+    bat.geometrtic_configuration.parallel_count             = 32
      
     for _ in range(number_of_modules):
         bus.battery_modules.append(deepcopy(bat))    

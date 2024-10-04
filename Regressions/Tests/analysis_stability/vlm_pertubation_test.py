@@ -163,6 +163,7 @@ def mission_setup(analyses):
 
     # base segment
     base_segment = Segments.Segment() 
+    base_segment.state.numerics.number_of_control_points    = 3
 
     # ------------------------------------------------------------------
     #   Climb Segment : Constant Speed Constant Rate
