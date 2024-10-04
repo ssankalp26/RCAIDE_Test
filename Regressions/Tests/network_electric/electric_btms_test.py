@@ -29,8 +29,8 @@ def main():
          
     battery_types = ['lithium_ion_nmc', 'lithium_ion_lfp']
     btms_types    = ['Liquid_Cooled_Wavy_Channel', 'Air_Cooled', None] 
-    CL_true       = [[0.6044019730641954,0.604775958081217,0.604775958081217],
-                     [0.6044019723858562, .6047759580812461, 0.6047759580812461]] 
+    CL_true       = [[0.8025399895694054,0.8025399895694054,0.8025399895694054],
+                     [0.80253998956437, 0.80253998956437,0.80253998956437]] 
     # vehicle data
     for i , battery_type in enumerate(battery_types):
         for j , btms_type in enumerate(btms_types):
@@ -48,7 +48,7 @@ def main():
              
             results = missions.base_mission.evaluate()
             
-            CL    = results.segments.cruise.conditions.aerodynamics.coefficients.lift.total[3, 0]
+            CL    = results.segments.climb.conditions.aerodynamics.coefficients.lift.total[0, 0]
             print('****************************************')
             print('Computed value of coefficient of lift is:', CL)
             error =  abs(CL - CL_true[i][j]) /CL_true[i][j]
@@ -151,7 +151,7 @@ def mission_setup(analyses):
     #   Departure End of Runway Segment  
     # ------------------------------------------------------------------ 
     segment = Segments.Climb.Linear_Speed_Constant_Rate(base_segment) 
-    segment.tag = 'Departure_End_of_Runway'       
+    segment.tag = 'climb'       
     segment.analyses.extend( analyses.base )  
     segment.altitude_start                                           = 0.0 * Units.feet
     segment.altitude_end                                             = 5 
