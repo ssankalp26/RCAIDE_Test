@@ -18,7 +18,20 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------  
 ## @ingroup Methods-Stability-Common 
 def sum_moment(component):
-    """ 
+    """ Recursively sums up the moment of all compoments and subcomponents
+
+    Assumptions:
+    None
+
+    Source:
+    N/A
+
+    Inputs:
+       compoment
+
+    Outputs:
+       total_moment
+       total_mass
     """   
     total_moment = np.array([[0.0,0.0,0.0]])
     total_mass   = 0
@@ -44,8 +57,22 @@ def sum_moment(component):
 #  Recursive Moment of Intertia 
 # ----------------------------------------------------------------------------------------------------------------------  
 ## @ingroup Methods-Stability-Common 
-def sum_moment_of_intertia(component, vehicle_center_of_gravity = None):
+def sum_moment_of_intertia(component, vehicle_center_of_gravity = None): 
+    """ Recursively sums up the moment of intertia of all compoments and subcomponents
 
+    Assumptions:
+    None
+
+    Source:
+    N/A
+
+    Inputs:
+       compoment
+       vehicle_center_of_gravity
+
+    Outputs:
+       total_I 
+    """   
     total_I = np.array([[0.0,0.0,0.0]]) 
     for key,Comp in component.items():
         if  isinstance(Comp,Component.Container):
