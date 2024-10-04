@@ -64,26 +64,48 @@ def compute_systems_weight(vehicle):
         Properties Used:
             N/A
     """
- 
-    ref_wing = None 
+    flap_area = 0
+    ref_wing  = None 
     for wing in  vehicle.wings:
         if isinstance(wing, RCAIDE.Library.Components.Wings.Main_Wing):
-            ref_wing  =  wing
-    
+            ref_wing  = wing
+            rc        = wing.chords.root
+            taper     = wing.taper
+            for cs in wing.control_surfaces:
+                if type(cs) == RCAIDE.Library.Components.Wings.Control_Surfaces.Flap: 
+                    sfs  = cs.span_fraction_start    
+                    sfe  = cs.span_fraction_end       
+                    c_f  = cs.chord_fraction
+                    span = (sfe - sfs) *wing.spans.projected 
+                    y1s = c_f*(rc -  taper *sfs * rc)
+                    y2e = c_f*(rc -  taper *sfe * rc)
+                    flap_area =  span * ( y1s + y2e) /2 
     S = 0
     if ref_wing == None:
         for wing in  vehicle.wings:
             if S < wing.areas.reference:
                 ref_wing = wing
+                rc        = wing.chords.root
+                taper     = wing.taper
+                for cs in wing.control_surfaces:
+                    if type(cs) == RCAIDE.Library.Components.Wings.Control_Surfaces.Flap: 
+                        sfs  = cs.span_fraction_start    
+                        sfe  = cs.span_fraction_end       
+                        c_f  = cs.chord_fraction
+                        span =  (sfe - sfs) *wing.spans.projected 
+                        y1s = c_f*(rc -  taper *sfs * rc)
+                        y2e = c_f*(rc -  taper *sfe * rc)
+                        flap_area =  span * ( y1s + y2e) /2 
     L_fus = 0
     for fuselage in vehicle.fuselages:
         if L_fus < fuselage.lengths.total:
             ref_fuselage = fuselage
-            
+    
+    flap_ratio     = flap_area / ref_wing.areas.reference
     L              = ref_fuselage.lengths.total / Units.ft
     Bw             = ref_wing.spans.projected / Units.ft
     DG             = vehicle.mass_properties.max_takeoff / Units.lbs
-    Scs            = ref_wing.flap_ratio * vehicle.reference_area / Units.ft**2
+    Scs            = flap_ratio * vehicle.reference_area / Units.ft**2
     design_mach    = vehicle.flight_envelope.design_mach_number
     num_pax        = vehicle.passengers 
     NENG = 0 
