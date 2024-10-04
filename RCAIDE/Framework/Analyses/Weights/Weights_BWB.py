@@ -6,6 +6,7 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 import RCAIDE 
+from RCAIDE.Framework.Core import Data 
 from .Weights import Weights
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -44,7 +45,8 @@ class Weights_BWB(Weights):
 
         self.tag      = 'weights_bwb' 
         self.vehicle  = None    
-        self.settings = None        
+        self.settings = Data()
+        self.settings.use_max_fuel_weight = True 
         
     def evaluate(self):
         """Evaluate the weight analysis.

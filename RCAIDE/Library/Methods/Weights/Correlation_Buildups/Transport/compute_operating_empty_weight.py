@@ -20,10 +20,7 @@ import numpy as np
 # ---------------------------------------------------------------------------------------------------------------------- 
 # Operating Empty Weight 
 # ----------------------------------------------------------------------------------------------------------------------
-def compute_operating_empty_weight(vehicle,
-                                   settings=None,
-                                   method_type='RCAIDE', 
-                                   update_fuel_weight = True):
+def compute_operating_empty_weight(vehicle, settings=None, method_type='RCAIDE'):
     """ Main function that estimates the zero-fuel weight of a transport aircraft:
         - MTOW = WZFW + FUEL
         - WZFW = WOE + WPAYLOAD
@@ -113,6 +110,9 @@ def compute_operating_empty_weight(vehicle,
     
     if settings == None:
         W_factors = Data()
+        use_max_fuel_weight = True 
+    else:
+        use_max_fuel_weight = settings.use_max_fuel_weight 
         
     # Set the factors
     if not hasattr(settings, 'weight_reduction_factors'):
@@ -231,7 +231,10 @@ def compute_operating_empty_weight(vehicle,
             W_energy_network.W_fuel_system      += W_propulsion.W_fuel_system 
             W_energy_network.W_nacelle          += W_propulsion.W_nacelle    
             number_of_engines                   += W_propulsion.number_of_engines
-            number_of_tanks                     += W_propulsion.number_of_fuel_tanks
+            number_of_tanks                     += W_propulsion.number_of_fuel_tanks  
+            for fuel_line in  network.fuel_lines:  
+                for propulsor in fuel_line.propulsors:
+                    propulsor.mass_properties.mass = W_energy_network_total / number_of_engines
             
         elif method_type == 'Raymer':
             W_propulsion                        = Raymer.compute_propulsion_system_weight(vehicle, network) 
@@ -244,6 +247,9 @@ def compute_operating_empty_weight(vehicle,
             W_energy_network.W_nacelle          += W_propulsion.W_nacelle    
             number_of_engines                   += W_propulsion.number_of_engines
             number_of_tanks                     += W_propulsion.number_of_fuel_tanks
+            for fuel_line in  network.fuel_lines:  
+                for propulsor in fuel_line.propulsors:
+                    propulsor.mass_properties.mass = W_energy_network_total / number_of_engines
         else:
             number_of_tanks = 0
             for fuel_line in  network.fuel_lines: 
@@ -422,10 +428,10 @@ def compute_operating_empty_weight(vehicle,
     output.operating_empty      = output.empty + output.operational_items.total
     output.zero_fuel_weight     = output.operating_empty + output.payload_breakdown.total
     output.max_takeoff          = vehicle.mass_properties.max_takeoff
-    total_fuel_weight           = 0.6 * (vehicle.mass_properties.max_takeoff - output.zero_fuel_weight) # This was changed
+    total_fuel_weight           = vehicle.mass_properties.max_takeoff - output.zero_fuel_weight
     
     # assume fuel is equally distributed in fuel tanks
-    if update_fuel_weight:
+    if use_max_fuel_weight:
         for network in vehicle.networks: 
             for fuel_line in network.fuel_lines:  
                 for fuel_tank in fuel_line.fuel_tanks:

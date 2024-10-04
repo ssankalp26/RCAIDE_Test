@@ -17,7 +17,7 @@ from RCAIDE.Library.Attributes.Materials.Aluminum import Aluminum
 # ---------------------------------------------------------------------------------------------------------------------- 
 # Operating Empty Weight 
 # ----------------------------------------------------------------------------------------------------------------------
-def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
+def compute_operating_empty_weight(vehicle,setings=None):
     """ This is for a BWB aircraft configuration.
 
     Assumptions:
@@ -74,6 +74,11 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
     """
 
     # Unpack inputs
+    if settings == None: 
+        use_max_fuel_weight = True 
+    else:
+        use_max_fuel_weight = settings.use_max_fuel_weight
+        
     TOW         = vehicle.mass_properties.max_takeoff
     
     for fuselage in vehicle.fuselages:
@@ -196,7 +201,7 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
     total_fuel_weight                                = vehicle.mass_properties.max_takeoff - output.zero_fuel_weight
     
     # assume fuel is equally distributed in fuel tanks
-    if update_fuel_weight:
+    if use_max_fuel_weight:
         for network in vehicle.networks: 
             for fuel_line in network.fuel_lines:  
                 for fuel_tank in fuel_line.fuel_tanks:

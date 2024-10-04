@@ -24,7 +24,7 @@ import warnings
 # ----------------------------------------------------------------------------------------------------------------------
 # Main Wing Weight 
 # ---------------------------------------------------------------------------------------------------------------------- 
-def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
+def compute_operating_empty_weight(vehicle, settings=None):
     """ output = RCAIDE.Methods.Weights.Correlations.Tube_Wing.empty(engine,wing,aircraft,fuselage,horizontal,vertical)
         Computes the empty weight breakdown of a General Aviation type aircraft  
         
@@ -165,6 +165,11 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
         
     """     
 
+    if settings == None: 
+        use_max_fuel_weight = True 
+    else:
+        use_max_fuel_weight = settings.use_max_fuel_weight
+        
     # Unpack inputs
     S_gross_w   = vehicle.reference_area
     Nult        = vehicle.flight_envelope.ultimate_load 
@@ -382,7 +387,7 @@ def compute_operating_empty_weight(vehicle, update_fuel_weight = True):
     
 
     # assume fuel is equally distributed in fuel tanks
-    if update_fuel_weight:
+    if use_max_fuel_weight:
         for network in vehicle.networks: 
             for fuel_line in network.fuel_lines:  
                 for fuel_tank in fuel_line.fuel_tanks:

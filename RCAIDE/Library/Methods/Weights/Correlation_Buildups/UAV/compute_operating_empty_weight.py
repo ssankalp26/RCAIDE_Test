@@ -14,7 +14,7 @@ from RCAIDE.Framework.Core    import  Data
  # ----------------------------------------------------------------------------------------------------------------------
 # Compute Operating Empty Weight 
 # ----------------------------------------------------------------------------------------------------------------------
-def compute_operating_empty_weight(vehicle,settings=None):
+def compute_operating_empty_weight(vehicle):
     """ This computes the weigt of a UAV   
     
     Assumptions:

@@ -42,8 +42,7 @@ class Weights_UAV(Weights):
         None 
         """           
         self.tag      = 'weights_uav'
-        self.vehicle  = None    
-        self.settings = None        
+        self.vehicle  = None     
         
     def evaluate(self):
         """Evaluate the weight analysis.
@@ -62,7 +61,7 @@ class Weights_UAV(Weights):
         """
         # unpack
         vehicle = self.vehicle 
-        results = RCAIDE.Library.Methods.Weights.Correlation_Buildups.UAV.compute_operating_empty_weight(vehicle, settings=self.settings)
+        results = RCAIDE.Library.Methods.Weights.Correlation_Buildups.UAV.compute_operating_empty_weight(vehicle)
 
         # storing weigth breakdown into vehicle
         vehicle.weight_breakdown = results
