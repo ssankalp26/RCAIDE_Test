@@ -48,7 +48,6 @@ def sum_moment(component):
                 total_moment += Comp.mass_properties.mass*global_cg_loc 
             total_mass   += Comp.mass_properties.mass
             
-            print(Comp.tag + '--  CG Location: ' + str(global_cg_loc)  + '    Mass: ' + str(Comp.mass_properties.mass)  + '     Moment: ' + str(total_moment) )
             debug =  0
             
     return total_moment , total_mass

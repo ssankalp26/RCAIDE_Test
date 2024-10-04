@@ -1,60 +1,79 @@
-# cg_and_moi_test.py   
-from RCAIDE.Framework.Core import Units,  Data ,  Container  
+# Regression/scripts/Tests/analysis_weights/cg_and_moi_test.py
+# 
+# Created:  Oct 2024, A. Molloy
+# ----------------------------------------------------------------------------------------------------------------------
+#  IMPORT
+# ----------------------------------------------------------------------------------------------------------------------
+# cg_and_moi_test.py
 
-import numpy as  np 
-import sys
+from RCAIDE.Framework.Core                                                     import Units,  Data ,  Container  
+from RCAIDE.Library.Methods.Weights.Correlation_Buildups                       import Common
+from RCAIDE.Library.Methods.Stability.Moment_of_Inertia.calculate_aircraft_MOI import calculate_aircraft_MOI
+from RCAIDE.Library.Methods.Stability.Center_of_Gravity                        import compute_vehicle_center_of_gravity
+from RCAIDE.Library.Methods.Stability.Moment_of_Inertia                        import compute_cuboid_moment_of_inertia
+
+import numpy as  np
+import RCAIDE
+import sys   
 
 sys.path.append('../../Vehicles')
-# the analysis functions
 
-from Boeing_737             import vehicle_setup as transport_setup
+# the analysis functions
+from Lockheed_C5a           import vehicle_setup as transport_setup
 from Cessna_172             import vehicle_setup as general_aviation_setup
 
 def main(): 
     Transport_Aircraft_Test()
-    BWB_Aircraft_Test()
+    General_Aviation_Test()
     return
 
 def Transport_Aircraft_Test():
-    vehicle = Lockheed_C5a.vehicle_setup()
+    vehicle = transport_setup()
     
+    # update fuel weight to 60%
+    vehicle.networks.fuel_network.fuel_lines.fuel_line.fuel_tanks.wing_fuel_tank.fuel.mass_properties.mass = 0.6 * vehicle.networks.fuel_network.fuel_lines.fuel_line.fuel_tanks.wing_fuel_tank.fuel.mass_properties.mass
+
     # ------------------------------------------------------------------
-    #   Weight Breakdown
+    #   Weight Breakdown 
     # ------------------------------------------------------------------  
-    weight_analysis =  RCAIDE.Framework.Analyses.Weights.Weights_Transport()
-    weight_analysis.vehicle = vehicle
-    weight_analysis.method  = 'RCAIDE' 
-    results =  weight_analysis.evaluate() 
-    print("Operating empty weight estimate for C-5a: "+str(results))
+    weight_analysis                               = RCAIDE.Framework.Analyses.Weights.Weights_Transport()
+    weight_analysis.vehicle                       = vehicle
+    weight_analysis.method                        = 'Raymer'
+    weight_analysis.settings.use_max_fuel_weight  = False  
+    results                                       = weight_analysis.evaluate() 
     
     # ------------------------------------------------------------------
     #   CG Location
     # ------------------------------------------------------------------    
     compute_vehicle_center_of_gravity(vehicle) 
-    CG_location = vehicle.mass_properties.center_of_gravity
-    CG_location_true = np.array([[29.5, 0, 0.547]]) #vehicle.mass_properties.center_of_gravity [[32.4,0,0]]
-    print("C-5a CG location: "+str(CG_location))
+    CG_location      = vehicle.mass_properties.center_of_gravity
     
     # ------------------------------------------------------------------
-    #   Aircraft MOI
+    #   Operating Aircraft MOI
     # ------------------------------------------------------------------    
     MOI, total_mass = calculate_aircraft_MOI(vehicle, CG_location)
 
     # ------------------------------------------------------------------
-    #   Cargo MOI
+    #   Payload MOI
     # ------------------------------------------------------------------    
-    Cargo_MOI, mass = compute_cuboid_moment_of_inertia(CG_location, 99790, 36.0, 3.66, 3, 0, 0, 0, CG_location)
-    MOI += Cargo_MOI
-    total_mass += mass
+    Cargo_MOI, mass =  compute_cuboid_moment_of_inertia(CG_location, 99790*Units.kg, 36.0, 3.66, 3, 0, 0, 0, CG_location)
+    MOI             += Cargo_MOI
+    total_mass      += mass
 
-    print(MOI)
-    print("MOI Mass: " + str(total_mass))
-    sft2 = 1.355817
-    C5a_true = np.array([[27800000 , 0, 2460000], [0, 31800000, 0], [2460000, 0, 56200000]]) * sft2
-    error = (MOI - C5a_true) / C5a_true * 100
-    print(error)
-     
- 
+    accepted  = np.array([[32345317.83576559,  2824293.44847796,  3423062.2751829], [2824293.44847796, 42743291.89239228, 0.], [3423062.2751829,  0., 61946007.291605]])
+    error     = (MOI - accepted)
+    error_Ixx = error[0, 0]
+    error_Iyy = error[1, 1]
+    error_Izz = error[2, 2]
+    error_Ixz = error[2, 0]
+    error_Ixy = error[1, 0]
+    
+    assert(abs(error_Ixx)<1e-6)
+    assert(abs(error_Iyy)<1e-6)
+    assert(abs(error_Izz)<1e-6)
+    assert(abs(error_Ixz)<1e-6)
+    assert(abs(error_Ixy)<1e-6)
+    
     return  
 
 def EVTOL_Aircraft_Test(): 
@@ -62,7 +81,46 @@ def EVTOL_Aircraft_Test():
     weight  = Electric.compute_operating_empty_weight(vehicle)
     
     return 
- 
+
+def General_Aviation_Test():
+    vehicle = general_aviation_setup()
+    
+    # update fuel weight to 60%
+
+    # ------------------------------------------------------------------
+    #   Weight Breakdown 
+    # ------------------------------------------------------------------  
+    weight_analysis                               = RCAIDE.Framework.Analyses.Weights.Weights_General_Aviation()
+    weight_analysis.vehicle                       = vehicle
+    weight_analysis.method                        = 'Raymer'
+    results                                       = weight_analysis.evaluate() 
+    
+    # ------------------------------------------------------------------
+    #   CG Location
+    # ------------------------------------------------------------------    
+    compute_vehicle_center_of_gravity(vehicle) 
+    CG_location      = vehicle.mass_properties.center_of_gravity
+    
+    # ------------------------------------------------------------------
+    #   Operating Aircraft MOI
+    # ------------------------------------------------------------------    
+    MOI, total_mass = calculate_aircraft_MOI(vehicle, CG_location) 
+    
+    accepted  = np.array([[1290.55346634, 43.52720306, 43.52720306], [43.52720306, 980.82840051, 0.], [43.52720306, 0., 2194.18580632]])
+    error     = (MOI - accepted)
+    error_Ixx = error[0, 0]
+    error_Iyy = error[1, 1]
+    error_Izz = error[2, 2]
+    error_Ixz = error[2, 0]
+    error_Ixy = error[1, 0]
+    
+    assert(abs(error_Ixx)<1e-6)
+    assert(abs(error_Iyy)<1e-6)
+    assert(abs(error_Izz)<1e-6)
+    assert(abs(error_Ixz)<1e-6)
+    assert(abs(error_Ixy)<1e-6)    
+    
+    return
 
 if __name__ == '__main__':
     main()

@@ -38,6 +38,7 @@ modules = [
     'Tests/network_internal_combustion_engine/ICE_constant_speed_test.py',
     'Tests/network_isolated_battery_cell/cell_test.py',
     'Tests/performance_payload_range/payload_range_test.py',
+    'Tests/analysis_weights/operating_empty_weight_test.py'
     
 ]
 

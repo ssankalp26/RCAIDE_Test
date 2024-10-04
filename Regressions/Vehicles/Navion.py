@@ -40,7 +40,8 @@ def vehicle_setup():
     vehicle.flight_envelope.ultimate_load             = 5.7
     vehicle.flight_envelope.limit_load                = 3.8
     vehicle.reference_area                            = 17.112 
-    vehicle.passengers                                = 2 
+    vehicle.passengers                                = 2
+    vehicle.design_dynamic_pressure                   = 1929.16080736607
     # ------------------------------------------------------------------        
     #   Main Wing
     # ------------------------------------------------------------------   
