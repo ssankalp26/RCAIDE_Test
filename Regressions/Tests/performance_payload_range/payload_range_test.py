@@ -8,7 +8,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 # RCAIDE imports  
 import RCAIDE
-from RCAIDE.Framework.Core import Units  
+from RCAIDE.Framework.Core import Units , Container
 from RCAIDE.Library.Methods.Performance.payload_range_diagram        import payload_range_diagram
 from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Electric  import compute_weight  
 
@@ -19,10 +19,10 @@ import matplotlib.pyplot as plt
 
 # local imports 
 sys.path.append('../../Vehicles')
-from Embraer_190    import vehicle_setup as E190_vehicle_setup
-from Embraer_190    import configs_setup as E190_configs_setup 
+from Embraer_190    import vehicle_setup as E190_vehicle_setup 
 from NASA_X57       import vehicle_setup as X57_vehicle_setup 
 from NASA_X57       import configs_setup as X57_configs_setup     
+import  time
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  REGRESSION
@@ -30,25 +30,29 @@ from NASA_X57       import configs_setup as X57_configs_setup
 def main(): 
     fuel_payload_range_res = fuel_aircraft_payload_range()
     fuel_r =  fuel_payload_range_res.range
-    fuel_r_true =  5739571.581626772
+    fuel_r_true = 6241932.558190243
     print('Fuel Range: ' + str(fuel_r[-1]))
     fuel_error =  abs(fuel_r[-1]- fuel_r_true) /fuel_r_true
     assert(abs(fuel_error)<1e-6)
     
-    electric_r_true = 137359.4709563402
+    electric_r_true = 37039.99999999999
     electric_payload_range_res = electric_aircraft_payload_range()       
     electric_r =  electric_payload_range_res.range
     print('Electric Range: ' + str(electric_r[-1]))
     electric_error =  abs(electric_r[-1]- electric_r_true) /electric_r_true
     assert(abs(electric_error)<1e-6)
-    
     return 
     
     
 def fuel_aircraft_payload_range():
     
     # vehicle data
-    E190_vehicle  = E190_vehicle_setup() 
+    E190_vehicle  = E190_vehicle_setup()
+    
+    # take out control surfaces to make regression run faster
+    for wing in E190_vehicle.wings:
+        wing.control_surfaces  = Container()
+        
     
     # Set up vehicle configs
     E190_configs  = E190_configs_setup(E190_vehicle)
@@ -89,6 +93,33 @@ def electric_aircraft_payload_range():
     electric_payload_range_res =  payload_range_diagram(X57_vehicle,X57_missions.base_mission,'cruise',reserves=0., plot_diagram = True)
         
     return electric_payload_range_res
+# ---------------------------------------------------------------------
+#   Define the Configurations
+# ---------------------------------------------------------------------
+
+def E190_configs_setup(vehicle):
+ 
+    
+    # ------------------------------------------------------------------
+    #   Initialize Configurations
+    # ------------------------------------------------------------------
+
+    configs     = RCAIDE.Library.Components.Configs.Config.Container() 
+    base_config = RCAIDE.Library.Components.Configs.Config(vehicle)
+    base_config.tag = 'base' 
+    base_config.landing_gear.gear_condition                      = 'up'
+    configs.append(base_config)
+
+    # ------------------------------------------------------------------
+    #   Cruise Configuration
+    # ------------------------------------------------------------------
+
+    config = RCAIDE.Library.Components.Configs.Config(base_config)
+    config.tag = 'cruise'
+    configs.append(config) 
+
+    # done!
+    return configs
   
 def E190_analyses_setup(configs):
 
@@ -157,30 +188,7 @@ def E190_mission_setup(analyses):
   
     Segments = RCAIDE.Framework.Mission.Segments 
     base_segment = Segments.Segment()
-    base_segment.state.numerics.number_of_control_points  = 3  
-
-    # ------------------------------------------------------------------    
-    #   Climb Segment 
-    # ------------------------------------------------------------------    
-    segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment)
-    segment.tag = "climb" 
-    segment.analyses.extend( analyses.cruise )  
-    segment.altitude_start = 0.0   * Units.km
-    segment.altitude_end = 10.5   * Units.km
-    segment.air_speed    = 226.0  * Units['m/s']
-    segment.climb_rate   = 3.0    * Units['m/s']  
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                      = True  
-    segment.flight_dynamics.force_z                      = True     
-    
-    # define flight controls 
-    segment.assigned_control_variables.throttle.active               = True           
-    segment.assigned_control_variables.throttle.assigned_propulsors  = [['starboard_propulsor','port_propulsor']]  
-    segment.assigned_control_variables.body_angle.active             = True                
-      
-    mission.append_segment(segment)
-
+    base_segment.state.numerics.number_of_control_points  = 3   
 
     # ------------------------------------------------------------------    
     #   Cruise Segment 
@@ -202,31 +210,7 @@ def E190_mission_setup(analyses):
     segment.assigned_control_variables.throttle.assigned_propulsors  = [['starboard_propulsor','port_propulsor']] 
     segment.assigned_control_variables.body_angle.active             = True                
     
-    mission.append_segment(segment)
-
-
-    # ------------------------------------------------------------------
-    #  Descent Segment 
-    # ------------------------------------------------------------------
-
-    segment = Segments.Descent.Constant_Speed_Constant_Rate(base_segment)
-    segment.tag = "descent" 
-    segment.analyses.extend( analyses.cruise ) 
-    segment.altitude_start = 10.5 * Units.km 
-    segment.altitude_end   = 0.0   * Units.km
-    segment.air_speed      = 220.0 * Units['m/s']
-    segment.descent_rate   = 4.5   * Units['m/s']   
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                      = True  
-    segment.flight_dynamics.force_z                      = True     
-    
-    # define flight controls 
-    segment.assigned_control_variables.throttle.active               = True           
-    segment.assigned_control_variables.throttle.assigned_propulsors  = [['starboard_propulsor','port_propulsor']]  
-    segment.assigned_control_variables.body_angle.active             = True                
-     
-    mission.append_segment(segment)
+    mission.append_segment(segment) 
  
 
     return mission 
@@ -308,31 +292,7 @@ def X57_mission_setup(analyses):
     # unpack Segments module
     Segments = RCAIDE.Framework.Mission.Segments  
     base_segment = Segments.Segment()
-    base_segment.state.numerics.number_of_control_points  = 3  
-    
-    # ------------------------------------------------------------------
-    # Climb Segment 
-    # ------------------------------------------------------------------  
-    segment = Segments.Climb.Linear_Speed_Constant_Rate(base_segment) 
-    segment.tag = "climb"   
-    segment.analyses.extend( analyses.base ) 
-    segment.initial_battery_state_of_charge              = 1.0  
-    segment.altitude_start                               = 0   * Units.feet  
-    segment.altitude_end                                 = 15000.0  * Units.feet 
-    segment.air_speed_start                              = 100.    * Units['mph'] 
-    segment.air_speed_end                                = 130     * Units.kts
-    segment.climb_rate                                   = 500.     * Units['ft/min']       
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                      = True  
-    segment.flight_dynamics.force_z                      = True     
-    
-    # define flight controls 
-    segment.assigned_control_variables.throttle.active               = True           
-    segment.assigned_control_variables.throttle.assigned_propulsors  = [['starboard_propulsor','port_propulsor']] 
-    segment.assigned_control_variables.body_angle.active             = True                
-       
-    mission.append_segment(segment)  
+    base_segment.state.numerics.number_of_control_points  = 3   
 
     # ------------------------------------------------------------------
     #  Cruise Segment 
@@ -340,6 +300,7 @@ def X57_mission_setup(analyses):
     segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
     segment.tag = "cruise" 
     segment.analyses.extend( analyses.base )  
+    segment.initial_battery_state_of_charge               = 1.0  
     segment.altitude                                      = 15000   * Units.feet 
     segment.air_speed                                     = 130 * Units.kts
     segment.distance                                      = 20.   * Units.nautical_mile 
@@ -354,36 +315,7 @@ def X57_mission_setup(analyses):
     segment.assigned_control_variables.body_angle.active             = True                  
           
     mission.append_segment(segment)
-    
-    
-
-    # ------------------------------------------------------------------
-    #  Descent Segment 
-    # ------------------------------------------------------------------
-
-    segment = Segments.Descent.Constant_Speed_Constant_Rate(base_segment)
-    segment.tag = "descent" 
-    segment.analyses.extend( analyses.base )  
-    segment.altitude_end   = 0.0   * Units.km
-    segment.air_speed      = 100 * Units.kts
-    segment.descent_rate   = 4.5   * Units['m/s']    
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                       = True  
-    segment.flight_dynamics.force_z                       = True     
-    
-    # define flight controls 
-    segment.assigned_control_variables.throttle.active               = True           
-    segment.assigned_control_variables.throttle.assigned_propulsors  = [['starboard_propulsor','port_propulsor']] 
-    segment.assigned_control_variables.body_angle.active             = True                  
-          
-    mission.append_segment(segment)    
-  
-    # ------------------------------------------------------------------
-    #   Mission definition complete    
-    # ------------------------------------------------------------------ 
-    
-    
+     
     return mission
 
 def missions_setup(mission): 

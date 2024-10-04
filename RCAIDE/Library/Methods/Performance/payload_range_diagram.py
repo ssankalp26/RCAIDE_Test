@@ -123,10 +123,10 @@ def conventional_payload_range_diagram(vehicle,mission,cruise_segment_tag,reserv
         # have to iterate distance in order to have total fuel equal to target fuel
         #
 
-        maxIter = 10 # maximum iteration limit
-        tol = 1.     # fuel convergency tolerance
-        err = 9999.  # error to be minimized
-        iter = 0     # iteration count
+        maxIter = 10    # maximum iteration limit
+        tol     = 1.    # fuel convergency tolerance
+        err     = 9999. # error to be minimized
+        iter    = 0     # iteration count
 
         while abs(err) > tol and iter < maxIter:
             iter = iter + 1
