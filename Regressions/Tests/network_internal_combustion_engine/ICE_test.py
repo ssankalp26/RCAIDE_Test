@@ -92,9 +92,9 @@ def mission_setup(analyses):
     segment     = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
     segment.tag = "cruise" 
     segment.analyses.extend( analyses.base ) 
-    segment.altitude                                = 12000. * Units.feet
-    segment.air_speed                               = 119.   * Units.knots
-    segment.distance                                = 10 * Units.nautical_mile  
+    segment.altitude                                   = 12000. * Units.feet
+    segment.air_speed                                  = 119.   * Units.knots
+    segment.distance                                   = 10 * Units.nautical_mile  
     segment.state.numerics.number_of_control_points    = 4   
     
     # define flight dynamics to model 

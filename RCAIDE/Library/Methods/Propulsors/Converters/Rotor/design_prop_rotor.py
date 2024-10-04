@@ -28,18 +28,18 @@ def design_prop_rotor(rotor,number_of_stations = 20,solver_name= 'SLSQP',iterati
           
           Inputs: 
           prop_attributes.
-              hub radius                       [m]
-              tip radius                       [m]
-              rotation rate                    [rad/s]
-              freestream velocity              [m/s]
-              number of blades                 [None]       
-              number of stations               [None]
-              design lift coefficient          [None]
-              airfoil data                     [None]
-              optimization_parameters.
-                 slack_constaint               [None]
-                 ideal_SPL_dbA                 [dBA]
-                 multiobjective_aeroacoustic_weight           [None]
+              hub radius                             [m]
+              tip radius                             [m]
+              rotation rate                          [rad/s]
+              freestream velocity                    [m/s]
+              number of blades                       [None]       
+              number of stations                     [None]
+              design lift coefficient                [None]
+              airfoil data                           [None]
+              optimization_parameters.      
+                 slack_constaint                     [None]
+                 ideal_SPL_dbA                       [dBA]
+                 multiobjective_aeroacoustic_weight  [None]
             
           Outputs:
           Twist distribution                   [array of radians]

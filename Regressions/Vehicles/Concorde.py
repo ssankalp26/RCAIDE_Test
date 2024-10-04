@@ -1,7 +1,9 @@
-# Regressions/Vehicles/Concorde.py
-# 
-# 
-# Created:  Jul 2023, M. Clarke 
+''' 
+  Concorde.py
+  
+  Created: June 2024, M Clarke 
+
+''' 
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
@@ -18,20 +20,13 @@ import numpy as np
 from copy import deepcopy
 import os
  
-def vehicle_setup():
-
-    # ------------------------------------------------------------------
-    #   Initialize the Vehicle
-    # ------------------------------------------------------------------    
-    
+def vehicle_setup(): 
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ################################################# Vehicle-level Properties ########################################################  
+    #------------------------------------------------------------------------------------------------------------------------------------
     vehicle = RCAIDE.Vehicle()
-    vehicle.tag = 'Concorde'    
+    vehicle.tag = 'Concorde'
     
-    
-    # ------------------------------------------------------------------
-    #   Vehicle-level Properties
-    # ------------------------------------------------------------------    
-
     # mass properties
     vehicle.mass_properties.max_takeoff               = 185000.   # kg
     vehicle.mass_properties.operating_empty           = 78700.   # kg
@@ -40,8 +35,8 @@ def vehicle_setup():
     vehicle.mass_properties.max_zero_fuel             = 92000.
         
     # envelope properties
-    vehicle.flight_envelope.ultimate_load = 3.75
-    vehicle.flight_envelope.limit_load    = 2.5
+    vehicle.envelope.ultimate_load = 3.75
+    vehicle.envelope.limit_load    = 2.5
 
     # basic parameters
     vehicle.reference_area               = 358.25      
@@ -54,9 +49,12 @@ def vehicle_setup():
     vehicle.design_range                 = 4505 * Units.miles
     vehicle.design_cruise_alt            = 60000.0 * Units.ft
     
-    # ------------------------------------------------------------------        
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ######################################################## Wings ####################################################################  
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------
     #   Main Wing
-    # ------------------------------------------------------------------        
+    # ------------------------------------------------------------------     
     
     wing = RCAIDE.Library.Components.Wings.Main_Wing()
     wing.tag = 'main_wing'
@@ -358,9 +356,10 @@ def vehicle_setup():
     
     vehicle.append_component(fuselage)
 
-    #------------------------------------------------------------------------------------------------------------------------------------  
-    #  Turbojet Network
-    #------------------------------------------------------------------------------------------------------------------------------------  
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ########################################################## Energy Network ######################################################### 
+    #------------------------------------------------------------------------------------------------------------------------------------ 
+    #initialize the fuel network
     net                                            = RCAIDE.Framework.Networks.Fuel() 
     
     #------------------------------------------------------------------------------------------------------------------------------------  
@@ -522,8 +521,7 @@ def vehicle_setup():
     nacelle_4.origin                        = [[37.,-5.5,-1.6]]
     outer_left_turbojet.nacelle = nacelle_4
     fuel_line.propulsors.append(outer_left_turbojet) 
-
-       
+ 
     #------------------------------------------------------------------------------------------------------------------------------------  
     #  Fuel Tank & Fuel
     #------------------------------------------------------------------------------------------------------------------------------------   
@@ -636,8 +634,7 @@ def configs_setup(vehicle):
     #   Takeoff Configuration
     # ------------------------------------------------------------------  
     config                                      = RCAIDE.Library.Components.Configs.Config(base_config)
-    config.tag                                  = 'takeoff' 
-    config.V2_VS_ratio                          = 1.21
+    config.tag                                  = 'takeoff'  
     config.maximum_lift_coefficient             = 2.  
     for propulsor in config.networks.fuel.fuel_lines.fuel_line.propulsors:
         propulsor.afterburner_active = True 
@@ -650,8 +647,7 @@ def configs_setup(vehicle):
     config                                = RCAIDE.Library.Components.Configs.Config(base_config)
     config.tag                            = 'landing' 
     config.wings['main_wing'].flaps_angle = 0. * Units.deg
-    config.wings['main_wing'].slats_angle = 0. * Units.deg 
-    config.Vref_VS_ratio                  = 1.23
+    config.wings['main_wing'].slats_angle = 0. * Units.deg  
     config.maximum_lift_coefficient       = 2.
     
     configs.append(config)
