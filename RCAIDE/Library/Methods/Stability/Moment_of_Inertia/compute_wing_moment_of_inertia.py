@@ -15,7 +15,7 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Compute Wing Moment of Intertia
 # ----------------------------------------------------------------------------------------------------------------------  
-def compute_wing_moment_of_inertia(wing, mass = 0,  center_of_gravity = [[0, 0, 0]], fuel_flag = False):
+def compute_wing_moment_of_inertia(wing, mass_total = 0,  center_of_gravity = [[0, 0, 0]], fuel_flag = False):
     ''' computes the moment of inertia tensor for a wing about a given center of gravity.
     Includes the ability to modela  wing fuel tank as a condensed wing
 
@@ -59,7 +59,9 @@ def compute_wing_moment_of_inertia(wing, mass = 0,  center_of_gravity = [[0, 0, 
     origin_wing = wing.origin + np.array([[cr / 4], [0], [0]]) # moves the origin of the wing to the quarter chord of the root airfoil.
     
     if wing.symmetric: # Splits the wing weight between the two wings if the wing is symmetric.
-        mass = mass * 0.5
+        mass = mass_total * 0.5
+    else:
+        mass = mass_total
     
     # ----------------------------------------------------------------------------------------------------------------------
     # Fuel Tank Values. The percentages come from [2]
@@ -160,5 +162,5 @@ def compute_wing_moment_of_inertia(wing, mass = 0,  center_of_gravity = [[0, 0, 
     s        = np.array(center_of_gravity) - np.array(origin_wing) # Vector for the parallel axis theorem
     I_global = np.array(I_RCAIDE) + mass * (np.array(np.dot(s[0], s[0])) * np.array(np.identity(3)) - s * np.transpose(s))
     
-    return I_global,  mass
+    return I_global,  mass_total
 
