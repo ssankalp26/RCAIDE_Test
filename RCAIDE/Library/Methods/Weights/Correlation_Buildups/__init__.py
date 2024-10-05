@@ -1,5 +1,5 @@
 ## @defgroup Methods-Weights-Correlations Correlations
-# RCAIDE/Methods/Weights/Correlations/__init__.py
+# RCAIDE/Library/Methods/Weights/Correlations/__init__.py
 # 
 
 """RCAIDE Package Setup

@@ -9,8 +9,8 @@
 # RCAIDE imports  
 import RCAIDE
 from RCAIDE.Framework.Core import Units , Container
-from RCAIDE.Library.Methods.Performance.payload_range_diagram        import payload_range_diagram
-from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Electric  import compute_weight  
+from RCAIDE.Library.Methods.Performance.payload_range_diagram        import payload_range_diagram 
+from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Electric  import converge_physics_based_weight_buildup 
 
 # python imports     
 import numpy as np  
@@ -21,23 +21,22 @@ import matplotlib.pyplot as plt
 sys.path.append('../../Vehicles')
 from Embraer_190    import vehicle_setup as E190_vehicle_setup 
 from NASA_X57       import vehicle_setup as X57_vehicle_setup 
-from NASA_X57       import configs_setup as X57_configs_setup     
-import  time
+from NASA_X57       import configs_setup as X57_configs_setup      
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  REGRESSION
 # ----------------------------------------------------------------------------------------------------------------------  
 def main(): 
     fuel_payload_range_res = fuel_aircraft_payload_range()
-    fuel_r =  fuel_payload_range_res.range
-    fuel_r_true = 6241932.558190243
+    fuel_r                 =  fuel_payload_range_res.range
+    fuel_r_true            = 6481430.881467549 
     print('Fuel Range: ' + str(fuel_r[-1]))
     fuel_error =  abs(fuel_r[-1]- fuel_r_true) /fuel_r_true
     assert(abs(fuel_error)<1e-6)
     
     electric_r_true = 37039.99999999999
     electric_payload_range_res = electric_aircraft_payload_range()       
-    electric_r =  electric_payload_range_res.range
+    electric_r         =  electric_payload_range_res.range
     print('Electric Range: ' + str(electric_r[-1]))
     electric_error =  abs(electric_r[-1]- electric_r_true) /electric_r_true
     assert(abs(electric_error)<1e-6)
@@ -51,8 +50,7 @@ def fuel_aircraft_payload_range():
     
     # take out control surfaces to make regression run faster
     for wing in E190_vehicle.wings:
-        wing.control_surfaces  = Container()
-        
+        wing.control_surfaces  = Container() 
     
     # Set up vehicle configs
     E190_configs  = E190_configs_setup(E190_vehicle)
@@ -73,10 +71,12 @@ def fuel_aircraft_payload_range():
 def electric_aircraft_payload_range():
     
     # vehicle data
-    X57_vehicle  = X57_vehicle_setup() 
-    breakdown    = compute_weight(X57_vehicle, contingency_factor=1.0)    
-    X57_vehicle.mass_properties.operating_empty =  breakdown.empty
-    X57_vehicle.mass_properties.operating_empty =  breakdown.empty
+
+    X57_vehicle              = X57_vehicle_setup()      
+    weight_analysis          = RCAIDE.Framework.Analyses.Weights.Weights()
+    weight_analysis.vehicle  = X57_vehicle
+    weight                   = weight_analysis.evaluate()
+    X57_vehicle.mass_properties.operating_empty =  weight.empty 
     
     # Set up vehicle configs
     X57_configs  = X57_configs_setup(X57_vehicle)
@@ -149,8 +149,8 @@ def E190_base_analysis(vehicle):
     #  Aerodynamics Analysis
     aerodynamics          = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
     aerodynamics.vehicle = vehicle
-    aerodynamics.settings.number_of_spanwise_vortices   = 25
-    aerodynamics.settings.number_of_chordwise_vortices  = 5     
+    aerodynamics.settings.number_of_spanwise_vortices   = 5
+    aerodynamics.settings.number_of_chordwise_vortices  = 2     
     analyses.append(aerodynamics)   
 
     # ------------------------------------------------------------------
@@ -240,25 +240,11 @@ def X57_base_analysis(vehicle):
     analyses.append(weights)
 
     # ------------------------------------------------------------------
-    #  Aerodynamics Analysis
-    
-    # Calculate extra drag from landing gear: 
-    main_wheel_width  = 4. * Units.inches
-    main_wheel_height = 12. * Units.inches
-    nose_gear_height  = 10. * Units.inches
-    nose_gear_width   = 4. * Units.inches 
-    total_wheel       = 2*main_wheel_width*main_wheel_height + nose_gear_width*nose_gear_height 
-    main_gear_strut_height = 2. * Units.inches
-    main_gear_strut_length = 24. * Units.inches
-    nose_gear_strut_height = 12. * Units.inches
-    nose_gear_strut_width  = 2. * Units.inches 
-    total_strut = 2*main_gear_strut_height*main_gear_strut_length + nose_gear_strut_height*nose_gear_strut_width 
-    drag_area = 1.4*( total_wheel + total_strut)
-    
-    
+    #  Aerodynamics Analysis  
     aerodynamics = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
-    aerodynamics.vehicle                             = vehicle
-    aerodynamics.settings.drag_coefficient_increment = drag_area/vehicle.reference_area
+    aerodynamics.vehicle                                = vehicle
+    aerodynamics.settings.number_of_spanwise_vortices   = 5
+    aerodynamics.settings.number_of_chordwise_vortices  = 2   
     analyses.append(aerodynamics)
 
     # ------------------------------------------------------------------

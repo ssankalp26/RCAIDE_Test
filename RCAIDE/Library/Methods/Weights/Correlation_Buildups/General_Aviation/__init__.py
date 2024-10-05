@@ -1,5 +1,5 @@
 ## @defgroup Methods-Weights-Correlations-General_Aviation General_Aviation
-# RCAIDE/Methods/Weights/Correlations/General_Aviation/__init__.py
+# RCAIDE/Library/Methods/Weights/Correlations/General_Aviation/__init__.py
 # 
 
 """RCAIDE Package Setup

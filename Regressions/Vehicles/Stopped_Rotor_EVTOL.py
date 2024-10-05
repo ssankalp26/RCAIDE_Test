@@ -403,9 +403,7 @@ def vehicle_setup(new_regression=True) :
         cruise_bus.battery_modules.append(deepcopy(bat))       
     
     for battery_module in  cruise_bus.battery_modules:
-        cruise_bus.voltage  +=   battery_module.voltage
-        cruise_bus.nominal_capacity =  max(battery_module.nominal_capacity, cruise_bus.nominal_capacity)   
-   
+        cruise_bus.voltage  +=   battery_module.voltage 
     
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Forward Bus Propulsors  
@@ -413,6 +411,7 @@ def vehicle_setup(new_regression=True) :
     # Define Forward Propulsor Container 
     cruise_propulsor_1                                     = RCAIDE.Library.Components.Propulsors.Electric_Rotor()
     cruise_propulsor_1.tag                                 = 'cruise_propulsor_1'  
+    cruise_propulsor_1.wing_mounted                        = False       
                  
     # Electronic Speed Controller                     
     propeller_esc                                          = RCAIDE.Library.Components.Energy.Modulators.Electronic_Speed_Controller() 
@@ -464,7 +463,6 @@ def vehicle_setup(new_regression=True) :
     propeller_motor.origin                                 = propeller.origin
     propeller_motor.propeller_radius                       = propeller.tip_radius 
     propeller_motor.no_load_current                        = 0.001
-    propeller_motor.wing_mounted                           = True 
     propeller_motor.wing_tag                               = 'horizontal_tail'
     propeller_motor.rotor_radius                           = propeller.tip_radius
     propeller_motor.design_torque                          = propeller.cruise.design_torque
@@ -598,13 +596,10 @@ def vehicle_setup(new_regression=True) :
     bat.geometrtic_configuration.parallel_count             = 40 
 
     for _ in range(number_of_modules):
-        lift_bus.battery_modules.append(deepcopy(bat))     
-
-    lift_bus.nominal_capacity = 0    
+        lift_bus.battery_modules.append(deepcopy(bat))
+        
     for battery_module in  lift_bus.battery_modules:
-        lift_bus.voltage  +=   battery_module.voltage
-        lift_bus.nominal_capacity =  max(battery_module.nominal_capacity, lift_bus.nominal_capacity)       
-    
+        lift_bus.voltage  +=   battery_module.voltage 
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Lift Propulsors 
@@ -612,7 +607,8 @@ def vehicle_setup(new_regression=True) :
      
     # Define Lift Propulsor Container 
     lift_propulsor_1                                       = RCAIDE.Library.Components.Propulsors.Electric_Rotor()
-    lift_propulsor_1.tag                                   = 'lift_propulsor_1'        
+    lift_propulsor_1.tag                                   = 'lift_propulsor_1'
+    lift_propulsor_1.wing_mounted                          = True         
               
     # Electronic Speed Controller           
     lift_rotor_esc                                         = RCAIDE.Library.Components.Energy.Modulators.Electronic_Speed_Controller() 
@@ -672,7 +668,6 @@ def vehicle_setup(new_regression=True) :
     lift_rotor_motor.propeller_radius                      = lift_rotor.tip_radius
     lift_rotor_motor.tag                                   = 'lift_rotor_motor_1' 
     lift_rotor_motor.no_load_current                       = 0.01  
-    lift_rotor_motor.wing_mounted                          = True 
     lift_rotor_motor.wing_tag                              = 'main_wing'
     lift_rotor_motor.rotor_radius                          = lift_rotor.tip_radius
     lift_rotor_motor.design_torque                         = lift_rotor.hover.design_torque

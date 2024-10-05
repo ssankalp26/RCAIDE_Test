@@ -1,4 +1,4 @@
-# RCAIDE/Methods/Weights/Correlation_Buildups/Common/compute_landing_gear_weight.py
+# RCAIDE/Library/Methods/Weights/Correlation_Buildups/Common/compute_landing_gear_weight.py
 # 
 # Created: Sep 2024, M. Clarke 
 

@@ -232,7 +232,7 @@ def compute_operating_empty_weight(vehicle, settings=None):
             # Avionics Weight 
             W_energy_network_total  += bus.avionics.mass_properties.mass      
     
-            for battery in bus.batteries: 
+            for battery in bus.battery_modules: 
                 W_energy_network_total  += battery.mass_properties.mass * Units.kg
                   
             for propulsor in bus.propulsors:

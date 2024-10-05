@@ -1,5 +1,5 @@
 ## @defgroup Methods-Weights-Buildups-eVTOL eVTOL
-# RCAIDE/Methods/Weights/Buildups/eVTOL/__init__.py
+# RCAIDE/Library/Methods/Weights/Buildups/eVTOL/__init__.py
 # 
 
 """RCAIDE Package Setup

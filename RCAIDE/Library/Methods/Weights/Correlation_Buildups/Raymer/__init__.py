@@ -1,5 +1,5 @@
 ## @defgroup Methods-Weights-Correlations-Raymer Raymer
-# RCAIDE/Methods/Weights/Correlations/Raymer/__init__.py
+# RCAIDE/Library/Methods/Weights/Correlations/Raymer/__init__.py
 # 
 
 """RCAIDE Package Setup

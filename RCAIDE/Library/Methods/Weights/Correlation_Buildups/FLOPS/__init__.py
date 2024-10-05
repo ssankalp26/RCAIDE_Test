@@ -1,5 +1,5 @@
 ## @defgroup Methods-Weights-Correlations-FLOPS FLOPS
-# RCAIDE/Methods/Weights/Correlations/FLOPS/__init__.py
+# RCAIDE/Library/Methods/Weights/Correlations/FLOPS/__init__.py
 # 
 
 """RCAIDE Package Setup

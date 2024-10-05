@@ -1,4 +1,4 @@
-# RCAIDE/Methods/Weights/Correlation_Buildups/BWB/compute_cabin_weight.py
+# RCAIDE/Library/Methods/Weights/Correlation_Buildups/BWB/compute_cabin_weight.py
 # 
 # Created: Sep 2024, M. Clarke 
 

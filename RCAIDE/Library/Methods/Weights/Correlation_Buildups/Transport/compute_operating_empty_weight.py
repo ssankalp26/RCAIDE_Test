@@ -1,4 +1,4 @@
-# RCAIDE/Methods/Weights/Correlation_Buildups/Transport/operating_empty_weight.py
+# RCAIDE/Library/Methods/Weights/Correlation_Buildups/Transport/operating_empty_weight.py
 # 
 # Created: Sep 2024, M. Clarke 
 
@@ -213,7 +213,8 @@ def compute_operating_empty_weight(vehicle, settings=None, method_type='RCAIDE')
     W_energy_network.W_fuel_system     = 0 
     W_energy_network.W_motors          = 0 
     W_energy_network.W_nacelle         = 0 
-    W_energy_network.W_battery         = 0 
+    W_energy_network.W_battery         = 0
+    W_energy_network.W_motor           = 0
     number_of_engines                  = 0
     number_of_tanks                    = 0
     W_energy_network_cumulative        = 0 
@@ -272,15 +273,14 @@ def compute_operating_empty_weight(vehicle, settings=None, method_type='RCAIDE')
             # Avionics Weight 
             W_systems.W_avionics  += bus.avionics.mass_properties.mass      
     
-            for battery in bus.batteries: 
+            for battery in bus.battery_modules: 
                 W_energy_network_total  += battery.mass_properties.mass * Units.kg
                 W_energy_network.W_battery = battery.mass_properties.mass * Units.kg
                 
             for propulsor in bus.propulsors:
-                if 'motor' in propulsor: 
-                    motor_mass = propulsor.motor.mass_properties.mass                            
-                    W_energy_network.motors += motor_mass 
-                    W_energy_network_total  += motor_mass
+                if 'motor' in propulsor:                           
+                    W_energy_network.W_motor +=  propulsor.motor.mass_properties.mass
+                    W_energy_network_total  +=  propulsor.motor.mass_properties.mass
                    
     W_energy_network_cumulative += W_energy_network_total
     
@@ -298,6 +298,7 @@ def compute_operating_empty_weight(vehicle, settings=None, method_type='RCAIDE')
  
     output.propulsion_breakdown.total               = W_energy_network_cumulative
     output.propulsion_breakdown.battery             = W_energy_network.W_battery
+    output.propulsion_breakdown.motors              = W_energy_network.W_motor
     output.propulsion_breakdown.engines             = W_energy_network.W_engine
     output.propulsion_breakdown.thrust_reversers    = W_energy_network.W_thrust_reverser
     output.propulsion_breakdown.miscellaneous       = W_energy_network.W_engine_controls + W_energy_network.W_starter

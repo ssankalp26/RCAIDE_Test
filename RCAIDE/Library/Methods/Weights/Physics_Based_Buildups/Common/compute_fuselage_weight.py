@@ -1,5 +1,5 @@
 ## @ingroup Methods-Weights-Buildups-Common 
-# RCAIDE/Methods/Weights/Buildups/Common/compute_fuselage_weight.py
+# RCAIDE/Library/Methods/Weights/Buildups/Common/compute_fuselage_weight.py
 # 
 # 
 # Created:  Sep 2024, M. Clarke

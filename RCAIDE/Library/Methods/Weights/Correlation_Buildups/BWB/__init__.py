@@ -1,5 +1,5 @@
 ## @defgroup Methods-Weights-Correlations-BWB BWB
-# RCAIDE/Methods/Weights/Correlations/BWB/__init__.py
+# RCAIDE/Library/Methods/Weights/Correlations/BWB/__init__.py
 # 
 
 """RCAIDE Package Setup

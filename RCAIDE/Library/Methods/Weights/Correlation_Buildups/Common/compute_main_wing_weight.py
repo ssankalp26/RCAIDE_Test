@@ -1,4 +1,4 @@
-# RCAIDE/Methods/Weights/Correlation_Buildups/Common/compute_main_wing_weight.py
+# RCAIDE/Library/Methods/Weights/Correlation_Buildups/Common/compute_main_wing_weight.py
 # 
 # Created: Sep 2024, M. Clarke 
 
@@ -53,7 +53,7 @@ def compute_main_wing_weight(vehicle, wing, rho, sigma):
     rho_sigma   = rho * 9.81 / sigma
     Nult        = vehicle.flight_envelope.ultimate_load
     TOW         = vehicle.mass_properties.max_takeoff
-    W_zf       = vehicle.mass_properties.max_zero_fuel
+    W_zf        = vehicle.mass_properties.max_zero_fuel
 
     # Start the calculations
     l_tot   = Nult * np.sqrt(TOW * W_zf) * 9.81

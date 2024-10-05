@@ -142,7 +142,7 @@ def BWB_Aircraft_Test():
     return
 
 def EVTOL_Aircraft_Test():
-    new_regression=False # ONLY turn to True for a new regression, typically left false
+    new_regression           = False # ONLY turn to True for a new regression, typically left false
     weight_analysis          = RCAIDE.Framework.Analyses.Weights.Weights_EVTOL()
     weight_analysis.vehicle  = evtol_setup(new_regression) 
     weight                   = weight_analysis.evaluate() 

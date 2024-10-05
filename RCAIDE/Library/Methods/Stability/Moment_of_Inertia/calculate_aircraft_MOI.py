@@ -71,7 +71,7 @@ def calculate_aircraft_MOI(vehicle, CG_location):
                         I, mass = compute_cylinder_moment_of_inertia(item.origin,item.mass_properties.mass, 0, 0, 0,0, CG_location)
                         I_network += I
                         total_mass += mass                        
-                for battery in bus.batteries: 
+                for battery in bus.battery_modules: 
                     I_network += compute_cuboid_moment_of_inertia(battery.origin, battery.mass_properties.mass, 0, 0, 0, 0, 0, 0, CG_location)
         
         # Fuel network

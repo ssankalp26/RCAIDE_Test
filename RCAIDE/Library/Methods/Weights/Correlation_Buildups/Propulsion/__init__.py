@@ -1,5 +1,5 @@
 ## @defgroup Methods-Weights-Correlations-Propulsion Propulsion
-# RCAIDE/Methods/Weights/Correlations/Propulsion/__init__.py
+# RCAIDE/Library/Methods/Weights/Correlations/Propulsion/__init__.py
 # 
 
 """RCAIDE Package Setup

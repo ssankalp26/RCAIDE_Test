@@ -1,4 +1,4 @@
-# RCAIDE/Methods/Weights/Buildups/eVTOL/compute_weight.py
+# RCAIDE/Library/Methods/Weights/Buildups/eVTOL/compute_weight.py
 # 
 # 
 # Created:  Sep 2024, M. Clarke
@@ -138,7 +138,7 @@ def compute_operating_empty_weight(vehicle,settings = None):
     MTOW                          = vehicle.mass_properties.max_takeoff
     atmosphere                    = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976() 
     atmo_data                     = atmosphere.compute_values(0, 0) 
-    rho_ref                       = atmo_data.density 
+    rho_ref                       = atmo_data.density[0, 0] 
     maxLift                       = MTOW * max_thrust_to_weight_ratio * 9.81           
     AvgBladeCD                    = 0.012         
 
@@ -177,7 +177,8 @@ def compute_operating_empty_weight(vehicle,settings = None):
     # Network Weight
     #-------------------------------------------------------------------------------
     maxLiftPower           = 0
-    total_number_of_rotors = 0 
+    total_number_of_rotors = 0
+    maxVTip                = 0
     for network in vehicle.networks: 
         for bus in network.busses:  
             #------------------------------------------------------------------------------- 
@@ -220,7 +221,8 @@ def compute_operating_empty_weight(vehicle,settings = None):
                     prop_servo_weight          = 5.2 * Units.kg  
                     propeller_mass             = compute_rotor_weight(rotor, maxLift/5.) * Units.kg
                     weight.rotors              += propeller_mass 
-                    rotor.mass_properties.mass =  propeller_mass + prop_hub_weight + prop_servo_weight
+                    rotor.mass_properties.mass  =  propeller_mass + prop_hub_weight + prop_servo_weight
+                    maxVTip                     = rotor.cruise.design_angular_velocity * rotor.tip_radius
                     weight.servos              += prop_servo_weight
                     weight.hubs                += prop_hub_weight
                     
@@ -280,7 +282,7 @@ def compute_operating_empty_weight(vehicle,settings = None):
 
         # compute_wiring_weight weight
         wiring_weight  = compute_wiring_weight(wing, vehicle, maxLiftPower/(eta*total_number_of_rotors)) * Units.kg  
-        weight.wiring  += wiring_weight[0][0]
+        weight.wiring  += wiring_weight 
 
     #-------------------------------------------------------------------------------
     # Landing Gear Weight
