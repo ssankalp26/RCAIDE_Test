@@ -1,5 +1,5 @@
 ## @defgroup Methods-Weights Weights
-# RCAIDE/Methods/Weights/__init__.py
+# RCAIDE/Library/Methods/Weights/__init__.py
 # 
 
 """RCAIDE Package Setup

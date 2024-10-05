@@ -13,7 +13,7 @@ import RCAIDE
 from RCAIDE.Framework.Core import Units   
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor             import design_propeller 
 from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor          import design_motor 
-from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion import nasa_motor
+from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion import compute_motor_weight
 from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common         import initialize_from_circuit_configuration
 from RCAIDE.Library.Methods.Geometry.Planform                       import wing_segmented_planform 
 
@@ -31,27 +31,29 @@ def vehicle_setup():
     # ################################################# Vehicle-level Properties ########################################################  
     #------------------------------------------------------------------------------------------------------------------------------------
 
-    vehicle = RCAIDE.Vehicle()
-    vehicle.tag = 'X57_Maxwell_Mod2' 
-    vehicle.mass_properties.max_takeoff   = 2712. * Units.pounds
-    vehicle.mass_properties.takeoff       = 2712. * Units.pounds
-    vehicle.mass_properties.max_zero_fuel = 2712. * Units.pounds 
-    vehicle.mass_properties.max_payload   = 50.  * Units.pounds  # kg
-    vehicle.envelope.ultimate_load        = 5.7
-    vehicle.envelope.limit_load           = 3.8 
-    vehicle.reference_area                = 14.76
-    vehicle.passengers                    = 4
-    vehicle.systems.control               = "fully powered"
-    vehicle.systems.accessories           = "commuter"    
-    
-    cruise_speed                          = 135.*Units['mph']    
-    altitude                              = 2500. * Units.ft
-    atmo                                  = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
-    freestream                            = atmo.compute_values (0.)
-    freestream0                           = atmo.compute_values (altitude)
-    mach_number                           = (cruise_speed/freestream.speed_of_sound)[0][0] 
-    vehicle.design_dynamic_pressure       = ( .5 *freestream0.density*(cruise_speed*cruise_speed))[0][0]
-    vehicle.design_mach_number            =  mach_number
+    vehicle                                           = RCAIDE.Vehicle()
+    vehicle.tag                                       = 'X57_Maxwell_Mod2' 
+    vehicle.mass_properties.max_takeoff               = 2712. * Units.pounds
+    vehicle.mass_properties.takeoff                   = 2712. * Units.pounds
+    vehicle.mass_properties.max_zero_fuel             = 2712. * Units.pounds 
+    vehicle.mass_properties.max_payload               = 50.  * Units.pounds  # kg 
+    vehicle.flight_envelope.ultimate_load             = 3.75
+    vehicle.flight_envelope.limit_load                = 2.5 
+    vehicle.flight_envelope.design_mach_number        = 0.78 
+    vehicle.flight_envelope.design_cruise_altitude    = 2500. * Units.ft
+    vehicle.flight_envelope.design_range              = 200 * Units.nmi 
+    vehicle.reference_area                            = 14.76
+    vehicle.passengers                                = 4
+    vehicle.systems.control                           = "fully powered"
+    vehicle.systems.accessories                       = "commuter"    
+                 
+    cruise_speed                                      = 135.*Units['mph']    
+    atmo                                              = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
+    freestream                                        = atmo.compute_values (0.)
+    freestream0                                       = atmo.compute_values (vehicle.flight_envelope.design_cruise_altitude )
+    mach_number                                       = (cruise_speed/freestream.speed_of_sound)[0][0] 
+    vehicle.design_dynamic_pressure                   = ( .5 *freestream0.density*(cruise_speed*cruise_speed))[0][0]
+    vehicle.design_mach_number                        =  mach_number
 
          
     #------------------------------------------------------------------------------------------------------------------------------------
@@ -362,14 +364,8 @@ def vehicle_setup():
     for _ in range(number_of_modules):
         bus.battery_modules.append(deepcopy(bat))    
     
-    bus.battery_module_electric_configuration = 'Series'
-    bus.charging_c_rate                       = 1
-    bus.initialize_bus_electrical_properties()     
-    
-    
-    
-    
-
+    bus.battery_module_electric_configuration = 'Series' 
+    bus.initialize_bus_electrical_properties()      
     #------------------------------------------------------------------------------------------------------------------------------------  
     #  Starboard Propulsor
     #------------------------------------------------------------------------------------------------------------------------------------   
@@ -419,7 +415,7 @@ def vehicle_setup():
     motor.design_torque                              = propeller.cruise.design_torque
     motor.angular_velocity                           = propeller.cruise.design_angular_velocity 
     design_motor(motor)  
-    motor.mass_properties.mass                       = nasa_motor(motor.design_torque) 
+    motor.mass_properties.mass                       = compute_motor_weight(motor.design_torque) 
     starboard_propulsor.motor                        = motor 
  
 

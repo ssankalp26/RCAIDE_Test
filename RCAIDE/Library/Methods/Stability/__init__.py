@@ -11,3 +11,4 @@
 
 from . import Common 
 from . import Center_of_Gravity 
+from . import Moment_of_Inertia

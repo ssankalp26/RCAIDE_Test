@@ -10,7 +10,9 @@
 # RCAIDE imports    
 from RCAIDE.Framework.Core                import Data 
 from RCAIDE.Library.Components.Component  import Container
-from RCAIDE.Library.Components            import Component  
+from RCAIDE.Library.Components            import Component
+from RCAIDE.Library.Methods.Stability.Moment_of_Inertia.compute_fuselage_moment_of_inertia import  compute_fuselage_moment_of_inertia
+
  
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Fuselage
@@ -138,4 +140,10 @@ class Fuselage(Component):
         # Store data
         self.Fuel_Tanks.append(fuel_tank)
 
-        return 
+        return
+    
+
+    def compute_fuselage_moment_of_inertia(fuselage, center_of_gravity):
+                    
+        I =  compute_fuselage_moment_of_inertia(fuselage,center_of_gravity) 
+        return I    

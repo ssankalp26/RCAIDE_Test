@@ -9,6 +9,7 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
 # RCAIDE imports    
 from .Fuselage import Fuselage
+import numpy as np
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Blended_Wing_Body_Fuselage
 # ---------------------------------------------------------------------------------------------------------------------- 
@@ -44,4 +45,8 @@ class Blended_Wing_Body_Fuselage(Fuselage):
         self.tag                   = 'bwb_fuselage'
         self.aft_centerbody_area   = 0.0
         self.aft_centerbody_taper  = 0.0
-        self.cabin_area            = 0.0   
+        self.cabin_area            = 0.0
+    def compute_fuselage_moment_of_inertia(fuselage, center_of_gravity):
+
+        I =  np.array([[0, 0, 0], [0, 0, 0], [0, 0, 0]]) 
+        return I        

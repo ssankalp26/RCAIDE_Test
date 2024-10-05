@@ -9,7 +9,8 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
 # RCAIDE imports   
 from .Wing import Wing 
-from copy import deepcopy 
+from copy import deepcopy
+from RCAIDE.Library.Methods.Stability.Moment_of_Inertia.compute_wing_moment_of_inertia import  compute_wing_moment_of_inertia
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Vertical_Tail
@@ -93,4 +94,9 @@ class Vertical_Tail(Wing):
         for cs in wing.control_surfaces:
             cs.deflection *= -1*cs.sign_duplicate
                 
-        return wing 
+        return wing
+    
+    def moment_of_inertia(wing,center_of_gravity):
+        
+        I =  compute_wing_moment_of_inertia(wing,center_of_gravity) 
+        return I      

@@ -10,4 +10,5 @@
 # ----------------------------------------------------------------------------------------------------------------------
 ## @ingroup Energy 
 from . import Battery_Modules
-from . import Fuel_Tanks 
+from . import Fuel_Tanks
+from . import Solar_Panels

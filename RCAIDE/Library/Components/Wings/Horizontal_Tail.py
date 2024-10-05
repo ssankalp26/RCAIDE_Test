@@ -9,6 +9,7 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
 # RCAIDE imports   
 from .Wing import Wing 
+from RCAIDE.Library.Methods.Stability.Moment_of_Inertia.compute_wing_moment_of_inertia import  compute_wing_moment_of_inertia
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Main Wing 
@@ -52,3 +53,8 @@ class Horizontal_Tail(Wing):
         N/A
         """ 
         self.tag = 'horizontal_stabilizer'
+    
+    def moment_of_inertia(wing,center_of_gravity):
+        I =  compute_wing_moment_of_inertia(wing,center_of_gravity) 
+        return I 
+    

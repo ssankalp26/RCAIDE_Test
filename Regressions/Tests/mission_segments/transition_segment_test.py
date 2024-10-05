@@ -30,7 +30,7 @@ from Stopped_Rotor_EVTOL    import configs_setup as  SR_configs_setup
 # ----------------------------------------------------------------------
 def main(): 
     # make true only when resizing aircraft. should be left false for regression
-    new_regression = False 
+    new_regression = True 
     
     # TEST 1
     tiltwing_transition_test(new_regression)
@@ -56,9 +56,9 @@ def tiltwing_transition_test(new_regression):
     TW_results = TW_missions.base_mission.evaluate()  
     
     # Extract sample values from computation    
-    hover_throttle                               = TW_results.segments.hover.conditions.energy['bus']['lift_rotor_propulsor_1'].throttle[1][0]
-    vertical_climb_1_throttle                    = TW_results.segments.vertical_climb_1.conditions.energy['bus']['lift_rotor_propulsor_1'].throttle[1][0] 
-    vertical_descent_throttle                    = TW_results.segments.vertical_descent.conditions.energy['bus']['lift_rotor_propulsor_1'].throttle[1][0] 
+    hover_throttle            = TW_results.segments.hover.conditions.energy['bus']['lift_rotor_propulsor_1'].throttle[1][0]
+    vertical_climb_1_throttle = TW_results.segments.vertical_climb_1.conditions.energy['bus']['lift_rotor_propulsor_1'].throttle[1][0] 
+    vertical_descent_throttle = TW_results.segments.vertical_descent.conditions.energy['bus']['lift_rotor_propulsor_1'].throttle[1][0] 
     
     #print values for resetting regression
     show_vals = True
@@ -68,15 +68,15 @@ def tiltwing_transition_test(new_regression):
             print(val)
     
     # Truth values 
-    hover_throttle_truth                                = 0.6044572977445689
-    vertical_climb_1_throttle_truth                     = 0.6080401647201861
-    vertical_descent_throttle_truth                     = 0.5977742166563198
+    hover_throttle_truth              = 0.6044572977445689
+    vertical_climb_1_throttle_truth   = 0.6080401647201861
+    vertical_descent_throttle_truth   = 0.5977742166563198
     
     # Store errors 
     error = Data() 
-    error.hover_throttle                              = np.max(np.abs( hover_throttle_truth                       - hover_throttle                      )/ hover_throttle_truth                             )
-    error.vertical_climb_1_throttle                   = np.max(np.abs( vertical_climb_1_throttle_truth            - vertical_climb_1_throttle           )/ vertical_climb_1_throttle_truth                  ) 
-    error.vertical_descent_throttle                   = np.max(np.abs( vertical_descent_throttle_truth            - vertical_descent_throttle           )/ vertical_descent_throttle_truth                  )
+    error.hover_throttle             = np.max(np.abs( hover_throttle_truth            - hover_throttle            )/ hover_throttle_truth            )
+    error.vertical_climb_1_throttle  = np.max(np.abs( vertical_climb_1_throttle_truth - vertical_climb_1_throttle )/ vertical_climb_1_throttle_truth ) 
+    error.vertical_descent_throttle  = np.max(np.abs( vertical_descent_throttle_truth - vertical_descent_throttle )/ vertical_descent_throttle_truth )
  
     print('Errors:')
     print(error)
@@ -164,7 +164,7 @@ def TW_base_analysis(vehicle):
     
     # ------------------------------------------------------------------
     #  Weights
-    weights         = RCAIDE.Framework.Analyses.Weights.Weights_eVTOL()
+    weights         = RCAIDE.Framework.Analyses.Weights.Weights_EVTOL()
     weights.vehicle = vehicle
     analyses.append(weights)
 
@@ -204,7 +204,7 @@ def SR_base_analysis(vehicle):
     
     # ------------------------------------------------------------------
     #  Weights
-    weights         = RCAIDE.Framework.Analyses.Weights.Weights_eVTOL()
+    weights         = RCAIDE.Framework.Analyses.Weights.Weights_EVTOL()
     weights.vehicle = vehicle
     analyses.append(weights)
 

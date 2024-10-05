@@ -73,7 +73,7 @@ class Costs(Analysis):
 
         Properties Used:
         self.
-          vehicle                           SUAVE vehicle passed to the functions below
+          vehicle                           RCAIDE vehicle passed to the functions below
           settings.industrial_costs_method  (function)
           settings.operating_costs_method   (function)
         """

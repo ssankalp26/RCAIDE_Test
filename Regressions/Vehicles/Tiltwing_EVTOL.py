@@ -9,10 +9,10 @@
 import RCAIDE
 from RCAIDE.Framework.Core import Units, Data    
 from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common                    import initialize_from_circuit_configuration 
-from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion            import nasa_motor
+from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion            import compute_motor_weight
 from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor                     import design_motor
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor                        import design_prop_rotor ,design_prop_rotor 
-from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Electric            import compute_weight , converge_weight 
+from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Electric            import converge_physics_based_weight_buildup 
 from RCAIDE.Library.Plots                                                      import *     
 
 from RCAIDE.load    import load as load_rotor
@@ -212,7 +212,7 @@ def vehicle_setup(new_regression=True):
     #------------------------------------------------------------------------------------------------------------------------------------
     # define network
     network                                                = RCAIDE.Framework.Networks.Electric() 
-     
+    network.charging_power                                 = 1000
     #==================================================================================================================================== 
     # Lift Bus 
     #====================================================================================================================================          
@@ -235,13 +235,10 @@ def vehicle_setup(new_regression=True):
     bat.geometrtic_configuration.parallel_count             = 24  
     
     for _ in range(number_of_modules):
-        bus.battery_modules.append(deepcopy(bat))    
-    bus.charging_c_rate  = 1
-    bus.nominal_capacity = 0
+        bus.battery_modules.append(deepcopy(bat))  
     
     for battery_module in  bus.battery_modules:
-        bus.voltage  +=   battery_module.voltage
-        bus.nominal_capacity =  max(battery_module.nominal_capacity, bus.nominal_capacity)   
+        bus.voltage  +=   battery_module.voltage 
     
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Lift Propulsors 
@@ -250,6 +247,7 @@ def vehicle_setup(new_regression=True):
     # Define Lift Propulsor Container 
     lift_propulsor                                = RCAIDE.Library.Components.Propulsors.Electric_Rotor()
     lift_propulsor.tag                            = 'lift_propulsor'      
+    lift_propulsor.wing_mounted                   = True 
               
     # Electronic Speed Controller           
     prop_rotor_esc                                = RCAIDE.Library.Components.Energy.Modulators.Electronic_Speed_Controller()
@@ -310,12 +308,11 @@ def vehicle_setup(new_regression=True):
     prop_rotor_motor.nominal_voltage         = bus.voltage * 0.75
     prop_rotor_motor.prop_rotor_radius       = prop_rotor.tip_radius 
     prop_rotor_motor.no_load_current         = 0.1  
-    prop_rotor_motor.wing_mounted            = True 
     prop_rotor_motor.rotor_radius            = prop_rotor.tip_radius
     prop_rotor_motor.design_torque           = prop_rotor.hover.design_torque
     prop_rotor_motor.angular_velocity        = prop_rotor.hover.design_angular_velocity/prop_rotor_motor.gear_ratio  
     design_motor(prop_rotor_motor)
-    prop_rotor_motor.mass_properties.mass    = nasa_motor(prop_rotor_motor.design_torque)     
+    prop_rotor_motor.mass_properties.mass    = compute_motor_weight(prop_rotor_motor.design_torque)     
     lift_propulsor.motor                     = prop_rotor_motor
      
 
@@ -380,11 +377,10 @@ def vehicle_setup(new_regression=True):
     #------------------------------------------------------------------------------------------------------------------------------------
     # ##################################   Determine Vehicle Mass Properties Using Physic Based Methods  ################################ 
     #------------------------------------------------------------------------------------------------------------------------------------   
-    converge_weight(vehicle) 
-    breakdown = compute_weight(vehicle)
+    converged_vehicle, breakdown = converge_physics_based_weight_buildup(vehicle)  
     print(breakdown) 
 
-    return vehicle
+    return converged_vehicle
 
 # ----------------------------------------------------------------------
 #   Define the Configurations

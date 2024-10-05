@@ -71,8 +71,7 @@ def empty_weight(vehicle, settings=None, method_type='New SUAVE'):
             method_type - weight estimation method chosen, available:
                             - FLOPS Simple
                             - FLOPS Complex
-                            - SUAVE
-                            - New SUAVE
+                            - RCAIDE
                             - Raymer
        Outputs:
             output - data dictionary with the weight breakdown of the vehicle
