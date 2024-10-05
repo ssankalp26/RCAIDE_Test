@@ -45,7 +45,7 @@ class Fuel(Network):
             N/A
         """           
 
-        self.tag                          = 'fuel_network'
+        self.tag                          = 'fuel'
         self.reverse_thrust               = False
         self.wing_mounted                 = True   
     # linking the different network components

@@ -625,7 +625,7 @@ def configs_setup(vehicle):
     # ------------------------------------------------------------------ 
     config                                      = RCAIDE.Library.Components.Configs.Config(base_config)
     config.tag                                  = 'climb' 
-    for propulsor in config.networks.fuel_network.fuel_lines.fuel_line.propulsors:
+    for propulsor in config.networks.fuel.fuel_lines.fuel_line.propulsors:
         propulsor.afterburner_active = True 
     configs.append(config)    
     
@@ -636,7 +636,7 @@ def configs_setup(vehicle):
     config                                      = RCAIDE.Library.Components.Configs.Config(base_config)
     config.tag                                  = 'takeoff'  
     config.maximum_lift_coefficient             = 2.  
-    for propulsor in config.networks.fuel_network.fuel_lines.fuel_line.propulsors:
+    for propulsor in config.networks.fuel.fuel_lines.fuel_line.propulsors:
         propulsor.afterburner_active = True 
     configs.append(config) 
     
