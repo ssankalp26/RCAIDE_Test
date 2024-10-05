@@ -1,4 +1,4 @@
-# Solar_UAV.py 
+# Human_Powered_Glider.py 
 
 # ----------------------------------------------------------------------
 #   Imports
@@ -6,8 +6,7 @@
 # RCAIDE imports 
 import RCAIDE 
 from RCAIDE.Framework.Core import Units   
-from RCAIDE.Library.Methods.Propulsors.Converters.Rotor     import design_propeller
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common import initialize_from_mass
+from RCAIDE.Library.Methods.Propulsors.Converters.Rotor     import design_propeller 
 
 # python imports 
 import numpy as np   
@@ -21,7 +20,7 @@ def vehicle_setup():
     # ------------------------------------------------------------------    
     
     vehicle = RCAIDE.Vehicle()
-    vehicle.tag = 'Solar'
+    vehicle.tag = 'Daedalus'
     
     # ------------------------------------------------------------------
     #   Vehicle-level Properties
@@ -134,52 +133,19 @@ def vehicle_setup():
     #  Electric Network
     #------------------------------------------------------------------------------------------------------------------------------------  
     #initialize the electric network
-    net            = RCAIDE.Framework.Networks.Solar()  
- 
-    logic                 = RCAIDE.Library.Components.Energy.Modulators.Solar_Logic()
-    logic.system_voltage  = 40.0
-    logic.MPPT_efficiency = 0.95
-    net.solar_logic       = logic 
+    net            = RCAIDE.Framework.Networks.Human_Powered()   
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Bus
     #------------------------------------------------------------------------------------------------------------------------------------  
-    bus                              = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus() 
-
-    #------------------------------------------------------------------------------------------------------------------------------------  
-    # Solar Panel
-    #------------------------------------------------------------------------------------------------------------------------------------  
-    panel                      = RCAIDE.Library.Components.Energy.Sources.Solar_Panels.Solar_Panel()
-    panel.area                 = vehicle.reference_area * 0.9
-    panel.efficiency           = 0.25
-    panel.mass_properties.mass = panel.area*(0.60 * Units.kg)
-    bus.solar_panel            = panel     
-
-    #------------------------------------------------------------------------------------------------------------------------------------           
-    # Battery
-    #------------------------------------------------------------------------------------------------------------------------------------  
-    bat                      = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC() 
-    bat.tag                  = 'li_ion_battery' 
-    bat.mass_properties.mass = 90.0 * Units.kg
-    bat.cell.specific_energy = 600. * Units.Wh/Units.kg
-    bat.cell.resistance      = 0.05
-    bat.maximum_voltage      = 45.0
-    initialize_from_mass(bat)  
-    bat.voltage              = bat.maximum_voltage   
-    bus.initialize_bus_electrical_properties()
-    
+    bus                              = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus()  # Need to update 
+ 
     #------------------------------------------------------------------------------------------------------------------------------------  
     #  Starboard Propulsor
     #------------------------------------------------------------------------------------------------------------------------------------   
-    propulsor                                         = RCAIDE.Library.Components.Propulsors.Electric_Rotor()  
+    propulsor                                         = RCAIDE.Library.Components.Propulsors.Electric_Rotor()  # need to update
     propulsor.tag                                     = 'propulsor' 
-             
-    # Electronic Speed Controller                  
-    esc                                               = RCAIDE.Library.Components.Energy.Modulators.Electronic_Speed_Controller()
-    esc.tag                                           = 'esc_1'
-    esc.efficiency                                    = 0.95 
-    propulsor.electronic_speed_controller             = esc   
-     
+               
     # Propeller              
     propeller                                        = RCAIDE.Library.Components.Propulsors.Converters.Propeller() 
     propeller.tag                                    = 'propeller_1' 
@@ -193,20 +159,6 @@ def vehicle_setup():
     propeller.cruise.design_thrust                   =  110.   
     design_propeller(propeller)    
     propulsor.rotor                                  = propeller   
-              
-    # DC_Motor       
-    motor                                            = RCAIDE.Library.Components.Propulsors.Converters.DC_Motor() 
-    motor.resistance                                 = 0.008
-    motor.no_load_current                            = 4.5  * Units.ampere
-    motor.speed_constant                             = 120. * Units['rpm'] # RPM/volt converted to (rad/s)/volt    
-    motor.rotor_radius                               = propeller.tip_radius
-    motor.rotor_Cp                                   = propeller.cruise.design_power_coefficient
-    motor.gear_ratio                                 = 12. # Gear ratio
-    motor.gearbox_efficiency                         = .98 # Gear box efficiency
-    motor.expected_current                           = 160. # Expected current
-    motor.mass_properties.mass                       = 2.0  * Units.kg  
-    propulsor.motor                                  = motor  
-
  
     # ##########################################################   Nacelles  ############################################################    
     nacelle              = RCAIDE.Library.Components.Nacelles.Nacelle()
@@ -218,22 +170,8 @@ def vehicle_setup():
     propulsor.nacelle = nacelle
     
     # append propulsor to distribution line 
-    bus.propulsors.append(propulsor)
-    
-    #------------------------------------------------------------------------------------------------------------------------------------           
-    # Payload 
-    #------------------------------------------------------------------------------------------------------------------------------------  
-    payload                      = RCAIDE.Library.Components.Payloads.Payload()
-    payload.power_draw           = 50. # Watts
-    payload.mass_properties.mass = 5.0 * Units.kg
-    bus.payload                  = payload
-
-    #------------------------------------------------------------------------------------------------------------------------------------  
-    # Avionics
-    #------------------------------------------------------------------------------------------------------------------------------------  
-    avionics                     = RCAIDE.Library.Components.Systems.Avionics()
-    avionics.power_draw          = 50. # Watts
-    bus.avionics                 = avionics   
+    bus.propulsors.append(propulsor) 
+ 
 
     # append bus   
     net.busses.append(bus)
@@ -265,4 +203,3 @@ def configs_setup(vehicle):
     configs.append(config)  
     
     return configs
- 

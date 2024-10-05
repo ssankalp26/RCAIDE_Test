@@ -228,6 +228,7 @@ def mission_setup(analyses,vehicle,battery_chemistry,current,mAh):
     # Charge Segment 
     segment                                = Segments.Ground.Battery_Recharge(base_segment)      
     segment.analyses.extend(analyses.charge) 
+    segment.time                           = time 
     segment.tag                            = 'Recharge' 
     mission.append_segment(segment)   
 

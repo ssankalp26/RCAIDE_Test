@@ -1,5 +1,4 @@
-## @defgroup Energy-Sources Sources
-# RCAIDE/Library/Compoments/Energy/Sources/__init__.py
+# RCAIDE/Library/Compoments/Energy/Sources/Solar_Panels/__init__.py
 # 
 
 """ RCAIDE Package Setup
@@ -8,7 +7,5 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Energy 
-from . import Battery_Modules
-from . import Fuel_Tanks
-from . import Solar_Panels
+
+from .Solar_Panel        import Solar_Panel

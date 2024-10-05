@@ -1,5 +1,5 @@
 ## @ingroup Methods-Weights-Buildups-eVTOL 
-# RCAIDE/Methods/Weights/Buildups/eVTOL/converge_evtol_weight.py
+# RCAIDE/Methods/Weights/Buildups/eVTOL/converge_physics_based_weight_buildup.py
 # 
 # 
 # Created:  Sep 2024, M. Clarke
@@ -9,14 +9,12 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE
-from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Electric import compute_operating_empty_weight
-from RCAIDE.Framework.Core import Data
+import RCAIDE 
 
 # ----------------------------------------------------------------------------------------------------------------------
-# converge_evtol_weight
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Methods-Weights-Buildups-eVTOL 
-def converge_weight(vehicle,
+# converge_physics_based_weight_buildup
+# ---------------------------------------------------------------------------------------------------------------------- 
+def converge_physics_based_weight_buildup(base_vehicle,
                     print_iterations              = False,
                     miscelleneous_weight_factor   = 1.1,):
     '''Converges the maximum takeoff weight of an aircraft using the eVTOL 
@@ -46,22 +44,26 @@ def converge_weight(vehicle,
     Properties Used:
     N/A
     '''
-    breakdown      = compute_operating_empty_weight(vehicle,miscelleneous_weight_factor) 
-    build_up_mass  = breakdown.total    
-    diff           = vehicle.mass_properties.max_takeoff - build_up_mass
-    iterations     = 0
+    
+
+    weight_analysis          = RCAIDE.Framework.Analyses.Weights.Weights_EVTOL()
+    weight_analysis.vehicle  = base_vehicle
+    breakdown                = weight_analysis.evaluate() 
+    build_up_mass            = breakdown.total    
+    diff                     = weight_analysis.vehicle.mass_properties.max_takeoff - build_up_mass
+    iterations               = 0
     
     while(abs(diff)>1):
-        vehicle.mass_properties.max_takeoff = vehicle.mass_properties.max_takeoff - diff
-        breakdown      = compute_operating_empty_weight(vehicle,miscelleneous_weight_factor)
+        weight_analysis.vehicle.mass_properties.max_takeoff = weight_analysis.vehicle.mass_properties.max_takeoff - diff 
+        breakdown      = weight_analysis.evaluate()         
         build_up_mass  = breakdown.total    
-        diff           = vehicle.mass_properties.max_takeoff - build_up_mass 
+        diff           = weight_analysis.vehicle.mass_properties.max_takeoff - build_up_mass 
         iterations     += 1
         if print_iterations:
             print(round(diff,3))
         if iterations == 100:
             print('Weight convergence failed!')
             return False 
-    print('Converged MTOW = ' + str(round(vehicle.mass_properties.max_takeoff)) + ' kg')
+    print('Converged MTOW = ' + str(round(weight_analysis.vehicle.mass_properties.max_takeoff)) + ' kg') 
     
-    return True 
+    return weight_analysis.vehicle , breakdown

@@ -31,7 +31,7 @@ def Transport_Aircraft_Test():
     vehicle = transport_setup()
     
     # update fuel weight to 60%
-    vehicle.networks.fuel_network.fuel_lines.fuel_line.fuel_tanks.wing_fuel_tank.fuel.mass_properties.mass = 0.6 * vehicle.networks.fuel_network.fuel_lines.fuel_line.fuel_tanks.wing_fuel_tank.fuel.mass_properties.mass
+    vehicle.networks.fuel.fuel_lines.fuel_line.fuel_tanks.wing_fuel_tank.fuel.mass_properties.mass = 0.6 * vehicle.networks.fuel.fuel_lines.fuel_line.fuel_tanks.wing_fuel_tank.fuel.mass_properties.mass
 
     # ------------------------------------------------------------------
     #   Weight Breakdown 
@@ -45,13 +45,13 @@ def Transport_Aircraft_Test():
     # ------------------------------------------------------------------
     #   CG Location
     # ------------------------------------------------------------------    
-    compute_vehicle_center_of_gravity(vehicle) 
-    CG_location      = vehicle.mass_properties.center_of_gravity
+    compute_vehicle_center_of_gravity( weight_analysis.vehicle) 
+    CG_location      =  weight_analysis.vehicle.mass_properties.center_of_gravity
     
     # ------------------------------------------------------------------
     #   Operating Aircraft MOI
     # ------------------------------------------------------------------    
-    MOI, total_mass = calculate_aircraft_MOI(vehicle, CG_location)
+    MOI, total_mass = calculate_aircraft_MOI(weight_analysis.vehicle, CG_location)
 
     # ------------------------------------------------------------------
     #   Payload MOI
@@ -59,66 +59,72 @@ def Transport_Aircraft_Test():
     Cargo_MOI, mass =  compute_cuboid_moment_of_inertia(CG_location, 99790*Units.kg, 36.0, 3.66, 3, 0, 0, 0, CG_location)
     MOI             += Cargo_MOI
     total_mass      += mass
-
-    accepted  = np.array([[32345317.83576559,  2824293.44847796,  3423062.2751829], [2824293.44847796, 42743291.89239228, 0.], [3423062.2751829,  0., 61946007.291605]])
-    error     = (MOI - accepted)
-    error_Ixx = error[0, 0]
-    error_Iyy = error[1, 1]
-    error_Izz = error[2, 2]
-    error_Ixz = error[2, 0]
-    error_Ixy = error[1, 0]
     
-    assert(abs(error_Ixx)<1e-6)
-    assert(abs(error_Iyy)<1e-6)
-    assert(abs(error_Izz)<1e-6)
-    assert(abs(error_Ixz)<1e-6)
-    assert(abs(error_Ixy)<1e-6)
+    print(weight_analysis.vehicle.tag + ' Moment of Intertia')
+    print(MOI)
+    accepted  = np.array([[32345317.83576559 , 2824293.44847796  , 3423062.2751829 ],
+                          [ 2824293.44847796 , 42743291.89239228  ,      0.        ],
+                          [ 3423062.2751829  ,       0.       ,  61946007.2916059 ]])
+    MOI_error     = MOI - accepted
+
+    # Check the errors
+    error = Data()
+    error.Ixx   = MOI_error[0, 0]
+    error.Iyy   = MOI_error[1, 1]
+    error.Izz   = MOI_error[2, 2]
+    error.Ixz   = MOI_error[2, 0]
+    error.Ixy   = MOI_error[1, 0]
+
+    print('Errors:')
+    print(error)
+
+    for k,v in list(error.items()):
+        assert(np.abs(v)<1e-6) 
     
     return  
+ 
 
-def EVTOL_Aircraft_Test(): 
-    vehicle = evtol_setup()
-    weight  = Electric.compute_operating_empty_weight(vehicle)
-    
-    return 
-
-def General_Aviation_Test():
-    vehicle = general_aviation_setup()
-    
-    # update fuel weight to 60%
-
+def General_Aviation_Test(): 
     # ------------------------------------------------------------------
     #   Weight Breakdown 
     # ------------------------------------------------------------------  
     weight_analysis                               = RCAIDE.Framework.Analyses.Weights.Weights_General_Aviation()
-    weight_analysis.vehicle                       = vehicle
-    weight_analysis.method                        = 'Raymer'
+    weight_analysis.vehicle                       = general_aviation_setup() 
     results                                       = weight_analysis.evaluate() 
     
     # ------------------------------------------------------------------
     #   CG Location
     # ------------------------------------------------------------------    
-    compute_vehicle_center_of_gravity(vehicle) 
-    CG_location      = vehicle.mass_properties.center_of_gravity
+    compute_vehicle_center_of_gravity(weight_analysis.vehicle) 
+    CG_location      = weight_analysis.vehicle.mass_properties.center_of_gravity
     
     # ------------------------------------------------------------------
     #   Operating Aircraft MOI
     # ------------------------------------------------------------------    
-    MOI, total_mass = calculate_aircraft_MOI(vehicle, CG_location) 
+    MOI, total_mass = calculate_aircraft_MOI(weight_analysis.vehicle, CG_location) 
+
+    print(weight_analysis.vehicle.tag + ' Moment of Intertia')
+    print(MOI)
     
-    accepted  = np.array([[1290.55346634, 43.52720306, 43.52720306], [43.52720306, 980.82840051, 0.], [43.52720306, 0., 2194.18580632]])
-    error     = (MOI - accepted)
-    error_Ixx = error[0, 0]
-    error_Iyy = error[1, 1]
-    error_Izz = error[2, 2]
-    error_Ixz = error[2, 0]
-    error_Ixy = error[1, 0]
+    accepted  = np.array([[1290.55346634 ,  43.52720306  , 43.52720306],
+                          [  43.52720306 , 980.82840051  ,  0.      ],
+                          [  43.52720306 ,   0.     ,    2194.18580632]])
     
-    assert(abs(error_Ixx)<1e-6)
-    assert(abs(error_Iyy)<1e-6)
-    assert(abs(error_Izz)<1e-6)
-    assert(abs(error_Ixz)<1e-6)
-    assert(abs(error_Ixy)<1e-6)    
+    MOI_error     = MOI - accepted
+
+    # Check the errors
+    error = Data()
+    error.Ixx   = MOI_error[0, 0]
+    error.Iyy   = MOI_error[1, 1]
+    error.Izz   = MOI_error[2, 2]
+    error.Ixz   = MOI_error[2, 0]
+    error.Ixy   = MOI_error[1, 0]
+
+    print('Errors:')
+    print(error)
+
+    for k,v in list(error.items()):
+        assert(np.abs(v)<1e-6)   
     
     return
 

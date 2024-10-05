@@ -14,7 +14,7 @@ from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common                    i
 from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion            import compute_motor_weight
 from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor                     import design_motor
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor                        import design_propeller ,design_lift_rotor 
-from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Electric            import compute_operating_empty_weight , converge_weight 
+from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Electric            import converge_physics_based_weight_buildup 
 from RCAIDE.Library.Plots                                                      import *       
 from RCAIDE.load    import load as load_rotor
 from RCAIDE.save    import save as save_rotor  
@@ -811,15 +811,14 @@ def vehicle_setup(new_regression=True) :
         
     # append energy network 
     vehicle.append_energy_network(network) 
-    
+     
     #------------------------------------------------------------------------------------------------------------------------------------
     # ##################################   Determine Vehicle Mass Properties Using Physic Based Methods  ################################ 
     #------------------------------------------------------------------------------------------------------------------------------------   
-    converge_weight(vehicle) 
-    breakdown = compute_operating_empty_weight(vehicle)
+    converged_vehicle, breakdown = converge_physics_based_weight_buildup(vehicle)  
     print(breakdown) 
-     
-    return vehicle
+
+    return converged_vehicle
 
 
 # ---------------------------------------------------------------------

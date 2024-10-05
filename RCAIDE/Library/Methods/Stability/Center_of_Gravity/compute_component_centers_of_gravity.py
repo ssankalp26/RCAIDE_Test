@@ -44,7 +44,11 @@ def compute_component_centers_of_gravity(vehicle, nose_load = 0.06):
     """  
     
     C =  RCAIDE.Library.Components
-    
+
+    # Go through all the fuselages
+    for fuse in vehicle.fuselages:
+        fuse.mass_properties.center_of_gravity[0][0]   = .45*fuse.lengths.total
+        
     # Go through all wings
     for wing in vehicle.wings:
     
@@ -110,11 +114,7 @@ def compute_component_centers_of_gravity(vehicle, nose_load = 0.06):
     if network_mass!= 0.:
         propulsion_cg = network_moment/network_mass
     else:
-        propulsion_cg = np.array([[0.,0.,0.]])
-
-    # Go through all the fuselages
-    for fuse in vehicle.fuselages:
-        fuse.mass_properties.center_of_gravity[0][0]   = .45*fuse.lengths.total
+        propulsion_cg = np.array([[.45*fuse.lengths.total,0.,0.]]) 
 
     #---------------------------------------------------------------------------------
     # All other components

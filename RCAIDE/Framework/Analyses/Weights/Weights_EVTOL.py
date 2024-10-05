@@ -43,8 +43,7 @@ class Weights_EVTOL(Weights):
         None 
         """           
         self.tag      = 'weights_evtol'
-        self.vehicle  = None
-        
+        self.vehicle  = None 
         self.settings = Data()    
         self.settings.miscelleneous_weight_factor   = 1.1 
         self.settings.safety_factor                 = 1.5   

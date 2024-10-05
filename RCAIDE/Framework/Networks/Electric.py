@@ -58,7 +58,7 @@ class Electric(Network):
             N/A
         """         
 
-        self.tag                          = 'electric_network'
+        self.tag                          = 'electric'
         self.system_voltage               = None   
         self.reverse_thrust               = False
         self.wing_mounted                 = True        

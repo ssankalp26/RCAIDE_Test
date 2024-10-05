@@ -45,9 +45,9 @@ def compute_operating_empty_weight(vehicle):
     # ----------------------------------------------------------------------------------------------------------------------    
     S_max = 0
     for wing in vehicle.wings:
-        if S_max < wing.areas.projected:
+        if S_max < wing.areas.reference:
             AR    = wing.aspect_ratio 
-            S_max = wing.areas.projected 
+            S_max = wing.areas.reference 
         if isinstance(wing,RCAIDE.Library.Components.Wings.Main_Wing):
             AR = wing.aspect_ratio
             break 

@@ -195,8 +195,8 @@ def compute_operating_empty_weight(vehicle,settings = None):
             bus.avionics.mass_properties.center_of_gravity[0][0]   = 0.0
             weight.avionics += bus.avionics.mass_properties.mass   
                          
-            for battery in bus.batteries: 
-                weight.battery += battery.mass_properties.mass * Units.kg  
+            for modules in bus.battery_modules: 
+                weight.battery += modules.mass_properties.mass * Units.kg  
         
             # Servo, Hub and BRS Weights
             lift_rotor_hub_weight   = 4.   * Units.kg

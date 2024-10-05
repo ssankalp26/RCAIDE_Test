@@ -17,7 +17,7 @@ from RCAIDE.Library.Attributes.Materials.Aluminum import Aluminum
 # ---------------------------------------------------------------------------------------------------------------------- 
 # Operating Empty Weight 
 # ----------------------------------------------------------------------------------------------------------------------
-def compute_operating_empty_weight(vehicle,setings=None):
+def compute_operating_empty_weight(vehicle,settings=None):
     """ This is for a BWB aircraft configuration.
 
     Assumptions:
