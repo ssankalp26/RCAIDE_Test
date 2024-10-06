@@ -1,5 +1,5 @@
 ## @ingroup Library-Methods-Energy-Propulsors-Turboshaft_Propulsor
-# RCAIDE/Library/Methods/Energy/Propulsors/Turboshaft_Propulsor/design_turboshaft.py
+# RCAIDE/Library/Methods/Energy/Propulsors/Turboshaft_Propulsor/design_turboprop.py
 # 
 # 
 # Created:  Jul 2023, M. Clarke 
@@ -28,9 +28,9 @@ import numpy                                                                as n
 #  Design Turboshaft
 # ----------------------------------------------------------------------------------------------------------------------   
 ## @ingroup Methods-Energy-Propulsors-Turboshaft_Propulsor
-def design_turboshaft(turboshaft):  
+def design_turboprop(turboprop):  
     #check if mach number and temperature are passed
-    if(turboshaft.design_mach_number==None or turboshaft.design_altitude==None):
+    if(turboprop.design_mach_number==None or turboprop.design_altitude==None):
         
         #raise an error
         raise NameError('The sizing conditions require an altitude and a Mach number')
@@ -38,7 +38,7 @@ def design_turboshaft(turboshaft):
     else:
         #call the atmospheric model to get the conditions at the specified altitude
         atmosphere = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
-        atmo_data  = atmosphere.compute_values(turboshaft.design_altitude,turboshaft.design_isa_deviation)
+        atmo_data  = atmosphere.compute_values(turboprop.design_altitude,turboprop.design_isa_deviation)
         planet     = RCAIDE.Library.Attributes.Planets.Earth()
         
         p   = atmo_data.pressure          
@@ -51,18 +51,18 @@ def design_turboshaft(turboshaft):
         conditions = RCAIDE.Framework.Mission.Common.Results()
     
         # freestream conditions    
-        conditions.freestream.altitude                    = np.atleast_1d(turboshaft.design_altitude)
-        conditions.freestream.mach_number                 = np.atleast_1d(turboshaft.design_mach_number)
+        conditions.freestream.altitude                    = np.atleast_1d(turboprop.design_altitude)
+        conditions.freestream.mach_number                 = np.atleast_1d(turboprop.design_mach_number)
         conditions.freestream.pressure                    = np.atleast_1d(p)
         conditions.freestream.temperature                 = np.atleast_1d(T)
         conditions.freestream.density                     = np.atleast_1d(rho)
         conditions.freestream.dynamic_viscosity           = np.atleast_1d(mu)
-        conditions.freestream.gravity                     = np.atleast_1d(planet.compute_gravity(turboshaft.design_altitude))
-        conditions.freestream.isentropic_expansion_factor = np.atleast_1d(turboshaft.working_fluid.compute_gamma(T,p))
-        conditions.freestream.Cp                          = np.atleast_1d(turboshaft.working_fluid.compute_cp(T,p))
-        conditions.freestream.R                           = np.atleast_1d(turboshaft.working_fluid.gas_specific_constant)
+        conditions.freestream.gravity                     = np.atleast_1d(planet.compute_gravity(turboprop.design_altitude))
+        conditions.freestream.isentropic_expansion_factor = np.atleast_1d(turboprop.working_fluid.compute_gamma(T,p))
+        conditions.freestream.Cp                          = np.atleast_1d(turboprop.working_fluid.compute_cp(T,p))
+        conditions.freestream.R                           = np.atleast_1d(turboprop.working_fluid.gas_specific_constant)
         conditions.freestream.speed_of_sound              = np.atleast_1d(a)
-        conditions.freestream.velocity                    = np.atleast_1d(a*turboshaft.design_mach_number)
+        conditions.freestream.velocity                    = np.atleast_1d(a*turboprop.design_mach_number)
          
          
     fuel_line                = RCAIDE.Library.Components.Energy.Distributors.Fuel_Line()
@@ -70,31 +70,31 @@ def design_turboshaft(turboshaft):
     segment.state.conditions = conditions
     segment.state.conditions.energy[fuel_line.tag] = Conditions()
     segment.state.conditions.noise[fuel_line.tag] = Conditions()
-    turboshaft.append_operating_conditions(segment,fuel_line) 
-    for tag, item in  turboshaft.items(): 
+    turboprop.append_operating_conditions(segment,fuel_line) 
+    for tag, item in  turboprop.items(): 
         if issubclass(type(item), RCAIDE.Library.Components.Component):
-            item.append_operating_conditions(segment,fuel_line,turboshaft) 
+            item.append_operating_conditions(segment,fuel_line,turboprop) 
          
-    ram                                                   = turboshaft.ram
-    inlet_nozzle                                          = turboshaft.inlet_nozzle
-    compressor                                            = turboshaft.compressor
-    combustor                                             = turboshaft.combustor
-    high_pressure_turbine                                 = turboshaft.high_pressure_turbine
-    low_pressure_turbine                                  = turboshaft.low_pressure_turbine
-    core_nozzle                                           = turboshaft.core_nozzle  
+    ram                      = turboprop.ram
+    inlet_nozzle             = turboprop.inlet_nozzle
+    compressor               = turboprop.compressor
+    combustor                = turboprop.combustor
+    high_pressure_turbine    = turboprop.high_pressure_turbine
+    low_pressure_turbine     = turboprop.low_pressure_turbine
+    core_nozzle              = turboprop.core_nozzle  
 
     # unpack component conditions
-    turboshaft_conditions   = conditions.energy[fuel_line.tag][turboshaft.tag]
-    ram_conditions          = turboshaft_conditions[ram.tag]     
-    inlet_nozzle_conditions = turboshaft_conditions[inlet_nozzle.tag]
-    core_nozzle_conditions  = turboshaft_conditions[core_nozzle.tag] 
-    compressor_conditions   = turboshaft_conditions[compressor.tag]  
-    combustor_conditions    = turboshaft_conditions[combustor.tag]
-    lpt_conditions          = turboshaft_conditions[low_pressure_turbine.tag]
-    hpt_conditions          = turboshaft_conditions[high_pressure_turbine.tag] 
+    turboprop_conditions    = conditions.energy[fuel_line.tag][turboprop.tag]
+    ram_conditions          = turboprop_conditions[ram.tag]     
+    inlet_nozzle_conditions = turboprop_conditions[inlet_nozzle.tag]
+    core_nozzle_conditions  = turboprop_conditions[core_nozzle.tag] 
+    compressor_conditions   = turboprop_conditions[compressor.tag]  
+    combustor_conditions    = turboprop_conditions[combustor.tag]
+    lpt_conditions          = turboprop_conditions[low_pressure_turbine.tag]
+    hpt_conditions          = turboprop_conditions[high_pressure_turbine.tag] 
      
     # Step 1: Set the working fluid to determine the fluid properties
-    ram.working_fluid                             = turboshaft.working_fluid
+    ram.working_fluid                             = turboprop.working_fluid
 
     # Step 2: Compute flow through the ram , this computes the necessary flow quantities and stores it into conditions
     compute_ram_performance(ram,ram_conditions,conditions)
@@ -176,34 +176,34 @@ def design_turboshaft(turboshaft):
 
     # compute the thrust using the thrust component
     #link the thrust component to the core nozzle
-    turboshaft_conditions.core_exit_velocity                  = core_nozzle_conditions.outputs.velocity
-    turboshaft_conditions.core_area_ratio                     = core_nozzle_conditions.outputs.area_ratio
-    turboshaft_conditions.core_nozzle                         = core_nozzle_conditions.outputs
+    turboprop_conditions.core_exit_velocity                  = core_nozzle_conditions.outputs.velocity
+    turboprop_conditions.core_area_ratio                     = core_nozzle_conditions.outputs.area_ratio
+    turboprop_conditions.core_nozzle                         = core_nozzle_conditions.outputs
     
     #link the thrust component to the combustor
-    turboshaft_conditions.fuel_to_air_ratio                   = combustor_conditions.outputs.fuel_to_air_ratio
+    turboprop_conditions.fuel_to_air_ratio                   = combustor_conditions.outputs.fuel_to_air_ratio
     
     #link the thrust component to the low pressure compressor
-    turboshaft_conditions.combustor_stagnation_temperature    = combustor_conditions.outputs.stagnation_temperature
-    turboshaft_conditions.stag_temp_lpt_exit                  = compressor_conditions.inputs.stagnation_temperature
-    turboshaft_conditions.stag_press_lpt_exit                 = compressor_conditions.inputs.stagnation_pressure 
-    turboshaft_conditions.total_temperature_reference         = compressor_conditions.inputs.stagnation_temperature
-    turboshaft_conditions.total_pressure_reference            = compressor_conditions.inputs.stagnation_pressure  
+    turboprop_conditions.combustor_stagnation_temperature    = combustor_conditions.outputs.stagnation_temperature
+    turboprop_conditions.stag_temp_lpt_exit                  = compressor_conditions.inputs.stagnation_temperature
+    turboprop_conditions.stag_press_lpt_exit                 = compressor_conditions.inputs.stagnation_pressure 
+    turboprop_conditions.total_temperature_reference         = compressor_conditions.inputs.stagnation_temperature
+    turboprop_conditions.total_pressure_reference            = compressor_conditions.inputs.stagnation_pressure  
 
     #compute the power
-    turboshaft_conditions.fan_nozzle                          = Data()
-    turboshaft_conditions.fan_nozzle.velocity                 = 0.0
-    turboshaft_conditions.fan_nozzle.area_ratio               = 0.0
-    turboshaft_conditions.fan_nozzle.static_pressure          = 0.0
-    turboshaft_conditions.bypass_ratio                        = 0.0
-    turboshaft_conditions.flow_through_core                   = 1.0 #scaled constant to turn on core power computation
-    turboshaft_conditions.flow_through_fan                    = 0.0 #scaled constant to turn on fan power computation      
+    turboprop_conditions.fan_nozzle                          = Data()
+    turboprop_conditions.fan_nozzle.velocity                 = 0.0
+    turboprop_conditions.fan_nozzle.area_ratio               = 0.0
+    turboprop_conditions.fan_nozzle.static_pressure          = 0.0
+    turboprop_conditions.bypass_ratio                        = 0.0
+    turboprop_conditions.flow_through_core                   = 1.0 #scaled constant to turn on core power computation
+    turboprop_conditions.flow_through_fan                    = 0.0 #scaled constant to turn on fan power computation      
     
-    # Step 25: Size the core of the turboshaft  
-    size_core(turboshaft,turboshaft_conditions,conditions)
+    # Step 25: Size the core of the turboprop  
+    size_core(turboprop,turboprop_conditions,conditions)
     
     # Step 26: Static Sea Level Thrust 
-    compute_static_sea_level_performance(turboshaft)
+    compute_static_sea_level_performance(turboprop)
      
     return      
   

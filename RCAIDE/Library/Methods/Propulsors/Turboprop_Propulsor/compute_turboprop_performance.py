@@ -1,5 +1,5 @@
-## @ingroup Methods-Energy-Propulsors-Networks-turboshaft_Propulsor
-# RCAIDE/Methods/Energy/Propulsors/Networks/turboshaft_Propulsor/compute_turboshaft_performance.py
+## @ingroup Methods-Energy-Propulsors-Networks-Turboprop_Propulsor
+# RCAIDE/Methods/Energy/Propulsors/Networks/Turboprop_Propulsor/compute_turboprop_performance.py
 # 
 # 
 # Created:  Jul 2023, M. Clarke
@@ -12,20 +12,17 @@ from RCAIDE.Framework.Core import Data
 from RCAIDE.Library.Methods.Propulsors.Converters.Ram                import compute_ram_performance
 from RCAIDE.Library.Methods.Propulsors.Converters.Combustor          import compute_combustor_performance
 from RCAIDE.Library.Methods.Propulsors.Converters.Compressor         import compute_compressor_performance
-from RCAIDE.Library.Methods.Propulsors.Converters.Turbine            import compute_turbine_performance
-from RCAIDE.Library.Methods.Propulsors.Converters.Expansion_Nozzle   import compute_expansion_nozzle_performance 
-from RCAIDE.Library.Methods.Propulsors.Converters.Compression_Nozzle import compute_compression_nozzle_performance
-from RCAIDE.Library.Methods.Propulsors.Turboshaft_Propulsor          import compute_power
+from RCAIDE.Library.Methods.Propulsors.Converters.Turbine            import compute_turbine_performance  
  
 # python imports 
 from copy import deepcopy
 import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
-# compute_turboshaft_performance
+# compute_turboprop_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Energy-Propulsors-Turboshaft_Propulsor
-def compute_turboshaft_performance(turboshaft,state,fuel_line,center_of_gravity= [[0.0, 0.0,0.0]]):    
-    ''' Computes the perfomrance of one turboshaft
+def compute_turboprop_performance(turboprop,state,fuel_line,center_of_gravity= [[0.0, 0.0,0.0]]):    
+    ''' Computes the perfomrance of one turboprop
     
     Assumptions: 
     N/A
@@ -36,40 +33,40 @@ def compute_turboshaft_performance(turboshaft,state,fuel_line,center_of_gravity=
     Inputs:  
     conditions           - operating conditions data structure     [-]  
     fuel_line            - fuelline                                [-] 
-    turboshaft           - turboshaft data structure               [-] 
-    total_power          - power of turboshaft group               [W] 
+    turboprop           - turboprop data structure               [-] 
+    total_power          - power of turboprop group               [W] 
 
     Outputs:  
-    total_power          - power of turboshaft group               [W] 
+    total_power          - power of turboprop group               [W] 
     stored_results_flag  - boolean for stored results              [-]     
-    stored_propulsor_tag - name of turboshaft with stored results  [-]
+    stored_propulsor_tag - name of turboprop with stored results  [-]
     
     Properties Used: 
     N.A.        
     ''' 
     conditions                = state.conditions 
-    noise_conditions          = conditions.noise[fuel_line.tag][turboshaft.tag]  
-    turboshaft_conditions     = conditions.energy[fuel_line.tag][turboshaft.tag]
+    noise_conditions          = conditions.noise[fuel_line.tag][turboprop.tag]  
+    turboprop_conditions     = conditions.energy[fuel_line.tag][turboprop.tag]
     rho                       = conditions.freestream.density  
-    ram                       = turboshaft.ram
-    inlet_nozzle              = turboshaft.inlet_nozzle
-    compressor                = turboshaft.compressor
-    combustor                 = turboshaft.combustor
-    high_pressure_turbine     = turboshaft.high_pressure_turbine
-    low_pressure_turbine      = turboshaft.low_pressure_turbine 
-    core_nozzle               = turboshaft.core_nozzle
+    ram                       = turboprop.ram
+    inlet_nozzle              = turboprop.inlet_nozzle
+    compressor                = turboprop.compressor
+    combustor                 = turboprop.combustor
+    high_pressure_turbine     = turboprop.high_pressure_turbine
+    low_pressure_turbine      = turboprop.low_pressure_turbine 
+    core_nozzle               = turboprop.core_nozzle
 
     # unpack component conditions 
-    ram_conditions          = turboshaft_conditions[ram.tag]     
-    inlet_nozzle_conditions = turboshaft_conditions[inlet_nozzle.tag]
-    core_nozzle_conditions  = turboshaft_conditions[core_nozzle.tag] 
-    compressor_conditions   = turboshaft_conditions[compressor.tag] 
-    lpt_conditions          = turboshaft_conditions[low_pressure_turbine.tag]
-    hpt_conditions          = turboshaft_conditions[high_pressure_turbine.tag]
-    combustor_conditions    = turboshaft_conditions[combustor.tag] 
+    ram_conditions          = turboprop_conditions[ram.tag]     
+    inlet_nozzle_conditions = turboprop_conditions[inlet_nozzle.tag]
+    core_nozzle_conditions  = turboprop_conditions[core_nozzle.tag] 
+    compressor_conditions   = turboprop_conditions[compressor.tag] 
+    lpt_conditions          = turboprop_conditions[low_pressure_turbine.tag]
+    hpt_conditions          = turboprop_conditions[high_pressure_turbine.tag]
+    combustor_conditions    = turboprop_conditions[combustor.tag] 
 
     # Step 1: Set the working fluid to determine the fluid properties
-    ram.working_fluid                             = turboshaft.working_fluid
+    ram.working_fluid                             = turboprop.working_fluid
 
     # Step 2: Compute flow through the ram , this computes the necessary flow quantities and stores it into conditions
     compute_ram_performance(ram,ram_conditions,conditions)
@@ -150,22 +147,22 @@ def compute_turboshaft_performance(turboshaft,state,fuel_line,center_of_gravity=
     compute_expansion_nozzle_performance(core_nozzle,core_nozzle_conditions,conditions) 
  
     # Link the thrust component to the core nozzle
-    turboshaft_conditions.core_exit_velocity                       = core_nozzle_conditions.outputs.velocity
-    turboshaft_conditions.core_area_ratio                          = core_nozzle_conditions.outputs.area_ratio
-    turboshaft_conditions.core_nozzle                              = core_nozzle_conditions.outputs
+    turboprop_conditions.core_exit_velocity                       = core_nozzle_conditions.outputs.velocity
+    turboprop_conditions.core_area_ratio                          = core_nozzle_conditions.outputs.area_ratio
+    turboprop_conditions.core_nozzle                              = core_nozzle_conditions.outputs
 
     # Link the thrust component to the combustor
-    turboshaft_conditions.fuel_to_air_ratio                        = combustor_conditions.outputs.fuel_to_air_ratio 
+    turboprop_conditions.fuel_to_air_ratio                        = combustor_conditions.outputs.fuel_to_air_ratio 
 
     # Link the thrust component to the low pressure compressor 
-    turboshaft_conditions.combustor_stagnation_temperature         = combustor_conditions.outputs.stagnation_temperature
-    turboshaft_conditions.total_temperature_reference              = compressor_conditions.inputs.stagnation_temperature
-    turboshaft_conditions.total_pressure_reference                 = compressor_conditions.inputs.stagnation_pressure 
-    turboshaft_conditions.flow_through_core                        =  1.0 #scaled constant to turn on core thrust computation
-    turboshaft_conditions.flow_through_fan                         =  0.0 #scaled constant to turn on fan thrust computation        
+    turboprop_conditions.combustor_stagnation_temperature         = combustor_conditions.outputs.stagnation_temperature
+    turboprop_conditions.total_temperature_reference              = compressor_conditions.inputs.stagnation_temperature
+    turboprop_conditions.total_pressure_reference                 = compressor_conditions.inputs.stagnation_pressure 
+    turboprop_conditions.flow_through_core                        =  1.0 #scaled constant to turn on core thrust computation
+    turboprop_conditions.flow_through_fan                         =  0.0 #scaled constant to turn on fan thrust computation        
     
     # Compute the power
-    compute_power(turboshaft,turboshaft_conditions,conditions) 
+    compute_power(turboprop,turboprop_conditions,conditions) 
 
     # Store data
     core_nozzle_res = Data(
@@ -176,19 +173,19 @@ def compute_turboshaft_performance(turboshaft,state,fuel_line,center_of_gravity=
                 exit_velocity                       = core_nozzle_conditions.outputs.velocity
             )
   
-    noise_conditions.turboshaft.core_nozzle   = core_nozzle_res  
+    noise_conditions.turboprop.core_nozzle   = core_nozzle_res  
     
     # Pack results   
     moment                 = 0*state.ones_row(3)
     thrust                 = 0*state.ones_row(3) 
-    power                  = turboshaft_conditions.power  
+    power                  = turboprop_conditions.power  
     stored_results_flag    = True
-    stored_propulsor_tag   = turboshaft.tag
+    stored_propulsor_tag   = turboprop.tag
     
     return thrust,moment,power,stored_results_flag,stored_propulsor_tag
 
-def reuse_stored_turboshaft_data(turboshaft,state,fuel_line,stored_propulsor_tag,center_of_gravity= [[0.0, 0.0,0.0]]):
-    '''Reuses results from one turboshaft for identical propulsors
+def reuse_stored_turboprop_data(turboprop,state,fuel_line,stored_propulsor_tag,center_of_gravity= [[0.0, 0.0,0.0]]):
+    '''Reuses results from one turboprop for identical propulsors
     
     Assumptions: 
     N/A
@@ -199,20 +196,20 @@ def reuse_stored_turboshaft_data(turboshaft,state,fuel_line,stored_propulsor_tag
     Inputs:  
     conditions           - operating conditions data structure     [-]  
     fuel_line            - fuelline                                [-] 
-    turboshaft            - turboshaft data structure              [-] 
-    total_power          - power of turboshaft group               [W] 
+    turboprop            - turboprop data structure              [-] 
+    total_power          - power of turboprop group               [W] 
 
     Outputs:  
-    total_power          - power of turboshaft group               [W] 
+    total_power          - power of turboprop group               [W] 
     
     Properties Used: 
     N.A.        
     ''' 
     conditions                                        = state.conditions   
-    conditions.energy[fuel_line.tag][turboshaft.tag]  = deepcopy(conditions.energy[fuel_line.tag][stored_propulsor_tag])
-    conditions.noise[fuel_line.tag][turboshaft.tag]   = deepcopy(conditions.noise[fuel_line.tag][stored_propulsor_tag])
+    conditions.energy[fuel_line.tag][turboprop.tag]  = deepcopy(conditions.energy[fuel_line.tag][stored_propulsor_tag])
+    conditions.noise[fuel_line.tag][turboprop.tag]   = deepcopy(conditions.noise[fuel_line.tag][stored_propulsor_tag])
       
-    power    = conditions.energy[fuel_line.tag][turboshaft.tag].power    
+    power    = conditions.energy[fuel_line.tag][turboprop.tag].power    
     moment   = 0*state.ones_row(3)
     thrust   = 0*state.ones_row(3)
     return thrust,moment,power    
