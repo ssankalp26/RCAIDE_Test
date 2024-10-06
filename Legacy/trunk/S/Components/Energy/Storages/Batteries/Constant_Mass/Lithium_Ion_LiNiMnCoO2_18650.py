@@ -14,8 +14,7 @@ from Legacy.trunk.S.Methods.Power.Battery.Cell_Cycle_Models.LiNiMnCoO2_cell_cycl
 from Legacy.trunk.S.Methods.Power.Battery.compute_net_generated_battery_heat            import compute_net_generated_battery_heat
 
 import numpy as np
-import os
-from scipy.integrate    import  cumtrapz
+import os 
 from scipy.interpolate  import RegularGridInterpolator 
 
 ## @ingroup Components-Energy-Storages-Batteries-Constant_Mass
