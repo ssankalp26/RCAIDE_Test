@@ -125,7 +125,7 @@ class Solar_Panel(Component):
         
         #flux = np.zeros_like(psi)
         
-        #earth = SUAVE.Attributes.Planets.Earth()
+        #earth = RCADE.Attributes.Planets.Earth()
         #Re = earth.mean_radius
         
         ## Atmospheric properties

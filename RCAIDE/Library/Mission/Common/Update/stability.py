@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Common-Update
 # RCAIDE/Library/Missions/Common/Update/stability.py
 # 
 # 
@@ -7,8 +6,7 @@
 import numpy as np  
 # ----------------------------------------------------------------------------------------------------------------------
 #  Stability
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Common-Update
+# ---------------------------------------------------------------------------------------------------------------------- 
 def stability(segment): 
     """ Updates the stability of the aircraft 
         
