@@ -1,3 +1,8 @@
+## @ingroup Core 
+# RCAIDE/Core/Utilities.py
+# 
+# 
+# Created:  Jul 2023, M. Clarke
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
@@ -303,4 +308,4 @@ def new_tensor(a):
     
     T = np.resize(T,[n_a,3,3])
     
-    return T    
+    return T

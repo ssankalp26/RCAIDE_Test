@@ -1,4 +1,4 @@
-# Units.py
+# Units.py 
 
 # ------------------------------------------------------------
 #   Imports
@@ -12,10 +12,7 @@ Units = UnitRegistry()
 
 # ------------------------------------------------------------
 #   Monkey Patching
-# ------------------------------------------------------------
- 
-# multiplication covnverts in to base unit
-## @ingroup Core
+# ------------------------------------------------------------ 
 def __rmul__(self,other):
     """ Override the basic python multiplication for Units
 
@@ -83,7 +80,7 @@ Units.Quantity.__array_wrap__    = None
 
 # doc string
 Units.__doc__ = \
-""" RCADE.Attributes.Units()
+""" SUAVE.Attributes.Units()
     Unit conversion toolbox
     Works by converting values in to and out of the base unit
     
@@ -114,7 +111,7 @@ Units.__doc__ = \
       luminsoity  : candela
       
     
-    Based on the Pint package, included in RCADE.Plugins
+    Based on the Pint package, included in SUAVE.Plugins
     https://pint.readthedocs.org/en/latest/
     
 """
