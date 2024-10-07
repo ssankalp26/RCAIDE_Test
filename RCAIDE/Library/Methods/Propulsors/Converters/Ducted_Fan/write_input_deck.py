@@ -72,14 +72,14 @@ shoo
 {7}
 '''
     ducted_fan        = dfdc_object.geometry 
-    geometry_filename = ducted_fan.tag + 'geometry.txt'                        
-    T                 = ducted_fan.design_thrust               
-    alt               = ducted_fan.design_altitude /1000           
-    B                 = ducted_fan.number_of_blades         
-    n                 = ducted_fan.number_of_radial_stations      
-    RPM               = ducted_fan.design_angular_velocity /Units.rpm   
-    V_inf             = ducted_fan.design_freestream_velocity  
-    V_ref             = ducted_fan.design_reference_velocity  
+    geometry_filename = ducted_fan.tag + '_geometry.txt'                    
+    B                 = ducted_fan.number_of_rotor_blades         
+    n                 = ducted_fan.number_of_radial_stations + 1           
+    T                 = ducted_fan.cruise.design_thrust               
+    alt               = ducted_fan.cruise.design_altitude /1000     
+    RPM               = ducted_fan.cruise.design_angular_velocity /Units.rpm   
+    V_inf             = ducted_fan.cruise.design_freestream_velocity  
+    V_ref             = ducted_fan.cruise.design_reference_velocity  
     settings_command  = base_settings_command.format(alt,V_ref,V_inf,B,n,RPM,T,geometry_filename) 
         
     return settings_command
@@ -98,11 +98,10 @@ exec
 writ
 N
 {2}
-'''   
-    results_template  = dfdc_object.settings.filenames.results_template
+'''    
     V_inf             = case.velocity     
     RPM               = case.RPM        
-    results_filename  = results_template.format(V_inf,RPM)
+    results_filename  = case.tag
     case_command      = base_case_command.format(RPM,V_inf,results_filename)  
         
     return case_command 

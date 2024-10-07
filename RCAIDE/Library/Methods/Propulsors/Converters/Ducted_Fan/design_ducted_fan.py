@@ -43,7 +43,7 @@ def design_ducted_fan(ducted_fan):
         write_input_deck(dfdc_analysis)   
 
         # RUN DFDC!
-        dfdc_results = run_dfdc_analysis(dfdc_analysis,print_output)
+        _ = run_dfdc_analysis(dfdc_analysis,print_output)
 
     # translate results
     results = read_results(dfdc_analysis)

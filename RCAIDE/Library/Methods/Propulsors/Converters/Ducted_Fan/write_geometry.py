@@ -5,8 +5,10 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Imports
 # ----------------------------------------------------------------------------------------------------------------------
-from RCAIDE.Library.Methods.Geometry.Airfoil import  import_airfoil_geometry
+from RCAIDE.Framework.Core import Units 
+from RCAIDE.Library.Methods.Geometry.Airfoil import  import_airfoil_geometry , compute_naca_4series
 from .purge_files import purge_files   
+import numpy as  np
  
 # ---------------------------------------------------------------------------------------------------------------------- 
 # Write Geometry 
@@ -21,22 +23,22 @@ def write_geometry(dfdc_object,run_script_path):
     geometry             = open(case_file,'w') 
     with open(case_file,'w') as geometry:
         make_header_text(dfdc_object,geometry)
+        make_hub_text(dfdc_object,geometry)
+        make_separator_text(dfdc_object,geometry)  
         make_duct_text(dfdc_object,geometry)
-        make_separator_text(dfdc_object,geometry) 
-        make_center_body_text(dfdc_object,geometry) 
     return
 
 def make_header_text(dfdc_object,geometry):  
     """This function writes the header using the template required for the DFDC executable to read
  
     """      
-    header_text = \
+    header_1_text_template = \
 '''DFDC Version  0.70 
 Bladed rotor + actdisk stator test case                                             
 
 OPER
 !        Vinf         Vref          RPM          RPM
-  0.00000E+00   50.000       8000.0          0.0    
+  {0}   {1}       {2}          0.0    
 !         Rho          Vso          Rmu           Alt
    1.2260       340.00      0.17800E-04  0.00000E+00
 !       XDwake        Nwake
@@ -62,21 +64,39 @@ ENDAERO
 
 ROTOR
 !       Xdisk        Nblds       NRsta
-  0.12000                6           11
+  {3}                {4}           {5}
 !  #stations
-    10
+    {6}
 !           r        Chord         Beta
-  0.50494E-01  0.68423E-01   77.017    
-  0.61571E-01  0.63974E-01   64.527    
-  0.72648E-01  0.59613E-01   55.142    
-  0.83725E-01  0.55667E-01   48.577    
-  0.94801E-01  0.52241E-01   43.957    
-  0.10588      0.49327E-01   40.191    
-  0.11696      0.46879E-01   37.057    
-  0.12803      0.44839E-01   34.396    
-  0.13911      0.43155E-01   32.088    
-  0.15019      0.41782E-01   30.041    
-ENDROTOR
+'''
+    
+    length                = dfdc_object.geometry.length
+    x_disc_rotor          = dfdc_object.geometry.rotor_percent_x_location * length
+    number_of_blades      = dfdc_object.geometry.number_of_rotor_blades 
+    number_of_end_points  = dfdc_object.geometry.number_of_radial_stations + 1 
+    number_of_stations    = dfdc_object.geometry.number_of_radial_stations  
+    hub_radius            = dfdc_object.geometry.hub_radius
+    clearance             = dfdc_object.geometry.blade_clearance
+    design_RPM            = dfdc_object.geometry.cruise.design_angular_velocity /Units.rpm 
+    tip_radius            = dfdc_object.geometry.tip_radius  
+    V_inf                 = dfdc_object.geometry.cruise.design_freestream_velocity  
+    V_ref                 = dfdc_object.geometry.cruise.design_reference_velocity  
+    header_1_text         = header_1_text_template.format(V_inf,V_ref, design_RPM,x_disc_rotor,number_of_blades,number_of_end_points, number_of_stations)
+   
+    geometry.write(header_1_text)
+    
+    station_chords = np.linspace(0.5,0.5, number_of_stations)
+    station_twists = np.linspace(77, 30, number_of_stations)
+    station_radii  = np.linspace(hub_radius+clearance, tip_radius-clearance,number_of_stations )
+    for i in range(number_of_stations): 
+        station_radius = station_radii[i]
+        station_chord  = station_chords[i] 
+        station_twist  = station_twists[i]
+        case_text = '  ' + format(station_radius, '.6f')+ "  " + format(station_chord, '.6f')+ "   " + format(station_twist, '.6f') + "\n" 
+        geometry.write(case_text)
+        
+    header_2_text_template = \
+'''ENDROTOR
 
 
 AERO
@@ -96,7 +116,7 @@ ENDAERO
 
 ACTDISK
 ! Xdisk   NRPdef
-  0.22     11
+  {0}     15
 ! #stations
   3
 ! r     BGam
@@ -117,232 +137,79 @@ DRAGOBJ
 ENDDRAGOBJ
 
 '''
-
-    geometry.write(header_text)     
+    x_disc_stator         = dfdc_object.geometry.stator_percent_x_location  * length  
+    header_2_text         = header_2_text_template.format(x_disc_stator ) 
+    geometry.write(header_2_text)     
     return  
+
+def make_hub_text(dfdc_object,geometry):  
+    """This function writes the rotor using the template required for the DFDC executable to read 
+    """ 
+    duct_header = \
+'''GEOM
+FatDuct + CB test case
+''' 
+    geometry.write(duct_header) 
+    if len(dfdc_object.geometry.hub_geometry) > 0: 
+        hub_filename = dfdc_object.geometry.airfoil
+        hub_geometry = import_airfoil_geometry(hub_filename)      
+    else: 
+        hub_geometry =   np.array([[1.00000000e+00, 1.17266523e-01],[9.93570055e-01, 1.19658984e-01],
+                                   [9.79097784e-01, 1.24590785e-01],[9.64028213e-01, 1.29081954e-01],[9.48612666e-01, 1.33014991e-01],[9.32772808e-01, 1.36406216e-01],[9.16479263e-01, 1.39278475e-01],
+                                   [8.99777726e-01, 1.41641562e-01],[8.82788964e-01, 1.43508530e-01],[8.65552143e-01, 1.44879381e-01],[8.47956289e-01, 1.45770435e-01],[8.29384520e-01, 1.46217593e-01],
+                                   [8.09040437e-01, 1.46344887e-01],[7.86845704e-01, 1.46351414e-01],[7.64030825e-01, 1.46374262e-01],[7.41062540e-01, 1.46406901e-01],[7.18064880e-01, 1.46429749e-01],
+                                   [6.96242236e-01, 1.46449332e-01],[6.74413064e-01, 1.46472180e-01],[6.52574099e-01, 1.46491763e-01],[6.30735135e-01, 1.46514611e-01],[6.08899435e-01, 1.46537459e-01],
+                                   [5.87063735e-01, 1.46557042e-01],[5.65221507e-01, 1.46579890e-01],[5.43392334e-01, 1.46599473e-01],[5.21566426e-01, 1.46622321e-01],[4.99747045e-01, 1.46645168e-01],
+                                   [4.77947248e-01, 1.46668016e-01],[4.56167035e-01, 1.46684335e-01],[4.34445572e-01, 1.46710447e-01],[4.12903626e-01, 1.46733294e-01],[3.91671753e-01, 1.46733294e-01],
+                                   [3.70208141e-01, 1.46785517e-01],[3.49958711e-01, 1.46883435e-01],[3.31096452e-01, 1.46746350e-01],[3.12208082e-01, 1.46243705e-01],[2.93420894e-01, 1.45417930e-01],
+                                   [2.74937251e-01, 1.44265762e-01],[2.56704931e-01, 1.42761090e-01],[2.38750045e-01, 1.40894121e-01],[2.21108496e-01, 1.38655064e-01],[2.03793341e-01, 1.36021072e-01],
+                                   [1.86811107e-01, 1.32982352e-01],[1.70256447e-01, 1.29542168e-01],[1.54155474e-01, 1.25684202e-01],[1.38527771e-01, 1.21388868e-01],[1.23432089e-01, 1.16662696e-01],
+                                   [1.08936970e-01, 1.11505684e-01],[9.50946377e-02, 1.05911306e-01],[8.19671061e-02, 9.98926167e-02],[6.96229180e-02, 9.34561442e-02],[5.81240881e-02, 8.66214721e-02],
+                                   [4.75391590e-02, 7.94081840e-02],[3.79203535e-02, 7.18423913e-02],[2.93231586e-02, 6.39534694e-02],[2.17802134e-02, 5.57707937e-02],[1.53306852e-02, 4.73074199e-02],
+                                   [9.98436577e-03, 3.85894595e-02],[5.76083870e-03, 2.96201763e-02],[2.66989578e-03, 2.03571394e-02],[7.18064880e-04, 1.06795831e-02],[0.00000000e+00, 0.00000000e+00]]) 
+
+    dim = len(hub_geometry)
+    
+    scaler =  dfdc_object.geometry.hub_radius / max(hub_geometry[:,1])
+    for i in range(dim):
+        x_coord  =  hub_geometry[i,0]*scaler  
+        y_coord  =  hub_geometry[i,1]*scaler            
+        case_text = '     ' + format(x_coord, '.6f')+ "    " + format(y_coord, '.6f') + "\n" 
+        geometry.write(case_text)
+              
+    return
+
+
+def make_separator_text(dfdc_object,geometry):  
+    """This function writes the operating conditions using the template required for the DFDC executable to read 
+    """      
+    separator_text = \
+'''  999.0 999.0
+'''
+    geometry.write(separator_text) 
+    return
 
 
 def make_duct_text(dfdc_object,geometry):  
     """This function writes the operating conditions using the template required for the DFDC executable to read
  
     """      
-    duct_header = \
-'''GEOM
-FatDuct + CB test case
-''' 
-    geometry.write(duct_header)
-    
-    
-    if len(dfdc_object.geometry.Airfoil):
-        airfoil_filename = dfdc_object.geometry.airfoil
+    if len(dfdc_object.geometry.duct_airfoil) > 0:
+        airfoil_filename      = dfdc_object.geometry.airfoil.duct_airfoil
         airfoil_geometry_data = import_airfoil_geometry(airfoil_filename)
-        dim = len(airfoil_geometry_data.x_coordinates)
-                   
-        for i in range(dim - 1):
-            if i == int(dim/2):
-                pass  
-            elif airfoil_geometry_data.y_coordinates[i] < 0.0:
-                case_text = '\t' + format(airfoil_geometry_data.x_coordinates[i], '.7f')+ "   " + format(airfoil_geometry_data.y_coordinates[i], '.7f') + "\n" 
-                geometry.write(case_text)
-            else:   
-                case_text = '\t' + format(airfoil_geometry_data.x_coordinates[i], '.7f')+ "    " + format(airfoil_geometry_data.y_coordinates[i], '.7f') + "\n" 
-                geometry.write(case_text)
-    else:
-        duct_geometry = \
-'''     0.306379    0.035928
-     0.304409    0.036661
-     0.299975    0.038172
-     0.295358    0.039548
-     0.290635    0.040753
-     0.285782    0.041792
-     0.280790    0.042672
-     0.275673    0.043396
-     0.270468    0.043968
-     0.265187    0.044388
-     0.259796    0.044661
-     0.254106    0.044798
-     0.247873    0.044837
-     0.241073    0.044839
-     0.234083    0.044846
-     0.227046    0.044856
-     0.220000    0.044863
-     0.213314    0.044869
-     0.206626    0.044876
-     0.199935    0.044882
-     0.193244    0.044889
-     0.186554    0.044896
-     0.179864    0.044902
-     0.173172    0.044909
-     0.166484    0.044915
-     0.159797    0.044922
-     0.153112    0.044929
-     0.146433    0.044936
-     0.139760    0.044941
-     0.133105    0.044949
-     0.126505    0.044956
-     0.120000    0.044956
-     0.113424    0.044972
-     0.107220    0.045002
-     0.101441    0.044960
-     0.095654    0.044806
-     0.089898    0.044553
-     0.084235    0.044200
-     0.078649    0.043739
-     0.073148    0.043167
-     0.067743    0.042481
-     0.062438    0.041674
-     0.057235    0.040743
-     0.052163    0.039689
-     0.047230    0.038507
-     0.042442    0.037191
-     0.037817    0.035743
-     0.033376    0.034163
-     0.029135    0.032449
-     0.025113    0.030605
-     0.021331    0.028633
-     0.017808    0.026539
-     0.014565    0.024329
-     0.011618    0.022011
-     0.008984    0.019594
-     0.006673    0.017087
-     0.004697    0.014494
-     0.003059    0.011823
-     0.001765    0.009075
-     0.000818    0.006237
-     0.000220    0.003272
-     0.000000    0.000000'''
-    geometry.write(duct_geometry)      
+    else:  
+        airfoil_geometry_data= compute_naca_4series('2208')    
+    dim = len(airfoil_geometry_data.x_coordinates)
+
+    x_coords  = airfoil_geometry_data.x_coordinates*dfdc_object.geometry.length 
+    y_coords  = airfoil_geometry_data.y_coordinates*dfdc_object.geometry.length     
+    offset    = abs(min(y_coords)) + dfdc_object.geometry.tip_radius
+    for i in range(dim):  
+        case_text = '     ' + format(x_coords[i], '.6f')+ "    " + format(y_coords[i] + offset, '.6f') + "\n" 
+        geometry.write(case_text) 
+    end_text = \
+'''ENDGEOM
+'''               
+    geometry.write(end_text) 
     return  
  
-def make_separator_text(dfdc_object,geometry):  
-    """This function writes the operating conditions using the template required for the DFDC executable to read 
-    """      
-    separator_text = \
-'''
-  999.0 999.0
-'''
-    geometry.write(separator_text) 
-    return 
-
-def make_center_body_text(dfdc_object,geometry):  
-    """This function writes the rotor using the template required for the DFDC executable to read 
-    """
-     
-    center_geometry = \
-'''     0.304542    0.159526
-     0.300090    0.161360
-     0.294089    0.163786
-     0.287155    0.166525
-     0.279918    0.169313
-     0.272562    0.172071
-     0.265159    0.174775
-     0.257734    0.177412
-     0.250271    0.179992
-     0.242791    0.182506
-     0.235295    0.184954
-     0.227802    0.187328
-     0.220289    0.189634
-     0.212770    0.191870
-     0.205266    0.194028
-     0.197773    0.196105
-     0.190295    0.198100
-     0.182837    0.200009
-     0.175399    0.201830
-     0.167998    0.203559
-     0.160654    0.205185
-     0.153344    0.206710
-     0.146087    0.208129
-     0.138907    0.209434
-     0.131841    0.210615
-     0.124987    0.211651
-     0.118379    0.212516
-     0.111879    0.213217
-     0.105460    0.213762
-     0.099122    0.214146
-     0.092868    0.214367
-     0.086702    0.214422
-     0.080632    0.214307
-     0.074675    0.214022
-     0.068839    0.213562
-     0.063131    0.212926
-     0.057569    0.212114
-     0.052173    0.211126
-     0.046954    0.209961
-     0.041929    0.208621
-     0.037125    0.207114
-     0.032572    0.205448
-     0.028297    0.203631
-     0.024324    0.201678
-     0.020684    0.199606
-     0.017398    0.197435
-     0.014488    0.195183
-     0.011963    0.192867
-     0.009829    0.190499
-     0.008090    0.188086
-     0.006750    0.185635
-     0.005819    0.183156
-     0.005307    0.180666
-     0.005219    0.178163
-     0.005587    0.175711
-     0.006428    0.173371
-     0.007726    0.171180
-     0.009456    0.169156
-     0.011594    0.167295
-     0.014136    0.165586
-     0.017089    0.164017
-     0.020469    0.162580
-     0.024289    0.161274
-     0.028565    0.160102
-     0.033285    0.159068
-     0.038452    0.158177
-     0.044042    0.157425
-     0.050036    0.156813
-     0.056422    0.156332
-     0.063182    0.155973
-     0.070302    0.155724
-     0.077764    0.155572
-     0.085568    0.155504
-     0.093708    0.155502
-     0.102173    0.155550
-     0.110962    0.155632
-     0.120000    0.155724
-     0.126668    0.155795
-     0.133170    0.155883
-     0.139589    0.155993
-     0.146086    0.156122
-     0.152658    0.156266
-     0.159302    0.156421
-     0.166019    0.156585
-     0.172800    0.156754
-     0.179623    0.156925
-     0.186436    0.157092
-     0.193212    0.157254
-     0.199963    0.157409
-     0.206680    0.157556
-     0.213355    0.157692
-     0.220000    0.157815
-     0.226000    0.157918
-     0.231995    0.158012
-     0.237979    0.158097
-     0.243952    0.158171
-     0.249925    0.158235
-     0.255902    0.158290
-     0.261888    0.158336
-     0.267883    0.158373
-     0.273872    0.158400
-     0.279876    0.158420
-     0.285849    0.158434
-     0.291632    0.158440
-     0.296938    0.158442
-     0.301213    0.158441
-     0.304466    0.158439'''
-    
-    end_text = \
-'''
-ENDGEOM
-'''  
-    # Insert inputs into the template
-    center_body_text = center_geometry + end_text  
-
-    geometry.write(center_body_text) 
-    return  

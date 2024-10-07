@@ -16,8 +16,7 @@ def translate_conditions_to_dfdc_cases(dfdc_analysis):
  
     """    
     # set up aerodynamic Conditions object
-    template = dfdc_analysis.settings.filenames.results_template
-    cases    = dfdc_analysis.run_cases 
+    template = dfdc_analysis.settings.filenames.results_template 
     v_infs   = dfdc_analysis.training.freestream_velocity               
     RPMs     = dfdc_analysis.training.RPM           
     

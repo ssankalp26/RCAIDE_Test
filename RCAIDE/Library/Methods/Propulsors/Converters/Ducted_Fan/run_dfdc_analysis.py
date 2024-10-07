@@ -7,8 +7,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 from RCAIDE.Framework.Core  import redirect 
-import sys
-import time
+import sys 
 import subprocess
 import os 
 from .purge_files  import purge_files 
@@ -48,10 +47,7 @@ def run_dfdc_analysis(dfdc_object,print_output):
         case      = dfdc_object.settings.filenames.case
         in_deck   = dfdc_object.current_status.deck_file  
     
-        with redirect.output(log_file,err_file):
-    
-            ctime = time.ctime() # Current date and time stamp
-    
+        with redirect.output(log_file,err_file): 
             with open(in_deck,'r') as commands: 
                 
                 # Initialize suppression of console window output
@@ -71,8 +67,7 @@ def run_dfdc_analysis(dfdc_object,print_output):
                     
             dfdc_run.wait()
     
-            exit_status = dfdc_run.returncode
-            ctime = time.ctime()
+            exit_status = dfdc_run.returncode 
 
     return exit_status
 

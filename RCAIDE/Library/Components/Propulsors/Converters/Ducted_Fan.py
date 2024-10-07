@@ -41,17 +41,25 @@ class Ducted_Fan(Data):
         None
         """      
         
-        self.tag                       = 'ducted_fan' 
-        self.design_thrust              = None
-        self.design_altitude            = None
-        self.design_angular_velocity    = None
-        self.number_of_blades           = 10
-        self.number_of_radial_stations  = 20
-        self.design_freestream_velocity = None
-        self.design_reference_velocity  = None
-        self.Airfoil                    = Data()
+        self.tag                               = 'ducted_fan'  
+        self.number_of_radial_stations         = 20
+        self.number_of_rotor_blades            = 22  
+        self.tip_radius                        = 1.0
+        self.hub_radius                        = 0.1
+        self.blade_clearance                   = 0.01
+        self.length                            = 1
+        self.rotor_percent_x_location          = 0.12
+        self.stator_percent_x_location         = 0.22  
+        self.cruise                            = Data()
+        self.cruise.design_thrust              = None
+        self.cruise.design_altitude            = None
+        self.cruise.design_angular_velocity    = None
+        self.cruise.design_freestream_velocity = None
+        self.cruise.design_reference_velocity  = None 
+        self.duct_airfoil                      = Data()
+        self.hub_geometry                      = Data()
     
-    def append_airfoil(self,airfoil):
+    def append_duct_airfoil(self,airfoil):
         """ Adds an airfoil to the segment 
     
         Assumptions:
@@ -75,6 +83,35 @@ class Ducted_Fan(Data):
             raise Exception('input component must be of type Data()')
 
         # Store data
-        self.Airfoil.append(airfoil)
+        self.duct_airfoil.append(airfoil)
 
-        return            
+        return
+    
+
+    def append_hub_geometry(self,airfoil):
+        """ Adds an airfoil to the segment 
+    
+        Assumptions:
+        None
+
+        Source:
+        N/A
+
+        Inputs:
+        None
+
+        Outputs:
+        None
+
+        Properties Used:
+        N/A
+        """ 
+
+        # Assert database type
+        if not isinstance(airfoil,Data):
+            raise Exception('input component must be of type Data()')
+
+        # Store data
+        self.hub_geometry.append(airfoil)
+
+        return                

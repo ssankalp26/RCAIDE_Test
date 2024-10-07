@@ -46,7 +46,7 @@ class Ducted_Fan_Design_Code(Data):
         self.settings.filenames.dfdc_bin_name             = '/Users/matthewclarke/Documents/LEADS/CODES/DFDC/bin/dfdc'   # to call avl from command line. If avl is not on the system path, include absolute path to the avl binary i.e. '/your/path/to/avl'
         self.settings.filenames.run_folder                = 'dfdc_files'   
         self.settings.filenames.deck_template             = 'commands_{0:02d}.deck'  
-        self.settings.filenames.results_template          = 'results_Vinf_{:.3f}_RPM_{:.3f}.txt' 
+        self.settings.filenames.results_template          = 'results_Vinf_{:.0f}_RPM_{:.0f}.txt' 
         self.settings.filenames.case                      = None
         self.settings.filenames.log_filename              = 'dfdc_log.txt'
         self.settings.filenames.err_filename              = 'dfdc_err.txt'
@@ -64,7 +64,7 @@ class Ducted_Fan_Design_Code(Data):
         self.training                                     = Data()   
                   
         # Standard subsonic/transolic aircarft          
-        self.training.RPM                                 = np.linspace(1E-3,10000, 11)
+        self.training.RPM                                 = np.linspace(1E3,10000, 10)
         self.training.freestream_velocity                 = np.array([1E-3,50,100,150,200,250, 300]) 
                                                         
         self.training_file                                = None
