@@ -79,11 +79,15 @@ def harmonic_noise_line(harmonics_blade,harmonics_load,conditions,propulsor_cond
     num_cpt              = len(angle_of_attack) 
     num_mic              = len(coordinates.X_hub[0,:,0,0,0]) 
     phi_0                = np.array([rotor.phase_offset_angle])  # phase angle offset  
+    airfoils             = rotor.Airfoils
     num_sec              = len(rotor.radius_distribution)
     num_az               = aeroacoustic_data.number_azimuthal_stations 
     orientation          = np.array(rotor.orientation_euler_angles) * 1 
     body2thrust          = sp.spatial.transform.Rotation.from_rotvec(orientation).as_matrix()  
-    airfoil_points          = settings.airfoil_number_of_points
+    for jj,airfoil in enumerate(airfoils):
+        airfoil_points          = airfoil.number_of_points
+        y_u_6          = np.tile(airfoil.geometry.y_upper_surface[None,None,None,None,None,:],(num_cpt,num_mic,num_sec,num_h_b,num_h_l,1))
+        y_l_6          = np.tile(airfoil.geometry.y_lower_surface[None,None,None,None,None,:],(num_cpt,num_mic,num_sec,num_h_b,num_h_l,1))
     commanded_thrust_vector = propulsor_conditions.commanded_thrust_vector_angle
     chord_coord             = int(np.floor(airfoil_points/2))
     
@@ -141,8 +145,7 @@ def harmonic_noise_line(harmonics_blade,harmonics_load,conditions,propulsor_cond
     t_b_5          = np.tile(t_b[None,None,:,None,None],(num_cpt,num_mic,1,num_h_b,num_h_l))
     
     # chordwise thickness distribution normalized wrt chord
-    y_u_6          = np.tile(rotor.Airfoils.airfoil.geometry.y_upper_surface[None,None,None,None,None,:],(num_cpt,num_mic,num_sec,num_h_b,num_h_l,1))
-    y_l_6          = np.tile(rotor.Airfoils.airfoil.geometry.y_lower_surface[None,None,None,None,None,:],(num_cpt,num_mic,num_sec,num_h_b,num_h_l,1))
+    
     H_6            = (y_u_6 - y_l_6)/c_6
     
     # Rotorcraft speed and mach number

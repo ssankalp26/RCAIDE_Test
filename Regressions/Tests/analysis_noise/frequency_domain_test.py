@@ -44,7 +44,7 @@ def main():
 # Harmonic Noise Validation
 # ------------------------------------------------------------------  
 def Harmonic_Noise_Validation(PP):
-    fidelities                     = ['plane_source'] #['point_source', 'line_source', 'plane_source']
+    fidelities                     = ['point_source', 'line_source', 'plane_source']
     bus                            = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus() 
     electric_rotor                 = RCAIDE.Library.Components.Propulsors.Electric_Rotor() 
     rotor                          = F8745_D4_Propeller() 

@@ -8,15 +8,9 @@
 # RCAIDE Imports 
 from RCAIDE.Framework.Core import Units
 from RCAIDE.Library.Methods.Aerodynamics.Airfoil_Panel_Method     import airfoil_analysis 
-<<<<<<< HEAD
-from RCAIDE.Library.Methods.Geometry.Two_Dimensional.Airfoil      import compute_naca_4series
-from RCAIDE.Library.Methods.Geometry.Two_Dimensional.Airfoil      import import_airfoil_geometry
-from RCAIDE.Library.Plots import *
-=======
 from RCAIDE.Library.Methods.Geometry.Airfoil      import compute_naca_4series
 from RCAIDE.Library.Methods.Geometry.Airfoil     import import_airfoil_geometry
 from RCAIDE.Library.Plots import * 
->>>>>>> 1d593ba4d8f2bb2b765d4c305a4bcca42f489fcf
 
 # Python imports
 import os 
