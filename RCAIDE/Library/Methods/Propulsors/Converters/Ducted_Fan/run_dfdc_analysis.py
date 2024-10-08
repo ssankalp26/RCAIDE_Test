@@ -60,6 +60,7 @@ def run_dfdc_analysis(dfdc_object,print_output):
                 for line in commands:
                     dfdc_run.stdin.write(line.encode('utf-8'))
                     dfdc_run.stdin.flush()
+                    
                   
                 # Terminate suppression of console window output  
                 if print_output == False:

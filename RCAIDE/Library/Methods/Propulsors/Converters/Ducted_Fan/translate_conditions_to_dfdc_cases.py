@@ -17,14 +17,17 @@ def translate_conditions_to_dfdc_cases(dfdc_analysis):
     """    
     # set up aerodynamic Conditions object
     template = dfdc_analysis.settings.filenames.results_template 
-    v_infs   = dfdc_analysis.training.freestream_velocity               
+    v_infs   = dfdc_analysis.training.freestream_velocity     
+    altitude = dfdc_analysis.training.altitude        
     RPMs     = dfdc_analysis.training.RPM           
     
     for i in range(len(v_infs)): 
-        for j in range(len(RPMs)):      
-            case            = Data()
-            case.tag        = template.format(v_infs[i],RPMs[j]) 
-            case.velocity   = v_infs[i]
-            case.RPM        = RPMs[j] 
-            dfdc_analysis.append_case(case) 
+        for j in range(len(RPMs)):   
+            for k in range(len(altitude)):     
+                case            = Data()
+                case.tag        = template.format(v_infs[i],RPMs[j],altitude[k]) 
+                case.velocity   = v_infs[i]
+                case.RPM        = RPMs[j]
+                case.altitude   = altitude[k]
+                dfdc_analysis.append_case(case) 
     return 

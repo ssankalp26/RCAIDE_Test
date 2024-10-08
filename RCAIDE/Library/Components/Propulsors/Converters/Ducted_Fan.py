@@ -43,13 +43,15 @@ class Ducted_Fan(Data):
         
         self.tag                               = 'ducted_fan'  
         self.number_of_radial_stations         = 20
-        self.number_of_rotor_blades            = 22  
+        self.number_of_rotor_blades            = 12  
         self.tip_radius                        = 1.0
         self.hub_radius                        = 0.1
         self.blade_clearance                   = 0.01
         self.length                            = 1
-        self.rotor_percent_x_location          = 0.12
-        self.stator_percent_x_location         = 0.22  
+        self.rotor                             = Data()
+        self.stator                            = Data()
+        self.rotor.percent_x_location          = 0.4
+        self.stator.percent_x_location         = 0.7
         self.cruise                            = Data()
         self.cruise.design_thrust              = None
         self.cruise.design_altitude            = None

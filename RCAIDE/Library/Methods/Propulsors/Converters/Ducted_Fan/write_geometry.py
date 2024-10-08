@@ -71,7 +71,7 @@ ROTOR
 '''
     
     length                = dfdc_object.geometry.length
-    x_disc_rotor          = dfdc_object.geometry.rotor_percent_x_location * length
+    x_disc_rotor          = dfdc_object.geometry.rotor.percent_x_location * length
     number_of_blades      = dfdc_object.geometry.number_of_rotor_blades 
     number_of_end_points  = dfdc_object.geometry.number_of_radial_stations + 1 
     number_of_stations    = dfdc_object.geometry.number_of_radial_stations  
@@ -85,7 +85,7 @@ ROTOR
    
     geometry.write(header_1_text)
     
-    station_chords = np.linspace(0.5,0.5, number_of_stations)
+    station_chords = np.linspace(0.4,0.3, number_of_stations)
     station_twists = np.linspace(77, 30, number_of_stations)
     station_radii  = np.linspace(hub_radius+clearance, tip_radius-clearance,number_of_stations )
     for i in range(number_of_stations): 
@@ -137,7 +137,7 @@ DRAGOBJ
 ENDDRAGOBJ
 
 '''
-    x_disc_stator         = dfdc_object.geometry.stator_percent_x_location  * length  
+    x_disc_stator         = dfdc_object.geometry.stator.percent_x_location  * length  
     header_2_text         = header_2_text_template.format(x_disc_stator ) 
     geometry.write(header_2_text)     
     return  

@@ -95,6 +95,8 @@ def compute_thrust(turbofan,turbofan_conditions,conditions):
 
     # Computing Specifc Thrust
     Fsp   = 1./(gamma*M0)*thrust_nondim
+    Fsp_c = 1./(gamma*M0)*core_thrust_nondim
+    Fsp_f = 1./(gamma*M0)*fan_thrust_nondim
 
     # Compute specific impulse
     Isp   = Fsp*a0*(1.+bypass_ratio)/(f*g)
@@ -106,7 +108,9 @@ def compute_thrust(turbofan,turbofan_conditions,conditions):
     mdot_core  = mdhc*np.sqrt(Tref/total_temperature_reference)*(total_pressure_reference/Pref)
 
     # Compute dimensional thrust
-    FD2  = Fsp*a0*(1.+bypass_ratio)*mdot_core*turbofan_conditions.throttle
+    FD2   = Fsp*a0*(1.+bypass_ratio)*mdot_core*turbofan_conditions.throttle
+    FD2_f = Fsp_f*a0*(1.+bypass_ratio)*mdot_core*turbofan_conditions.throttle
+    FD2_c = Fsp_c*a0*(1.+bypass_ratio)*mdot_core*turbofan_conditions.throttle
 
     # Compute power 
     power   = FD2*u0    
@@ -116,6 +120,8 @@ def compute_thrust(turbofan,turbofan_conditions,conditions):
 
     # Pack turbofan outouts  
     turbofan_conditions.thrust                            = FD2 
+    turbofan_conditions.fan_thrust                        = FD2_f 
+    turbofan_conditions.core_thrust                       = FD2_c 
     turbofan_conditions.thrust_specific_fuel_consumption  = TSFC
     turbofan_conditions.non_dimensional_thrust            = Fsp  
     turbofan_conditions.power                             = power  
