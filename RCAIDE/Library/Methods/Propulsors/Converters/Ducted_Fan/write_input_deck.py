@@ -90,18 +90,21 @@ def make_case_command(dfdc_object,case):
     # This is a template (place holder) for the input deck. Think of it as the actually keys
     # you will type if you were to manually run an analysis
     base_case_command = \
-'''rpm
-{0} 
+'''atmo
+{0}
+rpm
+{1} 
 vinf
-{1}
+{2}
 exec
 writ
 N
-{2}
+{3}
 '''    
+    alt               = case.altitude   
     V_inf             = case.velocity     
     RPM               = case.RPM        
     results_filename  = case.tag
-    case_command      = base_case_command.format(RPM,V_inf,results_filename)  
+    case_command      = base_case_command.format(alt,RPM,V_inf,results_filename)  
         
     return case_command 
