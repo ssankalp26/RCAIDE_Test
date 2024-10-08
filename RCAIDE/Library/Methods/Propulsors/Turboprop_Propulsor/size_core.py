@@ -7,10 +7,9 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
-from RCAIDE.Library.Methods.Propulsors.Turboshaft_Propulsor import compute_power
-
+from RCAIDE.Library.Methods.Propulsors.Turboprop_Propulsor import compute_thrust
 # Python package imports
-import numpy                                                       as np
+import numpy                                               as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  size_core
@@ -24,8 +23,7 @@ def size_core(turboprop,turboprop_conditions,conditions):
     Turboshaft engine with free power turbine
 
     Sources:
-    [1] https://soaneemrana.org/onewebmedia/ELEMENTS%20OF%20GAS%20TURBINE%20PROPULTION2.pdf - Page 332 - 336
-    [2] https://www.colorado.edu/faculty/kantha/sites/default/files/attached-files/70652-116619_-_luke_stuyvenberg_-_dec_17_2015_1258_pm_-_stuyvenberg_helicopterturboprops.pdf
+    [1] 
 
     Inputs:
     conditions.freestream.speed_of_sound [m/s] (conditions is also passed to turboprop.compute(..))
@@ -44,25 +42,8 @@ def size_core(turboprop,turboprop_conditions,conditions):
       reference_pressure                      [Pa]
       total_design                            [W] - Design power
     """             
-    
-    #unpack from turboprop
-    Tref                                           = turboprop.reference_temperature
-    Pref                                           = turboprop.reference_pressure 
-    total_temperature_reference                    = turboprop_conditions.total_temperature_reference  
-    total_pressure_reference                       = turboprop_conditions.total_pressure_reference 
-
-    #compute nondimensional power
-    compute_power(turboprop,turboprop_conditions,conditions)
-
-    #unpack results 
-    Psp                                            = turboprop_conditions.non_dimensional_power
-    
-    #compute dimensional mass flow rates
-    mdot_air                                       = turboprop.design_power/Psp
-    mdot_compressor                                = mdot_air/ (np.sqrt(Tref/total_temperature_reference)*(total_pressure_reference/Pref))
-
-    #pack outputs
-    turboprop.mass_flow_rate_design               = mdot_air
-    turboprop.compressor.mass_flow_rate           = mdot_compressor
-
+ 
+    compute_thrust(turboprop,turboprop_conditions,conditions)  
+    Fsp                         = turboprop_conditions.non_dimensional_thrust
+        
     return    
