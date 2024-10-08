@@ -5,7 +5,7 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Imports
 # ----------------------------------------------------------------------------------------------------------------------
- 
+import RCAIDE
 from RCAIDE.Framework.Core import Data, Units  
 import numpy as np
 import  os 
@@ -34,11 +34,11 @@ def read_results(dfdc_analysis):
     Nr                = ducted_fan.number_of_radial_stations
     results_template  = dfdc_analysis.settings.filenames.results_template
     run_folder        = dfdc_analysis.settings.filenames.run_folder
-    v_infs            = dfdc_analysis.training.freestream_velocity               
-    RPMs              = dfdc_analysis.training.RPM         
+    v_infs            = dfdc_analysis.training.freestream_velocity        
+    tip_machs         = dfdc_analysis.training.tip_mach  
     altitudes         = dfdc_analysis.training.altitude
     len_v             = len(v_infs)
-    len_rpm           = len(RPMs) 
+    len_tm            = len(tip_machs) 
     len_a             = len(altitudes)
     
     results                                             = Data()
@@ -56,15 +56,15 @@ def read_results(dfdc_analysis):
     results.geometry.design_power_coefficient           = 0
     results.geometry.design_thrust_coefficient          = 0  
     results.performance                                 = Data()
-    results.performance.thrust                          = np.zeros((len_v,len_rpm,len_a))  
-    results.performance.power                           = np.zeros((len_v,len_rpm,len_a))  
-    results.performance.efficiency                      = np.zeros((len_v,len_rpm,len_a)) 
-    results.performance.torque                          = np.zeros((len_v,len_rpm,len_a)) 
-    results.performance.thrust_coefficient              = np.zeros((len_v,len_rpm,len_a))  
-    results.performance.power_coefficient               = np.zeros((len_v,len_rpm,len_a)) 
-    results.performance.advance_ratio                   = np.zeros((len_v,len_rpm,len_a))
-    results.performance.figure_of_merit                 = np.zeros((len_v,len_rpm,len_a))  
-    results.performance.converged_solution              = np.zeros((len_v,len_rpm,len_a))    
+    results.performance.thrust                          = np.zeros((len_v,len_tm,len_a))  
+    results.performance.power                           = np.zeros((len_v,len_tm,len_a))  
+    results.performance.efficiency                      = np.zeros((len_v,len_tm,len_a)) 
+    results.performance.torque                          = np.zeros((len_v,len_tm,len_a)) 
+    results.performance.thrust_coefficient              = np.zeros((len_v,len_tm,len_a))  
+    results.performance.power_coefficient               = np.zeros((len_v,len_tm,len_a)) 
+    results.performance.advance_ratio                   = np.zeros((len_v,len_tm,len_a))
+    results.performance.figure_of_merit                 = np.zeros((len_v,len_tm,len_a))  
+    results.performance.converged_solution              = np.zeros((len_v,len_tm,len_a))    
  
     geometry_filename   =   os.path.abspath(run_folder + os.path.sep+ ducted_fan.tag + '_geometry.txt')            
     with open(geometry_filename,'r') as geometry_file: 
@@ -79,10 +79,14 @@ def read_results(dfdc_analysis):
                 results.geometry.rotor_solidity_distribution[n_r]       = float(geometry_lines[36 + Nr + n_r][44:56].strip())
     
     for i in range(len_v): 
-        for j in range(len_rpm):
-            for k in range(altitudes):
+        for j in range(len_tm):
+            for k in range(len_a):
                 try: 
-                    results_filename   =  os.path.abspath(run_folder + os.path.sep+ results_template.format(v_infs[i],RPMs[j]),altitudes[k])  
+                    atmosphere      = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
+                    atmo_data       = atmosphere.compute_values(altitudes[k]) 
+                    a               = atmo_data.speed_of_sound[0,0] 
+                    rpm             = ((tip_machs[j]*a) /dfdc_analysis.geometry.tip_radius)/Units.rpm                    
+                    results_filename   =  os.path.abspath(run_folder + os.path.sep+ results_template.format(v_infs[i],rpm,altitudes[k]))  
                     with open(results_filename,'r') as case_results_file: 
                         case_lines                       = case_results_file.readlines() 
                         results.performance.thrust[i,j,k]              = float(case_lines[8][13:26].strip())
@@ -95,6 +99,13 @@ def read_results(dfdc_analysis):
     
                     results.performance.converged_solution[i,j,k]  =  True                        
                 except:
-                    results.performance.converged_solution[i,j,k]  =  False
+                    results.performance.converged_solution[i,j,k]  = False
+                    results.performance.thrust[i,j,k]              = np.nan
+                    results.performance.power[i,j,k]               = np.nan
+                    results.performance.efficiency[i,j,k]          = np.nan
+                    results.performance.torque[i,j,k]              = np.nan       
+                    results.performance.thrust_coefficient[i,j,k]  = np.nan      
+                    results.performance.power_coefficient[i,j,k]   = np.nan  
+                    results.performance.advance_ratio[i,j,k]       = np.nan
 
     return results

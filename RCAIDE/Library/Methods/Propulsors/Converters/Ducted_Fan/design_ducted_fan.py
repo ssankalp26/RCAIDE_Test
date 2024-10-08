@@ -20,13 +20,19 @@ from .write_input_deck                   import  write_input_deck
 from .run_dfdc_analysis                  import  run_dfdc_analysis
 from .translate_conditions_to_dfdc_cases import  translate_conditions_to_dfdc_cases
 from .read_results                       import  read_results
+from scipy.interpolate import interp1d
 import os
+import numpy as  np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  design_ducted_fan
 # ---------------------------------------------------------------------------------------------------------------------- 
-def design_ducted_fan(ducted_fan):
+def design_ducted_fan(ducted_fan): 
+    '''
     
+    
+    
+    '''    
     dfdc_analysis                                   = Ducted_Fan_Design_Code() 
     dfdc_analysis.geometry                          = ducted_fan 
     run_folder                                      = os.path.abspath(dfdc_analysis.settings.filenames.run_folder)
@@ -62,38 +68,57 @@ def design_ducted_fan(ducted_fan):
     ducted_fan.stator.chord_distribution          = results.geometry.stator_chord_distribution           
     ducted_fan.stator.radius_distribution         = results.geometry.stator_radius_distribution          
     ducted_fan.stator.non_dim_radius_distribution = results.geometry.stator_non_dim_radius_distribution  
-    ducted_fan.stator.solidity_distribution       = results.geometry.stator_solidity_distribution        
-    
-    
-    # create performance surrogates 
-    raw_data = results.performance
-    thrust             = clean_data(raw_data.thrust,raw_data.converged_solution)               
-    power              = clean_data(raw_data.power,raw_data.converged_solution)                
-    efficiency         = clean_data(raw_data.efficiency,raw_data.converged_solution)           
-    torque             = clean_data(raw_data.torque,raw_data.converged_solution)               
-    thrust_coefficient = clean_data(raw_data.thrust_coefficient,raw_data.converged_solution)   
-    power_coefficient  = clean_data(raw_data.power_coefficient,raw_data.converged_solution)    
-    advance_ratio      = clean_data(raw_data.advance_ratio,raw_data.converged_solution)        
-    figure_of_merit    = clean_data(raw_data.figure_of_merit,raw_data.converged_solution)     
+    ducted_fan.stator.solidity_distribution       = results.geometry.stator_solidity_distribution   
 
     V_inf             = dfdc_analysis.training.freestream_velocity               
-    RPM               = dfdc_analysis.training.RPM         
+    tip_mach         = dfdc_analysis.training.tip_mach         
     altitude          = dfdc_analysis.training.altitude
     
+    # create performance surrogates 
+    raw_data           = results.performance
+    thrust             = clean_data(raw_data.thrust,V_inf,tip_mach,altitude,raw_data.converged_solution)               
+    power              = clean_data(raw_data.power,V_inf,tip_mach,altitude,raw_data.converged_solution)                
+    efficiency         = clean_data(raw_data.efficiency,V_inf,tip_mach,altitude,raw_data.converged_solution)           
+    torque             = clean_data(raw_data.torque,V_inf,tip_mach,altitude,raw_data.converged_solution)               
+    thrust_coefficient = clean_data(raw_data.thrust_coefficient,V_inf,tip_mach,altitude,raw_data.converged_solution)   
+    power_coefficient  = clean_data(raw_data.power_coefficient,V_inf,tip_mach,altitude,raw_data.converged_solution)    
+    advance_ratio      = clean_data(raw_data.advance_ratio,V_inf,tip_mach,altitude,raw_data.converged_solution)       
+    
     surrogates =  Data()
-    surrogates.thrust              = RegularGridInterpolator((V_inf,RPM,altitude),thrust               ,method = 'linear',   bounds_error=False, fill_value=None)      
-    surrogates.power               = RegularGridInterpolator((V_inf,RPM,altitude),power                ,method = 'linear',   bounds_error=False, fill_value=None)
-    surrogates.efficiency          = RegularGridInterpolator((V_inf,RPM,altitude),efficiency           ,method = 'linear',   bounds_error=False, fill_value=None)      
-    surrogates.torque              = RegularGridInterpolator((V_inf,RPM,altitude),torque               ,method = 'linear',   bounds_error=False, fill_value=None)
-    surrogates.thrust_coefficient  = RegularGridInterpolator((V_inf,RPM,altitude),thrust_coefficient   ,method = 'linear',   bounds_error=False, fill_value=None)      
-    surrogates.power_coefficient   = RegularGridInterpolator((V_inf,RPM,altitude),power_coefficient    ,method = 'linear',   bounds_error=False, fill_value=None)
-    surrogates.advance_ratio       = RegularGridInterpolator((V_inf,RPM,altitude),advance_ratio        ,method = 'linear',   bounds_error=False, fill_value=None)      
-    surrogates.figure_of_merit     = RegularGridInterpolator((V_inf,RPM,altitude),figure_of_merit      ,method = 'linear',   bounds_error=False, fill_value=None)
+    surrogates.thrust              = RegularGridInterpolator((V_inf,tip_mach,altitude),thrust               ,method = 'linear',   bounds_error=False, fill_value=None)      
+    surrogates.power               = RegularGridInterpolator((V_inf,tip_mach,altitude),power                ,method = 'linear',   bounds_error=False, fill_value=None)
+    surrogates.efficiency          = RegularGridInterpolator((V_inf,tip_mach,altitude),efficiency           ,method = 'linear',   bounds_error=False, fill_value=None)      
+    surrogates.torque              = RegularGridInterpolator((V_inf,tip_mach,altitude),torque               ,method = 'linear',   bounds_error=False, fill_value=None)
+    surrogates.thrust_coefficient  = RegularGridInterpolator((V_inf,tip_mach,altitude),thrust_coefficient   ,method = 'linear',   bounds_error=False, fill_value=None)      
+    surrogates.power_coefficient   = RegularGridInterpolator((V_inf,tip_mach,altitude),power_coefficient    ,method = 'linear',   bounds_error=False, fill_value=None)
+    surrogates.advance_ratio       = RegularGridInterpolator((V_inf,tip_mach,altitude),advance_ratio        ,method = 'linear',   bounds_error=False, fill_value=None)  
     
     ducted_fan.performance_surrogates =  surrogates
     return
 
-def clean_data(data,convergence_matrix):
-    
+def clean_data(raw_data,V_inf,tip_mach,altitude,convergence_matrix):
+    threshold =  2
+    cleaned_data =  np.zeros((len(V_inf),len(tip_mach),len(altitude)))
+    for i in range(len(V_inf)): 
+        for k in range(len(altitude)):
+            
+            raw_data_f1 = []
+            indexes_f1  = []
+            for idx, x in enumerate(raw_data[i, :, k]):
+                if not np.isnan(x):
+                    raw_data_f1.append(x)
+                    indexes_f1.append(idx) 
+
+            z_scores      = np.abs((np.array(raw_data_f1) - np.array(raw_data_f1).mean()) /np.array(raw_data_f1).std())
+            filter_flag   =  z_scores < threshold
+            raw_data_f2   = np.array(raw_data_f1)[filter_flag]
+            indexes_f2    = np.array(indexes_f1)[filter_flag]
+            filtered_alt  = altitude[indexes_f2]
+            
+            f = interp1d(filtered_alt, raw_data_f2, fill_value="extrapolate") 
+            
+            # Interpolate y values using the spline function
+            cleaned_data[i, :, k] = f(altitude) 
     
     return clean_data
+

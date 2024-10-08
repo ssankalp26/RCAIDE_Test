@@ -6,8 +6,10 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
-# RCAIDE imports    
-from RCAIDE.Framework.Core              import Data  
+# RCAIDE imports
+from RCAIDE.Framework.Core              import Data
+import numpy as np
+import scipy as sp
  
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Nacalle
@@ -116,4 +118,113 @@ class Ducted_Fan(Data):
         # Store data
         self.hub_geometry.append(airfoil)
 
-        return                
+        return
+    
+
+    def append_operating_conditions(ducted_fan,segment,distribution_line,propulsor): 
+        energy_conditions       = segment.state.conditions.energy[distribution_line.tag][propulsor.tag]
+        noise_conditions        = segment.state.conditions.noise[distribution_line.tag][propulsor.tag]
+        append_ducted_fan_conditions(ducted_fan,segment,energy_conditions,noise_conditions)
+        return        
+          
+    def vec_to_vel(self):
+        """This rotates from the ducted fan's vehicle frame to the ducted fan's velocity frame
+
+        Assumptions:
+        There are two ducted fan frames, the ducted fan vehicle frame and the ducted fan velocity frame. When ducted fan
+        is axially aligned with the vehicle body:
+           - The velocity frame is X out the nose, Z towards the ground, and Y out the right wing
+           - The vehicle frame is X towards the tail, Z towards the ceiling, and Y out the right wing
+
+        Source:
+        N/A
+
+        Inputs:
+        None
+
+        Outputs:
+        None
+
+        Properties Used:
+        None
+        """
+
+        rot_mat = sp.spatial.transform.Rotation.from_rotvec([0,np.pi,0]).as_matrix()
+
+        return rot_mat
+    
+
+    def body_to_prop_vel(self,commanded_thrust_vector):
+        """This rotates from the system's body frame to the ducted fan's velocity frame
+
+        Assumptions:
+        There are two ducted fan frames, the vehicle frame describing the location and the ducted fan velocity frame.
+        Velocity frame is X out the nose, Z towards the ground, and Y out the right wing
+        Vehicle frame is X towards the tail, Z towards the ceiling, and Y out the right wing
+
+        Source:
+        N/A
+
+        Inputs:
+        None
+
+        Outputs:
+        None
+
+        Properties Used:
+        None
+        """
+
+        # Go from velocity to vehicle frame
+        body_2_vehicle = sp.spatial.transform.Rotation.from_rotvec([0,np.pi,0]).as_matrix()
+
+        # Go from vehicle frame to ducted fan vehicle frame: rot 1 including the extra body rotation
+        cpts       = len(np.atleast_1d(commanded_thrust_vector))
+        rots       = np.array(self.orientation_euler_angles) * 1.
+        rots       = np.repeat(rots[None,:], cpts, axis=0) 
+        rots[:,1] += commanded_thrust_vector[:,0] 
+        
+        vehicle_2_duct_vec = sp.spatial.transform.Rotation.from_rotvec(rots).as_matrix()
+
+        # GO from the ducted fan vehicle frame to the ducted fan velocity frame: rot 2
+        duct_vec_2_duct_vel = self.vec_to_vel()
+
+        # Do all the matrix multiplies
+        rot1    = np.matmul(body_2_vehicle,vehicle_2_duct_vec)
+        rot_mat = np.matmul(rot1,duct_vec_2_duct_vel)
+ 
+        return rot_mat , rots
+
+
+    def duct_vel_to_body(self,commanded_thrust_vector):
+        """This rotates from the ducted fan's velocity frame to the system's body frame
+
+        Assumptions:
+        There are two ducted fan frames, the vehicle frame describing the location and the ducted fan velocity frame
+        velocity frame is X out the nose, Z towards the ground, and Y out the right wing
+        vehicle frame is X towards the tail, Z towards the ceiling, and Y out the right wing
+
+        Source:
+        N/A
+
+        Inputs:
+        None
+
+        Outputs:
+        None
+
+        Properties Used:
+        None
+        """
+
+        body2ductvel,rots = self.body_to_duct_vel(commanded_thrust_vector)
+
+        r = sp.spatial.transform.Rotation.from_matrix(body2ductvel)
+        r = r.inv()
+        rot_mat = r.as_matrix()
+
+        return rot_mat, rots
+    
+    def vec_to_duct_body(self,commanded_thrust_vector):
+        rot_mat, rots =  self.duct_vel_to_body(commanded_thrust_vector) 
+        return rot_mat, rots 

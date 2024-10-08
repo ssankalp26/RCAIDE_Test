@@ -36,8 +36,7 @@ def write_input_deck(dfdc_object):
 
     return
 
-def make_header_text(dfdc_object):
-    
+def make_header_text(dfdc_object): 
     base_header_text= \
 '''LOAD
 {0}
