@@ -61,7 +61,8 @@ class Electric(Network):
         self.tag                          = 'electric'
         self.system_voltage               = None   
         self.reverse_thrust               = False
-        self.wing_mounted                 = True        
+        self.wing_mounted                 = True
+        self.charging_power               = 1000 # 1 KiloWatt
 
     # manage process with a driver function
     def evaluate(self,state,center_of_gravity):
@@ -88,6 +89,7 @@ class Electric(Network):
         # unpack   
         conditions      = state.conditions 
         busses          = self.busses
+        charging_power  = self.charging_power
         coolant_lines   = self.coolant_lines
         total_thrust    = 0. * state.ones_row(3) 
         total_power     = 0. * state.ones_row(1) 
@@ -113,9 +115,8 @@ class Electric(Network):
                 if conditions.energy.recharging:
                     avionics_power         = (avionics_conditions.power*bus.power_split_ratio)* state.ones_row(1)
                     payload_power          = (payload_conditions.power*bus.power_split_ratio)* state.ones_row(1)            
-                    total_esc_power        = 0 * state.ones_row(1)
-                    bus.charging_current   = bus.nominal_capacity * bus.charging_c_rate 
-                    charging_power         = (bus.charging_current*bus_voltage*bus.power_split_ratio)
+                    total_esc_power        = 0 * state.ones_row(1) 
+                    charging_power         = charging_power*bus.power_split_ratio 
 
                     # append bus outputs to battery
                     bus_conditions                    = state.conditions.energy[bus.tag]

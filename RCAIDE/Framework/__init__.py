@@ -8,6 +8,7 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
+from . import Plugins
 from . import Core
 from . import Analyses
 from . import External_Interfaces

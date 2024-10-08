@@ -1,7 +1,10 @@
-# Regressions/Vehicles/Cessna_172.py
-# 
-# 
-# Created:  Jul 2023, M. Clarke 
+''' 
+  Cessna_172.py
+  
+  Created: June 2024, M Clarke 
+
+'''
+
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
@@ -13,26 +16,22 @@ import os
 
 # python imports 
 import numpy as np
-def vehicle_setup(): 
-    # ------------------------------------------------------------------
-    #   Initialize the Vehicle
-    # ------------------------------------------------------------------        
-    vehicle                                     = RCAIDE.Vehicle()
-    vehicle.tag                                 = 'Cessna_172'
-                                                
-    # ------------------------------------------------------------------
-    #   Vehicle-level Properties
-    # ------------------------------------------------------------------    
 
-    # mass properties
+def vehicle_setup(): 
+    
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ################################################# Vehicle-level Properties ########################################################  
+    #------------------------------------------------------------------------------------------------------------------------------------     
+    vehicle                                     = RCAIDE.Vehicle()
+    vehicle.tag                                 = 'Cessna_172' 
     vehicle.mass_properties.max_takeoff         = 2550. * Units.pounds
     vehicle.mass_properties.takeoff             = 2550. * Units.pounds
     vehicle.mass_properties.max_zero_fuel       = 2550. * Units.pounds
     vehicle.mass_properties.cargo               = 0. 
                                                
     # envelope properties                       
-    vehicle.envelope.ultimate_load              = 5.7
-    vehicle.envelope.limit_load                 = 3.8
+    vehicle.flight_envelope.ultimate_load       = 5.7 
+    vehicle.flight_envelope.limit_load          = 3.8  
                                                 
     cruise_speed                                = 124. * Units.kts
     altitude                                    = 8500. * Units.ft
@@ -41,15 +40,36 @@ def vehicle_setup():
     freestream0                                 = atmo.compute_values (altitude)
     mach_number                                 = (cruise_speed/freestream.speed_of_sound)[0][0] 
     vehicle.design_dynamic_pressure             = ( .5 *freestream0.density*(cruise_speed*cruise_speed))[0][0]
-    vehicle.design_mach_number                  =  mach_number
+    vehicle.flight_envelope.design_mach_number  =  mach_number
                                                 
     # basic parameters                          
     vehicle.reference_area                      = 174. * Units.feet**2       
     vehicle.passengers                          = 4
 
-    # ------------------------------------------------------------------        
+
+    
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ##################################################### Landing Gear ################################################################    
+    #------------------------------------------------------------------------------------------------------------------------------------
+    landing_gear                                = RCAIDE.Library.Components.Landing_Gear.Landing_Gear()
+    main_gear                                   = RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear()
+    nose_gear                                   = RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()
+    main_gear.strut_length                      = 12. * Units.inches  
+    nose_gear.strut_length                      = 6. * Units.inches 
+                                                
+    landing_gear.main                           = main_gear
+    landing_gear.nose                           = nose_gear
+                                                
+    #add to vehicle                             
+    vehicle.landing_gear                        = landing_gear 
+
+
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ######################################################## Wings ####################################################################  
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------
     #   Main Wing
-    # ------------------------------------------------------------------        
+    # ------------------------------------------------------------------   
 
     wing                                        = RCAIDE.Library.Components.Wings.Main_Wing()
     wing.tag                                    = 'main_wing'    
@@ -98,7 +118,7 @@ def vehicle_setup():
     #  Horizontal Stabilizer
     # ------------------------------------------------------------------        
                                                 
-    wing                                        = RCAIDE.Library.Components.Wings.Wing()
+    wing                                        = RCAIDE.Library.Components.Wings.Horizontal_Tail()
     wing.tag                                    = 'horizontal_stabilizer' 
     wing.sweeps.quarter_chord                   = 0.0 * Units.deg
     wing.thickness_to_chord                     = 0.12
@@ -124,7 +144,7 @@ def vehicle_setup():
     #   Vertical Stabilizer
     # ------------------------------------------------------------------
 
-    wing                                        = RCAIDE.Library.Components.Wings.Wing()
+    wing                                        = RCAIDE.Library.Components.Wings.Vertical_Tail()
     wing.tag                                    = 'vertical_stabilizer' 
     wing.sweeps.quarter_chord                   = 25. * Units.deg
     wing.thickness_to_chord                     = 0.12
@@ -148,10 +168,10 @@ def vehicle_setup():
     vehicle.append_component(wing)
 
 
-    # ------------------------------------------------------------------
-    #  Fuselage
-    # ------------------------------------------------------------------
-
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ########################################################## Fuselage ############################################################### 
+    #------------------------------------------------------------------------------------------------------------------------------------
+    
     fuselage                                    = RCAIDE.Library.Components.Fuselages.Tube_Fuselage() 
     fuselage.number_coach_seats                 = 4.        
     fuselage.differential_pressure              = 8*Units.psi                    # Maximum differential pressure
@@ -177,22 +197,10 @@ def vehicle_setup():
     # add to vehicle
     vehicle.append_component(fuselage)
     
-    # ------------------------------------------------------------------
-    #   Landing gear
-    # ------------------------------------------------------------------  
-    landing_gear                                = RCAIDE.Library.Components.Landing_Gear.Landing_Gear()
-    main_gear                                   = RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear()
-    nose_gear                                   = RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()
-    main_gear.strut_length                      = 12. * Units.inches  
-    nose_gear.strut_length                      = 6. * Units.inches 
-                                                
-    landing_gear.main                           = main_gear
-    landing_gear.nose                           = nose_gear
-                                                
-    #add to vehicle                             
-    vehicle.landing_gear                        = landing_gear
-
-    # ########################################################  Energy Network  #########################################################  
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ########################################################## Energy Network ######################################################### 
+    #------------------------------------------------------------------------------------------------------------------------------------ 
+    #initialize the fuel network
     net                                         = RCAIDE.Framework.Networks.Fuel()   
 
     # add the network to the vehicle
@@ -206,13 +214,12 @@ def vehicle_setup():
     #------------------------------------------------------------------------------------------------------------------------------------  
     #  Fuel Tank & Fuel
     #------------------------------------------------------------------------------------------------------------------------------------       
-    fuel_tank                                   = RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Fuel_Tank()
-    fuel_tank.origin                            = [[80.* Units.inches,0,0]]
-    fuel                                        = RCAIDE.Library.Attributes.Propellants.Aviation_Gasoline() 
-    fuel.mass_properties.mass                   = 319 *Units.lbs 
-    fuel.mass_properties.center_of_gravity      = [22.* Units.inches,0,0]
-    fuel.internal_volume                        = fuel.mass_properties.mass/fuel.density  
-    fuel_tank.fuel                              = fuel     
+    fuel_tank                                   = RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Fuel_Tank() 
+    fuel_tank.origin                            = vehicle.wings.main_wing.origin  
+    fuel_tank.fuel                              = RCAIDE.Library.Attributes.Propellants.Aviation_Gasoline() 
+    fuel_tank.fuel.mass_properties.mass         = 319 *Units.lbs 
+    fuel_tank.mass_properties.center_of_gravity = wing.mass_properties.center_of_gravity
+    fuel_tank.volume                            = fuel_tank.fuel.mass_properties.mass/fuel_tank.fuel.density   
     fuel_line.fuel_tanks.append(fuel_tank)  
     net.fuel_lines.append(fuel_line)    
 

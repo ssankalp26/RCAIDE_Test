@@ -1,9 +1,7 @@
 ''' 
-# Tiltwing_EVTOL.py
-# 
-# Created: May 2019, M Clarke
-#          Sep 2020, M. Clarke 
-
+  Tiltwing_EVTOL.py
+  
+  Created: June 2024, M Clarke  
 '''
 #----------------------------------------------------------------------
 #   Imports
@@ -11,29 +9,28 @@
 import RCAIDE
 from RCAIDE.Framework.Core import Units, Data    
 from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common                    import initialize_from_circuit_configuration 
-from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion            import nasa_motor
+from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion            import compute_motor_weight
 from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor                     import design_motor
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor                        import design_prop_rotor ,design_prop_rotor 
-from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Electric            import compute_weight , converge_weight 
-from RCAIDE.Library.Plots                                                      import *       
+from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Electric            import converge_physics_based_weight_buildup 
+from RCAIDE.Library.Plots                                                      import *     
+
+from RCAIDE.load    import load as load_rotor
+from RCAIDE.save    import save as save_rotor  
  
 import os
 import numpy as np 
-from copy import deepcopy
-import pickle  
- 
+from copy import deepcopy 
 
-def vehicle_setup():
-
-    # ------------------------------------------------------------------
-    #   Initialize the Vehicle
-    # ------------------------------------------------------------------     
+def vehicle_setup(new_regression=True): 
+    
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ################################################# Vehicle-level Properties ########################################################  
+    #------------------------------------------------------------------------------------------------------------------------------------
     vehicle                                     = RCAIDE.Vehicle()
     vehicle.tag                                 = 'Vahana'
     vehicle.configuration                       = 'eVTOL'
-    # ------------------------------------------------------------------
-    #   Vehicle-level Properties
-    # ------------------------------------------------------------------    
+         
     # mass properties
     vehicle.mass_properties.takeoff             = 735. 
     vehicle.mass_properties.operating_empty     = 735.
@@ -43,9 +40,12 @@ def vehicle_setup():
     vehicle.envelope.ultimate_load              = 5.7
     vehicle.envelope.limit_load                 = 3.     
 
-    # ------------------------------------------------------    
-    # WINGS    
-    # ------------------------------------------------------  
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ######################################################## Wings ####################################################################  
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------
+    #   Main Wing
+    # ------------------------------------------------------------------
     wing                                        = RCAIDE.Library.Components.Wings.Main_Wing()
     wing.tag                                    = 'canard_wing'  
     wing.aspect_ratio                           = 11.37706641  
@@ -108,10 +108,10 @@ def vehicle_setup():
     vehicle.append_component(wing)   
 
 
-    # ------------------------------------------------------    
-    # FUSELAGE    
-    # ------------------------------------------------------    
-    # FUSELAGE PROPERTIES                       
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ##########################################################  Fuselage ############################################################## 
+    #------------------------------------------------------------------------------------------------------------------------------------
+    
     fuselage                                    = RCAIDE.Library.Components.Fuselages.Fuselage()
     fuselage.tag                                = 'fuselage' 
     fuselage.seats_abreast                      = 0.  
@@ -202,10 +202,7 @@ def vehicle_setup():
 
     # add to vehicle
     vehicle.append_component(fuselage)    
-
-    #------------------------------------------------------------------------------------------------------------------------------------
-    # ##################################   Determine Vehicle Mass Properties Using Physic Based Methods  ################################ 
-    #------------------------------------------------------------------------------------------------------------------------------------     
+   
     sys                            = RCAIDE.Library.Components.Systems.System()
     sys.mass_properties.mass       = 5 # kg   
     vehicle.append_component(sys)    
@@ -214,10 +211,8 @@ def vehicle_setup():
     # ########################################################  Energy Network  ######################################################### 
     #------------------------------------------------------------------------------------------------------------------------------------
     # define network
-    network                                                = RCAIDE.Framework.Networks.Electric()
- 
- 
-     
+    network                                                = RCAIDE.Framework.Networks.Electric() 
+    network.charging_power                                 = 1000
     #==================================================================================================================================== 
     # Lift Bus 
     #====================================================================================================================================          
@@ -240,13 +235,10 @@ def vehicle_setup():
     bat.geometrtic_configuration.parallel_count             = 24  
     
     for _ in range(number_of_modules):
-        bus.battery_modules.append(deepcopy(bat))    
-    bus.charging_c_rate  = 1
-    bus.nominal_capacity = 0
+        bus.battery_modules.append(deepcopy(bat))  
     
     for battery_module in  bus.battery_modules:
-        bus.voltage  +=   battery_module.voltage
-        bus.nominal_capacity =  max(battery_module.nominal_capacity, bus.nominal_capacity)   
+        bus.voltage  +=   battery_module.voltage 
     
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Lift Propulsors 
@@ -255,6 +247,7 @@ def vehicle_setup():
     # Define Lift Propulsor Container 
     lift_propulsor                                = RCAIDE.Library.Components.Propulsors.Electric_Rotor()
     lift_propulsor.tag                            = 'lift_propulsor'      
+    lift_propulsor.wing_mounted                   = True 
               
     # Electronic Speed Controller           
     prop_rotor_esc                                = RCAIDE.Library.Components.Energy.Modulators.Electronic_Speed_Controller()
@@ -265,6 +258,7 @@ def vehicle_setup():
     # Lift Rotor Design
     g                                             = 9.81                                    # gravitational acceleration   
     Hover_Load                                    = vehicle.mass_properties.takeoff*g *1.1  # hover load   
+
     prop_rotor                                    = RCAIDE.Library.Components.Propulsors.Converters.Prop_Rotor()   
     prop_rotor.tag                                = 'prop_rotor'   
     prop_rotor.tip_radius                         = 0.8875
@@ -291,10 +285,20 @@ def vehicle_setup():
                                                      rel_path + 'Airfoils' + separator + 'Polars' + separator + 'NACA_4412_polar_Re_5000000.txt',
                                                      rel_path + 'Airfoils' + separator + 'Polars' + separator + 'NACA_4412_polar_Re_7500000.txt' ]
     prop_rotor.append_airfoil(airfoil)                
-    prop_rotor.airfoil_polar_stations             = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]   
-    design_prop_rotor(prop_rotor)
-    lift_propulsor.rotor                          = prop_rotor 
-     
+    prop_rotor.airfoil_polar_stations             = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]    
+    if  new_regression:
+        design_prop_rotor(prop_rotor)
+        save_rotor(prop_rotor, 'vahana_tilt_rotor_geometry.res')
+    else:
+        regression_prop_rotor = deepcopy(prop_rotor)
+        design_prop_rotor(regression_prop_rotor, iterations=2)
+        loaded_prop_rotor = load_rotor('vahana_tilt_rotor_geometry.res')
+        
+        for key,item in prop_rotor.items():
+            prop_rotor[key] = loaded_prop_rotor[key] 
+        prop_rotor.Wake   = RCAIDE.Framework.Analyses.Propulsion.Rotor_Wake_Fidelity_Zero()         
+            
+    lift_propulsor.rotor =  prop_rotor
     
     #------------------------------------------------------------------------------------------------------------------------------------               
     # Lift Rotor Motor  
@@ -304,12 +308,11 @@ def vehicle_setup():
     prop_rotor_motor.nominal_voltage         = bus.voltage * 0.75
     prop_rotor_motor.prop_rotor_radius       = prop_rotor.tip_radius 
     prop_rotor_motor.no_load_current         = 0.1  
-    prop_rotor_motor.wing_mounted            = True 
     prop_rotor_motor.rotor_radius            = prop_rotor.tip_radius
     prop_rotor_motor.design_torque           = prop_rotor.hover.design_torque
     prop_rotor_motor.angular_velocity        = prop_rotor.hover.design_angular_velocity/prop_rotor_motor.gear_ratio  
     design_motor(prop_rotor_motor)
-    prop_rotor_motor.mass_properties.mass    = nasa_motor(prop_rotor_motor.design_torque)     
+    prop_rotor_motor.mass_properties.mass    = compute_motor_weight(prop_rotor_motor.design_torque)     
     lift_propulsor.motor                     = prop_rotor_motor
      
 
@@ -374,11 +377,10 @@ def vehicle_setup():
     #------------------------------------------------------------------------------------------------------------------------------------
     # ##################################   Determine Vehicle Mass Properties Using Physic Based Methods  ################################ 
     #------------------------------------------------------------------------------------------------------------------------------------   
-    converge_weight(vehicle) 
-    breakdown = compute_weight(vehicle)
+    converged_vehicle, breakdown = converge_physics_based_weight_buildup(vehicle)  
     print(breakdown) 
 
-    return vehicle
+    return converged_vehicle
 
 # ----------------------------------------------------------------------
 #   Define the Configurations

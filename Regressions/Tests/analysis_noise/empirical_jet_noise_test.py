@@ -72,7 +72,8 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     aerodynamics = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
     aerodynamics.vehicle = vehicle
-    aerodynamics.settings.drag_coefficient_increment = 0.0000 
+    aerodynamics.settings.number_of_spanwise_vortices   = 5
+    aerodynamics.settings.number_of_chordwise_vortices  = 2     
     analyses.append(aerodynamics)
 
     # ------------------------------------------------------------------
@@ -127,6 +128,7 @@ def baseline_mission_setup(analyses):
     mission.tag  = 'base_mission' 
     Segments     = RCAIDE.Framework.Mission.Segments 
     base_segment = Segments.Segment() 
+    base_segment.state.numerics.number_of_control_points    = 3
 
     # -------------------   -----------------------------------------------
     #   Mission for Landing Noise

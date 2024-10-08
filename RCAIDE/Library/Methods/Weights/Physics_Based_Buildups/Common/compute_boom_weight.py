@@ -1,8 +1,8 @@
 ## @ingroup Methods-Weights-Buildups-Common 
-# RCAIDE/Methods/Weights/Buildups/Common/compute_boom_weight.py
+# RCAIDE/Library/Methods/Weights/Buildups/Common/compute_boom_weight.py
 # 
 # 
-# Created:  Jul 2023, M. Clarke  
+# Created:  Sep 2024, M. Clarke
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT

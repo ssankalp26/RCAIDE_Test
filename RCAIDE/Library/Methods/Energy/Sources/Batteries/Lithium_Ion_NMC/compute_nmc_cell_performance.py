@@ -173,9 +173,9 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
     Q_heat_cell[t_idx]    = (q_dot_joule + q_dot_entropy)*As_cell 
     Q_heat_module[t_idx]  = Q_heat_cell[t_idx]*n_total  
 
-    V_ul_cell[t_idx]      = compute_nmc_cell_state(battery_data,SOC_cell[t_idx],T_cell[t_idx],I_cell[t_idx]) 
+    V_ul_cell[t_idx]      = compute_nmc_cell_state(battery_data,SOC_cell[t_idx],T_cell[t_idx],abs(I_cell[t_idx])) 
 
-    V_oc_cell[t_idx]      = V_ul_cell[t_idx] + (I_cell[t_idx] * R_0_cell[t_idx])              
+    V_oc_cell[t_idx]      = V_ul_cell[t_idx] + (abs(I_cell[t_idx]) * R_0_cell[t_idx])              
 
     # Effective Power flowing through battery 
     P_module[t_idx]       = P_bus[t_idx] /no_modules  - np.abs(Q_heat_module[t_idx]) 
@@ -209,7 +209,7 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
         DOD_cell[t_idx+1]                             = 1 - SOC_cell[t_idx+1]  
     
         # Determine new charge throughput (the amount of charge gone through the battery)
-        Q_cell[t_idx+1]    = Q_cell[t_idx] + I_cell[t_idx]*delta_t[t_idx]/Units.hr
+        Q_cell[t_idx+1]    = Q_cell[t_idx] + abs(I_cell[t_idx])*delta_t[t_idx]/Units.hr
         
     stored_results_flag     = True
     stored_battery_tag     = battery.tag  

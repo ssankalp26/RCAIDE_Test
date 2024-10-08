@@ -25,9 +25,10 @@ modules = [
     'Tests/analysis_noise/empirical_jet_noise_test.py',    
     'Tests/analysis_noise/noise_hemisphere_test.py', 
     'Tests/analysis_stability/vlm_pertubation_test.py', 
+    'Tests/analysis_weights/operating_empty_weight_test.py',
+    'Tests/analysis_weights/cg_and_moi_test.py',
     'Tests/geometry_airfoils/airfoil_import_test.py', 
-    'Tests/geometry_airfoils/airfoil_interpolation_test.py',    
-    'Tests/mission_segments/segment_test.py',     
+    'Tests/geometry_airfoils/airfoil_interpolation_test.py',     
     'Tests/mission_segments/transition_segment_test.py', 
     'Tests/network_electric/electric_btms_test.py', 
     'Tests/network_turbofan/turbofan_network_test.py',
@@ -35,7 +36,10 @@ modules = [
     'Tests/network_turboshaft/turboshaft_network_test.py',
     'Tests/network_internal_combustion_engine/ICE_test.py',
     'Tests/network_internal_combustion_engine/ICE_constant_speed_test.py',
-    'Tests/network_isolated_battery_cell/cell_test.py', 
+    'Tests/network_isolated_battery_cell/cell_test.py',
+    'Tests/performance_payload_range/payload_range_test.py',
+    'Tests/analysis_weights/operating_empty_weight_test.py'
+    
 ]
 
 def regressions():

@@ -210,7 +210,7 @@ def compute_lfp_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
         DOD_cell[t_idx+1]                             = 1 - SOC_cell[t_idx+1]  
     
         # Determine new charge throughput (the amount of charge gone through the battery)
-        Q_cell[t_idx+1]    = Q_cell[t_idx] + I_cell[t_idx]*delta_t[t_idx]/Units.hr
+        Q_cell[t_idx+1]    = Q_cell[t_idx] + abs(I_cell[t_idx])*delta_t[t_idx]/Units.hr
         
     stored_results_flag     = True
     stored_battery_tag     = battery.tag  

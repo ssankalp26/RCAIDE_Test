@@ -147,13 +147,14 @@ def generate_3d_blade_points(rotor,n_points,dim,i,aircraftRefFrame=True):
     airfoil_le_offset  = np.repeat(b[:,None], n_points, axis=1)/2  
 
     # get airfoil coordinate geometry
+    a_loc =  np.array(a_loc)
     if len(airfoils.keys())>0:
         xpts  = np.zeros((dim,n_points))
         zpts  = np.zeros((dim,n_points))
         max_t = np.zeros(dim)
         for af_idx,airfoil in enumerate(airfoils):
             geometry     = import_airfoil_geometry(airfoil.coordinate_file,n_points)
-            locs         = np.where(np.array(a_loc) == af_idx)
+            locs         = np.where(a_loc == af_idx)
             xpts[locs]   = geometry.x_coordinates  
             zpts[locs]   = geometry.y_coordinates  
             max_t[locs]  = geometry.thickness_to_chord 

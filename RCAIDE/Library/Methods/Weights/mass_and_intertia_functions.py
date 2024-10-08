@@ -18,7 +18,20 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------  
 ## @ingroup Methods-Stability-Common 
 def sum_moment(component):
-    """ 
+    """ Recursively sums up the moment of all compoments and subcomponents
+
+    Assumptions:
+    None
+
+    Source:
+    N/A
+
+    Inputs:
+       compoment
+
+    Outputs:
+       total_moment
+       total_mass
     """   
     total_moment = np.array([[0.0,0.0,0.0]])
     total_mass   = 0
@@ -26,11 +39,16 @@ def sum_moment(component):
         if  isinstance(Comp,Component.Container):
             Moment, Mass  = sum_moment(Comp)  
             total_moment += Moment
-            total_mass   += Mass
+            total_mass   += Mass 
         elif isinstance(Comp,Component): 
-            global_cg_loc = Comp.mass_properties.center_of_gravity + Comp.origin 
-            total_moment += Comp.mass_properties.mass*global_cg_loc 
-            total_mass   += Comp.mass_properties.mass     
+            global_cg_loc = np.array(Comp.mass_properties.center_of_gravity) + np.array(Comp.origin)             
+            if global_cg_loc[0][0] == 0:
+                pass
+            else:
+                total_moment += Comp.mass_properties.mass*global_cg_loc 
+            total_mass   += Comp.mass_properties.mass
+            
+            debug =  0
             
     return total_moment , total_mass
 
@@ -38,8 +56,22 @@ def sum_moment(component):
 #  Recursive Moment of Intertia 
 # ----------------------------------------------------------------------------------------------------------------------  
 ## @ingroup Methods-Stability-Common 
-def sum_moment_of_intertia(component, vehicle_center_of_gravity = None):
+def sum_moment_of_intertia(component, vehicle_center_of_gravity = None): 
+    """ Recursively sums up the moment of intertia of all compoments and subcomponents
 
+    Assumptions:
+    None
+
+    Source:
+    N/A
+
+    Inputs:
+       compoment
+       vehicle_center_of_gravity
+
+    Outputs:
+       total_I 
+    """   
     total_I = np.array([[0.0,0.0,0.0]]) 
     for key,Comp in component.items():
         if  isinstance(Comp,Component.Container):

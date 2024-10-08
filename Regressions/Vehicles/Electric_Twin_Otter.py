@@ -11,7 +11,7 @@ import RCAIDE
 from RCAIDE.Framework.Core                                                                import Units   
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor                                   import design_propeller 
 from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor                                import design_motor 
-from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion                       import nasa_motor
+from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion                       import compute_motor_weight
 from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common                               import initialize_from_circuit_configuration
 from RCAIDE.Library.Methods.Geometry.Planform                                             import wing_segmented_planform
 from RCAIDE.Library.Methods.Thermal_Management.Heat_Exchangers.Cross_Flow_Heat_Exchanger  import design_cross_flow_heat_exchanger
@@ -456,8 +456,7 @@ def vehicle_setup(cell_chemistry, btms_type):
             bat_copy = deepcopy(bat_module)
             bus.battery_modules.append(bat_copy)
 
-        bus.battery_module_electric_configuration = 'Series'
-        bus.charging_c_rate                       = 1
+        bus.battery_module_electric_configuration = 'Series' 
         bus.initialize_bus_electrical_properties()
 
     elif cell_chemistry == 'lithium_ion_lfp':
@@ -479,8 +478,7 @@ def vehicle_setup(cell_chemistry, btms_type):
                 bat_copy = deepcopy(bat_module)
                 bus.battery_modules.append(bat_copy)
         
-            bus.battery_module_electric_configuration = 'Series'
-            bus.charging_c_rate                       = 1
+            bus.battery_module_electric_configuration = 'Series' 
             bus.initialize_bus_electrical_properties()
             
     if btms_type ==  None:
@@ -578,7 +576,7 @@ def vehicle_setup(cell_chemistry, btms_type):
     motor.design_torque                              = propeller.cruise.design_torque 
     motor.angular_velocity                           = propeller.cruise.design_angular_velocity # Horse power of gas engine variant  750 * Units['hp']
     design_motor(motor)  
-    motor.mass_properties.mass                       = nasa_motor(motor.design_torque) 
+    motor.mass_properties.mass                       = compute_motor_weight(motor.design_torque) 
     starboard_propulsor.motor                        = motor 
  
     # append propulsor to distribution line 

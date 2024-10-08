@@ -180,24 +180,18 @@ def generate_3d_wing_points(wing,n_points,dim):
                 # update origin for next segment 
                 segment_percent_span =    wing.Segments[next_seg].percent_span_location - wing.Segments[current_seg].percent_span_location     
                 if wing.vertical:
-                    inverted_wing = -np.sign(abs(dihedral) - np.pi/2)
-                    if inverted_wing  == 0:
-                        inverted_wing  = 1
-                    dz = inverted_wing*semispan*segment_percent_span
+                    dz = semispan*segment_percent_span
                     dy = dz*np.tan(dihedral)
                     l  = dz/np.cos(dihedral)
                     dx = l*np.tan(sweep)
                 else:
-                    inverted_wing = np.sign(dihedral)
-                    if inverted_wing  == 0:
-                        inverted_wing  = 1
-                    dy = inverted_wing*semispan*segment_percent_span
+                    dy = semispan*segment_percent_span
                     dz = dy*np.tan(dihedral)
                     l  = dy/np.cos(dihedral)
                     dx = l*np.tan(sweep)
                 translation[i+1,:,0,:] = translation[i,:,0,:] + dx
                 translation[i+1,:,1,:] = translation[i,:,1,:] + dy
-                translation[i+1,:,2,:] = translation[i,:,2,:] + dz  
+                translation[i+1,:,2,:] = translation[i,:,2,:] + dz 
     else:
 
         pts              = np.zeros((dim,n_points, 3,1))  

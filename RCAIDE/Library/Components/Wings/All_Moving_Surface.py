@@ -11,6 +11,7 @@
 from RCAIDE.Library.Components     import Component 
 from RCAIDE.Framework.Core         import DataOrdered 
 import numpy as np
+from RCAIDE.Library.Methods.Stability.Moment_of_Inertia.compute_wing_moment_of_inertia import  compute_wing_moment_of_inertia
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  All_Moving_Surface
@@ -84,3 +85,7 @@ class All_Moving_Surface(Component):
         
         self.use_constant_hinge_fraction = False
         self.hinge_vector                = np.array([0.,0.,0.])
+
+    def moment_of_inertia(wing,center_of_gravity):
+        I =  compute_wing_moment_of_inertia(wing,center_of_gravity) 
+        return I 

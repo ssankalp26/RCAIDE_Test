@@ -72,8 +72,8 @@ def lithium_ion_battery_test():
     C_rat                 = [0.5,1]  
     marker_size           = 5 
     mAh                   = np.array([3550,1500]) 
-    V_ul_true             = np.array([[3.979089016769657,3.6014269379449155], [3.92220237090634,3.6143636985487304]])
-    bat_temp_true         = np.array([[292.3915600365144,288.85765659521235], [296.40173907355614,289.5653131904246]])  
+    V_ul_true             = np.array([[3.975183741087232,3.6014269379449155], [3.91835673395705,3.6143636985487304]])
+    bat_temp_true         = np.array([[292.3879080392878,288.85765659521235], [296.3978928496251,289.5653131904246]])  
 
     # PLot parameters 
     marker                = ['s' ,'o' ,'P']
@@ -115,8 +115,7 @@ def lithium_ion_battery_test():
             print('Under load voltage: ' + str(V_ul))
             V_ul_diff   = np.abs(V_ul - V_ul_true[j,i])
             print('Under load voltage difference')
-            print(V_ul_diff)
-
+            print(V_ul_diff) 
             assert np.abs((V_ul_diff)/V_ul_true[j,i]) < 1e-6 
             
             # Temperature Regression
@@ -210,8 +209,7 @@ def mission_setup(analyses,vehicle,battery_chemistry,current,mAh):
     Segments           = RCAIDE.Framework.Mission.Segments 
     base_segment       = Segments.Segment()   
     time               = 0.8 * (mAh/1000)/current * Units.hrs  
-        
-    # Discharge Segment 
+         
     segment                                 = Segments.Ground.Battery_Discharge(base_segment) 
     segment.analyses.extend(analyses.discharge)  
     segment.tag                             = 'Discharge_1' 
@@ -228,6 +226,7 @@ def mission_setup(analyses,vehicle,battery_chemistry,current,mAh):
     # Charge Segment 
     segment                                = Segments.Ground.Battery_Recharge(base_segment)      
     segment.analyses.extend(analyses.charge) 
+    segment.cutoff_SOC                     = 0.9  
     segment.tag                            = 'Recharge' 
     mission.append_segment(segment)   
 

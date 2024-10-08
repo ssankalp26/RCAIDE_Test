@@ -56,7 +56,7 @@ def main():
     plot_results(results,regression_plotting_flag)   
 
     X57_SPL        = np.max(results.segments.climb.conditions.noise.total_SPL_dBA) 
-    X57_SPL_true   = 44.96663298041959
+    X57_SPL_true   = 45.232719642900996
     X57_diff_SPL   = np.abs(X57_SPL - X57_SPL_true)
     print('Error: ',X57_diff_SPL)
     assert np.abs((X57_SPL - X57_SPL_true)/X57_SPL_true) < 1e-3    
@@ -87,7 +87,7 @@ def base_analysis(vehicle,microphone_terrain_data,geospacial_data):
  
     # ------------------------------------------------------------------
     #  Weights
-    weights         = RCAIDE.Framework.Analyses.Weights.Weights_eVTOL()
+    weights         = RCAIDE.Framework.Analyses.Weights.Weights_EVTOL()
     weights.vehicle = vehicle
     analyses.append(weights)
 

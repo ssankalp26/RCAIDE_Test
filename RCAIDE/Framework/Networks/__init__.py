@@ -17,14 +17,12 @@ from Legacy.trunk.S.Components.Energy.Networks import PyCycle                   
 from Legacy.trunk.S.Components.Energy.Networks import Ramjet                                       as legacy_ramjet
 from Legacy.trunk.S.Components.Energy.Networks import Scramjet                                     as legacy_scramjet
 from Legacy.trunk.S.Components.Energy.Networks import Serial_Hybrid_Ducted_Fan                     as legacy_serial_hybrid_ducted_fan 
-from Legacy.trunk.S.Components.Energy.Networks import Solar_Low_Fidelity                           as legacy_solar_low_fidelity
 from Legacy.trunk.S.Components.Energy.Networks import Turboelectric_HTS_Ducted_Fan                 as legacy_turboelectric_hts_ducted_fan
 from Legacy.trunk.S.Components.Energy.Networks import Turboelectric_HTS_Dynamo_Ducted_Fan          as legacy_turboelectric_hts_dynamo_ducted_fan
-from Legacy.trunk.S.Components.Energy.Networks import Turbofan                                     as legacy_turbofan
 from Legacy.trunk.S.Components.Energy.Networks import Turbojet_Super                               as legacy_turbojet
-from Legacy.trunk.S.Components.Energy.Networks import Solar                                        as legacy_solar
  
 from .Network       import Network
 from .Fuel          import Fuel
 from .Electric      import Electric
- 
+from .Solar         import Solar
+from .Human_Powered import Human_Powered

@@ -36,7 +36,7 @@ def main():
  
  
     # dBA Verification checj
-    dBA_true   = 69.36894727323475
+    dBA_true   = 70.0732251155458
     dBA        = noise_data.SPL_dBA[0,0,0]
     print('dBA: ' + str(dBA)) 
     diff_dBA                = np.abs(dBA  - dBA_true) 
@@ -55,7 +55,7 @@ def base_analysis(vehicle):
  
     # ------------------------------------------------------------------
     #  Weights
-    weights         = RCAIDE.Framework.Analyses.Weights.Weights_eVTOL()
+    weights         = RCAIDE.Framework.Analyses.Weights.Weights_EVTOL()
     weights.vehicle = vehicle
     analyses.append(weights)
 

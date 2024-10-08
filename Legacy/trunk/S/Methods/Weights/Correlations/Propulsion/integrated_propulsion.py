@@ -10,7 +10,7 @@
 # ----------------------------------------------------------------------
 
 ## @ingroup Methods-Weights-Correlations-Propulsion
-def integrated_propulsion(engine_jet,num_eng, engine_wt_factor = 1.6):
+def integrated_propulsion(engine_jet, engine_wt_factor = 1.6):
     """ Calculate the weight of the entire propulsion system 
     
     Assumptions:
@@ -34,7 +34,7 @@ def integrated_propulsion(engine_jet,num_eng, engine_wt_factor = 1.6):
             N/A
     """   
     
-    weight = engine_jet * num_eng * engine_wt_factor
+    weight = engine_jet * engine_wt_factor
     
     return weight
     

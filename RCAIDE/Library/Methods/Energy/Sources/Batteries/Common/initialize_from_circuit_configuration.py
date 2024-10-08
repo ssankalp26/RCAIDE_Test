@@ -40,22 +40,19 @@ def initialize_from_circuit_configuration(battery_module,module_weight_factor = 
     Outputs:              
      battery_module.             
        maximum_energy         [watt-hours]
-       maximum_power              [watts]
+       maximum_power          [watts]
        initial_maximum_energy [watt-hours]
        specific_energy        [watt-hours/kilogram]
        charging_voltage       [volts]
        mass_properties.    
         mass                  [kilograms] 
-    """    
-    amp_hour_rating                               = battery_module.cell.nominal_capacity    
-    nominal_voltage                               = battery_module.cell.nominal_voltage
-    maximum_voltage                               = battery_module.cell.maximum_voltage   
-    total_battery_assemply_mass                   = battery_module.cell.mass * battery_module.electrical_configuration.series * battery_module.electrical_configuration.parallel   
-    battery_module.mass_properties.mass           = total_battery_assemply_mass*module_weight_factor  
-    battery_module.specific_energy                = (amp_hour_rating*maximum_voltage)/battery_module.cell.mass  * Units.Wh/Units.kg
-    battery_module.maximum_energy                 = total_battery_assemply_mass*battery_module.specific_energy    
-    battery_module.specific_power                 = battery_module.specific_energy/battery_module.cell.nominal_capacity 
-    battery_module.maximum_power                  = battery_module.specific_power*battery_module.mass_properties.mass  
+    """     
+    n_total                                       = battery_module.electrical_configuration.series * battery_module.electrical_configuration.parallel 
+    battery_module.mass_properties.mass           = battery_module.cell.mass * n_total * module_weight_factor   
+    battery_module.maximum_energy                 = battery_module.cell.mass * n_total * battery_module.cell.specific_energy
+    battery_module.maximum_power                  = battery_module.cell.mass * n_total * battery_module.cell.specific_power
+    battery_module.specific_power                 = battery_module.maximum_power / battery_module.mass_properties.mass   
+    battery_module.specific_energy                = battery_module.maximum_energy / battery_module.mass_properties.mass    
     battery_module.maximum_voltage                = battery_module.cell.maximum_voltage  * battery_module.electrical_configuration.series   
     battery_module.initial_maximum_energy         = battery_module.maximum_energy      
     battery_module.electrical_configuration.total = battery_module.electrical_configuration.series * battery_module.electrical_configuration.parallel        

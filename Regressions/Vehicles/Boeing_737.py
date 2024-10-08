@@ -26,7 +26,8 @@ def vehicle_setup():
     # ------------------------------------------------------------------    
     
     vehicle = RCAIDE.Vehicle()
-    vehicle.tag = 'Boeing_737-800'    
+    vehicle.tag = 'Boeing_737-800'
+
     
     # ################################################# Vehicle-level Properties #################################################   
     vehicle.mass_properties.max_takeoff               = 79015.8 * Units.kilogram  
@@ -34,8 +35,11 @@ def vehicle_setup():
     vehicle.mass_properties.operating_empty           = 62746.4 * Units.kilogram  
     vehicle.mass_properties.max_zero_fuel             = 62732.0 * Units.kilogram 
     vehicle.mass_properties.cargo                     = 10000.  * Units.kilogram  
-    vehicle.envelope.ultimate_load                    = 3.75
-    vehicle.envelope.limit_load                       = 2.5 
+    vehicle.flight_envelope.ultimate_load             = 3.75
+    vehicle.flight_envelope.limit_load                = 2.5 
+    vehicle.flight_envelope.design_mach_number        = 0.78 
+    vehicle.flight_envelope.design_cruise_altitude    = 35000*Units.feet
+    vehicle.flight_envelope.design_range              = 3500 * Units.nmi
     vehicle.reference_area                            = 124.862 * Units['meters**2']   
     vehicle.passengers                                = 170
     vehicle.systems.control                           = "fully powered" 
@@ -61,7 +65,7 @@ def vehicle_setup():
     # ------------------------------------------------------------------
     #   Main Wing
     # ------------------------------------------------------------------
-
+ 
     wing                                  = RCAIDE.Library.Components.Wings.Main_Wing()
     wing.tag                              = 'main_wing' 
     wing.aspect_ratio                     = 10.18
@@ -615,16 +619,13 @@ def vehicle_setup():
     #  Energy Source: Fuel Tank
     #------------------------------------------------------------------------------------------------------------------------- 
     # fuel tank
-    fuel_tank                                   = RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Fuel_Tank()
-    fuel_tank.origin                            = [[13.61,0,-0.5]] 
-    
-    # append fuel 
-    fuel                                        = RCAIDE.Library.Attributes.Propellants.Jet_A1()   
-    fuel.mass_properties.mass                   = vehicle.mass_properties.max_takeoff-vehicle.mass_properties.max_fuel
-    fuel.origin                                 = [[13.61,0,-0.5]]     
-    fuel.mass_properties.center_of_gravity      = [[13.61,0,-0.5]]
-    fuel.internal_volume                        = fuel.mass_properties.mass/fuel.density  
-    fuel_tank.fuel                              = fuel            
+    fuel_tank                                        = RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Fuel_Tank()
+    fuel_tank.origin                                 = vehicle.wings.main_wing.origin  
+    fuel_tank.fuel                                   = RCAIDE.Library.Attributes.Propellants.Jet_A1()   
+    fuel_tank.fuel.mass_properties.mass              = vehicle.mass_properties.max_takeoff-vehicle.mass_properties.max_fuel
+    fuel_tank.fuel.origin                            = vehicle.wings.main_wing.mass_properties.center_of_gravity      
+    fuel_tank.fuel.mass_properties.center_of_gravity = vehicle.wings.main_wing.aerodynamic_center
+    fuel_tank.volume                                 = fuel_tank.fuel.mass_properties.mass/fuel_tank.fuel.density   
     
     # apend fuel tank to dataclass of fuel tanks on fuel line 
     fuel_line.fuel_tanks.append(fuel_tank) 
@@ -672,8 +673,7 @@ def configs_setup(vehicle):
 
     config = RCAIDE.Library.Components.Configs.Config(base_config)
     config.tag = 'cruise'
-    configs.append(config)
-
+    configs.append(config) 
 
     # ------------------------------------------------------------------
     #   Takeoff Configuration

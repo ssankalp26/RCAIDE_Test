@@ -11,7 +11,8 @@
 from RCAIDE                    import Framework
 from RCAIDE.Framework.Core     import Data, DataOrdered
 from RCAIDE.Library            import Components, Attributes 
-import numpy as np
+import numpy as np 
+from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Common.compute_operating_empty_weight import  compute_operating_empty_weight
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Vehicle
@@ -30,25 +31,31 @@ class Vehicle(Data):
         Source:
             None
         """    
-        self.tag                    = 'vehicle'
-        self.networks               = Framework.Networks.Network.Container()
-        self.fuselages              = Components.Fuselages.Fuselage.Container()
-        self.wings                  = Components.Wings.Wing.Container()
-        self.nacelles               = Components.Nacelles.Nacelle.Container()
-        self.systems                = Components.Systems.System.Container()
-        self.avionics               = Components.Systems.Avionics.Container()
-        self.booms                  = Components.Booms.Boom.Container()
-        self.mass_properties        = Vehicle_Mass_Container()
-        self.payload                = Components.Payloads.Payload.Container()
-        self.costs                  = Data() 
-        self.costs.industrial       = Attributes.Costs.Industrial_Costs()
-        self.costs.operating        = Attributes.Costs.Operating_Costs()    
-        self.envelope               = Attributes.Envelope()
-        self.landing_gear           = Components.Landing_Gear.Landing_Gear.Container()
-        self.reference_area         = 0.0
-        self.passengers             = 0.0
-        self.maximum_cross_sectional_area =  0.0 
-        self.performance            = DataOrdered()
+        self.tag                                      = 'vehicle'
+        self.networks                                 = Framework.Networks.Network.Container()
+        self.fuselages                                = Components.Fuselages.Fuselage.Container()
+        self.wings                                    = Components.Wings.Wing.Container()
+        self.nacelles                                 = Components.Nacelles.Nacelle.Container()
+        self.systems                                  = Components.Systems.System.Container()
+        self.avionics                                 = Components.Systems.Avionics.Container()
+        self.booms                                    = Components.Booms.Boom.Container()
+        self.mass_properties                          = Vehicle_Mass_Container()
+        self.payload                                  = Components.Payloads.Payload.Container()
+        self.costs                                    = Data() 
+        self.costs.industrial                         = Attributes.Costs.Industrial_Costs()
+        self.costs.operating                          = Attributes.Costs.Operating_Costs()    
+        self.envelope                                 = Attributes.Envelope()
+        self.landing_gear                             = Components.Landing_Gear.Landing_Gear.Container()
+        self.reference_area                           = 0.0
+        self.passengers                               = 0.0
+        self.maximum_cross_sectional_area             = 0.0
+        self.flight_envelope                          = Data()
+        self.flight_envelope.design_dynamic_pressure  = None 
+        self.flight_envelope.design_mach_number       = None  
+        self.flight_envelope.design_cruise_altitude   = None
+        self.flight_envelope.design_range             = None
+        self.vehicle.flight_envelope.ultimate_load    = None
+        self.performance                              = DataOrdered()
          
     _energy_network_root_map = None 
 
@@ -216,8 +223,31 @@ class Vehicle(Data):
         
         self.mass_properties.center_of_gravity = CG
                 
-        return CG 
+        return CG
     
+    def moment_of_inertia(self):
+        """  
+        """
+        M = np.zeros((3, 3))
+        center_of_gravity =  self.mass_properties.center_of_gravity 
+        for key in self.keys():
+            item = self[key] 
+            M += item.moment_of_inertia(center_of_gravity) 
+                
+        return M
+     
+    def operating_empty_weight(self):
+        """ Compute operating empty weight  
+        
+            Assumptions:
+                None
+    
+            Source:
+                None
+        """  
+        outputs = compute_operating_empty_weight(self)  
+                
+        return outputs     
     
     def append_energy_network(self,energy_network):
         """ Adds an energy network to vehicle 
