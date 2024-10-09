@@ -56,7 +56,7 @@ def  wavy_channel_rating_model(HAS,battery,bus,coolant_line,Q_heat_gen,T_cell,st
     
     
     turndown_ratio = 0.5
-    T_cell_desired = 292
+    T_cell_desired = battery.cell.ideal_operating_temperature
     alpha          = 0.001
     eps            = 0.1
     diff           = 10
@@ -81,7 +81,8 @@ def  wavy_channel_rating_model(HAS,battery,bus,coolant_line,Q_heat_gen,T_cell,st
         h_cell                      = battery.cell.height                      
         A_cell                      = np.pi*d_cell*h_cell 
         N_cells_geometric_config    = battery.geometrtic_configuration.parallel_count*battery.geometrtic_configuration.normal_count  
-        cell_mass                   = battery.cell.mass 
+        cell_mass                   = battery.cell.mass
+        T_cell_desired              = battery.cell.ideal_operating_temperature
         Nn_module_cells             = battery.electrical_configuration.series            
         Np_module_cells             = battery.electrical_configuration.parallel
         number_of_cells_in_module   = Nn_module_cells*Np_module_cells   
@@ -192,31 +193,33 @@ def  wavy_channel_rating_model(HAS,battery,bus,coolant_line,Q_heat_gen,T_cell,st
         t_diff = T_cell_new   -  T_cell_desired  
         
         turndown_ratio += t_diff * alpha 
-        if (turndown_ratio < 0):
+        if (turndown_ratio <= 0):
             turndown_ratio = 0
             break
-        elif (turndown_ratio > 1):
+        elif (turndown_ratio >= 1):
             turndown_ratio =  1
             break 
      
-    state.conditions.energy[coolant_line.tag][HAS.tag].heat_removed[t_idx+1]               = Q_convec
-    state.conditions.energy[coolant_line.tag][HAS.tag].outlet_coolant_temperature[t_idx+1] = T_o
-    state.conditions.energy[coolant_line.tag][HAS.tag].coolant_mass_flow_rate[t_idx+1]     = m_coolant
-    state.conditions.energy[coolant_line.tag][HAS.tag].effectiveness[t_idx+1]              = heat_transfer_efficiency
-    state.conditions.energy[coolant_line.tag][HAS.tag].power[t_idx+1]                      = Power
-    state.conditions.energy[bus.tag].power_draw[t_idx+1]                                   += Power 
-    state.conditions.energy[coolant_line.tag][HAS.tag].turndown_ratio[t_idx+1]             = turndown_ratio
-    # To be introduced when turndown ratio is a thing in the future. 
-    #if turndown_ratio == 0:
-    #battery_conditions.thermal_management_system.heat_generated[t_idx+1]                    = Q_pack
-    #battery_conditions.thermal_management_system.HAS.heat_removed[t_idx+1]                  = 0
-    #battery_conditions.thermal_management_system.HAS.outlet_coolant_temperature[t_idx+1]    = T_cell_new     
-    #battery_conditions.thermal_management_system.HAS.coolant_mass_flow_rate[t_idx+1]        = 0
-    #battery_conditions.thermal_management_system.HAS.power[t_idx+1]                         = 0
-    #battery_conditions.thermal_management_system.HAS.effectiveness[t_idx+1]                 = 0
-    #battery_conditions.cell.temperature[t_idx+1]                                            = T_cell_new     
+   
 
-    #else: 
+    if turndown_ratio == 0:
+
+        state.conditions.energy[coolant_line.tag][HAS.tag].heat_removed[t_idx+1]               = 0
+        state.conditions.energy[coolant_line.tag][HAS.tag].outlet_coolant_temperature[t_idx+1] = T_cell_new
+        state.conditions.energy[coolant_line.tag][HAS.tag].coolant_mass_flow_rate[t_idx+1]     = 0
+        state.conditions.energy[coolant_line.tag][HAS.tag].effectiveness[t_idx+1]              = heat_transfer_efficiency
+        state.conditions.energy[coolant_line.tag][HAS.tag].power[t_idx+1]                      = 0
+        state.conditions.energy[bus.tag].power_draw[t_idx+1]                                   += 0 
+        state.conditions.energy[coolant_line.tag][HAS.tag].turndown_ratio[t_idx+1]             = turndown_ratio          
+    else:
+    
+        state.conditions.energy[coolant_line.tag][HAS.tag].heat_removed[t_idx+1]               = Q_convec
+        state.conditions.energy[coolant_line.tag][HAS.tag].outlet_coolant_temperature[t_idx+1] = T_o
+        state.conditions.energy[coolant_line.tag][HAS.tag].coolant_mass_flow_rate[t_idx+1]     = m_coolant
+        state.conditions.energy[coolant_line.tag][HAS.tag].effectiveness[t_idx+1]              = heat_transfer_efficiency
+        state.conditions.energy[coolant_line.tag][HAS.tag].power[t_idx+1]                      = Power
+        state.conditions.energy[bus.tag].power_draw[t_idx+1]                                   += Power 
+        state.conditions.energy[coolant_line.tag][HAS.tag].turndown_ratio[t_idx+1]             = turndown_ratio    
 
 
     return T_cell_new

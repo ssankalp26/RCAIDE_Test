@@ -101,7 +101,8 @@ class Lithium_Ion_NMC(Generic_Battery_Module):
         self.cell.specific_heat_capacity      = 1108                                                                             # [J/kgK]    
         self.cell.radial_thermal_conductivity = 0.4                                                                              # [J/kgK]  
         self.cell.axial_thermal_conductivity  = 32.2                                                                             # [J/kgK] # estimated
-    
+        self.cell.ideal_operating_temperature = 298                                                                              # [K]
+     
                                               
         battery_raw_data                      = load_battery_results()                                                   
         self.cell.discharge_performance_map   = create_discharge_performance_map(battery_raw_data)  
