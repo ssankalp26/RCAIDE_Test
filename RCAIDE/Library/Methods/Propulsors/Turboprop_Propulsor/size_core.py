@@ -7,7 +7,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
-from RCAIDE.Library.Methods.Propulsors.Turboprop_Propulsor import compute_thrust
+from RCAIDE.Library.Methods.Propulsors.Turboprop_Propulsor.compute_thrust import compute_thrust
 # Python package imports
 import numpy                                               as np
 
@@ -20,7 +20,7 @@ def size_core(turboprop,turboprop_conditions,conditions):
 
     Assumptions:
     Perfect gas
-    Turboshaft engine with free power turbine
+    Turboprop Engine
 
     Sources:
     [1] 
@@ -42,8 +42,7 @@ def size_core(turboprop,turboprop_conditions,conditions):
       reference_pressure                      [Pa]
       total_design                            [W] - Design power
     """             
- 
+
     compute_thrust(turboprop,turboprop_conditions,conditions)  
-    Fsp                         = turboprop_conditions.non_dimensional_thrust
-        
+       
     return    

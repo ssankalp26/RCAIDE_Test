@@ -2,7 +2,7 @@
 # RCAIDE/Methods/Energy/Propulsors/Turboprop_Propulsor/compute_thrust.py
 # 
 # 
-# Created:  Jul 2023, M. Clarke
+# Created:  Sep 2024, M. Clarke, M. Guidotti
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT

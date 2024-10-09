@@ -149,11 +149,13 @@ def compute_turboprop_performance(turboprop,state,fuel_line,center_of_gravity= [
     compute_expansion_nozzle_performance(core_nozzle,core_nozzle_conditions,conditions)
 
     # compute the thrust using the thrust component
-
+    
     turboprop_conditions.cpt                              = lpt_conditions.outputs.cp
     turboprop_conditions.R_t                              = lpt_conditions.outputs.gas_constant
-    turboprop_conditions.Tt4                              = lpt_conditions.outputs.Tt4
-    turboprop_conditions.stag_temp_lpt_exit               = lpt_conditions.outputs.stagnation_temperature
+    turboprop_conditions.stag_temp_lpt_out                = lpt_conditions.inputs.stagnation_temperature
+    turboprop_conditions.stag_temp_lpt_in                 = lpt_conditions.outputs.stagnation_temperature
+    turboprop_conditions.stag_temp_hpt_out                = hpt_conditions.inputs.stagnation_temperature
+    turboprop_conditions.stag_temp_hpt_in                 = hpt_conditions.outputs.stagnation_temperature
     turboprop_conditions.stag_press_lpt_exit              = lpt_conditions.outputs.stagnation_pressure 
     turboprop_conditions.core_exit_velocity               = core_nozzle_conditions.outputs.velocity
     turboprop_conditions.core_area_ratio                  = core_nozzle_conditions.outputs.area_ratio
@@ -161,6 +163,7 @@ def compute_turboprop_performance(turboprop,state,fuel_line,center_of_gravity= [
     turboprop_conditions.P9                               = core_nozzle_conditions.outputs.static_pressure    
     turboprop_conditions.T9                               = core_nozzle_conditions.outputs.static_temperature
     turboprop_conditions.cpc                              = compressor_conditions.outputs.cp
+    turboprop_conditions.gamma_c                          = compressor_conditions.outputs.gamma
     turboprop_conditions.R_c                              = compressor_conditions.outputs.gas_constant 
     turboprop_conditions.total_temperature_reference      = compressor_conditions.inputs.stagnation_temperature
     turboprop_conditions.total_pressure_reference         = compressor_conditions.inputs.stagnation_pressure 
@@ -183,7 +186,7 @@ def compute_turboprop_performance(turboprop,state,fuel_line,center_of_gravity= [
     
     # Pack results   
     moment                 = 0*state.ones_row(3)
-    thrust                 = 0*state.ones_row(3) 
+    thrust                 = turboprop_conditions.thrust
     power                  = turboprop_conditions.power  
     stored_results_flag    = True
     stored_propulsor_tag   = turboprop.tag
@@ -217,5 +220,5 @@ def reuse_stored_turboprop_data(turboprop,state,fuel_line,stored_propulsor_tag,c
       
     power    = conditions.energy[fuel_line.tag][turboprop.tag].power    
     moment   = 0*state.ones_row(3)
-    thrust   = 0*state.ones_row(3)
+    thrust   = conditions.energy[fuel_line.tag][turboprop.tag].thrust
     return thrust,moment,power    
