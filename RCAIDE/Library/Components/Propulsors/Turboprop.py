@@ -26,7 +26,6 @@ class Turboprop(Propulsor):
     def __defaults__(self):    
         # setting the default values
         self.tag                                      = 'turboprop'   
-        self.fan                                      = None 
         self.compressor                               = None  
         self.turbine                                  = None  
         self.combustor                                = None  
@@ -37,6 +36,8 @@ class Turboprop(Propulsor):
         self.design_isa_deviation                     = 0.0
         self.design_altitude                          = 0.0
         self.design_propeller_efficiency              = 0.0
+        self.design_gearbox_efficiency                = 0.0 
+        self.design_mach_number                       = 0.0
         self.compressor_nondimensional_massflow       = 0.0
         self.reference_temperature                    = 288.15
         self.reference_pressure                       = 1.01325*10**5  

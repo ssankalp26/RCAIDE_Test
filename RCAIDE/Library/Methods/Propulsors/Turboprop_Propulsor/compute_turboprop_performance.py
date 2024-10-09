@@ -20,14 +20,16 @@ from RCAIDE.Library.Methods.Propulsors.Converters.Compression_Nozzle import comp
 from RCAIDE.Library.Methods.Propulsors.Turboprop_Propulsor           import compute_thrust
  
 # python imports 
-from copy import deepcopy
+from   copy import deepcopy
 import numpy as np
+
 # ----------------------------------------------------------------------------------------------------------------------
 # compute_turboprop_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Energy-Propulsors-Turboshaft_Propulsor
 def compute_turboprop_performance(turboprop,state,fuel_line,center_of_gravity= [[0.0, 0.0,0.0]]):    
-    ''' Computes the perfomrance of one turboprop
+    
+    ''' Computes the performance of one turboprop
     
     Assumptions: 
     N/A
@@ -37,14 +39,15 @@ def compute_turboprop_performance(turboprop,state,fuel_line,center_of_gravity= [
 
     Inputs:  
     conditions           - operating conditions data structure     [-]  
-    fuel_line            - fuelline                                [-] 
-    turboprop           - turboprop data structure               [-] 
-    total_power          - power of turboprop group               [W] 
+    fuel_line            - fuel line                               [-] 
+    turboprop            - turboprop data structure                [-] 
+    total_power          - power of turboprop group                [W] 
 
     Outputs:  
-    total_power          - power of turboprop group               [W] 
+    thrust               - thrust of turboprop group               [W]
+    power                - power of turboprop group                [W] 
     stored_results_flag  - boolean for stored results              [-]     
-    stored_propulsor_tag - name of turboprop with stored results  [-]
+    stored_propulsor_tag - name of turboprop with stored results   [-]
     
     Properties Used: 
     N.A.        
@@ -52,7 +55,7 @@ def compute_turboprop_performance(turboprop,state,fuel_line,center_of_gravity= [
     conditions                = state.conditions 
     noise_conditions          = conditions.noise[fuel_line.tag][turboprop.tag]  
     turboprop_conditions      = conditions.energy[fuel_line.tag][turboprop.tag]
-    rho                       = conditions.freestream.density  
+    
     ram                                                   = turboprop.ram
     inlet_nozzle                                          = turboprop.inlet_nozzle
     compressor                                            = turboprop.compressor

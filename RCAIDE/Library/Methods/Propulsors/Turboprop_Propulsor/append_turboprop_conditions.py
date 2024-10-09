@@ -17,6 +17,6 @@ def append_turboprop_conditions(turboprop,segment,fuel_line,add_additional_netwo
     segment.state.conditions.energy[fuel_line.tag][turboprop.tag].inputs                        = Conditions()
     segment.state.conditions.energy[fuel_line.tag][turboprop.tag].outputs                       = Conditions() 
     segment.state.conditions.noise[fuel_line.tag][turboprop.tag]                                = Conditions() 
-    segment.state.conditions.noise[fuel_line.tag][turboprop.tag].turboprop                     = Conditions() 
-    segment.state.conditions.noise[fuel_line.tag][turboprop.tag].turboprop.core_nozzle         = Conditions()   
+    segment.state.conditions.noise[fuel_line.tag][turboprop.tag].turboprop                      = Conditions() 
+    segment.state.conditions.noise[fuel_line.tag][turboprop.tag].turboprop.core_nozzle          = Conditions()   
     return 
