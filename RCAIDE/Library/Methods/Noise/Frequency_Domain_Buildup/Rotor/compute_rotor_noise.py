@@ -91,7 +91,7 @@ def compute_rotor_noise(distributor,propulsor,rotor,conditions,settings):
     # ----------------------------------------------------------------------------------    
     # Broadband Noise
     # ----------------------------------------------------------------------------------
-    # broadband_noise(harmonics_blade,harmonics_load,conditions,energy_conditions,coordinates,rotor,settings,Noise)  
+    broadband_noise(harmonics_blade,harmonics_load,conditions,energy_conditions,coordinates,rotor,settings,Noise)  
 
     # ----------------------------------------------------------------------------------    
     # Atmospheric attenuation 

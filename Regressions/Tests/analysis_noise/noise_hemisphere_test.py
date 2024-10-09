@@ -34,7 +34,6 @@ def main():
     regression_plotting_flag = False 
     noise_data = plot_results(results,regression_plotting_flag) 
  
- 
     # dBA Verification checj
     dBA_true   = 70.0732251155458
     dBA        = noise_data.SPL_dBA[0,0,0]
@@ -133,7 +132,7 @@ def mission_setup(analyses,vehicle):
     mission.tag   = 'mission' 
     Segments      = RCAIDE.Framework.Mission.Segments  
     base_segment  = Segments.Segment()   
-    base_segment.state.numerics.number_of_control_points  = 5 
+    base_segment.state.numerics.number_of_control_points  = 3 
      
     # ------------------------------------------------------------------
     #   Constant Altitude Cruises 
