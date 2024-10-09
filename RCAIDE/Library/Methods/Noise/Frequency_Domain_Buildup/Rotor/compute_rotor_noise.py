@@ -108,7 +108,7 @@ def compute_rotor_noise(distributor,propulsor,rotor,conditions,settings):
     Results.SPL                                           = SPL_arithmetic(Noise.SPL_total_1_3_spectrum, sum_axis=2)
     Results.SPL_dBA                                       = SPL_arithmetic(A_weighting_metric(Noise.SPL_total_1_3_spectrum,settings.center_frequencies), sum_axis=2)
     Results.SPL_harmonic                                  = SPL_arithmetic(Noise.SPL_prop_harmonic_1_3_spectrum, sum_axis=2) 
-    # Results.SPL_broadband                                 = SPL_arithmetic(Noise.SPL_prop_broadband_1_3_spectrum)
+    Results.SPL_broadband                                 = SPL_arithmetic(Noise.SPL_prop_broadband_1_3_spectrum)
     
     # blade passing frequency 
     Results.blade_passing_frequencies                     = Noise.f          
@@ -121,8 +121,8 @@ def compute_rotor_noise(distributor,propulsor,rotor,conditions,settings):
     Results.SPL_1_3_spectrum_dBA                          = A_weighting_metric(Results.SPL_1_3_spectrum,settings.center_frequencies)      
     Results.SPL_harmonic_1_3_spectrum                     = Noise.SPL_prop_harmonic_1_3_spectrum    
     Results.SPL_harmonic_1_3_spectrum_dBA                 = A_weighting_metric(Results.SPL_harmonic_1_3_spectrum,settings.center_frequencies) 
-    # Results.SPL_broadband_1_3_spectrum                    = Noise.SPL_prop_broadband_1_3_spectrum 
-    # Results.SPL_broadband_1_3_spectrum_dBA                = A_weighting_metric(Results.SPL_broadband_1_3_spectrum,settings.center_frequencies)
+    Results.SPL_broadband_1_3_spectrum                    = Noise.SPL_prop_broadband_1_3_spectrum 
+    Results.SPL_broadband_1_3_spectrum_dBA                = A_weighting_metric(Results.SPL_broadband_1_3_spectrum,settings.center_frequencies)
     
     # A-weighted
     conditions.noise[distributor.tag][propulsor.tag][rotor.tag] = Results 
