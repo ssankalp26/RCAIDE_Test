@@ -13,8 +13,7 @@ from .purge_files import purge_files
 # ----------------------------------------------------------------------------------------------------------------------  
 def write_input_deck(dfdc_object):
     """ This function writes the execution steps used in the DFDC call 
-    """      
-
+    """
     # unpack 
     deck_filename = dfdc_object.current_status.deck_file 
 

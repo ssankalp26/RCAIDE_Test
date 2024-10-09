@@ -1,4 +1,4 @@
-# RCAIDE/Framework/Analyses/Propulsion/Ducted_Fan_Design_Code.py
+# RCAIDE/Library/Methods/Propulsors/Converters/Ducted_Fan.py
 #  
 # Created:  Jul 2023, M. Clarke
 
@@ -7,9 +7,8 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE imports 
-import RCAIDE
 from RCAIDE.Framework.Analyses.Propulsion.Ducted_Fan_Design_Code import Ducted_Fan_Design_Code
-from RCAIDE.Framework.Core import Units ,Data ,redirect   
+from RCAIDE.Framework.Core import Data ,redirect   
 from RCAIDE.Library.Plots  import *       
 from scipy.interpolate     import RegularGridInterpolator
  
@@ -120,5 +119,5 @@ def clean_data(raw_data,V_inf,tip_mach,altitude,convergence_matrix):
             # Interpolate y values using the spline function
             cleaned_data[i, :, k] = f(altitude) 
     
-    return clean_data
+    return cleaned_data
 

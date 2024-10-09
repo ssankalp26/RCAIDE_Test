@@ -118,8 +118,7 @@ class Ducted_Fan(Data):
         # Store data
         self.hub_geometry.append(airfoil)
 
-        return
-    
+        return 
 
     def append_operating_conditions(ducted_fan,segment,distribution_line,propulsor): 
         energy_conditions       = segment.state.conditions.energy[distribution_line.tag][propulsor.tag]

@@ -16,7 +16,7 @@ from RCAIDE.Library.Methods.Propulsors.Electric_Rotor_Propulsor.append_electric_
 from RCAIDE.Library.Methods.Propulsors.Electric_Rotor_Propulsor.compute_electric_rotor_performance   import compute_electric_rotor_performance, reuse_stored_electric_rotor_data
 
 # ----------------------------------------------------------------------
-#  Fan Component
+#  Electric Rotor Component
 # ----------------------------------------------------------------------
 ## @ingroup Components-Propulsors-Converters
 class Electric_Rotor(Propulsor):
