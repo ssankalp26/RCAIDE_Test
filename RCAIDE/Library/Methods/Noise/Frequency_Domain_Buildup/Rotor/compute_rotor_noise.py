@@ -63,10 +63,7 @@ def compute_rotor_noise(distributor,propulsor,rotor,conditions,settings):
  
     # unpack 
     energy_conditions    = conditions.energy[distributor.tag][propulsor.tag] 
-    microphone_locations = conditions.noise.relative_microphone_locations
-    angle_of_attack      = conditions.aerodynamics.angles.alpha 
-    velocity_vector      = conditions.frames.inertial.velocity_vector 
-    freestream           = conditions.freestream   
+    microphone_locations = conditions.noise.relative_microphone_locations   
     harmonics_blade      = settings.harmonics
     harmonics_load       = np.linspace(0,5,6).astype(int)     
     
@@ -102,8 +99,7 @@ def compute_rotor_noise(distributor,propulsor,rotor,conditions,settings):
     # Combine Harmonic (periodic/tonal) and Broadband Noise
     # ----------------------------------------------------------------------------------
     num_mic      = len(coordinates.X_hub[0,:,0,0])
-    # Noise.SPL_total_1_3_spectrum      = 10*np.log10( 10**(Noise.SPL_prop_harmonic_1_3_spectrum/10) + 10**(Noise.SPL_prop_broadband_1_3_spectrum/10)) - np.tile(delta_atmo[:,None,:],(1,num_mic,1))
-    Noise.SPL_total_1_3_spectrum      = 10*np.log10( 10**(Noise.SPL_prop_harmonic_1_3_spectrum/10)) - np.tile(delta_atmo[:,None,:],(1,num_mic,1))
+    Noise.SPL_total_1_3_spectrum      = 10*np.log10( 10**(Noise.SPL_prop_harmonic_1_3_spectrum/10) + 10**(Noise.SPL_prop_broadband_1_3_spectrum/10)) - np.tile(delta_atmo[:,None,:],(1,num_mic,1)) 
     Noise.SPL_total_1_3_spectrum[np.isnan(Noise.SPL_total_1_3_spectrum)] = 0 
 
     # ----------------------------------------------------------------------------------
