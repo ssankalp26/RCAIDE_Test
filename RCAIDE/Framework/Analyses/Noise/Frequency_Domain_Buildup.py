@@ -62,7 +62,7 @@ class Frequency_Domain_Buildup(Noise):
         
         # Initialize quantities
         settings                                        = self.settings
-        settings.fidelity                               = 'line_source' # ['point_source', 'line_source', 'plane_source']
+        settings.fidelity                               = 'point_source'
         settings.harmonics                              = np.arange(1,30) 
         settings.flyover                                = False    
         settings.approach                               = False
