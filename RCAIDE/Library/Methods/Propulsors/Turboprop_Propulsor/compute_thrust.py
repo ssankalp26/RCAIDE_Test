@@ -110,7 +110,7 @@ def compute_thrust(turboprop,turboprop_conditions,conditions):
     eta_T                                          = C_tot/((f*h_PR)/(cp_c*T0))                                                                                # [-]
     eta_P                                          = C_tot/((C_prop/eta_prop) + ((gamma_c - 1)/2)*((1 + f)*((V9/a0))**2 - M0**2))                              # [-]   
     
-    mdot_core                                      = turboprop.design_thrust/(Fsp*turboprop_conditions.throttle)                                               # [kg/s]
+    mdot_core                                      = turboprop.design_thrust*turboprop_conditions.throttle/(Fsp)                                               # [kg/s]
     mdhc                                           = mdot_core/ (np.sqrt(Tref/total_temperature_reference)*(total_pressure_reference/Pref))                    # [kg/s]
     
     #computing the dimensional thrust

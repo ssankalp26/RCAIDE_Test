@@ -228,16 +228,17 @@ def compute_turbofan_performance(turbofan,state,fuel_line,center_of_gravity= [[0
     compute_thrust(turbofan,turbofan_conditions,conditions)
 
     # Compute forces and moments
-    moment_vector      = 0*state.ones_row(3)
-    F                  = 0*state.ones_row(3)
-    F[:,0]             =  turbofan_conditions.thrust[:,0]
-    moment_vector[:,0] =  turbofan.origin[0][0] -   center_of_gravity[0][0] 
-    moment_vector[:,1] =  turbofan.origin[0][1]  -  center_of_gravity[0][1] 
-    moment_vector[:,2] =  turbofan.origin[0][2]  -  center_of_gravity[0][2]
-    M                  =  np.cross(moment_vector, F)   
-    moment             = M 
-    power              = turbofan_conditions.power
-    thrust             = F
+    moment_vector              = 0*state.ones_row(3)
+    F                          = 0*state.ones_row(3)
+    F[:,0]                     =  turbofan_conditions.thrust[:,0]
+    moment_vector[:,0]         =  turbofan.origin[0][0] -   center_of_gravity[0][0] 
+    moment_vector[:,1]         =  turbofan.origin[0][1]  -  center_of_gravity[0][1] 
+    moment_vector[:,2]         =  turbofan.origin[0][2]  -  center_of_gravity[0][2]
+    M                          =  np.cross(moment_vector, F)   
+    moment                     = M 
+    power                      = turbofan_conditions.power
+    thrust                     = F
+    turbofan_conditions.moment = moment
 
     # store data
     core_nozzle_res = Data(
@@ -298,10 +299,10 @@ def reuse_stored_turbofan_data(turbofan,state,fuel_line,stored_propulsor_tag,cen
     moment_vector[:,0] = turbofan.origin[0][0] -   center_of_gravity[0][0] 
     moment_vector[:,1] = turbofan.origin[0][1]  -  center_of_gravity[0][1] 
     moment_vector[:,2] = turbofan.origin[0][2]  -  center_of_gravity[0][2]
-    moment             = np.cross(moment_vector, F)           
+    moment             = np.cross(moment_vector, F)   
+    thrust             = F        
   
-    power                                   = conditions.energy[fuel_line.tag][turbofan.tag].power
-    thrust                                  = conditions.energy[fuel_line.tag][turbofan.tag].thrust 
+    power                                   = conditions.energy[fuel_line.tag][turbofan.tag].power 
     conditions.energy[fuel_line.tag][turbofan.tag].moment =  moment 
  
     return thrust,moment,power    
