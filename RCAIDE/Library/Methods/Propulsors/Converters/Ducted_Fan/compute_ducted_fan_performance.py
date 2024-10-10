@@ -49,7 +49,7 @@ def compute_ducted_fan_performance(propulsor,state,disributor,center_of_gravity=
 
     # Number of radial stations and segment control point
     B        = ducted_fan.number_of_rotor_blades
-    Nr       = len(ducted_fan.number_of_radial_stations)
+    Nr       = ducted_fan.number_of_radial_stations
     ctrl_pts = len(Vv)
      
     # Velocity in the rotor frame

@@ -52,6 +52,7 @@ class Ducted_Fan(Component):
         self.hub_radius                        = 0.1
         self.blade_clearance                   = 0.01
         self.length                            = 1
+        self.orientation_euler_angles          = [0.,0.,0.]  # vector of angles defining default orientation of rotor
         self.rotor                             = Data()
         self.stator                            = Data()
         self.rotor.percent_x_location          = 0.4
