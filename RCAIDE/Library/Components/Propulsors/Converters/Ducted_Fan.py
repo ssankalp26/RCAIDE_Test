@@ -7,14 +7,16 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 # RCAIDE imports
-from RCAIDE.Framework.Core              import Data
+from RCAIDE.Framework.Core     import Data
+from RCAIDE.Library.Components import Component
+from RCAIDE.Library.Methods.Propulsors.Converters.Ducted_Fan.append_ducted_fan_conditions import  append_ducted_fan_conditions
 import numpy as np
 import scipy as sp
  
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Nacalle
 # ----------------------------------------------------------------------------------------------------------------------  
-class Ducted_Fan(Data):
+class Ducted_Fan(Component):
     """ This is a ducted fan component
     
     Assumptions:
@@ -122,8 +124,7 @@ class Ducted_Fan(Data):
 
     def append_operating_conditions(ducted_fan,segment,distribution_line,propulsor): 
         energy_conditions       = segment.state.conditions.energy[distribution_line.tag][propulsor.tag]
-        noise_conditions        = segment.state.conditions.noise[distribution_line.tag][propulsor.tag]
-        append_ducted_fan_conditions(ducted_fan,segment,energy_conditions,noise_conditions)
+        append_ducted_fan_conditions(ducted_fan,segment,energy_conditions)
         return        
           
     def vec_to_vel(self):

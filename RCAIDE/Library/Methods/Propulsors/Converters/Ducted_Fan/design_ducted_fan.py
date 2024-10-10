@@ -70,8 +70,15 @@ def design_ducted_fan(ducted_fan):
     ducted_fan.stator.solidity_distribution       = results.geometry.stator_solidity_distribution   
 
     V_inf             = dfdc_analysis.training.freestream_velocity               
-    tip_mach         = dfdc_analysis.training.tip_mach         
-    altitude          = dfdc_analysis.training.altitude
+    tip_mach          = dfdc_analysis.training.tip_mach         
+    altitude          = dfdc_analysis.training.altitude 
+    
+    ducted_fan.cruise.design_thrust             = results.performance.design_thrust            
+    ducted_fan.cruise.design_power              = results.performance.design_power             
+    ducted_fan.cruise.design_efficiency         = results.performance.design_efficiency        
+    ducted_fan.cruise.design_torque             = results.performance.design_torque            
+    ducted_fan.cruise.design_thrust_coefficient = results.performance.design_thrust_coefficient
+    ducted_fan.cruise.design_power_coefficient  = results.performance.design_power_coefficient  
     
     # create performance surrogates 
     raw_data           = results.performance

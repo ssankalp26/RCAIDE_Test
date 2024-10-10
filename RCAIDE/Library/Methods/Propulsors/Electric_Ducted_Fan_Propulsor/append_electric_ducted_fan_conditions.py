@@ -25,7 +25,6 @@ def append_electric_ducted_fan_conditions(propulsor,segment,bus,add_additional_n
     segment.state.conditions.energy[bus.tag][propulsor.tag].commanded_thrust_vector_angle = 0. * ones_row(1)  
     segment.state.conditions.energy[bus.tag][propulsor.tag].thrust                        = 0. * ones_row(3) 
     segment.state.conditions.energy[bus.tag][propulsor.tag].power                         = 0. * ones_row(1) 
-    segment.state.conditions.energy[bus.tag][propulsor.tag].moment                        = 0. * ones_row(3)  
-    segment.state.conditions.noise[bus.tag][propulsor.tag]                                = Conditions()
+    segment.state.conditions.energy[bus.tag][propulsor.tag].moment                        = 0. * ones_row(3)   
        
     return

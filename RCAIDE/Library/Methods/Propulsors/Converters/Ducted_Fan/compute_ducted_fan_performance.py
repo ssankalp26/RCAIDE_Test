@@ -35,10 +35,9 @@ def compute_ducted_fan_performance(propulsor,state,disributor,center_of_gravity=
     propulsor_conditions  = conditions.energy[disributor.tag][propulsor.tag]
     commanded_TV          = propulsor_conditions.commanded_thrust_vector_angle
     ducted_fan_conditions = propulsor_conditions[ducted_fan.tag]
-     
-    tip_mach            = ducted_fan_conditions.tip_mach             
-    operating_altitude  = ducted_fan_conditions.operating_altitude  
-    inflow_velocity     = ducted_fan_conditions.inflow_velocity
+                  
+    altitude  = conditions.freestream.altitude
+    a         = conditions.freestream.speed_of_sound
     
     omega = ducted_fan_conditions.omega 
     n     = omega/(2.*np.pi)   # Rotations per second
@@ -49,8 +48,8 @@ def compute_ducted_fan_performance(propulsor,state,disributor,center_of_gravity=
     Vv      = conditions.frames.inertial.velocity_vector 
 
     # Number of radial stations and segment control point
-    B        = ducted_fan.number_of_blades
-    Nr       = len(ducted_fan.number_of_radian_station)
+    B        = ducted_fan.number_of_rotor_blades
+    Nr       = len(ducted_fan.number_of_radial_stations)
     ctrl_pts = len(Vv)
      
     # Velocity in the rotor frame
@@ -64,11 +63,11 @@ def compute_ducted_fan_performance(propulsor,state,disributor,center_of_gravity=
     # Check and correct for hover
     V         = V_thrust[:,0,None]
     V[V==0.0] = 1E-6
+     
+    tip_mach = (omega * ducted_fan.tip_radius) / a
     
-    
-    ctrl_pts = len(inflow_velocity)  
-    pts = (inflow_velocity,tip_mach,operating_altitude)
-
+    # create tuple for querying surrogate 
+    pts      = (V,tip_mach,altitude) 
     
     thrust         = ducted_fan.surrogates.thrust(pts)            
     power          = ducted_fan.surrogates.power(pts)                 
@@ -76,10 +75,9 @@ def compute_ducted_fan_performance(propulsor,state,disributor,center_of_gravity=
     torque         = ducted_fan.surrogates.torque(pts)                
     Ct             = ducted_fan.surrogates.thrust_coefficient(pts)    
     Cp             = ducted_fan.surrogates.power_coefficient(pts)     
-    advance_ratio  = ducted_fan.surrogates.advance_ratio(pts)
+    advance_ratio  = ducted_fan.surrogates.advance_ratio(pts) 
+    Cq             = torque/(rho*(n*n)*(D*D*D*D*D))
     
-
-    Cq       = torque/(rho*(n*n)*(D*D*D*D*D)) 
     # calculate coefficients    
     thrust_prop_frame      = np.zeros((ctrl_pts,3))
     thrust_prop_frame[:,0] = thrust[:,0]

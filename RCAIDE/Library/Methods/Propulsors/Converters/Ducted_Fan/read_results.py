@@ -52,10 +52,8 @@ def read_results(dfdc_analysis):
     results.geometry.stator_chord_distribution          = np.zeros(Nr)
     results.geometry.stator_radius_distribution         = np.zeros(Nr) 
     results.geometry.stator_non_dim_radius_distribution = np.zeros(Nr) 
-    results.geometry.stator_solidity_distribution       = np.zeros(Nr)
-    results.geometry.design_power_coefficient           = 0
-    results.geometry.design_thrust_coefficient          = 0  
-    results.performance                                 = Data()
+    results.geometry.stator_solidity_distribution       = np.zeros(Nr)  
+    results.performance                                 = Data() 
     results.performance.thrust                          = np.zeros((len_v,len_tm,len_a))  
     results.performance.power                           = np.zeros((len_v,len_tm,len_a))  
     results.performance.efficiency                      = np.zeros((len_v,len_tm,len_a)) 
@@ -65,7 +63,8 @@ def read_results(dfdc_analysis):
     results.performance.advance_ratio                   = np.zeros((len_v,len_tm,len_a))
     results.performance.figure_of_merit                 = np.zeros((len_v,len_tm,len_a))  
     results.performance.converged_solution              = np.zeros((len_v,len_tm,len_a))    
- 
+   
+    # Read geometry 
     geometry_filename   =   os.path.abspath(run_folder + os.path.sep+ ducted_fan.tag + '_geometry.txt')            
     with open(geometry_filename,'r') as geometry_file: 
             geometry_lines                       = geometry_file.readlines() 
@@ -78,6 +77,25 @@ def read_results(dfdc_analysis):
                 results.geometry.rotor_twist_distribution[n_r]          = float(geometry_lines[36 + Nr + n_r][35:44].strip()) * Units.degrees
                 results.geometry.rotor_solidity_distribution[n_r]       = float(geometry_lines[36 + Nr + n_r][44:56].strip())
     
+    # Read desing point data
+ 
+    atmosphere       = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
+    atmo_data        = atmosphere.compute_values(ducted_fan.cruise.design_altitude) 
+    a                = atmo_data.speed_of_sound[0,0] 
+    design_RPM       = ducted_fan.cruise.design_angular_velocity/Units.rpm 
+    design_velocity  = ducted_fan.cruise.design_freestream_velocity 
+    design_altitude  = ducted_fan.cruise.design_altitude  
+    results_filename =  os.path.abspath(run_folder + os.path.sep+ results_template.format(design_velocity,design_RPM,design_altitude))  
+    with open(results_filename,'r') as case_results_file: 
+        case_lines                       = case_results_file.readlines() 
+        results.performance.design_thrust              = float(case_lines[8][13:26].strip())
+        results.performance.design_power               = float(case_lines[8][39:52].strip())
+        results.performance.design_efficiency          = float(case_lines[8][65:76].strip()) 
+        results.performance.design_torque              = float(case_lines[10][39:52].strip())        
+        results.performance.design_thrust_coefficient  = float(case_lines[13][7:20].strip())        
+        results.performance.design_power_coefficient   = float(case_lines[13][27:39].strip())       
+        
+    # Read evaluation point data 
     for i in range(len_v): 
         for j in range(len_tm):
             for k in range(len_a):
