@@ -26,6 +26,7 @@ class Turboprop(Propulsor):
     def __defaults__(self):    
         # setting the default values
         self.tag                                      = 'turboprop'   
+        self.nacelle                                  = None 
         self.compressor                               = None  
         self.turbine                                  = None  
         self.combustor                                = None  

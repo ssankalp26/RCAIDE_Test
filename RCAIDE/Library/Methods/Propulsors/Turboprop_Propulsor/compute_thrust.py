@@ -70,8 +70,7 @@ def compute_thrust(turboprop,turboprop_conditions,conditions):
     turboprop_conditions.propulsive_efficiency               
     """       
     
-    #compute dimensional mass flow rates
-    throttle                                       = 1.0    
+    #compute dimensional mass flow rates 
     g                                              = conditions.freestream.gravity                                                                             # [m/s**2]
     Tref                                           = turboprop.reference_temperature                                                                           # [K]
     Pref                                           = turboprop.reference_pressure                                                                              # [Pa]
@@ -111,11 +110,11 @@ def compute_thrust(turboprop,turboprop_conditions,conditions):
     eta_T                                          = C_tot/((f*h_PR)/(cp_c*T0))                                                                                # [-]
     eta_P                                          = C_tot/((C_prop/eta_prop) + ((gamma_c - 1)/2)*((1 + f)*((V9/a0))**2 - M0**2))                              # [-]   
     
-    mdot_core                                      = turboprop.design_thrust/(Fsp*throttle)                                                                    # [kg/s]
+    mdot_core                                      = turboprop.design_thrust/(Fsp*turboprop_conditions.throttle)                                                                    # [kg/s]
     mdhc                                           = mdot_core/ (np.sqrt(Tref/total_temperature_reference)*(total_pressure_reference/Pref))                    # [kg/s]
     
     #computing the dimensional thrust
-    FD2                                            = Fsp*mdot_core*throttle                                                                                    # [N]  
+    FD2                                            = Fsp*mdot_core*turboprop_conditions.throttle                                                                            # [N]  
 
     #fuel flow rate
     a                                              = np.array([0.])                                                                                            # [-]     

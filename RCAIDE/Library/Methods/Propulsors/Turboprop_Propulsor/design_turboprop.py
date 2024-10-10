@@ -197,6 +197,15 @@ def design_turboprop(turboprop):
     
     # Step 26: Static Sea Level Thrust 
     compute_static_sea_level_performance(turboprop)
-     
+
+    turboprop.design_thrust_specific_fuel_consumption = turboprop_conditions.thrust_specific_fuel_consumption  
+    turboprop.design_non_dimensional_thrust           = turboprop_conditions.non_dimensional_thrust            
+    turboprop.design_core_mass_flow_rate              = turboprop_conditions.core_mass_flow_rate               
+    turboprop.design_fuel_flow_rate                   = turboprop_conditions.fuel_flow_rate                     
+    turboprop.design_power                            = turboprop_conditions.power                             
+    turboprop.design_specific_power                   = turboprop_conditions.specific_power                    
+    turboprop.design_power_specific_fuel_consumption  = turboprop_conditions.power_specific_fuel_consumption   
+    turboprop.design_thermal_efficiency               = turboprop_conditions.thermal_efficiency                
+    turboprop.design_propulsive_efficiency            = turboprop_conditions.propulsive_efficiency             
     return      
   
