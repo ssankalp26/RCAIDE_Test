@@ -64,7 +64,7 @@ class Ducted_Fan(Component):
         self.cruise.design_freestream_velocity = None
         self.cruise.design_reference_velocity  = None 
         self.duct_airfoil                      = Data()
-        self.hub_geometry                      = Data()
+        self.hub_airfoil                       = Data()
     
     def append_duct_airfoil(self,airfoil):
         """ Adds an airfoil to the segment 
@@ -95,7 +95,7 @@ class Ducted_Fan(Component):
         return
     
 
-    def append_hub_geometry(self,airfoil):
+    def append_hub_airfoil(self,airfoil):
         """ Adds an airfoil to the segment 
     
         Assumptions:
@@ -119,7 +119,7 @@ class Ducted_Fan(Component):
             raise Exception('input component must be of type Data()')
 
         # Store data
-        self.hub_geometry.append(airfoil)
+        self.hub_airfoil.append(airfoil)
 
         return 
 

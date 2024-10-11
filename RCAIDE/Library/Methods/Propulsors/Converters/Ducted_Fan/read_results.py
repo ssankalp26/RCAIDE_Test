@@ -34,10 +34,10 @@ def read_results(dfdc_analysis):
     Nr                = ducted_fan.number_of_radial_stations
     results_template  = dfdc_analysis.settings.filenames.results_template
     run_folder        = dfdc_analysis.settings.filenames.run_folder
-    v_infs            = dfdc_analysis.training.freestream_velocity        
+    mach              = dfdc_analysis.training.mach   
     tip_machs         = dfdc_analysis.training.tip_mach  
     altitudes         = dfdc_analysis.training.altitude
-    len_v             = len(v_infs)
+    len_m             = len(mach)
     len_tm            = len(tip_machs) 
     len_a             = len(altitudes)
     
@@ -54,15 +54,15 @@ def read_results(dfdc_analysis):
     results.geometry.stator_non_dim_radius_distribution = np.zeros(Nr) 
     results.geometry.stator_solidity_distribution       = np.zeros(Nr)  
     results.performance                                 = Data() 
-    results.performance.thrust                          = np.zeros((len_v,len_tm,len_a))  
-    results.performance.power                           = np.zeros((len_v,len_tm,len_a))  
-    results.performance.efficiency                      = np.zeros((len_v,len_tm,len_a)) 
-    results.performance.torque                          = np.zeros((len_v,len_tm,len_a)) 
-    results.performance.thrust_coefficient              = np.zeros((len_v,len_tm,len_a))  
-    results.performance.power_coefficient               = np.zeros((len_v,len_tm,len_a)) 
-    results.performance.advance_ratio                   = np.zeros((len_v,len_tm,len_a))
-    results.performance.figure_of_merit                 = np.zeros((len_v,len_tm,len_a))  
-    results.performance.converged_solution              = np.zeros((len_v,len_tm,len_a))    
+    results.performance.thrust                          = np.zeros((len_m,len_tm,len_a))  
+    results.performance.power                           = np.zeros((len_m,len_tm,len_a))  
+    results.performance.efficiency                      = np.zeros((len_m,len_tm,len_a)) 
+    results.performance.torque                          = np.zeros((len_m,len_tm,len_a)) 
+    results.performance.thrust_coefficient              = np.zeros((len_m,len_tm,len_a))  
+    results.performance.power_coefficient               = np.zeros((len_m,len_tm,len_a)) 
+    results.performance.advance_ratio                   = np.zeros((len_m,len_tm,len_a))
+    results.performance.figure_of_merit                 = np.zeros((len_m,len_tm,len_a))  
+    results.performance.converged_solution              = np.zeros((len_m,len_tm,len_a))    
    
     # Read geometry 
     geometry_filename   =   os.path.abspath(run_folder + os.path.sep+ ducted_fan.tag + '_geometry.txt')            
@@ -96,15 +96,16 @@ def read_results(dfdc_analysis):
         results.performance.design_power_coefficient   = float(case_lines[13][27:39].strip())       
         
     # Read evaluation point data 
-    for i in range(len_v): 
+    for i in range(len_m): 
         for j in range(len_tm):
             for k in range(len_a):
                 try: 
                     atmosphere      = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
                     atmo_data       = atmosphere.compute_values(altitudes[k]) 
                     a               = atmo_data.speed_of_sound[0,0] 
-                    rpm             = ((tip_machs[j]*a) /dfdc_analysis.geometry.tip_radius)/Units.rpm                    
-                    results_filename   =  os.path.abspath(run_folder + os.path.sep+ results_template.format(v_infs[i],rpm,altitudes[k]))  
+                    rpm             = ((tip_machs[j]*a) /dfdc_analysis.geometry.tip_radius)/Units.rpm
+                    velocity        =  mach[i] * a
+                    results_filename   =  os.path.abspath(run_folder + os.path.sep+ results_template.format(velocity,rpm,altitudes[k]))  
                     with open(results_filename,'r') as case_results_file: 
                         case_lines                       = case_results_file.readlines() 
                         results.performance.thrust[i,j,k]              = float(case_lines[8][13:26].strip())

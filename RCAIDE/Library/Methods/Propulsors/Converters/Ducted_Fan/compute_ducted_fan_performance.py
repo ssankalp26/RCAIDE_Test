@@ -36,7 +36,7 @@ def compute_ducted_fan_performance(propulsor,state,disributor,center_of_gravity=
     commanded_TV          = propulsor_conditions.commanded_thrust_vector_angle
     ducted_fan_conditions = propulsor_conditions[ducted_fan.tag]
                   
-    altitude  = conditions.freestream.altitude
+    altitude  = conditions.freestream.altitude / 1000
     a         = conditions.freestream.speed_of_sound
     
     omega = ducted_fan_conditions.omega 
@@ -65,17 +65,16 @@ def compute_ducted_fan_performance(propulsor,state,disributor,center_of_gravity=
     V[V==0.0] = 1E-6
      
     tip_mach = (omega * ducted_fan.tip_radius) / a
-    
+    mach     =  V/ a
     # create tuple for querying surrogate 
-    pts      = (V,tip_mach,altitude) 
+    pts      = (mach,tip_mach,altitude) 
     
-    thrust         = ducted_fan.surrogates.thrust(pts)            
-    power          = ducted_fan.surrogates.power(pts)                 
-    efficiency     = ducted_fan.surrogates.efficiency(pts)            
-    torque         = ducted_fan.surrogates.torque(pts)                
-    Ct             = ducted_fan.surrogates.thrust_coefficient(pts)    
-    Cp             = ducted_fan.surrogates.power_coefficient(pts)     
-    advance_ratio  = ducted_fan.surrogates.advance_ratio(pts) 
+    thrust         = ducted_fan.performance_surrogates.thrust(pts)            
+    power          = ducted_fan.performance_surrogates.power(pts)                 
+    efficiency     = ducted_fan.performance_surrogates.efficiency(pts)            
+    torque         = ducted_fan.performance_surrogates.torque(pts)                
+    Ct             = ducted_fan.performance_surrogates.thrust_coefficient(pts)    
+    Cp             = ducted_fan.performance_surrogates.power_coefficient(pts) 
     Cq             = torque/(rho*(n*n)*(D*D*D*D*D))
     
     # calculate coefficients    

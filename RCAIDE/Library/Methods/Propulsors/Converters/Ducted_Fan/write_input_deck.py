@@ -79,7 +79,8 @@ shoo
     V_inf             = ducted_fan.cruise.design_freestream_velocity  
     V_ref             = ducted_fan.cruise.design_reference_velocity  
     settings_command  = base_settings_command.format(alt,V_ref,V_inf,B,n,RPM,T,geometry_filename) 
-        
+ 
+    purge_files([geometry_filename])         
     return settings_command
 
 def make_case_command(dfdc_object,case):

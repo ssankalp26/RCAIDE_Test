@@ -33,7 +33,11 @@ def design_ducted_fan(ducted_fan):
     
     '''    
     dfdc_analysis                                   = Ducted_Fan_Design_Code() 
-    dfdc_analysis.geometry                          = ducted_fan 
+    dfdc_analysis.geometry                          = ducted_fan
+
+    dfdc_analysis.training.tip_mach                 = np.array([0.2, 0.4, 0.6, 0.8])     
+    dfdc_analysis.training.mach                     = np.array([0.1,0.2,0.35,0.5]) 
+    dfdc_analysis.training.altitude                 = np.linspace(0,ducted_fan.cruise.design_altitude*1.1,4) / 1000
     run_folder                                      = os.path.abspath(dfdc_analysis.settings.filenames.run_folder)
     run_script_path                                 = run_folder.rstrip('dfdc_files').rstrip('/')    
     deck_template                                   = dfdc_analysis.settings.filenames.deck_template 
@@ -69,7 +73,7 @@ def design_ducted_fan(ducted_fan):
     ducted_fan.stator.non_dim_radius_distribution = results.geometry.stator_non_dim_radius_distribution  
     ducted_fan.stator.solidity_distribution       = results.geometry.stator_solidity_distribution   
 
-    V_inf             = dfdc_analysis.training.freestream_velocity               
+    mach              = dfdc_analysis.training.mach       
     tip_mach          = dfdc_analysis.training.tip_mach         
     altitude          = dfdc_analysis.training.altitude 
     
@@ -82,49 +86,72 @@ def design_ducted_fan(ducted_fan):
     
     # create performance surrogates 
     raw_data           = results.performance
-    thrust             = clean_data(raw_data.thrust,V_inf,tip_mach,altitude,raw_data.converged_solution)               
-    power              = clean_data(raw_data.power,V_inf,tip_mach,altitude,raw_data.converged_solution)                
-    efficiency         = clean_data(raw_data.efficiency,V_inf,tip_mach,altitude,raw_data.converged_solution)           
-    torque             = clean_data(raw_data.torque,V_inf,tip_mach,altitude,raw_data.converged_solution)               
-    thrust_coefficient = clean_data(raw_data.thrust_coefficient,V_inf,tip_mach,altitude,raw_data.converged_solution)   
-    power_coefficient  = clean_data(raw_data.power_coefficient,V_inf,tip_mach,altitude,raw_data.converged_solution)    
-    advance_ratio      = clean_data(raw_data.advance_ratio,V_inf,tip_mach,altitude,raw_data.converged_solution)       
+    thrust             = clean_data(raw_data.thrust,mach,tip_mach,altitude,raw_data.converged_solution)               
+    power              = clean_data(raw_data.power,mach,tip_mach,altitude,raw_data.converged_solution)                
+    efficiency         = clean_data(raw_data.efficiency,mach,tip_mach,altitude,raw_data.converged_solution)           
+    torque             = clean_data(raw_data.torque,mach,tip_mach,altitude,raw_data.converged_solution)               
+    thrust_coefficient = clean_data(raw_data.thrust_coefficient,mach,tip_mach,altitude,raw_data.converged_solution)   
+    power_coefficient  = clean_data(raw_data.power_coefficient,mach,tip_mach,altitude,raw_data.converged_solution)     
     
     surrogates =  Data()
-    surrogates.thrust              = RegularGridInterpolator((V_inf,tip_mach,altitude),thrust               ,method = 'linear',   bounds_error=False, fill_value=None)      
-    surrogates.power               = RegularGridInterpolator((V_inf,tip_mach,altitude),power                ,method = 'linear',   bounds_error=False, fill_value=None)
-    surrogates.efficiency          = RegularGridInterpolator((V_inf,tip_mach,altitude),efficiency           ,method = 'linear',   bounds_error=False, fill_value=None)      
-    surrogates.torque              = RegularGridInterpolator((V_inf,tip_mach,altitude),torque               ,method = 'linear',   bounds_error=False, fill_value=None)
-    surrogates.thrust_coefficient  = RegularGridInterpolator((V_inf,tip_mach,altitude),thrust_coefficient   ,method = 'linear',   bounds_error=False, fill_value=None)      
-    surrogates.power_coefficient   = RegularGridInterpolator((V_inf,tip_mach,altitude),power_coefficient    ,method = 'linear',   bounds_error=False, fill_value=None)
-    surrogates.advance_ratio       = RegularGridInterpolator((V_inf,tip_mach,altitude),advance_ratio        ,method = 'linear',   bounds_error=False, fill_value=None)  
+    surrogates.thrust              = RegularGridInterpolator((mach,tip_mach,altitude),thrust               ,method = 'linear',   bounds_error=False, fill_value=None)      
+    surrogates.power               = RegularGridInterpolator((mach,tip_mach,altitude),power                ,method = 'linear',   bounds_error=False, fill_value=None)
+    surrogates.efficiency          = RegularGridInterpolator((mach,tip_mach,altitude),efficiency           ,method = 'linear',   bounds_error=False, fill_value=None)      
+    surrogates.torque              = RegularGridInterpolator((mach,tip_mach,altitude),torque               ,method = 'linear',   bounds_error=False, fill_value=None)
+    surrogates.thrust_coefficient  = RegularGridInterpolator((mach,tip_mach,altitude),thrust_coefficient   ,method = 'linear',   bounds_error=False, fill_value=None)      
+    surrogates.power_coefficient   = RegularGridInterpolator((mach,tip_mach,altitude),power_coefficient    ,method = 'linear',   bounds_error=False, fill_value=None) 
     
     ducted_fan.performance_surrogates =  surrogates
     return
 
-def clean_data(raw_data,V_inf,tip_mach,altitude,convergence_matrix):
+def clean_data(raw_data,mach,tip_mach,altitude,convergence_matrix):
     threshold =  2
-    cleaned_data =  np.zeros((len(V_inf),len(tip_mach),len(altitude)))
-    for i in range(len(V_inf)): 
-        for k in range(len(altitude)):
+    cleaned_data =  np.zeros((len(mach),len(tip_mach),len(altitude)))
+    for i in range(len(mach)): 
+        for j in range(len(altitude)):
             
             raw_data_f1 = []
             indexes_f1  = []
-            for idx, x in enumerate(raw_data[i, :, k]):
+            for idx, x in enumerate(raw_data[i, :, j]):
                 if not np.isnan(x):
                     raw_data_f1.append(x)
-                    indexes_f1.append(idx) 
-
-            z_scores      = np.abs((np.array(raw_data_f1) - np.array(raw_data_f1).mean()) /np.array(raw_data_f1).std())
-            filter_flag   =  z_scores < threshold
-            raw_data_f2   = np.array(raw_data_f1)[filter_flag]
-            indexes_f2    = np.array(indexes_f1)[filter_flag]
-            filtered_alt  = altitude[indexes_f2]
-            
-            f = interp1d(filtered_alt, raw_data_f2, fill_value="extrapolate") 
-            
-            # Interpolate y values using the spline function
-            cleaned_data[i, :, k] = f(altitude) 
+                    indexes_f1.append(idx)  
+            if len(indexes_f1) < 2:
+                pass
+            else:
+                z_scores      = np.abs((np.array(raw_data_f1) - np.array(raw_data_f1).mean()) /np.array(raw_data_f1).std())
+                filter_flag   =  z_scores < threshold
+                raw_data_f2   = np.array(raw_data_f1)[filter_flag]
+                indexes_f2    = np.array(indexes_f1)[filter_flag]
+                filtered_alt  = altitude[indexes_f2]
+                
+                f = interp1d(filtered_alt, raw_data_f2, fill_value="extrapolate") 
+                
+                # Interpolate y values using the spline function
+                cleaned_data[i, :, j] = f(altitude) 
     
+    
+    for k in range(len(mach)): 
+        for l in range(len(tip_mach)):
+            raw_data_f3 = []
+            indexes_f3  = []
+            for idx, x in enumerate(raw_data[k, l, :]):
+                if not np.isnan(x):
+                    raw_data_f3.append(x)
+                    indexes_f3.append(idx)  
+            if len(indexes_f3) < 2:
+                pass
+            else:
+                z_scores      = np.abs((np.array(raw_data_f3) - np.array(raw_data_f3).mean()) /np.array(raw_data_f3).std())
+                filter_flag   =  z_scores < threshold
+                raw_data_f4   = np.array(raw_data_f3)[filter_flag]
+                indexes_f4    = np.array(indexes_f3)[filter_flag]
+                filtered_alt  = altitude[indexes_f4]
+                
+                f = interp1d(filtered_alt, raw_data_f4, fill_value="extrapolate") 
+                
+                # Interpolate y values using the spline function
+                cleaned_data[k, l, :] = f(altitude) 
+     
     return cleaned_data
 

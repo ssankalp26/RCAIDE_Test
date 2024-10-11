@@ -65,7 +65,7 @@ class Ducted_Fan_Design_Code(Data):
                   
         # Standard subsonic/transolic aircarft          
         self.training.tip_mach                            = np.array([0.2, 0.4, 0.6, 0.8])     
-        self.training.freestream_velocity                 = np.array([10,50,100,150]) 
+        self.training.mach                                = np.array([0.1,0.2,0.35,0.5]) 
         self.training.altitude                            = np.array([0, 2, 5, 10])      
                                                         
         self.training_file                                = None
