@@ -71,25 +71,30 @@ def plot_propulsor_throttles(results,
         for network in results.segments[i].analyses.energy.vehicle.networks: 
             busses      = network.busses
             fuel_lines  = network.fuel_lines 
-            for bus in busses:
-                for j ,  propulsor in enumerate(bus.propulsors):
-                    eta = results.segments[i].conditions.energy[bus.tag][propulsor.tag].throttle[:,0]   
-                    axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width,markersize = ps.marker_size, label = segment_name + ': '+ propulsor.tag ) 
-                            
+            for bus in busses: 
+                for p_i, propulsor in enumerate(bus.propulsors): 
+                    if p_i == 0: 
+                        eta = results.segments[i].conditions.energy[bus.tag][propulsor.tag].throttle[:,0]   
+                        axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width,markersize = ps.marker_size, label = segment_name + ': ' + propulsor.tag ) 
+                    elif (bus.identical_propulsors == False) and p_i !=0:  
+                        eta = results.segments[i].conditions.energy[bus.tag][propulsor.tag].throttle[:,0]   
+                        axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width,markersize = ps.marker_size, label = segment_name + ': ' +propulsor.tag )  
             for fuel_line in fuel_lines:  
-                for j ,  propulsor in enumerate(fuel_line.propulsors):
-                    eta = results.segments[i].conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0]
-                    eta = results.segments[i].conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0]   
-                    axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width,markersize = ps.marker_size, label = segment_name + ': '+ propulsor.tag ) 
-                                 
+                for p_i, propulsor in enumerate(fuel_line.propulsors): 
+                    if p_i == 0: 
+                        eta = results.segments[i].conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0]   
+                        axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width,markersize = ps.marker_size, label = segment_name + ': ' +propulsor.tag ) 
+                    elif (fuel_line.identical_propulsors == False) and p_i !=0:  
+                        eta = results.segments[i].conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0]   
+                        axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width,markersize = ps.marker_size, label = segment_name + ': ' + propulsor.tag )  
     
     if show_legend:
-        leg =  fig.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg =  fig.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 3) 
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
     # Adjusting the sub-plots for legend 
     fig.tight_layout()   
-    fig.subplots_adjust(top=0.8) 
+    fig.subplots_adjust(top=0.6) 
     
     if save_figure:
         fig.savefig(save_filename + file_type)   

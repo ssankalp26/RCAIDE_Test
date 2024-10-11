@@ -208,3 +208,25 @@ class Air(Gas):
         mu = self.compute_absolute_viscosity(T)
         K  = self.compute_thermal_conductivity(T)
         return  mu*Cp/K      
+    
+    def compute_R(self,T=300.,p=101325.):
+        """Compute the prandtl number 
+             
+        Assumptions:
+            None
+            
+        Source:
+            None
+    
+        Args:
+            self      : air                   [unitless]
+            T (float) : temperature           [K] 
+            
+        Returns:
+            Pr  (float): Prandtl Number       [unitless]
+        """ 
+        
+        gamma = self.compute_gamma(T,p)
+        cp = self.compute_cp(T,p)
+        R  = ((gamma - 1)/gamma)*cp
+        return  R          
