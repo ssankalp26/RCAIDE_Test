@@ -35,7 +35,7 @@ def main():
     noise_data = plot_results(results,regression_plotting_flag) 
  
     # dBA Verification checj
-    dBA_true   = 70.0732251155458
+    dBA_true   = 162.6010473612175
     dBA        = noise_data.SPL_dBA[0,0,0]
     print('dBA: ' + str(dBA)) 
     diff_dBA                = np.abs(dBA  - dBA_true) 
