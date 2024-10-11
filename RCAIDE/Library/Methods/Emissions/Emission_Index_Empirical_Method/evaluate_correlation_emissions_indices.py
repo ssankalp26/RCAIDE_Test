@@ -51,6 +51,7 @@ def evaluate_correlation_emissions_indices(segment,settings,vehicle):
                                 propulsor_results =  state.conditions.energy[fuel_line.tag][propulsor.tag]
                                 fuel =  fuel_tank.fuel
                                 if (type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turbofan) or \
+                                    type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turboprop or \
                                     type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turboshaft or \
                                     type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turbojet:    
                          
