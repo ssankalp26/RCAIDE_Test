@@ -178,15 +178,14 @@ def compute_turboprop_performance(turboprop,state,fuel_line,center_of_gravity= [
 
     # Compute forces and moments
     moment_vector      = 0*state.ones_row(3)
-    F                  = 0*state.ones_row(3)
-    F[:,0]             = turboprop_conditions.thrust[:,0]
+    thrust_vector      = 0*state.ones_row(3)
+    thrust_vector[:,0] = turboprop_conditions.thrust[:,0]
     moment_vector[:,0] = turboprop.origin[0][0] -   center_of_gravity[0][0] 
     moment_vector[:,1] = turboprop.origin[0][1]  -  center_of_gravity[0][1] 
     moment_vector[:,2] = turboprop.origin[0][2]  -  center_of_gravity[0][2]
-    M                  =  np.cross(moment_vector, F)   
+    M                  =  np.cross(moment_vector, thrust_vector)   
     moment             = M 
-    power              = turboprop_conditions.power
-    thrust             = F
+    power              = turboprop_conditions.power 
  
 
     # Store data
@@ -204,7 +203,7 @@ def compute_turboprop_performance(turboprop,state,fuel_line,center_of_gravity= [
     stored_results_flag    = True
     stored_propulsor_tag   = turboprop.tag 
     
-    return thrust,moment,power,stored_results_flag,stored_propulsor_tag
+    return thrust_vector,moment,power,stored_results_flag,stored_propulsor_tag
 
 def reuse_stored_turboprop_data(turboprop,state,fuel_line,stored_propulsor_tag,center_of_gravity= [[0.0, 0.0,0.0]]):
     '''Reuses results from one turboprop for identical propulsors
@@ -233,14 +232,13 @@ def reuse_stored_turboprop_data(turboprop,state,fuel_line,stored_propulsor_tag,c
     
     # compute moment  
     moment_vector      = 0*state.ones_row(3)
-    F                  = 0*state.ones_row(3)
-    F[:,0]             = conditions.energy[fuel_line.tag][turboprop.tag].thrust[:,0] 
+    thrust_vector      = 0*state.ones_row(3)
+    thrust_vector[:,0] = conditions.energy[fuel_line.tag][turboprop.tag].thrust[:,0] 
     moment_vector[:,0] = turboprop.origin[0][0] -   center_of_gravity[0][0] 
     moment_vector[:,1] = turboprop.origin[0][1]  -  center_of_gravity[0][1] 
     moment_vector[:,2] = turboprop.origin[0][2]  -  center_of_gravity[0][2]
-    moment             = np.cross(moment_vector, F)        
-    thrust             = F   
+    moment             = np.cross(moment_vector, thrust_vector)         
   
     power                                   = conditions.energy[fuel_line.tag][turboprop.tag].power 
     conditions.energy[fuel_line.tag][turboprop.tag].moment =  moment 
-    return thrust,moment,power    
+    return thrust_vector,moment,power    
