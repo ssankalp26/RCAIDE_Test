@@ -84,7 +84,7 @@ def base_analysis(vehicle):
     aerodynamics.vehicle                               = vehicle
     aerodynamics.settings.number_of_spanwise_vortices  = 25
     aerodynamics.settings.number_of_chordwise_vortices = 5       
-    aerodynamics.settings.model_fuselage               = True
+    aerodynamics.settings.model_fuselage               = False
     aerodynamics.settings.drag_coefficient_increment   = 0.0000
     analyses.append(aerodynamics)
  
@@ -115,7 +115,20 @@ def base_analysis(vehicle):
 
 def plot_mission(results):
      
-    plot_aircraft_velocities(results)  
+    # Plots fligh conditions 
+    plot_flight_conditions(results) 
+    
+    # Plot arcraft trajectory
+    plot_flight_trajectory(results)   
+
+    plot_propulsor_throttles(results)
+    
+    # Plot Aircraft Electronics
+    plot_battery_module_conditions(results)   
+    
+    # Plot Electric Motor and Propeller Efficiencies 
+    plot_electric_propulsor_efficiencies(results)
+    
         
     return 
 
@@ -140,21 +153,22 @@ def mission_setup(analyses):
     #   First Climb Segment: constant Mach, constant segment angle 
     # ------------------------------------------------------------------
     
-    segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment)
+    segment = Segments.Climb.Constant_Mach_Constant_Rate(base_segment)
     segment.tag = "climb" 
     segment.analyses.extend( analyses.base ) 
     segment.altitude_start = 0.0   * Units.km
-    segment.altitude_end   = 4000. * Units.ft
-    segment.airpseed       = 250.  * Units.kts
-    segment.climb_rate     = 4000. * Units['ft/min']
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                      = True  
-    segment.flight_dynamics.force_z                      = True     
+    segment.altitude_end   = 1000. * Units.ft
+    segment.mach_number    = 0.3   * Units.kts
+    segment.climb_rate     = 1000. * Units['ft/min']
+    segment.initial_battery_state_of_charge                          = 1.0 
+                
+    # define flight dynamics to model             
+    segment.flight_dynamics.force_x                                  = True  
+    segment.flight_dynamics.force_z                                  = True     
     
     # define flight controls 
     segment.assigned_control_variables.throttle.active               = True           
-    segment.assigned_control_variables.throttle.assigned_propulsors  = [['inner_right_turbojet','outer_right_turbojet','outer_left_turbojet','inner_left_turbojet']] 
+    segment.assigned_control_variables.throttle.assigned_propulsors  = [['center_propulsor','starboard_propulsor','port_propulsor']] 
     segment.assigned_control_variables.body_angle.active             = True                   
       
     mission.append_segment(segment) 

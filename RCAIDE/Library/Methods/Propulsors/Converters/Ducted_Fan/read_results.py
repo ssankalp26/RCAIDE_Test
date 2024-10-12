@@ -93,7 +93,7 @@ def read_results(dfdc_analysis):
         results.performance.design_thrust              = float(case_lines[8][13:26].strip())
         results.performance.design_power               = float(case_lines[8][39:52].strip())
         results.performance.design_efficiency          = float(case_lines[8][65:76].strip()) 
-        results.performance.design_torque              = float(case_lines[10][39:52].strip())        
+        results.performance.design_torque              = float(case_lines[21][13:26].strip())        
         results.performance.design_thrust_coefficient  = float(case_lines[13][7:20].strip())        
         results.performance.design_power_coefficient   = float(case_lines[13][27:39].strip())       
         

@@ -110,7 +110,7 @@ def design_ducted_fan(ducted_fan):
     ducted_fan.cruise.design_thrust             = results.performance.design_thrust            
     ducted_fan.cruise.design_power              = results.performance.design_power             
     ducted_fan.cruise.design_efficiency         = results.performance.design_efficiency        
-    ducted_fan.cruise.design_torque             = results.performance.design_torque            
+    ducted_fan.cruise.design_torque             = results.performance.design_power /  ducted_fan.cruise.design_angular_velocity   
     ducted_fan.cruise.design_thrust_coefficient = results.performance.design_thrust_coefficient
     ducted_fan.cruise.design_power_coefficient  = results.performance.design_power_coefficient  
     
