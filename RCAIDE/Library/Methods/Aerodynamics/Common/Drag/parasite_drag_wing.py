@@ -87,8 +87,7 @@ def parasite_drag_wing(state,settings,geometry):
         total_k_reyn_l               = 0
         
         if recalculate_total_wetted_area:
-            wing = segment_properties(wing,update_wet_areas=True)
-            
+            wing = segment_properties(wing,update_wet_areas=True) 
         
         for i,segment in enumerate (wing.Segments): 
             if i == num_segments-1:

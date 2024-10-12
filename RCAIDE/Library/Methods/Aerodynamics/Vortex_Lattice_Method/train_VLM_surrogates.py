@@ -1,4 +1,3 @@
-## @ingroup  Library-Methods-Aerodynamics-Vortex_Lattice_Method
 # RCAIDE/Library/Methods/Aerodynamics/Vortex_Lattice_Method/train_VLM_surrogates.py
 #  
 # ----------------------------------------------------------------------------------------------------------------------
@@ -14,8 +13,7 @@ import numpy                                                     as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Vortex_Lattice
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Methods-Stability   
+# ---------------------------------------------------------------------------------------------------------------------- 
 def train_VLM_surrogates(aerodynamics):
     """Call methods to run VLM for sample point evaluation. 
     

@@ -1,7 +1,5 @@
-## @ingroup Components-Propulsors
 # RCAIDE/Library/Components/Propulsors/Propusor.py
-# 
-# 
+#  
 # 
 # Created:  Mar 2024, M. Clarke 
 

@@ -1,4 +1,3 @@
-## @ingroup Analyses-Aerodynamics
 # RCAIDE/Framework/Analyses/Aerodynamics/Aerodynamics.py
 # 
 # 
@@ -17,8 +16,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Aerodynamics
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Analyses-Aerodynamics
+# ---------------------------------------------------------------------------------------------------------------------- 
 class Aerodynamics(Analysis):
     """This is the base class for aerodynamics analyses. It contains functions
     that are built into the default class.
