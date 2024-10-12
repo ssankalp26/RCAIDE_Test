@@ -18,19 +18,11 @@ class Ducted_Fan_Design_Code(Data):
         """This sets the default values and methods for the analysis.
 
         Assumptions:
-        None
+            None
 
         Source:
-        N/A
-
-        Inputs:
-        None
-
-        Outputs:
-        None
-
-        Properties Used:
-        N/A
+            https://web.mit.edu/drela/Public/web/dfdc/
+            http://www.esotec.org/sw/DFDC.html 
         """          
         self.tag                                          = 'dfdc'    
                                                           
@@ -46,7 +38,7 @@ class Ducted_Fan_Design_Code(Data):
         self.settings.filenames.dfdc_bin_name             = '/Users/matthewclarke/Documents/LEADS/CODES/DFDC/bin/dfdc'   # to call avl from command line. If avl is not on the system path, include absolute path to the avl binary i.e. '/your/path/to/avl'
         self.settings.filenames.run_folder                = 'dfdc_files'   
         self.settings.filenames.deck_template             = 'commands_{0:02d}.deck'  
-        self.settings.filenames.results_template          = 'results_Vinf_{:.0f}_RPM_{:.0f}_Alt_{:.0f}.txt' 
+        self.settings.filenames.results_template          = 'results_Vinf_{:.2f}_RPM_{:.2f}_Alt_{:.2f}' 
         self.settings.filenames.case                      = None
         self.settings.filenames.log_filename              = 'dfdc_log.txt'
         self.settings.filenames.err_filename              = 'dfdc_err.txt'
@@ -64,9 +56,9 @@ class Ducted_Fan_Design_Code(Data):
         self.training                                     = Data()   
                   
         # Standard subsonic/transolic aircarft          
-        self.training.tip_mach                            = np.array([0.2, 0.4, 0.6, 0.8])     
-        self.training.mach                                = np.array([0.1,0.2,0.35,0.5]) 
-        self.training.altitude                            = np.array([0, 2, 5, 10])      
+        self.training.tip_mach                            = np.array([0.2, 0.3, 0.5, 0.6, 0.8])     
+        self.training.mach                                = np.array([0.1,0.2,0.35,0.5,0.6]) 
+        self.training.altitude                            = np.array([0, 2.5, 5, 7.5, 10]) *1000      
                                                         
         self.training_file                                = None
                   

@@ -20,7 +20,8 @@ def read_results(dfdc_analysis):
         None
         
     Source: 
-
+        None
+        
     Inputs:
         None
 
@@ -85,7 +86,8 @@ def read_results(dfdc_analysis):
     design_RPM       = ducted_fan.cruise.design_angular_velocity/Units.rpm 
     design_velocity  = ducted_fan.cruise.design_freestream_velocity 
     design_altitude  = ducted_fan.cruise.design_altitude  
-    results_filename =  os.path.abspath(run_folder + os.path.sep+ results_template.format(design_velocity,design_RPM,design_altitude))  
+    string           = results_template.format(design_velocity,design_RPM,design_altitude)     
+    results_filename =  os.path.abspath(run_folder + os.path.sep+ string.replace(".", "_") + '.txt')
     with open(results_filename,'r') as case_results_file: 
         case_lines                       = case_results_file.readlines() 
         results.performance.design_thrust              = float(case_lines[8][13:26].strip())
@@ -104,8 +106,9 @@ def read_results(dfdc_analysis):
                     atmo_data       = atmosphere.compute_values(altitudes[k]) 
                     a               = atmo_data.speed_of_sound[0,0] 
                     rpm             = ((tip_machs[j]*a) /dfdc_analysis.geometry.tip_radius)/Units.rpm
-                    velocity        =  mach[i] * a
-                    results_filename   =  os.path.abspath(run_folder + os.path.sep+ results_template.format(velocity,rpm,altitudes[k]))  
+                    velocity        =  mach[i] * a 
+                    string          = results_template.format(velocity,rpm,altitudes[k])   
+                    results_filename   =  os.path.abspath(run_folder + os.path.sep+ string.replace(".", "_") + '.txt')
                     with open(results_filename,'r') as case_results_file: 
                         case_lines                       = case_results_file.readlines() 
                         results.performance.thrust[i,j,k]              = float(case_lines[8][13:26].strip())
