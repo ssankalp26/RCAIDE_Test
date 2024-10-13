@@ -36,23 +36,23 @@ def single_airfoil():
     Re_vals              = np.atleast_2d(np.ones(len(AoA_deg)))*1E5 
     AoA_rad              = np.atleast_2d(AoA_deg*Units.degrees)   
     airfoil_file_1       = '4412'
-    airfoil_geometry_1   = compute_naca_4series(airfoil_file_1,npoints = 301)
+    airfoil_geometry_1   = compute_naca_4series(airfoil_file_1,npoints = 201)
     airfoil_properties_1 = airfoil_analysis(airfoil_geometry_1,AoA_rad,Re_vals)  
     
-    # distribution plots
-    for i in range(16):
-        plt.plot(airfoil_properties_1.x[0,0,150:],airfoil_properties_1.fL[:,i,0])
-        plt.title(('AOA =',AoA_deg[i],'degrees'))
-        plt.ylabel("fL")
-        plt.xlabel("c")
-        plt.show()
+    # # distribution plots
+    # for i in range(16):
+    #     plt.plot(airfoil_properties_1.x[0,0,150:],airfoil_properties_1.fL[:,i,0])
+    #     plt.title(('AOA =',AoA_deg[i],'degrees'))
+    #     plt.ylabel("fL")
+    #     plt.xlabel("c")
+    #     plt.show()
     
-    for i in range(16):
-        plt.plot(airfoil_properties_1.x[0,0,150:],airfoil_properties_1.fD[:,i,0])
-        plt.title(('AOA =',AoA_deg[i],'degrees'))
-        plt.ylabel("fD")
-        plt.xlabel("c")
-        plt.show()
+    # for i in range(16):
+    #     plt.plot(airfoil_properties_1.x[0,0,150:],airfoil_properties_1.fD[:,i,0])
+    #     plt.title(('AOA =',AoA_deg[i],'degrees'))
+    #     plt.ylabel("fD")
+    #     plt.xlabel("c")
+    #     plt.show()
     
     # Plots    
     plot_airfoil_surface_forces(airfoil_properties_1)   
