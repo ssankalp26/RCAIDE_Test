@@ -87,9 +87,9 @@ class Frequency_Domain_Buildup(Noise):
         
         settings.noise_hemisphere                       = False 
         settings.noise_hemisphere_radius                = 20 
-        settings.noise_hemisphere_microphone_resolution = 20 
-        settings.noise_hemisphere_directivity_phi_angle_bounds   = np.array([0,np.pi])     
-        settings.noise_hemisphere_directivity_theta_angle_bounds = np.array([0,2*np.pi])         
+        settings.noise_hemisphere_microphone_resolution = 20
+        settings.noise_hemisphere_phi_angle_bounds      = np.array([0,np.pi])
+        settings.noise_hemisphere_theta_angle_bounds    = np.array([0,2*np.pi])
          
                 
         # settings for acoustic frequency resolution
@@ -135,11 +135,13 @@ class Frequency_Domain_Buildup(Noise):
             generate_noise_hemisphere_microphone_locations(settings)     
             
         elif type(settings.ground_microphone_locations) is not np.ndarray: 
-            generate_zero_elevation_microphone_locations(settings)
-        RML,AGML,num_gm_mic,mic_stencil = compute_relative_noise_evaluation_locations(settings,conditions)
+            generate_zero_elevation_microphone_locations(settings)     
+        
+        RML,EGML,AGML,num_gm_mic,mic_stencil = compute_relative_noise_evaluation_locations(settings,segment)
           
         # append microphone locations to conditions  
-        conditions.noise.ground_microphone_stencil_locations   = mic_stencil         
+        conditions.noise.ground_microphone_stencil_locations   = mic_stencil        
+        conditions.noise.evaluated_ground_microphone_locations = EGML       
         conditions.noise.absolute_ground_microphone_locations  = AGML
         conditions.noise.number_of_ground_microphones          = num_gm_mic 
         conditions.noise.relative_microphone_locations         = RML 
@@ -157,7 +159,7 @@ class Frequency_Domain_Buildup(Noise):
                         for propulsor in distributor.propulsors:
                             for sub_tag , sub_item in  propulsor.items():
                                 if (sub_tag == 'rotor') or (sub_tag == 'propeller'):  
-                                    compute_rotor_noise(distributor,propulsor,sub_item,conditions,settings)  
+                                    compute_rotor_noise(distributor,propulsor,sub_item,conditions,settings) 
                                     total_SPL_dBA     = SPL_arithmetic(np.concatenate((total_SPL_dBA[:,None,:],conditions.noise[distributor.tag][propulsor.tag][sub_item.tag].SPL_dBA[:,None,:]),axis =1),sum_axis=1)
                                     total_SPL_spectra = SPL_arithmetic(np.concatenate((total_SPL_spectra[:,None,:,:],conditions.noise[distributor.tag][propulsor.tag][sub_item.tag].SPL_1_3_spectrum[:,None,:,:]),axis =1),sum_axis=1) 
                              
@@ -165,5 +167,3 @@ class Frequency_Domain_Buildup(Noise):
         conditions.noise.total_SPL_1_3_spectrum_dBA = total_SPL_spectra
         
         return
-    
-    

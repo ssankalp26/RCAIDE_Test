@@ -15,7 +15,7 @@ import numpy as np
 #  Relative Noise Evaluatation Locations
 # ----------------------------------------------------------------------------------------------------------------------      
 ## @ingroup Methods-Noise-Common 
-def compute_relative_noise_evaluation_locations(settings,conditions):
+def compute_relative_noise_evaluation_locations(settings,segment):
     """This computes the relative locations on the surface in the computational domain where the 
     propogated sound is computed. Vectors point from observer/microphone to aircraft/source  
             
@@ -41,15 +41,20 @@ def compute_relative_noise_evaluation_locations(settings,conditions):
         N/A       
     """       
  
+    mic_stencil_x     = settings.ground_microphone_x_stencil      
+    mic_stencil_y     = settings.ground_microphone_y_stencil 
+    MSL_altitude      = settings.mean_sea_level_altitude
     N_gm_x            = settings.ground_microphone_x_resolution   
     N_gm_y            = settings.ground_microphone_y_resolution   
     gml               = settings.ground_microphone_locations 
-    pos               = conditions.frames.inertial.position_vector 
+    pos               = segment.state.conditions.frames.inertial.position_vector 
     ctrl_pts          = len(pos)  
     AGML              = np.repeat(gml[np.newaxis,:,:],ctrl_pts,axis=0) 
     
     if settings.noise_hemisphere:
-        RML              = AGML   
+        RML   = AGML 
+        EGML  = AGML   
+
         mic_stencil      = np.zeros((ctrl_pts,4))
         mic_stencil[:,0] = 0 
         mic_stencil[:,1] = settings.noise_hemisphere_microphone_resolution  
@@ -58,9 +63,6 @@ def compute_relative_noise_evaluation_locations(settings,conditions):
         num_gm_mic       = N_gm_x*N_gm_y
         
     else: 
-        mic_stencil_x     = settings.ground_microphone_x_stencil      
-        mic_stencil_y     = settings.ground_microphone_y_stencil 
-        MSL_altitude      = settings.mean_sea_level_altitude
         if (mic_stencil_x*2 + 1) > N_gm_x:
             print("Resetting microphone stenxil in x direction")
             mic_stencil_x = int(np.floor(N_gm_x/2 - 1))
@@ -101,11 +103,13 @@ def compute_relative_noise_evaluation_locations(settings,conditions):
         mic_stencil[:,2] = start_y 
         mic_stencil[:,3] = end_y   
         
-        num_gm_mic   = (mic_stencil_x*2 + 1)*(mic_stencil_y*2 + 1) 
-        RML          = np.zeros((ctrl_pts,num_gm_mic,3))   
+        num_gm_mic   = (mic_stencil_x*2 + 1)*(mic_stencil_y*2 + 1)
+        EGML         = np.zeros((ctrl_pts,num_gm_mic,3))   
+        RML          = np.zeros_like(EGML)
         for cpt in range(ctrl_pts):
             surface         = AGML[cpt,:,:].reshape((N_gm_x,N_gm_y,3))
-            stencil         = surface[start_x[cpt]:end_x[cpt],start_y[cpt]:end_y[cpt],:].reshape(num_gm_mic,3,1)  # extraction of points  
+            stencil         = surface[start_x[cpt]:end_x[cpt],start_y[cpt]:end_y[cpt],:].reshape(num_gm_mic,3,1)  # extraction of points 
+            EGML[cpt]       = stencil[:,:,0]
             
             relative_locations           = np.zeros((num_gm_mic,3,1))
             relative_locations[:,0,0]    = stencil[:,0,0] -  (pos[cpt,0] + settings.aircraft_departure_location[0])
@@ -117,4 +121,4 @@ def compute_relative_noise_evaluation_locations(settings,conditions):
             
             RML[cpt,:,:]   = relative_locations[:,:,0] 
      
-    return RML,AGML,num_gm_mic,mic_stencil
+    return RML,EGML,AGML,num_gm_mic,mic_stencil
