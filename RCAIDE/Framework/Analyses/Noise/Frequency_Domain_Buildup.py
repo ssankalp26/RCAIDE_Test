@@ -7,15 +7,19 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------  
-# noise imports    
+# noise imports
+from  RCAIDE.Framework.Core                                                           import  Data
 from RCAIDE.Library.Methods.Noise.Common.decibel_arithmetic                           import SPL_arithmetic
-from RCAIDE.Library.Methods.Noise.Common.generate_microphone_locations                import generate_zero_elevation_microphone_locations, generate_noise_hemisphere_microphone_locations
+from RCAIDE.Library.Methods.Noise.Common.generate_zero_elevation_microphone_locations import generate_zero_elevation_microphone_locations 
+from RCAIDE.Library.Methods.Noise.Common.generate_terrain_microphone_locations        import generate_terrain_microphone_locations     
+from RCAIDE.Library.Methods.Noise.Common.generate_hemisphere_microphone_locations     import generate_hemisphere_microphone_locations
 from RCAIDE.Library.Methods.Noise.Common.compute_relative_noise_evaluation_locations  import compute_relative_noise_evaluation_locations  
 from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.compute_rotor_noise  import compute_rotor_noise 
 from .Noise      import Noise   
 
 # package imports
 import numpy as np
+from scipy.interpolate                                           import RegularGridInterpolator
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Frequency_Domain_Buildup
@@ -130,13 +134,13 @@ class Frequency_Domain_Buildup(Noise):
         ctrl_pts      = int(segment.state.numerics.number_of_control_points) 
         
         # generate noise valuation points
-        if settings.noise_hemisphere == True:
-            generate_noise_hemisphere_microphone_locations(settings)     
+        #if settings.noise_hemisphere == True:
+        microhpone_locations =  generate_hemisphere_microphone_locations(settings)     
             
-        elif type(settings.ground_microphone_locations) is not np.ndarray: 
-            generate_zero_elevation_microphone_locations(settings)     
+        #elif type(settings.ground_microphone_locations) is not np.ndarray: 
+            #microhpone_locations =  generate_zero_elevation_microphone_locations(settings)     
         
-        RML,EGML,AGML,num_gm_mic,mic_stencil = compute_relative_noise_evaluation_locations(settings,segment)
+        RML,EGML,AGML,num_gm_mic,mic_stencil = compute_relative_noise_evaluation_locations(settings,microhpone_locations, segment)
           
         # append microphone locations to conditions  
         conditions.noise.ground_microphone_stencil_locations   = mic_stencil        
@@ -157,10 +161,26 @@ class Frequency_Domain_Buildup(Noise):
                     for distributor in item: 
                         for propulsor in distributor.propulsors:
                             for sub_tag , sub_item in  propulsor.items():
-                                if (sub_tag == 'rotor') or (sub_tag == 'propeller'):  
-                                    compute_rotor_noise(distributor,propulsor,segment,settings) 
-                                    total_SPL_dBA     = SPL_arithmetic(np.concatenate((total_SPL_dBA[:,None,:],conditions.noise[distributor.tag][propulsor.tag][sub_item.tag].SPL_dBA[:,None,:]),axis =1),sum_axis=1)
-                                    total_SPL_spectra = SPL_arithmetic(np.concatenate((total_SPL_spectra[:,None,:,:],conditions.noise[distributor.tag][propulsor.tag][sub_item.tag].SPL_1_3_spectrum[:,None,:,:]),axis =1),sum_axis=1) 
+                                if (sub_tag == 'rotor') or (sub_tag == 'propeller'):
+                                    
+                                    # Step 1: compute noise at hemishere locations
+                                    compute_rotor_noise(distributor,propulsor,segment,settings)
+                                    
+                                    # Step 2: create surrogate here
+                                    surrogates = Data()
+                                    surrogates.SPL_dBA       = RegularGridInterpolator((AoA_data ,mach_data),training.Clift_alpha        ,method = 'linear',   bounds_error=False, fill_value=None)      
+                                    surrogates.SPL_spectra        = RegularGridInterpolator((Beta_data,mach_data),training.Clift_beta         ,method = 'linear',   bounds_error=False, fill_value=None) 
+                                    
+                                    
+                                    #total_SPL_dBA[:,None,:]
+                                    #total_SPL_spectra[:,None,:,:]
+                                    
+                                    # Step 3: query surrogate 
+                                    
+                                    # Step 4: store data 
+                                    
+                                    #total_SPL_dBA     = SPL_arithmetic(np.concatenate((total_SPL_dBA[:,None,:],conditions.noise[distributor.tag][propulsor.tag][sub_item.tag].SPL_dBA[:,None,:]),axis =1),sum_axis=1)
+                                    #total_SPL_spectra = SPL_arithmetic(np.concatenate((total_SPL_spectra[:,None,:,:],conditions.noise[distributor.tag][propulsor.tag][sub_item.tag].SPL_1_3_spectrum[:,None,:,:]),axis =1),sum_axis=1) 
                              
         conditions.noise.total_SPL_dBA              = total_SPL_dBA
         conditions.noise.total_SPL_1_3_spectrum_dBA = total_SPL_spectra
