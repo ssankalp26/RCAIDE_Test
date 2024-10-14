@@ -26,3 +26,4 @@ from . import Propulsion
 from . import Stability
 from . import Weights
 from . import Emissions
+from . import Geodesics

@@ -235,11 +235,6 @@ def import_tests():
         import pandas
     except ImportError:
         raise ImportError('pandas is required for this package')
-     
-    try:
-        import geopy
-    except ImportError:
-        raise ImportError('geopy is required for this package') 
     
     try:
         import importlib_metadata
