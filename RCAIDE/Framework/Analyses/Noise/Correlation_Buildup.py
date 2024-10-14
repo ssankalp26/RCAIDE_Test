@@ -13,7 +13,9 @@ from .Noise      import Noise
 from RCAIDE.Library.Methods.Noise.Correlation_Buildup.Airframe.airframe_noise                              import airframe_noise
 from RCAIDE.Library.Methods.Noise.Correlation_Buildup.Turbofan.turbofan_engine_noise                       import turbofan_engine_noise   
 from RCAIDE.Library.Methods.Noise.Common.decibel_arithmetic                                                import SPL_arithmetic
-from RCAIDE.Library.Methods.Noise.Common.generate_microphone_locations                                     import generate_zero_elevation_microphone_locations, generate_noise_hemisphere_microphone_locations
+from RCAIDE.Library.Methods.Noise.Common.generate_zero_elevation_microphone_locations                      import generate_zero_elevation_microphone_locations 
+from RCAIDE.Library.Methods.Noise.Common.generate_terrain_microphone_locations                             import generate_terrain_microphone_locations     
+from RCAIDE.Library.Methods.Noise.Common.generate_hemisphere_microphone_locations                          import generate_hemisphere_microphone_locations
 from RCAIDE.Library.Methods.Noise.Common.compute_relative_noise_evaluation_locations                       import compute_relative_noise_evaluation_locations  
 
 # package imports

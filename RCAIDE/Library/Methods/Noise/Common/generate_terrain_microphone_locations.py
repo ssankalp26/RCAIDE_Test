@@ -2,7 +2,7 @@
 # RCAIDE/Methods/Noise/Common/generate_microphone_locations.py
 # 
 # 
-# Created:  Jul 2023, M. Clarke  
+# Created:  Oct 2023, A. Molloy  
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
@@ -15,10 +15,10 @@ from scipy.interpolate import griddata
 import numpy as np
 from geopy.distance import geodesic as GD
 # ---------------------------------------------------------------------------------------------------------------------- 
-#  generate_terrain_elevated_microphone_locations
+#  generate_terrain_microphone_locations
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Noise-Common  
-def generate_terrain_elevated_microphone_locations(topography_file             = None,
+def generate_terrain_microphone_locations(topography_file             = None,
                                          departure_coordinates                 = [0.0,0.0],
                                          destination_coordinates               = [0.0,0.0],
                                          ground_microphone_x_resolution        = 101,

@@ -2,7 +2,7 @@
 # RCAIDE/Methods/Noise/Common/generate_microphone_locations.py
 # 
 # 
-# Created:  Jul 2023, M. Clarke  
+# Created:  Oct 2023, A. Molloy  
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
