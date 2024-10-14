@@ -1,68 +1,36 @@
+## @ingroup Methods-Geodesics-Geodesics 
+# RCAIDE/Library/Methods/Geodesics/Geodesics.py
+# 
+# 
+# Adapted:  Oct 2024, A. Molloy
+#
+# This is a built-in adaptation of the Geopy distance claculation capabilities. It primarily serves to calcualte distances
+# lat/long coordinate points. Minor adjustments have been made to better fit within the RCAIDE frameowkr (for instance, results
+# only returned in kilometers).
+#
+# Distinct classes that are included in one palce here include the original Constants, Distance, Geodesic, 
+# GeodesicCapability, Geodesic_Calculate, and Math classes.
 
+# ----------------------------------------------------------------------------------------------------------------------
+#  IMPORT
+# ---------------------------------------------------------------------------------------------------------------------- 
+import math
+import sys
 
+"""Evaluate the thrust produced by the energy network.
 
-'''The following code is taken from Geopy with a few minor adaptations.'''
+Assumptions:
+    WGS-84 Ellipsoid model 
 
-"""Define the :class:`~geographiclib.geodesic.Geodesic` class
+Source:
+    Karney, C. F., (2022) Geopy Python Code [source code]. https://geographiclib.sourceforge.io/
 
-The ellipsoid parameters are defined by the constructor.  The direct and
-inverse geodesic problems are solved by
+Args:
+    
+Returns:
+     
+""" 
 
-  * :meth:`~geographiclib.geodesic.Geodesic.Inverse` Solve the inverse
-    geodesic problem
-  * :meth:`~geographiclib.geodesic.Geodesic.Direct` Solve the direct
-    geodesic problem
-  * :meth:`~geographiclib.geodesic.Geodesic.ArcDirect` Solve the direct
-    geodesic problem in terms of spherical arc length
-
-:class:`~geographiclib.geodesicline.GeodesicLine` objects can be created
-with
-
-  * :meth:`~geographiclib.geodesic.Geodesic.Line`
-  * :meth:`~geographiclib.geodesic.Geodesic.DirectLine`
-  * :meth:`~geographiclib.geodesic.Geodesic.ArcDirectLine`
-  * :meth:`~geographiclib.geodesic.Geodesic.InverseLine`
-
-:class:`~geographiclib.polygonarea.PolygonArea` objects can be created
-with
-
-  * :meth:`~geographiclib.geodesic.Geodesic.Polygon`
-
-The public attributes for this class are
-
-  * :attr:`~geographiclib.geodesic.Geodesic.a`
-    :attr:`~geographiclib.geodesic.Geodesic.f`
-
-*outmask* and *caps* bit masks are
-
-  * :const:`~geographiclib.geodesic.Geodesic.EMPTY`
-  * :const:`~geographiclib.geodesic.Geodesic.LATITUDE`
-  * :const:`~geographiclib.geodesic.Geodesic.LONGITUDE`
-  * :const:`~geographiclib.geodesic.Geodesic.AZIMUTH`
-  * :const:`~geographiclib.geodesic.Geodesic.DISTANCE`
-  * :const:`~geographiclib.geodesic.Geodesic.STANDARD`
-  * :const:`~geographiclib.geodesic.Geodesic.DISTANCE_IN`
-  * :const:`~geographiclib.geodesic.Geodesic.REDUCEDLENGTH`
-  * :const:`~geographiclib.geodesic.Geodesic.GEODESICSCALE`
-  * :const:`~geographiclib.geodesic.Geodesic.AREA`
-  * :const:`~geographiclib.geodesic.Geodesic.ALL`
-  * :const:`~geographiclib.geodesic.Geodesic.LONG_UNROLL`
-
-:Example:
-
-    >>> from geographiclib.geodesic import Geodesic
-    >>> # The geodesic inverse problem
-    ... Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
-    {'lat1': -41.32,
-     'a12': 179.6197069334283,
-     's12': 19959679.26735382,
-     'lat2': 40.96,
-     'azi2': 18.825195123248392,
-     'azi1': 161.06766998615882,
-     'lon1': 174.81,
-     'lon2': -5.5}
-
-"""
 # geodesic.py
 #
 # This is a rather literal translation of the GeographicLib::Geodesic class to
@@ -81,16 +49,6 @@ The public attributes for this class are
 # under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 ######################################################################
-
-import math
-import sys
-import numpy as  np
-#from geographiclib.geomath import Math
-#from geographiclib.constants import Constants
-#from geographiclib.geodesiccapability import GeodesicCapability
-
-
-
 
 class Math:
     """
@@ -272,7 +230,6 @@ class Constants:
     """
     Constants describing the WGS84 ellipsoid
     """
-
     WGS84_a = 6378137.0           # meters
     """the equatorial radius in meters of the WGS84 ellipsoid in meters"""
     WGS84_f = 1/298.257223563
@@ -816,6 +773,7 @@ class Geodesic:
 
     # return lam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps,
     # domg12, dlam12
+    
     def _Lambda12(self, sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
                 slam120, clam120, diffp,
                 # Scratch areas of the right size
@@ -1484,7 +1442,7 @@ Geodesic.WGS84 = Geodesic(Constants.WGS84_a, Constants.WGS84_f)
 """Instantiation for the WGS84 ellipsoid"""
 
 class Distance:
-    """
+    """ Modified to remve unit conversions to stay with RCAIDE conventions - Oct. 2024
     Base class for other distance algorithms. Represents a distance.
 
     Can be used for units conversion::
@@ -1532,19 +1490,6 @@ class Distance:
         >>> Distance(kilometers=6) / 5
         Distance(1.2)
     """
-    ''' def kilometers(meters=0, miles=0, feet=0, nautical=0):
-        """
-        Convert distance to kilometers.
-        """
-        ret = 0.
-        if meters:
-            pass #ret += meters / 1000.
-        if feet:
-            pass #ret += feet / ft(1.)
-        if nautical:
-            pass #ret += nautical / nm(1.)
-        ret += miles * 1.609344
-        return ret'''
     
     def __init__(self, *args, **kwargs):
         """
@@ -1555,14 +1500,6 @@ class Distance:
             >>> from geopy.distance import Distance
             >>> Distance(1.42)
             Distance(1.42)
-
-        - From units::
-
-            >>> from geopy.distance import Distance
-            >>> Distance(kilometers=1.42)
-            Distance(1.42)
-            >>> Distance(miles=1)
-            Distance(1.609344)
 
         - From points (for non-abstract distances only),
           calculated as a sum of distances between all points::
@@ -1593,9 +1530,7 @@ class Distance:
         if isinstance(other, Distance):
             return self.__class__(self.kilometers + other.kilometers)
         else:
-            raise TypeError(
-                "Distance instance must be added with Distance instance."
-            )
+            raise TypeError("Distance instance must be added with Distance instance.")
 
     def __neg__(self):
         return self.__class__(-self.kilometers)
@@ -1605,17 +1540,13 @@ class Distance:
 
     def __mul__(self, other):
         if isinstance(other, Distance):
-            raise TypeError(
-                "Distance instance must be multiplicated with numbers."
-            )
+            raise TypeError("Distance instance must be multiplicated with numbers.")
         else:
             return self.__class__(self.kilometers * other)
 
     def __rmul__(self, other):
         if isinstance(other, Distance):
-            raise TypeError(
-                "Distance instance must be multiplicated with numbers."
-            )
+            raise TypeError("Distance instance must be multiplicated with numbers.")
         else:
             return self.__class__(other * self.kilometers)
 
@@ -1664,8 +1595,7 @@ class Distance:
             this instance::
 
                 >>> from geopy.distance import distance, Distance
-                >>> distance(miles=10).destination((34, 148), bearing=90, \
-distance=Distance(100))
+                >>> distance(miles=10).destination((34, 148), bearing=90, \distance=Distance(100))
                 Point(33.995238229104764, 149.08238904409637, 0.0)
 
         :type distance: :class:`.Distance`
@@ -1706,15 +1636,7 @@ distance=Distance(100))
 
     def __le__(self, other):
         return self.__cmp__(other) <= 0
-    '''
-    @property
-    def feet(self):
-        return units.feet(kilometers=self.kilometers)
-
-    @property
-    def ft(self):
-        return self.feet
-    '''
+    
     @property
     def kilometers(self):
         return self.__kilometers
@@ -1722,32 +1644,6 @@ distance=Distance(100))
     @property
     def km(self):
         return self.kilometers
-'''
-    @property
-    def m(self):
-        return self.meters
-
-    @property
-    def meters(self):
-        return units.meters(kilometers=self.kilometers)
-
-    @property
-    def mi(self):
-        return self.miles
-
-    @property
-    def miles(self):
-        return units.miles(kilometers=self.kilometers)
-
-    @property
-    def nautical(self):
-        return units.nautical(kilometers=self.kilometers)
-
-    @property
-    def nm(self):
-        return self.nautical
-
-'''
 
 class Geodesic_Calculate(Distance):
     """
@@ -1783,7 +1679,7 @@ class Geodesic_Calculate(Distance):
     def set_ellipsoid(self, ellipsoid):
         if isinstance(ellipsoid, str):
             try:
-                self.ELLIPSOID = (6378.137, 6356.7523142, 1 / 298.257223563)
+                self.ELLIPSOID = (6378.137, 6356.7523142, 1 / 298.257223563) # Assigns WGS-84 Ellipsoid parameters
                 self.ellipsoid_key = ellipsoid
             except KeyError:
                 raise Exception(
