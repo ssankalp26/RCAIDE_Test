@@ -31,5 +31,5 @@ def append_electric_ducted_fan_conditions(propulsor,segment,bus,add_additional_n
         ducted_fan   = propulsor.ducted_fan
         cp_init      = ducted_fan.cruise.design_power_coefficient
         segment.state.unknowns[ propulsor.tag  + '_ducted_fan_cp']               = cp_init * ones_row(1)  
-        segment.state.residuals.network[ propulsor.tag  + '_rotor_motor_torque'] = 0. * ones_row(1)        
+        segment.state.residuals.network[ propulsor.tag  + '_ducted_fan_motor_torque'] = 0. * ones_row(1)        
     return

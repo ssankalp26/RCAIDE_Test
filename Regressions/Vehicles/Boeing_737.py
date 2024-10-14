@@ -673,8 +673,7 @@ def configs_setup(vehicle):
 
     config = RCAIDE.Library.Components.Configs.Config(base_config)
     config.tag = 'cruise'
-    configs.append(config)
-
+    configs.append(config) 
 
     # ------------------------------------------------------------------
     #   Takeoff Configuration

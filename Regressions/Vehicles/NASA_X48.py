@@ -13,7 +13,7 @@ from RCAIDE.Library.Methods.Propulsors.Converters.Ducted_Fan        import desig
 from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor          import design_motor  
 from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion import compute_motor_weight
 from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common         import initialize_from_circuit_configuration
-from RCAIDE.Library.Methods.Geometry.Planform                       import wing_segmented_planform 
+from RCAIDE.Library.Methods.Geometry.Planform                       import wing_segmented_planform  
 from RCAIDE.Library.Plots                                           import *     
  
 # python imports 
@@ -55,59 +55,47 @@ def vehicle_setup():
 
     # ------------------------------------------------------------------        
     #   Main Wing
-    # ------------------------------------------------------------------        
-    wing = RCAIDE.Library.Components.Wings.Main_Wing()
-    wing.tag = 'main_wing'
-
-    wing.aspect_ratio            = 4.1
-    wing.thickness_to_chord      = 0.15
-    wing.taper                   = 0.0138
-    wing.spans.projected         = 6.4
-    wing.chords.root             = 4.6
-    wing.chords.tip              = 4.6 *  wing.taper    
-    wing.chords.mean_aerodynamic = (4.6 * (1 + wing.taper ) ) /2 
-    wing.areas.reference         = 9.34 
-    wing.sweeps.quarter_chord    = 33. * Units.degrees
-    wing.twists.root             = 0.0 * Units.degrees
-    wing.twists.tip              = 0.0 * Units.degrees
-    wing.dihedral                = 2.5 * Units.degrees
-    wing.origin                  = [[0.,0.,0]]
-    wing.aerodynamic_center      = [0,0,0] 
-    wing.vertical                = False
-    wing.symmetric               = True
-    wing.high_lift               = True
-    wing.dynamic_pressure_ratio  = 1.0
-
-    segment = RCAIDE.Library.Components.Wings.Segment()
-
+    # ------------------------------------------------------------------ 
+    wing                                  = RCAIDE.Library.Components.Wings.Main_Wing()
+    wing.tag                              = 'main_wing' 
+    wing.aspect_ratio                     = 4.1
+    wing.sweeps.quarter_chord             = 33. * Units.deg
+    wing.thickness_to_chord               = 0.1
+    wing.taper                            = 0.0138
+    wing.spans.projected                  = 6.4
+    wing.chords.root                      = 4.6
+    wing.chords.tip                       = wing.chords.root * wing.taper      
+    wing.chords.mean_aerodynamic          = (wing.chords.root * (1 + wing.taper ) ) /2 
+    wing.areas.reference                  = 9.34 
+    wing.areas.wetted                     = 9.34 * 2
+    wing.twists.root                      = 3.0 * Units.degrees
+    wing.twists.tip                       = 0.0 * Units.degrees 
+    wing.origin                           = [[0,0,0]]
+    wing.aerodynamic_center               = [0,0,0] 
+    wing.vertical                         = False
+    wing.symmetric                        = True
+    wing.high_lift                        = True 
+    wing.dynamic_pressure_ratio           = 1.0
+    
+    segment = RCAIDE.Library.Components.Wings.Segment() 
     segment.tag                   = 'section_1'
-    segment.percent_span_location = 0.0
-    segment.twist                 = 0. * Units.deg
+    segment.percent_span_location = 1.0
+    segment.twist                 = 3. * Units.deg
     segment.root_chord_percent    = 1.
     segment.dihedral_outboard     = 0. * Units.degrees
     segment.sweeps.quarter_chord  = 40.0 * Units.degrees
-    segment.thickness_to_chord    = 0.165
-    segment.vsp_mesh              = Data()
-    segment.vsp_mesh.inner_radius    = 4.
-    segment.vsp_mesh.outer_radius    = 4.
-    segment.vsp_mesh.inner_length    = .14
-    segment.vsp_mesh.outer_length    = .14    
-    wing.Segments.append(segment)    
+    segment.thickness_to_chord    = 0.165 
+    wing.append_segment(segment)
     
     segment = RCAIDE.Library.Components.Wings.Segment()
     segment.tag                      = 'section_2'
     segment.percent_span_location    = 0.052
-    segment.twist                    = 0. * Units.deg
+    segment.twist                    = 3. * Units.deg
     segment.root_chord_percent       = 0.921
     segment.dihedral_outboard        = 0.   * Units.degrees
     segment.sweeps.quarter_chord     = 52.5 * Units.degrees
-    segment.thickness_to_chord       = 0.167
-    segment.vsp_mesh                 = Data()
-    segment.vsp_mesh.inner_radius    = 4.
-    segment.vsp_mesh.outer_radius    = 4.
-    segment.vsp_mesh.inner_length    = .14
-    segment.vsp_mesh.outer_length    = .14     
-    wing.Segments.append(segment)   
+    segment.thickness_to_chord       = 0.167 
+    wing.append_segment(segment)
 
     segment = RCAIDE.Library.Components.Wings.Segment()
     segment.tag                      = 'section_3'
@@ -116,59 +104,39 @@ def vehicle_setup():
     segment.root_chord_percent       = 0.76
     segment.dihedral_outboard        = 1.85 * Units.degrees
     segment.sweeps.quarter_chord     = 36.9 * Units.degrees  
-    segment.thickness_to_chord       = 0.171
-    segment.vsp_mesh                 = Data()
-    segment.vsp_mesh.inner_radius    = 4.
-    segment.vsp_mesh.outer_radius    = 4.
-    segment.vsp_mesh.inner_length    = .14
-    segment.vsp_mesh.outer_length    = .14     
-    wing.Segments.append(segment)   
+    segment.thickness_to_chord       = 0.171 
+    wing.append_segment(segment)
     
     segment = RCAIDE.Library.Components.Wings.Segment()
     segment.tag                      = 'section_4'
     segment.percent_span_location    = 0.221
-    segment.twist                    = 0. * Units.deg
+    segment.twist                    = 2.5 * Units.deg
     segment.root_chord_percent       = 0.624
     segment.dihedral_outboard        = 1.85 * Units.degrees
     segment.sweeps.quarter_chord     = 30.4 * Units.degrees    
-    segment.thickness_to_chord       = 0.175
-    segment.vsp_mesh                 = Data()
-    segment.vsp_mesh.inner_radius    = 4.
-    segment.vsp_mesh.outer_radius    = 2.8
-    segment.vsp_mesh.inner_length    = .14
-    segment.vsp_mesh.outer_length    = .14     
-    wing.Segments.append(segment)       
+    segment.thickness_to_chord       = 0.175 
+    wing.append_segment(segment)
     
     segment = RCAIDE.Library.Components.Wings.Segment()
     segment.tag                   = 'section_5'
     segment.percent_span_location = 0.457
     segment.twist                 = 0. * Units.deg
-    segment.root_chord_percent    = 0.313
+    segment.root_chord_percent    = 1.313
     segment.dihedral_outboard     = 1.85  * Units.degrees
     segment.sweeps.quarter_chord  = 30.85 * Units.degrees
     segment.thickness_to_chord    = 0.118
-    wing.Segments.append(segment)       
+    wing.append_segment(segment)
     
     segment = RCAIDE.Library.Components.Wings.Segment()
     segment.tag                   = 'section_6'
     segment.percent_span_location = 0.568
-    segment.twist                 = 0. * Units.deg
+    segment.twist                 = 1. * Units.deg
     segment.root_chord_percent    = 0.197
     segment.dihedral_outboard     = 1.85 * Units.degrees
     segment.sweeps.quarter_chord  = 34.3 * Units.degrees
     segment.thickness_to_chord    = 0.10
-    wing.Segments.append(segment)     
-    
-    segment = RCAIDE.Library.Components.Wings.Segment()
-    segment.tag                   = 'section_7'
-    segment.percent_span_location = 0.97
-    segment.twist                 = 0. * Units.deg
-    segment.root_chord_percent    = 0.086
-    segment.dihedral_outboard     = 73. * Units.degrees
-    segment.sweeps.quarter_chord  = 55. * Units.degrees
-    segment.thickness_to_chord    = 0.10
-    wing.Segments.append(segment)      
-
+    wing.append_segment(segment)
+     
     segment = RCAIDE.Library.Components.Wings.Segment()
     segment.tag                   = 'tip'
     segment.percent_span_location = 1
@@ -177,7 +145,7 @@ def vehicle_setup():
     segment.dihedral_outboard     = 0. * Units.degrees
     segment.sweeps.quarter_chord  = 0. * Units.degrees
     segment.thickness_to_chord    = 0.10
-    wing.Segments.append(segment)  
+    wing.append_segment(segment)
     
     # Fill out more segment properties automatically
     wing = segment_properties(wing)        
@@ -205,23 +173,18 @@ def vehicle_setup():
     #------------------------------------------------------------------------------------------------------------------------------------           
     # Battery
     #------------------------------------------------------------------------------------------------------------------------------------  
-    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC()
-    number_of_modules                                      = 8 
+    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC() 
     bat.tag                                                = 'li_ion_battery'
-    bat.electrical_configuration.series                    = 16   
-    bat.electrical_configuration.parallel                  = 40
-    initialize_from_circuit_configuration(bat)  
-   
+    bat.electrical_configuration.series                    = 10  
+    bat.electrical_configuration.parallel                  = 5
+    initialize_from_circuit_configuration(bat)   
     bat.geometrtic_configuration.total                      = bat.electrical_configuration.total
     bat.voltage                                             = bat.maximum_voltage 
-    bat.geometrtic_configuration.normal_count               = 20
-    bat.geometrtic_configuration.parallel_count             = 32
-     
-    for _ in range(number_of_modules):
-        bus.battery_modules.append(deepcopy(bat))    
+    bat.geometrtic_configuration.normal_count               = 5
+    bat.geometrtic_configuration.parallel_count             = 10
+    bus.battery_modules.append(bat)      
+    bus.initialize_bus_electrical_properties()
     
-    bus.battery_module_electric_configuration = 'Series' 
-    bus.initialize_bus_electrical_properties()      
     #------------------------------------------------------------------------------------------------------------------------------------  
     #  Starboard Propulsor
     #------------------------------------------------------------------------------------------------------------------------------------   
@@ -247,8 +210,8 @@ def vehicle_setup():
     ducted_fan.rotor_percent_x_location          = 0.4
     ducted_fan.stator_percent_x_location         = 0.7
     ducted_fan.cruise.design_thrust              = 60 *  Units.lbs
-    ducted_fan.cruise.design_altitude            = 5000    
-    ducted_fan.cruise.design_tip_mach            = 0.6
+    ducted_fan.cruise.design_altitude            = 2000    
+    ducted_fan.cruise.design_tip_mach            = 0.7
     ducted_fan.cruise.design_angular_velocity    = (ducted_fan.cruise.design_tip_mach *320) /ducted_fan.tip_radius  # 1352 RPM
     ducted_fan.cruise.design_freestream_velocity = 120 *  Units.mph
     ducted_fan.cruise.design_reference_velocity  = 120 *  Units.mph
@@ -265,8 +228,8 @@ def vehicle_setup():
     motor                                         = RCAIDE.Library.Components.Propulsors.Converters.DC_Motor()
     motor.efficiency                              = 0.98
     motor.origin                                  = [[2.,  2.5, 0.95]]
-    motor.nominal_voltage                         = bus.voltage*0.5
-    motor.no_load_current                         = 1
+    motor.nominal_voltage                         = bus.voltage
+    motor.no_load_current                         = 0.01
     motor.rotor_radius                            = ducted_fan.tip_radius
     motor.design_torque                           = ducted_fan.cruise.design_torque
     motor.angular_velocity                        = ducted_fan.cruise.design_angular_velocity 

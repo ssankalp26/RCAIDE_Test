@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Correlation_Buildup-Turbofan
 # RCAIDE/Methods/Noise/Correlation_Buildup/Turbofan/turbofan_engine_noise.py
 # 
 # 
@@ -30,8 +29,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------     
 #  turbofan engine noise 
-# ----------------------------------------------------------------------------------------------------------------------        
-## @ingroup Methods-Noise-Correlation_Buildup-Engine
+# ----------------------------------------------------------------------------------------------------------------------         
 def turbofan_engine_noise(turbofan,aeroacoustic_data,segment,settings):  
     """This method predicts the free-field 1/3 Octave Band SPL of coaxial subsonic
        jets for turbofan engines under the following conditions:

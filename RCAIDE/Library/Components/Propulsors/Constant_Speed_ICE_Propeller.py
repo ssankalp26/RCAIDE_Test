@@ -1,8 +1,6 @@
-## @ingroup Components-Propulsors 
 # RCAIDE/Library/Components/Propulsors/Constant_Speed_ICE_Propeller.py
 # 
-# 
-# 
+#  
 # Created:  Mar 2024, M. Clarke
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -13,10 +11,9 @@ from .                import Propulsor
 from RCAIDE.Library.Methods.Propulsors.Constant_Speed_ICE_Propulsor.append_ice_cs_propeller_conditions  import append_ice_cs_propeller_conditions
 from RCAIDE.Library.Methods.Propulsors.Constant_Speed_ICE_Propulsor.compute_cs_ice_performance          import compute_cs_ice_performance, reuse_stored_ice_cs_prop_data
  
-# ----------------------------------------------------------------------
-#  Fan Component
-# ----------------------------------------------------------------------
-## @ingroup Components-Propulsors-Converters
+# ---------------------------------------------------------------------------------------------------------------------- 
+#  Constant_Speed_ICE_Propeller
+# ---------------------------------------------------------------------------------------------------------------------- 
 class Constant_Speed_ICE_Propeller(Propulsor):
     """This is an internal engine-propeller propulsor
     

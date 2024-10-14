@@ -14,8 +14,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Wing Segmented Planform
-# ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Library-Methods-Geometry-Two_Dimensional-Planform
+# ----------------------------------------------------------------------------------------------------------------------    
 def wing_segmented_planform(wing, overwrite_reference = False):
     """Computes standard wing planform values.
     

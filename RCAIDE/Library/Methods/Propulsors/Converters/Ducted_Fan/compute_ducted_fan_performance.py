@@ -16,23 +16,29 @@ import  numpy as  np
 #  Generalized Rotor Class
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Energy-Propulsion-Converters
-def compute_ducted_fan_performance(propulsor,state,disributor,center_of_gravity= [[0.0, 0.0,0.0]]):
+def compute_ducted_fan_performance(propulsor,state,distributor,center_of_gravity= [[0.0, 0.0,0.0]]):
     """Analyzes a general ducted_fan given geometry and operating conditions.
 
     Assumptions:
-    per source
+    N.A.
 
     Source:
+    N.A.
     
-    Inputs: 
+    Inputs:
+        propulsor          (dict): propulsor data structure 
+        state              (dict): flight conditions data structure 
+        distributor        (dict): data structure of distributor 
+        center_of_gravity  (list): center of gravity  
 
-    Outputs: 
+    Outputs:
+        None
     """
 
     # Unpack ducted_fan blade parameters and operating conditions 
     conditions            = state.conditions
     ducted_fan            = propulsor.ducted_fan
-    propulsor_conditions  = conditions.energy[disributor.tag][propulsor.tag]
+    propulsor_conditions  = conditions.energy[distributor.tag][propulsor.tag]
     commanded_TV          = propulsor_conditions.commanded_thrust_vector_angle
     ducted_fan_conditions = propulsor_conditions[ducted_fan.tag]
                   
@@ -97,8 +103,7 @@ def compute_ducted_fan_performance(propulsor,state,disributor,center_of_gravity=
                 rpm                               = omega /Units.rpm ,   
                 tip_mach                          = tip_mach, 
                 efficiency                        = efficiency,         
-                number_radial_stations            = Nr,
-                advance_ratio                     = advance_ratio, 
+                number_radial_stations            = Nr, 
                 orientation                       = orientation, 
                 speed_of_sound                    = conditions.freestream.speed_of_sound,
                 density                           = conditions.freestream.density,
@@ -111,6 +116,6 @@ def compute_ducted_fan_performance(propulsor,state,disributor,center_of_gravity=
                 power_coefficient                 = Cp,  
         ) 
     
-    conditions.energy[disributor.tag][propulsor.tag][ducted_fan.tag] = outputs   
+    conditions.energy[distributor.tag][propulsor.tag][ducted_fan.tag] = outputs   
     
     return  
