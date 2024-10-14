@@ -12,8 +12,9 @@ from RCAIDE.Framework.Core import Units, Data
 
 # package imports 
 from scipy.interpolate import griddata
-import numpy as np
-from geopy.distance import geodesic as GD
+import numpy as np 
+from RCAIDE.Framework.Analyses.Geodesics.Geodesics import Calculate_Distance
+ 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  generate_terrain_microphone_locations
 # ---------------------------------------------------------------------------------------------------------------------- 
@@ -83,8 +84,8 @@ def generate_terrain_microphone_locations(topography_file             = None,
     bottom_left_map_coords   = np.array([x_min_coord,y_min_coord])  
     bottom_right_map_coords  = np.array([x_min_coord,y_max_coord]) 
     
-    x_dist_max = GD(top_left_map_coords,bottom_left_map_coords).m 
-    y_dist_max = GD(bottom_right_map_coords,bottom_left_map_coords).m  
+    x_dist_max = Calculate_Distance(top_left_map_coords,bottom_left_map_coords) * Units.kilometers
+    y_dist_max = Calculate_Distance(bottom_right_map_coords,bottom_left_map_coords) * Units.kilometers
     
     [y_pts,x_pts]      = np.meshgrid(np.linspace(0,y_dist_max,ground_microphone_y_resolution),np.linspace(0,x_dist_max,ground_microphone_x_resolution))
     [long_deg,lat_deg] = np.meshgrid(np.linspace(np.min(Long),np.max(Long),ground_microphone_y_resolution),np.linspace(np.min(Lat),np.max(Lat),ground_microphone_x_resolution)) 
