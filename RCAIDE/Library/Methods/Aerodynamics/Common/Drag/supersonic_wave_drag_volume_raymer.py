@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
-  
+import RCAIDE
 from RCAIDE.Framework.Core                    import    Units 
 from RCAIDE.Library.Components.Wings          import Main_Wing
 from RCAIDE.Library.Methods.Utilities         import Cubic_Spline_Blender   
@@ -36,19 +36,24 @@ def supersonic_wave_drag_volume_raymer(vehicle,mach,scaling_factor):
       
     Returns:
     vehicle_wave_drag                     [Unitless] 
-    """   
+    """
+    L =  0
     for wing in vehicle.wings:
         if isinstance(wing,Main_Wing):
-            main_wing = wing 
+            main_wing = wing
+            L  =  wing.chords.root
     
     main_wing = vehicle.wings.main_wing
     # estimation of leading edge sweep if not defined 
     if main_wing.sweeps.leading_edge == None:                           
         main_wing.sweeps.leading_edge  = convert_sweep(main_wing,old_ref_chord_fraction = 0.25 ,new_ref_chord_fraction = 0.0) 
-    
-    L =  0 
-    for fuselage in  vehicle.fuselages:
-        L =  np.maximum(L, fuselage.lengths.total)
+     
+    for fuselage in vehicle.fuselages:
+        if type(fuselage) == RCAIDE.Library.Components.Fuselages.Blended_Wing_Body_Fuselage:
+            pass
+        else:
+            L =  np.maximum(L, fuselage.lengths.total)
+        
     LE_sweep = main_wing.sweeps.leading_edge / Units.deg
     Ae       = vehicle.maximum_cross_sectional_area
     S        = vehicle.reference_area
