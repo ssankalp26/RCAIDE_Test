@@ -6,14 +6,9 @@
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
-# ---------------------------------------------------------------------------------------------------------------------- 
-# RCAIDE imports  
-from RCAIDE.Framework.Core import Units, Data
-
-# package imports 
-from scipy.interpolate import griddata
-import numpy as np
-from geopy.distance import geodesic as GD
+# ----------------------------------------------------------------------------------------------------------------------  
+# package imports  
+import numpy as np 
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  generate_zero_elevation_microphone_locations
@@ -58,7 +53,5 @@ def generate_zero_elevation_microphone_locations(settings):
     gm_mic_locations[:,0] = x_coords_0.reshape(num_gm)
     gm_mic_locations[:,1] = y_coords_0.reshape(num_gm)
     gm_mic_locations[:,2] = z_coords_0.reshape(num_gm) 
-    
-    # store ground microphone locations
-    settings.ground_microphone_locations = gm_mic_locations
-    return
+     
+    return gm_mic_locations

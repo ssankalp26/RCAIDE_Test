@@ -9,24 +9,23 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
 # RCAIDE imports  
 from RCAIDE.Framework.Core import Units, Data
+from RCAIDE.Framework.Analyses.Geodesics.Geodesics import Calculate_Distance
 
 # package imports 
 from scipy.interpolate import griddata
 import numpy as np 
-from RCAIDE.Framework.Analyses.Geodesics.Geodesics import Calculate_Distance
  
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  generate_terrain_microphone_locations
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Noise-Common  
-def generate_terrain_microphone_locations(topography_file             = None,
-                                         departure_coordinates                 = [0.0,0.0],
-                                         destination_coordinates               = [0.0,0.0],
-                                         ground_microphone_x_resolution        = 101,
-                                         ground_microphone_y_resolution        = 101,
-                                         ground_microphone_x_stencil           = 3,
-                                         ground_microphone_y_stencil           = 3, 
-                                         adjusted_cruise_distance              = 0):
+def generate_terrain_microphone_locations(settings
+                                          #topography_file                      = None,
+                                         #ground_microphone_x_resolution        = 101,
+                                         #ground_microphone_y_resolution        = 101,
+                                         #departure_coordinates                 = [0.0,0.0],
+                                         #destination_coordinates               = [0.0,0.0], 
+                                         ):
     """This computes the absolute microphone/observer locations on a defined topography
             
     Assumptions: 
@@ -64,9 +63,11 @@ def generate_terrain_microphone_locations(topography_file             = None,
     # convert cooordinates to array 
     departure_coordinates   = np.asarray(departure_coordinates)
     destination_coordinates = np.asarray(destination_coordinates)
+    y_res =  settings.ground_microphone_y_resolution
+    x_res =  settings.ground_microphone_x_resolution
     
     # extract data from file 
-    data  = np.loadtxt(topography_file)
+    data  = np.loadtxt(settings.topography_file)
     Long  = data[:,0]
     Lat   = data[:,1]
     Elev  = data[:,2] 
@@ -87,53 +88,50 @@ def generate_terrain_microphone_locations(topography_file             = None,
     x_dist_max = Calculate_Distance(top_left_map_coords,bottom_left_map_coords) * Units.kilometers
     y_dist_max = Calculate_Distance(bottom_right_map_coords,bottom_left_map_coords) * Units.kilometers
     
-    [y_pts,x_pts]      = np.meshgrid(np.linspace(0,y_dist_max,ground_microphone_y_resolution),np.linspace(0,x_dist_max,ground_microphone_x_resolution))
-    [long_deg,lat_deg] = np.meshgrid(np.linspace(np.min(Long),np.max(Long),ground_microphone_y_resolution),np.linspace(np.min(Lat),np.max(Lat),ground_microphone_x_resolution)) 
+    [y_pts,x_pts]      = np.meshgrid(np.linspace(0,y_dist_max,y_res),np.linspace(0,x_dist_max,x_res))
+    [long_deg,lat_deg] = np.meshgrid(np.linspace(np.min(Long),np.max(Long),y_res),np.linspace(np.min(Lat),np.max(Lat),x_res)) 
     z_deg              = griddata((Lat,Long), Elev, (lat_deg, long_deg), method='linear')        
-    cartesian_pts      = np.dstack((np.dstack((x_pts[:,:,None],y_pts[:,:,None] )),z_deg[:,:,None])).reshape(ground_microphone_x_resolution*ground_microphone_y_resolution,3)
-    lat_long_pts       = np.dstack((np.dstack((lat_deg[:,:,None],long_deg[:,:,None] )),z_deg[:,:,None])).reshape(ground_microphone_x_resolution*ground_microphone_y_resolution,3)
+    cartesian_pts      = np.dstack((np.dstack((x_pts[:,:,None],y_pts[:,:,None] )),z_deg[:,:,None])).reshape(x_res*y_res,3)
+    lat_long_pts       = np.dstack((np.dstack((lat_deg[:,:,None],long_deg[:,:,None] )),z_deg[:,:,None])).reshape(x_res*y_res,3)
      
-    # Compute distance between departure and destimation points
-    coord0_rad = departure_coordinates*Units.degrees
-    coord1_rad = destination_coordinates*Units.degrees  
-    angle      = np.arccos(np.sin(coord0_rad[0])*np.sin(coord1_rad[0]) + 
-                           np.cos(coord0_rad[0])*np.cos(coord1_rad[0])*np.cos(coord0_rad[1] - coord1_rad[1])) 
+    ## Compute distance between departure and destimation points
+    #coord0_rad = departure_coordinates*Units.degrees
+    #coord1_rad = destination_coordinates*Units.degrees  
+    #angle      = np.arccos(np.sin(coord0_rad[0])*np.sin(coord1_rad[0]) + 
+                           #np.cos(coord0_rad[0])*np.cos(coord1_rad[0])*np.cos(coord0_rad[1] - coord1_rad[1])) 
       
-    # Compute heading from departure to destination    
-    gamma = np.arcsin( np.sin(np.pi/2 - coord1_rad[0])* np.sin(coord1_rad[1] - coord0_rad[1])/np.sin(angle)) 
-    angle_vector   = destination_coordinates - departure_coordinates 
-    if angle_vector[0] < 0:
-        gamma = np.pi - gamma 
+    ## Compute heading from departure to destination    
+    #gamma = np.arcsin( np.sin(np.pi/2 - coord1_rad[0])* np.sin(coord1_rad[1] - coord0_rad[1])/np.sin(angle)) 
+    #angle_vector   = destination_coordinates - departure_coordinates 
+    #if angle_vector[0] < 0:
+        #gamma = np.pi - gamma 
     
     # Compute relative cartesian location of departure and destimation points on topographical grid 
     corner_long = lat_long_pts[0,1]
     if corner_long>180:
         corner_long = corner_long-360  
     
-    lat_flag             = np.where(departure_coordinates<0)[0]
-    departure_coordinates[lat_flag]  = departure_coordinates[lat_flag] + 360 
-    long_flag            = np.where(destination_coordinates<0)[0]
-    destination_coordinates[long_flag] = destination_coordinates[long_flag] + 360   
+    #lat_flag             = np.where(departure_coordinates<0)[0]
+    #departure_coordinates[lat_flag]  = departure_coordinates[lat_flag] + 360 
+    #long_flag            = np.where(destination_coordinates<0)[0]
+    #destination_coordinates[long_flag] = destination_coordinates[long_flag] + 360   
 
     
     # pack data 
-    topography_data = Data(
-        topography_file                         = topography_file,
-        ground_microphone_x_resolution          = ground_microphone_x_resolution,
-        ground_microphone_y_resolution          = ground_microphone_y_resolution,
-        ground_microphone_x_stencil             = ground_microphone_x_stencil,
-        ground_microphone_y_stencil             = ground_microphone_y_stencil,             
-        ground_microphone_min_x                 = x_pts[0,0],               
-        ground_microphone_max_x                 = x_pts[0,-1], 
-        ground_microphone_min_y                 = y_pts[0,0],                   
-        ground_microphone_max_y                 = y_pts[0,-1],    
-        ground_microphone_min_lat               = x_min_coord,   
-        ground_microphone_max_lat               = x_max_coord,  
-        ground_microphone_min_long              = y_min_coord,  
-        ground_microphone_max_long              = y_max_coord,  
-        ground_microphone_locations             = cartesian_pts,
-        ground_microphone_coordinates = lat_long_pts)
+    #topography_data = Data( 
+        #ground_microphone_x_resolution   = x_res,
+        #ground_microphone_y_resolution   = y_res,           
+        #ground_microphone_min_x          = x_pts[0,0],               
+        #ground_microphone_max_x          = x_pts[0,-1], 
+        #ground_microphone_min_y          = y_pts[0,0],                   
+        #ground_microphone_max_y          = y_pts[0,-1],    
+        #ground_microphone_min_lat        = x_min_coord,   
+        #ground_microphone_max_lat        = x_max_coord,  
+        #ground_microphone_min_long       = y_min_coord,  
+        #ground_microphone_max_long       = y_max_coord,  
+        #ground_microphone_locations      = cartesian_pts,
+        #ground_microphone_coordinates    = lat_long_pts)
     
-    return topography_data
+    return cartesian_pts
 
 

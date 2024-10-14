@@ -20,3 +20,4 @@ from .generate_zero_elevation_microphone_locations       import generate_zero_el
 from .generate_terrain_microphone_locations              import generate_terrain_microphone_locations
 from .generate_hemisphere_microphone_locations           import generate_hemisphere_microphone_locations
 from .compute_relative_noise_evaluation_locations        import compute_relative_noise_evaluation_locations
+from .evaluate_noise_surrogate                           import evaluate_noise_surrogate
