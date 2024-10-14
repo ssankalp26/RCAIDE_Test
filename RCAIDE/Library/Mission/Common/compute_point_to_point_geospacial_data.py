@@ -87,10 +87,10 @@ def compute_point_to_point_geospacial_data(topography_file                      
     x1_coord                 = np.array([des_lat,y_min_coord])
     y1_coord                 = np.array([x_min_coord,des_long])  
     
-    x0 = Calculate_Distance(x0_coord,bottom_left_map_coords) 
-    y0 = Calculate_Distance(y0_coord,bottom_left_map_coords)  
-    x1 = Calculate_Distance(x1_coord,bottom_left_map_coords) 
-    y1 = Calculate_Distance(y1_coord,bottom_left_map_coords)
+    x0 = Calculate_Distance(x0_coord,bottom_left_map_coords) * Units.kilometers
+    y0 = Calculate_Distance(y0_coord,bottom_left_map_coords) * Units.kilometers
+    x1 = Calculate_Distance(x1_coord,bottom_left_map_coords) * Units.kilometers
+    y1 = Calculate_Distance(y1_coord,bottom_left_map_coords) * Units.kilometers
     
     lat_flag             = np.where(departure_coordinates<0)[0]
     departure_coordinates[lat_flag]  = departure_coordinates[lat_flag] + 360 

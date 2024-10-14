@@ -133,8 +133,8 @@ def generate_terrain_elevated_microphone_locations(topography_file             =
     bottom_left_map_coords   = np.array([x_min_coord,y_min_coord])  
     bottom_right_map_coords  = np.array([x_min_coord,y_max_coord]) 
     
-    x_dist_max = Calculate_Distance(top_left_map_coords,bottom_left_map_coords)
-    y_dist_max = Calculate_Distance(bottom_right_map_coords,bottom_left_map_coords)
+    x_dist_max = Calculate_Distance(top_left_map_coords,bottom_left_map_coords) * Units.kilometers
+    y_dist_max = Calculate_Distance(bottom_right_map_coords,bottom_left_map_coords) * Units.kilometers
     
     [y_pts,x_pts]      = np.meshgrid(np.linspace(0,y_dist_max,ground_microphone_y_resolution),np.linspace(0,x_dist_max,ground_microphone_x_resolution))
     [long_deg,lat_deg] = np.meshgrid(np.linspace(np.min(Long),np.max(Long),ground_microphone_y_resolution),np.linspace(np.min(Lat),np.max(Lat),ground_microphone_x_resolution)) 
