@@ -54,8 +54,8 @@ def  evaluate_noise_surrogate(total_SPL_dBA,total_SPL_spectra,settings,segment):
     # Scale data using radius  
     R_ref  = settings.noise_hemisphere_radius 
     R      =  np.linalg.norm(num_gm_mic, axis=2) 
-    SPL_dBA_scaled                = SPL_dBA_unscaled     # AIDAN TO CORRECT 
-    SPL_1_3_spectrum_dBA_scaled   = SPL_1_3_spectrum_dBA_unscaled # AIDAN TO CORRECT
+    SPL_dBA_scaled                = R_ref / R * SPL_dBA_unscaled     # AIDAN TO CORRECT. Done
+    SPL_1_3_spectrum_dBA_scaled   = R_ref / R * SPL_1_3_spectrum_dBA_unscaled # AIDAN TO CORRECT. Done
     
     # Store data        
     conditions.noise.SPL_dBA              = SPL_dBA_scaled
