@@ -209,8 +209,8 @@ def vehicle_setup():
     ducted_fan.length                            = 10. * Units.inches
     ducted_fan.rotor_percent_x_location          = 0.4
     ducted_fan.stator_percent_x_location         = 0.7
-    ducted_fan.cruise.design_thrust              = 60 *  Units.lbs
-    ducted_fan.cruise.design_altitude            = 2000    
+    ducted_fan.cruise.design_thrust              = 70 *  Units.lbs
+    ducted_fan.cruise.design_altitude            = 1000    
     ducted_fan.cruise.design_tip_mach            = 0.7
     ducted_fan.cruise.design_angular_velocity    = (ducted_fan.cruise.design_tip_mach *320) /ducted_fan.tip_radius  # 1352 RPM
     ducted_fan.cruise.design_freestream_velocity = 120 *  Units.mph
@@ -220,8 +220,9 @@ def vehicle_setup():
     ducted_fan.append_duct_airfoil(airfoil)  
     airfoil                                      = RCAIDE.Library.Components.Airfoils.NACA_4_Series_Airfoil()
     airfoil.NACA_4_Series_code                   = '0008'    
-    ducted_fan.append_hub_airfoil(airfoil)    
-    design_ducted_fan(ducted_fan) 
+    ducted_fan.append_hub_airfoil(airfoil) 
+    dfdc_bin_name = '/Users/matthewclarke/Documents/LEADS/CODES/DFDC/bin/dfdc' 
+    design_ducted_fan(ducted_fan,dfdc_bin_name) 
     center_propulsor.ducted_fan                  = ducted_fan   
               
     # DC_Motor       

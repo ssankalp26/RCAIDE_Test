@@ -26,7 +26,7 @@ import numpy as  np
 # ----------------------------------------------------------------------------------------------------------------------
 #  design_ducted_fan
 # ---------------------------------------------------------------------------------------------------------------------- 
-def design_ducted_fan(ducted_fan): 
+def design_ducted_fan(ducted_fan, dfdc_bin_name = 'dfdc'): 
     """ Optimizes ducted fan given input design conditions.
 
     Assumptions: 
@@ -65,9 +65,10 @@ def design_ducted_fan(ducted_fan):
         ducted_fan.cruise.design_tip_mach  =  (ducted_fan.cruise.design_angular_velocity * ducted_fan.tip_radius) *atmo_data.speed_of_sound[0,0]
         
     dfdc_analysis                                   = Ducted_Fan_Design_Code() 
-    dfdc_analysis.geometry                          = ducted_fan 
-    dfdc_analysis.training.tip_mach                 = np.array([0.2, 0.35, 0.5, 0.65, 0.8])     
-    dfdc_analysis.training.mach                     = np.linspace(ducted_fan.cruise.design_freestream_mach*0.1,ducted_fan.cruise.design_freestream_mach*1.1,5)  
+    dfdc_analysis.geometry                          = ducted_fan
+    dfdc_analysis.settings.filenames.dfdc_bin_name  = dfdc_bin_name
+    dfdc_analysis.training.tip_mach                 = np.array([0.3, 0.4, 0.5, 0.6, 0.7, 0.8])     
+    dfdc_analysis.training.mach                     = np.linspace(0.1,ducted_fan.cruise.design_freestream_mach*1.1,5)  
     run_folder                                      = os.path.abspath(dfdc_analysis.settings.filenames.run_folder)
     run_script_path                                 = run_folder.rstrip('dfdc_files').rstrip('/')    
     deck_template                                   = dfdc_analysis.settings.filenames.deck_template 

@@ -153,13 +153,12 @@ def mission_setup(analyses):
     #   First Climb Segment: constant Mach, constant segment angle 
     # ------------------------------------------------------------------
     
-    segment = Segments.Climb.Constant_Mach_Constant_Rate(base_segment)
-    segment.tag = "climb" 
+    segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
+    segment.tag = "cruise" 
     segment.analyses.extend( analyses.base ) 
-    segment.altitude_start = 0.0   * Units.km
-    segment.altitude_end   = 1000. * Units.ft
-    segment.mach_number    = 0.3   * Units.kts
-    segment.climb_rate     = 1000. * Units['ft/min']
+    segment.altitude       = 1000 * Units.feet
+    segment.mach_number    = 0.2   * Units.kts
+    segment.distance       = 1000 * Units.feet  
     segment.initial_battery_state_of_charge                          = 1.0 
                 
     # define flight dynamics to model             

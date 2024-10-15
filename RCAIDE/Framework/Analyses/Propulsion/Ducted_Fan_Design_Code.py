@@ -8,12 +8,15 @@
 
 # RCAIDE imports   
 from RCAIDE.Framework.Core import  Data , Container
-import  numpy as  np
+from RCAIDE.Framework.Analyses import Analysis   
 
+# package imports 
+import numpy as np
+ 
 # ----------------------------------------------------------------------------------------------------------------------
 # Ducted_Fan_Design_Code
 # ---------------------------------------------------------------------------------------------------------------------- 
-class Ducted_Fan_Design_Code(Data): 
+class Ducted_Fan_Design_Code(Analysis): 
     def __defaults__(self):
         """This sets the default values and methods for the analysis.
 
@@ -35,7 +38,7 @@ class Ducted_Fan_Design_Code(Data):
                                                           
         self.settings                                     = Data()
         self.settings.filenames                           = Data()
-        self.settings.filenames.dfdc_bin_name             = 'C:/Users/Matteo/Documents/UIUC/DFDC/bin./dfdc.exe'   # to call avl from command line. If avl is not on the system path, include absolute path to the avl binary i.e. '/your/path/to/avl'
+        self.settings.filenames.dfdc_bin_name             = 'dfdc'   # to call dfdc from command line. If avl is not on the system path, include absolute path to the avl binary i.e. '/your/path/to/avl'
         self.settings.filenames.run_folder                = 'dfdc_files'   
         self.settings.filenames.deck_template             = 'commands_{0:02d}.deck'  
         self.settings.filenames.results_template          = 'results_Vinf_{:.2f}_RPM_{:.2f}_Alt_{:.2f}' 
