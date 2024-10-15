@@ -49,17 +49,17 @@ def compute_relative_noise_evaluation_locations(settings,microphone_locations,se
     
     for cpt in range(len(pos)):  
         relative_locations           = np.zeros((num_gm_mic,3,1))
-        relative_locations[:,0,0]    = microphone_locations[:,0,0] -  (pos[cpt,0] + settings.aircraft_departure_location[0])
-        relative_locations[:,1,0]    = microphone_locations[:,1,0] -  (pos[cpt,1] + settings.aircraft_departure_location[1]) 
+        relative_locations[:,0,0]    = microphone_locations[:,0,0] -  (pos[cpt,0] + settings.aircraft_departure_location[0])  # X
+        relative_locations[:,1,0]    = microphone_locations[:,1,0] -  (pos[cpt,1] + settings.aircraft_departure_location[1])  # Y
         if MSL_altitude:
-            relative_locations[:,2,0]    = -(pos[cpt,2])  - microphone_locations[:,2,0] 
+            relative_locations[:,2,0]    = -(pos[cpt,2])  - microphone_locations[:,2,0] # Z
         else:
-            relative_locations[:,2,0]    = -(pos[cpt,2])    
+            relative_locations[:,2,0]    = -(pos[cpt,2])    # Z
         
         RML[cpt,:,:]   = relative_locations[:,:,0] 
     
-        PHI[cpt,:]     =  np.arctan(np.sqrt(np.square(relative_locations[:, 0, 0]) + np.square(relative_locations[:, 1, 0]))/relative_locations[:, 2, 0]) # AIDAN TO COMPUTE !!
-        THETA[cpt,:]   =  np.arctan(relative_locations[:, 1, 0]/relative_locations[:, 1, 0]) # AIDAN TO COMPUTE !! 
+        PHI[cpt,:]     =  np.arctan2(np.sqrt(np.square(relative_locations[:, 0, 0]) + np.square(relative_locations[:, 1, 0])),  relative_locations[:, 2, 0]) # AIDAN TO COMPUTE. DONE !!
+        THETA[cpt,:]   =  np.arctan2(relative_locations[:, 1, 0], relative_locations[:, 0, 0]) # AIDAN TO COMPUTE. DONE !! 
     
     return RML,PHI,THETA,num_gm_mic 
  
