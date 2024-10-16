@@ -10,9 +10,9 @@ import RCAIDE
 from RCAIDE.Framework.Core import Units , Data 
 from RCAIDE.Library.Plots import *     
 from RCAIDE.Library.Methods.Noise.Metrics import *  
-from RCAIDE.Library.Methods.Noise.Common.generate_microphone_locations        import generate_terrain_elevated_microphone_locations
+from RCAIDE.Library.Methods.Noise.Common.generate_terrain_microphone_locations        import generate_terrain_microphone_locations
 from RCAIDE.Library.Mission.Common.compute_point_to_point_geospacial_data     import compute_point_to_point_geospacial_data
-
+from RCAIDE.Framework.Analyses.Noise.Frequency_Domain_Buildup                 import  Frequency_Domain_Buildup
 # Python imports
 import matplotlib.pyplot as plt  
 import sys 
@@ -26,11 +26,12 @@ from NASA_X57    import vehicle_setup, configs_setup
 #   Main
 # ---------------------------------------------------------------------- 
 def main():    
-    microphone_terrain_data =  generate_terrain_elevated_microphone_locations(topography_file   ='LA_Metropolitan_Area.txt',
+    settings = Frequency_Domain_Buildup()
+    microphone_terrain_data =  generate_terrain_microphone_locations(settings, topography_file   ='LA_Metropolitan_Area.txt',
                                                            ground_microphone_x_resolution    = 201,  
-                                                           ground_microphone_y_resolution    = 101, 
-                                                           ground_microphone_x_stencil       = 1,   
-                                                           ground_microphone_y_stencil       = 1)    
+                                                           ground_microphone_y_resolution    = 101)
+                                                           #ground_microphone_x_stencil       = 1,   
+                                                           #ground_microphone_y_stencil       = 1)    
     
 
     geospacial_data =  compute_point_to_point_geospacial_data(topography_file  = 'LA_Metropolitan_Area.txt',

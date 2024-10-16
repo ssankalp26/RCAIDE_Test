@@ -19,12 +19,12 @@ import numpy as np
 #  generate_terrain_microphone_locations
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Noise-Common  
-def generate_terrain_microphone_locations(settings
-                                          #topography_file                      = None,
-                                         #ground_microphone_x_resolution        = 101,
-                                         #ground_microphone_y_resolution        = 101,
-                                         #departure_coordinates                 = [0.0,0.0],
-                                         #destination_coordinates               = [0.0,0.0], 
+def generate_terrain_microphone_locations(settings, 
+                                         topography_file                      = None,
+                                         ground_microphone_x_resolution        = 101,
+                                         ground_microphone_y_resolution        = 101,
+                                         departure_coordinates                 = [0.0,0.0],
+                                         destination_coordinates               = [0.0,0.0], 
                                          ):
     """This computes the absolute microphone/observer locations on a defined topography
             
@@ -63,11 +63,11 @@ def generate_terrain_microphone_locations(settings
     # convert cooordinates to array 
     departure_coordinates   = np.asarray(departure_coordinates)
     destination_coordinates = np.asarray(destination_coordinates)
-    y_res =  settings.ground_microphone_y_resolution
-    x_res =  settings.ground_microphone_x_resolution
+    y_res =  ground_microphone_y_resolution # settings.ground_microphone_y_resolution CHANGED 10-15-2024
+    x_res =  ground_microphone_x_resolution # settings.ground_microphone_x_resolution CHANGED 10-15-2024
     
     # extract data from file 
-    data  = np.loadtxt(settings.topography_file)
+    data  = np.loadtxt(topography_file) # settings.topography_file) CHANGED 10-15-2024
     Long  = data[:,0]
     Lat   = data[:,1]
     Elev  = data[:,2] 
