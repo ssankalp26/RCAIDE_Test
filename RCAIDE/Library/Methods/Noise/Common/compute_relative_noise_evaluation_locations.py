@@ -56,8 +56,8 @@ def compute_relative_noise_evaluation_locations(settings,microphone_locations,se
         else:
             relative_locations[:,2,0]    = -(pos[cpt,2])    # Z
         
-        RML[cpt,:,:]   = relative_locations[:,:,0] 
-    
+        RML[cpt,:,:]   = relative_locations[:,:,0]
+        
         PHI[cpt,:]     =  np.arctan2(np.sqrt(np.square(relative_locations[:, 0, 0]) + np.square(relative_locations[:, 1, 0])),  relative_locations[:, 2, 0]) # AIDAN TO COMPUTE. DONE !!
         THETA[cpt,:]   =  np.arctan2(relative_locations[:, 1, 0], relative_locations[:, 0, 0]) # AIDAN TO COMPUTE. DONE !! 
     

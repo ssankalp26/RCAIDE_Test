@@ -48,7 +48,7 @@ def generate_hemisphere_microphone_locations(settings):
  
     x     = r * np.outer(np.sin(u), np.cos(v))
     y     = r * np.outer(np.sin(u), np.sin(v))
-    z     = r * np.outer(np.ones(np.size(v)), np.cos(u)) 
+    z     = r * np.outer(np.cos(u), np.ones(np.size(v))) 
  
     num_gm                = len(z.flatten())
     gm_mic_locations      = np.zeros((num_gm,3))  
