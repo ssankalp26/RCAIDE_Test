@@ -11,8 +11,7 @@ import RCAIDE
 from RCAIDE.Framework.Core import Units, Data
 from scipy.interpolate import griddata
 import numpy as np
-from geopy.distance import geodesic as GD
-
+from  RCAIDE.Framework.Analyses.Geodesics.Geodesics import Calculate_Distance
 # ----------------------------------------------------------------------
 #  Compute Point to Point Geospacial Data
 # ---------------------------------------------------------------------
@@ -88,10 +87,10 @@ def compute_point_to_point_geospacial_data(topography_file                      
     x1_coord                 = np.array([des_lat,y_min_coord])
     y1_coord                 = np.array([x_min_coord,des_long])  
     
-    x0 = GD(x0_coord,bottom_left_map_coords).m 
-    y0 = GD(y0_coord,bottom_left_map_coords).m  
-    x1 = GD(x1_coord,bottom_left_map_coords).m 
-    y1 = GD(y1_coord,bottom_left_map_coords).m 
+    x0 = Calculate_Distance(x0_coord,bottom_left_map_coords) * Units.kilometers
+    y0 = Calculate_Distance(y0_coord,bottom_left_map_coords) * Units.kilometers
+    x1 = Calculate_Distance(x1_coord,bottom_left_map_coords) * Units.kilometers
+    y1 = Calculate_Distance(y1_coord,bottom_left_map_coords) * Units.kilometers
     
     lat_flag             = np.where(departure_coordinates<0)[0]
     departure_coordinates[lat_flag]  = departure_coordinates[lat_flag] + 360 
