@@ -49,8 +49,7 @@ class Ducted_Fan_Design_Code(Analysis):
         self.settings.print_output                        = False 
                    
         # Regression Status           
-        self.settings.keep_files                          = False
-        self.settings.save_regression_results             = False          
+        self.settings.keep_files                          = False           
         self.settings.regression_flag                     = False   
     
         self.run_cases                                    = Container() 

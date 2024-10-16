@@ -26,7 +26,7 @@ import numpy as  np
 # ----------------------------------------------------------------------------------------------------------------------
 #  design_ducted_fan
 # ---------------------------------------------------------------------------------------------------------------------- 
-def design_ducted_fan(ducted_fan, dfdc_bin_name = 'dfdc', regression_flag = False): 
+def design_ducted_fan(ducted_fan, dfdc_bin_name = 'dfdc', regression_flag = False, keep_files = True): 
     """ Optimizes ducted fan given input design conditions.
 
     Assumptions: 
@@ -67,7 +67,8 @@ def design_ducted_fan(ducted_fan, dfdc_bin_name = 'dfdc', regression_flag = Fals
     dfdc_analysis                                   = Ducted_Fan_Design_Code() 
     dfdc_analysis.geometry                          = ducted_fan
     dfdc_analysis.settings.filenames.dfdc_bin_name  = dfdc_bin_name
-    dfdc_analysis.settings.regression_flag          = regression_flag 
+    dfdc_analysis.settings.regression_flag          = regression_flag
+    dfdc_analysis.settings.keep_files               = keep_files  
     run_folder                                      = os.path.abspath(dfdc_analysis.settings.filenames.run_folder)
     run_script_path                                 = run_folder.rstrip('dfdc_files').rstrip('/')    
     deck_template                                   = dfdc_analysis.settings.filenames.deck_template 

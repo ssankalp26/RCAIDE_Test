@@ -18,8 +18,8 @@ def write_geometry(dfdc_object,run_script_path):
     """This function writes the translated aircraft geometry into text file read 
     by DFDC when it is called 
     """     
-    # unpack inputs 
-    case_file   = dfdc_object.geometry.tag + '.case'   
+    # unpack inputs
+    case_file   = dfdc_object.geometry.tag + '.case' 
     purge_files([case_file]) 
     geometry             = open(case_file,'w') 
     with open(case_file,'w') as geometry:
