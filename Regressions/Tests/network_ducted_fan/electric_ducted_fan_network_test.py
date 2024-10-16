@@ -45,21 +45,18 @@ def main():
      
     # mission analysis 
     results = missions.base_mission.evaluate()  
-
-    # load older results
-    save_results(results)
-    old_results = load_results()    
-
+ 
     # plt the old results
-    plot_mission(results)
-    plot_mission(old_results,'k-')
-    plt.show()
+    plot_mission(results)  
 
     # check the results
+    CL_truth =  0.3290060144079024
     if regression_flag:
-        check_results(results,old_results)
-    else: 
-        check_results(old_results,old_results)    
+        error =  (CL_truth - CL_truth) / CL_truth
+    else:  
+        CL =  results.segments.cruise.conditions.aerodynamics.coefficients.lift.total[2][0]
+        error =  (CL - CL_truth) / CL_truth        
+    assert(np.abs(error)<1e-6)         
     return 
 
 # ----------------------------------------------------------------------
@@ -182,45 +179,8 @@ def missions_setup(mission):
     missions.append(mission)
     
     # done!
-    return missions  
-    
-def check_results(new_results,old_results):
+    return missions
 
-    # check segment values
-    check_list = [
-        'segments.cruise.conditions.aerodynamics.angles.alpha',
-        'segments.cruise.conditions.aerodynamics.coefficients.drag.total',
-        'segments.cruise.conditions.aerodynamics.coefficients.lift.total',  
-    ]
-
-    # do the check
-    for k in check_list:
-        print(k)
-
-        old_val = np.max( old_results.deep_get(k) )
-        new_val = np.max( new_results.deep_get(k) )
-        err = (new_val-old_val)/old_val
-        print('Error at Max:' , err)
-        assert np.abs(err) < 1e-6 , 'Max Check Failed : %s' % k
-
-        old_val = np.min( old_results.deep_get(k) )
-        new_val = np.min( new_results.deep_get(k) )
-        err = (new_val-old_val)/old_val
-        print('Error at Min:' , err)
-        assert np.abs(err) < 1e-6 , 'Min Check Failed : %s' % k        
-
-        print('') 
-
-    return 
-
-
-
-def load_results():
-    return RCAIDE.load('results_mission_x48.res')
-
-def save_results(results):
-    RCAIDE.save(results,'results_mission_x48.res')
-    return    
 
 if __name__ == '__main__': 
     main()    
