@@ -13,6 +13,7 @@ from . import Combustor
 from . import Compression_Nozzle
 from . import Compressor
 from . import DC_Motor
+from . import Ducted_Fan
 from . import Engine
 from . import Expansion_Nozzle
 from . import Supersonic_Nozzle

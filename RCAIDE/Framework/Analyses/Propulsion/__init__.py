@@ -12,3 +12,4 @@
 from Legacy.trunk.S.Analyses.Propulsion.Rotor_Wake_Fidelity_Zero    import Rotor_Wake_Fidelity_Zero
 from Legacy.trunk.S.Analyses.Propulsion.Rotor_Wake_Fidelity_One     import Rotor_Wake_Fidelity_One
 from Legacy.trunk.S.Analyses.Propulsion.Rotor_Wake_Fidelity_Two     import Rotor_Wake_Fidelity_Two
+from .Ducted_Fan_Design_Code import Ducted_Fan_Design_Code
