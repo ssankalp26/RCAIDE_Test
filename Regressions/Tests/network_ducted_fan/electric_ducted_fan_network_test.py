@@ -26,7 +26,7 @@ from NASA_X48    import configs_setup as configs_setup
 # ----------------------------------------------------------------------------------------------------------------------
 
 def main(): 
-    regression_flag = False 
+    regression_flag = True # Keep true for regression on Appveyor
     
     # vehicle data
     vehicle  = vehicle_setup(regression_flag) 
