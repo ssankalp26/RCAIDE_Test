@@ -7,7 +7,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE imports   
-from RCAIDE.Framework.Core import  Data , Container
+from RCAIDE.Framework.Core import  Data , Units, Container
 from RCAIDE.Framework.Analyses import Analysis   
 
 # package imports 
@@ -59,9 +59,9 @@ class Ducted_Fan_Design_Code(Analysis):
         self.training                                     = Data()   
                   
         # Standard subsonic/transolic aircarft          
-        self.training.tip_mach                            = np.array([0.2, 0.3, 0.5, 0.6, 0.8])     
-        self.training.mach                                = np.array([0.1,0.2,0.35,0.5,0.6]) 
-        self.training.altitude                            = np.array([0, 2.5, 5, 7.5, 10]) *1000      
+        self.training.tip_mach                            = np.array([0.2,0.5,0.8])     
+        self.training.mach                                = np.array([0.1,0.3,0.6]) 
+        self.training.altitude                            = np.array([0,1000,2500,5000])*Units.feet    
                                                         
         self.training_file                                = None
                   

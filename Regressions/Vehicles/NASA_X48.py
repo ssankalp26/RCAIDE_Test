@@ -12,8 +12,7 @@ from RCAIDE.Library.Methods.Geometry.Planform                       import segme
 from RCAIDE.Library.Methods.Propulsors.Converters.Ducted_Fan        import design_ducted_fan
 from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor          import design_motor  
 from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion import compute_motor_weight
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common         import initialize_from_circuit_configuration
-from RCAIDE.Library.Methods.Geometry.Planform                       import wing_segmented_planform  
+from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common         import initialize_from_circuit_configuration 
 from RCAIDE.Library.Plots                                           import *     
  
 # python imports 
@@ -23,10 +22,8 @@ import os
 
 # ----------------------------------------------------------------------
 #   Define the Vehicle
-# ----------------------------------------------------------------------
-
-
-def vehicle_setup():
+# ---------------------------------------------------------------------- 
+def vehicle_setup(regression_flag):
 
     # ------------------------------------------------------------------
     #   Initialize the Vehicle
@@ -209,7 +206,7 @@ def vehicle_setup():
     ducted_fan.length                            = 10. * Units.inches
     ducted_fan.rotor_percent_x_location          = 0.4
     ducted_fan.stator_percent_x_location         = 0.7
-    ducted_fan.cruise.design_thrust              = 70 *  Units.lbs
+    ducted_fan.cruise.design_thrust              = 60 *  Units.lbs
     ducted_fan.cruise.design_altitude            = 1000    
     ducted_fan.cruise.design_tip_mach            = 0.7
     ducted_fan.cruise.design_angular_velocity    = (ducted_fan.cruise.design_tip_mach *320) /ducted_fan.tip_radius  # 1352 RPM
@@ -222,7 +219,7 @@ def vehicle_setup():
     airfoil.NACA_4_Series_code                   = '0008'    
     ducted_fan.append_hub_airfoil(airfoil) 
     dfdc_bin_name = '/Users/matthewclarke/Documents/LEADS/CODES/DFDC/bin/dfdc' 
-    design_ducted_fan(ducted_fan,dfdc_bin_name) 
+    design_ducted_fan(ducted_fan,dfdc_bin_name,regression_flag) 
     center_propulsor.ducted_fan                  = ducted_fan   
               
     # DC_Motor       

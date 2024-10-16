@@ -26,7 +26,7 @@ import numpy as  np
 # ----------------------------------------------------------------------------------------------------------------------
 #  design_ducted_fan
 # ---------------------------------------------------------------------------------------------------------------------- 
-def design_ducted_fan(ducted_fan, dfdc_bin_name = 'dfdc'): 
+def design_ducted_fan(ducted_fan, dfdc_bin_name = 'dfdc', regression_flag = False): 
     """ Optimizes ducted fan given input design conditions.
 
     Assumptions: 
@@ -67,8 +67,7 @@ def design_ducted_fan(ducted_fan, dfdc_bin_name = 'dfdc'):
     dfdc_analysis                                   = Ducted_Fan_Design_Code() 
     dfdc_analysis.geometry                          = ducted_fan
     dfdc_analysis.settings.filenames.dfdc_bin_name  = dfdc_bin_name
-    dfdc_analysis.training.tip_mach                 = np.array([0.3, 0.4, 0.5, 0.6, 0.7, 0.8])     
-    dfdc_analysis.training.mach                     = np.linspace(0.1,ducted_fan.cruise.design_freestream_mach*1.1,5)  
+    dfdc_analysis.settings.regression_flag          = regression_flag 
     run_folder                                      = os.path.abspath(dfdc_analysis.settings.filenames.run_folder)
     run_script_path                                 = run_folder.rstrip('dfdc_files').rstrip('/')    
     deck_template                                   = dfdc_analysis.settings.filenames.deck_template 
@@ -140,18 +139,19 @@ def clean_data(raw_data,mach,tip_mach,altitude,convergence_matrix):
     for i in range(len(mach)): 
         x = tip_mach
         y = altitude
-        #mask invalid values
+        
+        # mask invalid values
         array = np.ma.masked_invalid(raw_data[i])
         if np.all(array.mask ==False):
             cleaned_data[i, :, :] =  array.data
-        else:
-            xx, yy = np.meshgrid(x, y)  
-            x1 = xx[~array.mask]
-            y1 = yy[~array.mask]
-            newarr = array[~array.mask] 
-            points = np.vstack((x1, y1)).T
-            values1 =  newarr.data
-            cleaned_data[i, :, :]  =interpolate.griddata(points, values1, (xx, yy), method='cubic',  fill_value = -1E5)
-               
+        else: 
+            yy,xx   = np.meshgrid(y, x)
+            x1      = xx[~array.mask]
+            y1      = yy[~array.mask]
+            newarr  = array[~array.mask] 
+            points  = np.vstack((x1, y1)).T
+            values1 = newarr.data
+            cleaned_data[i, :, :]  = interpolate.griddata(points, values1, (xx, yy), method='cubic',  fill_value = -1E5)
+             
     return cleaned_data
 

@@ -48,6 +48,7 @@ def compute_ducted_fan_performance(propulsor,state,distributor,center_of_gravity
     omega = ducted_fan_conditions.omega 
     n     = omega/(2.*np.pi)   # Rotations per second
     D     = ducted_fan.tip_radius * 2
+    A     = 0.25 * np.pi * (D ** 2)
     
     # Unpack freestream conditions
     rho     = conditions.freestream.density[:,0,None] 
@@ -82,6 +83,7 @@ def compute_ducted_fan_performance(propulsor,state,distributor,center_of_gravity
     Ct             = ducted_fan.performance_surrogates.thrust_coefficient(pts)    
     Cp             = ducted_fan.performance_surrogates.power_coefficient(pts) 
     Cq             = torque/(rho*(n*n)*(D*D*D*D*D))
+    FoM            = thrust*np.sqrt(thrust/(2*rho*A))/power  
     
     # calculate coefficients    
     thrust_prop_frame      = np.zeros((ctrl_pts,3))
@@ -112,6 +114,7 @@ def compute_ducted_fan_performance(propulsor,state,distributor,center_of_gravity
                 thrust_per_blade                  = thrust/B,
                 thrust_coefficient                = Ct, 
                 torque_per_blade                  = torque/B,
+                figure_of_merit                   = FoM, 
                 torque_coefficient                = Cq,
                 power_coefficient                 = Cp,  
         ) 

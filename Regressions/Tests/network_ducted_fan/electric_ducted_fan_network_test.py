@@ -25,11 +25,11 @@ from NASA_X48    import configs_setup as configs_setup
 #   Main
 # ----------------------------------------------------------------------------------------------------------------------
 
-def main():
+def main(): 
+    regression_flag = False 
     
-
     # vehicle data
-    vehicle  = vehicle_setup()
+    vehicle  = vehicle_setup(regression_flag) 
     
     # Set up vehicle configs
     configs  = configs_setup(vehicle)
@@ -44,10 +44,22 @@ def main():
     missions = missions_setup(mission) 
      
     # mission analysis 
-    results = missions.base_mission.evaluate() 
-    
-    ## plt the old results
-    plot_mission(results)   
+    results = missions.base_mission.evaluate()  
+
+    # load older results
+    save_results(results)
+    old_results = load_results()    
+
+    # plt the old results
+    plot_mission(results)
+    plot_mission(old_results,'k-')
+    plt.show()
+
+    # check the results
+    if regression_flag:
+        check_results(results,old_results)
+    else: 
+        check_results(old_results,old_results)    
     return 
 
 # ----------------------------------------------------------------------
@@ -114,17 +126,7 @@ def base_analysis(vehicle):
 # ----------------------------------------------------------------------
 
 def plot_mission(results):
-     
-    # Plots fligh conditions 
-    plot_flight_conditions(results) 
-    
-    # Plot arcraft trajectory
-    plot_flight_trajectory(results)   
-
-    plot_propulsor_throttles(results)
-    
-    # Plot Aircraft Electronics
-    plot_battery_module_conditions(results)   
+      
     
     # Plot Electric Motor and Propeller Efficiencies 
     plot_electric_propulsor_efficiencies(results)
@@ -153,7 +155,7 @@ def mission_setup(analyses):
     #   First Climb Segment: constant Mach, constant segment angle 
     # ------------------------------------------------------------------
     
-    segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
+    segment = Segments.Cruise.Constant_Mach_Constant_Altitude(base_segment)
     segment.tag = "cruise" 
     segment.analyses.extend( analyses.base ) 
     segment.altitude       = 1000 * Units.feet
@@ -186,10 +188,9 @@ def check_results(new_results,old_results):
 
     # check segment values
     check_list = [
-        'segments.climb.conditions.aerodynamics.angles.alpha',
-        'segments.climb.conditions.aerodynamics.coefficients.drag.total',
-        'segments.climb.conditions.aerodynamics.coefficients.lift.total', 
-        'segments.climb.conditions.weights.vehicle_mass_rate', 
+        'segments.cruise.conditions.aerodynamics.angles.alpha',
+        'segments.cruise.conditions.aerodynamics.coefficients.drag.total',
+        'segments.cruise.conditions.aerodynamics.coefficients.lift.total',  
     ]
 
     # do the check
@@ -211,6 +212,15 @@ def check_results(new_results,old_results):
         print('') 
 
     return 
+
+
+
+def load_results():
+    return RCAIDE.load('results_mission_x48.res')
+
+def save_results(results):
+    RCAIDE.save(results,'results_mission_x48.res')
+    return    
 
 if __name__ == '__main__': 
     main()    

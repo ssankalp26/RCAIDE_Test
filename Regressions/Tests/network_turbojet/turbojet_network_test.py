@@ -44,10 +44,20 @@ def main():
     missions = missions_setup(mission) 
      
     # mission analysis 
-    results = missions.base_mission.evaluate() 
+    results = missions.base_mission.evaluate()  
+
+    # load older results
+    #save_results(results)
+    old_results = load_results()    
+
+    # plt the old results
+    plot_mission(results)
+    plot_mission(old_results,'k-')
+    plt.show()
+
+    # check the results
+    check_results(results,old_results)
     
-    ## plt the old results
-    plot_mission(results)   
     return 
 
 # ----------------------------------------------------------------------
@@ -481,7 +491,16 @@ def check_results(new_results,old_results):
 
         print('') 
 
-    return 
+    return
+
+
+def load_results():
+    return RCAIDE.load('results_mission_concorde.res')
+
+def save_results(results):
+    RCAIDE.save(results,'results_mission_concorde.res')
+    return    
+
 
 if __name__ == '__main__': 
     main()    
