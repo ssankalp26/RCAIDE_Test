@@ -12,6 +12,7 @@ import scipy.optimize
 import numpy as np
 
 from Legacy.trunk.S.Core.Arrays import array_type
+import  sys
 
 # ----------------------------------------------------------------------
 #  Converge Root
@@ -60,6 +61,7 @@ def converge_root(segment):
         print("Error Message:\n" + msg)
         segment.state.numerics.converged = False
         segment.converged = False
+        sys.exit() # Does this work???
     else:
         segment.state.numerics.converged = True
         segment.converged = True
