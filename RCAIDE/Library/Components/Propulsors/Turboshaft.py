@@ -1,8 +1,6 @@
-## @ingroup Components-Propulsors-Turboshaft
 # RCAIDE/Library/Components/Propulsors/Turboshaft.py
 # 
-# 
-# 
+#  
 # Created:  Mar 2024, M. Clarke
 # Modified: Jun 2024, M. Guidotti & D.J. Lee
 

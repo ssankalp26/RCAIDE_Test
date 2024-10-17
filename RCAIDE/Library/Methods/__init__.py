@@ -20,6 +20,7 @@ from . import Propulsors
 from . import Stability
 from . import Utilities
 from . import Weights
+from . import Geodesics
 
 from .skip import skip
 

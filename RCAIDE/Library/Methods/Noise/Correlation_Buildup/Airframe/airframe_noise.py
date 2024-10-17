@@ -30,7 +30,7 @@ import numpy as np
 # ----------------------------------------------------------------------
 
 ## @ingroup Methods-Noise-Correlation_Buildup-Airframe
-def airframe_noise(segment,analyses,config,settings):  
+def airframe_noise(segment,config,settings):  
     """ This computes the noise from different sources of the airframe for a given vehicle for a constant altitude flight. 
 
     Assumptions:
@@ -112,7 +112,7 @@ def airframe_noise(segment,analyses,config,settings):
         slots = 3  
 
     # Geometric information from the source to observer position 
-    RML                 = segment.conditions.noise.relative_microphone_locations  
+    RML                 = segment.conditions.noise.microphone_locations
     distance_vector     = np.linalg.norm(RML,axis = 2)
     thetas              = np.arccos(RML[:,:,0]/distance_vector) 
     phis                = np.arccos(RML[:,:,1]/distance_vector)   

@@ -133,7 +133,7 @@ def plot_quantity(ap, q, qaxis, qname,ylim_low,ylim_high,file_type,show_legend,s
             axis.set_ylim([ylim_low,ylim_high]) 
      
     if show_legend:
-        leg =  fig.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg =  fig.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 4) 
         
         # Adjusting the sub-plots for legend 
         fig.subplots_adjust(top=0.8)

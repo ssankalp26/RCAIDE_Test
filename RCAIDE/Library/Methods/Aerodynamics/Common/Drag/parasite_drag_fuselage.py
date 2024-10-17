@@ -6,7 +6,8 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
-# RCAIDE imporst 
+# RCAIDE import
+import RCAIDE
 from RCAIDE.Framework.Core import Data
 from Legacy.trunk.S.Methods.Aerodynamics.Common.Fidelity_Zero.Helper_Functions import compressible_turbulent_flat_plate
 from RCAIDE.Library.Methods.Utilities         import Cubic_Spline_Blender   
@@ -41,7 +42,21 @@ def parasite_drag_fuselage(state,settings,fuselage):
     Returns:
         None 
     """
-
+    
+    if type(fuselage) == RCAIDE.Library.Components.Fuselages.Blended_Wing_Body_Fuselage: 
+        # Store data
+        results = Data(
+            wetted_area               = 0.0 , 
+            reference_area            = 1.0,
+            total                     = 0.0,
+            skin_friction             = 0.0,
+            compressibility_factor    = 0.0,
+            reynolds_factor           = 0.0,
+            form_factor               = 0.0,
+        ) 
+        state.conditions.aerodynamics.coefficients.drag.parasite[fuselage.tag] = results
+        return  
+        
     # unpack inputs   
     Sref          = fuselage.areas.front_projected
     Swet          = fuselage.areas.wetted 
@@ -110,7 +125,7 @@ def parasite_drag_fuselage(state,settings,fuselage):
     
         fuselage_parasite_drag = k_fus * cf_fus * Swet / Sref
          
-    # Store dat 
+    # Store data
     results = Data(
         wetted_area               = Swet   , 
         reference_area            = Sref   , 

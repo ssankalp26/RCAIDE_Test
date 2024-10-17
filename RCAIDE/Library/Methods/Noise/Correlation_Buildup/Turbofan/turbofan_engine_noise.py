@@ -80,7 +80,7 @@ def turbofan_engine_noise(turbofan,aeroacoustic_data,segment,settings):
     Altitude               = segment.conditions.freestream.altitude[:,0] 
     AOA                    = np.mean(segment.conditions.aerodynamics.angles.alpha / Units.deg) 
     noise_time             = segment.conditions.frames.inertial.time[:,0] 
-    RML                    = segment.conditions.noise.relative_microphone_locations  
+    RML                    = segment.conditions.noise.microphone_locations
     distance_microphone    = np.linalg.norm(RML,axis = 2)
     angles                 = np.arccos(RML[:,:,0]/distance_microphone) 
     phi                    = np.arccos(RML[:,:,1]/distance_microphone)      

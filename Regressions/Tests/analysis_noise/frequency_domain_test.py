@@ -72,16 +72,16 @@ def Harmonic_Noise_Validation(PP):
     rotor.twist_distribution = beta + delta_beta 
 
     # microphone locations
-    positions = np.zeros(( len(theta),3))
+    mic_positions = np.zeros(( len(theta),3))
     for i in range(len(theta)):
         if theta[i]*Units.degrees < np.pi/2:
-            positions[i][:] = [-S*np.cos(theta[i]*Units.degrees)  ,S*np.sin(theta[i]*Units.degrees), 0.0]
+            mic_positions[i][:] = [-S*np.cos(theta[i]*Units.degrees)  ,S*np.sin(theta[i]*Units.degrees), 0.0]
         else: 
-            positions[i][:] = [S*np.sin(theta[i]*Units.degrees- np.pi/2)  ,S*np.cos(theta[i]*Units.degrees - np.pi/2), 0.0]   
+            mic_positions[i][:] = [S*np.sin(theta[i]*Units.degrees- np.pi/2)  ,S*np.cos(theta[i]*Units.degrees - np.pi/2), 0.0]   
  
     segment                                                = Segment()  
     conditions                                             = Results() 
-    conditions.noise.relative_microphone_locations         = np.repeat(positions[ np.newaxis,:,: ],1,axis=0)   
+    conditions.noise.relative_microphone_locations         = np.repeat(mic_positions[ np.newaxis,:,: ],1,axis=0)   
     conditions.aerodynamics.angles.alpha                   = np.atleast_2d(AoA).T 
     conditions.freestream.density                          = np.ones((ctrl_pts,1)) * density
     conditions.freestream.dynamic_viscosity                = np.ones((ctrl_pts,1)) * dynamic_viscosity   
@@ -146,7 +146,7 @@ def Harmonic_Noise_Validation(PP):
         # time
         ti[fid] = time.time()
         # Run Frequency Domain Rotor Noise Model           
-        compute_rotor_noise(bus,electric_rotor,rotor,segment.state.conditions,settings)
+        compute_rotor_noise(mic_positions,bus,electric_rotor,segment,settings)
         tf[fid] = time.time()
         
         F8745D4_SPL                                            = conditions.noise[bus.tag][electric_rotor.tag][rotor.tag].SPL     
@@ -230,12 +230,12 @@ def Broadband_Noise_Validation(PP):
     fligth_path_angle             = 0    
 
     # Microphone Locations 
-    positions = np.zeros((len(theta),3))
+    mic_positions = np.zeros((len(theta),3))
     for i in range(len(theta)):
         if theta[i]*Units.degrees < np.pi/2:
-            positions[i][:] = [-S*np.cos(theta[i]*Units.degrees),-S*np.sin(theta[i]*Units.degrees), 0.0]
+            mic_positions[i][:] = [-S*np.cos(theta[i]*Units.degrees),-S*np.sin(theta[i]*Units.degrees), 0.0]
         else: 
-            positions[i][:] = [S*np.sin(theta[i]*Units.degrees- np.pi/2),-S*np.cos(theta[i]*Units.degrees - np.pi/2), 0.0] 
+            mic_positions[i][:] = [S*np.sin(theta[i]*Units.degrees- np.pi/2),-S*np.cos(theta[i]*Units.degrees - np.pi/2), 0.0] 
 
     # Define conditions    
     segment                                                = Segment()  
@@ -248,8 +248,7 @@ def Broadband_Noise_Validation(PP):
     v_mat[:,0]                                             = velocity 
     conditions.frames.inertial.velocity_vector             = v_mat 
     conditions.energy.throttle                             = np.ones((ctrl_pts,1)) * 1.0    
-    conditions.aerodynamics.angle_of_attack                = np.atleast_2d(AoA).T 
-    conditions.noise.relative_microphone_locations         = np.repeat(positions[ np.newaxis,:,: ],1,axis=0)   
+    conditions.aerodynamics.angle_of_attack                = np.atleast_2d(AoA).T  
     conditions.frames.planet.true_course                   = np.zeros((ctrl_pts,3,3)) 
     conditions.frames.planet.true_course[:,0,0]            = np.cos(true_course),
     conditions.frames.planet.true_course[:,0,1]            = - np.sin(true_course)
@@ -295,7 +294,7 @@ def Broadband_Noise_Validation(PP):
     # time
     ti = time.time()             
     # Run Frequency Domain Rotor Noise Model           
-    compute_rotor_noise(bus,electric_rotor,rotor,segment.state.conditions,settings)
+    compute_rotor_noise(mic_positions,bus,electric_rotor,segment,settings)
     tf = time.time()
     
     APC_SF_1_3_Spectrum                                     = conditions.noise[bus.tag][electric_rotor.tag][rotor.tag].SPL_1_3_spectrum 

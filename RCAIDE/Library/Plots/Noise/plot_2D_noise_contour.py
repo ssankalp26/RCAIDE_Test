@@ -62,7 +62,7 @@ def plot_2D_noise_contour(noise_data,
     N/A
     """      
     
-    elevation       = noise_data.ground_microphone_locations[:,:,2]/Units.ft      
+    elevation       = noise_data.microphone_locations[:,:,2]/Units.ft      
     colors_undersea = plt.cm.terrain(np.linspace(0, 0.17, 56))
     colors_land     = plt.cm.terrain(np.linspace(0.25, 1, 200))  
     colors          = np.vstack((colors_undersea, colors_land))
@@ -78,16 +78,16 @@ def plot_2D_noise_contour(noise_data,
     noise_cmap     = plt.get_cmap('turbo')
     noise_new_cmap = truncate_colormap(noise_cmap,0.0, 1.0) 
      
-    if use_lat_long_coordinates: 
-        LAT  = noise_data.ground_microphone_coordinates[:,:,0]
-        LONG = noise_data.ground_microphone_coordinates[:,:,1]
+    if use_lat_long_coordinates and (noise_data.topography_file != None ):
+        LAT  = noise_data.microphone_coordinates[:,:,0]
+        LONG = noise_data.microphone_coordinates[:,:,1]
         axis.set_xlabel('Longitude [°]')
         axis.set_ylabel('Latitude [°]') 
     else:
-        LAT  = noise_data.ground_microphone_locations[:,:,0]/Units.nmi
-        LONG = noise_data.ground_microphone_locations[:,:,1]/Units.nmi 
-        axis.set_xlabel('x [nmi]')
-        axis.set_ylabel('y [nmi]')  
+        LAT  = noise_data.microphone_locations[:,:,0]
+        LONG = noise_data.microphone_locations[:,:,1]
+        axis.set_xlabel('x [m]')
+        axis.set_ylabel('y [m]')  
     
     if show_elevation:
         CS_1  = axis.contourf(LONG,LAT,elevation,cmap =cut_terrain_map,norm=norm,levels = 20, alpha=0.5)  

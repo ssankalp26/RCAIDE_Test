@@ -89,8 +89,8 @@ def vehicle_setup():
     segment.vsp_mesh.inner_radius    = 4.
     segment.vsp_mesh.outer_radius    = 4.
     segment.vsp_mesh.inner_length    = .14
-    segment.vsp_mesh.outer_length    = .14    
-    wing.Segments.append(segment)    
+    segment.vsp_mesh.outer_length    = .14   
+    wing.append_segment(segment)
     
     segment = RCAIDE.Library.Components.Wings.Segment()
     segment.tag                      = 'section_2'
@@ -104,8 +104,8 @@ def vehicle_setup():
     segment.vsp_mesh.inner_radius    = 4.
     segment.vsp_mesh.outer_radius    = 4.
     segment.vsp_mesh.inner_length    = .14
-    segment.vsp_mesh.outer_length    = .14     
-    wing.Segments.append(segment)   
+    segment.vsp_mesh.outer_length    = .14
+    wing.append_segment(segment)
 
     segment = RCAIDE.Library.Components.Wings.Segment()
     segment.tag                      = 'section_3'
@@ -119,8 +119,8 @@ def vehicle_setup():
     segment.vsp_mesh.inner_radius    = 4.
     segment.vsp_mesh.outer_radius    = 4.
     segment.vsp_mesh.inner_length    = .14
-    segment.vsp_mesh.outer_length    = .14     
-    wing.Segments.append(segment)   
+    segment.vsp_mesh.outer_length    = .14   
+    wing.append_segment(segment)
     
     segment = RCAIDE.Library.Components.Wings.Segment()
     segment.tag                      = 'section_4'
@@ -134,8 +134,8 @@ def vehicle_setup():
     segment.vsp_mesh.inner_radius    = 4.
     segment.vsp_mesh.outer_radius    = 2.8
     segment.vsp_mesh.inner_length    = .14
-    segment.vsp_mesh.outer_length    = .14     
-    wing.Segments.append(segment)       
+    segment.vsp_mesh.outer_length    = .14 
+    wing.append_segment(segment)
     
     segment = RCAIDE.Library.Components.Wings.Segment()
     segment.tag                   = 'section_5'
@@ -145,7 +145,7 @@ def vehicle_setup():
     segment.dihedral_outboard     = 1.85  * Units.degrees
     segment.sweeps.quarter_chord  = 30.85 * Units.degrees
     segment.thickness_to_chord    = 0.118
-    wing.Segments.append(segment)       
+    wing.append_segment(segment)
     
     segment = RCAIDE.Library.Components.Wings.Segment()
     segment.tag                   = 'section_6'
@@ -155,7 +155,7 @@ def vehicle_setup():
     segment.dihedral_outboard     = 1.85 * Units.degrees
     segment.sweeps.quarter_chord  = 34.3 * Units.degrees
     segment.thickness_to_chord    = 0.10
-    wing.Segments.append(segment)     
+    wing.append_segment(segment)
     
     segment = RCAIDE.Library.Components.Wings.Segment()
     segment.tag                   = 'section_7'
@@ -165,7 +165,7 @@ def vehicle_setup():
     segment.dihedral_outboard     = 73. * Units.degrees
     segment.sweeps.quarter_chord  = 55. * Units.degrees
     segment.thickness_to_chord    = 0.10
-    wing.Segments.append(segment)      
+    wing.append_segment(segment)
 
     segment = RCAIDE.Library.Components.Wings.Segment()
     segment.tag                   = 'tip'
@@ -175,7 +175,7 @@ def vehicle_setup():
     segment.dihedral_outboard     = 0. * Units.degrees
     segment.sweeps.quarter_chord  = 0. * Units.degrees
     segment.thickness_to_chord    = 0.10
-    wing.Segments.append(segment)  
+    wing.append_segment(segment)
     
     # Fill out more segment properties automatically
     wing = segment_properties(wing)        
