@@ -26,100 +26,40 @@ def compute_relative_noise_evaluation_locations(settings,segment):
         N/A  
 
     Inputs:  
-        settings.ground_microphone_locations                - array of microphone locations on the ground  [meters] 
+        settings.microphone_locations                - array of microphone locations on the ground  [meters] 
         segment.conditions.frames.inertial.position_vector  - position of aircraft                         [boolean]                                          
 
     Outputs: 
     GM_THETA   - angle measured from ground microphone in the x-z plane from microphone to aircraft 
     GM_PHI     - angle measured from ground microphone in the y-z plane from microphone to aircraft 
-    RML        - relative microphone locations
-    EGML       - evaluation ground microphone locations
-    AGML       - absolute ground microphone locations
+    RML        - relative microphone locations  
     num_gm_mic - number of ground microphones
  
     Properties Used:
         N/A       
     """       
- 
-    mic_stencil_x     = settings.ground_microphone_x_stencil      
-    mic_stencil_y     = settings.ground_microphone_y_stencil 
-    MSL_altitude      = settings.mean_sea_level_altitude
-    N_gm_x            = settings.ground_microphone_x_resolution   
-    N_gm_y            = settings.ground_microphone_y_resolution   
-    gml               = settings.ground_microphone_locations 
-    pos               = segment.state.conditions.frames.inertial.position_vector 
-    ctrl_pts          = len(pos)  
-    AGML              = np.repeat(gml[np.newaxis,:,:],ctrl_pts,axis=0) 
+  
+    MSL_altitude      = settings.mean_sea_level_altitude  
+    pos               = segment.state.conditions.frames.inertial.position_vector  
+    num_gm_mic        = len(settings.microphone_locations)  
+    RML               = np.zeros((len(pos),num_gm_mic,3)) 
+    PHI               = np.zeros((len(pos),num_gm_mic))
+    THETA             = np.zeros((len(pos),num_gm_mic))
+        
     
-    if settings.noise_hemisphere:
-        RML   = AGML 
-        EGML  = AGML   
-
-        mic_stencil      = np.zeros((ctrl_pts,4))
-        mic_stencil[:,0] = 0 
-        mic_stencil[:,1] = settings.noise_hemisphere_microphone_resolution  
-        mic_stencil[:,2] = 0
-        mic_stencil[:,3] = settings.noise_hemisphere_microphone_resolution   
-        num_gm_mic       = N_gm_x*N_gm_y
+    for cpt in range(len(pos)):  
+        relative_locations           = np.zeros((num_gm_mic,3,1))
+        relative_locations[:,0,0]    = settings.microphone_locations[:,0] -  (pos[cpt,0] + settings.aircraft_origin_location[0])  # X
+        relative_locations[:,1,0]    = settings.microphone_locations[:,1] -  (pos[cpt,1] + settings.aircraft_origin_location[1])  # Y
+        if MSL_altitude:
+            relative_locations[:,2,0]    = -(pos[cpt,2])  - settings.microphone_locations[:,2] # Z
+        else:
+            relative_locations[:,2,0]    = -(pos[cpt,2])    # Z
         
-    else: 
-        if (mic_stencil_x*2 + 1) > N_gm_x:
-            print("Resetting microphone stenxil in x direction")
-            mic_stencil_x = int(np.floor(N_gm_x/2 - 1))
+        RML[cpt,:,:]   = relative_locations[:,:,0]
         
-        if (mic_stencil_y*2 + 1) > N_gm_y:
-            print("Resetting microphone stenxil in y direction")
-            mic_stencil_y = int(np.floor(N_gm_y/2 - 1))      
-        
-        # index location that is closest to the position of the aircraft 
-        stencil_center_x_locs   = np.argmin(abs(np.tile((pos[:,0]+ settings.aircraft_departure_location[0])[:,None,None],(1,N_gm_x,N_gm_y)) -  np.tile(gml[:,0].reshape(N_gm_x,N_gm_y)[None,:,:],(ctrl_pts,1,1))),axis = 1)[:,0] 
-        stencil_center_y_locs   = np.argmin(abs(np.tile((pos[:,1]+ settings.aircraft_departure_location[1])[:,None,None],(1,N_gm_x,N_gm_y)) -  np.tile(gml[:,1].reshape(N_gm_x,N_gm_y)[None,:,:],(ctrl_pts,1,1))),axis = 2)[:,0]
-        
-        # modify location of stencil center point if at edge 
-        # top 
-        locs_1 = np.where(stencil_center_x_locs >= (N_gm_x-mic_stencil_x))[0]
-        stencil_center_x_locs[locs_1] = stencil_center_x_locs[locs_1] - ( mic_stencil_x - (N_gm_x - (stencil_center_x_locs[locs_1] + 1)))
-        
-        # right 
-        locs_2 = np.where(stencil_center_y_locs >= (N_gm_y-mic_stencil_y))[0]
-        stencil_center_y_locs[locs_2] = stencil_center_x_locs[locs_2] - ( mic_stencil_y - (N_gm_y - (stencil_center_y_locs[locs_2]+1)))     
-     
-        # bottom
-        locs_3 = np.where(stencil_center_x_locs <  (mic_stencil_x))[0]
-        stencil_center_x_locs[locs_3] = stencil_center_x_locs[locs_3] + ( mic_stencil_x - stencil_center_x_locs[locs_3])
-        
-        # left
-        locs_4 = np.where(stencil_center_y_locs <  (mic_stencil_y))[0]
-        stencil_center_y_locs[locs_4] = stencil_center_y_locs[locs_4] + ( mic_stencil_y - stencil_center_y_locs[locs_4])
-         
-        start_x = stencil_center_x_locs - mic_stencil_x
-        start_y = stencil_center_y_locs - mic_stencil_y
-        end_x   = stencil_center_x_locs + mic_stencil_x + 1
-        end_y   = stencil_center_y_locs + mic_stencil_y + 1
-        
-        mic_stencil      = np.zeros((ctrl_pts,4))
-        mic_stencil[:,0] = start_x 
-        mic_stencil[:,1] = end_x   
-        mic_stencil[:,2] = start_y 
-        mic_stencil[:,3] = end_y   
-        
-        num_gm_mic   = (mic_stencil_x*2 + 1)*(mic_stencil_y*2 + 1)
-        EGML         = np.zeros((ctrl_pts,num_gm_mic,3))   
-        RML          = np.zeros_like(EGML)
-        for cpt in range(ctrl_pts):
-            surface         = AGML[cpt,:,:].reshape((N_gm_x,N_gm_y,3))
-            stencil         = surface[start_x[cpt]:end_x[cpt],start_y[cpt]:end_y[cpt],:].reshape(num_gm_mic,3,1)  # extraction of points 
-            EGML[cpt]       = stencil[:,:,0]
-            
-            relative_locations           = np.zeros((num_gm_mic,3,1))
-            relative_locations[:,0,0]    = stencil[:,0,0] -  (pos[cpt,0] + settings.aircraft_departure_location[0])
-            relative_locations[:,1,0]    = stencil[:,1,0] -  (pos[cpt,1] + settings.aircraft_departure_location[1]) 
-            if MSL_altitude:
-                relative_locations[:,2,0]    = -(pos[cpt,2])  - stencil[:,2,0] 
-            else:
-                relative_locations[:,2,0]    = -(pos[cpt,2])    
-            
-            RML[cpt,:,:]   = relative_locations[:,:,0] 
-     
-    return RML,EGML,AGML,num_gm_mic,mic_stencil
+        PHI[cpt,:]     =  np.arctan2(np.sqrt(np.square(relative_locations[:, 0, 0]) + np.square(relative_locations[:, 1, 0])),  relative_locations[:, 2, 0]) # AIDAN TO COMPUTE. DONE !!
+        THETA[cpt,:]   =  np.arctan2(relative_locations[:, 1, 0], relative_locations[:, 0, 0]) # AIDAN TO COMPUTE. DONE !! 
+    
+    return RML,PHI,THETA,num_gm_mic 
  

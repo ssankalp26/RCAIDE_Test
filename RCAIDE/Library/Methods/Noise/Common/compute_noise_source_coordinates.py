@@ -45,7 +45,7 @@ def compute_rotor_point_source_coordinates(distributor,propulsor,conditions,mls,
     
     # aquire dimension of matrix
     num_cpt     = conditions._size
-    num_mic     = len(mls[0,:,0])  
+    num_mic     = len(mls[:,0])  
     num_rot     = 1 
     rot_origins = np.array(rotor.origin)  
     num_blades  = rotor.number_of_blades  
@@ -149,9 +149,9 @@ def compute_rotor_point_source_coordinates(distributor,propulsor,conditions,mls,
     # translation of vehicle to air  
     # -----------------------------------------------------------------------------------------------------------------------------
     Translation_XYZ                  = np.tile(I[None,None,None,None,:,:,:],(num_cpt,num_mic,num_rot,num_blades,num_sec,1,1)) 
-    Translation_XYZ[:,:,:,:,:,0,3]   = np.tile(mls[:,:,0][:,:,None,None,None],(1,1,num_rot,num_blades,num_sec)) 
-    Translation_XYZ[:,:,:,:,:,1,3]   = np.tile(mls[:,:,1][:,:,None,None,None],(1,1,num_rot,num_blades,num_sec)) 
-    Translation_XYZ[:,:,:,:,:,2,3]   = np.tile(mls[:,:,2][:,:,None,None,None],(1,1,num_rot,num_blades,num_sec))    
+    Translation_XYZ[:,:,:,:,:,0,3]   = np.tile(mls[None,:,0][:,:,None,None,None],(num_cpt,1,num_rot,num_blades,num_sec)) 
+    Translation_XYZ[:,:,:,:,:,1,3]   = np.tile(mls[None,:,1][:,:,None,None,None],(num_cpt,1,num_rot,num_blades,num_sec)) 
+    Translation_XYZ[:,:,:,:,:,2,3]   = np.tile(mls[None,:,2][:,:,None,None,None],(num_cpt,1,num_rot,num_blades,num_sec))    
  
     Rotation_RPY                     = np.tile(I[None,None,None,None,:,:,:],(num_cpt,num_mic,num_rot,num_blades,num_sec,1,1)) 
     V_vec_pitch                      = conditions.frames.wind.transform_to_inertial[:,np.newaxis,np.newaxis,np.newaxis,np.newaxis,:,:]  # np.linalg.inv(conditions.frames.wind.transform_to_inertial[:,np.newaxis,np.newaxis,np.newaxis,np.newaxis,:,:])

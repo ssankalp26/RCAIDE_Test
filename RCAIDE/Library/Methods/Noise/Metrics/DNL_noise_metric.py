@@ -43,14 +43,14 @@ def DNL_noise_metric(noise_data, flight_times = ['12:00:00'],time_period = 24*Un
         SPL        = np.zeros_like(noise_data.SPL_dBA)
         SPL[:,:,:] = noise_data.SPL_dBA       
         t          = noise_data.time  
-        N_gm_y     = noise_data.ground_microphone_y_resolution   
-        N_gm_x     = noise_data.ground_microphone_x_resolution    
+        N_gm_y     = noise_data.microphone_y_resolution   
+        N_gm_x     = noise_data.microphone_x_resolution    
         time_step  = t[1]-t[0]
         
         # Compute Day-Night Sound Level and Noise Equivalent Noise   
         number_of_flights       = len(flight_times) 
-        T                       = 15*Units.hours
-        number_of_timesteps        = int(T/time_step) 
+        T                       = time_period
+        number_of_timesteps     = int(T/time_step) 
         timestamps              = np.linspace(0,T,number_of_timesteps)
      
         TNE = np.zeros((number_of_timesteps,N_gm_x,N_gm_y))*np.nan   # cumulative noise exposure

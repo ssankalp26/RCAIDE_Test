@@ -44,8 +44,8 @@ def main():
     baseline_results  = basline_missions.base_mission.evaluate()   
      
     # SPL of rotor check during hover 
-    B737_SPL        = np.max(baseline_results.segments.takeoff.conditions.noise.total_SPL_dBA)
-    B737_SPL_true   = 120.52537687607997
+    B737_SPL        = np.max(baseline_results.segments.takeoff.conditions.noise.SPL_dBA)
+    B737_SPL_true   = 103.7594057659708
     B737_diff_SPL   = np.abs(B737_SPL - B737_SPL_true)
     print('SPL difference: ',B737_diff_SPL)
     assert np.abs((B737_SPL - B737_SPL_true)/B737_SPL_true) < 1e-1    

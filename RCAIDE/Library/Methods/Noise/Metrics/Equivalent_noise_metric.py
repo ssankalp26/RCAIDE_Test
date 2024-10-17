@@ -45,13 +45,13 @@ def Equivalent_noise_metric(noise_data, flight_times = ['12:00:00'],time_period 
         SPL        = np.zeros_like(noise_data.SPL_dBA)
         SPL[:,:,:] = noise_data.SPL_dBA       
         t          = noise_data.time  
-        N_gm_y     = noise_data.ground_microphone_y_resolution   
-        N_gm_x     = noise_data.ground_microphone_x_resolution    
+        N_gm_y     = noise_data.microphone_y_resolution   
+        N_gm_x     = noise_data.microphone_x_resolution    
         time_step  = t[1]-t[0]
         
         # Compute Day-Night Sound Level and Noise Equivalent Noise   
         number_of_flights       = len(flight_times) 
-        T                       = 15*Units.hours
+        T                       = time_period
         number_of_timesteps     = int(T/time_step) 
         timestamps              = np.linspace(0,T,number_of_timesteps)
      
@@ -92,7 +92,6 @@ def Equivalent_noise_metric(noise_data, flight_times = ['12:00:00'],time_period 
     noise_data.temporal_noise_exposure = TNE 
     noise_data.time_step               = time_step
     noise_data.number_of_timesteps     = number_of_timesteps
-    noise_data.time_stamps             = timestamps  
-    
+    noise_data.time_stamps             = timestamps   
     
     return noise_data  

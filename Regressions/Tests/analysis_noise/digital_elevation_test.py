@@ -8,11 +8,7 @@
 # RCAIDE Imports 
 import RCAIDE
 from RCAIDE.Framework.Core import Units , Data 
-from RCAIDE.Library.Plots import *     
-from RCAIDE.Library.Methods.Noise.Metrics import *  
-from RCAIDE.Library.Methods.Noise.Common.generate_microphone_locations        import generate_terrain_elevated_microphone_locations
-from RCAIDE.Library.Mission.Common.compute_point_to_point_geospacial_data     import compute_point_to_point_geospacial_data
-
+from RCAIDE.Library.Plots import *       
 # Python imports
 import matplotlib.pyplot as plt  
 import sys 
@@ -25,21 +21,7 @@ from NASA_X57    import vehicle_setup, configs_setup
 # ----------------------------------------------------------------------
 #   Main
 # ---------------------------------------------------------------------- 
-def main():    
-    microphone_terrain_data =  generate_terrain_elevated_microphone_locations(topography_file   ='LA_Metropolitan_Area.txt',
-                                                           ground_microphone_x_resolution    = 201,  
-                                                           ground_microphone_y_resolution    = 101, 
-                                                           ground_microphone_x_stencil       = 1,   
-                                                           ground_microphone_y_stencil       = 1)    
-    
-
-    geospacial_data =  compute_point_to_point_geospacial_data(topography_file  = 'LA_Metropolitan_Area.txt',
-                                                                                 departure_tag                         = 'A',
-                                                                                 destination_tag                       = 'B',
-                                                                                 departure_coordinates                 = [33.94067953101678, -118.40513722978149],
-                                                                                 destination_coordinates               = [33.81713622114423, -117.92111163722772] )    
-  
-    
+def main():       
     plot_elevation_contours(topography_file   ='LA_Metropolitan_Area.txt',use_lat_long_coordinates = True, save_filename = "Elevation_Contours_Lat_Long")
 
     plot_elevation_contours(topography_file   ='LA_Metropolitan_Area.txt',use_lat_long_coordinates = False, save_filename = "Elevation_Contours_XY")  
@@ -47,38 +29,56 @@ def main():
     vehicle  = vehicle_setup()      
     vehicle.networks.electric.busses.bus.identical_propulsors     = False # only for regression     
     configs  = configs_setup(vehicle) 
-    analyses = analyses_setup(configs,microphone_terrain_data,geospacial_data)  
-    mission  = mission_setup(analyses,geospacial_data)
+    analyses = analyses_setup(configs)  
+    mission  = mission_setup(analyses)
     missions = missions_setup(mission)  
     results  = missions.base_mission.evaluate()   
     
-    regression_plotting_flag = False
-    plot_results(results,regression_plotting_flag)   
+    regression_plotting_flag = False 
+    flight_times = np.array(['06:00:00','06:15:00','06:30:00','06:45:00',
+                             '07:00:00','07:15:00','07:30:00','07:45:00',
+                             '08:00:00','08:15:00','08:30:00','08:45:00',
+                             '09:00:00','09:15:00','09:30:00','09:45:00',
+                             '10:00:00','10:15:00','10:30:00','10:45:00',
+                             '11:00:00','11:15:00','11:30:00','11:45:00',
+                             '12:00:00','12:15:00','12:30:00','12:45:00',
+                             '13:00:00','13:15:00','13:30:00','13:45:00',
+                             '14:00:00','14:15:00','14:30:00','14:45:00',
+                             '15:00:00'])
 
-    X57_SPL        = np.max(results.segments.climb.conditions.noise.total_SPL_dBA) 
-    X57_SPL_true   = 45.232719642900996
-    X57_diff_SPL   = np.abs(X57_SPL - X57_SPL_true)
-    print('Error: ',X57_diff_SPL)
-    assert np.abs((X57_SPL - X57_SPL_true)/X57_SPL_true) < 1e-3    
+    noise_data   = post_process_noise_data(results,
+                                           flight_times = flight_times, 
+                                           DNL_time_period= 24*Units.hours,
+                                           LAeqt_time_period  = 15*Units.hours,
+                                           SENEL_time_period = 24*Units.hours)  
+
+    
+    plot_results(results,noise_data,regression_plotting_flag)   
+
+    #X57_SPL        = np.max(results.segments.climb.conditions.noise.total_SPL_dBA) 
+    #X57_SPL_true   = 45.232719642900996
+    #X57_diff_SPL   = np.abs(X57_SPL - X57_SPL_true)
+    #print('Error: ',X57_diff_SPL)
+    #assert np.abs((X57_SPL - X57_SPL_true)/X57_SPL_true) < 1e-3    
      
     return      
 
 # ----------------------------------------------------------------------
 #   Define the Vehicle Analyses
 # ---------------------------------------------------------------------- 
-def analyses_setup(configs,microphone_terrain_data,geospacial_data):
+def analyses_setup(configs):
 
     analyses = RCAIDE.Framework.Analyses.Analysis.Container()
 
     # build a base analysis for each config
     for tag,config in configs.items():
-        analysis      = base_analysis(config,microphone_terrain_data,geospacial_data) 
+        analysis      = base_analysis(config) 
         analyses[tag] = analysis
 
     return analyses  
 
 
-def base_analysis(vehicle,microphone_terrain_data,geospacial_data):
+def base_analysis(vehicle):
 
     # ------------------------------------------------------------------
     #   Initialize the Analyses
@@ -94,33 +94,17 @@ def base_analysis(vehicle,microphone_terrain_data,geospacial_data):
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
     aerodynamics          = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
-    aerodynamics.vehicle = vehicle
+    aerodynamics.vehicle  = vehicle
     aerodynamics.settings.drag_coefficient_increment = 0.0000
     analyses.append(aerodynamics)   
  
     #  Noise Analysis   
     noise = RCAIDE.Framework.Analyses.Noise.Frequency_Domain_Buildup()   
     noise.vehicle = vehicle
-    noise.settings.mean_sea_level_altitude          = False  
-    noise.settings.aircraft_departure_location      = geospacial_data.departure_location   
-    noise.settings.aircraft_destination_location    = geospacial_data.destination_location       
-    noise.settings.aircraft_departure_coordinates   = geospacial_data.departure_coordinates
-    noise.settings.aircraft_destination_coordinates = geospacial_data.destination_coordinates
-    noise.settings.ground_microphone_x_resolution   = microphone_terrain_data.ground_microphone_x_resolution           
-    noise.settings.ground_microphone_y_resolution   = microphone_terrain_data.ground_microphone_y_resolution          
-    noise.settings.ground_microphone_x_stencil      = microphone_terrain_data.ground_microphone_x_stencil             
-    noise.settings.ground_microphone_y_stencil      = microphone_terrain_data.ground_microphone_y_stencil             
-    noise.settings.ground_microphone_min_y          = microphone_terrain_data.ground_microphone_min_x                 
-    noise.settings.ground_microphone_max_y          = microphone_terrain_data.ground_microphone_max_x                 
-    noise.settings.ground_microphone_min_x          = microphone_terrain_data.ground_microphone_min_y                 
-    noise.settings.ground_microphone_max_x          = microphone_terrain_data.ground_microphone_max_y            
-    noise.settings.topography_file                  = microphone_terrain_data.topography_file  
-    noise.settings.ground_microphone_locations      = microphone_terrain_data.ground_microphone_locations 
-    noise.settings.ground_microphone_min_lat        = microphone_terrain_data.ground_microphone_min_lat 
-    noise.settings.ground_microphone_max_lat        = microphone_terrain_data.ground_microphone_max_lat 
-    noise.settings.ground_microphone_min_long       = microphone_terrain_data.ground_microphone_min_long
-    noise.settings.ground_microphone_min_long       = microphone_terrain_data.ground_microphone_min_long        
-    noise.settings.ground_microphone_coordinates    = microphone_terrain_data.ground_microphone_coordinates   
+    noise.settings.mean_sea_level_altitude          = False         
+    noise.settings.aircraft_departure_coordinates   = [33.94067953101678, -118.40513722978149]
+    noise.settings.aircraft_destination_coordinates = [33.81713622114423, -117.92111163722772]  
+    #noise.settings.topography_file                  = 'LA_Metropolitan_Area.txt' 
     analyses.append(noise)
 
     # ------------------------------------------------------------------
@@ -146,7 +130,7 @@ def base_analysis(vehicle,microphone_terrain_data,geospacial_data):
 # ----------------------------------------------------------------------
 #  Set Up Mission 
 # ---------------------------------------------------------------------- 
-def mission_setup(analyses,geospacial_data):      
+def mission_setup(analyses):      
     
     # ------------------------------------------------------------------
     #   Initialize the Mission
@@ -155,22 +139,43 @@ def mission_setup(analyses,geospacial_data):
     mission.tag   = 'mission' 
     Segments      = RCAIDE.Framework.Mission.Segments  
     base_segment  = Segments.Segment()   
-    base_segment.state.numerics.number_of_control_points  = 5 
+    base_segment.state.numerics.number_of_control_points  = 10
+    base_segment.state.numerics.discretization_method     = RCAIDE.Library.Methods.Utilities.Chebyshev.linear_data 
     
     # ------------------------------------------------------------------
     #   Departure End of Runway Segment Flight 1 : 
     # ------------------------------------------------------------------ 
 
-    segment = Segments.Climb.Linear_Speed_Constant_Rate(base_segment) 
-    segment.tag = "climb"   
+    #segment = Segments.Climb.Linear_Speed_Constant_Rate(base_segment) 
+    #segment.tag = "climb"   
+    #segment.analyses.extend( analyses.base ) 
+    #segment.initial_battery_state_of_charge              = 1.0 
+    #segment.altitude_start                               = 10.0    * Units.feet  
+    #segment.altitude_end                                 = 500.0   * Units.feet 
+    #segment.air_speed_start                              = 100.    * Units['mph'] 
+    #segment.air_speed_end                                = 120.    * Units['mph'] 
+    #segment.climb_rate                                   = 50.     * Units['ft/min']         
+    #segment.true_course                                  = 0
+    
+    ## define flight dynamics to model 
+    #segment.flight_dynamics.force_x                      = True  
+    #segment.flight_dynamics.force_z                      = True     
+    
+    ## define flight controls 
+    #segment.assigned_control_variables.throttle.active               = True           
+    #segment.assigned_control_variables.throttle.assigned_propulsors  = [['starboard_propulsor','port_propulsor']] 
+    #segment.assigned_control_variables.body_angle.active             = True                
+       
+    #mission.append_segment(segment)
+    
+    segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment) 
+    segment.tag = "cruise"   
     segment.analyses.extend( analyses.base ) 
-    segment.initial_battery_state_of_charge              = 0.89         
-    segment.altitude_start                               = 10.0    * Units.feet  
-    segment.altitude_end                                 = 500.0   * Units.feet 
-    segment.air_speed_start                              = 100.    * Units['mph'] 
-    segment.air_speed_end                                = 120.    * Units['mph'] 
-    segment.climb_rate                                   = 50.     * Units['ft/min']         
-    segment.true_course                                  = geospacial_data.true_course 
+    segment.initial_battery_state_of_charge              = 1.0       
+    segment.altitude                                     = 30
+    segment.air_speed                                    = 100
+    segment.distance                                     = 1000  
+    segment.true_course                                  = 0
     
     # define flight dynamics to model 
     segment.flight_dynamics.force_x                      = True  
@@ -181,7 +186,7 @@ def mission_setup(analyses,geospacial_data):
     segment.assigned_control_variables.throttle.assigned_propulsors  = [['starboard_propulsor','port_propulsor']] 
     segment.assigned_control_variables.body_angle.active             = True                
        
-    mission.append_segment(segment)  
+    mission.append_segment(segment)      
      
     return mission
 
@@ -200,14 +205,11 @@ def missions_setup(mission):
 # ----------------------------------------------------------------------
 #  Plot Resuls 
 # ---------------------------------------------------------------------- 
-def plot_results(results,regression_plotting_flag): 
-    
-    noise_data   = post_process_noise_data(results)  
-    
+def plot_results(results,noise_data,regression_plotting_flag): 
     # Plot noise hemisphere
     plot_noise_hemisphere(noise_data,
                           noise_level      = noise_data.SPL_dBA[1], 
-                          min_noise_level  = 35,  
+                          min_noise_level  = 20,  
                           max_noise_level  = 90, 
                           noise_scale_label= 'SPL [dBA]',
                           show_figure      = regression_plotting_flag)     
@@ -216,21 +218,12 @@ def plot_results(results,regression_plotting_flag):
     # Plot noise hemisphere with vehicle 
     plot_noise_hemisphere(noise_data,
                           noise_level      = noise_data.SPL_dBA[1], 
-                          min_noise_level  = 35,  
+                          min_noise_level  = 20,  
                           max_noise_level  = 90, 
                           noise_scale_label= 'SPL [dBA]',
                           save_filename    = "Noise_Hemisphere_With_Aircraft", 
-                          vehicle          = results.segments.climb.analyses.aerodynamics.vehicle,
-                          show_figure      = regression_plotting_flag)      
-    
-    
-    # Plot noise level
-    flight_times = np.array(['06:00:00','07:00:00','08:00:00','09:00:00','10:00:00','11:00:00','12:00:00','13:00:00','14:00:00','15:00:00'])  
-      
-    noise_data      = post_process_noise_data(results)   
-    noise_data      = DNL_noise_metric(noise_data, flight_times,time_period = 24*Units.hours)
-    noise_data      = Equivalent_noise_metric(noise_data, flight_times,time_period = 15*Units.hours)
-    noise_data      = SENEL_noise_metric(noise_data, flight_times,time_period = 24*Units.hours)
+                          vehicle          = results.segments.cruise.analyses.aerodynamics.vehicle,
+                          show_figure      = regression_plotting_flag)       
     
     plot_noise_level(noise_data,
                     noise_level  = noise_data.SPL_dBA[0], 
@@ -239,7 +232,7 @@ def plot_results(results,regression_plotting_flag):
     # Maximum Sound Pressure Level   
     plot_3D_noise_contour(noise_data,
                           noise_level      = np.max(noise_data.SPL_dBA,axis=0), 
-                          min_noise_level  = 35,  
+                          min_noise_level  = 20,  
                           max_noise_level  = 90, 
                           noise_scale_label= 'SPL [dBA]',
                           save_filename    = "SPL_max_Noise_3D_Contour",
@@ -249,7 +242,7 @@ def plot_results(results,regression_plotting_flag):
     # Day Night Average Noise Level 
     plot_3D_noise_contour(noise_data,
                         noise_level      = noise_data.DNL,
-                        min_noise_level  = 35,  
+                        min_noise_level  = 20,  
                         max_noise_level  = 90, 
                         noise_scale_label= 'DNL',
                         show_microphones = True, 
@@ -260,7 +253,7 @@ def plot_results(results,regression_plotting_flag):
     # Equivalent Noise Level
     plot_3D_noise_contour(noise_data,
                         noise_level      = noise_data.L_AeqT,
-                        min_noise_level  = 35,  
+                        min_noise_level  = 20,  
                         max_noise_level  = 90, 
                         noise_scale_label= 'LAeqT',
                         show_trajectory  = True,
@@ -271,7 +264,7 @@ def plot_results(results,regression_plotting_flag):
     # 24-hr Equivalent Noise Level
     plot_3D_noise_contour(noise_data,
                        noise_level      = noise_data.L_AeqT,
-                       min_noise_level  = 35,  
+                       min_noise_level  = 20,  
                        max_noise_level  = 90, 
                        noise_scale_label= '24hr-LAeqT',
                        save_filename    = "24hr_LAeqT_Noise_3D_Contour", 
@@ -282,22 +275,16 @@ def plot_results(results,regression_plotting_flag):
     # Single Event Noise Exposure Level
     plot_3D_noise_contour(noise_data,
                        noise_level      = noise_data.SENEL,
-                       min_noise_level  = 35,  
+                       min_noise_level  = 20,  
                        max_noise_level  = 90, 
                        noise_scale_label= 'SENEL',
                        save_filename    = "SENEL_Noise_3D_Contour",
-                       show_figure      = regression_plotting_flag)  
-
-
-    noise_data      = post_process_noise_data(results)  
-    noise_data      = Equivalent_noise_metric(noise_data, flight_times,time_period = 15*Units.hours)
-    noise_data      = SENEL_noise_metric(noise_data, flight_times,time_period = 24*Units.hours)
-    noise_data      = DNL_noise_metric(noise_data, flight_times,time_period = 24*Units.hours)
+                       show_figure      = regression_plotting_flag)
     
     # Maximum Sound Pressure Level   
     plot_2D_noise_contour(noise_data,
                         noise_level      = np.max(noise_data.SPL_dBA,axis=0), 
-                        min_noise_level  = 35,  
+                        min_noise_level  = 20,  
                         max_noise_level  = 90, 
                         noise_scale_label= 'SPL [dBA]',
                         save_filename    = "SPL_max_Noise_2D_Contour",
@@ -309,7 +296,7 @@ def plot_results(results,regression_plotting_flag):
     # Day Night Average Noise Level 
     plot_2D_noise_contour(noise_data,
                         noise_level      = noise_data.DNL,
-                        min_noise_level  = 35,  
+                        min_noise_level  = 20,  
                         max_noise_level  = 90, 
                         noise_scale_label= 'DNL',
                         save_filename    = "DNL_Noise_2D_Contour",
@@ -319,7 +306,7 @@ def plot_results(results,regression_plotting_flag):
     # Equivalent Noise Level
     plot_2D_noise_contour(noise_data,
                         noise_level      = noise_data.L_AeqT,
-                        min_noise_level  = 35,  
+                        min_noise_level  = 20,  
                         max_noise_level  = 90, 
                         noise_scale_label= 'LAeqT',
                         save_filename    = "LAeqT_Noise_2D_Contour",
@@ -329,7 +316,7 @@ def plot_results(results,regression_plotting_flag):
     # 24-hr Equivalent Noise Level
     plot_2D_noise_contour(noise_data,
                        noise_level      = noise_data.L_AeqT,
-                       min_noise_level  = 35,  
+                       min_noise_level  = 20,  
                        max_noise_level  = 90, 
                        noise_scale_label= '24hr-LAeqT',
                        save_filename    = "24hr_LAeqT_Noise_2D_Contour",
@@ -339,7 +326,7 @@ def plot_results(results,regression_plotting_flag):
     # Single Event Noise Exposure Level
     plot_2D_noise_contour(noise_data,
                        noise_level      = noise_data.SENEL,
-                       min_noise_level  = 35,  
+                       min_noise_level  = 20,  
                        max_noise_level  = 90, 
                        noise_scale_label= 'SENEL',
                        save_filename    = "SENEL_Noise_2D_Contour",

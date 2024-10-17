@@ -16,7 +16,8 @@ from .decibel_arithmetic                                 import pressure_ratio_t
 from .decibel_arithmetic                                 import SPL_arithmetic
 from .convert_to_third_octave_band                       import convert_to_third_octave_band 
 from .compute_noise_source_coordinates                   import compute_rotor_point_source_coordinates
-from .generate_microphone_locations                      import generate_zero_elevation_microphone_locations
-from .generate_microphone_locations                      import generate_terrain_elevated_microphone_locations
-from .generate_microphone_locations                      import generate_noise_hemisphere_microphone_locations
-from .compute_relative_noise_evaluation_locations        import compute_relative_noise_evaluation_locations   
+from .generate_zero_elevation_microphone_locations       import generate_zero_elevation_microphone_locations
+from .generate_terrain_microphone_locations              import generate_terrain_microphone_locations
+from .generate_hemisphere_microphone_locations           import generate_hemisphere_microphone_locations
+from .compute_relative_noise_evaluation_locations        import compute_relative_noise_evaluation_locations
+from .evaluate_noise_surrogate                           import evaluate_noise_surrogate
