@@ -25,6 +25,7 @@ from .Lift_Rotor                                 import Lift_Rotor
 from Legacy.trunk.S.Components.Energy.Converters import Motor_HTS_Rotor
 from Legacy.trunk.S.Components.Energy.Converters import Motor_Lo_Fid
 from .DC_Motor                                   import DC_Motor
+from .Ducted_Fan                                 import Ducted_Fan
 from Legacy.trunk.S.Components.Energy.Converters import Propeller_Lo_Fid
 from .Propeller                                  import Propeller
 from .Ram                                        import Ram

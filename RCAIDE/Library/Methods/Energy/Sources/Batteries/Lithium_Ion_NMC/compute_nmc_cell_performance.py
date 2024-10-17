@@ -149,7 +149,7 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
     # ---------------------------------------------------------------------------------------------------
     if bus_config == 'Series':
         I_module[t_idx]      = I_bus[t_idx]
-    elif bus_config ==  'Parallel':
+    elif bus_config  == 'Parallel':
         I_module[t_idx]      = I_bus[t_idx] / len(bus.battery_modules)
 
     I_cell[t_idx]        = I_module[t_idx] / n_parallel   

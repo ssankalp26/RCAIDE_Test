@@ -44,10 +44,38 @@ def main():
     missions = missions_setup(mission) 
      
     # mission analysis 
-    results = missions.base_mission.evaluate() 
+    results = missions.base_mission.evaluate()   
+
+    # Extract sample values from computation  
+    thrust     = results.segments.climb_1.conditions.energy['fuel_line']['inner_right_turbojet'].thrust[3][0]
+    throttle   = results.segments.level_cruise.conditions.energy['fuel_line']['inner_right_turbojet'].throttle[3][0] 
+    CL        = results.segments.descent_1.conditions.aerodynamics.coefficients.lift.total[2][0] 
     
-    ## plt the old results
-    plot_mission(results)   
+    #print values for resetting regression
+    show_vals = True
+    if show_vals:
+        data = [thrust, throttle, CL]
+        for val in data:
+            print(val)
+    
+    # Truth values
+    thrust_truth     = 182595.39930805957
+    throttle_truth   = 1.0733672692406722
+    CL_truth         = 0.27062735354848166
+    
+    # Store errors 
+    error = Data()
+    error.thrust    = np.max(np.abs(thrust - thrust_truth )/thrust_truth) 
+    error.throttle  = np.max(np.abs(throttle  - throttle_truth  )/throttle_truth) 
+    error.CL        = np.max(np.abs(CL - CL_truth   )/CL_truth)      
+     
+    print('Errors:')
+    print(error)
+     
+    for k,v in list(error.items()): 
+        assert(np.abs(v)<1e-6)
+        
+    plot_mission(results)    
     return 
 
 # ----------------------------------------------------------------------
@@ -451,37 +479,8 @@ def missions_setup(mission):
     missions.append(mission)
     
     # done!
-    return missions  
-    
-def check_results(new_results,old_results):
+    return missions   
 
-    # check segment values
-    check_list = [
-        'segments.climbing_cruise.conditions.aerodynamics.angles.alpha',
-        'segments.climbing_cruise.conditions.aerodynamics.coefficients.drag.total',
-        'segments.climbing_cruise.conditions.aerodynamics.coefficients.lift.total', 
-        'segments.climbing_cruise.conditions.weights.vehicle_mass_rate', 
-    ]
-
-    # do the check
-    for k in check_list:
-        print(k)
-
-        old_val = np.max( old_results.deep_get(k) )
-        new_val = np.max( new_results.deep_get(k) )
-        err = (new_val-old_val)/old_val
-        print('Error at Max:' , err)
-        assert np.abs(err) < 1e-6 , 'Max Check Failed : %s' % k
-
-        old_val = np.min( old_results.deep_get(k) )
-        new_val = np.min( new_results.deep_get(k) )
-        err = (new_val-old_val)/old_val
-        print('Error at Min:' , err)
-        assert np.abs(err) < 1e-6 , 'Min Check Failed : %s' % k        
-
-        print('') 
-
-    return 
 
 if __name__ == '__main__': 
     main()    

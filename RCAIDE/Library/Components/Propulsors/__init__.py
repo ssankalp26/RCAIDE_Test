@@ -13,6 +13,7 @@
 from .                                           import Converters  
 from .Propulsor                                  import Propulsor
 from .Electric_Rotor                             import Electric_Rotor
+from .Electric_Ducted_Fan                        import Electric_Ducted_Fan
 from .ICE_Propeller                              import ICE_Propeller
 from .Turbofan                                   import Turbofan
 from .Turbojet                                   import Turbojet

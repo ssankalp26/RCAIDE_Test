@@ -99,21 +99,27 @@ def plot_electric_propulsor_efficiencies(results,
      
     return fig_1,fig_2, fig_3
 
-def plot_propulsor_data(results,bus,propulsor,axis_1,axis_2,axis_3,line_colors,ps,pi): 
-    rotor =  propulsor.rotor
+def plot_propulsor_data(results,bus,propulsor,axis_1,axis_2,axis_3,line_colors,ps,pi):
+    
+    if 'rotor' in propulsor: 
+        thrustor =  propulsor.rotor
+        axis_1.set_ylabel(r'$\eta_{rotor}$')
+    elif 'ducted_fan' in propulsor:
+        thrustor =  propulsor.ducted_fan
+        axis_1.set_ylabel(r'$\eta_{ducted fan}$')
     motor =  propulsor.motor
     
     for i in range(len(results.segments)): 
         bus_results  = results.segments[i].conditions.energy[bus.tag] 
         time         = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min      
-        effp         = bus_results[propulsor.tag][rotor.tag].efficiency[:,0]
-        fom          = bus_results[propulsor.tag][rotor.tag].figure_of_merit[:,0]
+        effp         = bus_results[propulsor.tag][thrustor.tag].efficiency[:,0]
+        fom          = bus_results[propulsor.tag][thrustor.tag].figure_of_merit[:,0]
         effm         = bus_results[propulsor.tag][motor.tag].efficiency[:,0]        
         segment_tag  = results.segments[i].tag
         segment_name = segment_tag.replace('_', ' ')
          
         axis_1.plot(time, effp, color = line_colors[i], marker = ps.markers[pi], markersize= ps.marker_size, linewidth = ps.line_width, label = segment_name) 
-        axis_1.set_ylabel(r'$\eta_{rotor}$')
+        
         axis_1.set_xlabel('Time (mins)')
         axis_1.set_ylim([0,1.1])
         set_axes(axis_1)         
