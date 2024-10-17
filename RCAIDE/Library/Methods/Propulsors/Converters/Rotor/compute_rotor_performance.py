@@ -331,6 +331,9 @@ def compute_rotor_performance(propulsor,state,disributor,center_of_gravity= [[0.
 
         Va_2d = Wa
         Vt_2d = Wt
+        V_disc  = np.sqrt(Va_2d**2 + Vt_2d**2)
+        M_disc  = Ma
+        
         Va_avg = np.average(Wa, axis=2)      # averaged around the azimuth
         Vt_avg = np.average(Wt, axis=2)      # averaged around the azimuth
 
@@ -361,7 +364,9 @@ def compute_rotor_performance(propulsor,state,disributor,center_of_gravity= [[0.
         blade_dQ_dr_2d           = np.repeat(blade_dQ_dr[:, :, None], Na, axis=2)
         blade_Gamma_2d           = np.repeat(Gamma[ :, :, None], Na, axis=2)
         alpha_2d                 = np.repeat(alpha[ :, :, None], Na, axis=2)
-
+        V_disc                   = np.sqrt(Va_2d**2 + Vt_2d**2)
+        M_disc                   = np.repeat(Ma[ :, :, None], Na, axis=2)
+        
         Vt_avg                  = Wt
         Va_avg                  = Wa
         Vt_ind_avg              = vt
@@ -459,6 +464,8 @@ def compute_rotor_performance(propulsor,state,disributor,center_of_gravity= [[0.
                 disc_axial_induced_velocity       = Va_ind_2d,
                 disc_tangential_velocity          = Vt_2d,
                 disc_axial_velocity               = Va_2d,
+                disc_velocity                     = V_disc,
+                disc_Mach_number                  = M_disc,
                 drag_coefficient                  = Cd,
                 lift_coefficient                  = Cl, 
                 disc_loading                      = disc_loading, 
