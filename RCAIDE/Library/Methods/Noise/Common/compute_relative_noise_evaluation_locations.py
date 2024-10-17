@@ -15,7 +15,7 @@ import numpy as np
 #  Relative Noise Evaluatation Locations
 # ----------------------------------------------------------------------------------------------------------------------      
 ## @ingroup Methods-Noise-Common 
-def compute_relative_noise_evaluation_locations(settings,microphone_locations,segment):
+def compute_relative_noise_evaluation_locations(settings,segment):
     """This computes the relative locations on the surface in the computational domain where the 
     propogated sound is computed. Vectors point from observer/microphone to aircraft/source  
             
@@ -26,7 +26,7 @@ def compute_relative_noise_evaluation_locations(settings,microphone_locations,se
         N/A  
 
     Inputs:  
-        settings.ground_microphone_locations                - array of microphone locations on the ground  [meters] 
+        settings.microphone_locations                - array of microphone locations on the ground  [meters] 
         segment.conditions.frames.inertial.position_vector  - position of aircraft                         [boolean]                                          
 
     Outputs: 
@@ -41,7 +41,7 @@ def compute_relative_noise_evaluation_locations(settings,microphone_locations,se
   
     MSL_altitude      = settings.mean_sea_level_altitude  
     pos               = segment.state.conditions.frames.inertial.position_vector  
-    num_gm_mic        = len(microphone_locations)  
+    num_gm_mic        = len(settings.microphone_locations)  
     RML               = np.zeros((len(pos),num_gm_mic,3)) 
     PHI               = np.zeros((len(pos),num_gm_mic))
     THETA             = np.zeros((len(pos),num_gm_mic))
@@ -49,10 +49,10 @@ def compute_relative_noise_evaluation_locations(settings,microphone_locations,se
     
     for cpt in range(len(pos)):  
         relative_locations           = np.zeros((num_gm_mic,3,1))
-        relative_locations[:,0,0]    = microphone_locations[:,0,0] -  (pos[cpt,0] + settings.aircraft_departure_location[0])  # X
-        relative_locations[:,1,0]    = microphone_locations[:,1,0] -  (pos[cpt,1] + settings.aircraft_departure_location[1])  # Y
+        relative_locations[:,0,0]    = settings.microphone_locations[:,0] -  (pos[cpt,0] + settings.aircraft_origin_location[0])  # X
+        relative_locations[:,1,0]    = settings.microphone_locations[:,1] -  (pos[cpt,1] + settings.aircraft_origin_location[1])  # Y
         if MSL_altitude:
-            relative_locations[:,2,0]    = -(pos[cpt,2])  - microphone_locations[:,2,0] # Z
+            relative_locations[:,2,0]    = -(pos[cpt,2])  - settings.microphone_locations[:,2] # Z
         else:
             relative_locations[:,2,0]    = -(pos[cpt,2])    # Z
         

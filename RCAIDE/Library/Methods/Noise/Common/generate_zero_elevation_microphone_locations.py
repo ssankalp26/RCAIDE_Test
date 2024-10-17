@@ -39,19 +39,20 @@ def generate_zero_elevation_microphone_locations(settings):
         N/A       
     """       
 
-    N_x                   = settings.ground_microphone_x_resolution 
-    N_y                   = settings.ground_microphone_y_resolution
+    N_x                   = settings.microphone_x_resolution 
+    N_y                   = settings.microphone_y_resolution
     num_gm                = N_x*N_y
     gm_mic_locations      = np.zeros((num_gm,3))     
-    min_x                 = settings.ground_microphone_min_x         
-    max_x                 = settings.ground_microphone_max_x         
-    min_y                 = settings.ground_microphone_min_y         
-    max_y                 = settings.ground_microphone_max_y   
+    min_x                 = settings.microphone_min_x         
+    max_x                 = settings.microphone_max_x         
+    min_y                 = settings.microphone_min_y         
+    max_y                 = settings.microphone_max_y   
     x_coords_0            = np.repeat(np.linspace(min_x,max_x,N_x)[:,np.newaxis],N_y, axis = 1)
     y_coords_0            = np.repeat(np.linspace(min_y,max_y,N_y)[:,np.newaxis],N_x, axis = 1).T
     z_coords_0            = np.zeros_like(x_coords_0) 
     gm_mic_locations[:,0] = x_coords_0.reshape(num_gm)
     gm_mic_locations[:,1] = y_coords_0.reshape(num_gm)
     gm_mic_locations[:,2] = z_coords_0.reshape(num_gm) 
-     
-    return gm_mic_locations
+    
+    settings.microphone_locations =  gm_mic_locations
+    return  

@@ -55,8 +55,5 @@ def generate_hemisphere_microphone_locations(settings):
     gm_mic_locations[:,0] = x.flatten() 
     gm_mic_locations[:,1] = y.flatten() 
     gm_mic_locations[:,2] = -z.flatten() 
-    
-    # store ground microphone locations 
-    settings.ground_microphone_x_resolution = n   
-    settings.ground_microphone_y_resolution = n      
+      
     return gm_mic_locations   
