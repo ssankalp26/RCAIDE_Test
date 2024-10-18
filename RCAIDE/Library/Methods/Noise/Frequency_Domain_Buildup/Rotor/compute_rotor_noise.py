@@ -65,7 +65,7 @@ def compute_rotor_noise(microphone_locations,distributor,propulsor,segment,setti
     # unpack
     rotor                = propulsor.rotor
     conditions           = segment.state.conditions
-    energy_conditions    = conditions.energy[distributor.tag][propulsor.tag][rotor.tag]
+    propulsor_conditions = conditions.energy[distributor.tag][propulsor.tag]
     harmonics_blade      = settings.harmonics
     harmonics_load       = np.linspace(0,5,6).astype(int)  
       
@@ -74,24 +74,24 @@ def compute_rotor_noise(microphone_locations,distributor,propulsor,segment,setti
     Results = Data()
                      
     # compute position vector from point source (or should it be origin) at rotor hub to microphones 
-    coordinates = compute_rotor_point_source_coordinates(distributor,propulsor,rotor,conditions,microphone_locations,settings)  
+    coordinates = compute_rotor_point_source_coordinates(distributor,propulsor,conditions,microphone_locations,settings) 
 
     # ----------------------------------------------------------------------------------
     # Harmonic Noise
     # ---------------------------------------------------------------------------------- 
     # harmonic noise with planar load distribution
     if settings.fidelity == 'plane_source':
-        harmonic_noise_plane(harmonics_blade,harmonics_load,conditions,energy_conditions,coordinates,rotor,settings,Noise)
+        harmonic_noise_plane(harmonics_blade,harmonics_load,conditions,propulsor_conditions,coordinates,rotor,settings,Noise)
     elif settings.fidelity == 'line_source': 
-        harmonic_noise_line(harmonics_blade,harmonics_load,conditions,energy_conditions,coordinates,rotor,settings,Noise)
+        harmonic_noise_line(harmonics_blade,harmonics_load,conditions,propulsor_conditions,coordinates,rotor,settings,Noise)
     else:
-        harmonic_noise_point(harmonics_blade,harmonics_load,conditions,energy_conditions,coordinates,rotor,settings,Noise) 
+        harmonic_noise_point(harmonics_blade,harmonics_load,conditions,propulsor_conditions,coordinates,rotor,settings,Noise) 
 
     # ----------------------------------------------------------------------------------    
     # Broadband Noise
     # ----------------------------------------------------------------------------------
     # broadband_noise(harmonics_blade,harmonics_load,conditions,energy_conditions,coordinates,rotor,settings,Noise)  
-    broadband_noise_unsteady(conditions,energy_conditions,coordinates,rotor,settings,Noise)  
+    broadband_noise_unsteady(conditions,propulsor_conditions,coordinates,rotor,settings,Noise)  
 
     # ----------------------------------------------------------------------------------    
     # Atmospheric attenuation 

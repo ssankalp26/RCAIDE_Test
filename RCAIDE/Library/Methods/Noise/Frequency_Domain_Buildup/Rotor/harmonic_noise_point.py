@@ -67,7 +67,7 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,conditions,propulsor_con
                       For instance, m_6 is the 6 dimensional harmonic modes variable, m_5 is 5 dimensional harmonic modes variable
     '''
 
-    aeroacoustic_data    = propulsor_conditions[rotor.tag]     
+    aeroacoustic_data    = propulsor_conditions[rotor.tag]  
     angle_of_attack      = conditions.aerodynamics.angles.alpha 
     velocity_vector      = conditions.frames.inertial.velocity_vector 
     freestream           = conditions.freestream   
