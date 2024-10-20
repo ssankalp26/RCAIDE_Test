@@ -106,7 +106,7 @@ class Frequency_Domain_Buildup(Noise):
                         for propulsor in distributor.propulsors:
                             for sub_tag , sub_item in  propulsor.items():
                                 if (sub_tag == 'rotor') or (sub_tag == 'propeller'): 
-                                    compute_rotor_noise(microphone_locations,distributor,propulsor,segment,settings) 
+                                    compute_rotor_noise(microphone_locations,distributor,propulsor,sub_item,segment,settings) 
                                     total_SPL_dBA     = SPL_arithmetic(np.concatenate((total_SPL_dBA[:,None,:],conditions.noise[distributor.tag][propulsor.tag][sub_item.tag].SPL_dBA[:,None,:]),axis =1),sum_axis=1)
                                     total_SPL_spectra = SPL_arithmetic(np.concatenate((total_SPL_spectra[:,None,:,:],conditions.noise[distributor.tag][propulsor.tag][sub_item.tag].SPL_1_3_spectrum[:,None,:,:]),axis =1),sum_axis=1) 
                              

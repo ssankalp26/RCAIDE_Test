@@ -10,15 +10,14 @@
 
 # RCAIDE Imports 
 from RCAIDE.Framework.Core import  Data   
-from RCAIDE.Library.Methods.Noise.Common.decibel_arithmetic                             import SPL_arithmetic  
-from RCAIDE.Library.Methods.Noise.Common.compute_noise_source_coordinates               import compute_rotor_point_source_coordinates  
-from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.harmonic_noise_point   import harmonic_noise_point
-from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.harmonic_noise_line    import harmonic_noise_line
-from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.harmonic_noise_plane   import harmonic_noise_plane
-from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.broadband_noise        import broadband_noise
-from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.broadband_noise_unsteady        import broadband_noise_unsteady
-from RCAIDE.Library.Methods.Noise.Common                                                import atmospheric_attenuation
-from RCAIDE.Library.Methods.Noise.Metrics.A_weighting_metric                            import A_weighting_metric  
+from RCAIDE.Library.Methods.Noise.Common.decibel_arithmetic                                import SPL_arithmetic  
+from RCAIDE.Library.Methods.Noise.Common.compute_noise_source_coordinates                  import compute_rotor_point_source_coordinates  
+from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.harmonic_noise_point      import harmonic_noise_point
+from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.harmonic_noise_line       import harmonic_noise_line
+from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.harmonic_noise_plane      import harmonic_noise_plane 
+from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.broadband_noise           import broadband_noise
+from RCAIDE.Library.Methods.Noise.Common                                                   import atmospheric_attenuation
+from RCAIDE.Library.Methods.Noise.Metrics.A_weighting_metric                               import A_weighting_metric  
 
 # Python package imports   
 import numpy as np    
@@ -27,7 +26,7 @@ import numpy as np
 #  Rotor Noise 
 # ----------------------------------------------------------------------------------------------------------------------    
 ## @ingroup Methods-Noise-Frequency_Domain_Buildup-Rotor
-def compute_rotor_noise(microphone_locations,distributor,propulsor,segment,settings):
+def compute_rotor_noise(microphone_locations,distributor,propulsor,rotor,segment,settings):
     ''' This is a collection medium-fidelity frequency domain methods for rotor acoustic noise prediction which 
     computes the acoustic signature (sound pressure level, weighted sound pressure levels,
     and frequency spectrums of a system of rotating blades           
@@ -62,8 +61,7 @@ def compute_rotor_noise(microphone_locations,distributor,propulsor,segment,setti
         N/A   
     '''
  
-    # unpack
-    rotor                = propulsor.rotor
+    # unpack 
     conditions           = segment.state.conditions
     propulsor_conditions = conditions.energy[distributor.tag][propulsor.tag]
     harmonics_blade      = settings.harmonics
@@ -74,7 +72,7 @@ def compute_rotor_noise(microphone_locations,distributor,propulsor,segment,setti
     Results = Data()
                      
     # compute position vector from point source (or should it be origin) at rotor hub to microphones 
-    coordinates = compute_rotor_point_source_coordinates(distributor,propulsor,conditions,microphone_locations,settings) 
+    coordinates = compute_rotor_point_source_coordinates(distributor,propulsor,rotor,conditions,microphone_locations,settings) 
 
     # ----------------------------------------------------------------------------------
     # Harmonic Noise
@@ -89,9 +87,8 @@ def compute_rotor_noise(microphone_locations,distributor,propulsor,segment,setti
 
     # ----------------------------------------------------------------------------------    
     # Broadband Noise
-    # ----------------------------------------------------------------------------------
-    # broadband_noise(harmonics_blade,harmonics_load,conditions,energy_conditions,coordinates,rotor,settings,Noise)  
-    broadband_noise_unsteady(conditions,propulsor_conditions,coordinates,rotor,settings,Noise)  
+    # ---------------------------------------------------------------------------------- 
+    broadband_noise(conditions,propulsor_conditions,coordinates,rotor,settings,Noise)  
 
     # ----------------------------------------------------------------------------------    
     # Atmospheric attenuation 
