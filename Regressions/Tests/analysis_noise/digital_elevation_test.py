@@ -55,11 +55,11 @@ def main():
     
     plot_results(results,noise_data,regression_plotting_flag)   
 
-    #X57_SPL        = np.max(results.segments.climb.conditions.noise.total_SPL_dBA) 
-    #X57_SPL_true   = 45.232719642900996
-    #X57_diff_SPL   = np.abs(X57_SPL - X57_SPL_true)
-    #print('Error: ',X57_diff_SPL)
-    #assert np.abs((X57_SPL - X57_SPL_true)/X57_SPL_true) < 1e-3    
+    X57_SPL        = np.max(results.segments.climb.conditions.noise.total_SPL_dBA) 
+    X57_SPL_true   = 45.232719642900996
+    X57_diff_SPL   = np.abs(X57_SPL - X57_SPL_true)
+    print('Error: ',X57_diff_SPL)
+    assert np.abs((X57_SPL - X57_SPL_true)/X57_SPL_true) < 1e-3    
      
     return      
 
@@ -140,33 +140,7 @@ def mission_setup(analyses):
     Segments      = RCAIDE.Framework.Mission.Segments  
     base_segment  = Segments.Segment()   
     base_segment.state.numerics.number_of_control_points  = 10
-    base_segment.state.numerics.discretization_method     = RCAIDE.Library.Methods.Utilities.Chebyshev.linear_data 
-    
-    # ------------------------------------------------------------------
-    #   Departure End of Runway Segment Flight 1 : 
-    # ------------------------------------------------------------------ 
-
-    #segment = Segments.Climb.Linear_Speed_Constant_Rate(base_segment) 
-    #segment.tag = "climb"   
-    #segment.analyses.extend( analyses.base ) 
-    #segment.initial_battery_state_of_charge              = 1.0 
-    #segment.altitude_start                               = 10.0    * Units.feet  
-    #segment.altitude_end                                 = 500.0   * Units.feet 
-    #segment.air_speed_start                              = 100.    * Units['mph'] 
-    #segment.air_speed_end                                = 120.    * Units['mph'] 
-    #segment.climb_rate                                   = 50.     * Units['ft/min']         
-    #segment.true_course                                  = 0
-    
-    ## define flight dynamics to model 
-    #segment.flight_dynamics.force_x                      = True  
-    #segment.flight_dynamics.force_z                      = True     
-    
-    ## define flight controls 
-    #segment.assigned_control_variables.throttle.active               = True           
-    #segment.assigned_control_variables.throttle.assigned_propulsors  = [['starboard_propulsor','port_propulsor']] 
-    #segment.assigned_control_variables.body_angle.active             = True                
-       
-    #mission.append_segment(segment)
+    base_segment.state.numerics.discretization_method     = RCAIDE.Library.Methods.Utilities.Chebyshev.linear_data
     
     segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment) 
     segment.tag = "cruise"   

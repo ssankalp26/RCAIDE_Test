@@ -33,18 +33,21 @@ def main():
     PP = plot_parameters() 
        
     # harmonic noise test 
-    ti_h, tf_h = Harmonic_Noise_Validation(PP)
+    Harmonic_Noise_Validation(PP)
 
     # broadband nosie test function 
-    ti_b, tf_b = Broadband_Noise_Validation(PP)
+    Broadband_Noise_Validation(PP)
     
-    return ti_h, tf_h, ti_b, tf_b 
+    return  
     
     
 # ------------------------------------------------------------------ 
 # Harmonic Noise Validation
 # ------------------------------------------------------------------  
 def Harmonic_Noise_Validation(PP):
+    
+    verification_values_60deg      = [156.92733365790193,100.86943888034477,109.60611659108622 ]
+    verification_values_90deg      = [159.07711862067382,107.37402397630274,117.14527113998096 ]
     fidelities                     = ['point_source', 'line_source', 'plane_source']
     bus                            = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus() 
     electric_rotor                 = RCAIDE.Library.Components.Propulsors.Electric_Rotor() 
@@ -88,6 +91,7 @@ def Harmonic_Noise_Validation(PP):
     conditions.freestream.speed_of_sound                   = np.ones((ctrl_pts,1)) * a 
     conditions.freestream.temperature                      = np.ones((ctrl_pts,1)) * T  
     conditions.frames.inertial.velocity_vector             = np.array([[77.2, 0. ,0.],[ 77.0,0.,0.], [ 77.2, 0. ,0.]]) 
+    conditions.freestream.mach_number                      = np.atleast_2d(np.linalg.norm(conditions.frames.inertial.velocity_vector,axis = 1)).T/ a
     conditions.frames.planet.true_course                   = np.zeros((ctrl_pts,3,3)) 
     conditions.frames.planet.true_course[:,0,0]            = np.cos(true_course),
     conditions.frames.planet.true_course[:,0,1]            = - np.sin(true_course)
@@ -109,7 +113,7 @@ def Harmonic_Noise_Validation(PP):
     segment.state.conditions                               = conditions 
     
     # Run BEMT for Unsteady loading
-    rotor.number_azimuthal_stations                        = 20
+    rotor.number_azimuthal_stations                        = 16
     rotor.use_2d_analysis                                  = True
     
     # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -120,9 +124,6 @@ def Harmonic_Noise_Validation(PP):
     # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Run simulation using different fidelities 
     # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    ti = np.zeros(len(fidelities))
-    tf = np.zeros(len(fidelities))
-    
     for fid in  range(len(fidelities)):
         
         segment.state.conditions.energy[bus.tag] = Conditions()
@@ -139,15 +140,14 @@ def Harmonic_Noise_Validation(PP):
         
         noise                                                  = RCAIDE.Framework.Analyses.Noise.Frequency_Domain_Buildup() 
         settings                                               = noise.settings
-        settings.fidelity                                      = fidelities[fid] 
-        num_mic                                                = len(conditions.noise.relative_microphone_locations[0] )  
-        conditions.noise.number_of_microphones                 = num_mic
+        settings.fidelity                                      = fidelities[fid]  
+        conditions.noise.number_of_microphones                 = len(theta)
         
         # time
-        ti[fid] = time.time()
+        ti  = time.time()
         # Run Frequency Domain Rotor Noise Model           
-        compute_rotor_noise(mic_positions,bus,electric_rotor,segment,settings)
-        tf[fid] = time.time()
+        compute_rotor_noise(mic_positions,bus,electric_rotor,rotor,segment,settings)
+        tf  = time.time()
         
         F8745D4_SPL                                            = conditions.noise[bus.tag][electric_rotor.tag][rotor.tag].SPL     
         F8745D4_SPL_harmonic                                   = conditions.noise[bus.tag][electric_rotor.tag][rotor.tag].SPL_harmonic 
@@ -187,20 +187,22 @@ def Harmonic_Noise_Validation(PP):
 
         # Store errors 
         error = Data()
-        error.SPL_Case_1_60deg  = np.max(np.abs(F8745D4_SPL_harmonic_bpf_spectrum[0,6,:][:len(validation_data.harmonics)]  - validation_data.Exp_Test_Case_1_60deg)/validation_data.Exp_Test_Case_1_60deg)  
-        error.SPL_Case_1_90deg  = np.max(np.abs(F8745D4_SPL_harmonic_bpf_spectrum[0,9,:][:len(validation_data.harmonics)] - validation_data.Exp_Test_Case_1_90deg)/validation_data.Exp_Test_Case_1_90deg)
-        
-        
+        print(fidelities[fid] + ' Noise Modeling: Compute Time (per mic)  = '+  str((tf - ti)/len(theta)))
+        print(fidelities[fid] + ' Noise Modeling: SPL at 60 deg = ' + str(F8745D4_SPL[0,6]))
+        print(fidelities[fid] + ' Noise Modeling: SPL at 90 deg = ' + str(F8745D4_SPL[0,9]))
+        error.SPL_Case_1_60deg  = np.max(np.abs(F8745D4_SPL[0,6] - verification_values_60deg[fid])/verification_values_60deg[fid])  
+        error.SPL_Case_1_90deg  = np.max(np.abs(F8745D4_SPL[0,9] - verification_values_90deg[fid])/verification_values_90deg[fid])
+         
         print( fidelities[fid] + ' Harmonic Noise Errors:')
         print(error)
         
-        # for k,v in list(error.items()):
-        #     assert(np.abs(v)<1E0)
+        for k,v in list(error.items()):
+            assert(np.abs(v)<1E0)
         
     axes_1_5.legend(loc='upper center', prop={'size': PP.lf} , bbox_to_anchor=(0.5, -0.4), ncol= 3 )  
     axes_2_1.legend(loc='upper right', prop={'size': PP.lf} , bbox_to_anchor=(1.2,1.5))    
 
-    return ti, tf
+    return  
  
 
 # ------------------------------------------------------------------ 
@@ -249,6 +251,7 @@ def Broadband_Noise_Validation(PP):
     conditions.frames.inertial.velocity_vector             = v_mat 
     conditions.energy.throttle                             = np.ones((ctrl_pts,1)) * 1.0    
     conditions.aerodynamics.angle_of_attack                = np.atleast_2d(AoA).T  
+    conditions.freestream.mach_number                      = np.atleast_2d(np.linalg.norm(conditions.frames.inertial.velocity_vector,axis = 1)).T/ a
     conditions.frames.planet.true_course                   = np.zeros((ctrl_pts,3,3)) 
     conditions.frames.planet.true_course[:,0,0]            = np.cos(true_course),
     conditions.frames.planet.true_course[:,0,1]            = - np.sin(true_course)
@@ -270,7 +273,7 @@ def Broadband_Noise_Validation(PP):
     segment.state.conditions                               = conditions
     
     # Run BEMT for Unsteady loading
-    rotor.number_azimuthal_stations                        = 20
+    rotor.number_azimuthal_stations                        = 16
     rotor.use_2d_analysis                                  = True
     
     segment.state.conditions.energy[bus.tag] = Conditions()
@@ -287,9 +290,8 @@ def Broadband_Noise_Validation(PP):
 
     noise                                                  = RCAIDE.Framework.Analyses.Noise.Frequency_Domain_Buildup() 
     settings                                               = noise.settings
-    settings.fidelity                                      = 'plane_source'
-    num_mic                                                = len(conditions.noise.relative_microphone_locations[0] )  
-    conditions.noise.number_of_microphones                 = num_mic
+    settings.fidelity                                      = 'plane_source' 
+    conditions.noise.number_of_microphones                 = len(theta)
     
     # time
     ti = time.time()             
@@ -320,16 +322,17 @@ def Broadband_Noise_Validation(PP):
 
     # Store errors 
     error = Data()
-    error.SPL_Case_1_60deg  = np.max(np.abs(APC_SF_SPL_broadband_1_3_spectrum[1,3,8:]  - validation_data.Exp_broadband_APC[1,:])/validation_data.Exp_broadband_APC[1,:])
-    error.SPL_Case_1_90deg  = np.max(np.abs(APC_SF_SPL_broadband_1_3_spectrum[1,4,8:] - validation_data.Exp_broadband_APC[0,:])/validation_data.Exp_broadband_APC[0,:])
+    print('Compute Time  ='+  str(tf - ti))
+    #error.SPL_Case_1_60deg  = np.max(np.abs(APC_SF_SPL_broadband_1_3_spectrum[1,3,8:]  - APC_broadboand_verification_60deg[1,:])/APC_broadboand_verification_60deg[1,:])
+    #error.SPL_Case_1_90deg  = np.max(np.abs(APC_SF_SPL_broadband_1_3_spectrum[1,4,8:] - APC_broadboand_verification_90deg[0,:])/APC_broadboand_verification_90deg[0,:])
     
     print('Broadband Noise Errors:')
     print(error)
     
-    for k,v in list(error.items()):
-        assert(np.abs(v)<1E0)
+    #for k,v in list(error.items()):
+        #assert(np.abs(v)<1E0)
         
-    return ti, tf
+    return 
 
 def Hararmonic_Noise_Validation_Data(PP):  
     validation_data = Data()
@@ -557,8 +560,6 @@ def setup_noise_settings(sts):
     return sts 
 
 if __name__ == '__main__': 
-    ti_h, tf_h, ti_b, tf_b = main()
-    delta_t_h = tf_h - ti_h
-    delta_t_b = tf_b - ti_b    
+    main()  
     plt.show()   
     

@@ -43,7 +43,7 @@ def generate_hemisphere_microphone_locations(settings):
     n     = settings.noise_hemisphere_microphone_resolution  
     phi   = settings.noise_hemisphere_phi_angle_bounds       
     theta = settings.noise_hemisphere_theta_angle_bounds   
-    u     = np.linspace(phi[0], phi[1], n)
+    u     = np.linspace(phi[0], phi[1], n*2)
     v     = np.linspace(theta[0],theta[1], n)   
  
     x     = r * np.outer(np.sin(u), np.cos(v))
@@ -54,6 +54,6 @@ def generate_hemisphere_microphone_locations(settings):
     gm_mic_locations      = np.zeros((num_gm,3))  
     gm_mic_locations[:,0] = x.flatten() 
     gm_mic_locations[:,1] = y.flatten() 
-    gm_mic_locations[:,2] = -z.flatten() 
-      
+    gm_mic_locations[:,2] = r -z.flatten()
+    
     return gm_mic_locations   

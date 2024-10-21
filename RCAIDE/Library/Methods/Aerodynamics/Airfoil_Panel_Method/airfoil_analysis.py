@@ -163,7 +163,7 @@ def airfoil_analysis(airfoil_geometry,alpha,Re_L,initial_momentum_thickness=1E-5
     CF_TR_BOT         = CF_T_BOT[transition_panel,aoas,res].reshape(ncases,ncpts)
     H_TR_BOT          = H_T_BOT[transition_panel,aoas,res].reshape(ncases,ncpts)
     
-    # TURBULENT_SURF    = L_BOT.data  - X_TR_BOT
+    # TURBULENT_SURF  
     TURBULENT_SURF    = L_BOT.data
     TURBULENT_COORD   = np.ma.masked_less(X_BOT.data  - X_TR_BOT,0) 
     

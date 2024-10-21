@@ -95,8 +95,7 @@ class Correlation_Buildup(Noise):
         dim_cf        = len(settings.center_frequencies ) 
         ctrl_pts      = int(segment.state.numerics.number_of_control_points) 
          
-        microphone_locations =  generate_hemisphere_microphone_locations(settings)     
-        N_hemisphere_mics    =  len(microphone_locations)
+        microphone_locations =  generate_hemisphere_microphone_locations(settings)      
         
         conditions =  segment.state.conditions
         ctrl_pts   =  segment.state.numerics.number_of_control_points 

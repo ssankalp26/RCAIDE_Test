@@ -74,9 +74,9 @@ class Noise(Analysis):
         
         self.settings.noise_hemisphere                       = False 
         self.settings.noise_hemisphere_radius                = 20 
-        self.settings.noise_hemisphere_microphone_resolution = 20
-        self.settings.noise_hemisphere_phi_angle_bounds      = np.array([0,np.pi])
-        self.settings.noise_hemisphere_theta_angle_bounds    = np.array([-1 * np.pi,1*np.pi])
+        self.settings.noise_hemisphere_microphone_resolution = 6
+        self.settings.noise_hemisphere_phi_angle_bounds      = np.array([-np.pi / 2,np.pi / 2])
+        self.settings.noise_hemisphere_theta_angle_bounds    = np.array([-1 * np.pi, 1*np.pi])
          
                 
         # settings for acoustic frequency resolution

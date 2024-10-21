@@ -10,8 +10,6 @@
 # RCAIDE
 from RCAIDE.Framework.Core                                 import orientation_product, orientation_transpose  
 from RCAIDE.Library.Methods.Noise.Common                   import convert_to_third_octave_band
-from RCAIDE.Library.Methods.Geometry.Airfoil.import_airfoil_geometry import import_airfoil_geometry
-from RCAIDE.Library.Methods.Aerodynamics.Airfoil_Panel_Method.airfoil_analysis   import airfoil_analysis
 
 # Python Package imports  
 import numpy as np
@@ -85,40 +83,22 @@ def harmonic_noise_plane(harmonics_blade,harmonics_load,conditions,propulsor_con
     num_mic                 = len(coordinates.X_hub[0,:,0,0,0]) 
     phi_0                   = np.array([rotor.phase_offset_angle])  # phase angle offset  
     airfoils                = rotor.Airfoils 
-    num_sec                 = len(rotor.radius_distribution)
-    a_loc                   = rotor.airfoil_polar_stations
-    num_az                  = aeroacoustic_data.number_azimuthal_stations
+    num_sec                 = len(rotor.radius_distribution) 
     orientation             = np.array(rotor.orientation_euler_angles) * 1 
     body2thrust             = sp.spatial.transform.Rotation.from_rotvec(orientation).as_matrix() 
     for jj,airfoil in enumerate(airfoils):
-        airfoil_points          = airfoil.number_of_points
+        airfoil_points      = airfoil.number_of_points
     commanded_thrust_vector = propulsor_conditions.commanded_thrust_vector_angle
     chord_coord             = int(np.floor(airfoil_points/2))
-
-    # Reynolds number and AOA of each blade section at each azimuthal station
-    Re      = aeroacoustic_data.disc_reynolds_number
-    AOA_sec = aeroacoustic_data.disc_effective_angle_of_attack 
-    
-    # Lift and Drag - coefficients and distributions
-    fL_pre  = np.zeros_like(Re)
-    fL      = np.tile(fL_pre[:,:,:,None],(1,1,1,chord_coord))
-    fD_pre  = np.zeros_like(Re)
-    fD      = np.tile(fD_pre[:,:,:,None],(1,1,1,chord_coord))
-    CL      = np.zeros_like(Re)
-    CD      = np.zeros_like(Re)
-
-    for jj,airfoil in enumerate(airfoils):     
-        for cpt in range (num_cpt): 
-            for az in range(num_az): 
-                locs               = np.where(np.array(a_loc) == jj ) 
-                airfoil_geometry   = import_airfoil_geometry(airfoil.coordinate_file,airfoil_points)
-                airfoil_properties = airfoil_analysis(airfoil_geometry,np.atleast_2d(AOA_sec[cpt,locs,az]),np.atleast_2d(Re[cpt,locs,az]))
-                fL[cpt,locs,az,:]  = airfoil_properties.fL[:,0,0]
-                fD[cpt,locs,az,:]  = airfoil_properties.fD[:,0,0]
-                CL[cpt,locs,az]    = airfoil_properties.cl_invisc
-                CD[cpt,locs,az]    = airfoil_properties.cd_visc
-        y_u_6          = np.tile(airfoil.geometry.y_upper_surface[None,None,None,None,None,:],(num_cpt,num_mic,num_sec,num_h_b,num_h_l,1))
-        y_l_6          = np.tile(airfoil.geometry.y_lower_surface[None,None,None,None,None,:],(num_cpt,num_mic,num_sec,num_h_b,num_h_l,1))
+ 
+    # Lift and Drag - coefficients and distributions 
+    fL      = aeroacoustic_data.disc_lift_distribution 
+    fD      = aeroacoustic_data.disc_lift_distribution
+    CL      = aeroacoustic_data.disc_lift_coefficient
+    CD      = aeroacoustic_data.disc_drag_coefficient
+                
+    y_u_6   = np.tile(aeroacoustic_data.blade_upper_surface[:,None,:,None,None,:],(1,num_mic,1,num_h_b,num_h_l,1))
+    y_l_6   = np.tile(aeroacoustic_data.blade_lower_surface[:,None,:,None,None,:],(1,num_mic,1,num_h_b,num_h_l,1))
     
     # DFT to get loading modes
     CL_k           = sp.fft.rfft(CL, axis=2)

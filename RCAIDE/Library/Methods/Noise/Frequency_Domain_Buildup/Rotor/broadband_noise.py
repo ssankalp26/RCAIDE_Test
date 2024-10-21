@@ -77,9 +77,9 @@ def broadband_noise(conditions,propulsor_conditions,coordinates,rotor,settings,N
     dyna_visc          = freestream.dynamic_viscosity  
     alpha              = aeroacoustic_data.disc_effective_angle_of_attack/Units.degrees 
     alpha_tip          = aeroacoustic_data.disc_effective_angle_of_attack[:,-1]/Units.degrees  
-    disc_Re           = aeroacoustic_data.disc_reynolds_number
-    disc_speed        = aeroacoustic_data.disc_velocity
-    disc_Ma           = aeroacoustic_data.disc_Mach_number
+    disc_Re            = aeroacoustic_data.disc_reynolds_number
+    disc_speed         = aeroacoustic_data.disc_velocity
+    disc_Ma            = aeroacoustic_data.disc_Mach_number
     Vt                 = aeroacoustic_data.disc_tangential_velocity  
     Va                 = aeroacoustic_data.disc_axial_velocity                
     blade_chords       = rotor.chord_distribution           # blade chord    

@@ -79,8 +79,7 @@ def heads_method(npanel,ncases,ncpts,NU,DEL_0,THETA_0,DELTA_STAR_0,CF_0,ShapeFac
                     ReTheta = Ve_i[ind]*THETA/nu;
                     cf_var = 0.246*(10**(-0.678*H))*(ReTheta**-0.268);
                     return cf_var
-
-
+                
                 def getH(H1_var):
                     if H1_var<3.3:
                         H_var = 3.0
@@ -88,8 +87,7 @@ def heads_method(npanel,ncases,ncpts,NU,DEL_0,THETA_0,DELTA_STAR_0,CF_0,ShapeFac
                         H_var = 0.6778 + 1.153793*(H1_var-3.3)**-0.32637;
                     elif H1_var >= 5.39142:
                         H_var = 1.1 + 0.8598636*(H1_var - 3.3)**-0.777;
-                    return H_var
-                
+                    return H_var 
              
                 # define RK4 slope function for Theta
                 def dTheta_by_dx(index, X, THETA, VETHETAH1):

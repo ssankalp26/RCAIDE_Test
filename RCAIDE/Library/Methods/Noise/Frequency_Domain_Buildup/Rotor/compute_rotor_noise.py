@@ -18,6 +18,8 @@ from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.harmonic_noise_
 from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.broadband_noise           import broadband_noise
 from RCAIDE.Library.Methods.Noise.Common                                                   import atmospheric_attenuation
 from RCAIDE.Library.Methods.Noise.Metrics.A_weighting_metric                               import A_weighting_metric  
+from RCAIDE.Library.Methods.Geometry.Airfoil.import_airfoil_geometry                       import import_airfoil_geometry
+from RCAIDE.Library.Methods.Aerodynamics.Airfoil_Panel_Method.airfoil_analysis             import airfoil_analysis
 
 # Python package imports   
 import numpy as np    
@@ -26,7 +28,7 @@ import numpy as np
 #  Rotor Noise 
 # ----------------------------------------------------------------------------------------------------------------------    
 ## @ingroup Methods-Noise-Frequency_Domain_Buildup-Rotor
-def compute_rotor_noise(microphone_locations,distributor,propulsor,rotor,segment,settings):
+def compute_rotor_noise(microphone_locations,distributor,propulsor,rotor,segment,settings, rotor_index = 0, previous_rotor_tag = None):
     ''' This is a collection medium-fidelity frequency domain methods for rotor acoustic noise prediction which 
     computes the acoustic signature (sound pressure level, weighted sound pressure levels,
     and frequency spectrums of a system of rotating blades           
@@ -66,64 +68,135 @@ def compute_rotor_noise(microphone_locations,distributor,propulsor,rotor,segment
     propulsor_conditions = conditions.energy[distributor.tag][propulsor.tag]
     harmonics_blade      = settings.harmonics
     harmonics_load       = np.linspace(0,5,6).astype(int)  
+    num_mic              = len(microphone_locations[:,0]) 
+    num_cpt              = conditions._size
+    num_f                = len(settings.center_frequencies)
       
     # create data structures for computation
     Noise   = Data()  
     Results = Data()
-                     
-    # compute position vector from point source (or should it be origin) at rotor hub to microphones 
-    coordinates = compute_rotor_point_source_coordinates(distributor,propulsor,rotor,conditions,microphone_locations,settings) 
 
-    # ----------------------------------------------------------------------------------
-    # Harmonic Noise
-    # ---------------------------------------------------------------------------------- 
-    # harmonic noise with planar load distribution
-    if settings.fidelity == 'plane_source':
-        harmonic_noise_plane(harmonics_blade,harmonics_load,conditions,propulsor_conditions,coordinates,rotor,settings,Noise)
-    elif settings.fidelity == 'line_source': 
-        harmonic_noise_line(harmonics_blade,harmonics_load,conditions,propulsor_conditions,coordinates,rotor,settings,Noise)
-    else:
-        harmonic_noise_point(harmonics_blade,harmonics_load,conditions,propulsor_conditions,coordinates,rotor,settings,Noise) 
-
-    # ----------------------------------------------------------------------------------    
-    # Broadband Noise
-    # ---------------------------------------------------------------------------------- 
-    broadband_noise(conditions,propulsor_conditions,coordinates,rotor,settings,Noise)  
-
-    # ----------------------------------------------------------------------------------    
-    # Atmospheric attenuation 
-    # ----------------------------------------------------------------------------------
-    delta_atmo = atmospheric_attenuation(np.linalg.norm(coordinates.X_r[:,0,0,0,:],axis=1),settings.center_frequencies)
-
-    # ----------------------------------------------------------------------------------    
-    # Combine Harmonic (periodic/tonal) and Broadband Noise
-    # ----------------------------------------------------------------------------------
-    num_mic      = len(coordinates.X_hub[0,:,0,0])
-    Noise.SPL_total_1_3_spectrum      = 10*np.log10( 10**(Noise.SPL_prop_harmonic_1_3_spectrum/10) + 10**(Noise.SPL_prop_broadband_1_3_spectrum/10)) - np.tile(delta_atmo[:,None,:],(1,num_mic,1))
-    Noise.SPL_total_1_3_spectrum[np.isnan(Noise.SPL_total_1_3_spectrum)] = 0 
-
-    # ----------------------------------------------------------------------------------
-    # Summation of spectra from propellers into one SPL and store results
-    # ----------------------------------------------------------------------------------
-    Results.SPL                                           = SPL_arithmetic(Noise.SPL_total_1_3_spectrum, sum_axis=2)
-    Results.SPL_dBA                                       = SPL_arithmetic(A_weighting_metric(Noise.SPL_total_1_3_spectrum,settings.center_frequencies), sum_axis=2)
-    Results.SPL_harmonic                                  = SPL_arithmetic(Noise.SPL_prop_harmonic_1_3_spectrum, sum_axis=2) 
-    Results.SPL_broadband                                 = SPL_arithmetic(Noise.SPL_prop_broadband_1_3_spectrum, sum_axis=2)
-    
-    # blade passing frequency 
-    Results.blade_passing_frequencies                     = Noise.f          
-    Results.SPL_harmonic_bpf_spectrum                     = Noise.SPL_prop_harmonic_bpf_spectrum
-    Results.SPL_harmonic_bpf_spectrum_dBA                 = A_weighting_metric(Results.SPL_harmonic_bpf_spectrum,Noise.f) 
-    
-    # 1/3 octave band
+    Results.SPL                                           = np.zeros((num_cpt,num_mic))
+    Results.SPL_dBA                                       = np.zeros_like(Results.SPL)
+    Results.SPL_harmonic                                  = np.zeros_like(Results.SPL)
+    Results.SPL_broadband                                 = np.zeros_like(Results.SPL)
+    Results.blade_passing_frequencies                     = np.zeros(num_f)
+    Results.SPL_1_3_spectrum                              = np.zeros((num_cpt,num_mic,num_f)) 
+    Results.SPL_harmonic_bpf_spectrum                     = np.zeros_like(Results.SPL_1_3_spectrum)
+    Results.SPL_harmonic_bpf_spectrum_dBA                 = np.zeros_like(Results.SPL_1_3_spectrum)
     Results.one_third_frequency_spectrum                  = settings.center_frequencies 
-    Results.SPL_1_3_spectrum                              = Noise.SPL_total_1_3_spectrum     
-    Results.SPL_1_3_spectrum_dBA                          = A_weighting_metric(Results.SPL_1_3_spectrum,settings.center_frequencies)      
-    Results.SPL_harmonic_1_3_spectrum                     = Noise.SPL_prop_harmonic_1_3_spectrum    
-    Results.SPL_harmonic_1_3_spectrum_dBA                 = A_weighting_metric(Results.SPL_harmonic_1_3_spectrum,settings.center_frequencies) 
-    Results.SPL_broadband_1_3_spectrum                    = Noise.SPL_prop_broadband_1_3_spectrum 
-    Results.SPL_broadband_1_3_spectrum_dBA                = A_weighting_metric(Results.SPL_broadband_1_3_spectrum,settings.center_frequencies)
+    Results.SPL_1_3_spectrum                              = np.zeros_like(Results.SPL_1_3_spectrum)
+    Results.SPL_1_3_spectrum_dBA                          = np.zeros_like(Results.SPL_1_3_spectrum)
+    Results.SPL_harmonic_1_3_spectrum                     = np.zeros_like(Results.SPL_1_3_spectrum)
+    Results.SPL_harmonic_1_3_spectrum_dBA                 = np.zeros_like(Results.SPL_1_3_spectrum)
+    Results.SPL_broadband_1_3_spectrum                    = np.zeros_like(Results.SPL_1_3_spectrum)
+    Results.SPL_broadband_1_3_spectrum_dBA                = np.zeros_like(Results.SPL_1_3_spectrum)
+        
+
+    for mic_no in range(num_mic):
+     
+        # compute position vector from point source (or should it be origin) at rotor hub to microphones
+        microphone_location =  np.atleast_2d(microphone_locations[mic_no])
+        coordinates = compute_rotor_point_source_coordinates(distributor,propulsor,rotor,conditions,microphone_location,settings)
+                
+        # ----------------------------------------------------------------------------------
+        # Harmonic Noise
+        # ---------------------------------------------------------------------------------- 
+        # harmonic noise with planar load distribution
+        if settings.fidelity == 'plane_source':
+        
+            aeroacoustic_data = propulsor_conditions[rotor.tag]       
+            Re                = aeroacoustic_data.disc_reynolds_number
+            AOA_sec           = aeroacoustic_data.disc_effective_angle_of_attack  
+            a_loc             = rotor.airfoil_polar_stations
+            num_az            = aeroacoustic_data.number_azimuthal_stations     
+            airfoils          = rotor.Airfoils         
+            for jj,airfoil in enumerate(airfoils):
+                airfoil_points      = airfoil.number_of_points 
+            chord_coord             = int(np.floor(airfoil_points/2))       
+                
+            if (distributor.identical_propulsors == False) and rotor_index !=0: 
+                prev_aeroacoustic_data                   = propulsor_conditions[previous_rotor_tag]                 
+                prev_aeroacoustic_data                   = propulsor_conditions[rotor.tag]  
+                aeroacoustic_data.disc_lift_distribution = prev_aeroacoustic_data.disc_lift_distribution
+                aeroacoustic_data.disc_lift_distribution = prev_aeroacoustic_data.disc_lift_distribution
+                aeroacoustic_data.disc_lift_coefficient  = prev_aeroacoustic_data.disc_lift_coefficient 
+                aeroacoustic_data.disc_drag_coefficient  = prev_aeroacoustic_data.disc_drag_coefficient  
+                aeroacoustic_data.blade_upper_surface    = prev_aeroacoustic_data.blade_upper_surface
+                aeroacoustic_data.blade_lower_surface    = prev_aeroacoustic_data.blade_lower_surface
+            else:
+
+                # Lift and Drag - coefficients and distributions 
+                fL      = np.tile(np.zeros_like(Re)[:,:,:,None],(1,1,1,chord_coord))
+                fD      = np.zeros_like(fL)
+                CL      = np.zeros_like(Re)
+                CD      = np.zeros_like(Re) 
+                y_up    = np.zeros_like(fL)
+                y_low   = np.zeros_like(fL)
+                for jj,airfoil in enumerate(airfoils):     
+                    for cpt in range (num_cpt): 
+                        for az in range(num_az): 
+                            locs                  = np.where(np.array(a_loc) == jj ) 
+                            airfoil_geometry      = import_airfoil_geometry(airfoil.coordinate_file,airfoil_points)
+                            airfoil_properties    = airfoil_analysis(airfoil_geometry,np.atleast_2d(AOA_sec[cpt,locs,az]),np.atleast_2d(Re[cpt,locs,az]))
+                            fL[cpt,locs,az,:]     = airfoil_properties.fL[:,0,0]
+                            fD[cpt,locs,az,:]     = airfoil_properties.fD[:,0,0]
+                            CL[cpt,locs,az]       = airfoil_properties.cl_invisc
+                            CD[cpt,locs,az]       = airfoil_properties.cd_visc 
+                            y_up[cpt,locs,az,:]   = airfoil.geometry.y_upper_surface
+                            y_low[cpt,locs,az,:]  = airfoil.geometry.y_lower_surface
+                        
+                aeroacoustic_data.disc_lift_distribution = fL
+                aeroacoustic_data.disc_lift_distribution = fD
+                aeroacoustic_data.disc_lift_coefficient  = CL
+                aeroacoustic_data.disc_drag_coefficient  = CD 
+                aeroacoustic_data.blade_upper_surface    = y_up
+                aeroacoustic_data.blade_lower_surface    = y_low                        
+                        
+            harmonic_noise_plane(harmonics_blade,harmonics_load,conditions,propulsor_conditions,coordinates,rotor,settings,Noise)
+        elif settings.fidelity == 'line_source': 
+            harmonic_noise_line(harmonics_blade,harmonics_load,conditions,propulsor_conditions,coordinates,rotor,settings,Noise)
+        else:
+            harmonic_noise_point(harmonics_blade,harmonics_load,conditions,propulsor_conditions,coordinates,rotor,settings,Noise) 
+    
+        # ----------------------------------------------------------------------------------    
+        # Broadband Noise
+        # ---------------------------------------------------------------------------------- 
+        broadband_noise(conditions,propulsor_conditions,coordinates,rotor,settings,Noise)  
+    
+        # ----------------------------------------------------------------------------------    
+        # Atmospheric attenuation 
+        # ----------------------------------------------------------------------------------
+        delta_atmo = atmospheric_attenuation(np.linalg.norm(coordinates.X_r[:,0,0,0,:],axis=1),settings.center_frequencies)
+    
+        # ----------------------------------------------------------------------------------    
+        # Combine Harmonic (periodic/tonal) and Broadband Noise
+        # ----------------------------------------------------------------------------------
+        num_mic      = len(coordinates.X_hub[0,:,0,0])
+        SPL_total_1_3_spectrum      = 10*np.log10( 10**(Noise.SPL_prop_harmonic_1_3_spectrum/10) + 10**(Noise.SPL_prop_broadband_1_3_spectrum/10)) - np.tile(delta_atmo[:,None,:],(1,num_mic,1))
+        SPL_total_1_3_spectrum[np.isnan(SPL_total_1_3_spectrum)] = 0 
+    
+        # ----------------------------------------------------------------------------------
+        # Summation of spectra from propellers into one SPL and store results
+        # ----------------------------------------------------------------------------------
+        Results.SPL[:,mic_no]                               = SPL_arithmetic(SPL_total_1_3_spectrum, sum_axis=2)[:, 0]
+        Results.SPL_dBA[:,mic_no]                           = SPL_arithmetic(A_weighting_metric(SPL_total_1_3_spectrum,settings.center_frequencies), sum_axis=2)[:, 0]
+        Results.SPL_harmonic[:,mic_no]                      = SPL_arithmetic(Noise.SPL_prop_harmonic_1_3_spectrum, sum_axis=2)[:, 0] 
+        Results.SPL_broadband[:,mic_no]                     = SPL_arithmetic(Noise.SPL_prop_broadband_1_3_spectrum, sum_axis=2)[:, 0]
+          
+        # blade passing frequency   
+        Results.blade_passing_frequencies                     = Noise.f          
+        Results.SPL_harmonic_bpf_spectrum[:,mic_no,:]         = Noise.SPL_prop_harmonic_bpf_spectrum[:, 0, :]
+        Results.SPL_harmonic_bpf_spectrum_dBA[:,mic_no,:]     = A_weighting_metric(Results.SPL_harmonic_bpf_spectrum,Noise.f)[:, 0, :] 
+          
+        # 1/3 octave band   
+        Results.SPL_1_3_spectrum[:,mic_no,:]                  = SPL_total_1_3_spectrum[:, 0, :]     
+        Results.SPL_1_3_spectrum_dBA[:,mic_no,:]              = A_weighting_metric(Results.SPL_1_3_spectrum,settings.center_frequencies)[:, 0, :]      
+        Results.SPL_harmonic_1_3_spectrum[:,mic_no,:]         = Noise.SPL_prop_harmonic_1_3_spectrum[:, 0, :]   
+        Results.SPL_harmonic_1_3_spectrum_dBA[:,mic_no,:]     = A_weighting_metric(Results.SPL_harmonic_1_3_spectrum,settings.center_frequencies)[:, 0, :] 
+        Results.SPL_broadband_1_3_spectrum[:,mic_no,:]        = Noise.SPL_prop_broadband_1_3_spectrum[:, 0, :] 
+        Results.SPL_broadband_1_3_spectrum_dBA[:,mic_no,:]    = A_weighting_metric(Results.SPL_broadband_1_3_spectrum,settings.center_frequencies)[:, 0, :]
     
     # A-weighted
     conditions.noise[distributor.tag][propulsor.tag][rotor.tag] = Results 
-    return  
+    return rotor.tag 
