@@ -75,8 +75,6 @@ def heads_method(npanel,ncases,ncpts,NU,DEL_0,THETA_0,DELTA_STAR_0,CF_0,ShapeFac
             if l == 0.0:
                 pass
             else: 
-                
-                
                 x_i          = TURBULENT_COORD.data[:,case,cpt][TURBULENT_COORD.mask[:,case,cpt] ==False] 
                 Ve_i         = VE_I.data[:,case,cpt][TURBULENT_COORD.mask[:,case,cpt] ==False]
                 dVe_i        = DVE_I.data[:,case,cpt][TURBULENT_COORD.mask[:,case,cpt] ==False]
@@ -187,18 +185,8 @@ def getH(H1_var):
     elif H1_var >= 5.39142:
         H_var = 1.1 + 0.8598636*(H1_var - 3.3)**-0.777
     return H_var 
-
-# define RK4 slope function for Theta
-def dTheta_by_dx(index, X, THETA, VETHETAH1,Ve_i,cf, H, dVe_i):
-    return 0.5*cf[index] - (THETA/Ve_i[index])*(2+H[index])*(dVe_i[index])
-
-# define RK4 slope function for VeThetaH1
-def dVeThetaH1_by_dx(index, X, THETA, VETHETAH1,Ve_i):
-    return Ve_i[index]*0.0306*(((VETHETAH1/(Ve_i[index]*THETA))-3)**-0.6169)
-
                 
-def RK4(ind, dx, x, Theta_var, VeThetaH1_var,Ve_i,cf, H, dVe_i): 
-    
+def RK4(ind, dx, x, Theta_var, VeThetaH1_var,Ve_i,cf, H, dVe_i):  
     k1 = dTheta_by_dx(ind,  x[ind],  Theta_var[ind],  VeThetaH1_var[ind],Ve_i,cf, H, dVe_i)
     l1 = dVeThetaH1_by_dx(ind,  x[ind],  Theta_var[ind],  VeThetaH1_var[ind],Ve_i)
     
@@ -214,3 +202,11 @@ def RK4(ind, dx, x, Theta_var, VeThetaH1_var,Ve_i,cf, H, dVe_i):
     Theta_new = Theta_var[ind] + ((dx[ind]/6)*(k1 + 2*k2 + 2*k3 + k4))
     VeThetaH1_new = VeThetaH1_var[ind] + ((dx[ind]/6)*(l1 + 2*l2 + 2*l3 + l4))
     return Theta_new, VeThetaH1_new 
+
+# define RK4 slope function for Theta
+def dTheta_by_dx(index, X, THETA, VETHETAH1,Ve_i,cf, H, dVe_i):
+    return 0.5*cf[index] - (THETA/Ve_i[index])*(2+H[index])*(dVe_i[index])
+
+# define RK4 slope function for VeThetaH1
+def dVeThetaH1_by_dx(index, X, THETA, VETHETAH1,Ve_i):
+    return Ve_i[index]*0.0306*(((VETHETAH1/(Ve_i[index]*THETA))-3)**-0.6169)
