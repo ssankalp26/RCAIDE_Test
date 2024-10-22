@@ -133,19 +133,25 @@ def compute_rotor_noise(microphone_locations,distributor,propulsor,rotor,segment
                 CD      = np.zeros_like(Re) 
                 y_up    = np.zeros_like(fL)
                 y_low   = np.zeros_like(fL)
+                
+                import  time
+                ti                   = time.time()                  
                 for jj,airfoil in enumerate(airfoils):     
-                    for cpt in range (num_cpt): 
-                        for az in range(num_az): 
-                            locs                  = np.where(np.array(a_loc) == jj ) 
-                            airfoil_geometry      = import_airfoil_geometry(airfoil.coordinate_file,airfoil_points)
-                            airfoil_properties    = airfoil_analysis(airfoil_geometry,np.atleast_2d(AOA_sec[cpt,locs,az]),np.atleast_2d(Re[cpt,locs,az]))
-                            fL[cpt,locs,az,:]     = airfoil_properties.fL[:,0,0]
-                            fD[cpt,locs,az,:]     = airfoil_properties.fD[:,0,0]
-                            CL[cpt,locs,az]       = airfoil_properties.cl_invisc
-                            CD[cpt,locs,az]       = airfoil_properties.cd_visc 
-                            y_up[cpt,locs,az,:]   = airfoil.geometry.y_upper_surface
-                            y_low[cpt,locs,az,:]  = airfoil.geometry.y_lower_surface
-                        
+                    for cpt in range (num_cpt):  
+                        locs                  = np.where(np.array(a_loc) == jj ) 
+                        azi_AoA               = np.atleast_2d(AOA_sec[cpt,locs,:].flatten())
+                        azi_Re                = np.atleast_2d(Re[cpt,locs,:].flatten())
+                        airfoil_geometry      = import_airfoil_geometry(airfoil.coordinate_file,airfoil_points)
+                        airfoil_properties    = airfoil_analysis(airfoil_geometry,azi_AoA,azi_Re)
+                        fL[cpt,locs,:,:]      = airfoil_properties.fL.reshape(chord_coord, len(a_loc), num_az,1).swapaxes(0, 3)
+                        fD[cpt,locs,:,:]      = airfoil_properties.fD.reshape(chord_coord, len(a_loc), num_az,1).swapaxes(0, 3)
+                        CL[cpt,locs,:]        = airfoil_properties.cl_invisc.reshape(1, len(a_loc), num_az) 
+                        CD[cpt,locs,:]        = airfoil_properties.cd_visc.reshape(1, len(a_loc), num_az) 
+                        y_up[cpt,locs,:,:]    = airfoil.geometry.y_upper_surface
+                        y_low[cpt,locs,:,:]   = airfoil.geometry.y_lower_surface
+                    
+                tf                   = time.time()
+                print('Time ' + str(tf-ti))
                 aeroacoustic_data.disc_lift_distribution = fL
                 aeroacoustic_data.disc_lift_distribution = fD
                 aeroacoustic_data.disc_lift_coefficient  = CL
