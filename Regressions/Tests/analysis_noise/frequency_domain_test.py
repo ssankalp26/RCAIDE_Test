@@ -296,7 +296,7 @@ def Broadband_Noise_Validation(PP):
     # time
     ti = time.time()             
     # Run Frequency Domain Rotor Noise Model           
-    compute_rotor_noise(mic_positions,bus,electric_rotor,segment,settings)
+    compute_rotor_noise(mic_positions,bus,electric_rotor,rotor,segment,settings)
     tf = time.time()
     
     APC_SF_1_3_Spectrum                                     = conditions.noise[bus.tag][electric_rotor.tag][rotor.tag].SPL_1_3_spectrum 

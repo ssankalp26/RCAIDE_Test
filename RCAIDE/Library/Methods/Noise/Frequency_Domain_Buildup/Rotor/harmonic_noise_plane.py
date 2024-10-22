@@ -97,8 +97,8 @@ def harmonic_noise_plane(harmonics_blade,harmonics_load,conditions,propulsor_con
     CL      = aeroacoustic_data.disc_lift_coefficient
     CD      = aeroacoustic_data.disc_drag_coefficient
                 
-    y_u_6   = np.tile(aeroacoustic_data.blade_upper_surface[:,None,:,None,None,:],(1,num_mic,1,num_h_b,num_h_l,1))
-    y_l_6   = np.tile(aeroacoustic_data.blade_lower_surface[:,None,:,None,None,:],(1,num_mic,1,num_h_b,num_h_l,1))
+    y_u_6   = np.tile(aeroacoustic_data.blade_upper_surface[:, None, :, 0,None, None, :],(1,num_mic,1,num_h_b,num_h_l,1))
+    y_l_6   = np.tile(aeroacoustic_data.blade_lower_surface[:, None, :, 0,None, None, :],(1,num_mic,1,num_h_b,num_h_l,1))
     
     # DFT to get loading modes
     CL_k           = sp.fft.rfft(CL, axis=2)

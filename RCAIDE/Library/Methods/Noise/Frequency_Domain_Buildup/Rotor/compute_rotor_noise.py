@@ -23,6 +23,7 @@ from RCAIDE.Library.Methods.Aerodynamics.Airfoil_Panel_Method.airfoil_analysis  
 
 # Python package imports   
 import numpy as np    
+from RCAIDE.Framework.Core import interp2d 
 
 # ----------------------------------------------------------------------------------------------------------------------    
 #  Rotor Noise 
@@ -119,7 +120,7 @@ def compute_rotor_noise(microphone_locations,distributor,propulsor,rotor,segment
                 prev_aeroacoustic_data                   = propulsor_conditions[previous_rotor_tag]                 
                 prev_aeroacoustic_data                   = propulsor_conditions[rotor.tag]  
                 aeroacoustic_data.disc_lift_distribution = prev_aeroacoustic_data.disc_lift_distribution
-                aeroacoustic_data.disc_lift_distribution = prev_aeroacoustic_data.disc_lift_distribution
+                aeroacoustic_data.disc_drag_distribution = prev_aeroacoustic_data.disc_lift_distribution
                 aeroacoustic_data.disc_lift_coefficient  = prev_aeroacoustic_data.disc_lift_coefficient 
                 aeroacoustic_data.disc_drag_coefficient  = prev_aeroacoustic_data.disc_drag_coefficient  
                 aeroacoustic_data.blade_upper_surface    = prev_aeroacoustic_data.blade_upper_surface
@@ -133,27 +134,24 @@ def compute_rotor_noise(microphone_locations,distributor,propulsor,rotor,segment
                 CD      = np.zeros_like(Re) 
                 y_up    = np.zeros_like(fL)
                 y_low   = np.zeros_like(fL)
-                
-                import  time
-                ti                   = time.time()                  
+                                  
                 for jj,airfoil in enumerate(airfoils):     
                     for cpt in range (num_cpt):  
                         locs                  = np.where(np.array(a_loc) == jj ) 
-                        azi_AoA               = np.atleast_2d(AOA_sec[cpt,locs,:].flatten())
-                        azi_Re                = np.atleast_2d(Re[cpt,locs,:].flatten())
-                        airfoil_geometry      = import_airfoil_geometry(airfoil.coordinate_file,airfoil_points)
-                        airfoil_properties    = airfoil_analysis(airfoil_geometry,azi_AoA,azi_Re)
-                        fL[cpt,locs,:,:]      = airfoil_properties.fL.reshape(chord_coord, len(a_loc), num_az,1).swapaxes(0, 3)
-                        fD[cpt,locs,:,:]      = airfoil_properties.fD.reshape(chord_coord, len(a_loc), num_az,1).swapaxes(0, 3)
-                        CL[cpt,locs,:]        = airfoil_properties.cl_invisc.reshape(1, len(a_loc), num_az) 
-                        CD[cpt,locs,:]        = airfoil_properties.cd_visc.reshape(1, len(a_loc), num_az) 
+                        alpha_azi                 = np.atleast_2d(AOA_sec[cpt,locs,:].flatten())
+                        Re_azi                    = np.atleast_2d(Re[cpt,locs,:].flatten())      
+                        pd                    = airfoil.polars
+                        cl_invisc             = interp2d(Re_azi,alpha_azi,pd.reynolds_numbers, pd.angle_of_attacks, pd.lift_coefficients)
+                        cd_visc               = interp2d(Re_azi,alpha_azi,pd.reynolds_numbers, pd.angle_of_attacks, pd.drag_coefficients)  
+                        fL[cpt,locs,:,:]      = pd.lift_distribution_func((alpha_azi,Re_azi)).reshape(1,len(a_loc), num_az,chord_coord) 
+                        fD[cpt,locs,:,:]      = pd.drag_distribution_func((alpha_azi,Re_azi)).reshape(1,len(a_loc), num_az,chord_coord) 
+                        CL[cpt,locs,:]        = cl_invisc.reshape(1, len(a_loc), num_az) 
+                        CD[cpt,locs,:]        = cd_visc.reshape(1, len(a_loc), num_az) 
                         y_up[cpt,locs,:,:]    = airfoil.geometry.y_upper_surface
                         y_low[cpt,locs,:,:]   = airfoil.geometry.y_lower_surface
-                    
-                tf                   = time.time()
-                print('Time ' + str(tf-ti))
+                        
                 aeroacoustic_data.disc_lift_distribution = fL
-                aeroacoustic_data.disc_lift_distribution = fD
+                aeroacoustic_data.disc_drag_distribution = fD
                 aeroacoustic_data.disc_lift_coefficient  = CL
                 aeroacoustic_data.disc_drag_coefficient  = CD 
                 aeroacoustic_data.blade_upper_surface    = y_up
