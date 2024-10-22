@@ -47,10 +47,7 @@ def append_bus_conditions(bus,segment):
 
 
 def append_bus_segment_conditions(bus,conditions,segment):
-    """Sets the initial bus properties at the start of each 
-        segment as the last point from the previous segment.  
-        It adds the power draw from the thermal management system
-        to the first control point power draw.
+    """Sets the initial bus properties at the start of each segment as the last point from the previous segment 
     
         Assumptions:
         None
@@ -59,9 +56,8 @@ def append_bus_segment_conditions(bus,conditions,segment):
         N/A
     
         Inputs:  
-            bus           (data structure)              [None]
-            conditions    (data structure)              [None]
-            segment       (data structure)              [None]
+         cross_flow_hex            (data structure)              [None]
+               
         Outputs:
         None
     
