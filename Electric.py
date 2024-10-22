@@ -91,8 +91,7 @@ class Electric(Network):
         coolant_lines   = self.coolant_lines
         total_thrust    = 0. * state.ones_row(3) 
         total_power     = 0. * state.ones_row(1) 
-        total_moment    = 0. * state.ones_row(3) 
-        recharging_flag = conditions.energy.recharging 
+        total_moment    = 0. * state.ones_row(3)  
         reverse_thrust  = self.reverse_thrust
 
         for bus in busses:
@@ -111,7 +110,7 @@ class Electric(Network):
                 # Bus Voltage 
                 bus_voltage = bus.voltage * state.ones_row(1)
 
-                if recharging_flag:
+                if conditions.energy.recharging:
                     avionics_power         = (avionics_conditions.power*bus.power_split_ratio)* state.ones_row(1)
                     payload_power          = (payload_conditions.power*bus.power_split_ratio)* state.ones_row(1)            
                     total_esc_power        = 0 * state.ones_row(1)
@@ -147,7 +146,7 @@ class Electric(Network):
                     # compute power from each componemnt 
                     avionics_power  = (avionics_conditions.power*bus.power_split_ratio)* state.ones_row(1) 
                     payload_power   = (payload_conditions.power*bus.power_split_ratio)* state.ones_row(1)   
-                    charging_power  = (state.conditions.energy[bus.tag].charging_current*bus_voltage*bus.power_split_ratio) 
+                    charging_power  = (state.conditions.energy[bus.tag].regenerative_power*bus_voltage*bus.power_split_ratio) 
                     total_esc_power = total_power*bus.power_split_ratio  
 
                     # append bus outputs to battery 
@@ -165,14 +164,14 @@ class Electric(Network):
                 for battery in  bus.battery_modules:                   
                     if bus.identical_batteries == False:
                         # run analysis  
-                        stored_results_flag, stored_battery_tag =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t, recharging_flag)
+                        stored_results_flag, stored_battery_tag =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
                     else:             
                         if stored_results_flag == False: 
-                            # run propulsor analysis 
-                            stored_results_flag, stored_battery_tag  =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t, recharging_flag)
+                            # run battery analysis 
+                            stored_results_flag, stored_battery_tag  =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
                         else:
-                            # use previous propulsor results 
-                            battery.reuse_stored_data(state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag,recharging_flag)
+                            # use previous battery results 
+                            battery.reuse_stored_data(state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag)
 
                 # Thermal Management Calculations                    
                 for coolant_line in  coolant_lines:
@@ -183,10 +182,8 @@ class Electric(Network):
                                     heat_exchanger.compute_heat_exchanger_performance(state,coolant_line,delta_t[t_idx],t_idx)
                             if tag == 'reservoirs':
                                 for reservoir in  item:
-                                    reservoir.compute_reservior_coolant_temperature(state,coolant_line,delta_t[t_idx],t_idx)      
-                bus.compute_distributor_conditions(state)
-
-
+                                    reservoir.compute_reservior_coolant_temperature(state,coolant_line,delta_t[t_idx],t_idx)
+        
         if reverse_thrust ==  True:
             total_thrust =  total_thrust * -1     
             total_moment =  total_moment* -1                    
@@ -344,6 +341,3 @@ class Electric(Network):
 
         return segment
     __call__ = evaluate 
-def run_energy_calc(battery, state, bus, coolant_lines, t_idx, delta_t, recharging_flag):
-    bus.battery_modules[battery.tag].energy_calc(state, bus, coolant_lines, t_idx, delta_t, recharging_flag)
-

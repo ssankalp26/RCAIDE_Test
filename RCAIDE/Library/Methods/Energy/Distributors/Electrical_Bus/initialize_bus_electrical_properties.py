@@ -21,11 +21,15 @@ def initialize_bus_electrical_properties(bus):
         Properties Used:
         None
         """
-    if bus.battery_module_electric_configuration is 'Series': 
+    
+    if bus.battery_module_electric_configuration is 'Series':
+        #bus.nominal_capacity = 0
         for battery_module in  bus.battery_modules:
-            bus.voltage         +=   battery_module.voltage  
+            bus.voltage         +=   battery_module.voltage
+            #bus.nominal_capacity =  max(battery_module.nominal_capacity, bus.nominal_capacity)  
     elif bus.battery_module_electric_configuration is 'Parallel':
         bus.voltage = 0
         for battery_module in  bus.battery_modules:
-            bus.voltage           =  max(battery_module.voltage, bus.voltage) 
-    return
+            bus.voltage           =  max(battery_module.voltage, bus.voltage)
+            #bus.nominal_capacity +=  battery_module.nominal_capacity          
+    return 

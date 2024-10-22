@@ -9,7 +9,8 @@
 # ----------------------------------------------------------------------------------------------------------------------
 # Package imports 
 import scipy.optimize
-import numpy as np 
+import numpy as np
+import  sys
 
 # ----------------------------------------------------------------------------------------------------------------------
 # converge root
@@ -57,6 +58,7 @@ def converge_root(segment):
         print("Error Message:\n" + msg)
         segment.state.numerics.converged = False
         segment.converged = False
+        raise Exception('Simulation Failed')
     else:
         segment.state.numerics.converged = True
         segment.converged = True

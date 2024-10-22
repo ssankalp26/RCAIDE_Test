@@ -41,7 +41,8 @@ class Electrical_Bus(Component):
         self.active                                = True
         self.efficiency                            = 1.0
         self.voltage                               = 0.0 
-        self.power_split_ratio                     = 1.0 
+        self.power_split_ratio                     = 1.0
+        self.charging_c_rate                       = 1.0 
         self.battery_module_electric_configuration = 'Series'
         
     def append_operating_conditions(self, segment):
