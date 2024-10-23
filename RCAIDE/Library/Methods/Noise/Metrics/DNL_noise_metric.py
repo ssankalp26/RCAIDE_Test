@@ -82,10 +82,7 @@ def DNL_noise_metric(noise_data, flight_times = ['12:00:00'],time_period = 24*Un
     L_dn[:,:,:]             = TNE
     L_dn[0:idx_7am]         = L_dn[0:idx_7am] + 10   
     p_dn_i                  = 10**(L_dn/10)    
-    DNL                     = 10*np.log10((1/(24*Units.hours))*np.nansum(p_dn_i*delta_t, axis = 0))   
-    #DNL[DNL == np.nan] = 35.
-    #DNL[DNL < 35] = 35.
-    #np.nan_to_num(DNL)    
+    DNL                     = 10*np.log10((1/(24*Units.hours))*np.nansum(p_dn_i*delta_t, axis = 0))    
       
     noise_data.DNL                     = DNL
     noise_data.temporal_noise_exposure = TNE 

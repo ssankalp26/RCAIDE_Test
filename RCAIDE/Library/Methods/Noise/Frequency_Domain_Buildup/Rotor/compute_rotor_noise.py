@@ -125,8 +125,7 @@ def compute_rotor_noise(microphone_locations,distributor,propulsor,rotor,segment
                 aeroacoustic_data.disc_drag_coefficient  = prev_aeroacoustic_data.disc_drag_coefficient  
                 aeroacoustic_data.blade_upper_surface    = prev_aeroacoustic_data.blade_upper_surface
                 aeroacoustic_data.blade_lower_surface    = prev_aeroacoustic_data.blade_lower_surface
-            else:
-
+            else: 
                 # Lift and Drag - coefficients and distributions 
                 fL      = np.tile(np.zeros_like(Re)[:,:,:,None],(1,1,1,chord_coord))
                 fD      = np.zeros_like(fL)

@@ -50,8 +50,6 @@ def main():
     print('SPL difference: ',B737_diff_SPL)
     assert np.abs((B737_SPL - B737_SPL_true)/B737_SPL_true) < 1e-1    
     return     
-  
- 
 
 def base_analysis(vehicle):
 

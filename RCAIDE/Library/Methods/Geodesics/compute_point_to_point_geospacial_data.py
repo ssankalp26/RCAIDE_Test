@@ -82,6 +82,7 @@ def compute_point_to_point_geospacial_data(settings):
     des_loc              = np.array([x1,y1,z1])
     
     # pack data 
-    settings.origin_location      = dep_loc
-    settings.destination_location = des_loc  
+    settings.aircraft_origin_location      = dep_loc
+    settings.aircraft_destination_location = des_loc 
+        
     return 

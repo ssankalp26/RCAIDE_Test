@@ -106,7 +106,7 @@ class Correlation_Buildup(Noise):
         else:    
             generate_zero_elevation_microphone_locations(settings) 
         
-        RML,PHI,THETA,num_gm_mic  = compute_relative_noise_evaluation_locations(settings, segment)
+        noise_time,noise_pos,RML,PHI,THETA,num_gm_mic  = compute_relative_noise_evaluation_locations(settings, segment)
     
         # Append microphone locations to conditions 
         conditions.noise.number_of_ground_microphones        = num_gm_mic 

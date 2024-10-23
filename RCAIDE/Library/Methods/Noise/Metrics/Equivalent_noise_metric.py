@@ -39,7 +39,6 @@ def Equivalent_noise_metric(noise_data, flight_times = ['12:00:00'],time_period 
     Properties Used:
         N/A  
     """    
-     
 
     if not hasattr(noise_data,'temporal_noise_exposure'):
         SPL        = np.zeros_like(noise_data.SPL_dBA)

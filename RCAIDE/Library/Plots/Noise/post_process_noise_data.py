@@ -81,8 +81,8 @@ def post_process_noise_data(results,
      
     # store data 
     noise_data                           = Data() 
-    noise_data.SPL_dBA                   = SPL_dBA_old # SPL_dBA_new  
-    noise_data.time                      = time_old # t_new  
+    noise_data.SPL_dBA                   = SPL_dBA_old 
+    noise_data.time                      = time_old 
     noise_data.microphone_locations      = Mic_pos_gm
     if results.segments[0].analyses.noise.settings.topography_file  == None:
         noise_data.topography_file                  =  None
@@ -94,7 +94,7 @@ def post_process_noise_data(results,
     
     noise_data.microphone_y_resolution       = N_gm_y
     noise_data.microphone_x_resolution       = N_gm_x   
-    noise_data.aircraft_position             = Aircraft_pos # Aircraft_pos_new              
+    noise_data.aircraft_position             = Aircraft_pos               
     noise_data.aircraft_origin_location      = results.segments[0].analyses.noise.settings.aircraft_origin_location             
     noise_data.aircraft_destination_location = results.segments[0].analyses.noise.settings.aircraft_destination_location        
  
