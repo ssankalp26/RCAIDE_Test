@@ -138,15 +138,25 @@ def compute_rotor_noise(microphone_locations,distributor,propulsor,rotor,segment
                 for jj,airfoil in enumerate(airfoils):     
                     for cpt in range (num_cpt):  
                         locs                  = np.where(np.array(a_loc) == jj ) 
-                        alpha_azi                 = np.atleast_2d(AOA_sec[cpt,locs,:].flatten())
-                        Re_azi                    = np.atleast_2d(Re[cpt,locs,:].flatten())      
-                        pd                    = airfoil.polars
-                        cl_invisc             = interp2d(Re_azi,alpha_azi,pd.reynolds_numbers, pd.angle_of_attacks, pd.lift_coefficients)
-                        cd_visc               = interp2d(Re_azi,alpha_azi,pd.reynolds_numbers, pd.angle_of_attacks, pd.drag_coefficients)  
-                        fL[cpt,locs,:,:]      = pd.lift_distribution_func((alpha_azi,Re_azi)).reshape(1,len(a_loc), num_az,chord_coord) 
-                        fD[cpt,locs,:,:]      = pd.drag_distribution_func((alpha_azi,Re_azi)).reshape(1,len(a_loc), num_az,chord_coord) 
-                        CL[cpt,locs,:]        = cl_invisc.reshape(1, len(a_loc), num_az) 
-                        CD[cpt,locs,:]        = cd_visc.reshape(1, len(a_loc), num_az) 
+                        alpha_azi             = np.atleast_2d(AOA_sec[cpt,locs,:].flatten())
+                        Re_azi                = np.atleast_2d(Re[cpt,locs,:].flatten())      
+                        pd                    = airfoil.polars 
+                        if settings.use_plane_loading_surrogate: 
+                            fL[cpt,locs,:,:]      = pd.lift_distribution_func((alpha_azi,Re_azi)).reshape(1,len(a_loc), num_az,chord_coord) 
+                            fD[cpt,locs,:,:]      = pd.drag_distribution_func((alpha_azi,Re_azi)).reshape(1,len(a_loc), num_az,chord_coord)  
+                            cl_invisc             = interp2d(Re_azi,alpha_azi,pd.reynolds_numbers, pd.angle_of_attacks, pd.lift_coefficients)
+                            cd_visc               = interp2d(Re_azi,alpha_azi,pd.reynolds_numbers, pd.angle_of_attacks, pd.drag_coefficients)   
+                            CL[cpt,locs,:]        = cl_invisc.reshape(1, len(a_loc), num_az) 
+                            CD[cpt,locs,:]        = cd_visc.reshape(1, len(a_loc), num_az)                             
+                        
+                        else : 
+                            airfoil_geometry      = import_airfoil_geometry(airfoil.coordinate_file,airfoil_points)
+                            airfoil_properties    = airfoil_analysis(airfoil_geometry,alpha_azi,Re_azi)
+                            fL[cpt,locs,:,:]      = airfoil_properties.fL.reshape(chord_coord, len(a_loc), num_az,1).swapaxes(0, 3)
+                            fD[cpt,locs,:,:]      = airfoil_properties.fD.reshape(chord_coord, len(a_loc), num_az,1).swapaxes(0, 3)
+                            CL[cpt,locs,:]        = airfoil_properties.cl_invisc.reshape(1, len(a_loc), num_az) 
+                            CD[cpt,locs,:]        = airfoil_properties.cd_visc.reshape(1, len(a_loc), num_az) 
+                            
                         y_up[cpt,locs,:,:]    = airfoil.geometry.y_upper_surface
                         y_low[cpt,locs,:,:]   = airfoil.geometry.y_lower_surface
                         

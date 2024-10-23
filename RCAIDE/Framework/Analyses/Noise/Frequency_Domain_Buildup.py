@@ -62,8 +62,9 @@ class Frequency_Domain_Buildup(Noise):
         """
         
         # Initialize quantities 
-        self.tag =  "Frequency_Domain_Buildup"        
-        self.settings.fidelity = 'line_source'   
+        self.tag                                   =  "Frequency_Domain_Buildup"        
+        self.settings.fidelity                     = 'line_source'
+        self.settings.use_plane_loading_surrogate =  True 
     def evaluate_noise(self,segment):
         """ Process vehicle to setup vehicle, condititon and configuration
     
