@@ -15,6 +15,9 @@ def orientation(segment):
 
     if segment.assigned_control_variables.bank_angle.active: 
         segment.state.conditions.frames.body.inertial_rotations[:,0] = segment.state.unknowns.bank_angle[:,0]
+    else:
+        segment.state.conditions.frames.body.inertial_rotations[:,0] = segment.bank_angle
+    segment.state.conditions.frames.body.inertial_rotations[:,2] =  segment.state.conditions.frames.planet.true_heading[:,0] 
     
     # Velocity Control
     if segment.assigned_control_variables.velocity.active:
