@@ -40,7 +40,7 @@ def compute_relative_noise_evaluation_locations(settings,segment):
     """       
   
     MSL_altitude      = settings.mean_sea_level_altitude
-    N                 =  settings.noise_control_points
+    N                 = settings.noise_control_points
     pos               = segment.state.conditions.frames.inertial.position_vector
     
     # rediscretize time and aircraft position to get finer resolution 
@@ -57,16 +57,17 @@ def compute_relative_noise_evaluation_locations(settings,segment):
     THETA             = np.zeros((N,num_gm_mic)) 
     
     for cpt in range(N):  
-        relative_locations           = np.zeros((num_gm_mic,3,1))
-        relative_locations[:,0,0]    = settings.microphone_locations[:,0] -  (noise_pos[cpt,0] + settings.aircraft_origin_location[0])  
-        relative_locations[:,1,0]    = settings.microphone_locations[:,1] -  (noise_pos[cpt,1] + settings.aircraft_origin_location[1])  
+        relative_locations         = np.zeros((num_gm_mic,3))
+        relative_locations[:,0]    = settings.microphone_locations[:,0] - (settings.aircraft_origin_location[0] + noise_pos[cpt,0])    
+        relative_locations[:,1]    = settings.microphone_locations[:,1] - (settings.aircraft_origin_location[1] + noise_pos[cpt,1]) 
         if MSL_altitude:
-            relative_locations[:,2,0]    = -(noise_pos[cpt,2])  - settings.microphone_locations[:,2] 
+            relative_locations[:,2]    = -(noise_pos[cpt,2])  - settings.microphone_locations[:,2] 
         else:
-            relative_locations[:,2,0]    = -(noise_pos[cpt,2])  
-        RML[cpt,:,:]   = relative_locations[:,:,0] 
-        PHI[cpt,:]     =  np.arctan2(np.sqrt(np.square(relative_locations[:, 0, 0]) + np.square(relative_locations[:, 1, 0])),  relative_locations[:, 2, 0])  
-        THETA[cpt,:]   =  np.arctan2(relative_locations[:, 1, 0], relative_locations[:, 0, 0])   
+            relative_locations[:,2]    = -(noise_pos[cpt,2])
+            
+        RML[cpt,:,:]   = relative_locations 
+        PHI[cpt,:]     =  np.arctan2(np.sqrt(np.square(relative_locations[:, 0]) + np.square(relative_locations[:, 1])),  relative_locations[:, 2])  
+        THETA[cpt,:]   =  np.arctan2(relative_locations[:, 1], relative_locations[:, 0]) 
     
     return noise_time,noise_pos,RML,PHI,THETA,num_gm_mic 
  

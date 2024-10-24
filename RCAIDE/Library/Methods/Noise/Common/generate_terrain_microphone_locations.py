@@ -67,11 +67,12 @@ def generate_terrain_microphone_locations(settings):
     x_min_coord = np.min(Lat)
     x_max_coord = np.max(Lat)
     y_min_coord = np.min(Long)
-    y_max_coord = np.max(Long)
-    if np.min(Long)>180: 
-        y_min_coord = np.min(Long)-360
-    if np.max(Long)>180:
-        y_max_coord = np.max(Long)-360  
+    y_max_coord = np.max(Long) 
+
+    if y_min_coord < 0: 
+        y_min_coord = 360 + y_min_coord
+    if y_max_coord< 0:
+        y_max_coord=360 + y_max_coord 
     
     top_left_map_coords      = np.array([x_max_coord,y_min_coord])
     bottom_left_map_coords   = np.array([x_min_coord,y_min_coord])  

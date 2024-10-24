@@ -67,7 +67,8 @@ class Noise(Analysis):
         self.settings.microphone_coordinates                 = None
         self.settings.microphone_x_resolution                = 10 
         self.settings.microphone_y_resolution                = 10
-        self.settings.noise_control_points                   = 30
+        self.settings.number_of_microphone_in_stencil        = 10
+        self.settings.noise_control_points                   = 50
         self.settings.microphone_min_x                       = 0  
         self.settings.microphone_max_x                       = 5000 
         self.settings.microphone_min_y                       = -450  

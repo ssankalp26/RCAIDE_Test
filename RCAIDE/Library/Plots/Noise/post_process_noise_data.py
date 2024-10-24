@@ -46,10 +46,10 @@ def post_process_noise_data(results,
     background_noise_dbA = background_noise() 
     N_ctrl_pts = 1
     for j in range(len(results.segments)): 
-        N_ctrl_pts  += len(results.segments[j].conditions.frames.inertial.time[:,0]) - 1 
+        N_ctrl_pts  += len(results.segments[j].conditions.noise.time[:,0]) - 1 
     N_gm_x                = results.segments[0].analyses.noise.settings.microphone_x_resolution
     N_gm_y                = results.segments[0].analyses.noise.settings.microphone_y_resolution     
-    SPL_dBA_old           = np.zeros((N_ctrl_pts ,N_gm_x,N_gm_y)) 
+    SPL_dBA               = np.ones((N_ctrl_pts,N_gm_x,N_gm_y))*1E-16 
     time_old              = np.zeros(N_ctrl_pts)
     Aircraft_pos          = np.zeros((N_ctrl_pts,3)) 
     Mic_pos_gm            = results.segments[0].analyses.noise.settings.microphone_locations.reshape(N_gm_x,N_gm_y,3) 
@@ -64,24 +64,27 @@ def post_process_noise_data(results,
         else:  
             if i == 0:  start = 0 
             else: start = 1                    
-            seg_cpts  = len(results.segments[i].conditions.frames.inertial.time[:,0])  
+            seg_cpts  = len(results.segments[i].conditions.noise.time[:,0])  
             for j in range(start,seg_cpts): 
-                time_old[idx]          = results.segments[i].conditions.frames.inertial.time[j,0]
-                Aircraft_pos[idx,0]    = results.segments[i].conditions.frames.inertial.position_vector[j,0]  + x0
-                Aircraft_pos[idx,1]    = results.segments[i].conditions.frames.inertial.position_vector[j,1]  + y0 
+                time_old[idx]          = results.segments[i].conditions.noise.time[j,0]
+                Aircraft_pos[idx,0]    = results.segments[i].conditions.noise.position_vector[j,0]  + x0
+                Aircraft_pos[idx,1]    = results.segments[i].conditions.noise.position_vector[j,1]  + y0 
                 x_idx                  = abs(Mic_pos_gm[:,0,0] - Aircraft_pos[idx,0]).argmin()
                 y_idx                  = abs(Mic_pos_gm[0,:,1] - Aircraft_pos[idx,1]).argmin() 
-                Aircraft_pos[idx,2]    = -results.segments[i].conditions.frames.inertial.position_vector[j,2] + Mic_pos_gm[x_idx,y_idx,2] 
-                SPL_dBA_old[idx]       = results.segments[i].conditions.noise.SPL_dBA[j].reshape(N_gm_x,N_gm_y)
+                Aircraft_pos[idx,2]    = -results.segments[i].conditions.noise.position_vector[j,2] + Mic_pos_gm[x_idx,y_idx,2] 
+                m_locs                 = list(results.segments[i].conditions.noise.microphone_indexes[j].astype(int) )
+                SPL_dBA_temp           = SPL_dBA[idx].flatten()
+                SPL_dBA_temp[m_locs]   = results.segments[i].conditions.noise.SPL_dBA[j] 
+                SPL_dBA[idx]           = SPL_dBA_temp.reshape(N_gm_x,N_gm_y)                
                 idx  += 1
                 
     # Step 2: Make any readings less that background noise equal to background noise
-    SPL_dBA                               = np.nan_to_num(SPL_dBA_old) 
+    SPL_dBA                               = np.nan_to_num(SPL_dBA) 
     SPL_dBA[SPL_dBA<background_noise_dbA] = background_noise_dbA  
      
     # store data 
     noise_data                           = Data() 
-    noise_data.SPL_dBA                   = SPL_dBA_old 
+    noise_data.SPL_dBA                   = SPL_dBA
     noise_data.time                      = time_old 
     noise_data.microphone_locations      = Mic_pos_gm
     if results.segments[0].analyses.noise.settings.topography_file  == None:
