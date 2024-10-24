@@ -49,7 +49,7 @@ def forces(segment):
     T_body2inertial = conditions.frames.body.transform_to_inertial
     T_wind2inertial = conditions.frames.wind.transform_to_inertial
 
-    # to inertial frame
+    # transform to inertial frame
     F = orientation_product(T_wind2inertial,wind_force_vector)
     T = orientation_product(T_body2inertial,body_thrust_force_vector)
     
@@ -65,7 +65,7 @@ def forces(segment):
         F =  np.zeros_like(T)
     elif type(segment) ==  RCAIDE.Framework.Mission.Segments.Vertical_Flight.Descent:
         F =  np.zeros_like(T) 
-    W = inertial_gravity_force_vector
+    W = -inertial_gravity_force_vector
 
     # sum of the forces
     F_tot = F +  T  + W 
