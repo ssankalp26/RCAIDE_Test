@@ -95,17 +95,17 @@ class Vortex_Lattice_Method(Aerodynamics):
         settings.supersonic.cross_sectional_area_calculation_type   = 'Fixed'     
         settings.supersonic.wave_drag_type                          = 'Raymer'    
     
-        self.settings.number_of_spanwise_vortices                   = 15
-        self.settings.number_of_chordwise_vortices                  = 5
-        self.settings.wing_spanwise_vortices                        = None
-        self.settings.wing_chordwise_vortices                       = None
-        self.settings.fuselage_spanwise_vortices                    = None
-        self.settings.fuselage_chordwise_vortices                   = None  
-        self.settings.spanwise_cosine_spacing                       = True
-        self.settings.vortex_distribution                           = Data()  
-        self.settings.leading_edge_suction_multiplier               = 1.0  
-        self.settings.use_VORLAX_matrix_calculation                 = False
-        self.settings.floating_point_precision                      = np.float32 
+        settings.number_of_spanwise_vortices                   = 15
+        settings.number_of_chordwise_vortices                  = 5
+        settings.wing_spanwise_vortices                        = None
+        settings.wing_chordwise_vortices                       = None
+        settings.fuselage_spanwise_vortices                    = None
+        settings.fuselage_chordwise_vortices                   = None  
+        settings.spanwise_cosine_spacing                       = True
+        settings.vortex_distribution                           = Data()  
+        settings.leading_edge_suction_multiplier               = 1.0  
+        settings.use_VORLAX_matrix_calculation                 = False
+        settings.floating_point_precision                      = np.float32 
     
         # conditions table, used for surrogate model training
         self.training                                               = Data()

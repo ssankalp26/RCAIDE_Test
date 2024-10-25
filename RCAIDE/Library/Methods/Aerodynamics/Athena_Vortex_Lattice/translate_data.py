@@ -9,7 +9,7 @@
 # RCAIDE imports 
 from RCAIDE.Framework.Core import Data, Units
 from RCAIDE.Framework.Mission.Common import Results
-from .AVL_Objects.Cases import Run_Case
+from .AVL_Objects.Run_Case import Run_Case
 
 # package imports 
 import numpy as np
@@ -28,7 +28,7 @@ def translate_conditions_to_cases(avl ,conditions):
         Drela, M. and Youngren, H., AVL, http://web.mit.edu/drela/Public/web/avl
 
     Inputs:
-        conditions.aerodynamics.angle_of_attack  [radians] 
+        conditions.aerodynamics.angles.alpha  [radians] 
         conditions.freestream.mach_number        [-]
         conditions.freestream.density            [kilograms per meters**3]
         conditions.freestream.gravity            [meters per second**2]
@@ -40,20 +40,20 @@ def translate_conditions_to_cases(avl ,conditions):
         N/A
     """    
     # set up aerodynamic Conditions object
-    aircraft = avl.geometry
+    aircraft = avl.vehicle
     cases    = Run_Case.Container()
-    for i in range(len(conditions.aerodynamics.angle_of_attack)):      
+    for i in range(len(conditions.aerodynamics.angles.alpha)):      
         case                                                  = Run_Case()
         case.tag                                              = avl.settings.filenames.case_template.format(avl.current_status.batch_index,i+1)
         case.mass                                             = conditions.weights.total_mass
         case.conditions.freestream.mach                       = conditions.freestream.mach_number
         case.conditions.freestream.density                    = conditions.freestream.density
         case.conditions.freestream.gravitational_acceleration = conditions.freestream.gravity      
-        case.conditions.aerodynamics.angle_of_attack          = conditions.aerodynamics.angle_of_attack[i]/Units.deg
-        case.conditions.aerodynamics.side_slip_angle          = conditions.aerodynamics.side_slip_angle  
-        case.conditions.aerodynamics.lift_coefficient         = conditions.aerodynamics.lift_coefficient
-        case.conditions.aerodynamics.roll_rate_coefficient    = conditions.aerodynamics.roll_rate_coefficient
-        case.conditions.aerodynamics.pitch_rate_coefficient   = conditions.aerodynamics.pitch_rate_coefficient
+        case.conditions.aerodynamics.angles.alpha             = conditions.aerodynamics.angles.alpha[i]/Units.deg
+        case.conditions.aerodynamics.angles.beta              = conditions.aerodynamics.angles.beta  
+        case.conditions.aerodynamics.coefficients.lift        = conditions.aerodynamics.coefficients.lift
+        case.conditions.static_stability.coefficients.roll    = conditions.static_stability.coefficients.roll
+        case.conditions.static_stability.coefficients.pitch   = conditions.static_stability.coefficients.pitch
         
         # determine the number of wings 
         n_wings = 0 
@@ -62,7 +62,7 @@ def translate_conditions_to_cases(avl ,conditions):
             if wing.symmetric == True:
                 n_wings += 1                
         case.num_wings                                        = n_wings
-        case.n_sw                                             = avl.settings.number_spanwise_vortices  
+        case.n_sw                                             = avl.settings.number_of_spanwise_vortices  
                 
         cases.append_case(case)
     
@@ -93,12 +93,9 @@ def translate_results_to_conditions(cases,results):
     dim       = len(cases)
         
     # set up aerodynamic Conditions object
-    res                             = Results()
+    res             = Results()
     res.expand_rows(dim,override=False)
-    
-    res.stability.static.neutral_point                       = np.zeros_like(res.S_ref)    
-    res.stability.static.spiral_criteria                     = np.zeros_like(res.S_ref)    
- 
+     
     # aero results 1: total surface forces and coefficeints 
     res.aerodynamics.wing_areas                    = np.zeros((dim,num_wings)) 
     res.aerodynamics.wing_CLs                      = np.zeros_like(res.aerodynamics.wing_areas) 
@@ -109,9 +106,8 @@ def translate_results_to_conditions(cases,results):
     res.aerodynamics.wing_section_chords           = np.zeros_like(res.aerodynamics.wing_local_spans)
     res.aerodynamics.wing_section_cls              = np.zeros_like(res.aerodynamics.wing_local_spans)
     res.aerodynamics.wing_section_induced_angle    = np.zeros_like(res.aerodynamics.wing_local_spans)
-    res.aerodynamics.wing_section_cds              = np.zeros_like(res.aerodynamics.wing_local_spans)
-    
-    res.stability.static.control_surfaces_cases   = {}
+    res.aerodynamics.wing_section_cds              = np.zeros_like(res.aerodynamics.wing_local_spans) 
+    res.static_stability.control_surfaces_cases   = {}
     
     mach_case = list(results.keys())[0][5:9]   
     for i in range(len(results.keys())):
@@ -120,89 +116,83 @@ def translate_results_to_conditions(cases,results):
         case_res = results[tag]       
         
         # stability file 
-        res.S_ref[i][0]                                     = case_res.S_ref 
-        res.c_ref[i][0]                                     = case_res.c_ref 
-        res.b_ref[i][0]                                     = case_res.b_ref
-        res.X_ref[i][0]                                     = case_res.X_ref 
-        res.Y_ref[i][0]                                     = case_res.Y_ref 
-        res.Z_ref[i][0]                                     = case_res.Z_ref       
-        res.aerodynamics.AoA[i][0]                          = case_res.aerodynamics.AoA
-        res.aerodynamics.CX[i][0]                           = case_res.aerodynamics.CX 
-        res.aerodynamics.CY[i][0]                           = case_res.aerodynamics.CY  
-        res.aerodynamics.CZ[i][0]                           = case_res.aerodynamics.CZ    
-        res.aerodynamics.Cltot[i][0]                        = case_res.aerodynamics.Cltot 
-        res.aerodynamics.Cmtot[i][0]                        = case_res.aerodynamics.Cmtot 
-        res.aerodynamics.Cntot[i][0]                        = case_res.aerodynamics.Cntot      
-        res.aerodynamics.roll_moment_coefficient[i][0]      = case_res.aerodynamics.roll_moment_coefficient
-        res.aerodynamics.pitch_moment_coefficient[i][0]     = case_res.aerodynamics.pitch_moment_coefficient
-        res.aerodynamics.yaw_moment_coefficient[i][0]       = case_res.aerodynamics.yaw_moment_coefficient
-        res.aerodynamics.lift_coefficient[i][0]             = case_res.aerodynamics.total_lift_coefficient
-        res.aerodynamics.drag_breakdown.induced.total[i][0] = case_res.aerodynamics.induced_drag_coefficient
-        res.aerodynamics.drag_breakdown.induced.efficiency_factor[i][0]  = case_res.aerodynamics.oswald_efficiency 
-        res.aerodynamics.oswald_efficiency[i][0]            = case_res.aerodynamics.oswald_efficiency 
-        res.stability.static.CL_alpha[i][0]                 = case_res.stability.alpha_derivatives.lift_curve_slope
-        res.stability.static.CY_alpha[i][0]                 = case_res.stability.alpha_derivatives.side_force_derivative
-        res.stability.static.Cl_alpha[i][0]                 = case_res.stability.alpha_derivatives.roll_moment_derivative
-        res.stability.static.Cm_alpha[i][0]                 = case_res.stability.alpha_derivatives.pitch_moment_derivative
-        res.stability.static.Cn_alpha[i][0]                 = case_res.stability.alpha_derivatives.yaw_moment_derivative
-        res.stability.static.CL_beta[i][0]                  = case_res.stability.beta_derivatives.lift_coefficient_derivative
-        res.stability.static.CY_beta[i][0]                  = case_res.stability.beta_derivatives.side_force_derivative
-        res.stability.static.Cl_beta[i][0]                  = case_res.stability.beta_derivatives.roll_moment_derivative
-        res.stability.static.Cm_beta[i][0]                  = case_res.stability.beta_derivatives.pitch_moment_derivative
-        res.stability.static.Cn_beta[i][0]                  = case_res.stability.beta_derivatives.yaw_moment_derivative        
-        res.stability.static.CL_p[i][0]                     = case_res.stability.CL_p 
-        res.stability.static.CL_q[i][0]                     = case_res.stability.CL_q
-        res.stability.static.CL_r[i][0]                     = case_res.stability.CL_r 
-        res.stability.static.CY_p[i][0]                     = case_res.stability.CY_p 
-        res.stability.static.CY_q[i][0]                     = case_res.stability.CY_q 
-        res.stability.static.CY_r[i][0]                     = case_res.stability.CY_r
-        res.stability.static.Cl_p[i][0]                     = case_res.stability.Cl_p 
-        res.stability.static.Cl_q[i][0]                     = case_res.stability.Cl_q 
-        res.stability.static.Cl_r[i][0]                     = case_res.stability.Cl_r 
-        res.stability.static.Cm_p[i][0]                     = case_res.stability.Cm_p 
-        res.stability.static.Cm_q[i][0]                     = case_res.stability.Cm_q 
-        res.stability.static.Cm_r[i][0]                     = case_res.stability.Cm_r 
-        res.stability.static.Cn_p[i][0]                     = case_res.stability.Cn_p 
-        res.stability.static.Cn_q[i][0]                     = case_res.stability.Cn_q 
-        res.stability.static.Cn_r[i][0]                     = case_res.stability.Cn_r
-        res.stability.static.CX_u[i][0]                     = case_res.stability.CX_u
-        res.stability.static.CX_v[i][0]                     = case_res.stability.CX_v
-        res.stability.static.CX_w[i][0]                     = case_res.stability.CX_w
-        res.stability.static.CY_u[i][0]                     = case_res.stability.CY_u
-        res.stability.static.CY_v[i][0]                     = case_res.stability.CY_v
-        res.stability.static.CY_w[i][0]                     = case_res.stability.CY_w
-        res.stability.static.CZ_u[i][0]                     = case_res.stability.CZ_u
-        res.stability.static.CZ_v[i][0]                     = case_res.stability.CZ_v
-        res.stability.static.CZ_w[i][0]                     = case_res.stability.CZ_w
-        res.stability.static.Cl_u[i][0]                     = case_res.stability.Cl_u
-        res.stability.static.Cl_v[i][0]                     = case_res.stability.Cl_v
-        res.stability.static.Cl_w[i][0]                     = case_res.stability.Cl_w
-        res.stability.static.Cm_u[i][0]                     = case_res.stability.Cm_u
-        res.stability.static.Cm_v[i][0]                     = case_res.stability.Cm_v
-        res.stability.static.Cm_w[i][0]                     = case_res.stability.Cm_w
-        res.stability.static.Cn_u[i][0]                     = case_res.stability.Cn_u
-        res.stability.static.Cn_v[i][0]                     = case_res.stability.Cn_v
-        res.stability.static.Cn_w[i][0]                     = case_res.stability.Cn_w
-        res.stability.static.CX_p[i][0]                     = case_res.stability.CX_p
-        res.stability.static.CX_q[i][0]                     = case_res.stability.CX_q
-        res.stability.static.CX_r[i][0]                     = case_res.stability.CX_r
-        res.stability.static.CY_p[i][0]                     = case_res.stability.CY_p
-        res.stability.static.CY_q[i][0]                     = case_res.stability.CY_q
-        res.stability.static.CY_r[i][0]                     = case_res.stability.CY_r
-        res.stability.static.CZ_p[i][0]                     = case_res.stability.CZ_p
-        res.stability.static.CZ_q[i][0]                     = case_res.stability.CZ_q
-        res.stability.static.CZ_r[i][0]                     = case_res.stability.CZ_r
-        res.stability.static.Cl_p[i][0]                     = case_res.stability.Cl_p
-        res.stability.static.Cl_q[i][0]                     = case_res.stability.Cl_q
-        res.stability.static.Cl_r[i][0]                     = case_res.stability.Cl_r
-        res.stability.static.Cm_p[i][0]                     = case_res.stability.Cm_p
-        res.stability.static.Cm_q[i][0]                     = case_res.stability.Cm_q
-        res.stability.static.Cm_r[i][0]                     = case_res.stability.Cm_r
-        res.stability.static.Cn_p[i][0]                     = case_res.stability.Cn_p
-        res.stability.static.Cn_q[i][0]                     = case_res.stability.Cn_q
-        res.stability.static.Cn_r[i][0]                     = case_res.stability.Cn_r
-        res.stability.static.neutral_point[i][0]            = case_res.stability.neutral_point
-        res.stability.static.spiral_criteria[i][0]          = case_res.stability.spiral_criteria
+        res.S_ref[i][0]                                                     = case_res.S_ref 
+        res.c_ref[i][0]                                                     = case_res.c_ref 
+        res.b_ref[i][0]                                                     = case_res.b_ref
+        res.X_ref[i][0]                                                     = case_res.X_ref 
+        res.Y_ref[i][0]                                                     = case_res.Y_ref 
+        res.Z_ref[i][0]                                                     = case_res.Z_ref       
+        res.aerodynamics.angles.alpha[i][0]                                 = case_res.aerodynamics.AoA
+        res.static_stability.coefficients.X[i][0]                           = case_res.aerodynamics.CX 
+        res.static_stability.coefficients.Y[i][0]                           = case_res.aerodynamics.CY  
+        res.static_stability.coefficients.Z[i][0]                           = case_res.aerodynamics.CZ    
+        res.static_stability.coefficients.L[i][0]                           = case_res.aerodynamics.Cltot 
+        res.static_stability.coefficients.M[i][0]                           = case_res.aerodynamics.Cmtot 
+        res.static_stability.coefficients.N[i][0]                           = case_res.aerodynamics.Cntot      
+        res.static_stability.coefficients.roll[i][0]                        = case_res.aerodynamics.roll_moment_coefficient
+        res.static_stability.coefficients.pitch[i][0]                       = case_res.aerodynamics.pitch_moment_coefficient
+        res.static_stability.coefficients.yaw[i][0]                         = case_res.aerodynamics.yaw_moment_coefficient
+        res.static_stability.forces.lift[i][0]                              = case_res.aerodynamics.total_lift_coefficient
+        res.aerodynamics.coefficients.drag.induced.total[i][0]              = case_res.aerodynamics.induced_drag_coefficient 
+        res.aerodynamics.coefficients.drag.induced.efficiency_factor[i][0]  = case_res.aerodynamics.oswald_efficiency 
+        res.aerodynamics.oswald_efficiency[i][0]                            = case_res.aerodynamics.oswald_efficiency
+        
+        res.static_stability.derivatives.Clift_alpha[i][0]                  = case_res.stability.alpha_derivatives.lift_curve_slope
+        res.static_stability.derivatives.CY_alpha[i][0]                     = case_res.stability.alpha_derivatives.side_force_derivative
+        res.static_stability.derivatives.CL_alpha[i][0]                     = case_res.stability.alpha_derivatives.roll_moment_derivative
+        res.static_stability.derivatives.CM_alpha[i][0]                     = case_res.stability.alpha_derivatives.pitch_moment_derivative
+        res.static_stability.derivatives.CN_alpha[i][0]                     = case_res.stability.alpha_derivatives.yaw_moment_derivative
+        res.static_stability.derivatives.Clift_beta[i][0]                   = case_res.stability.beta_derivatives.lift_coefficient_derivative
+        res.static_stability.derivatives.CY_beta[i][0]                      = case_res.stability.beta_derivatives.side_force_derivative
+        res.static_stability.derivatives.CL_beta[i][0]                      = case_res.stability.beta_derivatives.roll_moment_derivative
+        res.static_stability.derivatives.CM_beta[i][0]                      = case_res.stability.beta_derivatives.pitch_moment_derivative
+        res.static_stability.derivatives.CN_beta[i][0]                      = case_res.stability.beta_derivatives.yaw_moment_derivative        
+    
+        res.static_stability.derivatives.Clift_p[i][0]                      = case_res.stability.CL_p 
+        res.static_stability.derivatives.Clift_q[i][0]                      = case_res.stability.CL_q
+        res.static_stability.derivatives.Clift_r[i][0]                      = case_res.stability.CL_r 
+        res.static_stability.derivatives.CY_p[i][0]                         = case_res.stability.CY_p 
+        res.static_stability.derivatives.CY_q[i][0]                         = case_res.stability.CY_q 
+        res.static_stability.derivatives.CY_r[i][0]                         = case_res.stability.CY_r
+        res.static_stability.derivatives.CL_p[i][0]                         = case_res.stability.Cl_p 
+        res.static_stability.derivatives.CL_q[i][0]                         = case_res.stability.Cl_q 
+        res.static_stability.derivatives.CL_r[i][0]                         = case_res.stability.Cl_r 
+        res.static_stability.derivatives.CM_p[i][0]                         = case_res.stability.Cm_p 
+        res.static_stability.derivatives.CM_q[i][0]                         = case_res.stability.Cm_q 
+        res.static_stability.derivatives.CM_r[i][0]                         = case_res.stability.Cm_r 
+        res.static_stability.derivatives.CN_p[i][0]                         = case_res.stability.Cn_p 
+        res.static_stability.derivatives.CN_q[i][0]                         = case_res.stability.Cn_q 
+        res.static_stability.derivatives.CN_r[i][0]                         = case_res.stability.Cn_r
+        res.static_stability.derivatives.CX_u[i][0]                         = case_res.stability.CX_u
+        res.static_stability.derivatives.CX_v[i][0]                         = case_res.stability.CX_v
+        res.static_stability.derivatives.CX_w[i][0]                         = case_res.stability.CX_w
+        res.static_stability.derivatives.CY_u[i][0]                         = case_res.stability.CY_u
+        res.static_stability.derivatives.CY_v[i][0]                         = case_res.stability.CY_v
+        res.static_stability.derivatives.CY_w[i][0]                         = case_res.stability.CY_w
+        res.static_stability.derivatives.CZ_u[i][0]                         = case_res.stability.CZ_u
+        res.static_stability.derivatives.CZ_v[i][0]                         = case_res.stability.CZ_v
+        res.static_stability.derivatives.CZ_w[i][0]                         = case_res.stability.CZ_w
+        res.static_stability.derivatives.CL_u[i][0]                         = case_res.stability.Cl_u
+        res.static_stability.derivatives.CL_v[i][0]                         = case_res.stability.Cl_v
+        res.static_stability.derivatives.CL_w[i][0]                         = case_res.stability.Cl_w
+        res.static_stability.derivatives.CM_u[i][0]                         = case_res.stability.Cm_u
+        res.static_stability.derivatives.CM_v[i][0]                         = case_res.stability.Cm_v
+        res.static_stability.derivatives.CM_w[i][0]                         = case_res.stability.Cm_w
+        res.static_stability.derivatives.CN_u[i][0]                         = case_res.stability.Cn_u
+        res.static_stability.derivatives.CN_v[i][0]                         = case_res.stability.Cn_v
+        res.static_stability.derivatives.CN_w[i][0]                         = case_res.stability.Cn_w
+            
+        res.static_stability.derivatives.CX_p[i][0]                         = case_res.stability.CX_p
+        res.static_stability.derivatives.CX_q[i][0]                         = case_res.stability.CX_q
+        res.static_stability.derivatives.CX_r[i][0]                         = case_res.stability.CX_r
+        res.static_stability.derivatives.CY_p[i][0]                         = case_res.stability.CY_p
+        res.static_stability.derivatives.CY_q[i][0]                         = case_res.stability.CY_q
+        res.static_stability.derivatives.CY_r[i][0]                         = case_res.stability.CY_r
+        res.static_stability.derivatives.CZ_p[i][0]                         = case_res.stability.CZ_p
+        res.static_stability.derivatives.CZ_q[i][0]                         = case_res.stability.CZ_q
+        res.static_stability.derivatives.CZ_r[i][0]                         = case_res.stability.CZ_r   
+        res.static_stability.neutral_point[i][0]                            = case_res.stability.neutral_point
+        res.static_stability.spiral_criteria[i][0]                          = case_res.stability.spiral_criteria
         
         # aero surface forces file 
         res.aerodynamics.wing_areas[i][:]                   = case_res.aerodynamics.wing_areas   
@@ -216,6 +206,6 @@ def translate_results_to_conditions(cases,results):
         res.aerodynamics.wing_section_induced_angle[i][:]   = case_res.aerodynamics.wing_section_aoa_i
         res.aerodynamics.wing_section_cds[i][:]             = case_res.aerodynamics.wing_section_cds   
         
-        res.stability.static.control_surfaces_cases[tag]    = case_res.stability.control_surfaces
+        res.static_stability.control_surfaces_cases[tag]    = case_res.stability.control_surfaces
         
     return res

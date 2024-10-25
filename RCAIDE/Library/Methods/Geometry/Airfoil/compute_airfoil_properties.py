@@ -193,7 +193,7 @@ def compute_extended_polars(airfoil_cl,airfoil_cd,airfoil_aoa,AoA_sweep_deg,geom
     # Setup data structures for this run
     ones                                                      = np.ones_like(AoA_sweep_radians)
     settings.section_zero_lift_angle_of_attack                = A0
-    state.conditions.aerodynamics.angle_of_attack             = AoA_sweep_radians* ones  
+    state.conditions.aerodynamics.angles.alpha             = AoA_sweep_radians* ones  
     geometry.section.angle_attack_max_prestall_lift           = ACL1 * ones 
     geometry.pre_stall_maximum_drag_coefficient_angle         = ACD1 * ones 
     geometry.pre_stall_maximum_lift_coefficient               = CL1max * ones 

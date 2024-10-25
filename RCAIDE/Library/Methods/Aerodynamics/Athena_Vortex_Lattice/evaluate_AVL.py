@@ -36,7 +36,7 @@ def evaluate_AVL_surrogate(state,settings,vehicle):
     conditions          = state.conditions
     aerodynamics        = state.analyses.aerodynamics  
     Mach                = conditions.freestream.mach_number
-    AoA                 = conditions.aerodynamics.angle_of_attack
+    AoA                 = conditions.aerodynamics.angles.alpha
     lift_model          = aerodynamics.surrogates.lift_coefficient
     drag_model          = aerodynamics.surrogates.drag_coefficient
     e_model             = aerodynamics.surrogates.span_efficiency_factor
@@ -85,7 +85,7 @@ def evaluate_AVL_surrogate(state,settings,vehicle):
     conditions.aerodynamics.lift_breakdown.inviscid_wings_lift = Data()
     conditions.aerodynamics.lift_breakdown.compressible_wings  = Data()
     conditions.aerodynamics.lift_breakdown.inviscid_wings_lift = inviscid_lift
-    conditions.aerodynamics.lift_coefficient                   = inviscid_lift
+    conditions.aerodynamics.coefficients.lift                   = inviscid_lift
 
     Sref = vehicle.reference_area
     for wing in vehicle.wings.values():
@@ -102,4 +102,8 @@ def evaluate_AVL_surrogate(state,settings,vehicle):
     
 
     return
+
+def evaluate_AVL_no_surrogate():
+    
+    pass
  

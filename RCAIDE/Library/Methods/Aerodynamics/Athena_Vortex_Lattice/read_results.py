@@ -35,11 +35,11 @@ def read_results(avl_object):
         N/A
     """    
     # unpack
-    aircraft = avl_object.geometry
+    aircraft = avl_object.vehicle
     results  = Data()
     case_idx = 0  
     for case in avl_object.current_status.cases:
-        num_ctrl =  case.stability_and_control.number_control_surfaces
+        num_ctrl =  case.stability_and_control.number_of_control_surfaces
         # open newly written result files and read in aerodynamic properties 
         with open(case.aero_result_filename_1,'r') as stab_der_vile:
             # Extract results from stability axis derivatives file                                                                
@@ -121,7 +121,7 @@ def read_results(avl_object):
             case_res.stability.spiral_criteria    = float(lines[52+12*(num_ctrl>0)+num_ctrl][22:33].strip())    
         
         # get number of wings, spanwise discretization for surface and strip force result extraction
-        n_sw    = avl_object.settings.number_spanwise_vortices
+        n_sw    = avl_object.settings.number_of_spanwise_vortices
         n_wings = 0 
         for wing in aircraft.wings:
             n_wings += 1

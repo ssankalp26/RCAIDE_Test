@@ -19,7 +19,7 @@ def write_mass_file(avl_object,run_conditions):
     
     # unpack inputs
     mass_file       = avl_object.settings.filenames.mass_file 
-    aircraft        = avl_object.geometry
+    aircraft        = avl_object.vehicle
     
     # Open the mass file after purging if it already exists
     purge_files([mass_file]) 
@@ -65,7 +65,7 @@ rho = {2}
 '''
 
         # Unpack inputs
-        name    = avl_object.geometry._base.tag
+        name    = avl_object.vehicle._base.tag
         density = run_conditions.freestream.density 
         gravity = run_conditions.freestream.gravity
         

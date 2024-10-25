@@ -24,7 +24,7 @@ def write_run_cases(avl_object,trim_aircraft):
    
     Inputs:
         avl_object.current_status.batch_file                    [-]
-        avl_object.geometry.mass_properties.center_of_gravity   [meters]
+        avl_object.vehicle.mass_properties.center_of_gravity   [meters]
    
     Outputs:
         None
@@ -35,7 +35,7 @@ def write_run_cases(avl_object,trim_aircraft):
     
 
     # unpack avl_inputs
-    aircraft       = avl_object.geometry
+    aircraft       = avl_object.vehicle
     batch_filename = avl_object.current_status.batch_file
 
     base_case_text = \
@@ -83,7 +83,7 @@ def write_run_cases(avl_object,trim_aircraft):
 
 '''#{4} is a set of control surface inputs that will vary depending on the control surface configuration
 
-    # Open the geometry file after purging if it already exists
+    # Open the vehicle file after purging if it already exists
     purge_files([batch_filename]) 
     with open(batch_filename,'w') as runcases:
         # extract C.G. coordinates and moment of intertia tensor
@@ -104,12 +104,12 @@ def write_run_cases(avl_object,trim_aircraft):
             # extract flight conditions 
             index = case.index
             name  = case.tag
-            CL    = case.conditions.aerodynamics.lift_coefficient
+            CL    = case.conditions.aerodynamics.coefficients.lift
             CDp   = 0.
-            AoA   = round(case.conditions.aerodynamics.angle_of_attack,4)
-            beta  = round(case.conditions.aerodynamics.side_slip_angle,4)
-            pb_2V = round(case.conditions.aerodynamics.roll_rate_coefficient,4)
-            qc_2V = round(case.conditions.aerodynamics.pitch_rate_coefficient,4)
+            AoA   = round(case.conditions.aerodynamics.angles.alpha,4)
+            beta  = round(case.conditions.aerodynamics.angles.beta,4)
+            pb_2V = round(case.conditions.static_stability.coefficients.roll,4)
+            qc_2V = round(case.conditions.static_stability.coefficients.pitch,4)
             mach  = round(case.conditions.freestream.mach,4)
             vel   = round(case.conditions.freestream.velocity,4)
             rho   = round(case.conditions.freestream.density,4)
@@ -127,9 +127,9 @@ def write_run_cases(avl_object,trim_aircraft):
                     toggle_val = AoA
                     alpha_val  = '0.00000     deg'
                     CL_val     = '0.00000'
-                if case.stability_and_control.number_control_surfaces != 0 :
+                if case.stability_and_control.number_of_control_surfaces != 0 :
                     # write control surface text in .run file if there is any
-                    controls = make_controls_case_text(case.stability_and_control.control_surface_names,avl_object.geometry)
+                    controls = make_controls_case_text(case.stability_and_control.control_surface_names,avl_object.vehicle)
                     controls_text = ''.join(controls)
  
             elif trim_aircraft: # trim is specified  
@@ -145,9 +145,9 @@ def write_run_cases(avl_object,trim_aircraft):
                     CL_val     = '0.00000'
                 
                 controls = []
-                if case.stability_and_control.number_control_surfaces != 0 :
+                if case.stability_and_control.number_of_control_surfaces != 0 :
                     # write control surface text in .run file if there is any
-                    controls = make_controls_case_text(case.stability_and_control.control_surface_names,avl_object.geometry)
+                    controls = make_controls_case_text(case.stability_and_control.control_surface_names,avl_object.vehicle)
                 controls_text = ''.join(controls)
                 
             # write the .run file using template and the extracted vehicle properties and flight condition

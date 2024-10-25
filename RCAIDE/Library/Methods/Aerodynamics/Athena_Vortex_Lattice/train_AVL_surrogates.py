@@ -6,27 +6,20 @@
 
 # RCAIDE imports
 import RCAIDE
-from RCAIDE.Framework.Core import Units, Data, redirect  
-from RCAIDE.Framework.Mission.Common    import Results 
-from RCAIDE.Library.Methods.Aerodynamics.Athena_Vortex_Lattice.write_geometry           import write_geometry
-from RCAIDE.Library.Methods.Aerodynamics.Athena_Vortex_Lattice.write_mass_file          import write_mass_file
-from RCAIDE.Library.Methods.Aerodynamics.Athena_Vortex_Lattice.write_run_cases          import write_run_cases
-from RCAIDE.Library.Methods.Aerodynamics.Athena_Vortex_Lattice.write_input_deck         import write_input_deck
-from RCAIDE.Library.Methods.Aerodynamics.Athena_Vortex_Lattice.run_analysis             import run_analysis
-from RCAIDE.Library.Methods.Aerodynamics.Athena_Vortex_Lattice.translate_data           import translate_conditions_to_cases, translate_results_to_conditions 
-from RCAIDE.Library.Methods.Geometry.Planform.populate_control_sections                 import populate_control_sections   
-from RCAIDE.Library.Components.Wings.Control_Surfaces import Aileron , Elevator , Slat , Flap , Rudder 
+from RCAIDE.Framework.Core                                         import Units, Data, redirect  
+from RCAIDE.Framework.Mission.Common                               import Results  
+from RCAIDE.Library.Methods.Aerodynamics.Athena_Vortex_Lattice     import run_AVL_analysis  
  
 # Package imports 
 import os
 import numpy as np
-import sys  
 from shutil import rmtree   
+import sys  
 
 # ----------------------------------------------------------------------------------------------------------------------
-#  train_VLM_surrogates
+#  train_AVL_surrogates
 # ---------------------------------------------------------------------------------------------------------------------- 
-def train_VLM_surrogates(aerodynamics):
+def train_AVL_surrogates(aerodynamics):
     """Call methods to run VLM for sample point evaluation. 
     
     Assumptions:
@@ -40,21 +33,18 @@ def train_VLM_surrogates(aerodynamics):
         
     Returns: 
         None    
-    """
+    """ 
  
- 
- 
- 
-    run_folder             = os.path.abspath(self.settings.filenames.run_folder)
-    vehicle               = self.vehicle
-    training               = self.training 
-    trim_aircraft          = self.settings.trim_aircraft  
+    run_folder             = os.path.abspath(aerodynamics.settings.filenames.run_folder)
+    vehicle                = aerodynamics.vehicle
+    training               = aerodynamics.training 
+    trim_aircraft          = aerodynamics.settings.trim_aircraft  
     AoA                    = training.angle_of_attack
     Mach                   = training.Mach
-    side_slip_angle        = self.settings.side_slip_angle
-    roll_rate_coefficient  = self.settings.roll_rate_coefficient
-    pitch_rate_coefficient = self.settings.pitch_rate_coefficient
-    lift_coefficient       = self.settings.lift_coefficient
+    side_slip_angle        = aerodynamics.settings.side_slip_angle
+    roll_rate_coefficient  = aerodynamics.settings.roll_rate_coefficient
+    pitch_rate_coefficient = aerodynamics.settings.pitch_rate_coefficient
+    lift_coefficient       = aerodynamics.settings.lift_coefficient
     atmosphere             = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
     atmo_data              = atmosphere.compute_values(altitude = 0.0)         
     
@@ -67,7 +57,7 @@ def train_VLM_surrogates(aerodynamics):
 
     # remove old files in run directory  
     if os.path.exists('avl_files'):
-        if not self.settings.regression_flag:
+        if not aerodynamics.settings.regression_flag:
             rmtree(run_folder)
 
     for i,_ in enumerate(Mach):
@@ -78,16 +68,16 @@ def train_VLM_surrogates(aerodynamics):
         run_conditions.freestream.speed_of_sound           = atmo_data.speed_of_sound[0,0]  
         run_conditions.freestream.velocity                 = Mach[i] * run_conditions.freestream.speed_of_sound
         run_conditions.freestream.mach_number              = Mach[i] 
-        run_conditions.aerodynamics.side_slip_angle        = side_slip_angle
-        run_conditions.aerodynamics.angle_of_attack        = AoA 
-        run_conditions.aerodynamics.roll_rate_coefficient  = roll_rate_coefficient
-        run_conditions.aerodynamics.lift_coefficient       = lift_coefficient
-        run_conditions.aerodynamics.pitch_rate_coefficient = pitch_rate_coefficient
+        run_conditions.aerodynamics.angles.beta            = side_slip_angle
+        run_conditions.aerodynamics.angles.alpha           = AoA 
+        run_conditions.static_stability.coefficients.roll  = roll_rate_coefficient
+        run_conditions.aerodynamics.coefficients.lift      = lift_coefficient
+        run_conditions.static_stability.coefficients.pitch = pitch_rate_coefficient
 
         # Run Analysis at AoA[i] and Mach[i]
-        results =  self.evaluate_conditions(run_conditions, trim_aircraft)
+        results =  run_AVL_analysis(aerodynamics, run_conditions, trim_aircraft)
  
-        CL[:,i]       = results.aerodynamics.lift_coefficient[:,0]
+        CL[:,i]       = results.aerodynamics.coefficients.lift[:,0]
         CD[:,i]       = results.aerodynamics.drag_breakdown.induced.total[:,0]      
         e [:,i]       = results.aerodynamics.drag_breakdown.induced.efficiency_factor[:,0]   
         CM[:,i]       = results.aerodynamics.Cmtot[:,0]
@@ -95,10 +85,9 @@ def train_VLM_surrogates(aerodynamics):
         Cn_beta[:,i]  = results.stability.static.Cn_beta[:,0]
         NP[:,i]       = results.stability.static.neutral_point[:,0]
 
-    if self.training_file:
+    if aerodynamics.training_file:
         # load data 
-        data_array   = np.loadtxt(self.training_file)
-
+        data_array   = np.loadtxt(aerodynamics.training_file) 
         
         # convert from 1D to 2D        
         CL_1D         = np.atleast_2d(data_array[:,0]) 
@@ -119,7 +108,7 @@ def train_VLM_surrogates(aerodynamics):
         NP        = np.reshape(NP_1D , (len_AoA,-1))
 
     # Save the data for regression 
-    if self.settings.save_regression_results:
+    if aerodynamics.settings.save_regression_results:
         # convert from 2D to 1D
         CL_1D       = CL.reshape([len_AoA*len_Mach,1]) 
         CD_1D       = CD.reshape([len_AoA*len_Mach,1])  
@@ -144,117 +133,3 @@ def train_VLM_surrogates(aerodynamics):
     # Store training data
     training.coefficients = training_data
     
-    
-def evaluate_conditions(self,run_conditions, trim_aircraft ):
-    """Process vehicle to setup avl geometry, condititons, and configurations.
-
-    Assumptions:
-    None
-
-    Source:
-    N/A
-
-    Inputs:
-    run_conditions <RCAIDE data type> aerodynamic conditions; until input
-            method is finalized, will assume mass_properties are always as 
-            defined in self.features
-
-    Outputs:
-    results        <RCAIDE data type>
-
-    Properties Used:
-    self.settings.filenames.
-      run_folder
-      output_template
-      batch_template
-      deck_template
-    self.current_status.
-      batch_index
-      batch_file
-      deck_file
-      cases
-    """           
-    
-    # unpack
-    run_folder                       = os.path.abspath(self.settings.filenames.run_folder)
-    run_script_path                  = run_folder.rstrip('avl_files').rstrip('/')   
-    aero_results_template_1          = self.settings.filenames.aero_output_template_1       # 'stability_axis_derivatives_{}.dat' 
-    aero_results_template_2          = self.settings.filenames.aero_output_template_2       # 'surface_forces_{}.dat'
-    aero_results_template_3          = self.settings.filenames.aero_output_template_3       # 'strip_forces_{}.dat'      
-    aero_results_template_4          = self.settings.filenames.aero_output_template_4       # 'body_axis_derivatives_{}.dat' 
-    dynamic_results_template_1       = self.settings.filenames.dynamic_output_template_1    # 'eigen_mode_{}.dat'
-    dynamic_results_template_2       = self.settings.filenames.dynamic_output_template_2    # 'system_matrix_{}.dat'
-    batch_template                   = self.settings.filenames.batch_template
-    deck_template                    = self.settings.filenames.deck_template 
-    print_output                     = self.settings.print_output 
-
-    # rename defaul avl aircraft tag
-    self.tag                         = 'avl_analysis_of_{}'.format(self.geometry.tag) 
-    self.settings.filenames.features = self.geometry._base.tag + '.avl'
-    self.settings.filenames.mass_file= self.geometry._base.tag + '.mass'
-    
-    # update current status
-    self.current_status.batch_index += 1
-    batch_index                      = self.current_status.batch_index
-    self.current_status.batch_file   = batch_template.format(batch_index)
-    self.current_status.deck_file    = deck_template.format(batch_index)
-           
-    # control surfaces
-    num_cs       = 0
-    cs_names     = []
-    cs_functions = [] 
-    control_surfaces = False
-    
-    for wing in self.geometry.wings: # this parses through the wings to determine how many control surfaces does the vehicle have 
-        if wing.control_surfaces:
-            control_surfaces = True 
-            wing = populate_control_sections(wing)     
-            num_cs_on_wing = len(wing.control_surfaces)
-            num_cs +=  num_cs_on_wing
-            for cs in wing.control_surfaces:
-                ctrl_surf = cs    
-                cs_names.append(ctrl_surf.tag)  
-                if (type(ctrl_surf) ==  Slat):
-                    ctrl_surf_function  = 'slat'
-                elif (type(ctrl_surf) ==  Flap):
-                    ctrl_surf_function  = 'flap' 
-                elif (type(ctrl_surf) ==  Aileron):
-                    ctrl_surf_function  = 'aileron'                          
-                elif (type(ctrl_surf) ==  Elevator):
-                    ctrl_surf_function  = 'elevator' 
-                elif (type(ctrl_surf) ==  Rudder):
-                    ctrl_surf_function = 'rudder'                      
-                cs_functions.append(ctrl_surf_function)  
-
-    # translate conditions
-    cases                            = translate_conditions_to_cases(self,run_conditions)    
-    for case in cases:
-        case.stability_and_control.number_control_surfaces = num_cs
-        case.stability_and_control.control_surface_names   = cs_names
-    self.current_status.cases                              = cases  
-     
-    for case in cases:  
-        case.aero_result_filename_1     = aero_results_template_1.format(case.tag)        # 'stability_axis_derivatives_{}.dat'  
-        case.aero_result_filename_2     = aero_results_template_2.format(case.tag)        # 'surface_forces_{}.dat'
-        case.aero_result_filename_3     = aero_results_template_3.format(case.tag)        # 'strip_forces_{}.dat'          
-        case.aero_result_filename_4     = aero_results_template_4.format(case.tag)        # 'body_axis_derivatives_{}.dat'            
-        case.eigen_result_filename_1    = dynamic_results_template_1.format(case.tag)     # 'eigen_mode_{}.dat'
-        case.eigen_result_filename_2    = dynamic_results_template_2.format(case.tag)     # 'system_matrix_{}.dat'
-    
-    # write the input files
-    with redirect.folder(run_folder,force=False):
-        write_geometry(self,run_script_path)
-        write_mass_file(self,run_conditions)
-        write_run_cases(self,trim_aircraft)
-        write_input_deck(self, trim_aircraft,control_surfaces)
-
-        # RUN AVL!
-        results_avl = run_analysis(self,print_output)
-
-    # translate results
-    results = translate_results_to_conditions(cases,results_avl)
-
-    if not self.settings.keep_files:
-        rmtree( run_folder )
-        
-    return results    

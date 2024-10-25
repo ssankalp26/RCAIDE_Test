@@ -73,7 +73,7 @@ class Run_Case(Data):
 
         self.stability_and_control.control_surface_names     = None
         self.stability_and_control.control_surface_functions = None
-        self.stability_and_control.number_control_surfaces   = 0
+        self.stability_and_control.number_of_control_surfaces   = 0
         self.conditions.freestream      = free
         self.conditions.aerodynamics    = aero
 

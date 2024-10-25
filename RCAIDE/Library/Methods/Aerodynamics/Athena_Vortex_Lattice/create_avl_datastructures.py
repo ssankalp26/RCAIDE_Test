@@ -7,6 +7,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE imports
+import RCAIDE
 from RCAIDE.Framework.Core import  Data ,  Units 
 from RCAIDE.Library.Components.Wings.Control_Surfaces                                      import Aileron , Elevator , Slat , Flap , Rudder 
 from RCAIDE.Library.Methods.Aerodynamics.Athena_Vortex_Lattice.write_avl_airfoil_file      import write_avl_airfoil_file  
@@ -119,39 +120,44 @@ def populate_wing_sections(avl_wing,rcaide_wing):
     avl_wing.semispan    = semispan   
     root_chord           = rcaide_wing.chords.root
     segments             = rcaide_wing.Segments
-    n_segments           = len(segments.keys()) 
+    segment_names        = list(segments.keys())
+    n_segments           = len(segment_names) 
     origin               = rcaide_wing.origin  
         
-    if len(rcaide_wing.Segments.keys())>0: 
-        for i_segs in range(n_segments):
+    if n_segments>0: 
+        for i_segs in range(n_segments): 
+            current_seg =  segment_names[i_segs]
             if (i_segs == n_segments-1):
                 sweep = 0                                 
             else: # This converts all sweeps defined by the quarter chord to leading edge sweep since AVL needs the start of each wing section
-                # from the leading edge coordinate and not the quarter chord coordinate
-                if segments[i_segs].sweeps.leading_edge is not None: 
+                # from the leading edge coordinate and not the quarter chord coordinate 
+                next_seg    =  segment_names[i_segs+1]
+                
+                if segments[current_seg].sweeps.leading_edge is not None: 
                     # If leading edge sweep is defined 
-                    sweep       = segments[i_segs].sweeps.leading_edge  
+                    sweep       = segments[current_seg].sweeps.leading_edge  
                 else:   
                     # If quarter chord sweep is defined, convert it to leading edge sweep
-                    sweep_quarter_chord = segments[i_segs].sweeps.quarter_chord 
+                    sweep_quarter_chord = segments[current_seg].sweeps.quarter_chord 
                     chord_fraction      = 0.25                          
-                    segment_root_chord  = root_chord*segments[i_segs].root_chord_percent
-                    segment_tip_chord   = root_chord*segments[i_segs+1].root_chord_percent
-                    segment_span        = semispan*(segments[i_segs+1].percent_span_location - segments[i_segs].percent_span_location )
+                    segment_root_chord  = root_chord*segments[current_seg].root_chord_percent
+                    segment_tip_chord   = root_chord*segments[next_seg].root_chord_percent
+                    segment_span        = semispan*(segments[next_seg].percent_span_location - segments[current_seg].percent_span_location )
                     sweep               = np.arctan(((segment_root_chord*chord_fraction) + (np.tan(sweep_quarter_chord )*segment_span - chord_fraction*segment_tip_chord)) /segment_span) 
-            dihedral       = segments[i_segs].dihedral_outboard   
+            dihedral       = segments[current_seg].dihedral_outboard   
     
             # append section 
             section        = Section() 
-            section.tag    = segments[i_segs].tag
-            section.chord  = root_chord*segments[i_segs].root_chord_percent 
-            section.twist  = segments[i_segs].twist/Units.degrees    
+            section.tag    = segments[current_seg].tag
+            section.chord  = root_chord*segments[current_seg].root_chord_percent 
+            section.twist  = segments[current_seg].twist/Units.degrees    
             section.origin = origin # first origin in wing root, overwritten by section origin 
-            if segments[i_segs].Airfoil:
-                if segments[i_segs].Airfoil.airfoil.coordinate_file is not None:
-                    section.airfoil_coord_file   = write_avl_airfoil_file(segments[i_segs].Airfoil.airfoil.coordinate_file)
-                elif segments[i_segs].Airfoil.airfoil.naca_airfoil is not None:
-                    section.naca_airfoil         = segments[i_segs].Airfoil.airfoil.naca_airfoil     
+            if len(segments[current_seg].Airfoil) != 0: 
+                airfoil_tag = list(segments[current_seg].Airfoil.keys())[0]  
+                if type(segments[current_seg].Airfoil[airfoil_tag]) == RCAIDE.Library.Components.Airfoils.NACA_4_Series_Airfoil:
+                    section.naca_airfoil         = segments[current_seg].Airfoil[airfoil_tag].NACA_4_Series_code
+                else:
+                    section.airfoil_coord_file   = write_avl_airfoil_file(segments[current_seg].Airfoil[airfoil_tag].coordinate_file)
                     
             # append section to wing
             avl_wing.append_section(section)   
@@ -161,21 +167,21 @@ def populate_wing_sections(avl_wing,rcaide_wing):
             else:
                 # condition for the presence of control surfaces in segment 
                 if getattr(rcaide_wing,'control_surfaces',False):   
-                    root_chord_percent = segments[i_segs].root_chord_percent
-                    tip_chord_percent  = segments[i_segs+1].root_chord_percent
-                    tip_percent_span   = segments[i_segs+1].percent_span_location
-                    root_percent_span  = segments[i_segs].percent_span_location
-                    root_twist         = segments[i_segs].twist
-                    tip_twist          = segments[i_segs+1].twist
-                    tip_airfoil        = segments[i_segs+1].Airfoil 
-                    seg_tag            = segments[i_segs+1].tag 
+                    root_chord_percent = segments[current_seg].root_chord_percent
+                    tip_chord_percent  = segments[next_seg].root_chord_percent
+                    tip_percent_span   = segments[next_seg].percent_span_location
+                    root_percent_span  = segments[current_seg].percent_span_location
+                    root_twist         = segments[current_seg].twist
+                    tip_twist          = segments[next_seg].twist             
+                    tip_airfoil        = segments[next_seg].Airfoil 
+                    seg_tag            = segments[next_seg].tag 
                     
                     # append control surfaces
                     append_avl_wing_control_surfaces(rcaide_wing,avl_wing,semispan,root_chord_percent,tip_chord_percent,tip_percent_span,
                                                      root_percent_span,root_twist,tip_twist,tip_airfoil,seg_tag,dihedral,origin,sweep) 
     
             # update origin for next segment 
-            segment_percent_span =    segments[i_segs+1].percent_span_location - segments[i_segs].percent_span_location     
+            segment_percent_span =    segments[next_seg].percent_span_location - segments[current_seg].percent_span_location     
             if avl_wing.vertical:
                 inverted_wing = -np.sign(abs(dihedral) - np.pi/2)
                 if inverted_wing  == 0:
@@ -214,11 +220,8 @@ def populate_wing_sections(avl_wing,rcaide_wing):
         root_section.chord    = rcaide_wing.chords.root 
         root_section.twist    = rcaide_wing.twists.root/Units.degrees
         
-        # append control surfaces
-        if rcaide_wing.Airfoil:
-            tip_airfoil  = rcaide_wing.Airfoil.airfoil.coordinate_file     
-        else:
-            tip_airfoil = None
+        # append control surfaces 
+        tip_airfoil = rcaide_wing.Airfoil 
         seg_tag            = 'section'   
         append_avl_wing_control_surfaces(rcaide_wing,avl_wing,semispan,1.0,rcaide_wing.taper,1.0,
                                          0.0,rcaide_wing.twists.root,rcaide_wing.twists.tip,tip_airfoil,seg_tag,dihedral,origin,sweep)  
@@ -236,16 +239,18 @@ def populate_wing_sections(avl_wing,rcaide_wing):
             tip_section.origin    = [[origin[0][0]+semispan*np.tan(sweep), origin[0][1]+semispan,origin[0][2]+semispan*np.tan(dihedral)]]
 
         # assign wing airfoil
-        if rcaide_wing.Airfoil:
-            root_section.airfoil_coord_file  = rcaide_wing.Airfoil.airfoil.coordinate_file          
-            tip_section.airfoil_coord_file   = rcaide_wing.Airfoil.airfoil.coordinate_file     
+        if len( rcaide_wing.Airfoil) !=  0:
+            airfoil_tag  =  list(rcaide_wing.Airfoil.keys())[0] 
+            root_section.airfoil_coord_file  = rcaide_wing.Airfoil[airfoil_tag].coordinate_file          
+            tip_section.airfoil_coord_file   = rcaide_wing.Airfoil[airfoil_tag].coordinate_file     
 
         avl_wing.append_section(root_section)
         avl_wing.append_section(tip_section)
         
     return avl_wing
 
-def append_avl_wing_control_surfaces(rcaide_wing,avl_wing,semispan,root_chord_percent,tip_chord_percent,tip_percent_span,root_percent_span,root_twist,tip_twist,tip_airfoil,seg_tag,dihedral,origin,sweep):
+def append_avl_wing_control_surfaces(rcaide_wing,avl_wing,semispan,root_chord_percent,tip_chord_percent,tip_percent_span,
+                                     root_percent_span,root_twist,tip_twist,tip_airfoil,seg_tag,dihedral,origin,sweep):
 
     """ Converts control surfaces on a rcaide wing to sections in avl wing
 
@@ -329,8 +334,7 @@ def append_avl_wing_control_surfaces(rcaide_wing,avl_wing,semispan,root_chord_pe
 
         # this loop appends all the control surfaces within a particular wing section
         for index  , ctrl_surf in enumerate(rcaide_wing.control_surfaces):
-            if  (semispan*ctrl_surf.span_fraction_start == ordered_section_spans[section_count]) or \
-                                        (ordered_section_spans[section_count] == semispan*ctrl_surf.span_fraction_end):
+            if  (semispan*ctrl_surf.span_fraction_start == ordered_section_spans[section_count]) or (ordered_section_spans[section_count] == semispan*ctrl_surf.span_fraction_end):
                 c                     = Control_Surface()
                 c.tag                 = ctrl_surf.tag                # name of control surface   
                 c.sign_duplicate      = '+1'                         # this float indicates control surface deflection symmetry
@@ -361,8 +365,7 @@ def append_avl_wing_control_surfaces(rcaide_wing,avl_wing,semispan,root_chord_pe
                     raise AttributeError("Define control surface function as 'slat', 'flap', 'elevator' , 'aileron' or 'rudder'")
                 section.append_control_surface(c) 
 
-            elif  (semispan*ctrl_surf.span_fraction_start < ordered_section_spans[section_count]) and \
-                                          (ordered_section_spans[section_count] < semispan*ctrl_surf.span_fraction_end):
+            elif  (semispan*ctrl_surf.span_fraction_start < ordered_section_spans[section_count]) and (ordered_section_spans[section_count] < semispan*ctrl_surf.span_fraction_end):
                 c                     = Control_Surface()
                 c.tag                 = ctrl_surf.tag                # name of control surface   
                 c.sign_duplicate      = '+1'                         # this float indicates control surface deflection symmetry
@@ -393,11 +396,12 @@ def append_avl_wing_control_surfaces(rcaide_wing,avl_wing,semispan,root_chord_pe
                     raise AttributeError("Define control surface function as 'slat', 'flap', 'elevator' , 'aileron' or 'rudder'")
                 section.append_control_surface(c)                                                  
 
-        if tip_airfoil:
-            if tip_airfoil.airfoil.coordinate_file is not None:
-                section.airfoil_coord_file   = write_avl_airfoil_file(tip_airfoil.airfoil.coordinate_file)
-            elif tip_airfoil.airfoil.naca_airfoil is not None:
-                section.naca_airfoil         = tip_airfoil.airfoil.naca_airfoil
+        if len(tip_airfoil) != 0: 
+            airfoil_tag  = list(tip_airfoil.keys())[0]  
+            if type(tip_airfoil[airfoil_tag]) == RCAIDE.Library.Components.Airfoils.NACA_4_Series_Airfoil:
+                section.naca_airfoil         = tip_airfoil[airfoil_tag].NACA_4_Series_code 
+            else:
+                section.airfoil_coord_file   = write_avl_airfoil_file(tip_airfoil[airfoil_tag].coordinate_file) 
 
         avl_wing.append_section(section)  
                         
