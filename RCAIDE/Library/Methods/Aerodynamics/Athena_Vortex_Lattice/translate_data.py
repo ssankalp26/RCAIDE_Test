@@ -46,14 +46,17 @@ def translate_conditions_to_cases(avl ,conditions):
         case                                                  = Run_Case()
         case.tag                                              = avl.settings.filenames.case_template.format(avl.current_status.batch_index,i+1)
         case.mass                                             = conditions.weights.total_mass
-        case.conditions.freestream.mach                       = conditions.freestream.mach_number
-        case.conditions.freestream.density                    = conditions.freestream.density
-        case.conditions.freestream.gravitational_acceleration = conditions.freestream.gravity      
-        case.conditions.aerodynamics.angles.alpha             = conditions.aerodynamics.angles.alpha[i]/Units.deg
-        case.conditions.aerodynamics.angles.beta              = conditions.aerodynamics.angles.beta  
-        case.conditions.aerodynamics.coefficients.lift        = conditions.aerodynamics.coefficients.lift
-        case.conditions.static_stability.coefficients.roll    = conditions.static_stability.coefficients.roll
-        case.conditions.static_stability.coefficients.pitch   = conditions.static_stability.coefficients.pitch
+        case.conditions.freestream.mach                       = conditions.freestream.mach_number[i, 0]
+        case.conditions.freestream.density                    = conditions.freestream.density[i, 0]
+        case.conditions.freestream.gravitational_acceleration = conditions.freestream.gravity[i, 0]      
+        case.conditions.aerodynamics.angles.alpha             = conditions.aerodynamics.angles.alpha[i, 0]/Units.deg
+        case.conditions.aerodynamics.angles.beta              = conditions.aerodynamics.angles.beta[i, 0] 
+        if conditions.aerodynamics.coefficients.lift.total == None: 
+            case.conditions.aerodynamics.coefficients.lift.total = None
+        else:
+            case.conditions.aerodynamics.coefficients.lift.total= conditions.aerodynamics.coefficients.lift.total[i, 0]  
+        case.conditions.static_stability.coefficients.roll    = conditions.static_stability.coefficients.roll[i, 0] 
+        case.conditions.static_stability.coefficients.pitch   = conditions.static_stability.coefficients.pitch[i, 0] 
         
         # determine the number of wings 
         n_wings = 0 
@@ -68,7 +71,7 @@ def translate_conditions_to_cases(avl ,conditions):
     
     return cases
 
-def translate_results_to_conditions(cases,results):
+def translate_results_to_conditions(cases,res,results):
     """ Takes avl results structure containing the results of each run case stored
         each in its own Data() object. Translates into the Conditions() data structure.
 
@@ -91,12 +94,9 @@ def translate_results_to_conditions(cases,results):
     num_wings = cases[0].num_wings 
     n_sw      = cases[0].n_sw
     dim       = len(cases)
-        
-    # set up aerodynamic Conditions object
-    res             = Results()
-    res.expand_rows(dim,override=False)
-     
-    # aero results 1: total surface forces and coefficeints 
+         
+    # aero results 1: total surface forces and coefficeints
+    res.aerodynamics.coefficients.lift.total       = np.zeros((dim,1))
     res.aerodynamics.wing_areas                    = np.zeros((dim,num_wings)) 
     res.aerodynamics.wing_CLs                      = np.zeros_like(res.aerodynamics.wing_areas) 
     res.aerodynamics.wing_CDs                      = np.zeros_like(res.aerodynamics.wing_areas) 
@@ -132,7 +132,7 @@ def translate_results_to_conditions(cases,results):
         res.static_stability.coefficients.roll[i][0]                        = case_res.aerodynamics.roll_moment_coefficient
         res.static_stability.coefficients.pitch[i][0]                       = case_res.aerodynamics.pitch_moment_coefficient
         res.static_stability.coefficients.yaw[i][0]                         = case_res.aerodynamics.yaw_moment_coefficient
-        res.static_stability.forces.lift[i][0]                              = case_res.aerodynamics.total_lift_coefficient
+        res.aerodynamics.coefficients.lift.total[i][0]                      = case_res.aerodynamics.total_lift_coefficient
         res.aerodynamics.coefficients.drag.induced.total[i][0]              = case_res.aerodynamics.induced_drag_coefficient 
         res.aerodynamics.coefficients.drag.induced.efficiency_factor[i][0]  = case_res.aerodynamics.oswald_efficiency 
         res.aerodynamics.oswald_efficiency[i][0]                            = case_res.aerodynamics.oswald_efficiency
@@ -208,4 +208,4 @@ def translate_results_to_conditions(cases,results):
         
         res.static_stability.control_surfaces_cases[tag]    = case_res.stability.control_surfaces
         
-    return res
+    return  

@@ -5,16 +5,14 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE imports
-import RCAIDE
-from RCAIDE.Framework.Core                                         import Units, Data, redirect  
-from RCAIDE.Framework.Mission.Common                               import Results  
-from RCAIDE.Library.Methods.Aerodynamics.Athena_Vortex_Lattice     import run_AVL_analysis  
+import RCAIDE 
+from RCAIDE.Framework.Mission.Common                                             import Results  
+from RCAIDE.Library.Methods.Aerodynamics.Athena_Vortex_Lattice.run_AVL_analysis  import run_AVL_analysis  
  
 # Package imports 
 import os
 import numpy as np
-from shutil import rmtree   
-import sys  
+from shutil import rmtree    
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  train_AVL_surrogates
@@ -37,8 +35,7 @@ def train_AVL_surrogates(aerodynamics):
  
     run_folder             = os.path.abspath(aerodynamics.settings.filenames.run_folder)
     vehicle                = aerodynamics.vehicle
-    training               = aerodynamics.training 
-    trim_aircraft          = aerodynamics.settings.trim_aircraft  
+    training               = aerodynamics.training  
     AoA                    = training.angle_of_attack
     Mach                   = training.Mach
     side_slip_angle        = aerodynamics.settings.side_slip_angle
@@ -48,12 +45,15 @@ def train_AVL_surrogates(aerodynamics):
     atmosphere             = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
     atmo_data              = atmosphere.compute_values(altitude = 0.0)         
     
-    len_AoA  =  len(AoA)
-    len_Mach =  len(Mach)
+    len_AoA  = len(AoA)
+    len_Mach = len(Mach)
     CM       = np.zeros((len_AoA,len_Mach))
+    CL       = np.zeros_like(CM)
+    CD       = np.zeros_like(CM)
+    e        = np.zeros_like(CM)
     Cm_alpha = np.zeros_like(CM)
     Cn_beta  = np.zeros_like(CM)
-    NP       = np.zeros_like(CM)
+    NP       = np.zeros_like(CM)  
 
     # remove old files in run directory  
     if os.path.exists('avl_files'):
@@ -63,27 +63,31 @@ def train_AVL_surrogates(aerodynamics):
     for i,_ in enumerate(Mach):
         # Set training conditions
         run_conditions = Results()
-        run_conditions.freestream.density                  = atmo_data.density[0,0] 
-        run_conditions.freestream.gravity                  = 9.81            
-        run_conditions.freestream.speed_of_sound           = atmo_data.speed_of_sound[0,0]  
-        run_conditions.freestream.velocity                 = Mach[i] * run_conditions.freestream.speed_of_sound
-        run_conditions.freestream.mach_number              = Mach[i] 
-        run_conditions.aerodynamics.angles.beta            = side_slip_angle
-        run_conditions.aerodynamics.angles.alpha           = AoA 
-        run_conditions.static_stability.coefficients.roll  = roll_rate_coefficient
-        run_conditions.aerodynamics.coefficients.lift      = lift_coefficient
-        run_conditions.static_stability.coefficients.pitch = pitch_rate_coefficient
+        run_conditions.expand_rows(len_AoA)
+        run_conditions.aerodynamics.angles.alpha           = np.array([AoA]).T  
+        run_conditions.freestream.density                  = np.ones_like(run_conditions.aerodynamics.angles.alpha)*atmo_data.density 
+        run_conditions.freestream.gravity                  = np.ones_like(run_conditions.aerodynamics.angles.alpha)*9.81          
+        run_conditions.freestream.speed_of_sound           = np.ones_like(run_conditions.aerodynamics.angles.alpha)*atmo_data.speed_of_sound[0,0]  
+        run_conditions.freestream.velocity                 = np.ones_like(run_conditions.aerodynamics.angles.alpha)*Mach[i] * run_conditions.freestream.speed_of_sound 
+        run_conditions.freestream.mach_number              = np.ones_like(run_conditions.aerodynamics.angles.alpha)*Mach[i]
+        run_conditions.aerodynamics.angles.beta            = np.ones_like(run_conditions.aerodynamics.angles.alpha)*side_slip_angle 
+        run_conditions.static_stability.coefficients.roll  = np.ones_like(run_conditions.aerodynamics.angles.alpha)*roll_rate_coefficient   
+        if lift_coefficient == None: 
+            run_conditions.aerodynamics.coefficients.lift.total= lift_coefficient
+        else:
+            run_conditions.aerodynamics.coefficients.lift.total= np.array([lift_coefficient]).T  
+        run_conditions.static_stability.coefficients.pitch = np.ones_like(run_conditions.aerodynamics.angles.alpha)*pitch_rate_coefficient 
 
         # Run Analysis at AoA[i] and Mach[i]
-        results =  run_AVL_analysis(aerodynamics, run_conditions, trim_aircraft)
+        run_AVL_analysis(aerodynamics,run_conditions)
  
-        CL[:,i]       = results.aerodynamics.coefficients.lift[:,0]
-        CD[:,i]       = results.aerodynamics.drag_breakdown.induced.total[:,0]      
-        e [:,i]       = results.aerodynamics.drag_breakdown.induced.efficiency_factor[:,0]   
-        CM[:,i]       = results.aerodynamics.Cmtot[:,0]
-        Cm_alpha[:,i] = results.stability.static.Cm_alpha[:,0]
-        Cn_beta[:,i]  = results.stability.static.Cn_beta[:,0]
-        NP[:,i]       = results.stability.static.neutral_point[:,0]
+        CL[:,i]       = run_conditions.aerodynamics.coefficients.lift.total[:,0]
+        CD[:,i]       = run_conditions.aerodynamics.coefficients.drag.induced.total[:,0]      
+        e [:,i]       = run_conditions.aerodynamics.coefficients.drag.induced.efficiency_factor[:,0]   
+        CM[:,i]       = run_conditions.static_stability.coefficients.pitch[:,0]
+        Cm_alpha[:,i] = run_conditions.static_stability.derivatives.CM_alpha[:,0]
+        Cn_beta[:,i]  = run_conditions.static_stability.derivatives.CN_beta[:,0]
+        NP[:,i]       = run_conditions.static_stability.neutral_point[:,0]     
 
     if aerodynamics.training_file:
         # load data 
@@ -121,7 +125,7 @@ def train_AVL_surrogates(aerodynamics):
 
     # Store training data
     # Save the data for regression
-    training_data = np.zeros((4,len_AoA,len_Mach))
+    training_data = np.zeros((7,len_AoA,len_Mach))
     training_data[0,:,:] = CL 
     training_data[1,:,:] = CD 
     training_data[2,:,:] = e  

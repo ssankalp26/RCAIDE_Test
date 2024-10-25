@@ -34,7 +34,7 @@ def post_stall_coefficients(state,settings,geometry):
       section.angle_attack_max_prestall_lift        [radians]
       pre_stall_maximum_lift_drag_coefficient       [Unitless]
       pre_stall_maximum_drag_coefficient_angle      [Unitless]
-    state.conditions.aerodynamics.angles.alpha   [radians]
+    state.conditions.aerodynamics.angle_of_attack   [radians]
       
 
     Outputs:
@@ -54,7 +54,7 @@ def post_stall_coefficients(state,settings,geometry):
     ACL1   = wing.section.angle_attack_max_prestall_lift 
     CD1max = wing.pre_stall_maximum_lift_drag_coefficient
     ACD1   = wing.pre_stall_maximum_drag_coefficient_angle
-    alpha  = state.conditions.aerodynamics.angles.alpha
+    alpha  = state.conditions.aerodynamics.angle_of_attack
     
     if wing.vertical == True:
         alpha = 0. * np.ones_like(alpha)    

@@ -27,7 +27,7 @@ def pre_stall_coefficients(state,settings,geometry):
       Wind Turbines and Wind Tunnels" by D. A. Spera
 
     Inputs:
-    state.conditions.aerodynamics.angles.alpha
+    state.conditions.aerodynamics.angle_of_attack
     settings.section_zero_lift_angle_of_attack
     geometry.
       section.
@@ -49,7 +49,7 @@ def pre_stall_coefficients(state,settings,geometry):
     
     # unpack inputs
     wing   = geometry
-    alpha  = state.conditions.aerodynamics.angles.alpha * 1.0
+    alpha  = state.conditions.aerodynamics.angle_of_attack * 1.0
     A0     = settings.section_zero_lift_angle_of_attack
     ACL1   = wing.section.angle_attack_max_prestall_lift 
     ACD1   = wing.pre_stall_maximum_drag_coefficient_angle

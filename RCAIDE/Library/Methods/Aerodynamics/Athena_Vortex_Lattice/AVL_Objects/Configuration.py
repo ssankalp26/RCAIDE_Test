@@ -52,7 +52,7 @@ class Configuration(Data):
         Properties Used:
             N/A
         """ 		
-        self.tag = 'configuration'
+        self.tag                          = 'configuration'
         self.parasite_drag                = 0.0
 
         self.reference_values             = Data()     
@@ -72,7 +72,6 @@ class Configuration(Data):
         self.mass_properties.inertial.Izx = 0.0        # [kg.m^2]
 
         self.symmetry_settings            = Data()
-        self.symmetry_settings.Iysym      = 0	# Assumed y-symmetry of solution 
-                            # (1: symmetric, -1: antisymmetric, 0: no symmetry assumed)
+        self.symmetry_settings.Iysym      = 0	# Assumed y-symmetry of solution  # (1: symmetric, -1: antisymmetric, 0: no symmetry assumed)
         self.symmetry_settings.Izsym      = 0	# Assumed z-symmetry of solution
         self.symmetry_settings.Zsym       = 0.0	# z-coordinate of plane of z-symmetry

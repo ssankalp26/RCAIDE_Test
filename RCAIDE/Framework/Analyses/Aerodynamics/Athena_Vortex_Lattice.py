@@ -65,6 +65,20 @@ class Athena_Vortex_Lattice(Aerodynamics):
                    
         # correction factors           
         settings                                                     = self.settings 
+        settings.fuselage_lift_correction                            = 1.14
+        settings.trim_drag_correction_factor                         = 1.0
+        settings.wing_parasite_drag_form_factor                      = 1.1
+        settings.fuselage_parasite_drag_form_factor                  = 2.3
+        settings.maximum_lift_coefficient_factor                     = 1.0        
+        settings.lift_to_drag_adjustment                             = 0.0   
+        settings.viscous_lift_dependent_drag_factor                  = 0.38
+        settings.drag_coefficient_increment                          = 0.0
+        settings.spoiler_drag_increment                              = 0.0
+        settings.maximum_lift_coefficient                            = np.inf  
+        settings.recalculate_total_wetted_area                       = False  
+        settings.oswald_efficiency_factor                            = None
+        settings.span_efficiency                                     = None
+        
         settings.run_cases                                           = Run_Case.Container()
         
         settings.flow_symmetry                                       = Data()
@@ -72,8 +86,7 @@ class Athena_Vortex_Lattice(Aerodynamics):
         settings.flow_symmetry.xy_parallel                           = 0    # Symmetry across the z=z_symmetry_plane plane
         settings.flow_symmetry.z_symmetry_plane                      = 0.0
          
-        settings.number_of_control_surfaces                          = 0
-        
+        settings.number_of_control_surfaces                          = 0 
         settings.filenames                                           = Data()
         settings.filenames.avl_bin_name                              = 'avl' # to call avl from command line. If avl is not on the system path, include absolute path to the avl binary i.e. '/your/path/to/avl'
         settings.filenames.run_folder                                = 'avl_files'  
@@ -89,9 +102,7 @@ class Athena_Vortex_Lattice(Aerodynamics):
         settings.filenames.dynamic_output_template_2                 = 'system_matrix_{}.txt'
         settings.filenames.case_template                             = 'case_{0:04d}_{1:04d}'
         settings.filenames.log_filename                              = 'avl_log.txt'
-        settings.filenames.err_filename                              = 'avl_err.txt' 
-        #settings.filenames.log_filename                             = sys.stdout
-        #settings.filenames.err_filename                             = sys.stderr           
+        settings.filenames.err_filename                              = 'avl_err.txt'        
         settings.number_of_spanwise_vortices                        = 25
         settings.number_of_chordwise_vortices                       = 10
         settings.use_surrogate                                      = True 

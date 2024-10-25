@@ -46,7 +46,7 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
     # unpack unit conversions
     if np.count_nonzero(aircraft.mass_properties.moments_of_inertia.tensor) > 0:
             
-        conditions =  state.conditions 
+        conditions = state.conditions 
         g          = conditions.freestream.gravity  
         rho        = conditions.freestream.density
         u0         = conditions.freestream.velocity

@@ -23,11 +23,12 @@ import sys
 import time
 import subprocess
 import os
+from shutil import rmtree   
 
 # ----------------------------------------------------------------------------------------------------------------------
 # run_analysis
 # ---------------------------------------------------------------------------------------------------------------------- 
-def run_AVL_analysis(aerodynamics,run_conditions, trim_aircraft ):
+def run_AVL_analysis(aerodynamics,run_conditions):
     """Process vehicle to setup avl geometry, condititons, and configurations.
 
     Assumptions:
@@ -58,6 +59,7 @@ def run_AVL_analysis(aerodynamics,run_conditions, trim_aircraft ):
     """           
     
     # unpack
+    trim_aircraft                    = aerodynamics.settings.trim_aircraft
     run_folder                       = os.path.abspath(aerodynamics.settings.filenames.run_folder)
     run_script_path                  = run_folder.rstrip('avl_files').rstrip('/')   
     aero_results_template_1          = aerodynamics.settings.filenames.aero_output_template_1       # 'stability_axis_derivatives_{}.dat' 
@@ -131,16 +133,16 @@ def run_AVL_analysis(aerodynamics,run_conditions, trim_aircraft ):
         write_input_deck(aerodynamics, trim_aircraft,control_surfaces)
 
         # RUN AVL! 
-        exit_status =  call_avl(aerodynamics,print_output)
+        exit_status = call_avl(aerodynamics,print_output)
         results_avl = read_results(aerodynamics)
         
     # translate results
-    results = translate_results_to_conditions(cases,results_avl)
+    translate_results_to_conditions(cases,run_conditions,results_avl) 
 
     if not aerodynamics.settings.keep_files:
         rmtree( run_folder )
         
-    return results 
+    return 
  
 def call_avl(avl_object,print_output):
     """ This function calls the AVL executable and executes analyses

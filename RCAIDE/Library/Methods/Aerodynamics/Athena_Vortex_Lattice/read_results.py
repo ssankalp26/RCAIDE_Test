@@ -36,8 +36,7 @@ def read_results(avl_object):
     """    
     # unpack
     aircraft = avl_object.vehicle
-    results  = Data()
-    case_idx = 0  
+    results  = Data() 
     for case in avl_object.current_status.cases:
         num_ctrl =  case.stability_and_control.number_of_control_surfaces
         # open newly written result files and read in aerodynamic properties 

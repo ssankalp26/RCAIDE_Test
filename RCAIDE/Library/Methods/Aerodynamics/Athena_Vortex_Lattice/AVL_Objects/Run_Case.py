@@ -52,37 +52,41 @@ class Run_Case(Data):
             N/A
         """ 
 
-        self.index                      = 0		 
-        self.tag                        = 'case'
-        self.mass                       = 0.0
+        self.index                                            = 0		 
+        self.tag                                              = 'case'
+        self.mass                                             = 0.0
+                       
+        self.conditions                                       = Data()
+        self.stability_and_control                            = Data()  
+        self.stability_and_control.control_surface_names      = None
+        self.stability_and_control.control_surface_functions  = None
+        self.stability_and_control.number_of_control_surfaces = 0
+        
+        self.conditions.freestream                            = Data() 
+        self.conditions.freestream.mach                       = 0.0       
+        self.conditions.freestream.velocity                   = 0.0       
+        self.conditions.freestream.density                    = 1.225    
+        self.conditions.freestream.gravitational_acceleration = 9.81        
+        self.conditions.aerodynamics                          = Data() 
+        self.conditions.aerodynamics.parasite_drag            = 0.0     
+        self.conditions.aerodynamics.angles                   = Data()  
+        self.conditions.aerodynamics.angles.alpha             = None     
+        self.conditions.aerodynamics.angles.beta              = 0.0  
+        self.conditions.aerodynamics.coefficients             = Data()  
+        self.conditions.aerodynamics.coefficients.lift        = Data()  
+        self.conditions.aerodynamics.coefficients.lift.total  = Data()  
+        
+        self.conditions.static_stability                      = Data()  
+        self.conditions.static_stability.coefficients         = Data()  
+        self.conditions.static_stability.coefficients.roll    = 0
+        self.conditions.static_stability.coefficients.pitch   = 0        
 
-        self.conditions                 = Data()
-        self.stability_and_control      = Data()
-        free                            = Data()
-        aero                            = Data()
-
-        free.mach                       = 0.0
-        free.velocity                   = 0.0
-        free.density                    = 1.225
-        free.gravitational_acceleration = 9.81
-
-        aero.parasite_drag              = 0.0
-        aero.angle_of_attack            = None
-        aero.lift_coefficient           = None
-        aero.side_slip_angle            = 0.0
-
-        self.stability_and_control.control_surface_names     = None
-        self.stability_and_control.control_surface_functions = None
-        self.stability_and_control.number_of_control_surfaces   = 0
-        self.conditions.freestream      = free
-        self.conditions.aerodynamics    = aero
-
-        self.aero_result_filename_1     = None
-        self.aero_result_filename_2     = None
-        self.aero_result_filename_3     = None 
-        self.aero_result_filename_4     = None
-        self.eigen_result_filename_1    = None 
-        self.eigen_result_filename_2    = None 
+        self.aero_result_filename_1                           = None
+        self.aero_result_filename_2                           = None
+        self.aero_result_filename_3                           = None 
+        self.aero_result_filename_4                           = None
+        self.eigen_result_filename_1                          = None 
+        self.eigen_result_filename_2                          = None 
         return
  
 class Container(DataOrdered):
