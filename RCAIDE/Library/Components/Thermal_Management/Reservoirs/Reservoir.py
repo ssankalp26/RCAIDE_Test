@@ -39,9 +39,9 @@ class Reservoir(Component):
         self.tag                          = 'coolant_reservoir'
         self.material                     = Polyetherimide()
         self.coolant                      = Glycol_Water()
-        self.length                       = 5.0                                     # [m]
-        self.width                        = 5.0                                     # [m]
-        self.height                       = 5.0                                     # [m]
+        self.length                       = 0.3                                      # [m]
+        self.width                        = 0.3                                      # [m]
+        self.height                       = 0.3                                      # [m]
         self.thickness                    = 5e-3                                     # [m] 
         self.surface_area                 = 2*(self.length*self.width+self.width*
                                                self.height+self.length*self.height)  # [m^2]
@@ -59,9 +59,9 @@ class Reservoir(Component):
 
     def compute_reservior_coolant_temperature(self,state,coolant_line,delta_t,t_idx):
         compute_mixing_temperature(self,state,coolant_line,delta_t,t_idx)
-        compute_reservoir_temperature(self,state,coolant_line,delta_t,t_idx)
+        #compute_reservoir_temperature(self,state,coolant_line,delta_t,t_idx)
         return
     
-    def plot_operating_conditions(self,results, coolant_line,save_filename, save_figure,show_legend,file_type , width, height):
-        plot_reservoir_conditions(self, results, coolant_line,save_filename,save_figure,show_legend,file_type , width, height)
+    def plot_operating_conditions(self,results, coolant_line,save_filename, save_figure,show_legend,file_type,width, height):
+        plot_reservoir_conditions(self, results, coolant_line,save_filename,save_figure,show_legend,file_type,width, height)
         return    

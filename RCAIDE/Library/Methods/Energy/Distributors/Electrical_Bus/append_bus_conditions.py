@@ -64,7 +64,6 @@ def append_bus_segment_conditions(bus,conditions,segment):
         Properties Used:
         None
     """    
-
     bus_conditions             = conditions[bus.tag]
     ones_row                   = segment.state.ones_row
     bus_conditions.power_draw  = 0 * ones_row(1)

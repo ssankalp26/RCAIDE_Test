@@ -6,24 +6,36 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  Compute heat loss to environment 
 # ----------------------------------------------------------------------------------------------------------------------
-def compute_reservoir_temperature(reservoir,state,coolant_line,delta_t,t_idx):
+def compute_reservoir_temperature(reservoir, state, coolant_line, delta_t, t_idx):
     """
-     Computes the resultant temperature of the reservoir at each time step with coolant exchanging heat to the environment
-          
-          Inputs: 
-                 reservoir          (Reservoir Data Structure)
-                 coolant_line       (Coolant Line Data Structure)
-                 delta_t
-                 t_idx 
-             
-          Outputs:
-                 reservoir.coolant.temperature
-                 
-          Assumptions: 
-             N/A
-        
-          Source:
-          None
+    Computes the resultant temperature of the reservoir at each time step with coolant exchanging heat to the environment.
+
+    :param reservoir: Reservoir Data Structure
+        - reservoir.surface_area
+        - reservoir.volume
+        - reservoir.thickness
+        - reservoir.material.conductivity
+        - reservoir.material.emissivity
+        - reservoir.coolant
+    :type reservoir: dict
+    :param state: State Data Structure
+        - state.conditions.freestream.temperature
+        - state.conditions.energy.coolant_line[reservoir.tag].coolant_temperature
+    :type state: dict
+    :param coolant_line: Coolant Line Data Structure
+    :type coolant_line: dict
+    :param delta_t: Time step
+    :type delta_t: float
+    :param t_idx: Time index
+    :type t_idx: int
+    :return: Updated temperature of the reservoir coolant
+    :rtype: float
+
+    :Assumptions: 
+        N/A
+
+    :Source:
+        None
     """  
     
     # Ambient Air Temperature 
@@ -43,9 +55,9 @@ def compute_reservoir_temperature(reservoir,state,coolant_line,delta_t,t_idx):
     rho_coolant                = coolant.compute_density(T_current)
 
     # Heat Transfer properties
-    conductivity               = reservoir.material.conductivity / 10
+    conductivity                = reservoir.material.conductivity
     sigma                       = 5.69e-8   #Stefan Boltzman Constant
-    h                           = 50        #[W/m^2-k]
+    h                           = 1000        #[W/m^2-k]
     emissivity_air              = 0.9
     
 
