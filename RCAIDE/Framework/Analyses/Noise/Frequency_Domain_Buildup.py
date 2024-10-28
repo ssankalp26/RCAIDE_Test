@@ -9,8 +9,7 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------  
 # RCAIDE Imports 
-from RCAIDE.Library.Methods.Noise.Common.decibel_arithmetic                           import SPL_arithmetic 
-from RCAIDE.Library.Methods.Noise.Common.evaluate_noise_surrogate                     import evaluate_noise_surrogate
+from RCAIDE.Library.Methods.Noise.Common.decibel_arithmetic                           import SPL_arithmetic  
 from RCAIDE.Library.Methods.Noise.Common.generate_hemisphere_microphone_locations     import generate_hemisphere_microphone_locations  
 from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.compute_rotor_noise  import compute_rotor_noise 
 from .Noise      import Noise
@@ -113,5 +112,7 @@ class Frequency_Domain_Buildup(Noise):
                                     total_SPL_dBA     = SPL_arithmetic(np.concatenate((total_SPL_dBA[:,None,:],conditions.noise[distributor.tag][propulsor.tag][sub_item.tag].SPL_dBA[:,None,:]),axis =1),sum_axis=1)
                                     total_SPL_spectra = SPL_arithmetic(np.concatenate((total_SPL_spectra[:,None,:,:],conditions.noise[distributor.tag][propulsor.tag][sub_item.tag].SPL_1_3_spectrum[:,None,:,:]),axis =1),sum_axis=1) 
                                     i += 1
-        evaluate_noise_surrogate(total_SPL_dBA,total_SPL_spectra,settings,segment)
+                                    
+        conditions.noise.hemisphere_SPL_dBA              = total_SPL_dBA
+        conditions.noise.hemisphere_SPL_1_3_spectrum_dBA = total_SPL_spectra  
         return

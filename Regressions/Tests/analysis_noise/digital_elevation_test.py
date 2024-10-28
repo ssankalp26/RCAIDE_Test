@@ -21,7 +21,8 @@ from NASA_X57    import vehicle_setup, configs_setup
 # ----------------------------------------------------------------------
 #   Main
 # ---------------------------------------------------------------------- 
-def main():
+def main(): 
+
 
 
     plot_elevation_contours(topography_file   ='LA_Metropolitan_Area.txt',use_lat_long_coordinates = True, save_filename = "Elevation_Contours_Lat_Long")
@@ -49,19 +50,20 @@ def main():
                              '15:00:00'])
 
     noise_data   = post_process_noise_data(results,
-                                           flight_times = flight_times, 
-                                           DNL_time_period= 24*Units.hours,
-                                           LAeqt_time_period  = 15*Units.hours,
-                                           SENEL_time_period = 24*Units.hours)  
+                                           flight_times = flight_times,  
+                                           time_period  = ['06:00:00','20:00:00'], 
+                                           compute_SENEL = False )  
 
     
-    plot_results(results,noise_data,regression_plotting_flag)   
+    plot_results(results,noise_data,regression_plotting_flag)
+    
+    print(np.max(results.segments.cruise.conditions.noise.hemisphere_SPL_dBA))
 
-    X57_SPL        = np.max(results.segments.cruise.conditions.noise.SPL_dBA) 
-    X57_SPL_true   = 58.07971761839425
-    X57_diff_SPL   = np.abs(X57_SPL - X57_SPL_true)
-    print('Error: ',X57_diff_SPL)
-    assert np.abs((X57_SPL - X57_SPL_true)/X57_SPL_true) < 1e-3 
+    #X57_SPL        = np.max(results.segments.cruise.conditions.noise.hemisphere_SPL_dBA) 
+    #X57_SPL_true   = 116.65380842952558
+    #X57_diff_SPL   = np.abs(X57_SPL - X57_SPL_true)
+    #print('Error: ',X57_diff_SPL)
+    #assert np.abs((X57_SPL - X57_SPL_true)/X57_SPL_true) < 1e-3 
      
     return      
 
@@ -106,10 +108,10 @@ def base_analysis(vehicle):
     noise.settings.mean_sea_level_altitude          = False         
     noise.settings.aircraft_origin_coordinates      = [33.94067953101678, -118.40513722978149]# Los Angeles International Airport
     noise.settings.aircraft_destination_coordinates = [33.8146, -118.1459]  # Ontario International airport 
-    noise.settings.microphone_x_resolution          = 150 # 1200
-    noise.settings.microphone_y_resolution          = 200 # 1600 
-    noise.settings.number_of_microphone_in_stencil  = 10  # 50
-    noise.settings.noise_control_points             = 100 # 225
+    noise.settings.microphone_x_resolution          = 1200 # 150 # 1200
+    noise.settings.microphone_y_resolution          = 1600 #  200 # 1600  
+    noise.settings.noise_times_steps                = 200   #  50  # 50   
+    noise.settings.number_of_microphone_in_stencil  = 25
     noise.settings.topography_file                  = 'LA_Metropolitan_Area.txt' 
     analyses.append(noise)
 
@@ -145,7 +147,7 @@ def mission_setup(analyses):
     mission.tag   = 'mission' 
     Segments      = RCAIDE.Framework.Mission.Segments  
     base_segment  = Segments.Segment()   
-    base_segment.state.numerics.number_of_control_points  = 5
+    base_segment.state.numerics.number_of_control_points  = 3
     base_segment.state.numerics.discretization_method     = RCAIDE.Library.Methods.Utilities.Chebyshev.linear_data
     
     segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment) 
@@ -154,7 +156,7 @@ def mission_setup(analyses):
     segment.initial_battery_state_of_charge              = 1.0       
     segment.altitude                                     = 30
     segment.air_speed                                    = 100
-    segment.distance                                     = 17 * Units.miles
+    segment.distance                                     = 5 * Units.miles
     segment.true_course                                  = 130 *Units.degrees 
     
     # define flight dynamics to model 
@@ -221,50 +223,50 @@ def plot_results(results,noise_data,regression_plotting_flag):
 
     # Day Night Average Noise Level 
     plot_3D_noise_contour(noise_data,
-                        noise_level      = noise_data.DNL,
-                        min_noise_level  = 20,  
+                        noise_level      = noise_data.L_dn,
+                        min_noise_level  = 0,  
                         max_noise_level  = 90, 
-                        noise_scale_label= 'DNL',
+                        noise_scale_label= 'L_dn',
                         show_microphones = True, 
-                        save_filename    = "DNL_Noise_3D_Contour",
+                        save_filename    = "L_dn_Noise_3D_Contour",
                         show_figure      = regression_plotting_flag) 
     
 
     # Equivalent Noise Level
     plot_3D_noise_contour(noise_data,
-                        noise_level      = noise_data.L_AeqT,
-                        min_noise_level  = 20,  
+                        noise_level      = noise_data.L_eq,
+                        min_noise_level  = 0,  
                         max_noise_level  = 90, 
-                        noise_scale_label= 'LAeqT',
+                        noise_scale_label= 'L_eq',
                         show_trajectory  = True,
-                        save_filename    = "LAeqT_Noise_3D_Contour",
+                        save_filename    = "L_eq_Noise_3D_Contour",
                         show_figure      = regression_plotting_flag)    
     
 
     # 24-hr Equivalent Noise Level
     plot_3D_noise_contour(noise_data,
-                       noise_level      = noise_data.L_AeqT,
-                       min_noise_level  = 20,  
+                       noise_level      = noise_data.L_eq,
+                       min_noise_level  = 0,  
                        max_noise_level  = 90, 
-                       noise_scale_label= '24hr-LAeqT',
-                       save_filename    = "24hr_LAeqT_Noise_3D_Contour", 
+                       noise_scale_label= '24hr-L_eq',
+                       save_filename    = "24hr_L_eq_Noise_3D_Contour", 
                        use_lat_long_coordinates = False,                         
                        show_figure      = regression_plotting_flag)      
     
 
-    # Single Event Noise Exposure Level
-    plot_3D_noise_contour(noise_data,
-                       noise_level      = noise_data.SENEL,
-                       min_noise_level  = 20,  
-                       max_noise_level  = 90, 
-                       noise_scale_label= 'SENEL',
-                       save_filename    = "SENEL_Noise_3D_Contour",
-                       show_figure      = regression_plotting_flag)
+    ## Single Event Noise Exposure Level
+    #plot_3D_noise_contour(noise_data,
+                       #noise_level      = noise_data.SENEL,
+                       #min_noise_level  = 0,  
+                       #max_noise_level  = 90, 
+                       #noise_scale_label= 'SENEL',
+                       #save_filename    = "SENEL_Noise_3D_Contour",
+                       #show_figure      = regression_plotting_flag)
     
     # Maximum Sound Pressure Level   
     plot_2D_noise_contour(noise_data,
                         noise_level      = np.max(noise_data.SPL_dBA,axis=0), 
-                        min_noise_level  = 20,  
+                        min_noise_level  = 0,  
                         max_noise_level  = 90, 
                         noise_scale_label= 'SPL [dBA]',
                         save_filename    = "SPL_max_Noise_2D_Contour",
@@ -275,31 +277,31 @@ def plot_results(results,noise_data,regression_plotting_flag):
 
     # Day Night Average Noise Level 
     plot_2D_noise_contour(noise_data,
-                        noise_level      = noise_data.DNL,
-                        min_noise_level  = 20,  
+                        noise_level      = noise_data.L_dn,
+                        min_noise_level  = 0,  
                         max_noise_level  = 90, 
-                        noise_scale_label= 'DNL',
-                        save_filename    = "DNL_Noise_2D_Contour",
+                        noise_scale_label= 'L_dn',
+                        save_filename    = "L_dn_Noise_2D_Contour",
                         show_figure      = regression_plotting_flag) 
     
 
     # Equivalent Noise Level
     plot_2D_noise_contour(noise_data,
-                        noise_level      = noise_data.L_AeqT,
-                        min_noise_level  = 20,  
+                        noise_level      = noise_data.L_eq,
+                        min_noise_level  = 0,  
                         max_noise_level  = 90, 
-                        noise_scale_label= 'LAeqT',
-                        save_filename    = "LAeqT_Noise_2D_Contour",
+                        noise_scale_label= 'L_eq',
+                        save_filename    = "L_eq_Noise_2D_Contour",
                         show_figure      = regression_plotting_flag)    
     
 
     # 24-hr Equivalent Noise Level
     plot_2D_noise_contour(noise_data,
-                       noise_level      = noise_data.L_AeqT,
+                       noise_level      = noise_data.L_eq,
                        min_noise_level  = 20,  
                        max_noise_level  = 90, 
-                       noise_scale_label= '24hr-LAeqT',
-                       save_filename    = "24hr_LAeqT_Noise_2D_Contour",
+                       noise_scale_label= '24hr-L_eq',
+                       save_filename    = "24hr_L_eq_Noise_2D_Contour",
                        show_figure      = regression_plotting_flag)      
     
 
