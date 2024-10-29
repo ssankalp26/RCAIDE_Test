@@ -7,8 +7,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE imports 
-from RCAIDE.Framework.Core import Data, Units
-from RCAIDE.Framework.Mission.Common import Results
+from RCAIDE.Framework.Core import Units
 from .AVL_Objects.Run_Case import Run_Case
 
 # package imports 
