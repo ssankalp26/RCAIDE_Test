@@ -10,7 +10,7 @@
 from RCAIDE.Library.Components                                                      import Component 
 from RCAIDE.Library.Attributes.Coolants.Glycol_Water                                import Glycol_Water
 from RCAIDE.Library.Attributes.Materials.Polyetherimide                             import Polyetherimide
-from RCAIDE.Library.Methods.Thermal_Management.Reservoirs.Reservoir_Tank            import compute_mixing_temperature, compute_reservoir_temperature, append_reservoir_conditions, append_reservoir_segment_conditions
+from RCAIDE.Library.Methods.Thermal_Management.Reservoirs.Reservoir_Tank            import compute_mixing_temperature, append_reservoir_conditions, append_reservoir_segment_conditions
 from RCAIDE.Library.Plots.Thermal_Management.plot_reservoir_conditions              import plot_reservoir_conditions
 
 # ----------------------------------------------------------------------
@@ -46,6 +46,7 @@ class Reservoir(Component):
         self.surface_area                 = 2*(self.length*self.width+self.width*
                                                self.height+self.length*self.height)  # [m^2]
         self.volume                       = self.length*self.width*self.height       # [m^3]
+        self.mass_properties.mass         = self.coolant.density*self.volume
 
         return
     
@@ -59,7 +60,6 @@ class Reservoir(Component):
 
     def compute_reservior_coolant_temperature(self,state,coolant_line,delta_t,t_idx):
         compute_mixing_temperature(self,state,coolant_line,delta_t,t_idx)
-        #compute_reservoir_temperature(self,state,coolant_line,delta_t,t_idx)
         return
     
     def plot_operating_conditions(self,results, coolant_line,save_filename, save_figure,show_legend,file_type,width, height):

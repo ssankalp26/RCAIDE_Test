@@ -30,17 +30,25 @@ def initialize_conditions(segment):
     N/A
     """    
     t_nondim   = segment.state.numerics.dimensionless.control_points
+
     if isinstance(segment, RCAIDE.Framework.Mission.Segments.Ground.Battery_Recharge):
         for network in segment.analyses.energy.vehicle.networks:
             time =  0 
             for bus in  network.busses:
-                time           =  max((1-segment.state.initials.conditions.energy[bus.tag].SOC[-1] / bus.charging_c_rate )*Units.hrs  , time) 
-                t_initial     = segment.state.conditions.frames.inertial.time[0,0]
-                t_nondim      = segment.state.numerics.dimensionless.control_points 
-                charging_time = t_nondim * ( time ) + t_initial
+                if not segment.state.initials.keys():
+                    end_of_flight_soc = segment.state.conditions.energy.bus.battery_modules.lithium_ion_nmc.cell.state_of_charge[-1]
+                    # *****************This is a band aid, cant be approved in a PR*******************
+                else:
+                    end_of_flight_soc =  segment.state.initials.conditions.energy[bus.tag].SOC[-1]
+                    
+                time           =  max(((1-end_of_flight_soc) / bus.charging_c_rate )*Units.hrs  , time) 
+                t_initial = segment.state.conditions.frames.inertial.time[0,0]
+                t_nondim  = segment.state.numerics.dimensionless.control_points
+                #segment.state.
+                charging_time      = t_nondim * ( time ) + t_initial
                 segment.state.conditions.frames.inertial.time[:,0] = charging_time[:,0]
     else:
+
         t_initial = segment.state.conditions.frames.inertial.time[0,0]
         t_nondim  = segment.state.numerics.dimensionless.control_points
-        time      = t_nondim * ( segment.time ) + t_initial 
-        segment.state.conditions.frames.inertial.time[:,0] = time[:,0] 
+        time      = t_nondim * ( segment.time ) + t_initial

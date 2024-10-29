@@ -15,58 +15,95 @@ from copy import  deepcopy
 # compute_nmc_cell_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
 def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t): 
-    '''This is an electric cycle model for 18650 lithium-nickel-manganese-cobalt-oxide
-       battery cells. The model uses experimental data performed
-       by the Automotive Industrial Systems Company of Panasonic Group 
+    """
+    Compute the performance of a lithium-nickel-manganese-cobalt-oxide (NMC) battery cell.
 
-       Sources:  
-       Internal Resistance Model:
-       Zou, Y., Hu, X., Ma, H., and Li, S. E., "Combined State of Charge and State of
-       Health estimation over lithium-ion battery cellcycle lifespan for electric 
-       vehicles,"Journal of Power Sources, Vol. 273, 2015, pp. 793-803.
-       doi:10.1016/j.jpowsour.2014.09.146,URLhttp://dx.doi.org/10.1016/j.jpowsour.2014.09.146. 
+    This function models the electrical and thermal behavior of an 18650 NMC battery cell
+    based on experimental data from the Automotive Industrial Systems Company of Panasonic Group.
 
-       Battery Heat Generation Model and  Entropy Model:
-       Jeon, Dong Hyup, and Seung Man Baek. "Thermal modeling of cylindrical lithium ion 
-       battery during discharge cycle." Energy Conversion and Management 52.8-9 (2011): 
-       2973-2981. 
+    Parameters
+    ----------
+    battery : Battery
+        The battery object containing cell properties and configuration.
+    state : MissionState
+        The current state of the mission.
+    bus : ElectricBus
+        The electric bus to which the battery is connected.
+    coolant_lines : list
+        List of coolant lines for thermal management.
+    t_idx : int
+        Current time index in the simulation.
+    delta_t : float
+        Time step size.
 
-       Assumtions:
-       1) All battery modules exhibit the same themal behaviour. 
+    Returns
+    -------
+    tuple
+        A tuple containing:
+        - stored_results_flag (bool): Flag indicating if results were stored.
+        - stored_battery_tag (str): Tag of the battery for which results were stored.
 
-       Inputs:
-         battery.
-               I_bat             (maximum_energy)                      [Joules]
-               cell_mass         (battery cell mass)                   [kilograms]
-               Cp                (battery cell specific heat capacity) [J/(K kg)] 
-               t                 (battery age in days)                 [days] 
-               T_ambient         (ambient temperature)                 [Kelvin]
-               T_current         (pack temperature)                    [Kelvin]
-               T_cell            (battery cell temperature)            [Kelvin]
-               E_max             (max energy)                          [Joules]
-               E_current         (current energy)                      [Joules]
-               Q_prior           (charge throughput)                   [Amp-hrs]
-               R_growth_factor   (internal resistance growth factor)   [unitless]
+    Notes
+    -----
+    The function updates various battery conditions in the `state` object, including:
+    - Current energy
+    - Temperature
+    - Heat energy generated
+    - Load power
+    - Current
+    - Open-circuit voltage
+    - Charge throughput
+    - Internal resistance
+    - State of charge
+    - Depth of discharge
+    - Voltage under load
 
-         inputs.
-               I_bat             (current)                             [amps]
-               P_bat             (power)                               [Watts]
+    The model includes:
+    - Internal resistance calculation
+    - Thermal modeling (heat generation and temperature change)
+    - Electrical performance (voltage and current calculations)
+    - State of charge and depth of discharge updates
 
-       Outputs:
-         battery.
-              current_energy                                           [Joules]
-              temperature                                              [Kelvin]
-              heat_energy_generated                                    [Watts]
-              load_power                                               [Watts]
-              current                                                  [Amps]
-              battery_voltage_open_circuit                             [Volts]
-              charge_throughput                                        [Amp-hrs]
-              internal_resistance                                      [Ohms]
-              battery_state_of_charge                                  [unitless]
-              depth_of_discharge                                       [unitless]
-              battery_voltage_under_load                               [Volts]
+    Arrays accessed from objects:
+    - From bus_conditions:
+        - power_draw
+        - current_draw
+    - From battery_conditions:
+        - energy
+        - voltage_open_circuit
+        - cell.voltage_open_circuit
+        - power
+        - cell.power
+        - internal_resistance
+        - cell.internal_resistance
+        - heat_energy_generated
+        - cell.heat_energy_generated
+        - voltage_under_load
+        - cell.voltage_under_load
+        - current
+        - cell.current
+        - temperature
+        - cell.temperature
+        - cell.state_of_charge
+        - cell.energy
+        - cell.charge_throughput
+        - cell.depth_of_discharge
 
-    '''
+    References
+    ----------
+    .. [1] Zou, Y., Hu, X., Ma, H., and Li, S. E., "Combined State of Charge and State of
+           Health estimation over lithium-ion battery cell cycle lifespan for electric 
+           vehicles," Journal of Power Sources, Vol. 273, 2015, pp. 793-803.
+           doi:10.1016/j.jpowsour.2014.09.146
+    .. [2] Jeon, Dong Hyup, and Seung Man Baek. "Thermal modeling of cylindrical lithium ion 
+           battery during discharge cycle." Energy Conversion and Management 52.8-9 (2011): 
+           2973-2981.
+
+    Assumptions
+    -----------
+    - All battery modules exhibit the same thermal behavior.
+    - The cell temperature is assumed to be the temperature of the entire module.
+    """
 
 
     # Unpack varibles 
@@ -84,8 +121,8 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
     bus_conditions              =  state.conditions.energy[bus.tag]
     bus_config                  =  bus.battery_module_electric_configuration
     P_bus                       = bus_conditions.power_draw
-    V_bus                       = bus.voltage
-    bus_conditions.current_draw = P_bus/V_bus
+    # V_bus                       = bus.voltage
+    # bus_conditions.current_draw = P_bus/V_bus
     I_bus                       = bus_conditions.current_draw
     
     # ---------------------------------------------------------------------------------

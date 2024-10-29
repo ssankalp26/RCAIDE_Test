@@ -120,7 +120,7 @@ class Electric(Network):
                     # append bus outputs to battery
                     bus_conditions                    = state.conditions.energy[bus.tag]
                     bus_conditions.power_draw         = ((avionics_power + payload_power + total_esc_power) - charging_power)/bus.efficiency
-                    bus_conditions.current_draw       = -bus_conditions.power_draw/bus_voltage
+                    bus_conditions.current_draw       = -bus_conditions.power_draw/bus.voltage
 
                 else:       
                     # compute energy consumption of each battery on bus 

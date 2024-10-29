@@ -31,6 +31,5 @@ def initialize_bus_electrical_properties(bus):
         for battery_module in  bus.battery_modules:
             bus.voltage           =  max(battery_module.voltage, bus.voltage)
             bus.nominal_capacity +=  battery_module.nominal_capacity        
-    else: raise Exception("Define the electric configuration of the battery modules")    
     
     return
