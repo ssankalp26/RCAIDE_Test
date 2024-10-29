@@ -124,8 +124,8 @@ def train_model(aerodynamics, Mach):
     Clift_alpha   = np.reshape(Clift_res,(len_Mach,len_AoA)).T 
     Cdrag_alpha   = np.reshape(Cdrag_res,(len_Mach,len_AoA)).T 
     CX_alpha      = np.reshape(CX_res,(len_Mach,len_AoA)).T 
-    CY_alpha      = np.reshape(CY_res,(len_Mach,len_AoA)).T 
-    CZ_alpha      = np.reshape(CZ_res,(len_Mach,len_AoA)).T 
+    CY_alpha      = 0 * np.reshape(CY_res,(len_Mach,len_AoA)).T # ''' Hard coded to zero, bug in VLM'''
+    CZ_alpha      = -np.reshape(CZ_res,(len_Mach,len_AoA)).T 
     CL_alpha      = np.reshape(CL_res,(len_Mach,len_AoA)).T 
     CM_alpha      = np.reshape(CM_res,(len_Mach,len_AoA)).T 
     CN_alpha      = np.reshape(CN_res,(len_Mach,len_AoA)).T  

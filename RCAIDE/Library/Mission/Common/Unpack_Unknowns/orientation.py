@@ -19,7 +19,7 @@ def orientation(segment):
         if  ctrls.body_angle.initial_guess_values !=  None:
             segment.state.conditions.frames.body.inertial_rotations[:,1]  = ctrls.body_angle.initial_guess_values[0][0]
         else:  
-            segment.state.conditions.frames.body.inertial_rotations[:,1] = segment.state.unknowns.body_angle[:,0]
+            segment.state.conditions.frames.body.inertial_rotations[:,1] = segment.state.unknowns.body_angle[:,0] * 0 # SET AT ZERO 
 
     if ctrls.bank_angle.active: 
         if  ctrls.bank_angle.initial_guess_values !=  None:
@@ -29,8 +29,8 @@ def orientation(segment):
     else:
         segment.state.conditions.frames.body.inertial_rotations[:,0] = segment.bank_angle
         
-    #segment.state.conditions.frames.body.inertial_rotations[:,2] =  segment.state.conditions.frames.planet.true_heading[:,0] -  segment.sideslip_angle
-    #segment.state.conditions.frames.body.inertial_rotations[:,2] =  segment.state.conditions.frames.planet.true_heading[:,0] # UNSURE
+    #segment.state.conditions.frames.body.inertial_rotations[:,2] =  segment.state.conditions.frames.planet.true_heading[:,0] -  segment.sideslip_angle # INCORRER
+    segment.state.conditions.frames.body.inertial_rotations[:,2] =  segment.state.conditions.frames.planet.true_heading[:,0] # WORKS
     
     # Velocity Control
     if ctrls.velocity.active:
