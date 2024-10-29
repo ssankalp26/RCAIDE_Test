@@ -118,8 +118,9 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
     # ---------------------------------------------------------------------------------
     # Compute Bus electrical properties 
     # -------------------------------------------------------------------------    
-    bus_conditions              =  state.conditions.energy[bus.tag]
-    bus_config                  =  bus.battery_module_electric_configuration
+    bus_conditions              = state.conditions.energy[bus.tag]
+    bus_config                  = bus.battery_module_electric_configuration
+    E_bus                       = bus_conditions.energy
     P_bus                       = bus_conditions.power_draw
     # V_bus                       = bus.voltage
     # bus_conditions.current_draw = P_bus/V_bus
@@ -221,7 +222,8 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
     V_oc_module[t_idx]     = V_oc_cell[t_idx]*n_series 
     V_ul_module[t_idx]     = V_ul_cell[t_idx]*n_series  
     T_module[t_idx]        = T_cell[t_idx]   # Assume the cell temperature is the temperature of the module
-    P_cell[t_idx]          = P_module[t_idx]/n_total  
+    P_cell[t_idx]          = P_module[t_idx]/n_total 
+    E_module[t_idx]        = E_bus[t_idx]/no_modules   
     E_cell[t_idx]          = E_module[t_idx]/n_total  
 
     # ---------------------------------------------------------------------------------------------------     
