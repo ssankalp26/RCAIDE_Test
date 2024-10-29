@@ -53,7 +53,7 @@ def SENEL_noise_metric(noise_data, flight_times = ['12:00:00'],time_period  = ['
     T                       = t_end - t_start
     number_of_timesteps     = int(T/time_step) 
  
-    TNE = np.zeros((number_of_timesteps,N_gm_x,N_gm_y))* (10**(background_noise()/10))  # cumulative noise exposure 
+    TNE = np.ones((number_of_timesteps,N_gm_x,N_gm_y))* (10**(background_noise()/10))  # cumulative noise exposure 
     for i in range(number_of_flights): 
         # get start time of flight
         t0                      = int((float(flight_times[i].split(':')[0])*60*60 +  float(flight_times[i].split(':')[1])*60 +   float(flight_times[i].split(':')[2]) - 6*Units.hours)/time_step)    

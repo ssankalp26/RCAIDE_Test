@@ -36,7 +36,7 @@ def post_process_noise_data(results,
                             time_period        = ['06:00:00','20:00:00'], 
                             compute_L_dn       = True, 
                             compute_SENEL      = True,    
-                            compute_L_eq     = True,): 
+                            compute_L_eq       = True,): 
     """This translates all noise data into metadata for plotting 
     
     Assumptions:
@@ -148,47 +148,7 @@ def post_process_noise_data(results,
     noise_data.time                  = Time 
     noise_data.aircraft_position     = Aircraft_pos
     
-    # Step 8: Perform noise metric calculations
-    if compute_L_eq or compute_L_dn:
-        DNL_time_period         = ['07:00:00','20:00:00']
-        t_7am                   = float(DNL_time_period[0].split(':')[0])*60*60 + float(DNL_time_period[0].split(':')[1])*60 +  float(DNL_time_period[0].split(':')[2])
-        t_10pm                  = float(DNL_time_period[1].split(':')[0])*60*60 + float(DNL_time_period[1].split(':')[1])*60 +  float(DNL_time_period[1].split(':')[2])            
-        t_start                 = float(time_period[0].split(':')[0])*60*60 + float(time_period[0].split(':')[1])*60 +  float(time_period[0].split(':')[2])
-        t_end                   = float(time_period[1].split(':')[0])*60*60 + float(time_period[1].split(':')[1])*60 +  float(time_period[1].split(':')[2])    
-        SPL                     = np.zeros_like(noise_data.SPL_dBA)
-        SPL[:,:,:]              = noise_data.SPL_dBA      
-        N_gm_y                  = noise_data.microphone_y_resolution   
-        N_gm_x                  = noise_data.microphone_x_resolution    
-        time_step               = noise_data.time[1]-noise_data.time[0] 
-        number_of_flights       = len(flight_times)   
-        p_sq_div_p_ref_sq_L_eq  = np.zeros((N_gm_x,N_gm_y))* (10**(background_noise()/10))
-        p_sq_div_p_ref_sq_L_dn  = np.zeros((N_gm_x,N_gm_y))* (10**(background_noise()/10))
-          
-        for i in range(number_of_flights):   
-            t_flight_during_day  = float(flight_times[i].split(':')[0])*60*60 +  float(flight_times[i].split(':')[1])*60 +  float(flight_times[i].split(':')[2]) + noise_data.time
-            
-            # convert SPL to pressure and multiply by duration 
-            p_sq_ref_flight_sq        = np.nansum(time_step * (10**(SPL/10)), axis=0)  
-            
-            # add to current 
-            p_sq_div_p_ref_sq_L_eq    = np.nansum(np.concatenate((p_sq_ref_flight_sq[:,:,None],p_sq_div_p_ref_sq_L_eq[:,:,None]),axis = 2), axis =2)
-             
-            # create noise penalty 
-            noise_penality          = np.zeros((len(noise_data.time),N_gm_x,N_gm_y))         
-            noise_penality[t_flight_during_day<t_7am]  = 10
-            noise_penality[t_flight_during_day>t_10pm] = 10 
-         
-            # convert SPL to pressure and multiply by duration 
-            p_sq_ref_flight_sq        = np.nansum(time_step * (10**( (noise_penality + SPL)/10)), axis=0)  
-        
-            # add to current 
-            p_sq_div_p_ref_sq_L_dn   = np.nansum(np.concatenate((p_sq_ref_flight_sq[:,:,None],p_sq_div_p_ref_sq_L_dn[:,:,None]),axis = 2), axis =2)
-    
-             
-        noise_data.L_eq      = 10*np.log10((1/(t_end-t_start))*p_sq_div_p_ref_sq_L_eq)
-        noise_data.L_eq_24hr = 10*np.log10((1/(24*Units.hours))*p_sq_div_p_ref_sq_L_eq)   
-        noise_data.L_dn      = 10*np.log10((1/(24*Units.hours))*p_sq_div_p_ref_sq_L_dn)
- 
+    # Step 8: Perform noise metric calculations 
     if compute_SENEL:
         SENEL_noise_metric(noise_data, flight_times,time_period)
     if compute_L_dn or compute_L_eq:

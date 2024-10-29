@@ -38,20 +38,17 @@ def main():
     results  = missions.base_mission.evaluate()   
     
     regression_plotting_flag = False 
-    flight_times = np.array(['06:00:00','06:15:00','06:30:00','06:45:00',
-                             '07:00:00','07:15:00','07:30:00','07:45:00',
-                             '08:00:00','08:15:00','08:30:00','08:45:00',
-                             '09:00:00','09:15:00','09:30:00','09:45:00',
-                             '10:00:00','10:15:00','10:30:00','10:45:00',
-                             '11:00:00','11:15:00','11:30:00','11:45:00',
-                             '12:00:00','12:15:00','12:30:00','12:45:00',
-                             '13:00:00','13:15:00','13:30:00','13:45:00',
-                             '14:00:00','14:15:00','14:30:00','14:45:00',
-                             '15:00:00'])
+    flight_times = np.array(['06:00:00','06:05:00','06:10:00','06:15:00',
+                             '06:20:00','06:25:00','06:30:00','06:35:00',
+                             '06:40:00','06:45:00','06:50:00','06:55:00',
+                             '07:00:00','07:05:00','07:10:00','07:15:00',
+                             '07:20:00','07:25:00','07:30:00','07:35:00',
+                             '07:40:00','07:45:00','07:50:00','07:55:00', 
+                             '08:00:00'])
 
     noise_data   = post_process_noise_data(results,
                                            flight_times = flight_times,  
-                                           time_period  = ['06:00:00','20:00:00'], 
+                                           time_period  = ['06:00:00','09:00:00'], 
                                            compute_SENEL = False )  
 
     
@@ -305,14 +302,14 @@ def plot_results(results,noise_data,regression_plotting_flag):
                        show_figure      = regression_plotting_flag)      
     
 
-    # Single Event Noise Exposure Level
-    plot_2D_noise_contour(noise_data,
-                       noise_level      = noise_data.SENEL,
-                       min_noise_level  = 20,  
-                       max_noise_level  = 90, 
-                       noise_scale_label= 'SENEL',
-                       save_filename    = "SENEL_Noise_2D_Contour",
-                       show_figure      = regression_plotting_flag)      
+    ## Single Event Noise Exposure Level
+    #plot_2D_noise_contour(noise_data,
+                       #noise_level      = noise_data.SENEL,
+                       #min_noise_level  = 20,  
+                       #max_noise_level  = 90, 
+                       #noise_scale_label= 'SENEL',
+                       #save_filename    = "SENEL_Noise_2D_Contour",
+                       #show_figure      = regression_plotting_flag)      
     return  
 
 if __name__ == '__main__': 
