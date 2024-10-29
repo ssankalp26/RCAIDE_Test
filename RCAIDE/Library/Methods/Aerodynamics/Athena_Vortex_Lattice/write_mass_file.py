@@ -65,7 +65,7 @@ rho = {2}
 '''
 
         # Unpack inputs
-        name    = avl_object.vehicle._base.tag
+        name    = avl_object.vehicle.tag
         density = run_conditions.freestream.density 
         gravity = run_conditions.freestream.gravity
         

@@ -74,8 +74,8 @@ def run_AVL_analysis(aerodynamics,run_conditions):
 
     # rename defaul avl aircraft tag
     aerodynamics.tag                         = 'avl_analysis_of_{}'.format(aerodynamics.vehicle.tag) 
-    aerodynamics.settings.filenames.features = aerodynamics.vehicle._base.tag + '.avl'
-    aerodynamics.settings.filenames.mass_file= aerodynamics.vehicle._base.tag + '.mass'
+    aerodynamics.settings.filenames.features = aerodynamics.vehicle.tag + '.avl'
+    aerodynamics.settings.filenames.mass_file= aerodynamics.vehicle.tag + '.mass'
     
     # update current status
     aerodynamics.current_status.batch_index += 1

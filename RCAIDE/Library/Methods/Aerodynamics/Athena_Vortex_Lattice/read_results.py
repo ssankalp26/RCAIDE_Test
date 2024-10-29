@@ -126,9 +126,10 @@ def read_results(avl_object):
             n_wings += 1
             if wing.symmetric:
                 n_wings += 1   
-        n_fus_sec = 0 
-        for fuselage in aircraft.fuselages:
-            n_fus_sec += 2
+        n_fus_sec = 0
+        for fuselage in aircraft.fuselages: 
+            if avl_object.settings.model_fuselage:          
+                n_fus_sec += 2
         
         wing_area            = np.zeros(n_wings)
         wing_CL              = np.zeros(n_wings)

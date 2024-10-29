@@ -92,7 +92,7 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
         Xq         = 0   
         Czu        = SSD.CZ_u
         Zu         = -rho * u0 * S_ref * Cw * np.cos(theta0) + 0.5 * rho * u0 * S_ref * Czu
-        Czalpha    = SSD.CL_alpha
+        Czalpha    = SSD.CL_alpha # INCORRECT 
         Zw         = 0.5 * rho * u0 * S_ref * Czalpha
         Czq        = -SSD.CL_q 
         Zq         = 0.25 * rho * u0 * c_ref * S_ref * Czq

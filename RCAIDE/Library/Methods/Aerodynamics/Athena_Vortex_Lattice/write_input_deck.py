@@ -6,7 +6,8 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-# RCAIDE imports
+# RCAIDE imports 
+from RCAIDE.Library.Components.Wings.Control_Surfaces import Aileron , Elevator , Rudder  
 from RCAIDE.Framework.Core import Units
 from .purge_files import purge_files
 
@@ -98,7 +99,7 @@ x
     # if trim analysis is specified, this function writes the trim commands else it 
     # uses the defined deflection of the control surfaces of the aircraft
     if trim_aircraft:
-        trim_command       = make_trim_text_command(case)
+        trim_command       = make_trim_text_command(case, avl_object)
         beta_command       = make_beta_text_command(case)
         roll_rate_command  = make_roll_rate_text_command(case)
         pitch_rate_command = make_pitch_rate_text_command(case)
@@ -138,7 +139,7 @@ x
         
     return case_command
 
-def make_trim_text_command(case):
+def make_trim_text_command(case,avl_object):
     """ Writes the trim command currently for a specified AoA or flight CL condition
     Assumptions:
         None
@@ -153,6 +154,25 @@ def make_trim_text_command(case):
     Properties Used:
         N/A
     """      
+     
+    cs_template = \
+'''
+D{0}
+{1}
+'''
+    cs_idx = 1 
+    cs_commands = ''
+    for wing in avl_object.vehicle.wings:
+        for ctrl_surf in wing.control_surfaces:
+            if type(ctrl_surf) == Aileron:
+                control = 'RM'
+            elif type(ctrl_surf) == Elevator:
+                control = 'PM' 
+            elif type(ctrl_surf) == Rudder:
+                control = 'YM' 
+            cs_command = cs_template.format(cs_idx,control)
+            cs_commands = cs_commands + cs_command
+            cs_idx += 1   
     
     base_trim_command = \
 '''
@@ -174,7 +194,7 @@ c1
     # write trim commands into template 
     trim_command = base_trim_command.format(condition,val)
     
-    return trim_command
+    return cs_commands + trim_command
 
 def make_roll_rate_text_command(case):
     """ Writes the roll rate command currently for a specified flight  condition
@@ -250,14 +270,14 @@ def make_beta_text_command(case):
 B
 B
 {0}'''      
-    beta = case.conditions.aerodynamics.angles.beta/Units.degrees
+    beta = case.conditions.aerodynamics.angles.beta 
     if  beta != 0.0:
         beta_command     = base_roll_command.format(beta)
     else:
         beta_command = ''
     return beta_command
 
-def control_surface_deflection_command(case,aircraft): 
+def control_surface_deflection_command(case,avl_object): 
     """Writes the control surface command template
     Assumptions:
         None
@@ -280,7 +300,7 @@ D{1}
 {2}'''
     cs_idx = 1 
     cs_commands = ''
-    for wing in aircraft.vehicle.wings:
+    for wing in avl_object.vehicle.wings:
         for ctrl_surf in wing.control_surfaces:
             cs_command = cs_template.format(cs_idx,cs_idx,round(ctrl_surf.deflection/Units.degrees,4))
             cs_commands = cs_commands + cs_command

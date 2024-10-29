@@ -34,8 +34,8 @@ def write_geometry(avl_object,run_script_path):
     """    
     
     # unpack inputs
-    aircraft                   = avl_object.vehicle
-    geometry_file              = avl_object.settings.filenames.features
+    aircraft                      = avl_object.vehicle
+    geometry_file                 = avl_object.settings.filenames.features
     number_of_spanwise_vortices   = avl_object.settings.number_of_spanwise_vortices
     number_of_chordwise_vortices  = avl_object.settings.number_of_chordwise_vortices
     # Open the geometry file after purging if it already exists
@@ -50,11 +50,12 @@ def write_geometry(avl_object,run_script_path):
             avl_wing      = translate_avl_wing(w)
             wing_text     = make_surface_text(avl_wing,number_of_spanwise_vortices,number_of_chordwise_vortices)
             geometry.write(wing_text)  
-            
-        for b in aircraft.fuselages:
-            avl_body  = translate_avl_body(b)
-            body_text = make_body_text(avl_body,number_of_chordwise_vortices)
-            geometry.write(body_text)
+        
+        if avl_object.settings.model_fuselage:
+            for b in aircraft.fuselages:
+                avl_body  = translate_avl_body(b)
+                body_text = make_body_text(avl_body,number_of_chordwise_vortices)
+                geometry.write(body_text)
             
     return
 

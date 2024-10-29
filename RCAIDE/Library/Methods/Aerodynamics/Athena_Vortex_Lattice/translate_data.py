@@ -50,11 +50,11 @@ def translate_conditions_to_cases(avl ,conditions):
         case.conditions.freestream.density                    = conditions.freestream.density[i, 0]
         case.conditions.freestream.gravitational_acceleration = conditions.freestream.gravity[i, 0]      
         case.conditions.aerodynamics.angles.alpha             = conditions.aerodynamics.angles.alpha[i, 0]/Units.deg
-        case.conditions.aerodynamics.angles.beta              = conditions.aerodynamics.angles.beta[i, 0] 
-        if conditions.aerodynamics.coefficients.lift.total == None: 
+        case.conditions.aerodynamics.angles.beta              = conditions.aerodynamics.angles.beta[i, 0]/Units.deg 
+        if type(conditions.aerodynamics.coefficients.lift.total) == np.ndarray: 
+            case.conditions.aerodynamics.coefficients.lift.total= conditions.aerodynamics.coefficients.lift.total[i, 0]        
+        else:      
             case.conditions.aerodynamics.coefficients.lift.total = None
-        else:
-            case.conditions.aerodynamics.coefficients.lift.total= conditions.aerodynamics.coefficients.lift.total[i, 0]  
         case.conditions.static_stability.coefficients.roll    = conditions.static_stability.coefficients.roll[i, 0] 
         case.conditions.static_stability.coefficients.pitch   = conditions.static_stability.coefficients.pitch[i, 0] 
         
@@ -122,7 +122,8 @@ def translate_results_to_conditions(cases,res,results):
         res.X_ref[i][0]                                                     = case_res.X_ref 
         res.Y_ref[i][0]                                                     = case_res.Y_ref 
         res.Z_ref[i][0]                                                     = case_res.Z_ref       
-        res.aerodynamics.angles.alpha[i][0]                                 = case_res.aerodynamics.AoA
+        res.aerodynamics.angles.alpha[i][0]                                 = case_res.aerodynamics.AoA * Units.degree
+        res.aerodynamics.angles.beta[i][0]                                  = case_res.aerodynamics.beta * Units.degree
         res.static_stability.coefficients.X[i][0]                           = case_res.aerodynamics.CX 
         res.static_stability.coefficients.Y[i][0]                           = case_res.aerodynamics.CY  
         res.static_stability.coefficients.Z[i][0]                           = case_res.aerodynamics.CZ    
@@ -208,4 +209,6 @@ def translate_results_to_conditions(cases,res,results):
         
         res.static_stability.control_surfaces_cases[tag]    = case_res.stability.control_surfaces
         
+    if len(res.static_stability.coefficients.X) > 1:
+        res.static_stability.derivatives.CX_alpha[:, 0] =  np.gradient( res.static_stability.coefficients.X[:, 0],res.aerodynamics.angles.alpha[:, 0] )
     return  
