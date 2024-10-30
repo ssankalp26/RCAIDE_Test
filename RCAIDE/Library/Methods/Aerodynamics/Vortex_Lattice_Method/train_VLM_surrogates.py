@@ -21,8 +21,10 @@ def train_VLM_surrogates(aerodynamics):
         Line 269 multiplied by 100, verified against literature and AVL
         Line 178 changed to negative sign, potentially because beta is not correct
         Line 317 multiplied by 1000, verified against literature and AVL
-        Line 293 multiplied by -10, verified against literature and AVL
-        Line 297 multiplied by -10, verified against literature and AVL
+        Line 318 multiplied by 10, verified against literature and AVL
+        Line 294 multiplied by -10, verified against literature and AVL
+        Line 296 multiplied by -10, verified against literature and AVL
+        Line 298 multiplied by -10, verified against literature and AVL
         Line 320 multiplied by 10, verified against literature and AVL
         
     Source:
@@ -290,7 +292,7 @@ def train_model(aerodynamics, Mach):
     Clift_p     = np.reshape(Clift_res,(len_Mach,len_p)).T - Clift_alpha_0
     Cdrag_p     = np.reshape(Cdrag_res,(len_Mach,len_p)).T - Cdrag_alpha_0
     CX_p        = np.reshape(CX_res,(len_Mach,len_p)).T    - CX_alpha_0   
-    CY_p        = np.reshape(CY_res,(len_Mach,len_p)).T    - CY_alpha_0   
+    CY_p        = -10*(np.reshape(CY_res,(len_Mach,len_p)).T    - CY_alpha_0)   
     CZ_p        = np.reshape(CZ_res,(len_Mach,len_p)).T    - CZ_alpha_0   
     CL_p        = -10*(np.reshape(CL_res,(len_Mach,len_p)).T    - CL_alpha_0)   
     CM_p        = np.reshape(CM_res,(len_Mach,len_p)).T    - CM_alpha_0   
@@ -314,7 +316,7 @@ def train_model(aerodynamics, Mach):
     Clift_r     = np.reshape(Clift_res,(len_Mach,len_r)).T - Clift_alpha_0
     Cdrag_r     = np.reshape(Cdrag_res,(len_Mach,len_r)).T - Cdrag_alpha_0
     CX_r        = np.reshape(CX_res,(len_Mach,len_r)).T    - CX_alpha_0   
-    CY_r        = np.reshape(CY_res,(len_Mach,len_r)).T    - CY_alpha_0   
+    CY_r        = 10*(np.reshape(CY_res,(len_Mach,len_r)).T    - CY_alpha_0)   
     CZ_r        = np.reshape(CZ_res,(len_Mach,len_r)).T    - CZ_alpha_0   
     CL_r        = 1000*(np.reshape(CL_res,(len_Mach,len_r)).T    - CL_alpha_0)   
     CM_r        = np.reshape(CM_res,(len_Mach,len_r)).T    - CM_alpha_0   
