@@ -92,20 +92,7 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
                 ht_tag  = wing.tag
             if isinstance(wing,RCAIDE.Library.Components.Wings.Main_Wing):
                 main_wing_tag = wing.tag
-            
-            if wing.control_surfaces :
-                for ctrl_surf in wing.control_surfaces: 
-                    if (type(ctrl_surf) ==  Elevator):
-                        ele = conditions.control_surfaces.elevator.static_stability.coefficients 
-                        Xe  = 0 # Neglect
-                        Ze  = 0.5 * rho * u0 * u0 * S_ref * ele.lift
-                        Me  = 0.5 * rho * u0 * u0 * S_ref * c_ref * ele.M
-                        
-                        BLon[:,0,0] = Xe / m
-                        BLon[:,1,0] = (Ze / (m - ZwDot)).T[0]
-                        BLon[:,2,0] = (Me / Iyy + MwDot / Iyy * Ze / (m - ZwDot)).T[0]
-                        BLon[:,3,0] = 0
-         
+                
         if main_wing_tag != None and  ht_tag !=None: 
             main_wing       = aircraft.wings[main_wing_tag]     
             horizontal_tail = aircraft.wings[ht_tag] 
@@ -154,7 +141,21 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
         ALon[:,3,0] = 0
         ALon[:,3,1] = 0
         ALon[:,3,2] = 1
-        ALon[:,3,3] = 0
+        ALon[:,3,3] = 0 
+
+        for wing in aircraft.wings: 
+            if wing.control_surfaces :
+                for ctrl_surf in wing.control_surfaces: 
+                    if (type(ctrl_surf) ==  Elevator):
+                        ele = conditions.control_surfaces.elevator.static_stability.coefficients 
+                        Xe  = 0 # Neglect
+                        Ze  = 0.5 * rho * u0 * u0 * S_ref * ele.lift
+                        Me  = 0.5 * rho * u0 * u0 * S_ref * c_ref * ele.M
+                        
+                        BLon[:,0,0] = Xe / m
+                        BLon[:,1,0] = (Ze / (m - ZwDot)).T[0]
+                        BLon[:,2,0] = (Me / Iyy + MwDot / Iyy * Ze / (m - ZwDot)).T[0]
+                        BLon[:,3,0] = 0        
          
         # Look at eigenvalues and eigenvectors
         LonModes                  = np.zeros((num_cases,4), dtype = complex)
