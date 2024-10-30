@@ -1,4 +1,4 @@
-# RCAIDE/Library/Methods/Aerodynamics/Vortex_Lattice_Method/train_VLM_surrogates.py
+# RCAIDE/Library/Methods/Aerodynamics/Vortex_Lattice_Method/train_AVL_surrogates.py
 #  
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT

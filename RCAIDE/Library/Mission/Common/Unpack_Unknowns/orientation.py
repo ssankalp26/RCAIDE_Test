@@ -19,7 +19,7 @@ def orientation(segment):
         if  ctrls.body_angle.initial_guess_values !=  None:
             segment.state.conditions.frames.body.inertial_rotations[:,1]  = ctrls.body_angle.initial_guess_values[0][0]
         else:  
-            segment.state.conditions.frames.body.inertial_rotations[:,1] = segment.state.unknowns.body_angle[:,0] * 0 
+            segment.state.conditions.frames.body.inertial_rotations[:,1] = segment.state.unknowns.body_angle[:,0] 
     else:
         segment.state.conditions.frames.body.inertial_rotations[:,0] = segment.angle_of_attack            
 

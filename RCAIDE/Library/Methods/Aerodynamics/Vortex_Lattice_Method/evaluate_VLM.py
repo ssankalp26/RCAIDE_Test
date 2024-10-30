@@ -216,13 +216,21 @@ def evaluate_surrogate(state,settings,vehicle):
                                          h_sub,h_sup,Mach, pts_beta)
      
     Clift_beta   = results_beta.Clift   
-    Cdrag_beta   = results_beta.Cdrag   
-    CX_beta      = results_beta.CX      
-    CY_beta      = results_beta.CY      
-    CZ_beta      = results_beta.CZ      
-    CL_beta      = results_beta.CL      
-    CM_beta      = results_beta.CM      
+    Cdrag_beta   = results_beta.Cdrag 
+    CX_beta      = results_beta.CX     
+    CY_beta      = results_beta.CY     
+    CZ_beta      = results_beta.CZ     
+    CL_beta      = results_beta.CL     
+    CM_beta      = results_beta.CM     
     CN_beta      = results_beta.CN 
+    Clift_beta[Beta==0.0]   = 0   
+    Cdrag_beta[Beta==0.0]   = 0
+    CX_beta[Beta==0.0]      = 0 
+    CY_beta[Beta==0.0]      = 0 
+    CZ_beta[Beta==0.0]      = 0 
+    CL_beta[Beta==0.0]      = 0 
+    CM_beta[Beta==0.0]      = 0 
+    CN_beta[Beta==0.0]      = 0
 
     # u  
     results_u    =  compute_coefficients(sub_sur.Clift_u,  sub_sur.Cdrag_u,  sub_sur.CX_u,  sub_sur.CY_u,  sub_sur.CZ_u,  sub_sur.CL_u,  sub_sur.CM_u,   sub_sur.CN_u,

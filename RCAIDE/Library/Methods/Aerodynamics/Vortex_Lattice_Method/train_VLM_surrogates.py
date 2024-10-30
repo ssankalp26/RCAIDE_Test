@@ -26,6 +26,8 @@ def train_VLM_surrogates(aerodynamics):
         Line 296 multiplied by -10, verified against literature and AVL
         Line 298 multiplied by -10, verified against literature and AVL
         Line 320 multiplied by 10, verified against literature and AVL
+        Lie 536 multiplied by -1, verified against literature 
+        Lie 655 multiplied by -1, verified against literature 
         
     Source:
         None
@@ -533,7 +535,7 @@ def train_model(aerodynamics, Mach):
         training.dCX_ddelta_a = (CX_d_a[0,:] - CX_d_a[1,:]) / (delta_a[0] - delta_a[1]) 
         training.dCY_ddelta_a = (CY_d_a[0,:] - CY_d_a[1,:]) / (delta_a[0] - delta_a[1]) 
         training.dCZ_ddelta_a = (CZ_d_a[0,:] - CZ_d_a[1,:]) / (delta_a[0] - delta_a[1]) 
-        training.dCL_ddelta_a = (CL_d_a[0,:] - CL_d_a[1,:]) / (delta_a[0] - delta_a[1]) 
+        training.dCL_ddelta_a = -(CL_d_a[0,:] - CL_d_a[1,:]) / (delta_a[0] - delta_a[1]) 
         training.dCM_ddelta_a = (CM_d_a[0,:] - CM_d_a[1,:]) / (delta_a[0] - delta_a[1]) 
         training.dCN_ddelta_a = (CN_d_a[0,:] - CN_d_a[1,:]) / (delta_a[0] - delta_a[1])
     
@@ -651,7 +653,7 @@ def train_model(aerodynamics, Mach):
         training.dCZ_ddelta_r = (CZ_d_r[0,:] - CZ_d_r[1,:]) / (delta_r[0] - delta_r[1])  
         training.dCL_ddelta_r = (CL_d_r[0,:] - CL_d_r[1,:]) / (delta_r[0] - delta_r[1])  
         training.dCM_ddelta_r = (CM_d_r[0,:] - CM_d_r[1,:]) / (delta_r[0] - delta_r[1]) 
-        training.dCN_ddelta_r = (CN_d_r[0,:] - CN_d_r[1,:]) / (delta_r[0] - delta_r[1])  
+        training.dCN_ddelta_r = -(CN_d_r[0,:] - CN_d_r[1,:]) / (delta_r[0] - delta_r[1])  
                         
     # --------------------------------------------------------------------------------------------------------------
     # Flap
