@@ -9,7 +9,8 @@
 import RCAIDE 
 from RCAIDE.Framework.Core import  Data 
 from RCAIDE.Library.Methods.Aerodynamics.Vortex_Lattice_Method   import VLM
-from RCAIDE.Library.Methods.Utilities                            import Cubic_Spline_Blender 
+from RCAIDE.Library.Methods.Utilities                            import Cubic_Spline_Blender
+from RCAIDE.Library.Methods.Stability.Common import  compute_dynamic_flight_modes
 
 # package imports
 import numpy                                                     as np  
@@ -495,7 +496,9 @@ def evaluate_surrogate(state,settings,vehicle):
     
     conditions.aerodynamics.coefficients.lift.total            = conditions.static_stability.coefficients.lift 
     conditions.aerodynamics.coefficients.drag.induced.inviscid = conditions.static_stability.coefficients.drag   
-
+    
+    compute_dynamic_flight_modes(state,settings,vehicle)
+    
     return
 
  
