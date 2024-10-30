@@ -33,8 +33,8 @@ def append_bus_conditions(bus,segment):
     segment.state.conditions.energy[bus.tag]                       = Conditions()
     segment.state.conditions.energy[bus.tag].battery_modules       = Conditions()
     segment.state.conditions.energy[bus.tag].power_draw            = 0 * ones_row(1)
-    segment.state.conditions.energy[bus.tag].SOC                   = 0 * ones_row(1) 
-    segment.state.conditions.energy[bus.tag].DOD                   = 0 * ones_row(1) 
+    segment.state.conditions.energy[bus.tag].state_of_charge       = 0 * ones_row(1) 
+    segment.state.conditions.energy[bus.tag].depth_of_discharge    = 0 * ones_row(1) 
     segment.state.conditions.energy[bus.tag].current_draw          = 0 * ones_row(1)
     segment.state.conditions.energy[bus.tag].charging_current      = 0 * ones_row(1)
     segment.state.conditions.energy[bus.tag].voltage_open_circuit  = 0 * ones_row(1)
@@ -50,12 +50,12 @@ def append_bus_conditions(bus,segment):
         initial_battery_energy                                             = segment.initial_battery_state_of_charge*bus.maximum_energy   
         segment.state.conditions.energy[bus.tag].maximum_initial_energy    = initial_battery_energy
         segment.state.conditions.energy[bus.tag].energy                    = initial_battery_energy* ones_row(1) 
-        segment.state.conditions.energy[bus.tag].SOC                       = segment.initial_battery_state_of_charge* ones_row(1) 
-        segment.state.conditions.energy[bus.tag].DOD    = 1 - segment.initial_battery_state_of_charge* ones_row(1)
+        segment.state.conditions.energy[bus.tag].state_of_charge           = segment.initial_battery_state_of_charge* ones_row(1) 
+        segment.state.conditions.energy[bus.tag].depth_of_discharge        = 1 - segment.initial_battery_state_of_charge* ones_row(1)
     else:  
         segment.state.conditions.energy[bus.tag].energy                    = 0 * ones_row(1) 
-        segment.state.conditions.energy[bus.tag].SOC                       = 0 * ones_row(1)       
-        segment.state.conditions.energy[bus.tag].DOD                       = 0 * ones_row(1)   
+        segment.state.conditions.energy[bus.tag].state_of_charge           = 0 * ones_row(1)       
+        segment.state.conditions.energy[bus.tag].depth_of_discharge        = 0 * ones_row(1)   
         
    
     return

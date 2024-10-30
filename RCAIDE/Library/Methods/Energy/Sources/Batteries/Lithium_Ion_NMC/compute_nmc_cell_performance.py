@@ -1,4 +1,4 @@
-# RCAIDE/Methods/Energy/Sources/Battery/Lithium_Ion_NMC/.py
+# RCAIDE/Methods/Energy/Sources/battery_module/Lithium_Ion_NMC/.py
 # 
 # 
 # Created:  Feb 2024, M. Clarke
@@ -14,21 +14,21 @@ from copy import  deepcopy
 # ----------------------------------------------------------------------------------------------------------------------
 # compute_nmc_cell_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
-def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t): 
+def compute_nmc_cell_performance(battery_module,state,bus,coolant_lines,t_idx, delta_t): 
     """
-    Compute the performance of a lithium-nickel-manganese-cobalt-oxide (NMC) battery cell.
+    Compute the performance of a lithium-nickel-manganese-cobalt-oxide (NMC) battery_module cell.
 
-    This function models the electrical and thermal behavior of an 18650 NMC battery cell
+    This function models the electrical and thermal behavior of an 18650 NMC battery_module cell
     based on experimental data from the Automotive Industrial Systems Company of Panasonic Group.
 
     Parameters
     ----------
-    battery : Battery
-        The battery object containing cell properties and configuration.
+    battery_module : battery_module
+        The battery_module object containing cell properties and configuration.
     state : MissionState
         The current state of the mission.
     bus : ElectricBus
-        The electric bus to which the battery is connected.
+        The electric bus to which the battery_module is connected.
     coolant_lines : list
         List of coolant lines for thermal management.
     t_idx : int
@@ -41,11 +41,11 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
     tuple
         A tuple containing:
         - stored_results_flag (bool): Flag indicating if results were stored.
-        - stored_battery_tag (str): Tag of the battery for which results were stored.
+        - stored_battery_module_tag (str): Tag of the battery_module for which results were stored.
 
     Notes
     -----
-    The function updates various battery conditions in the `state` object, including:
+    The function updates various battery_module conditions in the `state` object, including:
     - Current energy
     - Temperature
     - Heat energy generated
@@ -68,7 +68,7 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
     - From bus_conditions:
         - power_draw
         - current_draw
-    - From battery_conditions:
+    - From battery_module_conditions:
         - energy
         - voltage_open_circuit
         - cell.voltage_open_circuit
@@ -92,81 +92,80 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
     References
     ----------
     .. [1] Zou, Y., Hu, X., Ma, H., and Li, S. E., "Combined State of Charge and State of
-           Health estimation over lithium-ion battery cell cycle lifespan for electric 
+           Health estimation over lithium-ion battery_module cell cycle lifespan for electric 
            vehicles," Journal of Power Sources, Vol. 273, 2015, pp. 793-803.
            doi:10.1016/j.jpowsour.2014.09.146
     .. [2] Jeon, Dong Hyup, and Seung Man Baek. "Thermal modeling of cylindrical lithium ion 
-           battery during discharge cycle." Energy Conversion and Management 52.8-9 (2011): 
+           battery_module during discharge cycle." Energy Conversion and Management 52.8-9 (2011): 
            2973-2981.
 
     Assumptions
     -----------
-    - All battery modules exhibit the same thermal behavior.
+    - All battery_module modules exhibit the same thermal behavior.
     - The cell temperature is assumed to be the temperature of the entire module.
     """
 
-
-    # Unpack varibles 
-   
-    # Battery Properties
-    electrode_area     = battery.cell.electrode_area 
-    As_cell            = battery.cell.surface_area
-    cell_mass          = battery.cell.mass    
-    Cp                 = battery.cell.specific_heat_capacity       
-    battery_data       = battery.cell.discharge_performance_map
+    # ---------------------------------------------------------------------------------    
+    # battery cell properties
+    # --------------------------------------------------------------------------------- 
+    electrode_area            = battery_module.cell.electrode_area 
+    As_cell                   = battery_module.cell.surface_area
+    cell_mass                 = battery_module.cell.mass    
+    Cp                        = battery_module.cell.specific_heat_capacity       
+    battery_module_data       = battery_module.cell.discharge_performance_map
     
     # ---------------------------------------------------------------------------------
     # Compute Bus electrical properties 
-    # -------------------------------------------------------------------------    
+    # ---------------------------------------------------------------------------------    
     bus_conditions              = state.conditions.energy[bus.tag]
     bus_config                  = bus.battery_module_electric_configuration
     E_bus                       = bus_conditions.energy
     P_bus                       = bus_conditions.power_draw
     I_bus                       = bus_conditions.current_draw
-    SOC_bus                     = bus_conditions.SOC
-    DOD_bus                     = bus_conditions.DOD
+    SOC_bus                     = bus_conditions.state_of_charge
+    DOD_bus                     = bus_conditions.depth_of_discharge
     
     # ---------------------------------------------------------------------------------
-    # Compute Battery Conditions
+    # Compute battery_module Conditions
     # -------------------------------------------------------------------------    
-    battery_conditions = state.conditions.energy[bus.tag].battery_modules[battery.tag]  
+    battery_module_conditions = state.conditions.energy[bus.tag].battery_modules[battery_module.tag]  
    
-    E_max              = battery.maximum_energy * battery_conditions.cell.capacity_fade_factor
-    E_module           = battery_conditions.energy
+    E_module_max       = battery_module.maximum_energy * battery_module_conditions.cell.capacity_fade_factor
+    E_module           = battery_module_conditions.energy
     
-    V_oc_module        = battery_conditions.voltage_open_circuit
-    V_oc_cell          = battery_conditions.cell.voltage_open_circuit   
+    V_oc_module        = battery_module_conditions.voltage_open_circuit
+    V_oc_cell          = battery_module_conditions.cell.voltage_open_circuit   
   
-    P_module           = battery_conditions.power
-    P_cell             = battery_conditions.cell.power
+    P_module           = battery_module_conditions.power
+    P_cell             = battery_module_conditions.cell.power
     
-    R_0_module         = battery_conditions.internal_resistance
-    R_0_cell           = battery_conditions.cell.internal_resistance
+    R_0_module         = battery_module_conditions.internal_resistance
+    R_0_cell           = battery_module_conditions.cell.internal_resistance
     
-    Q_heat_module      = battery_conditions.heat_energy_generated
-    Q_heat_cell        = battery_conditions.cell.heat_energy_generated
+    Q_heat_module      = battery_module_conditions.heat_energy_generated
+    Q_heat_cell        = battery_module_conditions.cell.heat_energy_generated
     
-    V_ul_module         = battery_conditions.voltage_under_load
-    V_ul_cell           = battery_conditions.cell.voltage_under_load
+    V_ul_module        = battery_module_conditions.voltage_under_load
+    V_ul_cell          = battery_module_conditions.cell.voltage_under_load
     
-    I_module           = battery_conditions.current 
-    I_cell             = battery_conditions.cell.current
+    I_module           = battery_module_conditions.current 
+    I_cell             = battery_module_conditions.cell.current
     
-    T_module           = battery_conditions.temperature                 
-    T_cell             = battery_conditions.cell.temperature
+    T_module           = battery_module_conditions.temperature                 
+    T_cell             = battery_module_conditions.cell.temperature
     
-    SOC_cell           = battery_conditions.cell.state_of_charge  
-    E_cell             = battery_conditions.cell.energy                   
-    Q_cell             = battery_conditions.cell.charge_throughput              
-    DOD_cell           = battery_conditions.cell.depth_of_discharge
+    SOC_cell           = battery_module_conditions.cell.state_of_charge  
+    E_cell             = battery_module_conditions.cell.energy                   
+    Q_cell             = battery_module_conditions.cell.charge_throughput              
+    DOD_cell           = battery_module_conditions.cell.depth_of_discharge
     
     # ---------------------------------------------------------------------------------
-    # Compute battery electrical properties 
+    # Compute battery_module electrical properties 
     # -------------------------------------------------------------------------    
     # Calculate the current going into one cell  
-    n_series          = battery.electrical_configuration.series
-    n_parallel        = battery.electrical_configuration.parallel 
-    n_total           = battery.electrical_configuration.total
+    n_series          = battery_module.electrical_configuration.series
+    n_parallel        = battery_module.electrical_configuration.parallel 
+    n_total           = battery_module.electrical_configuration.total
     no_modules        = len(bus.battery_modules)
     
     # ---------------------------------------------------------------------------------
@@ -177,7 +176,7 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
         for tag, item in  coolant_line.items():
             if tag == 'battery_modules':
                 for sub_tag, sub_item in item.items():
-                    if sub_tag == battery.tag:
+                    if sub_tag == battery_module.tag:
                         for btms in  sub_item:
                             HAS = btms    
 
@@ -190,12 +189,12 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
     elif bus_config  == 'Parallel':
         I_module[t_idx]      = I_bus[t_idx] / len(bus.battery_modules)
 
-    I_cell[t_idx]        = I_module[t_idx] / n_parallel   
+    I_cell[t_idx] = I_module[t_idx] / n_parallel   
 
     # ---------------------------------------------------------------------------------
-    # Compute battery cell temperature 
+    # Compute battery_module cell temperature 
     # ---------------------------------------------------------------------------------
-    R_0_cell[t_idx]                     =  (0.01483*(SOC_cell[t_idx]**2) - 0.02518*SOC_cell[t_idx] + 0.1036) *battery_conditions.cell.resistance_growth_factor  
+    R_0_cell[t_idx]                     =  (0.01483*(SOC_cell[t_idx]**2) - 0.02518*SOC_cell[t_idx] + 0.1036) *battery_module_conditions.cell.resistance_growth_factor  
     R_0_cell[t_idx][R_0_cell[t_idx]<0]  = 0. 
 
     # Determine temperature increase         
@@ -211,11 +210,11 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
     Q_heat_cell[t_idx]    = (q_dot_joule + q_dot_entropy)*As_cell 
     Q_heat_module[t_idx]  = Q_heat_cell[t_idx]*n_total  
 
-    V_ul_cell[t_idx]      = compute_nmc_cell_state(battery_data,SOC_cell[t_idx],T_cell[t_idx],abs(I_cell[t_idx])) 
+    V_ul_cell[t_idx]      = compute_nmc_cell_state(battery_module_data,SOC_cell[t_idx],T_cell[t_idx],abs(I_cell[t_idx])) 
 
     V_oc_cell[t_idx]      = V_ul_cell[t_idx] + (abs(I_cell[t_idx]) * R_0_cell[t_idx])              
 
-    # Effective Power flowing through battery 
+    # Effective Power flowing through battery_module 
     P_module[t_idx]       = P_bus[t_idx] /no_modules  - np.abs(Q_heat_module[t_idx]) 
 
     # store remaining variables 
@@ -233,16 +232,16 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
 
         # Compute cell temperature
         if HAS is not None:
-            T_cell[t_idx+1]  = HAS.compute_thermal_performance(battery,bus,coolant_line,Q_heat_cell[t_idx],T_cell[t_idx],state,delta_t[t_idx],t_idx)
+            T_cell[t_idx+1]  = HAS.compute_thermal_performance(battery_module,bus,coolant_line,Q_heat_cell[t_idx],T_cell[t_idx],state,delta_t[t_idx],t_idx)
         else:
             # Considers a thermally insulated system and the heat piles on in the system
             dT_dt              = Q_heat_cell[t_idx]/(cell_mass*Cp)
             T_cell[t_idx+1]    =  T_cell[t_idx] + dT_dt*delta_t[t_idx]
             
-        # Compute state of charge and depth of discarge of the battery
+        # Compute state of charge and depth of discarge of the battery_module
         E_module[t_idx+1]                             = E_module[t_idx] -P_module[t_idx]*delta_t[t_idx] 
-        E_module[t_idx+1][E_module[t_idx+1] > E_max]  = E_max
-        SOC_cell[t_idx+1]                             = E_module[t_idx+1]/E_max 
+        E_module[t_idx+1][E_module[t_idx+1] > E_module_max]  = E_module_max
+        SOC_cell[t_idx+1]                             = E_module[t_idx+1]/E_module_max 
         SOC_cell[t_idx+1][SOC_cell[t_idx+1]>1]        = 1.
         SOC_cell[t_idx+1][SOC_cell[t_idx+1]<0]        = 0. 
         DOD_cell[t_idx+1]                             = 1 - SOC_cell[t_idx+1]  
@@ -251,16 +250,16 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
         DOD_bus[t_idx+1]                              = DOD_cell[t_idx+1]
 
     
-        # Determine new charge throughput (the amount of charge gone through the battery)
+        # Determine new charge throughput (the amount of charge gone through the battery_module)
         Q_cell[t_idx+1]    = Q_cell[t_idx] + abs(I_cell[t_idx])*delta_t[t_idx]/Units.hr
         
     stored_results_flag     = True
-    stored_battery_tag     = battery.tag  
+    stored_battery_module_tag     = battery_module.tag  
         
-    return stored_results_flag, stored_battery_tag
+    return stored_results_flag, stored_battery_module_tag
 
 
-def reuse_stored_nmc_cell_data(battery,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag):
+def reuse_stored_nmc_cell_data(battery_module,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_module_tag):
     '''Reuses results from one propulsor for identical batteries
     
     Assumptions: 
@@ -278,15 +277,15 @@ def reuse_stored_nmc_cell_data(battery,state,bus,coolant_lines, t_idx, delta_t,s
     N.A.        
     '''
    
-    state.conditions.energy[bus.tag].battery_modules[battery.tag] = deepcopy(state.conditions.energy[bus.tag].battery_modules[stored_battery_tag])
+    state.conditions.energy[bus.tag].battery_modules[battery_module.tag] = deepcopy(state.conditions.energy[bus.tag].battery_modules[stored_battery_module_tag])
     
         
     return
 
 ## @ingroup Methods-Energy-Sources-Lithium_Ion_NMC
-def compute_nmc_cell_state(battery_data,SOC,T,I):
+def compute_nmc_cell_state(battery_module_data,SOC,T,I):
     """This computes the electrical state variables of a lithium ion 
-    battery cell with a  lithium-nickel-cobalt-aluminum oxide cathode 
+    battery_module cell with a  lithium-nickel-cobalt-aluminum oxide cathode 
     chemistry from look-up tables 
      
     Assumtions: 
@@ -297,9 +296,9 @@ def compute_nmc_cell_state(battery_data,SOC,T,I):
      
     Inputs:
         SOC           - state of charge of cell     [unitless]
-        battery_data  - look-up data structure      [unitless]
-        T             - battery cell temperature    [Kelvin]
-        I             - battery cell current        [Amperes]
+        battery_module_data  - look-up data structure      [unitless]
+        T             - battery_module cell temperature    [Kelvin]
+        I             - battery_module cell current        [Amperes]
     
     Outputs:  
         V_ul          - under-load voltage          [Volts] 
@@ -319,6 +318,6 @@ def compute_nmc_cell_state(battery_data,SOC,T,I):
     I[I>8.0]       = 8.0   
      
     pts            = np.hstack((np.hstack((I, T)),DOD  )) # amps, temp, SOC   
-    V_ul           = np.atleast_2d(battery_data.Voltage(pts)[:,1]).T  
+    V_ul           = np.atleast_2d(battery_module_data.Voltage(pts)[:,1]).T  
     
     return V_ul

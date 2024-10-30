@@ -202,7 +202,7 @@ def compute_operating_empty_weight(vehicle,settings = None):
         
             # Servo, Hub and BRS Weights
             lift_rotor_hub_weight   = 4.   * Units.kg
-            prop_hub_weight         = MTOW * 0.04  * Units.kg
+            prop_hub_weight         = 4.   * Units.kg
             lift_rotor_BRS_weight   = 16.  * Units.kg
     
             # Rotor Weight
@@ -287,8 +287,9 @@ def compute_operating_empty_weight(vehicle,settings = None):
                         tms_weight +=  heat_exchanger.mass_properties.mass
                 if tag == 'reservoirs':
                     for reservoir in item:
-                       weight.thermal_management_system[reservoir.tag] = reservoir.mass_properties.mass
-                       tms_weight +=  reservoir.mass_properties.mass
+                        weight.thermal_management_system[reservoir.tag] = reservoir.mass_properties.mass
+                        tms_weight +=  reservoir.mass_properties.mass
+    weight.thermal_management_system.total = tms_weight
     #-------------------------------------------------------------------------------
     # Wing and Motor Wiring Weight
     #-------------------------------------------------------------------------------
@@ -305,8 +306,8 @@ def compute_operating_empty_weight(vehicle,settings = None):
         weight.wings_total           += wing_weight
 
         # compute_wiring_weight weight
-        # wiring_weight  = compute_wiring_weight(wing, vehicle, maxLiftPower/(eta*total_number_of_rotors)) * Units.kg  
-        # weight.wiring  += wiring_weight 
+        wiring_weight  = compute_wiring_weight(wing, vehicle, maxLiftPower/(eta*total_number_of_rotors)) * Units.kg  
+        weight.wiring  += wiring_weight 
 
     #-------------------------------------------------------------------------------
     # Landing Gear Weight
@@ -338,22 +339,23 @@ def compute_operating_empty_weight(vehicle,settings = None):
     #-------------------------------------------------------------------------------
     # Pack Up Outputs
     #-------------------------------------------------------------------------------
-    output                                    = Data()
-    output.structural_breakdown               = Data()
-    output.structural_breakdown.total         = weight.booms + weight.fuselage + weight.landing_gear +weight.wings_total 
-    output.structural_breakdown.booms         = weight.booms 
-    output.structural_breakdown.fusleage      = weight.fuselage  
-    output.structural_breakdown.landing_gear  = weight.landing_gear  
-    output.structural_breakdown.wings         = weight.wings_total 
-
-    output.propulsion_breakdown               = Data()
-    output.propulsion_breakdown.motors        = weight.motors
-    output.propulsion_breakdown.rotors        = weight.rotors
-    output.propulsion_breakdown.hubs          = weight.hubs 
-    output.propulsion_breakdown.servos        = weight.servos
-    output.propulsion_breakdown.wiring        = weight.wiring 
-    output.propulsion_breakdown.battery       = weight.battery
-    output.propulsion_breakdown.total         = weight.rotors + weight.hubs +  weight.battery +  weight.motors +   weight.wiring +   weight.servos
+    output                                                = Data()
+    output.structural_breakdown                           = Data()
+    output.structural_breakdown.total                     = weight.booms + weight.fuselage + weight.landing_gear +weight.wings_total 
+    output.structural_breakdown.booms                     = weight.booms 
+    output.structural_breakdown.fusleage                  = weight.fuselage  
+    output.structural_breakdown.landing_gear              = weight.landing_gear  
+    output.structural_breakdown.wings                     = weight.wings_total 
+             
+    output.propulsion_breakdown                           = Data()
+    output.propulsion_breakdown.motors                    = weight.motors
+    output.propulsion_breakdown.rotors                    = weight.rotors
+    output.propulsion_breakdown.hubs                      = weight.hubs 
+    output.propulsion_breakdown.servos                    = weight.servos
+    output.propulsion_breakdown.wiring                    = weight.wiring 
+    output.propulsion_breakdown.battery                   = weight.battery
+    output.propulsion_breakdown.thermal_management_system = weight.thermal_management_system.total
+    output.propulsion_breakdown.total                     = weight.rotors + weight.hubs +  weight.battery +  weight.motors +   weight.wiring +   weight.servos +  weight.thermal_management_system.total
 
 
 

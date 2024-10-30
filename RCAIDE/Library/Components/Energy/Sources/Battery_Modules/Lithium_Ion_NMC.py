@@ -191,8 +191,8 @@ def create_discharge_performance_map(raw_data):
         """   
     # Process raw data   
     processed_data = Data() 
-    processed_data.Voltage        = np.zeros((5,6,15,2)) # current , operating temperature , SOC vs voltage      
-    processed_data.Temperature    = np.zeros((5,6,15,2)) # current , operating temperature , SOC vs temperature 
+    processed_data.Voltage        = np.zeros((5,6,15,2)) # current , operating temperature , state_of_charge vs voltage      
+    processed_data.Temperature    = np.zeros((5,6,15,2)) # current , operating temperature , state_of_charge vs temperature 
 
     # Reshape  Data          
     raw_data.Voltage 

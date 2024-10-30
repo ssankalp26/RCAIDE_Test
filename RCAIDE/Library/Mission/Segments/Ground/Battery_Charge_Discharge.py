@@ -39,7 +39,7 @@ def initialize_conditions(segment):
                     end_of_flight_soc = segment.state.conditions.energy.bus.battery_modules.lithium_ion_nmc.cell.state_of_charge[-1]
                     # *****************This is a band aid, cant be approved in a PR*******************
                 else:
-                    end_of_flight_soc =  segment.state.initials.conditions.energy[bus.tag].SOC[-1]
+                    end_of_flight_soc =  segment.state.initials.conditions.energy[bus.tag].state_of_charge[-1]
                     
                 time           =  max(((1-end_of_flight_soc) / bus.charging_c_rate )*Units.hrs  , time) 
                 t_initial = segment.state.conditions.frames.inertial.time[0,0]
