@@ -80,7 +80,7 @@ class Vortex_Lattice_Method(Aerodynamics):
         settings.recalculate_total_wetted_area                      = False
         settings.propeller_wake_model                               = False 
         settings.discretize_control_surfaces                        = True
-        settings.model_fuselage                                     = False 
+        settings.model_fuselage                                     = True
         settings.trim_aircraft                                      = False 
 
         # correction factors
@@ -110,24 +110,25 @@ class Vortex_Lattice_Method(Aerodynamics):
         # conditions table, used for surrogate model training
         self.training                                               = Data()
         self.training.angle_of_attack                               = np.array([-5., -2. , 1E-12 , 2.0, 5.0, 8.0, 10.0 , 12., 45., 75.]) * Units.deg 
-        self.training.Mach                                          = np.array([1E-12, 0.1  , 0.2 , 0.3,  0.5,  0.75 , 0.85 , 0.9, 1.3, 1.35 , 1.5 , 2.0, 2.25 , 2.5  , 3.0  , 3.5])               
+        #self.training.Mach                                          = np.array([1E-12, 0.1  , 0.2 , 0.3,  0.5,  0.75 , 0.85 , 0.9, 1.3, 1.35 , 1.5 , 2.0, 2.25 , 2.5  , 3.0  , 3.5])  
+        self.training.Mach                                          = np.array([1E-12, 0.1  , 0.2 , 0.3,  0.5,  0.65 , 0.85 , 0.9, 1.3, 1.35 , 1.5 , 2.0, 2.25 , 2.5  , 3.0  , 3.5])             
                       
         self.training.subsonic                                      = None
         self.training.supersonic                                    = None
         self.training.transonic                                     = None
                                
-        self.training.sideslip_angle                                = np.array([30  , 10.0 , 1E-12]) * Units.deg
-        self.training.aileron_deflection                            = np.array([30  , 10.0 , 1E-12]) * Units.deg
-        self.training.elevator_deflection                           = np.array([30  , 10.0 , 1E-12]) * Units.deg   
-        self.training.rudder_deflection                             = np.array([30  , 10.0 , 1E-12]) * Units.deg
-        self.training.flap_deflection                               = np.array([30  , 10.0 , 1E-12]) * Units.deg 
-        self.training.slat_deflection                               = np.array([30  , 10.0 , 1E-12]) * Units.deg                      
+        self.training.sideslip_angle                                = np.array([10  , 5.0 , 1E-12]) * Units.deg
+        self.training.aileron_deflection                            = np.array([10  , 5.0 , 1E-12]) * Units.deg
+        self.training.elevator_deflection                           = np.array([10  , 5.0 , 1E-12]) * Units.deg   
+        self.training.rudder_deflection                             = np.array([10  , 5.0 , 1E-12]) * Units.deg
+        self.training.flap_deflection                               = np.array([10  , 5.0 , 1E-12]) * Units.deg 
+        self.training.slat_deflection                               = np.array([10  , 5.0 , 1E-12]) * Units.deg                      
         self.training.u                                             = np.array([0.2 , 0.1  , 1E-12])  
         self.training.v                                             = np.array([0.2 , 0.1  , 1E-12])  
         self.training.w                                             = np.array([0.2 , 0.1  , 1E-12])    
-        self.training.pitch_rate                                    = np.array([0.3 ,0.15  , 0.0 ])  * Units.rad / Units.sec
-        self.training.roll_rate                                     = np.array([0.3 ,0.15  , 0.0])  * Units.rad / Units.sec
-        self.training.yaw_rate                                      = np.array([0.3 ,0.15  , 0.0])  * Units.rad / Units.sec
+        self.training.pitch_rate                                    = np.array([3 ,1.5  , 0.0 ])  * Units.deg / Units.sec
+        self.training.roll_rate                                     = np.array([3 ,1.5  , 0.0])  * Units.deg / Units.sec
+        self.training.yaw_rate                                      = np.array([3 ,1.5  , 0.0])  * Units.deg / Units.sec
     
         self.reference_values                                       = Data()
         self.reference_values.S_ref                                 = 0

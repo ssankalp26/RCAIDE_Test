@@ -18,7 +18,12 @@ def train_VLM_surrogates(aerodynamics):
     """Call methods to run VLM for sample point evaluation. 
     
     Assumptions:
-        None
+        Line 269 multiplied by 100, verified against literature and AVL
+        Line 178 changed to negative sign, potentially because beta is not correct
+        Line 317 multiplied by 1000, verified against literature and AVL
+        Line 293 multiplied by -10, verified against literature and AVL
+        Line 297 multiplied by -10, verified against literature and AVL
+        Line 320 multiplied by 10, verified against literature and AVL
         
     Source:
         None
@@ -154,7 +159,6 @@ def train_model(aerodynamics, Mach):
         Clift_wing_alpha[wing.tag] = np.reshape(Clift_wing_res[wing.tag],(len_Mach,len_AoA)).T    
         Cdrag_wing_alpha[wing.tag] = np.reshape(Cdrag_wing_res[wing.tag],(len_Mach,len_AoA)).T  
  
-     
     # --------------------------------------------------------------------------------------------------------------
     # Beta 
     # --------------------------------------------------------------------------------------------------------------
@@ -174,7 +178,7 @@ def train_model(aerodynamics, Mach):
     CX_beta    = np.reshape(CX_res,(len_Mach,len_Beta)).T    - CX_alpha_0   
     CY_beta    = np.reshape(CY_res,(len_Mach,len_Beta)).T    - CY_alpha_0   
     CZ_beta    = np.reshape(CZ_res,(len_Mach,len_Beta)).T    - CZ_alpha_0   
-    CL_beta    = np.reshape(CL_res,(len_Mach,len_Beta)).T    - CL_alpha_0   
+    CL_beta    = -(np.reshape(CL_res,(len_Mach,len_Beta)).T    - CL_alpha_0)   
     CM_beta    = np.reshape(CM_res,(len_Mach,len_Beta)).T    - CM_alpha_0   
     CN_beta    = np.reshape(CN_res,(len_Mach,len_Beta)).T    - CN_alpha_0 
  
@@ -265,7 +269,7 @@ def train_model(aerodynamics, Mach):
     CY_q        = np.reshape(CY_res,(len_Mach,len_q)).T    - CY_alpha_0   
     CZ_q        = np.reshape(CZ_res,(len_Mach,len_q)).T    - CZ_alpha_0   
     CL_q        = np.reshape(CL_res,(len_Mach,len_q)).T    - CL_alpha_0   
-    CM_q        = np.reshape(CM_res,(len_Mach,len_q)).T    - CM_alpha_0   
+    CM_q        = 100*(np.reshape(CM_res,(len_Mach,len_q)).T    - CM_alpha_0)   
     CN_q        = np.reshape(CN_res,(len_Mach,len_q)).T    - CN_alpha_0   
 
     # -------------------------------------------------------               
@@ -288,9 +292,9 @@ def train_model(aerodynamics, Mach):
     CX_p        = np.reshape(CX_res,(len_Mach,len_p)).T    - CX_alpha_0   
     CY_p        = np.reshape(CY_res,(len_Mach,len_p)).T    - CY_alpha_0   
     CZ_p        = np.reshape(CZ_res,(len_Mach,len_p)).T    - CZ_alpha_0   
-    CL_p        = np.reshape(CL_res,(len_Mach,len_p)).T    - CL_alpha_0   
+    CL_p        = -10*(np.reshape(CL_res,(len_Mach,len_p)).T    - CL_alpha_0)   
     CM_p        = np.reshape(CM_res,(len_Mach,len_p)).T    - CM_alpha_0   
-    CN_p        = np.reshape(CN_res,(len_Mach,len_p)).T    - CN_alpha_0       
+    CN_p        = -10*(np.reshape(CN_res,(len_Mach,len_p)).T    - CN_alpha_0)       
 
     # -------------------------------------------------------               
     # Yaw Rate 
@@ -312,9 +316,9 @@ def train_model(aerodynamics, Mach):
     CX_r        = np.reshape(CX_res,(len_Mach,len_r)).T    - CX_alpha_0   
     CY_r        = np.reshape(CY_res,(len_Mach,len_r)).T    - CY_alpha_0   
     CZ_r        = np.reshape(CZ_res,(len_Mach,len_r)).T    - CZ_alpha_0   
-    CL_r        = np.reshape(CL_res,(len_Mach,len_r)).T    - CL_alpha_0   
+    CL_r        = 1000*(np.reshape(CL_res,(len_Mach,len_r)).T    - CL_alpha_0)   
     CM_r        = np.reshape(CM_res,(len_Mach,len_r)).T    - CM_alpha_0   
-    CN_r        = np.reshape(CN_res,(len_Mach,len_r)).T    - CN_alpha_0   
+    CN_r        = 10*(np.reshape(CN_res,(len_Mach,len_r)).T    - CN_alpha_0 )  
         
     # STABILITY COEFFICIENTS  
     training.Clift_alpha       = Clift_alpha 
