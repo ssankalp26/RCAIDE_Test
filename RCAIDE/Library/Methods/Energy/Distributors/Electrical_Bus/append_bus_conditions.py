@@ -6,6 +6,7 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 # RCAIDE imports  
+import RCAIDE
 from RCAIDE.Framework.Mission.Common     import   Conditions
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -33,6 +34,7 @@ def append_bus_conditions(bus,segment):
     segment.state.conditions.energy[bus.tag].battery_modules       = Conditions()
     segment.state.conditions.energy[bus.tag].power_draw            = 0 * ones_row(1)
     segment.state.conditions.energy[bus.tag].SOC                   = 0 * ones_row(1) 
+    segment.state.conditions.energy[bus.tag].DOD                   = 0 * ones_row(1) 
     segment.state.conditions.energy[bus.tag].current_draw          = 0 * ones_row(1)
     segment.state.conditions.energy[bus.tag].charging_current      = 0 * ones_row(1)
     segment.state.conditions.energy[bus.tag].voltage_open_circuit  = 0 * ones_row(1)
@@ -42,6 +44,19 @@ def append_bus_conditions(bus,segment):
     segment.state.conditions.energy[bus.tag].temperature           = 0 * ones_row(1)
     segment.state.conditions.energy[bus.tag].energy                = 0 * ones_row(1)
     segment.state.conditions.energy[bus.tag].regenerative_power    = 0 * ones_row(1)
+
+     # first segment 
+    if 'initial_battery_state_of_charge' in segment:  
+        initial_battery_energy                                             = segment.initial_battery_state_of_charge*bus.maximum_energy   
+        segment.state.conditions.energy[bus.tag].maximum_initial_energy    = initial_battery_energy
+        segment.state.conditions.energy[bus.tag].energy                    = initial_battery_energy* ones_row(1) 
+        segment.state.conditions.energy[bus.tag].SOC                       = segment.initial_battery_state_of_charge* ones_row(1) 
+        segment.state.conditions.energy[bus.tag].DOD    = 1 - segment.initial_battery_state_of_charge* ones_row(1)
+    else:  
+        segment.state.conditions.energy[bus.tag].energy                    = 0 * ones_row(1) 
+        segment.state.conditions.energy[bus.tag].SOC                       = 0 * ones_row(1)       
+        segment.state.conditions.energy[bus.tag].DOD                       = 0 * ones_row(1)   
+        
    
     return
 
@@ -67,7 +82,7 @@ def append_bus_segment_conditions(bus,conditions,segment):
     bus_conditions             = conditions[bus.tag]
     ones_row                   = segment.state.ones_row
     bus_conditions.power_draw  = 0 * ones_row(1)
-    
+    # Thermal power draw
     if segment.state.initials:
         for network in segment.analyses.energy.vehicle.networks:
             for coolant_line in  network.coolant_lines:
@@ -79,4 +94,13 @@ def append_bus_segment_conditions(bus,conditions,segment):
                     if tag == 'heat_exchangers':
                         for heat_exchanger in  item:                    
                             bus_conditions.power_draw[0,0]   +=  segment.state.initials.conditions.energy[coolant_line.tag][heat_exchanger.tag].power[-1] 
+        # Bus Properties 
+        bus_initials                                        = segment.state.initials.conditions.energy[bus.tag]
+        if type(segment) ==  RCAIDE.Framework.Mission.Segments.Ground.Battery_Recharge:             
+            bus_initials.battery_discharge_flag           = False 
+        else:                   
+            bus_initials.battery_discharge_flag           = True     
+        bus_conditions.energy[:,0]                     = bus_initials.energy[-1,0]
+
+
     return

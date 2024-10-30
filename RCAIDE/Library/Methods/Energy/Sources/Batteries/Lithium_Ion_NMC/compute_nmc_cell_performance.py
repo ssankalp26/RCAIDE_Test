@@ -122,16 +122,16 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
     bus_config                  = bus.battery_module_electric_configuration
     E_bus                       = bus_conditions.energy
     P_bus                       = bus_conditions.power_draw
-    # V_bus                       = bus.voltage
-    # bus_conditions.current_draw = P_bus/V_bus
     I_bus                       = bus_conditions.current_draw
+    SOC_bus                     = bus_conditions.SOC
+    DOD_bus                     = bus_conditions.DOD
     
     # ---------------------------------------------------------------------------------
     # Compute Battery Conditions
     # -------------------------------------------------------------------------    
     battery_conditions = state.conditions.energy[bus.tag].battery_modules[battery.tag]  
    
-    E_max              = battery_conditions.maximum_initial_energy * battery_conditions.cell.capacity_fade_factor
+    E_max              = battery.maximum_energy * battery_conditions.cell.capacity_fade_factor
     E_module           = battery_conditions.energy
     
     V_oc_module        = battery_conditions.voltage_open_circuit
@@ -223,7 +223,7 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
     V_ul_module[t_idx]     = V_ul_cell[t_idx]*n_series  
     T_module[t_idx]        = T_cell[t_idx]   # Assume the cell temperature is the temperature of the module
     P_cell[t_idx]          = P_module[t_idx]/n_total 
-    E_module[t_idx]        = E_bus[t_idx]/no_modules   
+    E_module[t_idx]        = E_bus[t_idx]/no_modules 
     E_cell[t_idx]          = E_module[t_idx]/n_total  
 
     # ---------------------------------------------------------------------------------------------------     
@@ -246,6 +246,10 @@ def compute_nmc_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t)
         SOC_cell[t_idx+1][SOC_cell[t_idx+1]>1]        = 1.
         SOC_cell[t_idx+1][SOC_cell[t_idx+1]<0]        = 0. 
         DOD_cell[t_idx+1]                             = 1 - SOC_cell[t_idx+1]  
+        E_bus[t_idx+1]                                = E_module[t_idx+1]*no_modules
+        SOC_bus[t_idx+1]                              = SOC_cell[t_idx+1]
+        DOD_bus[t_idx+1]                              = DOD_cell[t_idx+1]
+
     
         # Determine new charge throughput (the amount of charge gone through the battery)
         Q_cell[t_idx+1]    = Q_cell[t_idx] + abs(I_cell[t_idx])*delta_t[t_idx]/Units.hr
