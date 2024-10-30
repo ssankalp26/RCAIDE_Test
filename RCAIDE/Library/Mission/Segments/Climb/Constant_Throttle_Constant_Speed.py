@@ -34,9 +34,9 @@ def unpack_body_angle(segment):
     N/A
     """          
 
-    # unpack unknowns
-    theta      = segment.state.unknowns.body_angle 
-    segment.state.conditions.frames.body.inertial_rotations[:,1] = theta[:,0]      
+    # unpack unknowns 
+    segment.state.conditions.frames.body.inertial_rotations[:,0] = segment.state.unknowns.bank_angle[:,0]  
+    segment.state.conditions.frames.body.inertial_rotations[:,1] = segment.state.unknowns.body_angle[:,0]     
 
 
 # ----------------------------------------------------------------------
