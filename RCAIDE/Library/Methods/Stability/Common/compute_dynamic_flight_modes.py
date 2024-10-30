@@ -8,7 +8,8 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-# RCAIDE imports 
+# RCAIDE imports
+import RCAIDE
 from RCAIDE.Framework.Core                            import Units 
 from RCAIDE.Library.Components.Wings.Control_Surfaces import Aileron , Elevator  
 
@@ -28,7 +29,8 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
        Linerarized Equations are used following the reference below
 
     Source:
-      Automatic Control of Aircraft and Missiles by J. Blakelock Pg 23 and 117 
+      Automatic Control of Aircraft and Missiles by J. Blakelock Pg 23 and 117
+      Dynanmics of Flight Stability and Control by Bernard Edkin and Llyod Reid Chapter 5, 
 
     Inputs:
        conditions.aerodynamics  
@@ -42,16 +44,16 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
     Properties Used:
        N/A
      """
- 
-    # unpack unit conversions
+    
     if np.count_nonzero(aircraft.mass_properties.moments_of_inertia.tensor) > 0:
-            
+
+                        
         conditions = state.conditions 
         g          = conditions.freestream.gravity  
         rho        = conditions.freestream.density
         u0         = conditions.freestream.velocity
         qDyn0      = conditions.freestream.dynamic_pressure  
-        theta0     = conditions.aerodynamics.angles.alpha
+        theta0     = conditions.frames.body.inertial_rotations[:,1][:, None]
         AoA        = conditions.aerodynamics.angles.alpha    
         SS         = conditions.static_stability
         SSD        = SS.derivatives 
@@ -80,31 +82,17 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
         ALon = np.zeros((num_cases,4,4))
         BLon = np.zeros((num_cases,4,1)) 
         CLon = np.zeros((num_cases,4,4))
-        for i in range(num_cases): 
-            CLon[i,:,:] = np.eye(4)       
-        DLon = np.zeros((num_cases,4,1))
         
-        Cw         = m * g / (qDyn0 * S_ref) 
-        Cxu        = SSD.CX_u
-        Xu         = rho * u0 * S_ref * Cw * np.sin(theta0) + 0.5 * rho * u0 * S_ref * Cxu
-        Cxalpha    = SSD.CX_alpha
-        Xw         = 0.5 * rho * u0 * S_ref * Cxalpha
-        Xq         = 0   
-        Czu        = SSD.CZ_u
-        Zu         = -rho * u0 * S_ref * Cw * np.cos(theta0) + 0.5 * rho * u0 * S_ref * Czu
-        Czalpha    = SSD.CL_alpha # INCORRECT 
-        Zw         = 0.5 * rho * u0 * S_ref * Czalpha
-        Czq        = -SSD.CL_q 
-        Zq         = 0.25 * rho * u0 * c_ref * S_ref * Czq
-        Cmu        = SSD.CM_q   
-        Mu         = 0.5 * rho * u0 * c_ref * S_ref * Cmu
-        Mw         = 0.5 * rho * u0 * c_ref * S_ref * SSD.CM_alpha
-        Mq         = 0.25 * rho * u0 * c_ref * c_ref * S_ref * SSD.CM_q  
-        ZwDot      = 0.25 * rho * c_ref * S_ref * SSD.CZ_q 
-        MwDot      = 0.25 * rho * c_ref * S_ref * SSD.CM_q
-        
-        # Elevator effectiveness 
+
+        # Elevator effectiveness
+        ht_tag         =  None
+        main_wing_tag  = None
         for wing in aircraft.wings:
+            if isinstance(wing,RCAIDE.Library.Components.Wings.Horizontal_Tail):
+                ht_tag  = wing.tag
+            if isinstance(wing,RCAIDE.Library.Components.Wings.Main_Wing):
+                main_wing_tag = wing.tag
+            
             if wing.control_surfaces :
                 for ctrl_surf in wing.control_surfaces: 
                     if (type(ctrl_surf) ==  Elevator):
@@ -117,17 +105,49 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
                         BLon[:,1,0] = (Ze / (m - ZwDot)).T[0]
                         BLon[:,2,0] = (Me / Iyy + MwDot / Iyy * Ze / (m - ZwDot)).T[0]
                         BLon[:,3,0] = 0
+         
+        if main_wing_tag != None and  ht_tag !=None: 
+            main_wing       = aircraft.wings[main_wing_tag]     
+            horizontal_tail = aircraft.wings[ht_tag] 
+            
+            # unpack unit conversions 
+            V_t_prime       =  u0
+            a_t             = 2 * np.pi # dCL_t_dalphat 
+            l_t             = (horizontal_tail.origin[0][0] +horizontal_tail.aerodynamic_center[0]) - aircraft.mass_properties.center_of_gravity[0][0] # disstance from CG to tail AC
+            S_t             = horizontal_tail.areas.reference # tail area
+            S               = main_wing.areas.reference # wing area
+            l_bar_t         = (horizontal_tail.origin[0][0] +  horizontal_tail.aerodynamic_center[0]) -(main_wing.origin[0][0] +  main_wing.aerodynamic_center[0])  # distance from AC of main wing to tail AC
+            V_H             = ( l_bar_t *S_t ) /(c_ref *S)  # tail volume
+            dEpsilon_dalpha =  0.3
+            
+            SSD.CZ_alpha_dot =  a_t * dEpsilon_dalpha *  (l_t /u0) *  (S_t / S) # Dynamics of Flight Page 147 
+            SSD.CM_alpha_dot =  -a_t * V_H * dEpsilon_dalpha*  (l_t /u0)  # Dynamics of Flight Page 148                         
                         
+        for i in range(num_cases): 
+            CLon[i,:,:] = np.eye(4)        
+        Cw         = m * g / (qDyn0 * S_ref)  
+        Xu         = rho * u0 * S_ref * Cw * np.sin(theta0) + 0.5 * rho * u0 * S_ref * SSD.CX_u # CHECKED
+        Xw         = 0.5 * rho * u0 * S_ref * SSD.CX_alpha # CHECKED
+        Xq         = 0.25 * rho * u0 * c_ref * S_ref *  SSD.CX_q    # CHECKED (Should be 0)
+        Zu         = -rho * u0 * S_ref * Cw * np.cos(theta0) + 0.5 * rho * u0 * S_ref * SSD.CZ_u# CHECKED
+        Zw         = 0.5 * rho * u0 * S_ref * SSD.CZ_alpha   # CHECKED 
+        Zq         = 0.25 * rho * u0 * c_ref * S_ref *  SSD.CZ_q   # CHECKED 
+        Mu         =  0.5 * rho * u0 * c_ref * S_ref * SSD.CM_u    # CHECKED (Should be 0)
+        Mw         = 0.5 * rho * u0 * c_ref * S_ref * SSD.CM_alpha   # CHECKED 
+        Mq         = 0.25 * rho * u0 * c_ref * c_ref * S_ref * SSD.CM_q    # CHECKED 
+        ZwDot      = 0.25 * rho * c_ref * S_ref * SSD.CZ_alpha_dot  # Dynamics of FLight Page 118  CHECKED (Should be +ve)
+        MwDot      = 0.25 * rho * c_ref * S_ref * SSD.CM_alpha_dot   # Dynamics of FLight Page 118 CHECKED 
+        
         
         ALon[:,0,0] = (Xu / m).T[0]
         ALon[:,0,1] = (Xw / m).T[0]
-        ALon[:,0,2] =  Xq / m 
+        #ALon[:,0,2] =  Xq.T[0] / m 
         ALon[:,0,3] = (-g * np.cos(theta0)).T[0]
         ALon[:,1,0] = (Zu / (m - ZwDot)).T[0]
         ALon[:,1,1] = (Zw / (m - ZwDot)).T[0]
         ALon[:,1,2] = ((Zq + (m * u0)) / (m - ZwDot) ).T[0]
         ALon[:,1,3] = (-m * g * np.sin(theta0) / (m - ZwDot)).T[0]
-        ALon[:,2,0] = ((Mu + MwDot * Zu / (m - ZwDot)) / Iyy).T[0] 
+        ALon[:,2,0] = ((MwDot * Zu / (m - ZwDot)) / Iyy).T[0]  # ((Mu + MwDot * Zu / (m - ZwDot)) / Iyy).T[0] 
         ALon[:,2,1] = ((Mw + MwDot * Zw / (m - ZwDot)) / Iyy).T[0] 
         ALon[:,2,2] = ((Mq + MwDot * (Zq + m * u0) / (m - ZwDot)) / Iyy ).T[0] 
         ALon[:,2,3] = (-MwDot * m * g * np.sin(theta0) / (Iyy * (m - ZwDot))).T[0] 
@@ -153,15 +173,15 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
                 LonModes[i,:] = D
                 
                 # Find phugoid
-                phugoidInd               = np.argmax(V[0,:]) # u is the primary state involved
-                phugoidFreqHz[i]         = abs(LonModes[i,phugoidInd]) / 2 / np.pi
-                phugoidDamping[i]        = -np.cos(np.angle(LonModes[i,phugoidInd]))
+                phugoidInd               = np.argmax(D)  
+                phugoidFreqHz[i]         = abs(D[phugoidInd]) / (2 * np.pi)
+                phugoidDamping[i]        = np.sqrt(1/ (1 + ( D[phugoidInd].imag/ D[phugoidInd].real )**2 ))  
                 phugoidTimeDoubleHalf[i] = np.log(2) / abs(2 * np.pi * phugoidFreqHz[i] * phugoidDamping[i])
                 
                 # Find short period
-                shortPeriodInd               = np.argmax(V[1,:]) # w is the primary state involved
-                shortPeriodFreqHz[i]         = abs(LonModes[i, shortPeriodInd]) / 2 / np.pi
-                shortPeriodDamping[i]        = -np.cos(np.angle(LonModes[i, shortPeriodInd ]))
+                shortPeriodInd               = np.argmin(D)  
+                shortPeriodFreqHz[i]         = abs(D[shortPeriodInd]) / (2 * np.pi)
+                shortPeriodDamping[i]        = np.sqrt(1/ (1 + (D[shortPeriodInd].imag/D[shortPeriodInd].real)**2 ))  
                 shortPeriodTimeDoubleHalf[i] = np.log(2) / abs(2 * np.pi * shortPeriodFreqHz[i] * shortPeriodDamping[i]) 
         
         ## Build lateral EOM A Matrix (stability axis)
@@ -251,10 +271,10 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
             for j in range(3):
                 for k in range(j+1,4):
                     if LatModes[i,j].real ==  LatModes[i,k].real:
-                        dutchRollFreqHz[i] = abs(LatModes[i,j]) / 2 / np.pi
+                        dutchRollFreqHz[i] = abs(LatModes[i,j]) / (2 * np.pi)
                         dutchRollDamping[i] = -np.cos(np.angle(LatModes[i,j]))
                         dutchRollTimeDoubleHalf[i] = np.log(2) / abs(2 * np.pi * dutchRollFreqHz[i] * dutchRollDamping[i])
-                        dutchRoll_mode_real[i] = LatModes[i,j].real /  2 / np.pi
+                        dutchRoll_mode_real[i] = LatModes[i,j].real / (2 * np.pi)
                         done = 1
                         break  
                 if done:

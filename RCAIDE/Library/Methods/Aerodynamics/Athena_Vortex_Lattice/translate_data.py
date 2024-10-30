@@ -210,4 +210,5 @@ def translate_results_to_conditions(cases,res,results):
         
     if len(res.static_stability.coefficients.X) > 1:
         res.static_stability.derivatives.CX_alpha[:, 0] =  np.gradient( res.static_stability.coefficients.X[:, 0],res.aerodynamics.angles.alpha[:, 0] )
+        res.static_stability.derivatives.CZ_alpha[:, 0] =  np.gradient( res.static_stability.coefficients.Z[:, 0],res.aerodynamics.angles.alpha[:, 0] )
     return  

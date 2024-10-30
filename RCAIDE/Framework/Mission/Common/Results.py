@@ -380,8 +380,9 @@ class Results(Conditions):
         self.static_stability.derivatives.CM_w                                 = ones_1col * 0
         self.static_stability.derivatives.CN_u                                 = ones_1col * 0
         self.static_stability.derivatives.CN_v                                 = ones_1col * 0
-        self.static_stability.derivatives.CN_w                                 = ones_1col * 0
-        
+        self.static_stability.derivatives.CN_w                                 = ones_1col * 0 
+        self.static_stability.derivatives.CZ_alpha_dot                         = ones_1col * 0
+        self.static_stability.derivatives.CM_alpha_dot                         = ones_1col * 0 
         self.static_stability.derivatives.Clift_p                              = ones_1col * 0
         self.static_stability.derivatives.Clift_q                              = ones_1col * 0
         self.static_stability.derivatives.Clift_r                              = ones_1col * 0

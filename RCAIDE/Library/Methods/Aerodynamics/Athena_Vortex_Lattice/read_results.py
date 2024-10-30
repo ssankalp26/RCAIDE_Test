@@ -59,6 +59,7 @@ def read_results(avl_object):
             case_res.Z_ref                                                  = float(lines[9][52:58].strip())  
                                                                             
             case_res.aerodynamics.AoA                                       = float(lines[15][10:19].strip())
+            case_res.aerodynamics.beta                                      = float(lines[16][10:19].strip())
             case_res.aerodynamics.CX                                        = float(lines[19][11:19].strip())
             case_res.aerodynamics.CY                                        = float(lines[20][11:19].strip()) 
             case_res.aerodynamics.CZ                                        = float(lines[21][11:19].strip())
