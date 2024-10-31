@@ -272,10 +272,10 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
             for j in range(3):
                 for k in range(j+1,4):
                     if LatModes[i,j].real ==  LatModes[i,k].real:
-                        dutchRollFreqHz[i] = abs(LatModes[i,j]) / (2 * np.pi)
-                        dutchRollDamping[i] = -np.cos(np.angle(LatModes[i,j]))
+                        dutchRollFreqHz[i]         = abs(LatModes[i,j]) / (2 * np.pi)
+                        dutchRollDamping[i]        = np.sqrt(1/ (1 + ( D[i].imag/ D[i].real )**2 ))  
                         dutchRollTimeDoubleHalf[i] = np.log(2) / abs(2 * np.pi * dutchRollFreqHz[i] * dutchRollDamping[i])
-                        dutchRoll_mode_real[i] = LatModes[i,j].real / (2 * np.pi)
+                        dutchRoll_mode_real[i]     = LatModes[i,j].real / (2 * np.pi)
                         done = 1
                         break  
                 if done:
@@ -315,10 +315,10 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
         DS.LongModes.LongModes                    = LonModes
         #DS.LongModes.LongSys                      = LonSys    
         DS.LongModes.phugoidFreqHz                = phugoidFreqHz
-        DS.LongModes.phugoidDamp                  = phugoidDamping
+        DS.LongModes.phugoidDamping               = phugoidDamping
         DS.LongModes.phugoidTimeDoubleHalf        = phugoidTimeDoubleHalf
         DS.LongModes.shortPeriodFreqHz            = shortPeriodFreqHz
-        DS.LongModes.shortPeriodDamp              = shortPeriodDamping
+        DS.LongModes.shortPeriodDamping           = shortPeriodDamping
         DS.LongModes.shortPeriodTimeDoubleHalf    = shortPeriodTimeDoubleHalf
                                                                         
         DS.LatModes.LatModes                      = LatModes  
