@@ -128,7 +128,7 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
         
         ALon[:,0,0] = (Xu / m).T[0]
         ALon[:,0,1] = (Xw / m).T[0]
-        #ALon[:,0,2] =  Xq.T[0] / m 
+        ALon[:,0,2] =  (Xq.T)[0] / m 
         ALon[:,0,3] = (-g * np.cos(theta0)).T[0]
         ALon[:,1,0] = (Zu / (m - ZwDot)).T[0]
         ALon[:,1,1] = (Zw / (m - ZwDot)).T[0]
