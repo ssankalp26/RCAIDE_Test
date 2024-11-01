@@ -53,7 +53,7 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
         rho        = conditions.freestream.density
         u0         = conditions.freestream.velocity
         qDyn0      = conditions.freestream.dynamic_pressure  
-        theta0     = conditions.frames.body.inertial_rotations[:,1][:, None]
+        theta0     = np.arctan(conditions.frames.inertial.velocity_vector[:,2]/conditions.frames.inertial.velocity_vector[:,0])[:,None]
         AoA        = conditions.aerodynamics.angles.alpha    
         SS         = conditions.static_stability
         SSD        = SS.derivatives 

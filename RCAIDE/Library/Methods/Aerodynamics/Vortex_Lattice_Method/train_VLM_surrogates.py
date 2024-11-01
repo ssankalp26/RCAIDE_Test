@@ -204,7 +204,7 @@ def train_model(aerodynamics, Mach):
     
     Clift_u     = np.reshape(Clift_res,(len_Mach,len_u)).T - Clift_alpha_0
     Cdrag_u     = np.reshape(Cdrag_res,(len_Mach,len_u)).T - Cdrag_alpha_0
-    CX_u        = np.reshape(CX_res,(len_Mach,len_u)).T    - CX_alpha_0   
+    CX_u        = 10 * ( np.reshape(CX_res,(len_Mach,len_u)).T    - CX_alpha_0 )  
     CY_u        = np.reshape(CY_res,(len_Mach,len_u)).T    - CY_alpha_0   
     CZ_u        = np.reshape(CZ_res,(len_Mach,len_u)).T    - CZ_alpha_0   
     CL_u        = np.reshape(CL_res,(len_Mach,len_u)).T    - CL_alpha_0   
