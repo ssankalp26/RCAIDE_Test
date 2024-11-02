@@ -42,10 +42,11 @@ def initialize_conditions(segment):
                     end_of_flight_soc =  segment.state.initials.conditions.energy[bus.tag].state_of_charge[-1]
                     
                 time           =  max(((1-end_of_flight_soc) / bus.charging_c_rate )*Units.hrs  , time) 
+                time           += segment.cooling_time
                 t_initial = segment.state.conditions.frames.inertial.time[0,0]
                 t_nondim  = segment.state.numerics.dimensionless.control_points
                 #segment.state.
-                charging_time      = t_nondim * ( time ) + t_initial
+                charging_time      = t_nondim * ( time ) + t_initial 
                 segment.state.conditions.frames.inertial.time[:,0] = charging_time[:,0]
     else:
 

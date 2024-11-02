@@ -161,18 +161,18 @@ class Electric(Network):
             for bus in  busses:
                 stored_results_flag  = False
                 stored_battery_tag   = None                          
-                for battery in  bus.battery_modules:                   
+                for battery_module in  bus.battery_modules:                   
                     if bus.identical_batteries == False:
                         # run analysis  
-                        stored_results_flag, stored_battery_tag =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
+                        stored_results_flag, stored_battery_tag =  battery_module.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
                     else:             
                         if stored_results_flag == False: 
                             # run battery analysis 
-                            stored_results_flag, stored_battery_tag  =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
+                            stored_results_flag, stored_battery_tag  =  battery_module.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
                         else:
                             # use previous battery results 
-                            battery.reuse_stored_data(state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag)
-
+                            battery_module.reuse_stored_data(state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag)
+                bus.compute_distributor_conditions(state,t_idx, delta_t)
                 # Thermal Management Calculations                    
                 for coolant_line in  coolant_lines:
                     if t_idx != state.numerics.number_of_control_points-1:

@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
-def compute_bus_conditions(bus,state): 
+def compute_bus_conditions(bus,state,t_idx, delta_t): 
     """ Computes the conditions of the bus based on the response of the battery modules
         
         Assumptions:
@@ -24,31 +24,38 @@ def compute_bus_conditions(bus,state):
            
         Properties Used:
         None
-        """
+        """  
     
     bus_conditions                         = state.conditions.energy[bus.tag]
-    if bus.battery_module_electric_configuration is  'Series':
-        for battery_module in  bus.battery_modules:
-            bm_conditions                          =  bus_conditions.battery_modules[battery_module.tag]
-            bus_conditions.voltage_open_circuit    += bm_conditions.voltage_open_circuit
-            bus_conditions.voltage_under_load      += bm_conditions.voltage_under_load 
-            bus_conditions.heat_energy_generated   += bm_conditions.heat_energy_generated
-            bus_conditions.temperature             += bm_conditions.temperature
-            bus_conditions.energy                  += bm_conditions.energy
-        bus_conditions.temperature             =  bus_conditions.temperature / len(bus.battery_modules)
-        bus_conditions.state_of_charge                     =  bm_conditions.cell.state_of_charge  
-        bus_conditions.efficiency              = (bus_conditions.power_draw+bus_conditions.heat_energy_generated)/bus_conditions.power_draw
-    elif bus.battery_module_electric_configuration is 'Parallel':
-        for battery_module in  bus.battery_modules:
-            bm_conditions                          =  bus_conditions.battery_modules[battery_module.tag]
-            bus_conditions.heat_energy_generated   += bm_conditions.heat_energy_generated
-            bus_conditions.temperature             += bm_conditions.temperature
-            bus_conditions.energy                  += bm_conditions.energy
-        bus_conditions.voltage_open_circuit    = bm_conditions.voltage_open_circuit
-        bus_conditions.voltage_under_load      = bm_conditions.voltage_under_load             
-        bus_conditions.temperature             = bus_conditions.temperature / len(bus.battery_modules)
-        bus_conditions.state_of_charge                     = bm_conditions.cell.state_of_charge  
-        bus_conditions.efficiency              = (bus_conditions.power_draw+bus_conditions.heat_energy_generated)/bus_conditions.power_draw
-              
+    if t_idx != state.numerics.number_of_control_points-1:  
+        if bus.battery_module_electric_configuration is  'Series':
+            bus_conditions.energy[t_idx+1,0]       = 0
+            for battery_module in  bus.battery_modules:
+                bm_conditions                                    =  bus_conditions.battery_modules[battery_module.tag]
+                bus_conditions.voltage_open_circuit[t_idx+1]    += bm_conditions.voltage_open_circuit[t_idx+1]
+                bus_conditions.voltage_under_load[t_idx+1]      += bm_conditions.voltage_under_load[t_idx+1]
+                bus_conditions.heat_energy_generated[t_idx+1]   += bm_conditions.heat_energy_generated[t_idx+1]
+                bus_conditions.temperature[t_idx+1]             += bm_conditions.temperature[t_idx+1]
+                bus_conditions.energy[t_idx+1,0]                  += bm_conditions.energy[t_idx+1]
+            bus_conditions.temperature[t_idx+1]             =  bus_conditions.temperature[t_idx+1] / len(bus.battery_modules)
+            bus_conditions.state_of_charge[t_idx+1]         =  bm_conditions.state_of_charge[t_idx+1]  
+            bus_conditions.efficiency[t_idx+1]              = (bus_conditions.power_draw[t_idx+1]+bus_conditions.heat_energy_generated[t_idx+1])/bus_conditions.power_draw[t_idx+1]
+            if state.conditions.energy.recharging and bus_conditions.state_of_charge[t_idx+1] == 1:
+                bus_conditions.charging_current[t_idx+1]    = 0
+                bus_conditions.power_draw[t_idx+1]          = 0
+                bus_conditions.current_draw[t_idx+1]         = 0
+                
+        elif bus.battery_module_electric_configuration is 'Parallel':
+            for battery_module in  bus.battery_modules:
+                bm_conditions                                    =  bus_conditions.battery_modules[battery_module.tag]
+                bus_conditions.heat_energy_generated[t_idx+1]   += bm_conditions.heat_energy_generated[t_idx+1]
+                bus_conditions.temperature[t_idx+1]             += bm_conditions.temperature[t_idx+1]
+                bus_conditions.energy[t_idx+1]                  += bm_conditions.energy[t_idx+1]
+            bus_conditions.voltage_open_circuit[t_idx+1]    = bm_conditions.voltage_open_circuit[t_idx+1]
+            bus_conditions.voltage_under_load[t_idx+1]      = bm_conditions.voltage_under_load[t_idx+1]             
+            bus_conditions.temperature[t_idx+1]             = bus_conditions.temperature[t_idx+1] / len(bus.battery_modules)
+            bus_conditions.state_of_charge[t_idx+1]         = bm_conditions.cell.state_of_charge[t_idx+1]  
+            bus_conditions.efficiency[t_idx+1]              = (bus_conditions.power_draw[t_idx+1]+bus_conditions.heat_energy_generated[t_idx+1])/bus_conditions.power_draw[t_idx+1]
+            
   
     return 

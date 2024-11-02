@@ -8,7 +8,7 @@
 # RCAIDE imports  
 import RCAIDE
 from RCAIDE.Framework.Mission.Common     import   Conditions
-
+import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  METHODS
 # ---------------------------------------------------------------------------------------------------------------------- 
@@ -29,7 +29,8 @@ def append_bus_conditions(bus,segment):
         None
         """
     ones_row                                                       = segment.state.ones_row
-   
+    n_cp                                                           = segment.state.numerics.number_of_control_points
+
     segment.state.conditions.energy[bus.tag]                       = Conditions()
     segment.state.conditions.energy[bus.tag].battery_modules       = Conditions()
     segment.state.conditions.energy[bus.tag].power_draw            = 0 * ones_row(1)
@@ -45,18 +46,13 @@ def append_bus_conditions(bus,segment):
     segment.state.conditions.energy[bus.tag].energy                = 0 * ones_row(1)
     segment.state.conditions.energy[bus.tag].regenerative_power    = 0 * ones_row(1)
 
-     # first segment 
+     # first segment  
     if 'initial_battery_state_of_charge' in segment:  
         initial_battery_energy                                             = segment.initial_battery_state_of_charge*bus.maximum_energy   
         segment.state.conditions.energy[bus.tag].maximum_initial_energy    = initial_battery_energy
-        segment.state.conditions.energy[bus.tag].energy                    = initial_battery_energy* ones_row(1) 
+        segment.state.conditions.energy[bus.tag].energy                   = initial_battery_energy* ones_row(1)
         segment.state.conditions.energy[bus.tag].state_of_charge           = segment.initial_battery_state_of_charge* ones_row(1) 
         segment.state.conditions.energy[bus.tag].depth_of_discharge        = 1 - segment.initial_battery_state_of_charge* ones_row(1)
-    else:  
-        segment.state.conditions.energy[bus.tag].energy                    = 0 * ones_row(1) 
-        segment.state.conditions.energy[bus.tag].state_of_charge           = 0 * ones_row(1)       
-        segment.state.conditions.energy[bus.tag].depth_of_discharge        = 0 * ones_row(1)   
-        
    
     return
 
@@ -100,7 +96,7 @@ def append_bus_segment_conditions(bus,conditions,segment):
             bus_initials.battery_discharge_flag           = False 
         else:                   
             bus_initials.battery_discharge_flag           = True     
-        bus_conditions.energy[:,0]                     = bus_initials.energy[-1,0]
+        bus_conditions.energy[0,0]                     = bus_initials.energy[-1,0]
 
 
     return

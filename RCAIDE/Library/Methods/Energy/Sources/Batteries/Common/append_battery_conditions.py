@@ -118,10 +118,12 @@ def append_battery_conditions(battery,segment,bus):
         initial_battery_energy                                            = segment.initial_battery_state_of_charge*battery.maximum_energy   
         bus_results.battery_modules[battery.tag].maximum_initial_energy   = initial_battery_energy
         bus_results.battery_modules[battery.tag].energy                   = initial_battery_energy* ones_row(1) 
+        bus_results.battery_modules[battery.tag].state_of_charge          = segment.initial_battery_state_of_charge* ones_row(1) 
         bus_results.battery_modules[battery.tag].cell.state_of_charge     = segment.initial_battery_state_of_charge* ones_row(1) 
         bus_results.battery_modules[battery.tag].cell.depth_of_discharge  = 1 - segment.initial_battery_state_of_charge* ones_row(1)
     else:  
-        bus_results.battery_modules[battery.tag].energy                    = 0 * ones_row(1) 
+        bus_results.battery_modules[battery.tag].energy                    = 0 * ones_row(1)
+        bus_results.battery_modules[battery.tag].state_of_charge          = 0 * ones_row(1)
         bus_results.battery_modules[battery.tag].cell.state_of_charge      = 0 * ones_row(1)       
         bus_results.battery_modules[battery.tag].cell.depth_of_discharge   = 0 * ones_row(1)   
         

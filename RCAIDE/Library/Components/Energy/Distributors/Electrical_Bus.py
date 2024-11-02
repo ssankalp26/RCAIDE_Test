@@ -56,6 +56,6 @@ class Electrical_Bus(Component):
     def initialize_bus_electrical_properties(self):
         initialize_bus_electrical_properties(self)
         return
-    def compute_distributor_conditions(self,state):
-        #compute_bus_conditions(self, state)
+    def compute_distributor_conditions(self,state,t_idx, delta_t):
+        compute_bus_conditions(self,state,t_idx, delta_t)
         return    
