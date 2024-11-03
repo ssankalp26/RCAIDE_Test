@@ -35,7 +35,7 @@ def compute_bus_conditions(bus,state,t_idx, delta_t):
             bus_conditions.current_draw[t_idx+1]        = 0
        
         bus_conditions.energy[t_idx+1,0]    = 0
-        if bus.battery_module_electric_configuration is  'Series':
+        if bus.battery_module_electric_configuration ==  'Series':
             for battery_module in  bus.battery_modules:
                 bm_conditions                                    =  bus_conditions.battery_modules[battery_module.tag]
                 bus_conditions.voltage_open_circuit[t_idx+1]    += bm_conditions.voltage_open_circuit[t_idx+1]
@@ -47,7 +47,7 @@ def compute_bus_conditions(bus,state,t_idx, delta_t):
             bus_conditions.state_of_charge[t_idx+1]      = bm_conditions.state_of_charge[t_idx+1]  
             bus_conditions.efficiency[t_idx+1]           = (bus_conditions.power_draw[t_idx+1]+bus_conditions.heat_energy_generated[t_idx+1])/bus_conditions.power_draw[t_idx+1]
            
-        elif bus.battery_module_electric_configuration is 'Parallel':
+        elif bus.battery_module_electric_configuration == 'Parallel':
             for battery_module in  bus.battery_modules:
                 bm_conditions                                    = bus_conditions.battery_modules[battery_module.tag]
                 bus_conditions.heat_energy_generated[t_idx+1]   += bm_conditions.heat_energy_generated[t_idx+1]

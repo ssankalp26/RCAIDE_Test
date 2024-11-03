@@ -60,6 +60,6 @@ def update_nmc_cell_age(battery,segment, battery_conditions,increment_battery_ag
     battery_conditions.cell.resistance_growth_factor = np.maximum(R_growth_factor,battery_conditions.cell.resistance_growth_factor)
     
     if increment_battery_age_by_one_day:
-        battery_conditions.cell.cycle_in_day = segment.increment_battery_cycle_day +  1 # update battery age by one day 
+        battery_conditions.cell.cycle_in_day += 1 # update battery age by one day 
   
     return  

@@ -138,9 +138,14 @@ def append_battery_conditions(battery,segment,bus):
     # charge thoughput 
     if 'charge_throughput' in segment: 
         bus_results.battery_modules[battery.tag].cell.charge_throughput  = segment.charge_throughput * ones_row(1)  
+        bus_results.battery_modules[battery.tag].cell.resistance_growth_factor  = segment.resistance_growth
+        bus_results.battery_modules[battery.tag].cell.capacity_fade_factor  = segment.capacity_fade
+        bus_results.battery_modules[battery.tag].cell.cycle_in_day  = segment.cycle_day
     else:
-        bus_results.battery_modules[battery.tag].cell.charge_throughput  = 0 * ones_row(1)  
-        
+        bus_results.battery_modules[battery.tag].cell.charge_throughput  = 0 * ones_row(1)
+        bus_results.battery_modules[battery.tag].cell.resistance_growth_factor  = 1 
+        bus_results.battery_modules[battery.tag].cell.capacity_fade_factor  = 1 
+        bus_results.battery_modules[battery.tag].cell.cycle_in_day  = 0 
     # This is the only one besides energy and discharge flag that should be moduleed into the segment top level
     if 'increment_battery_age_by_one_day' not in segment:
         segment.increment_battery_age_by_one_day   = False    
