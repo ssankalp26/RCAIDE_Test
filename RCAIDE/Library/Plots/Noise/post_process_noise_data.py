@@ -148,10 +148,7 @@ def post_process_noise_data(results,
     noise_data.time                  = Time 
     noise_data.aircraft_position     = Aircraft_pos
     
-    # Step 8: Perform noise metric calculations 
-    if compute_SENEL:
-        SENEL_noise_metric(noise_data, flight_times,time_period)
-    if compute_L_dn or compute_L_eq:
-        DNL_and_Equivalent_noise_metric(noise_data, flight_times)
+    # Step 8: Perform noise metric calculations  
+    compute_noise_metrics(noise_data, flight_times)
     
     return noise_data

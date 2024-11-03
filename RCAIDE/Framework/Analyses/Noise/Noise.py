@@ -65,14 +65,14 @@ class Noise(Analysis):
         self.settings.topography_file                        = None
         self.settings.microphone_locations                   = None   
         self.settings.microphone_coordinates                 = None
-        self.settings.microphone_x_resolution                = 10 
-        self.settings.microphone_y_resolution                = 10 
-        self.settings.noise_times_steps                      = 50 
+        self.settings.microphone_x_resolution                = 11 
+        self.settings.microphone_y_resolution                = 11 
+        self.settings.noise_times_steps                      = 101 
         self.settings.number_of_microphone_in_stencil        = 10
         self.settings.microphone_min_x                       = 0  
-        self.settings.microphone_max_x                       = 5000 
-        self.settings.microphone_min_y                       = -450  
-        self.settings.microphone_max_y                       = 450  
+        self.settings.microphone_max_x                       = 1000 
+        self.settings.microphone_min_y                       = -100  
+        self.settings.microphone_max_y                       = 100  
         
         self.settings.noise_hemisphere                       = False 
         self.settings.noise_hemisphere_radius                = 20  
