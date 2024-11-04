@@ -24,7 +24,7 @@ import numpy as np
 #  Rotor Noise 
 # ----------------------------------------------------------------------------------------------------------------------    
 ## @ingroup Methods-Noise-Frequency_Domain_Buildup-Rotor
-def compute_rotor_noise(distributor,propulsor,segment,settings):
+def compute_rotor_noise(microphone_locations,distributor,propulsor,segment,settings):
     ''' This is a collection medium-fidelity frequency domain methods for rotor acoustic noise prediction which 
     computes the acoustic signature (sound pressure level, weighted sound pressure levels,
     and frequency spectrums of a system of rotating blades           
@@ -62,8 +62,7 @@ def compute_rotor_noise(distributor,propulsor,segment,settings):
     # unpack
     rotor                = propulsor.rotor
     conditions           = segment.state.conditions
-    energy_conditions    = conditions.energy[distributor.tag][propulsor.tag][rotor.tag] 
-    microphone_locations = conditions.noise.relative_microphone_locations
+    energy_conditions    = conditions.energy[distributor.tag][propulsor.tag][rotor.tag]  
     angle_of_attack      = conditions.aerodynamics.angles.alpha 
     velocity_vector      = conditions.frames.inertial.velocity_vector 
     freestream           = conditions.freestream  

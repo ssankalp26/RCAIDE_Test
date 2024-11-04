@@ -59,9 +59,9 @@ def plot_noise_hemisphere(noise_data,
     if vehicle != None:
         plot_data,_,_,_,_,_,_, = generate_3d_vehicle_geometry_data(plot_data,vehicle)
         
-    X               = noise_data.ground_microphone_locations[:,:,0]   
-    Y               = noise_data.ground_microphone_locations[:,:,1]  
-    Z               = noise_data.ground_microphone_locations[:,:,2]  
+    X               = noise_data.microphone_locations[:,:,0]   
+    Y               = noise_data.microphone_locations[:,:,1]  
+    Z               = noise_data.microphone_locations[:,:,2]  
   
     # ---------------------------------------------------------------------------
     # TRHEE DIMENSIONAL NOISE CONTOUR

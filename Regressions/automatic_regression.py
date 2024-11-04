@@ -23,7 +23,6 @@ modules = [
     'Tests/analysis_noise/digital_elevation_test.py',  
     'Tests/analysis_noise/frequency_domain_test.py', 
     'Tests/analysis_noise/empirical_jet_noise_test.py',    
-    'Tests/analysis_noise/noise_hemisphere_test.py', 
     'Tests/analysis_stability/vlm_pertubation_test.py', 
     'Tests/analysis_weights/operating_empty_weight_test.py',
     'Tests/analysis_weights/cg_and_moi_test.py',

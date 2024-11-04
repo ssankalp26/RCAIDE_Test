@@ -156,9 +156,9 @@ def compute_lfp_cell_performance(battery_module,state,bus,coolant_lines,t_idx, d
    # ---------------------------------------------------------------------------------------------------
     # Current State 
     # ---------------------------------------------------------------------------------------------------
-    if bus_config is 'Series':
+    if bus_config == 'Series':
         I_module[t_idx]      = I_bus[t_idx]
-    elif bus_config is  'Parallel':
+    elif bus_config == 'Parallel':
         I_module[t_idx]      = I_bus[t_idx] / len(bus.battery_modules)
 
     I_cell[t_idx]        = I_module[t_idx] / n_parallel   
