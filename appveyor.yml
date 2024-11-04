@@ -11,9 +11,8 @@ environment:
   COVERALLS_REPO_TOKEN: 25Sl8XjzDDuldcq2FscZnlq7ts1fRVhb3
 
 init:
-  - sudo dpkg --remove-architecture i386  # Remove unsupported i386 architecture
-  - sudo apt-get update --allow-releaseinfo-change  # Accept label changes in repositories
-  - sudo apt-get install -qq python3-pip
+    - sudo apt-get update
+    - sudo apt-get install -qq python3-pip
     
 install: 
     - python3 -m pip install --upgrade pip
