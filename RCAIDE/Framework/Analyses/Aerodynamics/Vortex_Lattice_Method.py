@@ -95,17 +95,17 @@ class Vortex_Lattice_Method(Aerodynamics):
         settings.supersonic.cross_sectional_area_calculation_type   = 'Fixed'     
         settings.supersonic.wave_drag_type                          = 'Raymer'    
     
-        settings.number_of_spanwise_vortices                   = 15
-        settings.number_of_chordwise_vortices                  = 5
-        settings.wing_spanwise_vortices                        = None
-        settings.wing_chordwise_vortices                       = None
-        settings.fuselage_spanwise_vortices                    = None
-        settings.fuselage_chordwise_vortices                   = None  
-        settings.spanwise_cosine_spacing                       = True
-        settings.vortex_distribution                           = Data()  
-        settings.leading_edge_suction_multiplier               = 1.0  
-        settings.use_VORLAX_matrix_calculation                 = False
-        settings.floating_point_precision                      = np.float32 
+        settings.number_of_spanwise_vortices                        = 15
+        settings.number_of_chordwise_vortices                       = 5
+        settings.wing_spanwise_vortices                             = None
+        settings.wing_chordwise_vortices                            = None
+        settings.fuselage_spanwise_vortices                         = None
+        settings.fuselage_chordwise_vortices                        = None  
+        settings.spanwise_cosine_spacing                            = True
+        settings.vortex_distribution                                = Data()  
+        settings.leading_edge_suction_multiplier                    = 1.0  
+        settings.use_VORLAX_matrix_calculation                      = False
+        settings.floating_point_precision                           = np.float32 
     
         # conditions table, used for surrogate model training
         self.training                                               = Data()
@@ -116,23 +116,23 @@ class Vortex_Lattice_Method(Aerodynamics):
         self.training.supersonic                                    = None
         self.training.transonic                                     = None
 
-        self.training.speed_of_sound                                = 343 # reference speed of sound 
+        self.training.altitude                                      = 0    
         self.training.angle_purtubation                             = 2 * Units.deg          
         self.training.speed_purtubation                             = 10   
         self.training.rate_purtubation                              = 3 * Units.deg / Units.sec   
         self.training.control_surface_purtubation                   = 3 * Units.deg   
-        self.training.sideslip_angle                                = np.array([10  , 5.0 , 1E-12]) * Units.deg
-        self.training.aileron_deflection                            = np.array([10  , 5.0 , 1E-12]) * Units.deg
-        self.training.elevator_deflection                           = np.array([10  , 5.0 , 1E-12]) * Units.deg   
-        self.training.rudder_deflection                             = np.array([10  , 5.0 , 1E-12]) * Units.deg
-        self.training.flap_deflection                               = np.array([10  , 5.0 , 1E-12]) * Units.deg 
-        self.training.slat_deflection                               = np.array([10  , 5.0 , 1E-12]) * Units.deg                      
-        self.training.u                                             = np.array([0.2 , 0.1  , 1E-12])  
-        self.training.v                                             = np.array([0.2 , 0.1  , 1E-12])  
-        self.training.w                                             = np.array([0.2 , 0.1  , 1E-12])    
-        self.training.pitch_rate                                    = np.array([3 ,1.5  , 0.0 ])  * Units.deg / Units.sec
-        self.training.roll_rate                                     = np.array([3 ,1.5  , 0.0])  * Units.deg / Units.sec
-        self.training.yaw_rate                                      = np.array([3 ,1.5  , 0.0])  * Units.deg / Units.sec
+        self.training.sideslip_angle                                = np.array([10  , 5.0 ]) * Units.deg
+        self.training.aileron_deflection                            = np.array([10  , 5.0 ]) * Units.deg
+        self.training.elevator_deflection                           = np.array([10  , 5.0 ]) * Units.deg   
+        self.training.rudder_deflection                             = np.array([10  , 5.0 ]) * Units.deg
+        self.training.flap_deflection                               = np.array([10  , 5.0 ]) * Units.deg 
+        self.training.slat_deflection                               = np.array([10  , 5.0 ]) * Units.deg                      
+        self.training.u                                             = np.array([10 , 5 ])  
+        self.training.v                                             = np.array([10 , 5 ])  
+        self.training.w                                             = np.array([10 , 5 ])    
+        self.training.pitch_rate                                    = np.array([3 ,1.5 ])  * Units.deg / Units.sec
+        self.training.roll_rate                                     = np.array([3 ,1.5 ])  * Units.deg / Units.sec
+        self.training.yaw_rate                                      = np.array([3 ,1.5 ])  * Units.deg / Units.sec
     
         self.reference_values                                       = Data()
         self.reference_values.S_ref                                 = 0

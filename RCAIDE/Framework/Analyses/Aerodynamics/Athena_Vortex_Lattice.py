@@ -103,19 +103,19 @@ class Athena_Vortex_Lattice(Aerodynamics):
         settings.filenames.case_template                             = 'case_{0:04d}_{1:04d}'
         settings.filenames.log_filename                              = 'avl_log.txt'
         settings.filenames.err_filename                              = 'avl_err.txt'        
-        settings.number_of_spanwise_vortices                        = 30
-        settings.number_of_chordwise_vortices                       = 10
-        settings.use_surrogate                                      = True 
-        settings.trim_aircraft                                      = False 
-        settings.model_fuselage                                     = False 
-        settings.print_output                                       = False 
-        settings.keep_files                                         = False
-        settings.save_regression_results                            = False          
-        settings.regression_flag                                    = False  
-        settings.side_slip_angle                                    = 0.0
-        settings.roll_rate_coefficient                              = 0.0
-        settings.pitch_rate_coefficient                             = 0.0 
-        settings.lift_coefficient                                   = None 
+        settings.number_of_spanwise_vortices                         = 20
+        settings.number_of_chordwise_vortices                        = 10
+        settings.use_surrogate                                       = True 
+        settings.trim_aircraft                                       = False 
+        settings.model_fuselage                                      = False 
+        settings.print_output                                        = False 
+        settings.keep_files                                          = False
+        settings.save_regression_results                             = False          
+        settings.regression_flag                                     = False  
+        settings.side_slip_angle                                     = 0.0
+        settings.roll_rate_coefficient                               = 0.0
+        settings.pitch_rate_coefficient                              = 0.0 
+        settings.lift_coefficient                                    = None 
 
         # correction factors
         settings.supersonic                                         = Data()

@@ -43,21 +43,14 @@ def forces(segment):
     wind_force_vector             = conditions.frames.wind.force_vector
     body_thrust_force_vector      = conditions.frames.body.thrust_force_vector
     inertial_gravity_force_vector = conditions.frames.inertial.gravity_force_vector
-    '''ADDED 10/21/2024 AIDAN'''
-    phi                          = segment.bank_angle
+    
     # unpack transformation matrices
     T_body2inertial = conditions.frames.body.transform_to_inertial
     T_wind2inertial = conditions.frames.wind.transform_to_inertial
 
     # transform to inertial frame
     F = orientation_product(T_wind2inertial,wind_force_vector)
-    T = orientation_product(T_body2inertial,body_thrust_force_vector)
-    
-    # Bank angle compensation
-    #Roll_rotation = [[1, 0, 0], [0, np.cos(phi), -np.sin(phi)], [0, np.sin(phi), np.cos(phi)]]
-    #Rotation_matrix = np.array([Roll_rotation, Roll_rotation,Roll_rotation,Roll_rotation,Roll_rotation,Roll_rotation,Roll_rotation,Roll_rotation,Roll_rotation,Roll_rotation,Roll_rotation,Roll_rotation,Roll_rotation,Roll_rotation,Roll_rotation,Roll_rotation])
-    #T = orientation_product(Rotation_matrix, T)
-    #F = orientation_product(Rotation_matrix, F)
+    T = orientation_product(T_body2inertial,body_thrust_force_vector) 
     
     if type(segment) ==  RCAIDE.Framework.Mission.Segments.Vertical_Flight.Climb:
         F =  np.zeros_like(T)

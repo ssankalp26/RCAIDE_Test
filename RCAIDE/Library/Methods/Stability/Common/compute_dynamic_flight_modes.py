@@ -45,9 +45,7 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
        N/A
      """
     
-    if np.count_nonzero(aircraft.mass_properties.moments_of_inertia.tensor) > 0:
-
-                        
+    if np.count_nonzero(aircraft.mass_properties.moments_of_inertia.tensor) > 0: 
         conditions = state.conditions 
         g          = conditions.freestream.gravity  
         rho        = conditions.freestream.density
@@ -275,8 +273,8 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
             idx = np.where(counts==2)[0]
 
             dutchRollFreqHz[i_lat]         = abs(D[idx]) / (2 * np.pi)
-            dutchRollDamping[i_lat]        = np.sqrt(1/ (1 + ( D[i_lat].imag/ D[i_lat].real )**2 ))  
-            dutchRollTimeDoubleHalf[i_lat] = np.log(2) / abs(2 * np.pi * dutchRollFreqHz[i_lat] * dutchRollDamping[i_lat])
+            dutchRollDamping[i_lat]        = np.sqrt(1/ (1 + ( D[idx].imag/ D[idx].real )**2 ))  
+            dutchRollTimeDoubleHalf[i_lat] = np.log(2) / abs(2 * np.pi * dutchRollFreqHz[idx] * dutchRollDamping[idx])
             dutchRoll_mode_real[i_lat]     = D[idx].real / (2 * np.pi)
             
             dutch_roll_idx                 = np.where( unique_elements[idx] == D.real )[0]
