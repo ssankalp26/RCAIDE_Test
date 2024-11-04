@@ -83,73 +83,64 @@ def regressions():
 # ----------------------------------------------------------------------
 
 def test_module(module_path):
-
-    home_dir = os.getcwd()
+    original_dir = os.getcwd()
     
-    # Adjust module_path to point to correct location
-    actual_module_path = os.path.join(home_dir, 'RCAIDE/Regressions', module_path)
-    test_dir, module_name = os.path.split(os.path.abspath(actual_module_path))
-    
-    # Create regression directory if needed
-    os.makedirs(test_dir, exist_ok=True)
-    
-    # Change to test directory
-    os.chdir(test_dir)
-    sys.path.append(test_dir)  # Add test directory to path for imports
-
-    sys.stdout.write('# --------------------------------------------------------------------- \n')
-    sys.stdout.write('# Start Test: %s \n' % module_path)
-    sys.stdout.flush()
-
-    tic = time.time()
-
-    # try the test
     try:
-
-        # see if file exists
-        os.chdir(test_dir)
-        if not os.path.exists(module_name) and not os.path.isfile(module_name):
-            raise ImportError('file %s does not exist' % module_name)
-
-        # add module directory
-        sys.path.append(test_dir)
-
-        # do the import
+        # Get regression directory (where this script is)
+        regression_dir = os.path.dirname(os.path.abspath(__file__))
+        sys.path.append(regression_dir)
+        
+        # Convert module_path to full path from regression directory
+        full_module_path = os.path.join(regression_dir, module_path)
+        test_dir = os.path.dirname(full_module_path)
+        module_name = os.path.basename(module_path)
+        
+        sys.stdout.write('# --------------------------------------------------------------------- \n')
+        sys.stdout.write('# Start Test: %s \n' % full_module_path)
+        sys.stdout.flush()
+        
+        tic = time.time()
+        
+        # Check if file exists
+        if not os.path.exists(full_module_path):
+            raise ImportError(f'file {full_module_path} does not exist')
+        
+        # Add test directory to Python path and change to it
+        if test_dir:
+            sys.path.append(test_dir)
+            os.chdir(test_dir)
+        
+        # Import and run the test
         name = os.path.splitext(module_name)[0]
         module = __import__(name)
-
-        # run main function
         module.main()
-
+        
         passed = True
-
-    # catch an error
+        
     except Exception as exc:
-
-        # print traceback
-        sys.stderr.write( 'Test Failed: \n' )
-        sys.stderr.write( traceback.format_exc() )
-        sys.stderr.write( '\n' )
+        sys.stderr.write('Test Failed: \n')
+        sys.stderr.write(traceback.format_exc())
+        sys.stderr.write('\n')
         sys.stderr.flush()
-
         passed = False
-
-    # final result
-    if passed:
-        sys.stdout.write('# Passed: %s \n' % module_name)
-    else:
-        sys.stdout.write('# FAILED: %s \n' % module_name)
-    sys.stdout.write('# Test Duration: %.4f min \n' % ((time.time()-tic)/60) )
-    sys.stdout.write('\n')
-
-    # cleanup
-    plt.close('all')
-    os.chdir(home_dir)
-
-    # make sure to write to stdout
-    sys.stdout.flush()
-    sys.stderr.flush()
-
+        
+    finally:
+        # Cleanup
+        plt.close('all')
+        os.chdir(original_dir)
+        
+        # Log results
+        if passed:
+            sys.stdout.write('# Passed: %s \n' % module_name)
+        else:
+            sys.stdout.write('# FAILED: %s \n' % module_name)
+        sys.stdout.write('# Test Duration: %.4f min \n' % ((time.time()-tic)/60))
+        sys.stdout.write('\n')
+        
+        # Ensure output is written
+        sys.stdout.flush()
+        sys.stderr.flush()
+        
     return passed
  
 
