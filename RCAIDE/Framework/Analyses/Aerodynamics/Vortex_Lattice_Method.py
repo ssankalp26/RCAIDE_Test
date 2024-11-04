@@ -117,10 +117,10 @@ class Vortex_Lattice_Method(Aerodynamics):
         self.training.transonic                                     = None
 
         self.training.speed_of_sound                                = 343 # reference speed of sound 
-        self.training.angle_purtubation                             = 1 * Units.deg          
+        self.training.angle_purtubation                             = 2 * Units.deg          
         self.training.speed_purtubation                             = 10   
-        self.training.rate_purtubation                              = 1 * Units.deg / Units.sec   
-        self.training.control_surface_purtubation                   = 1 * Units.deg   
+        self.training.rate_purtubation                              = 3 * Units.deg / Units.sec   
+        self.training.control_surface_purtubation                   = 3 * Units.deg   
         self.training.sideslip_angle                                = np.array([10  , 5.0 , 1E-12]) * Units.deg
         self.training.aileron_deflection                            = np.array([10  , 5.0 , 1E-12]) * Units.deg
         self.training.elevator_deflection                           = np.array([10  , 5.0 , 1E-12]) * Units.deg   
