@@ -129,9 +129,9 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
         #ALon[:,0,2] =  (Xq.T)[0] / m 
         ALon[:,0,3] = (-g * np.cos(theta0)).T[0]
         ALon[:,1,0] = (Zu / (m - ZwDot)).T[0]
-        ALon[:,1,1] = (Zw / (m - ZwDot)).T[0]
+        ALon[:,1,1] = (Zw / (m - ZwDot)).T[0] # Note negative
         ALon[:,1,2] = ((Zq + (m * u0)) / (m - ZwDot) ).T[0]
-        ALon[:,2,0] = ((Mu + MwDot * Zu / (m - ZwDot)) / Iyy).T[0] 
+        ALon[:,2,0] = ((Mu + MwDot * Zu / (m - ZwDot)) / Iyy).T[0] # Negative
         #ALon[:,2,0] = ((MwDot * Zu / (m - ZwDot)) / Iyy).T[0]  # ((Mu + MwDot * Zu / (m - ZwDot)) / Iyy).T[0] 
         ALon[:,2,1] = ((Mw + MwDot * Zw / (m - ZwDot)) / Iyy).T[0] 
         ALon[:,2,2] = ((Mq + MwDot * (Zq + m * u0) / (m - ZwDot)) / Iyy ).T[0] 
