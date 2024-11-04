@@ -43,24 +43,25 @@ def compute_mixing_temperature(reservoir, state, coolant_line, delta_t, t_idx):
         None
     """  
     T_current = 0
-    volume = 0
+    volume    = 0
     for reservoir in coolant_line.reservoirs:
         T_current += state.conditions.energy.coolant_line[reservoir.tag].coolant_temperature[t_idx, 0]
-        volume += reservoir.volume
+        volume    += reservoir.volume
+    
     T_current = T_current / len(coolant_line.reservoirs)
 
     # Reservoir Properties
     coolant = reservoir.coolant
     rho_coolant = coolant.compute_density(T_current)
     Cp_RES = coolant.compute_cp(T_current)
-    mass_coolant = rho_coolant * volume
+    mass_coolant  = rho_coolant * volume
 
-    mass_flow_HAS = []
-    T_outlet_HAS = []
-    Cp_HAS = []
-    mass_flow_HEX = []
-    T_outlet_HEX = []
-    Cp_HEX = []
+    mass_flow_HAS  = []
+    T_outlet_HAS   = []
+    Cp_HAS         = []
+    mass_flow_HEX  = []
+    T_outlet_HEX   = []
+    Cp_HEX         = []
 
     for battery in coolant_line.battery_modules:
         for HAS in battery:
@@ -83,15 +84,15 @@ def compute_mixing_temperature(reservoir, state, coolant_line, delta_t, t_idx):
 
 def compute_heat_loss_to_environment(T_final, T_ambient, reservoir):
     # Properties of Reservoir
-    A_surface = reservoir.surface_area
-    thickness = reservoir.thickness
-    conductivity = reservoir.material.conductivity
-    emissivity_res = reservoir.material.emissivity
+    A_surface       = reservoir.surface_area
+    thickness       = reservoir.thickness
+    conductivity    = reservoir.material.conductivity
+    emissivity_res  = reservoir.material.emissivity
 
     # Heat Transfer properties
-    sigma = 5.69e-8  # Stefan Boltzmann Constant
-    h = 1000  # [W/m^2-K]
-    emissivity_air = 0.9
+    sigma           = 5.69e-8  # Stefan Boltzmann Constant
+    h               = 1000  # [W/m^2-K]
+    emissivity_air  = 0.9
 
     # Heat Transfer due to conduction
     dQ_dt_cond = conductivity * A_surface * (T_final - T_ambient) / thickness

@@ -170,7 +170,7 @@ class Lithium_Ion_NMC(Generic_Battery_Module):
         Returns: 
             None
         """        
-        update_nmc_cell_age(self,segment, battery_conditions,increment_battery_age_by_one_day) 
+        update_nmc_cell_age(self,segment,battery_conditions,increment_battery_age_by_one_day) 
         
         return  
 

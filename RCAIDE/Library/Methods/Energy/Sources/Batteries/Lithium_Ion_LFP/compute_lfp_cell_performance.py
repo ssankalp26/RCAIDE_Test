@@ -114,8 +114,8 @@ def compute_lfp_cell_performance(battery_module,state,bus,coolant_lines,t_idx, d
     Q_heat_module      = battery_module_conditions.heat_energy_generated
     Q_heat_cell        = battery_module_conditions.cell.heat_energy_generated
 
-    V_ul_module         = battery_module_conditions.voltage_under_load
-    V_ul_cell           = battery_module_conditions.cell.voltage_under_load
+    V_ul_module        = battery_module_conditions.voltage_under_load
+    V_ul_cell          = battery_module_conditions.cell.voltage_under_load
 
     I_module           = battery_module_conditions.current 
     I_cell             = battery_module_conditions.cell.current
@@ -210,11 +210,11 @@ def compute_lfp_cell_performance(battery_module,state,bus,coolant_lines,t_idx, d
         else:
             # Considers a thermally insulated system and the heat piles on in the system
             dT_dt              = Q_heat_cell[t_idx]/(cell_mass*Cp)
-            T_cell[t_idx+1]    =  T_cell[t_idx] + dT_dt*delta_t[t_idx]
+            T_cell[t_idx+1]    = T_cell[t_idx] + dT_dt*delta_t[t_idx]
             
         # Compute state of charge and depth of discarge of the battery_module
-        E_module[t_idx+1]                                    = E_module[t_idx] -P_module[t_idx]*delta_t[t_idx] 
-        E_module[t_idx+1][E_module[t_idx+1] > E_module_max]  = E_module_max
+        E_module[t_idx+1]                                     = E_module[t_idx] -P_module[t_idx]*delta_t[t_idx] 
+        E_module[t_idx+1][E_module[t_idx+1] > E_module_max]   = E_module_max
         SOC_cell[t_idx+1]                                     = E_module[t_idx+1]/E_module_max 
         SOC_cell[t_idx+1][SOC_cell[t_idx+1]>1]                = 1.
         SOC_cell[t_idx+1][SOC_cell[t_idx+1]<0]                = 0. 

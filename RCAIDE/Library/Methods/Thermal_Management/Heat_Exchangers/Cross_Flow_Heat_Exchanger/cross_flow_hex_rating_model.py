@@ -306,6 +306,6 @@ def cross_flow_hex_rating_model(HEX,state,bus,coolant_line, delta_t,t_idx):
     state.conditions.energy[coolant_line.tag][HEX.tag].air_inlet_pressure[t_idx+1]         = P_i_c 
     state.conditions.energy[coolant_line.tag][HEX.tag].coolant_inlet_pressure[t_idx+1]     = P_i_h
     state.conditions.energy[coolant_line.tag][HEX.tag].effectiveness_HEX[t_idx+1]          = eff_hex   
-    #state.conditions.energy[bus.tag].power_draw[t_idx+1]                                  += P_hex 
+    state.conditions.energy[bus.tag].power_draw[t_idx+1]                                  += P_hex 
     
     return  

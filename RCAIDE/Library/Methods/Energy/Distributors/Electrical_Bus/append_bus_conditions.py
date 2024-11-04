@@ -8,7 +8,6 @@
 # RCAIDE imports  
 import RCAIDE
 from RCAIDE.Framework.Mission.Common     import   Conditions
-import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  METHODS
 # ---------------------------------------------------------------------------------------------------------------------- 
@@ -50,7 +49,7 @@ def append_bus_conditions(bus,segment):
     if 'initial_battery_state_of_charge' in segment:  
         initial_battery_energy                                             = segment.initial_battery_state_of_charge*bus.maximum_energy   
         segment.state.conditions.energy[bus.tag].maximum_initial_energy    = initial_battery_energy
-        segment.state.conditions.energy[bus.tag].energy                   = initial_battery_energy* ones_row(1)
+        segment.state.conditions.energy[bus.tag].energy                    = initial_battery_energy* ones_row(1)
         segment.state.conditions.energy[bus.tag].state_of_charge           = segment.initial_battery_state_of_charge* ones_row(1) 
         segment.state.conditions.energy[bus.tag].depth_of_discharge        = 1 - segment.initial_battery_state_of_charge* ones_row(1)
    
@@ -91,12 +90,12 @@ def append_bus_segment_conditions(bus,conditions,segment):
                         for heat_exchanger in  item:                    
                             bus_conditions.power_draw[0,0]   +=  segment.state.initials.conditions.energy[coolant_line.tag][heat_exchanger.tag].power[-1] 
         # Bus Properties 
-        bus_initials                                        = segment.state.initials.conditions.energy[bus.tag]
+        bus_initials            = segment.state.initials.conditions.energy[bus.tag]
         if type(segment) ==  RCAIDE.Framework.Mission.Segments.Ground.Battery_Recharge:             
             bus_initials.battery_discharge_flag           = False 
         else:                   
             bus_initials.battery_discharge_flag           = True     
-        bus_conditions.energy[0,0]                     = bus_initials.energy[-1,0]
+        bus_conditions.energy[0,0]          = bus_initials.energy[-1,0]
 
 
     return
