@@ -169,28 +169,28 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
         if np.any(np.isnan(ALon)):
             pass
         else:
-            for i in range(num_cases):
-                D  , V = np.linalg.eig(ALon[i,:,:]) # State order: u, w, q, theta
-                LonModes[i,:] = D
+            for i_long in range(num_cases):
+                D  , V = np.linalg.eig(ALon[i_long,:,:]) # State order: u, w, q, theta
+                LonModes[i_long,:] = D
                 
                 # Find phugoid
-                phugoidInd               = np.argmax(D)  
-                phugoidFreqHz[i]         = abs(D[phugoidInd]) / (2 * np.pi)
-                phugoidDamping[i]        = np.sqrt(1/ (1 + ( D[phugoidInd].imag/ D[phugoidInd].real )**2 ))  
-                phugoidTimeDoubleHalf[i] = np.log(2) / abs(2 * np.pi * phugoidFreqHz[i] * phugoidDamping[i])
+                phugoidInd                    = np.argmax(D)  
+                phugoidFreqHz[i_long]         = abs(D[phugoidInd]) / (2 * np.pi)
+                phugoidDamping[i_long]        = np.sqrt(1/ (1 + ( D[phugoidInd].imag/ D[phugoidInd].real )**2 ))  
+                phugoidTimeDoubleHalf[i_long] = np.log(2) / abs(2 * np.pi * phugoidFreqHz[i_long] * phugoidDamping[i_long])
                 
                 # Find short period
-                shortPeriodInd               = np.argmin(D)  
-                shortPeriodFreqHz[i]         = abs(D[shortPeriodInd]) / (2 * np.pi)
-                shortPeriodDamping[i]        = np.sqrt(1/ (1 + (D[shortPeriodInd].imag/D[shortPeriodInd].real)**2 ))  
-                shortPeriodTimeDoubleHalf[i] = np.log(2) / abs(2 * np.pi * shortPeriodFreqHz[i] * shortPeriodDamping[i]) 
+                shortPeriodInd                    = np.argmin(D)  
+                shortPeriodFreqHz[i_long]         = abs(D[shortPeriodInd]) / (2 * np.pi)
+                shortPeriodDamping[i_long]        = np.sqrt(1/ (1 + (D[shortPeriodInd].imag/D[shortPeriodInd].real)**2 ))  
+                shortPeriodTimeDoubleHalf[i_long] = np.log(2) / abs(2 * np.pi * shortPeriodFreqHz[i_long] * shortPeriodDamping[i_long]) 
         
         ## Build lateral EOM A Matrix (stability axis)
         ALat = np.zeros((num_cases,4,4))
         BLat = np.zeros((num_cases,4,1))
         CLat = np.zeros((num_cases,4,4))
-        for i in range(num_cases): 
-            CLat[i,:,:] = np.eye(4) 
+        for c_i1 in range(num_cases): 
+            CLat[c_i1,:,:] = np.eye(4) 
         DLat = np.zeros((num_cases,4,1))
         
         # Need to compute Ixx, Izz, and Ixz as a function of alpha
@@ -198,16 +198,16 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
         Izp  = np.zeros((num_cases,1))
         Ixzp = np.zeros((num_cases,1))
         
-        for i in range(num_cases): 
-            R       = np.array( [[np.cos(AoA[i][0]*Units.degrees) ,  - np.sin(AoA[i][0]*Units.degrees) ], [ np.sin( AoA[i][0]*Units.degrees) , np.cos(AoA[i][0]*Units.degrees)]])
+        for c_i2 in range(num_cases): 
+            R       = np.array( [[np.cos(AoA[c_i2][0]*Units.degrees) ,  - np.sin(AoA[c_i2][0]*Units.degrees) ], [ np.sin( AoA[c_i2][0]*Units.degrees) , np.cos(AoA[i][0]*Units.degrees)]])
             modI    = np.array([[moments_of_inertia[0][0],moments_of_inertia[0][2]],[moments_of_inertia[2][0],moments_of_inertia[2][2]]] ) 
             INew    = R * modI  * np.transpose(R)
             IxxStab =  INew[0,0]
             IxzStab = -INew[0,1]
             IzzStab =  INew[1,1]
-            Ixp[i]  = (IxxStab * IzzStab - IxzStab**2) / IzzStab
-            Izp[i]  = (IxxStab * IzzStab - IxzStab**2) / IxxStab
-            Ixzp[i] = IxzStab / (IxxStab * IzzStab - IxzStab**2) 
+            Ixp[c_i2]  = (IxxStab * IzzStab - IxzStab**2) / IzzStab
+            Izp[c_i2]  = (IxxStab * IzzStab - IxzStab**2) / IxxStab
+            Ixzp[c_i2] = IxzStab / (IxxStab * IzzStab - IxzStab**2) 
             
         Yv = 0.5 * rho * u0 * S_ref * SSD.CY_beta
         Yp = 0.25 * rho * u0 * b_ref * S_ref * SSD.CY_p
@@ -235,17 +235,20 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
                         BLat[:,3,0] = 0
      
         ALat[:,0,0] = (Yv / m).T[0] 
-        ALat[:,0,1] = (Yp / m).T[0] 
+        #ALat[:,0,1] = (Yp / m).T[0] 
         ALat[:,0,2] = (Yr/m - u0).T[0] 
-        ALat[:,0,3] = (g * np.cos(theta0)).T[0] 
+        ALat[:,0,3] = (g * np.cos(theta0)).T[0]
+        
         ALat[:,1,0] = (Lv / Ixp + Ixzp * Nv).T[0] 
         ALat[:,1,1] = (Lp / Ixp + Ixzp * Np).T[0] 
         ALat[:,1,2] = (Lr / Ixp + Ixzp * Nr).T[0] 
         ALat[:,1,3] = 0
+        
         ALat[:,2,0] = (Ixzp * Lv + Nv / Izp).T[0] 
         ALat[:,2,1] = (Ixzp * Lp + Np / Izp).T[0] 
         ALat[:,2,2] = (Ixzp * Lr + Nr / Izp).T[0] 
         ALat[:,2,3] = 0
+        
         ALat[:,3,0] = 0
         ALat[:,3,1] = 1
         ALat[:,3,2] = (np.tan(theta0)).T[0] 
@@ -263,47 +266,33 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
         spiralDamping               = np.zeros((num_cases,1))
         dutchRoll_mode_real         = np.zeros((num_cases,1))
         
-        for i in range(num_cases):        
-            D  , V = np.linalg.eig(ALat[i,:,:]) # State order: u, w, q, theta
-            LatModes[i,:] = D  
+        for i_lat in range(num_cases):        
+            D  , V = np.linalg.eig(ALat[i_lat,:,:]) # State order: u, w, q, theta
+            LatModes[i_lat,:] = D  
             
-            # Find dutch roll (complex pair)
-            done = 0
-            for j in range(3):
-                for k in range(j+1,4):
-                    if LatModes[i,j].real ==  LatModes[i,k].real:
-                        dutchRollFreqHz[i]         = abs(LatModes[i,j]) / (2 * np.pi)
-                        dutchRollDamping[i]        = np.sqrt(1/ (1 + ( D[i].imag/ D[i].real )**2 ))  
-                        dutchRollTimeDoubleHalf[i] = np.log(2) / abs(2 * np.pi * dutchRollFreqHz[i] * dutchRollDamping[i])
-                        dutchRoll_mode_real[i]     = LatModes[i,j].real / (2 * np.pi)
-                        done = 1
-                        break  
-                if done:
-                    break  
+            real_parts = LatModes[i_lat,:].real
+            unique_elements, counts = np.unique(real_parts, return_counts=True)
+            idx = np.where(counts==2)[0]
+
+            dutchRollFreqHz[i_lat]         = abs(D[idx]) / (2 * np.pi)
+            dutchRollDamping[i_lat]        = np.sqrt(1/ (1 + ( D[i_lat].imag/ D[i_lat].real )**2 ))  
+            dutchRollTimeDoubleHalf[i_lat] = np.log(2) / abs(2 * np.pi * dutchRollFreqHz[i_lat] * dutchRollDamping[i_lat])
+            dutchRoll_mode_real[i_lat]     = D[idx].real / (2 * np.pi)
             
-            # Find roll mode
-            diff_vec = np.arange(0,4)
-            tmpInd   = np.setdiff1d(diff_vec , [j,k])
-            rollInd  = np.argmax(abs(LatModes[i,tmpInd])) # higher frequency than spiral
-            rollInd  = tmpInd[rollInd]
-            rollSubsistenceFreqHz[i]       = abs(LatModes[i,rollInd]) / 2 / np.pi
-            rollSubsistenceDamping[i]      = - np.sign(LatModes[i,rollInd].real)
-            rollSubsistenceTimeConstant[i] = 1 / (2 * np.pi * rollSubsistenceFreqHz[i] * rollSubsistenceDamping[i])
+            dutch_roll_idx                 = np.where( unique_elements[idx] == D.real )[0]
             
-            # Find spiral mode
-            spiralInd               = np.setdiff1d(diff_vec,[j,k,rollInd])
-            spiralFreqHz[i]         = abs(LatModes[i,spiralInd]) / 2 / np.pi
-            spiralDamping[i]        = - np.sign(LatModes[i,spiralInd].real)
-            spiralTimeDoubleHalf[i] = np.log(2) / abs(2 * np.pi * spiralFreqHz[i] * spiralDamping[i])
+            remaining_modes                    = np.delete(D, dutch_roll_idx)
+            rollInd                            = np.argmin(remaining_modes) 
+            rollSubsistenceFreqHz[i_lat]       = abs(remaining_modes[rollInd]) / 2 / np.pi
+            rollSubsistenceDamping[i_lat]      = - np.sign(remaining_modes[rollInd].real)
+            rollSubsistenceTimeConstant[i_lat] = 1 / (2 * np.pi * rollSubsistenceFreqHz[i_lat] * rollSubsistenceDamping[i_lat])
+            
+            # Find spiral mode 
+            sprial_mode                 = np.delete(remaining_modes,rollInd)             
+            spiralFreqHz[i_lat]         = abs(sprial_mode) / 2 / np.pi
+            spiralDamping[i_lat]        = - np.sign(sprial_mode.real)
+            spiralTimeDoubleHalf[i_lat] = np.log(2) / abs(2 * np.pi * spiralFreqHz[i_lat] * spiralDamping[i_lat])
              
-        ## Build longitudinal and lateral state space system. Requires additional toolbox 
-        #from control.matlab import ss  # control toolbox needed in python. Run "pip (or pip3) install control"    
-        #LonSys    = {}
-        #LatSys    = {}    
-        #for i in range(num_cases):         
-            #LonSys[cases[i].tag] = ss(ALon[i],BLon[i],CLon[i],DLon[i])
-            #LatSys[cases[i].tag] = ss(ALat[i],BLat[i],CLat[i],DLat[i]) 
-        
         
         # Inertial coupling susceptibility
         # See Etkin & Reid pg. 118 

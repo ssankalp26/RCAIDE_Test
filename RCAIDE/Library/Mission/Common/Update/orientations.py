@@ -48,9 +48,16 @@ def orientations(segment):
     """
 
     # unpack
-    conditions = segment.state.conditions
-    V_inertial = conditions.frames.inertial.velocity_vector
+    conditions              = segment.state.conditions
+    V_inertial              = conditions.frames.inertial.velocity_vector
     body_inertial_rotations = conditions.frames.body.inertial_rotations
+ 
+    # Apply Rotation Rates 
+    I            = segment.state.numerics.time.integrate
+    omega        = segment.state.conditions.frames.inertial.angular_velocity_vector  
+    if len(I) != 0:
+        delta_angles = np.dot(I,omega)
+        body_inertial_rotations += delta_angles
 
     # ------------------------------------------------------------------
     #  Body Frame
