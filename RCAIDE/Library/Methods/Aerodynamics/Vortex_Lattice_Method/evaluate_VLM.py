@@ -10,7 +10,6 @@ import RCAIDE
 from   RCAIDE.Framework.Core                                       import Data 
 from   RCAIDE.Library.Methods.Aerodynamics.Vortex_Lattice_Method   import VLM
 from   RCAIDE.Library.Methods.Utilities                            import Cubic_Spline_Blender
-from   RCAIDE.Library.Methods.Stability.Common                     import compute_dynamic_flight_modes
 
 # package imports
 import numpy                                                       as np  
@@ -426,16 +425,6 @@ def evaluate_surrogate(state,settings,vehicle):
     conditions.Y_ref  = ref_vals.Y_ref
     conditions.Z_ref  = ref_vals.Z_ref 
     
-    # Complete model
-    #conditions.static_stability.coefficients.lift                     = Clift_alpha + Clift_beta + Clift_u + Clift_v + Clift_w + Clift_p + Clift_q + Clift_r 
-    #conditions.static_stability.coefficients.drag                     = Cdrag_alpha + Cdrag_beta + Cdrag_u + Cdrag_v + Cdrag_w + Cdrag_p + Cdrag_q + Cdrag_r 
-    #conditions.static_stability.coefficients.X                        = CX_alpha + CX_beta + CX_u + CX_v + CX_w + CX_p + CX_q + CX_r
-    #conditions.static_stability.coefficients.Y                        = CY_alpha + CY_beta + CY_u + CY_v + CY_w + CY_p + CY_q + CY_r
-    #conditions.static_stability.coefficients.Z                        = CZ_alpha + CZ_beta + CZ_u + CZ_v + CZ_w + CZ_p + CZ_q + CZ_r
-    #conditions.static_stability.coefficients.L                        = CL_alpha + CL_beta + CL_u + CL_v + CL_w + CL_p + CL_q + CL_r
-    #conditions.static_stability.coefficients.M                        = CM_alpha + CM_beta + CM_u + CM_v + CM_w + CM_p + CM_q + CM_r
-    #conditions.static_stability.coefficients.N                        = CN_alpha + CN_beta + CN_u + CN_v + CN_w + CN_p + CN_q + CN_r
-    
     # Simplified model
     conditions.static_stability.coefficients.lift                     = Clift_alpha + Clift_u + Clift_w + Clift_q 
     conditions.static_stability.coefficients.drag                     = Cdrag_alpha + Cdrag_u + Cdrag_w + Cdrag_q 
@@ -606,9 +595,6 @@ def evaluate_surrogate(state,settings,vehicle):
     
     conditions.aerodynamics.coefficients.lift.total            = conditions.static_stability.coefficients.lift 
     conditions.aerodynamics.coefficients.drag.induced.inviscid = conditions.static_stability.coefficients.drag   
-    
-    compute_dynamic_flight_modes(state,settings,vehicle)
-    
     return
 
  
