@@ -36,20 +36,23 @@ def initialize_conditions(segment):
             time =  0 
             for bus in  network.busses:
                 if not segment.state.initials.keys():
-                    end_of_flight_soc = segment.state.conditions.energy.bus.battery_modules.lithium_ion_nmc.cell.state_of_charge[-1]
-                    # *****************This is a band aid, cant be approved in a PR*******************
+                    end_of_flight_soc = 1
+                    for battery_module in segment.state.conditions.energy.bus.battery_modules:
+                        end_of_flight_soc = min(end_of_flight_soc,battery_module.cell.state_of_charge[-1])
                 else:
                     end_of_flight_soc =  segment.state.initials.conditions.energy[bus.tag].state_of_charge[-1]
-                    
-                time           =  max(((1-end_of_flight_soc) / bus.charging_c_rate )*Units.hrs  , time) 
+                
+                time           =  max(((segment.cutoff_SOC-end_of_flight_soc) / bus.charging_c_rate )*Units.hrs  , time) 
                 time           += segment.cooling_time
-                t_initial = segment.state.conditions.frames.inertial.time[0,0]
-                t_nondim  = segment.state.numerics.dimensionless.control_points
-                #segment.state.
-                charging_time      = t_nondim * ( time ) + t_initial 
-                segment.state.conditions.frames.inertial.time[:,0] = charging_time[:,0]
+            t_initial = segment.state.conditions.frames.inertial.time[0,0]
+            t_nondim  = segment.state.numerics.dimensionless.control_points
+            #segment.state.
+            charging_time      = t_nondim * ( time ) + t_initial 
+            segment.state.conditions.frames.inertial.time[:,0] = charging_time[:,0]
+
     else:
 
         t_initial = segment.state.conditions.frames.inertial.time[0,0]
         t_nondim  = segment.state.numerics.dimensionless.control_points
         time      = t_nondim * ( segment.time ) + t_initial
+        segment.state.conditions.frames.inertial.time[:,0] = time[:,0]

@@ -86,7 +86,17 @@ def regressions():
 def test_module(module_path):
 
     home_dir = os.getcwd()
-    test_dir, module_name = os.path.split( os.path.abspath(module_path) )
+    
+    # Adjust module_path to point to correct location
+    actual_module_path = os.path.join(home_dir, 'RCAIDE/Regressions', module_path)
+    test_dir, module_name = os.path.split(os.path.abspath(actual_module_path))
+    
+    # Create regression directory if needed
+    os.makedirs(test_dir, exist_ok=True)
+    
+    # Change to test directory
+    os.chdir(test_dir)
+    sys.path.append(test_dir)  # Add test directory to path for imports
 
     sys.stdout.write('# --------------------------------------------------------------------- \n')
     sys.stdout.write('# Start Test: %s \n' % module_path)

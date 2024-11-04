@@ -16,10 +16,10 @@ from RCAIDE.Library.Mission.Common.compute_point_to_point_geospacial_data     im
 # Python imports
 import matplotlib.pyplot as plt  
 import sys 
+import os
 import numpy as np     
 
-# local imports 
-sys.path.append('../../Vehicles')
+sys.path.append(os.path.join(sys.path[0],'Vehicles'))
 from NASA_X57    import vehicle_setup, configs_setup     
 
 # ----------------------------------------------------------------------

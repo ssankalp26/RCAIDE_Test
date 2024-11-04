@@ -236,9 +236,8 @@ def vehicle_setup(new_regression=True):
     
     for _ in range(number_of_modules):
         bus.battery_modules.append(deepcopy(bat))  
-    
-    for battery_module in  bus.battery_modules:
-        bus.voltage  +=   battery_module.voltage 
+
+    bus.initialize_bus_electrical_properties()
     
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Lift Propulsors 
@@ -286,13 +285,16 @@ def vehicle_setup(new_regression=True):
                                                      rel_path + 'Airfoils' + separator + 'Polars' + separator + 'NACA_4412_polar_Re_7500000.txt' ]
     prop_rotor.append_airfoil(airfoil)                
     prop_rotor.airfoil_polar_stations             = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]    
-    if  new_regression:
+    current_dir = os.path.abspath(os.path.dirname(__file__))
+    test_dir = os.path.abspath(os.path.join(current_dir, '../Tests/mission_segments'))
+    
+    if new_regression:
         design_prop_rotor(prop_rotor)
-        save_rotor(prop_rotor, 'vahana_tilt_rotor_geometry.res')
+        save_rotor(prop_rotor, os.path.join(test_dir, 'vahana_tilt_rotor_geometry.res'))
     else:
         regression_prop_rotor = deepcopy(prop_rotor)
         design_prop_rotor(regression_prop_rotor, iterations=2)
-        loaded_prop_rotor = load_rotor('vahana_tilt_rotor_geometry.res')
+        loaded_prop_rotor = load_rotor(os.path.join(test_dir, 'vahana_tilt_rotor_geometry.res'))
         
         for key,item in prop_rotor.items():
             prop_rotor[key] = loaded_prop_rotor[key] 

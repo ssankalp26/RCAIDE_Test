@@ -59,3 +59,4 @@ def initialize_from_circuit_configuration(battery_module,module_weight_factor = 
     battery_module.maximum_voltage                = battery_module.cell.maximum_voltage  * battery_module.electrical_configuration.series   
     battery_module.initial_maximum_energy         = battery_module.maximum_energy      
     battery_module.electrical_configuration.total = battery_module.electrical_configuration.series * battery_module.electrical_configuration.parallel        
+    battery_module.nominal_capacity               = battery_module.cell.nominal_capacity* battery_module.electrical_configuration.parallel

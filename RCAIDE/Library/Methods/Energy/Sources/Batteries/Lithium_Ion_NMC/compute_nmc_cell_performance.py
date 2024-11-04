@@ -122,8 +122,6 @@ def compute_nmc_cell_performance(battery_module,state,bus,coolant_lines,t_idx, d
     E_bus                       = bus_conditions.energy
     P_bus                       = bus_conditions.power_draw
     I_bus                       = bus_conditions.current_draw
-    SOC_bus                     = bus_conditions.state_of_charge
-    DOD_bus                     = bus_conditions.depth_of_discharge
     
     # ---------------------------------------------------------------------------------
     # Compute battery_module Conditions
@@ -240,15 +238,13 @@ def compute_nmc_cell_performance(battery_module,state,bus,coolant_lines,t_idx, d
             T_cell[t_idx+1]    =  T_cell[t_idx] + dT_dt*delta_t[t_idx]
             
         # Compute state of charge and depth of discarge of the battery_module
-        E_module[t_idx+1]                             = E_module[t_idx] -P_module[t_idx]*delta_t[t_idx] 
+        E_module[t_idx+1]                                    = E_module[t_idx] -P_module[t_idx]*delta_t[t_idx] 
         E_module[t_idx+1][E_module[t_idx+1] > E_module_max]  = E_module_max
-        SOC_cell[t_idx+1]                             = E_module[t_idx+1]/E_module_max 
-        SOC_cell[t_idx+1][SOC_cell[t_idx+1]>1]        = 1.
-        SOC_cell[t_idx+1][SOC_cell[t_idx+1]<0]        = 0. 
-        DOD_cell[t_idx+1]                             = 1 - SOC_cell[t_idx+1]  
-        #E_bus[t_idx+1]                                = E_module[t_idx+1]*no_modules
-        SOC_module[t_idx+1]                            = SOC_cell[t_idx+1]
-        #DOD_bus[t_idx+1]                              = DOD_cell[t_idx+1]
+        SOC_cell[t_idx+1]                                     = E_module[t_idx+1]/E_module_max 
+        SOC_cell[t_idx+1][SOC_cell[t_idx+1]>1]                = 1.
+        SOC_cell[t_idx+1][SOC_cell[t_idx+1]<0]                = 0. 
+        DOD_cell[t_idx+1]                                     = 1 - SOC_cell[t_idx+1]  
+        SOC_module[t_idx+1]                                   = SOC_cell[t_idx+1]
 
     
         # Determine new charge throughput (the amount of charge gone through the battery_module)

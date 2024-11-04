@@ -18,9 +18,10 @@ import sys
 import matplotlib.pyplot as plt 
 import numpy as np     
 from copy import deepcopy
+import os
 
 # local imports 
-sys.path.append('../../Vehicles')
+sys.path.append(os.path.join(sys.path[0],'Vehicles'))
 from Embraer_190    import vehicle_setup as vehicle_setup
 from Embraer_190    import configs_setup as configs_setup 
 

@@ -16,9 +16,10 @@ from RCAIDE.Library.Plots             import *
 import numpy as np
 import pylab as plt 
 import sys
+import os
 
 # local imports 
-sys.path.append('../../Vehicles')
+sys.path.append(os.path.join(sys.path[0], 'Vehicles'))
 from Boeing_737    import vehicle_setup as vehicle_setup
 from Boeing_737    import configs_setup as configs_setup 
 
