@@ -11,7 +11,7 @@
 # RCAIDE 
 import RCAIDE
 from RCAIDE.Library.Methods.Geometry.Planform import compute_span_location_from_chord_length
-from RCAIDE.Library.Methods.Geometry.Planform import compute_chord_length_from_span_location
+from RCAIDE.Library.Methods.Geometry.Planform import compute_chord_length_from_span_location 
 from RCAIDE.Library.Methods.Geometry.Planform import convert_sweep
 from RCAIDE.Library.Components import  Component
 
@@ -219,7 +219,7 @@ def compute_component_centers_of_gravity(vehicle, nose_load = 0.06):
 
     try:  
         main_gear                                                  = vehicle.landing_gear.main  
-        moment_sans_main                                           = vehicle.center_of_gravity()[0][0]*(vehicle.sum_mass()-main_gear.mass_properties.mass) 
+        moment_sans_main                                           = RCAIDE.Library.Methods.Weights.Center_of_Gravity.compute_vehicle_center_of_gravity(vehicle, update_CG=False)[0][0]*     (vehicle.sum_mass()-main_gear.mass_properties.mass) 
         main_gear_location                                         = moment_sans_main/(vehicle.mass_properties.takeoff-main_gear.mass_properties.mass)/(1-nose_load)
         main_gear.origin[0][0]                                     = main_gear_location
         main_gear.mass_properties.center_of_gravity                = 0.0 

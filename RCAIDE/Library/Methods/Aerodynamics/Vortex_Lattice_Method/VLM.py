@@ -511,11 +511,11 @@ def VLM(conditions,settings,geometry):
     results.Y_ref      = 0
     results.Z_ref      = z_m
     
-    results.CL         =  CL         
-    results.CDi        =  CDi  
+    results.CL         = CL         
+    results.CDi        = CDi  
     
-    results.CX         = CX
-    results.CY         = CY 
+    results.CX         =  CX
+    results.CY         =  CY 
     results.CZ         = -CZ
     
     results.CL_mom     =  CL_mom 
@@ -578,7 +578,7 @@ def compute_rotation_effects(VD, settings, EW_small, GAMMA, len_mach, X, CHORD, 
     # VX, VY, VZ ARE THE FLOW ONSET VELOCITY COMPONENTS AT THE LEADING
     # EDGE (STRIP MIDPOINT). VX, VY, VZ AND THE ROTATION RATES ARE
     # REFERENCED TO THE FREE STREAM VELOCITY.     
-    VX = rhs.VX   # (COSCOS - PITCH*ZGIRO + YAW  *YGIRO) # rhs.VX  
+    VX = (COSCOS - PITCH*ZGIRO + YAW  *YGIRO)  
     VY = (COSINP - YAW  *XGIRO + ROLL *ZGIRO)  
     VZ = (SINALF - ROLL *YGIRO + PITCH*XGIRO)
 

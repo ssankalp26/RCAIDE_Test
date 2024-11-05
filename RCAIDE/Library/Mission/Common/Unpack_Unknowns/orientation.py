@@ -16,7 +16,7 @@ def orientation(segment):
 
     # Body Angle Control    
     if ctrls.body_angle.active: 
-        segment.state.conditions.frames.body.inertial_rotations[:,1] = segment.state.unknowns.body_angle[:,0]*0 
+        segment.state.conditions.frames.body.inertial_rotations[:,1] = segment.state.unknowns.body_angle[:,0] 
     else:
         segment.state.conditions.frames.body.inertial_rotations[:,1] = segment.angle_of_attack            
 
@@ -25,8 +25,7 @@ def orientation(segment):
     else:
         segment.state.conditions.frames.body.inertial_rotations[:,0] = segment.bank_angle
         
-    #segment.state.conditions.frames.body.inertial_rotations[:,2] =  segment.state.conditions.frames.planet.true_heading[:,0] -  segment.sideslip_angle # INCORRER
-    segment.state.conditions.frames.body.inertial_rotations[:,2] =  segment.state.conditions.frames.planet.true_heading[:,0] # WORKS
+    segment.state.conditions.frames.body.inertial_rotations[:,2] =  segment.state.conditions.frames.planet.true_heading[:,0] 
     
     # Velocity Control
     if ctrls.velocity.active:

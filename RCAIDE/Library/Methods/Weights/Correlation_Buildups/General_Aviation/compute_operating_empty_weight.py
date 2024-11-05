@@ -276,8 +276,8 @@ def compute_operating_empty_weight(vehicle, settings=None):
             t_c_v      = wing.thickness_to_chord
             sweep_v    = wing.sweeps.quarter_chord
             t_tail     = wing.t_tail  
-            output_3   = compute_vertical_tail_weight(S_v, AR_v, sweep_v, q_c, taper_v, t_c_v, Nult,TOW,t_tail) 
-            wing.mass_properties.mass = output_3.W_tail_vertical
+            W_tail_vertical   = compute_vertical_tail_weight(S_v, AR_v, sweep_v, q_c, taper_v, t_c_v, Nult,TOW,t_tail) 
+            wing.mass_properties.mass = W_tail_vertical
     
     for fuselage in  vehicle.fuselages: 
         S_fus       = fuselage.areas.wetted
@@ -301,7 +301,7 @@ def compute_operating_empty_weight(vehicle, settings=None):
         landing_gear_component = vehicle.landing_gear #landing gear previously defined
         strut_length_main      = landing_gear_component.main.strut_length
         strut_length_nose      = landing_gear_component.nose.strut_length
-        W_landing_gear        = compute_landing_gear_weight(landing_weight, Nult, strut_length_main, strut_length_nose)
+        W_landing_gear         = compute_landing_gear_weight(landing_weight, Nult, strut_length_main, strut_length_nose)
         
         landing_gear_component.main.mass_properties.mass = W_landing_gear.main
         landing_gear_component.nose.mass_properties.mass = W_landing_gear.nose
@@ -323,7 +323,7 @@ def compute_operating_empty_weight(vehicle, settings=None):
     # Calculate the equipment empty weight of the aircraft
 
     W_empty           = (W_wing + W_fuselage + W_landing_gear.main+W_landing_gear.nose + W_energy_network_cumulative + W_systems.total + \
-                          W_tail_horizontal + output_3.W_tail_vertical) 
+                          W_tail_horizontal +W_tail_vertical) 
 
     # packup outputs
     W_payload = compute_payload_weight(TOW, W_empty, num_pax,W_cargo)
@@ -342,7 +342,7 @@ def compute_operating_empty_weight(vehicle, settings=None):
     output.structural_breakdown                   = Data()
     output.structural_breakdown.wing              = W_wing
     output.structural_breakdown.horizontal_tail   = W_tail_horizontal
-    output.structural_breakdown.vertical_tail     = output_3.W_tail_vertical
+    output.structural_breakdown.vertical_tail     = W_tail_vertical
     output.structural_breakdown.fuselage          = W_fuselage
     output.structural_breakdown.main_landing_gear = W_landing_gear.main
     output.structural_breakdown.nose_landing_gear = W_landing_gear.nose

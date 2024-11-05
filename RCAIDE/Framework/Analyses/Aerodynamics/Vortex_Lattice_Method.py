@@ -116,11 +116,13 @@ class Vortex_Lattice_Method(Aerodynamics):
         self.training.supersonic                                    = None
         self.training.transonic                                     = None
 
-        self.training.altitude                                      = 0    
+        self.training.altitude                                      = 0
+        self.training.speed_of_sound   = 343
+        
         self.training.angle_purtubation                             = 2 * Units.deg          
-        self.training.speed_purtubation                             = 10   
-        self.training.rate_purtubation                              = 3 * Units.deg / Units.sec   
-        self.training.control_surface_purtubation                   = 3 * Units.deg   
+        self.training.speed_purtubation                             = 0.5  
+        self.training.rate_purtubation                              = 0.5 * Units.deg / Units.sec   
+        self.training.control_surface_purtubation                   = 2 * Units.deg   
         self.training.sideslip_angle                                = np.array([10  , 5.0 ]) * Units.deg
         self.training.aileron_deflection                            = np.array([10  , 5.0 ]) * Units.deg
         self.training.elevator_deflection                           = np.array([10  , 5.0 ]) * Units.deg   

@@ -274,7 +274,7 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
 
             dutchRollFreqHz[i_lat]         = abs(D[idx]) / (2 * np.pi)
             dutchRollDamping[i_lat]        = np.sqrt(1/ (1 + ( D[idx].imag/ D[idx].real )**2 ))  
-            dutchRollTimeDoubleHalf[i_lat] = np.log(2) / abs(2 * np.pi * dutchRollFreqHz[idx] * dutchRollDamping[idx])
+            dutchRollTimeDoubleHalf[i_lat] = np.log(2) / abs(2 * np.pi * dutchRollFreqHz[i_lat] * dutchRollDamping[i_lat])
             dutchRoll_mode_real[i_lat]     = D[idx].real / (2 * np.pi)
             
             dutch_roll_idx                 = np.where( unique_elements[idx] == D.real )[0]

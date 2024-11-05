@@ -45,7 +45,7 @@ def write_avl_airfoil_file(rcaide_airfoil_filename):
     # read airfoil file header 
     origin  = os.getcwd()
     os_path = os.path.split(origin)[0]
-    f_path  = os_path + '/' + rcaide_airfoil_filename
+    f_path  = rcaide_airfoil_filename
     f = open(f_path)  
     data_block = f.readlines() 
     f.close()   

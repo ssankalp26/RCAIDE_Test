@@ -20,7 +20,7 @@ import numpy as np
 #  Computer Aircraft Center of Gravity
 # ----------------------------------------------------------------------------------------------------------------------  
 ## @ingroup Methods-Center_of_Gravity 
-def compute_vehicle_center_of_gravity(vehicle): 
+def compute_vehicle_center_of_gravity(vehicle, update_CG=True): 
     ''' Computes the moment of intertia of aircraft 
     
     Source:
@@ -54,9 +54,10 @@ def compute_vehicle_center_of_gravity(vehicle):
             Moment, Mass  = sum_moment(item)  
             total_moment += Moment
             total_mass   += Mass         
+    
+    if update_CG:
+        vehicle.mass_properties.center_of_gravity = total_moment/total_mass 
             
-    vehicle.mass_properties.center_of_gravity = total_moment/total_mass 
-            
-    return  
+    return  total_moment/total_mass 
 
 

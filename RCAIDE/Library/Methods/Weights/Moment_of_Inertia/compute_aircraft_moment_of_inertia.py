@@ -1,11 +1,11 @@
-# RCAIDE/Library/Methods/Stability/Moment_of_Inertia/compute_aircraft_MOI.py 
+# RCAIDE/Library/Methods/Stability/Moment_of_Inertia/compute_aircraft_moment_of_inertia.py 
 # 
 # Created:  September 2024, A. Molloy
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
-from RCAIDE.Library.Methods.Stability.Moment_of_Inertia import compute_cuboid_moment_of_inertia, compute_cylinder_moment_of_inertia, compute_fuselage_moment_of_inertia, compute_wing_moment_of_inertia
+from RCAIDE.Library.Methods.Weights.Moment_of_Inertia import compute_cuboid_moment_of_inertia, compute_cylinder_moment_of_inertia, compute_fuselage_moment_of_inertia, compute_wing_moment_of_inertia
 
 import RCAIDE
 import numpy as  np 
@@ -13,7 +13,7 @@ import numpy as  np
 # ------------------------------------------------------------------        
 #  Component moments of inertia (MOI) tensors
 # ------------------------------------------------------------------  
-def calculate_aircraft_MOI(vehicle, CG_location): 
+def compute_aircraft_moment_of_inertia(vehicle, CG_location, update_MOI=True): 
     ''' sums the moments of inertia of each component in the aircraft. Components summed: fuselages,
     wings (main, horizontal, tail + others), turbofan engines, batteries, motors, batteries, fuel tanks
 
@@ -97,4 +97,6 @@ def calculate_aircraft_MOI(vehicle, CG_location):
                         
     total_MOI += I_network    
     
-    return(total_MOI,  total_mass)  
+    if update_MOI:
+        vehicle.mass_properties.moments_of_inertia.tensor = total_MOI  
+    return total_MOI    

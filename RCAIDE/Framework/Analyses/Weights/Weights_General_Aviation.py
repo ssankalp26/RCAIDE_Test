@@ -69,7 +69,7 @@ class Weights_General_Aviation(Weights):
         vehicle.weight_breakdown = results
 
         # updating empty weight
-        vehicle.mass_properties.operating_empty = results.empty
+        vehicle.mass_properties.operating_empty = results.empty 
 
         # done!
         return results        

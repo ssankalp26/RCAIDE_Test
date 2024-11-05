@@ -6,11 +6,10 @@
 # ----------------------------------------------------------------------------------------------------------------------
 # cg_and_moi_test.py
 
-from RCAIDE.Framework.Core                                                     import Units,  Data ,  Container  
-from RCAIDE.Library.Methods.Weights.Correlation_Buildups                       import Common
-from RCAIDE.Library.Methods.Stability.Moment_of_Inertia.calculate_aircraft_MOI import calculate_aircraft_MOI
-from RCAIDE.Library.Methods.Stability.Center_of_Gravity                        import compute_vehicle_center_of_gravity
-from RCAIDE.Library.Methods.Stability.Moment_of_Inertia                        import compute_cuboid_moment_of_inertia
+from RCAIDE.Framework.Core                                import Units,  Data ,  Container  
+from RCAIDE.Library.Methods.Weights.Correlation_Buildups  import Common 
+from RCAIDE.Library.Methods.Weights.Center_of_Gravity     import compute_vehicle_center_of_gravity
+from RCAIDE.Library.Methods.Weights.Moment_of_Inertia     import compute_aircraft_moment_of_inertia, compute_cuboid_moment_of_inertia
 
 import numpy as  np
 import RCAIDE
@@ -51,7 +50,7 @@ def Transport_Aircraft_Test():
     # ------------------------------------------------------------------
     #   Operating Aircraft MOI
     # ------------------------------------------------------------------    
-    MOI, total_mass = calculate_aircraft_MOI(weight_analysis.vehicle, CG_location)
+    MOI, total_mass = compute_aircraft_moment_of_inertia(weight_analysis.vehicle, CG_location)
 
     # ------------------------------------------------------------------
     #   Payload MOI
@@ -101,7 +100,7 @@ def General_Aviation_Test():
     # ------------------------------------------------------------------
     #   Operating Aircraft MOI
     # ------------------------------------------------------------------    
-    MOI, total_mass = calculate_aircraft_MOI(weight_analysis.vehicle, CG_location) 
+    MOI, total_mass = compute_aircraft_moment_of_inertia(weight_analysis.vehicle, CG_location) 
 
     print(weight_analysis.vehicle.tag + ' Moment of Intertia')
     print(MOI)

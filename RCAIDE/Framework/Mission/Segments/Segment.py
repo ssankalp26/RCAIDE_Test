@@ -1,5 +1,5 @@
 ## @ingroup Analyses-Mission-Segments
-# RCAIDE/Framework/Analyses/Mission/Segment/Segment.py
+# RCAIDE/Framework/Mission/Segment/Segment.py
 # 
 # 
 # Created:  Jul 2023, M. Clarke
