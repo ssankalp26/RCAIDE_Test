@@ -13,8 +13,9 @@ from RCAIDE.Library.Methods.Propulsors.Converters.Rotor.compute_rotor_performanc
 import sys 
 import numpy as np 
 import matplotlib.pyplot as plt  
+import os
 
-sys.path.append('../../Vehicles/Rotors')
+sys.path.append(os.path.join(sys.path[0],'Vehicles','Rotors'))
 # the analysis functions
 
 from F8745_D4_Propeller  import F8745_D4_Propeller

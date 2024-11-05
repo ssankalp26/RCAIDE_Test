@@ -61,8 +61,7 @@ class Electric(Network):
         self.tag                          = 'electric'
         self.system_voltage               = None   
         self.reverse_thrust               = False
-        self.wing_mounted                 = True
-        self.charging_power               = 1000 # 1 KiloWatt
+        self.wing_mounted                 = True        
 
     # manage process with a driver function
     def evaluate(self,state,center_of_gravity):
@@ -89,7 +88,6 @@ class Electric(Network):
         # unpack   
         conditions      = state.conditions 
         busses          = self.busses
-        charging_power  = self.charging_power
         coolant_lines   = self.coolant_lines
         total_thrust    = 0. * state.ones_row(3) 
         total_power     = 0. * state.ones_row(1) 
@@ -115,13 +113,14 @@ class Electric(Network):
                 if conditions.energy.recharging:
                     avionics_power         = (avionics_conditions.power*bus.power_split_ratio)* state.ones_row(1)
                     payload_power          = (payload_conditions.power*bus.power_split_ratio)* state.ones_row(1)            
-                    total_esc_power        = 0 * state.ones_row(1) 
-                    charging_power         = charging_power*bus.power_split_ratio 
+                    total_esc_power        = 0 * state.ones_row(1)
+                    bus.charging_current   = bus.nominal_capacity * bus.charging_c_rate 
+                    charging_power         = (bus.charging_current*bus_voltage*bus.power_split_ratio)
 
                     # append bus outputs to battery
                     bus_conditions                    = state.conditions.energy[bus.tag]
                     bus_conditions.power_draw         = ((avionics_power + payload_power + total_esc_power) - charging_power)/bus.efficiency
-                    bus_conditions.current_draw       = -bus_conditions.power_draw/bus_voltage
+                    bus_conditions.current_draw       = -bus_conditions.power_draw/bus.voltage
 
                 else:       
                     # compute energy consumption of each battery on bus 
@@ -162,18 +161,18 @@ class Electric(Network):
             for bus in  busses:
                 stored_results_flag  = False
                 stored_battery_tag   = None                          
-                for battery in  bus.battery_modules:                   
+                for battery_module in  bus.battery_modules:                   
                     if bus.identical_batteries == False:
                         # run analysis  
-                        stored_results_flag, stored_battery_tag =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
+                        stored_results_flag, stored_battery_tag =  battery_module.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
                     else:             
                         if stored_results_flag == False: 
                             # run battery analysis 
-                            stored_results_flag, stored_battery_tag  =  battery.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
+                            stored_results_flag, stored_battery_tag  =  battery_module.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
                         else:
                             # use previous battery results 
-                            battery.reuse_stored_data(state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag)
-
+                            battery_module.reuse_stored_data(state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag)
+                bus.compute_distributor_conditions(state,t_idx, delta_t)
                 # Thermal Management Calculations                    
                 for coolant_line in  coolant_lines:
                     if t_idx != state.numerics.number_of_control_points-1:

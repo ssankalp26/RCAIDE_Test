@@ -41,13 +41,14 @@ class Electrical_Bus(Component):
         self.active                                = True
         self.efficiency                            = 1.0
         self.voltage                               = 0.0 
-        self.power_split_ratio                     = 1.0 
-        self.battery_module_electric_configuration = 'Series'
+        self.power_split_ratio                     = 1.0
+        self.nominal_capacity                      = 0.0
+        self.charging_c_rate                       = 1.0
+        self.battery_module_electric_configuration = "Series" 
         
     def append_operating_conditions(self, segment):
         append_bus_conditions(self, segment)
         return
-    
     def append_segment_conditions(self, conditions, segment):
         append_bus_segment_conditions(self, conditions, segment)
         return    
@@ -55,7 +56,6 @@ class Electrical_Bus(Component):
     def initialize_bus_electrical_properties(self):
         initialize_bus_electrical_properties(self)
         return
-    
-    def compute_distributor_conditions(self,state):
-        compute_bus_conditions(self, state)
+    def compute_distributor_conditions(self,state,t_idx, delta_t):
+        compute_bus_conditions(self,state,t_idx, delta_t)
         return    

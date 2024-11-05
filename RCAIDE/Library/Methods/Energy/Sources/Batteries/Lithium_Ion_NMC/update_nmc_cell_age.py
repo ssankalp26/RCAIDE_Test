@@ -12,7 +12,7 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 # update_nmc_cell_age
 # ----------------------------------------------------------------------------------------------------------------------  
-def update_nmc_cell_age(battery,battery_conditions,increment_battery_age_by_one_day):  
+def update_nmc_cell_age(battery,segment, battery_conditions,increment_battery_age_by_one_day):  
     """ This is an aging model for 18650 lithium-nickel-manganese-cobalt-oxide batteries. 
    
     Source: 

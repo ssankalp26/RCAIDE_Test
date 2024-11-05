@@ -17,9 +17,10 @@ from RCAIDE.Library.Methods.Performance.estimate_stall_speed    import estimate_
 import numpy as np  
 import sys
 import matplotlib.pyplot as plt    
+import os
 
 # local imports 
-sys.path.append('../../Vehicles')
+sys.path.append(os.path.join(sys.path[0],'Vehicles'))
 from Tiltwing_EVTOL         import vehicle_setup as  TW_vehicle_setup 
 from Tiltwing_EVTOL         import configs_setup as  TW_configs_setup 
 from Stopped_Rotor_EVTOL    import vehicle_setup as  SR_vehicle_setup 
