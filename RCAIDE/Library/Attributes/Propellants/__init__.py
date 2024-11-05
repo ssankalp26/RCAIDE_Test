@@ -15,6 +15,7 @@ from .Jet_A              import Jet_A
 from .Jet_A1             import Jet_A1 
 from .Gaseous_Hydrogen   import Gaseous_Hydrogen
 from .Liquid_Natural_Gas import Liquid_Natural_Gas
+from .Liquid_Petroleum_Gas import Liquid_Petroleum_Gas
 from .JP7                import JP7
 from .Methane            import Methane
 from .Propane            import Propane
