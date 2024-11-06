@@ -18,7 +18,7 @@ import numpy as np
 import sys 
 import os
 
-sys.path.append(os.path.join(sys.path[0], 'Vehicles'))
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 from Navion    import vehicle_setup, configs_setup     
 # ----------------------------------------------------------------------
 #   Main
@@ -45,20 +45,19 @@ def main():
     results = missions.base_mission.evaluate() 
 
     elevator_deflection        = results.segments.climb.conditions.control_surfaces.elevator.deflection[0,0] / Units.deg  
-    elevator_deflection_true   = -1.6514157380434311
+    elevator_deflection_true   = -1.1204196105648536
     elevator_deflection_diff   = np.abs(elevator_deflection - elevator_deflection_true)
     print('Error: ',elevator_deflection_diff)
     assert np.abs(elevator_deflection_diff/elevator_deflection_true) < 1e-3
 
     aileron_deflection        = results.segments.climb.conditions.control_surfaces.aileron.deflection[0,0] / Units.deg  
-    aileron_deflection_true   = 0.8448403820824947
+    aileron_deflection_true   = -0.5666380923616978
     aileron_deflection_diff   = np.abs(aileron_deflection - aileron_deflection_true)
     print('Error: ',aileron_deflection_diff)
-    assert np.abs(aileron_deflection_diff/aileron_deflection_true) < 1e-3
-    
+    assert np.abs(aileron_deflection_diff/aileron_deflection_true) < 1e-3 
 
     rudder_deflection        = results.segments.climb.conditions.control_surfaces.rudder.deflection[0,0] / Units.deg  
-    rudder_deflection_true   = -2.357495302759012
+    rudder_deflection_true   = 2.8667861407853974
     rudder_deflection_diff   = np.abs(rudder_deflection - rudder_deflection_true)
     print('Error: ',rudder_deflection_diff)
     assert np.abs(rudder_deflection_diff/rudder_deflection_true) < 1e-3    

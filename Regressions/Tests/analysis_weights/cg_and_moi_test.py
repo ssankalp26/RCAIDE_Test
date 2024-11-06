@@ -16,7 +16,7 @@ import RCAIDE
 import sys   
 import os
 
-sys.path.append(os.path.join(sys.path[0], 'Vehicles'))
+sys.path.append(os.path.join(os.path.split(sys.path[0])[0], 'Vehicles'))
 
 # the analysis functions
 from Lockheed_C5a           import vehicle_setup as transport_setup

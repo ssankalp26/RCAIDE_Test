@@ -15,7 +15,7 @@ import sys
 import os
 import numpy as np     
 
-sys.path.append(os.path.join(sys.path[0],'Vehicles'))
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 from NASA_X57    import vehicle_setup, configs_setup     
 
 # ----------------------------------------------------------------------
@@ -55,7 +55,7 @@ def main():
     
     plot_results(results,noise_data,regression_plotting_flag)   
 
-    X57_SPL        = np.max(results.segments.climb.conditions.noise.total_SPL_dBA) 
+    X57_SPL        = np.max(results.segments.climb.conditions.noise.SPL_dBA) 
     X57_SPL_true   = 45.232719642900996
     X57_diff_SPL   = np.abs(X57_SPL - X57_SPL_true)
     print('Error: ',X57_diff_SPL)
@@ -104,7 +104,7 @@ def base_analysis(vehicle):
     noise.settings.mean_sea_level_altitude          = False         
     noise.settings.aircraft_departure_coordinates   = [33.94067953101678, -118.40513722978149]
     noise.settings.aircraft_destination_coordinates = [33.81713622114423, -117.92111163722772]  
-    #noise.settings.topography_file                  = 'LA_Metropolitan_Area.txt' 
+    noise.settings.topography_file                  = 'LA_Metropolitan_Area.txt' 
     analyses.append(noise)
 
     # ------------------------------------------------------------------
@@ -146,27 +146,27 @@ def mission_setup(analyses):
     #   Departure End of Runway Segment Flight 1 : 
     # ------------------------------------------------------------------ 
 
-    #segment = Segments.Climb.Linear_Speed_Constant_Rate(base_segment) 
-    #segment.tag = "climb"   
-    #segment.analyses.extend( analyses.base ) 
-    #segment.initial_battery_state_of_charge              = 1.0 
-    #segment.altitude_start                               = 10.0    * Units.feet  
-    #segment.altitude_end                                 = 500.0   * Units.feet 
-    #segment.air_speed_start                              = 100.    * Units['mph'] 
-    #segment.air_speed_end                                = 120.    * Units['mph'] 
-    #segment.climb_rate                                   = 50.     * Units['ft/min']         
-    #segment.true_course                                  = 0
+    segment = Segments.Climb.Linear_Speed_Constant_Rate(base_segment) 
+    segment.tag = "climb"   
+    segment.analyses.extend( analyses.base ) 
+    segment.initial_battery_state_of_charge              = 1.0 
+    segment.altitude_start                               = 10.0    * Units.feet  
+    segment.altitude_end                                 = 500.0   * Units.feet 
+    segment.air_speed_start                              = 100.    * Units['mph'] 
+    segment.air_speed_end                                = 120.    * Units['mph'] 
+    segment.climb_rate                                   = 50.     * Units['ft/min']         
+    segment.true_course                                  = 0
     
-    ## define flight dynamics to model 
-    #segment.flight_dynamics.force_x                      = True  
-    #segment.flight_dynamics.force_z                      = True     
+    # define flight dynamics to model 
+    segment.flight_dynamics.force_x                      = True  
+    segment.flight_dynamics.force_z                      = True     
     
-    ## define flight controls 
-    #segment.assigned_control_variables.throttle.active               = True           
-    #segment.assigned_control_variables.throttle.assigned_propulsors  = [['starboard_propulsor','port_propulsor']] 
-    #segment.assigned_control_variables.body_angle.active             = True                
+    # define flight controls 
+    segment.assigned_control_variables.throttle.active               = True           
+    segment.assigned_control_variables.throttle.assigned_propulsors  = [['starboard_propulsor','port_propulsor']] 
+    segment.assigned_control_variables.body_angle.active             = True                
        
-    #mission.append_segment(segment)
+    mission.append_segment(segment)
     
     segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment) 
     segment.tag = "cruise"   

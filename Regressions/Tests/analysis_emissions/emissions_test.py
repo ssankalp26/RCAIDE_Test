@@ -16,9 +16,9 @@ import numpy as np
 import sys
 import os
 import matplotlib.pyplot as plt  
+ 
 
-
-sys.path.append(os.path.join(sys.path[0], 'Vehicles'))
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 from Boeing_737    import vehicle_setup as vehicle_setup
 from Boeing_737    import configs_setup as configs_setup 
 

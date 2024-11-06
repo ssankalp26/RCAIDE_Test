@@ -9,7 +9,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE imports
-from RCAIDE.Framework.Core import  Units
 from RCAIDE.Framework.Core  import  angles_to_dcms, orientation_product, orientation_transpose
 
 # package imports 
@@ -48,8 +47,8 @@ def orientations(segment):
     """
 
     # unpack
-    conditions              = segment.state.conditions
-    V_inertial              = conditions.frames.inertial.velocity_vector
+    conditions = segment.state.conditions
+    V_inertial = conditions.frames.inertial.velocity_vector
     body_inertial_rotations = conditions.frames.body.inertial_rotations
  
     # Apply Rotation Rates 

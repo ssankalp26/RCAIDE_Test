@@ -86,29 +86,7 @@ def generate_terrain_microphone_locations(settings):
     [long_deg,lat_deg] = np.meshgrid(np.linspace(np.min(Long),np.max(Long),y_res),np.linspace(np.min(Lat),np.max(Lat),x_res)) 
     z_deg              = griddata((Lat,Long), Elev, (lat_deg, long_deg), method='linear')        
     cartesian_pts      = np.dstack((np.dstack((x_pts[:,:,None],y_pts[:,:,None] )),z_deg[:,:,None])).reshape(x_res*y_res,3)
-    lat_long_pts       = np.dstack((np.dstack((lat_deg[:,:,None],long_deg[:,:,None] )),z_deg[:,:,None])).reshape(x_res*y_res,3)
-     
-    ## Compute distance between origin and destimation points
-    #coord0_rad = origin_coordinates*Units.degrees
-    #coord1_rad = destination_coordinates*Units.degrees  
-    #angle      = np.arccos(np.sin(coord0_rad[0])*np.sin(coord1_rad[0]) + 
-                           #np.cos(coord0_rad[0])*np.cos(coord1_rad[0])*np.cos(coord0_rad[1] - coord1_rad[1])) 
-      
-    ## Compute heading from origin to destination    
-    #gamma = np.arcsin( np.sin(np.pi/2 - coord1_rad[0])* np.sin(coord1_rad[1] - coord0_rad[1])/np.sin(angle)) 
-    #angle_vector   = destination_coordinates - origin_coordinates 
-    #if angle_vector[0] < 0:
-        #gamma = np.pi - gamma 
-    
-    # Compute relative cartesian location of origin and destimation points on topographical grid 
-    #corner_long = lat_long_pts[0,1]
-    #if corner_long>180:
-        #corner_long = corner_long-360  
-    
-    #lat_flag             = np.where(origin_coordinates<0)[0]
-    #origin_coordinates[lat_flag]  = origin_coordinates[lat_flag] + 360 
-    #long_flag            = np.where(destination_coordinates<0)[0]
-    #destination_coordinates[long_flag] = destination_coordinates[long_flag] + 360    
+    lat_long_pts       = np.dstack((np.dstack((lat_deg[:,:,None],long_deg[:,:,None] )),z_deg[:,:,None])).reshape(x_res*y_res,3)    
         
     settings.microphone_locations      = cartesian_pts 
     settings.microphone_coordinates    = lat_long_pts
