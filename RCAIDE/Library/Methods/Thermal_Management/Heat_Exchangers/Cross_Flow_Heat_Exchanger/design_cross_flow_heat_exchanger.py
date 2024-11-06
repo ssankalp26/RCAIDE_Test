@@ -58,6 +58,7 @@ def design_cross_flow_heat_exchanger(HEX,coolant_line,battery, single_side_conta
     HEX.design_air_frontal_area       = HEX_opt.air_frontal_area
     HEX.design_air_pressure_diff      = HEX_opt.pressure_diff_air
     HEX.design_heat_removed           = HEX_opt.heat_removed
+    HEX.mass_properties.mass          = HEX_opt.heat_exchanger_mass
     return HEX
 
 ## @ingroup Methods-Thermal_Management-Batteries-Sizing

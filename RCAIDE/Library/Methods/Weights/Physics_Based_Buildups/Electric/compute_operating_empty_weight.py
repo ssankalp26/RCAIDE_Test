@@ -82,20 +82,21 @@ def compute_operating_empty_weight(vehicle,settings = None):
         max_g_load                    = settings.max_g_load  
                
     # Set up data structures for RCAIDE weight methods
-    weight                   = Data()  
-    weight.battery           = 0.0
-    weight.payload           = 0.0
-    weight.servos            = 0.0
-    weight.hubs              = 0.0
-    weight.booms             = 0.0
-    weight.BRS               = 0.0  
-    weight.motors            = 0.0
-    weight.rotors            = 0.0
-    weight.rotors            = 0.0
-    weight.fuselage          = 0.0
-    weight.wiring            = 0.0
-    weight.wings             = Data()
-    weight.wings_total       = 0.0
+    weight                                  = Data()  
+    weight.battery                          = 0.0
+    weight.payload                          = 0.0
+    weight.servos                           = 0.0
+    weight.hubs                             = 0.0
+    weight.booms                            = 0.0
+    weight.BRS                              = 0.0  
+    weight.motors                           = 0.0
+    weight.rotors                           = 0.0
+    weight.rotors                           = 0.0
+    weight.fuselage                         = 0.0
+    weight.wiring                           = 0.0
+    weight.wings                            = Data()
+    weight.wings_total                      = 0.0
+    weight.thermal_management_system       = Data()
 
 
     control_systems                                  = RCAIDE.Library.Components.Component()
@@ -201,7 +202,7 @@ def compute_operating_empty_weight(vehicle,settings = None):
         
             # Servo, Hub and BRS Weights
             lift_rotor_hub_weight   = 4.   * Units.kg
-            prop_hub_weight         = MTOW * 0.04  * Units.kg
+            prop_hub_weight         = 4.   * Units.kg
             lift_rotor_BRS_weight   = 16.  * Units.kg
     
             # Rotor Weight
@@ -266,6 +267,30 @@ def compute_operating_empty_weight(vehicle,settings = None):
                 weight.rotors     += weight.tail_rotor 
 
     #-------------------------------------------------------------------------------
+    # Thermal Management System Weight
+    #-------------------------------------------------------------------------------
+    tms_weight = 0.0
+    for network in vehicle.networks:
+        for coolant_line in network.coolant_lines:
+            weight.thermal_management_system.battery_module = Data()  # Add container for battery module
+            for i, battery_module in enumerate(coolant_line.battery_modules):
+                module_key = f'module_{i+1}'  # Create unique key for each module
+                weight.thermal_management_system.battery_module[module_key] = 0.0  # Initialize weight
+                for HAS in battery_module:
+                    weight.thermal_management_system.battery_module[module_key] = HAS.mass_properties.mass
+                    tms_weight +=  HAS.mass_properties.mass
+
+            for tag, item in coolant_line.items(): 
+                if tag == 'heat_exchangers':
+                    for heat_exchanger in item:
+                        weight.thermal_management_system[heat_exchanger.tag] = heat_exchanger.mass_properties.mass
+                        tms_weight +=  heat_exchanger.mass_properties.mass
+                if tag == 'reservoirs':
+                    for reservoir in item:
+                        weight.thermal_management_system[reservoir.tag] = reservoir.mass_properties.mass
+                        tms_weight +=  reservoir.mass_properties.mass
+    weight.thermal_management_system.total = tms_weight
+    #-------------------------------------------------------------------------------
     # Wing and Motor Wiring Weight
     #-------------------------------------------------------------------------------
     maxSpan =  0
@@ -314,22 +339,25 @@ def compute_operating_empty_weight(vehicle,settings = None):
     #-------------------------------------------------------------------------------
     # Pack Up Outputs
     #-------------------------------------------------------------------------------
-    output                                    = Data()
-    output.structural_breakdown               = Data()
-    output.structural_breakdown.total         = weight.booms + weight.fuselage + weight.landing_gear +weight.wings_total 
-    output.structural_breakdown.booms         = weight.booms 
-    output.structural_breakdown.fusleage      = weight.fuselage  
-    output.structural_breakdown.landing_gear  = weight.landing_gear  
-    output.structural_breakdown.wings         = weight.wings_total 
+    output                                                = Data()
+    output.structural_breakdown                           = Data()
+    output.structural_breakdown.total                     = weight.booms + weight.fuselage + weight.landing_gear +weight.wings_total 
+    output.structural_breakdown.booms                     = weight.booms 
+    output.structural_breakdown.fusleage                  = weight.fuselage  
+    output.structural_breakdown.landing_gear              = weight.landing_gear  
+    output.structural_breakdown.wings                     = weight.wings_total 
+             
+    output.propulsion_breakdown                           = Data()
+    output.propulsion_breakdown.motors                    = weight.motors
+    output.propulsion_breakdown.rotors                    = weight.rotors
+    output.propulsion_breakdown.hubs                      = weight.hubs 
+    output.propulsion_breakdown.servos                    = weight.servos
+    output.propulsion_breakdown.wiring                    = weight.wiring 
+    output.propulsion_breakdown.battery                   = weight.battery
+    output.propulsion_breakdown.thermal_management_system = weight.thermal_management_system.total
+    output.propulsion_breakdown.total                     = weight.rotors + weight.hubs +  weight.battery +  weight.motors +   weight.wiring +   weight.servos +  weight.thermal_management_system.total
 
-    output.propulsion_breakdown               = Data()
-    output.propulsion_breakdown.motors        = weight.motors
-    output.propulsion_breakdown.rotors        = weight.rotors
-    output.propulsion_breakdown.hubs          = weight.hubs 
-    output.propulsion_breakdown.servos        = weight.servos
-    output.propulsion_breakdown.wiring        = weight.wiring 
-    output.propulsion_breakdown.battery       = weight.battery
-    output.propulsion_breakdown.total         = weight.rotors + weight.hubs +  weight.battery +  weight.motors +   weight.wiring +   weight.servos
+
 
     output.systems_breakdown                              = Data()
     output.systems_breakdown.environmental_control_system = weight.ECS
@@ -343,3 +371,9 @@ def compute_operating_empty_weight(vehicle,settings = None):
     output.passengers  = weight.passengers
     output.payload     = weight.payload  
     return output
+
+
+
+
+
+

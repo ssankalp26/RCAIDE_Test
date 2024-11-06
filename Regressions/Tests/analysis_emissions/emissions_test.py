@@ -14,10 +14,11 @@ from RCAIDE.Library.Plots                           import *
 # python imports     
 import numpy as np  
 import sys
+import os
 import matplotlib.pyplot as plt  
 
-# local imports 
-sys.path.append('../../Vehicles')
+
+sys.path.append(os.path.join(sys.path[0], 'Vehicles'))
 from Boeing_737    import vehicle_setup as vehicle_setup
 from Boeing_737    import configs_setup as configs_setup 
 

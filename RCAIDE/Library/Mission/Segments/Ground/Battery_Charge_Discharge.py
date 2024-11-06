@@ -29,27 +29,30 @@ def initialize_conditions(segment):
     Properties Used:
     N/A
     """    
-    t_nondim   = segment.state.numerics.dimensionless.control_points 
-    
+    t_nondim   = segment.state.numerics.dimensionless.control_points
+
     if isinstance(segment, RCAIDE.Framework.Mission.Segments.Ground.Battery_Recharge):
         for network in segment.analyses.energy.vehicle.networks:
-            final_time =  0 
+            time =  0 
             for bus in  network.busses:
-                for battery_module in  bus.battery_modules:
-                    if 'initial_battery_state_of_charge' in segment:
-                        initial_SOC =  segment.initial_battery_state_of_charge
-                    else: 
-                        initial_SOC = segment.state.initials.conditions.energy[bus.tag].SOC[-1] 
-                    energy_consumed =  (segment.cutoff_SOC-initial_SOC) * battery_module.maximum_energy
-                    final_time      =   max((energy_consumed /network.charging_power) , final_time) 
-        t_initial     = segment.state.conditions.frames.inertial.time[0,0]
-        t_final       = final_time + t_initial
-        t_nondim      = segment.state.numerics.dimensionless.control_points 
-        time          =  t_nondim * (t_final-t_initial) + t_initial
-        segment.state.conditions.frames.inertial.time[:,0] =  time[:,0]
-    else: 
-        
+                if not segment.state.initials.keys():
+                    end_of_flight_soc = 1
+                    for battery_module in segment.state.conditions.energy.bus.battery_modules:
+                        end_of_flight_soc = min(end_of_flight_soc,battery_module.cell.state_of_charge[-1])
+                else:
+                    end_of_flight_soc =  segment.state.initials.conditions.energy[bus.tag].state_of_charge[-1]
+                
+                time           =  max(((segment.cutoff_SOC-end_of_flight_soc) / bus.charging_c_rate )*Units.hrs  , time) 
+                time           += segment.cooling_time
+            t_initial = segment.state.conditions.frames.inertial.time[0,0]
+            t_nondim  = segment.state.numerics.dimensionless.control_points
+            #segment.state.
+            charging_time      = t_nondim * ( time ) + t_initial 
+            segment.state.conditions.frames.inertial.time[:,0] = charging_time[:,0]
+
+    else:
+
         t_initial = segment.state.conditions.frames.inertial.time[0,0]
         t_nondim  = segment.state.numerics.dimensionless.control_points
-        time      = t_nondim * ( segment.time ) + t_initial 
-        segment.state.conditions.frames.inertial.time[:,0] = time[:,0] 
+        time      = t_nondim * ( segment.time ) + t_initial
+        segment.state.conditions.frames.inertial.time[:,0] = time[:,0]
