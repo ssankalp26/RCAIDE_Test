@@ -284,7 +284,7 @@ def compute_operating_empty_weight(vehicle, settings=None):
         diff_p_fus  = fuselage.differential_pressure
         w_fus       = fuselage.width
         h_fus       = fuselage.heights.maximum
-        l_fus       = fuselage.lengths.structure
+        l_fus       = fuselage.lengths.total # Raymer defines this as structural weight which does not include radome, tailcap, etc
         V_fuse      = fuselage.mass_properties.volume 
         num_seats   = fuselage.number_coach_seats  
         W_fuselage  = compute_fuselage_weight(S_fus, Nult, TOW, w_fus, h_fus, l_fus, l_w2h, q_c, V_fuse, diff_p_fus)
@@ -299,12 +299,12 @@ def compute_operating_empty_weight(vehicle, settings=None):
 
     else: 
         landing_gear_component = vehicle.landing_gear #landing gear previously defined
-        strut_length_main      = landing_gear_component.main.strut_length
-        strut_length_nose      = landing_gear_component.nose.strut_length
+        strut_length_main      = landing_gear_component.main_strut_length
+        strut_length_nose      = landing_gear_component.nose_strut_length 
         W_landing_gear         = compute_landing_gear_weight(landing_weight, Nult, strut_length_main, strut_length_nose)
         
-        landing_gear_component.main.mass_properties.mass = W_landing_gear.main
-        landing_gear_component.nose.mass_properties.mass = W_landing_gear.nose
+        landing_gear_component.mass_properties.mass = [W_landing_gear.main, W_landing_gear.nose]
+        #landing_gear_component.mass_properties.mass = W_landing_gear.nose
 
     if 'avionics' not in vehicle: 
         avionics     = RCAIDE.Library.Components.Systems.Avionics()
