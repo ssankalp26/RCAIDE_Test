@@ -50,14 +50,13 @@ def Transport_Aircraft_Test():
     # ------------------------------------------------------------------
     #   Operating Aircraft MOI
     # ------------------------------------------------------------------    
-    MOI, total_mass = compute_aircraft_moment_of_inertia(weight_analysis.vehicle, CG_location)
-
+    MOI  = compute_aircraft_moment_of_inertia(weight_analysis.vehicle, CG_location)
+    
     # ------------------------------------------------------------------
     #   Payload MOI
     # ------------------------------------------------------------------    
     Cargo_MOI, mass =  compute_cuboid_moment_of_inertia(CG_location, 99790*Units.kg, 36.0, 3.66, 3, 0, 0, 0, CG_location)
-    MOI             += Cargo_MOI
-    total_mass      += mass
+    MOI             += Cargo_MOI 
     
     print(weight_analysis.vehicle.tag + ' Moment of Intertia')
     print(MOI)
@@ -100,7 +99,7 @@ def General_Aviation_Test():
     # ------------------------------------------------------------------
     #   Operating Aircraft MOI
     # ------------------------------------------------------------------    
-    MOI, total_mass = compute_aircraft_moment_of_inertia(weight_analysis.vehicle, CG_location) 
+    MOI = compute_aircraft_moment_of_inertia(weight_analysis.vehicle, CG_location) 
 
     print(weight_analysis.vehicle.tag + ' Moment of Intertia')
     print(MOI)

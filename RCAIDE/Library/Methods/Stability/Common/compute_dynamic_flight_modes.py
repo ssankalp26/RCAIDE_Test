@@ -105,34 +105,31 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
             V_H             = ( l_bar_t *S_t ) /(c_ref *S)  # tail volume
             dEpsilon_dalpha =  0.3
             
-            SSD.CZ_alpha_dot =  a_t * dEpsilon_dalpha *  (l_t /u0) *  (S_t / S) # Dynamics of Flight Page 147 
-            SSD.CM_alpha_dot =  -a_t * V_H * dEpsilon_dalpha*  (l_t /u0)  # Dynamics of Flight Page 148                         
+            SSD.CZ_alpha_dot =  a_t * dEpsilon_dalpha *  (l_t /u0) *  (S_t / S) 
+            SSD.CM_alpha_dot =  -a_t * V_H * dEpsilon_dalpha*  (l_t /u0)        
                         
         for i in range(num_cases): 
             CLon[i,:,:] = np.eye(4)        
         Cw         = m * g / (qDyn0 * S_ref)  
-        Xu         = rho * u0 * S_ref * Cw * np.sin(theta0) + 0.5 * rho * u0 * S_ref * SSD.CX_u # CHECKED
-        Xw         = 0.5 * rho * u0 * S_ref * SSD.CX_alpha # CHECKED
-        Xq         = 0.25 * rho * u0 * c_ref * S_ref *  SSD.CX_q    # CHECKED (Should be 0)
-        Zu         = -rho * u0 * S_ref * Cw * np.cos(theta0) + 0.5 * rho * u0 * S_ref * SSD.CZ_u# CHECKED
-        Zw         = 0.5 * rho * u0 * S_ref * SSD.CZ_alpha   # CHECKED 
-        Zq         = 0.25 * rho * u0 * c_ref * S_ref *  SSD.CZ_q   # CHECKED 
-        Mu         =  0.5 * rho * u0 * c_ref * S_ref * SSD.CM_u    # CHECKED (Should be 0)
-        Mw         = 0.5 * rho * u0 * c_ref * S_ref * SSD.CM_alpha   # CHECKED 
-        Mq         = 0.25 * rho * u0 * c_ref * c_ref * S_ref * SSD.CM_q    # CHECKED 
-        ZwDot      = 0.25 * rho * c_ref * S_ref * SSD.CZ_alpha_dot  # Dynamics of FLight Page 118  CHECKED (Should be +ve)
-        MwDot      = 0.25 * rho * c_ref * S_ref * SSD.CM_alpha_dot   # Dynamics of FLight Page 118 CHECKED 
+        Xu         = rho * u0 * S_ref * Cw * np.sin(theta0) + 0.5 * rho * u0 * S_ref * SSD.CX_u  
+        Xw         = 0.5 * rho * u0 * S_ref * SSD.CX_alpha     
+        Zu         = -rho * u0 * S_ref * Cw * np.cos(theta0) + 0.5 * rho * u0 * S_ref * SSD.CZ_u 
+        Zw         = 0.5 * rho * u0 * S_ref * SSD.CZ_alpha   
+        Zq         = 0.25 * rho * u0 * c_ref * S_ref *  SSD.CZ_q    
+        Mu         =  0.5 * rho * u0 * c_ref * S_ref * SSD.CM_u     
+        Mw         = 0.5 * rho * u0 * c_ref * S_ref * SSD.CM_alpha  
+        Mq         = 0.25 * rho * u0 * c_ref * c_ref * S_ref * SSD.CM_q     
+        ZwDot      = 0.25 * rho * c_ref * S_ref * SSD.CZ_alpha_dot  
+        MwDot      = 0.25 * rho * c_ref * S_ref * SSD.CM_alpha_dot  
         
         
         ALon[:,0,0] = (Xu / m).T[0]
-        ALon[:,0,1] = (Xw / m).T[0]
-        #ALon[:,0,2] =  (Xq.T)[0] / m 
+        ALon[:,0,1] = (Xw / m).T[0] 
         ALon[:,0,3] = (-g * np.cos(theta0)).T[0]
         ALon[:,1,0] = (Zu / (m - ZwDot)).T[0]
-        ALon[:,1,1] = (Zw / (m - ZwDot)).T[0] # Note negative
+        ALon[:,1,1] = (Zw / (m - ZwDot)).T[0] 
         ALon[:,1,2] = ((Zq + (m * u0)) / (m - ZwDot) ).T[0]
-        ALon[:,2,0] = ((Mu + MwDot * Zu / (m - ZwDot)) / Iyy).T[0] # Negative
-        #ALon[:,2,0] = ((MwDot * Zu / (m - ZwDot)) / Iyy).T[0]  # ((Mu + MwDot * Zu / (m - ZwDot)) / Iyy).T[0] 
+        ALon[:,2,0] = ((Mu + MwDot * Zu / (m - ZwDot)) / Iyy).T[0]  
         ALon[:,2,1] = ((Mw + MwDot * Zw / (m - ZwDot)) / Iyy).T[0] 
         ALon[:,2,2] = ((Mq + MwDot * (Zq + m * u0) / (m - ZwDot)) / Iyy ).T[0] 
         ALon[:,2,3] = (-MwDot * m * g * np.sin(theta0) / (Iyy * (m - ZwDot))).T[0] 
@@ -207,8 +204,7 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
             Izp[c_i2]  = (IxxStab * IzzStab - IxzStab**2) / IxxStab
             Ixzp[c_i2] = IxzStab / (IxxStab * IzzStab - IxzStab**2) 
             
-        Yv = 0.5 * rho * u0 * S_ref * SSD.CY_beta
-        Yp = 0.25 * rho * u0 * b_ref * S_ref * SSD.CY_p
+        Yv = 0.5 * rho * u0 * S_ref * SSD.CY_beta 
         Yr = 0.25 * rho * u0 * b_ref * S_ref * SSD.CY_r
         Lv = 0.5 * rho * u0 * b_ref * S_ref * SSD.CL_beta
         Lp = 0.25 * rho * u0 * b_ref**2 * S_ref * SSD.CL_p
@@ -232,8 +228,7 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
                         BLat[:,2,0] = (Ixzp * La + Na / Izp).T[0]
                         BLat[:,3,0] = 0
      
-        ALat[:,0,0] = (Yv / m).T[0] 
-        #ALat[:,0,1] = (Yp / m).T[0] 
+        ALat[:,0,0] = (Yv / m).T[0]  
         ALat[:,0,2] = (Yr/m - u0).T[0] 
         ALat[:,0,3] = (g * np.cos(theta0)).T[0]
         

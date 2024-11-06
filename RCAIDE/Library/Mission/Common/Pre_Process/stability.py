@@ -35,8 +35,8 @@ def stability(mission):
             else:
                 if (type(segment.analyses.aerodynamics) == RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method) or (type(segment.analyses.aerodynamics) == RCAIDE.Framework.Analyses.Aerodynamics.Athena_Vortex_Lattice) :
                     segment.analyses.stability.process.compute.lift.inviscid_wings = segment.analyses.aerodynamics.process.compute.lift.inviscid_wings 
-                    segment.analyses.aerodynamics.surrogates       = segment.analyses.aerodynamics.surrogates 
-                    segment.analyses.aerodynamics.reference_values = segment.analyses.aerodynamics.reference_values 
+                    segment.analyses.stability.surrogates       = segment.analyses.aerodynamics.surrogates 
+                    segment.analyses.stability.reference_values = segment.analyses.aerodynamics.reference_values 
                     last_tag = tag                 
                 else:
                     stab = segment.analyses.stability

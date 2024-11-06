@@ -111,19 +111,19 @@ class Vortex_Lattice_Method(Stability):
     
         # conditions table, used for surrogate model training
         self.training                                               = Data()
-        self.training.angle_of_attack                               = np.array([-5., -2. , 1E-12 , 2.0, 5.0, 8.0, 10.0 , 12., 45., 75.]) * Units.deg 
-        self.training.Mach                                          = np.array([1E-12, 0.1  , 0.2 , 0.3,  0.5,  0.75 , 0.85 , 0.9, 1.3, 1.35 , 1.5 , 2.0, 2.25 , 2.5  , 3.0  , 3.5]) 
+        self.training.angle_of_attack                               = np.array([-5., -2. , 1E-20 , 2.0, 5.0, 8.0, 10.0 , 12., 45., 75.]) * Units.deg 
+        self.training.Mach                                          = np.array([0.1  , 0.2 , 0.3,  0.5,  0.75 , 0.85 , 0.9, 1.3, 1.35 , 1.5 , 2.0, 2.25 , 2.5  , 3.0  , 3.5]) 
                       
         self.training.subsonic                                      = None
         self.training.supersonic                                    = None
-        self.training.transonic                                     = None
+        self.training.transonic                                     = None 
 
-        self.training.altitude                                      = 0   
-        self.training.speed_of_sound                                = 343 # reference speed of sound 
-        self.training.angle_purtubation                             = 0.1 * Units.deg          
-        self.training.speed_purtubation                             = 1   
-        self.training.rate_purtubation                              = 0.1 * Units.deg / Units.sec   
-        self.training.control_surface_purtubation                   = 0.1 * Units.deg                                  
+        self.training.altitude                                      = 0
+        self.training.speed_of_sound                                = 343 
+        self.training.angle_purtubation                             = 2 * Units.deg          
+        self.training.speed_purtubation                             = 0.5  
+        self.training.rate_purtubation                              = 0.5 * Units.deg / Units.sec   
+        self.training.control_surface_purtubation                   = 5 * Units.deg   
         self.training.sideslip_angle                                = np.array([10  , 5.0 ]) * Units.deg
         self.training.aileron_deflection                            = np.array([10  , 5.0 ]) * Units.deg
         self.training.elevator_deflection                           = np.array([10  , 5.0 ]) * Units.deg   
