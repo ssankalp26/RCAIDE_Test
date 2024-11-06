@@ -42,14 +42,20 @@ def main():
     analyses          = analyses_setup(configs)  
     mission           = baseline_mission_setup(analyses)
     basline_missions  = baseline_missions_setup(mission)     
-    baseline_results  = basline_missions.base_mission.evaluate()   
+    baseline_results  = basline_missions.base_mission.evaluate()
+
+
+    _   = post_process_noise_data(baseline_results)      
      
     # SPL of rotor check during hover 
     B737_SPL        = np.max(baseline_results.segments.takeoff.conditions.noise.hemisphere_SPL_dBA) 
     B737_SPL_true   = 155.21417984389177
     B737_diff_SPL   = np.abs(B737_SPL - B737_SPL_true)
     print('SPL difference: ',B737_diff_SPL)
-    assert np.abs((B737_SPL - B737_SPL_true)/B737_SPL_true) < 1e-1    
+    assert np.abs((B737_SPL - B737_SPL_true)/B737_SPL_true) < 1e-1
+    
+    # plot aircraft
+    plot_3d_vehicle(vehicle)
     return     
 
 def base_analysis(vehicle):
