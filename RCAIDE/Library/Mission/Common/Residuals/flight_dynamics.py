@@ -10,7 +10,6 @@
 
 import RCAIDE
 import numpy as np 
-from RCAIDE.Framework.Core  import  orientation_product, orientation_transpose 
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Residual Total Forces
@@ -41,7 +40,7 @@ def flight_dynamics(segment):
 
     FT = segment.state.conditions.frames.inertial.total_force_vector
     a  = segment.state.conditions.frames.inertial.acceleration_vector    
- 
+
     if transition_seg_flag: 
         omega = segment.state.conditions.frames.inertial.angular_velocity_vector
         D  = segment.state.numerics.time.differentiate   

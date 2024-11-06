@@ -511,8 +511,8 @@ def VLM(conditions,settings,geometry):
     results.Y_ref      = 0
     results.Z_ref      = z_m
     
-    results.CL         = CL         
-    results.CDi        = CDi  
+    results.CL         =  CL
+    results.CDi        =  CDi
     
     results.CX         =  CX
     results.CY         =  CY 

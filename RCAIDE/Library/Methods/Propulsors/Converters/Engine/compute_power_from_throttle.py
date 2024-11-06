@@ -75,7 +75,7 @@ def compute_power_from_throttle(engine,engine_conditions,conditions):
     # Regulate using throttle 
     P       = Pavailable * engine_conditions.throttle 
     P[P<0.] = 0. 
-    SFC     = PSFC #* Units['lb/hp/hr']
+    SFC     = PSFC
 
     # Compute engine torque
     torque = P/omega

@@ -251,8 +251,6 @@ def build_RHS(VD, conditions, settings, aoa_distribution, delta, phi, PSI_distri
     rhs.YGIRO  = YGIRO
     rhs.ZGIRO  = ZGIRO
     rhs.VX     = VX
-    #rhs.VY     = VY
-    #rhs.VZ     = VZ
     rhs.SCNTL  = SCNTL
     rhs.CCNTL  = CCNTL
     rhs.COD    = COD
