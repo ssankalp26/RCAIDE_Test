@@ -342,13 +342,13 @@ def evaluate_surrogate(state,settings,vehicle):
         CM_delta_a[delta_a==0.0]    = 0        
         CN_delta_a[delta_a==0.0]    = 0
         
-        conditions.static_stability.coefficients.lift                                += Clift_delta_a
-        conditions.static_stability.coefficients.drag                                += Cdrag_delta_a
-        conditions.static_stability.coefficients.X                                   += CX_delta_a 
+        #conditions.static_stability.coefficients.lift                                += Clift_delta_a
+        #conditions.static_stability.coefficients.drag                                += Cdrag_delta_a
+        #conditions.static_stability.coefficients.X                                   += CX_delta_a 
         conditions.static_stability.coefficients.Y                                   += CY_delta_a
-        conditions.static_stability.coefficients.Z                                   += CZ_delta_a
+        #conditions.static_stability.coefficients.Z                                   += CZ_delta_a
         conditions.static_stability.coefficients.L                                   += CL_delta_a
-        conditions.static_stability.coefficients.M                                   += CM_delta_a
+        #conditions.static_stability.coefficients.M                                   += CM_delta_a
         conditions.static_stability.coefficients.N                                   += CN_delta_a
 
         conditions.control_surfaces.aileron.static_stability.coefficients.lift       = Clift_delta_a         
@@ -386,13 +386,13 @@ def evaluate_surrogate(state,settings,vehicle):
         CN_delta_e[delta_e==0.0]    = 0
         
         conditions.static_stability.coefficients.lift                                += Clift_delta_e
-        conditions.static_stability.coefficients.drag                                += Cdrag_delta_e
+        #conditions.static_stability.coefficients.drag                                += Cdrag_delta_e
         conditions.static_stability.coefficients.X                                   += CX_delta_e 
-        conditions.static_stability.coefficients.Y                                   += CY_delta_e
+        #conditions.static_stability.coefficients.Y                                   += CY_delta_e
         conditions.static_stability.coefficients.Z                                   += CZ_delta_e
-        conditions.static_stability.coefficients.L                                   += CL_delta_e
+        #conditions.static_stability.coefficients.L                                   += CL_delta_e
         conditions.static_stability.coefficients.M                                   += CM_delta_e
-        conditions.static_stability.coefficients.N                                   += CN_delta_e
+        #conditions.static_stability.coefficients.N                                   += CN_delta_e
         
         conditions.control_surfaces.elevator.static_stability.coefficients.lift      = Clift_delta_e         
         conditions.control_surfaces.elevator.static_stability.coefficients.drag      = Cdrag_delta_e            
@@ -428,13 +428,13 @@ def evaluate_surrogate(state,settings,vehicle):
         CM_delta_r[delta_r==0.0]    = 0          
         CN_delta_r[delta_r==0.0]    = 0
         
-        conditions.static_stability.coefficients.lift                                += Clift_delta_r
-        conditions.static_stability.coefficients.drag                                += Cdrag_delta_r
-        conditions.static_stability.coefficients.X                                   += CX_delta_r 
+        #conditions.static_stability.coefficients.lift                                += Clift_delta_r
+        #conditions.static_stability.coefficients.drag                                += Cdrag_delta_r
+        #conditions.static_stability.coefficients.X                                   += CX_delta_r 
         conditions.static_stability.coefficients.Y                                   += CY_delta_r
-        conditions.static_stability.coefficients.Z                                   += CZ_delta_r
+        #conditions.static_stability.coefficients.Z                                   += CZ_delta_r
         conditions.static_stability.coefficients.L                                   += CL_delta_r
-        conditions.static_stability.coefficients.M                                   += CM_delta_r
+        #conditions.static_stability.coefficients.M                                   += CM_delta_r
         conditions.static_stability.coefficients.N                                   += CN_delta_r
 
         conditions.control_surfaces.rudder.static_stability.coefficients.lift        = Clift_delta_r         
@@ -670,6 +670,13 @@ def evaluate_no_surrogate(state,settings,vehicle):
     Cdrag_visc      = state.conditions.aerodynamics.coefficients.drag.total
     CX_visc         = orientation_product(T_wind2inertial,Cdrag_visc)[:,0][:,None]   
   
+    no_beta   = np.all(conditions.aerodynamics.angles.beta == 0)
+    no_ail    = np.all(conditions.control_surfaces.aileron.deflection == 0) 
+    no_rud    = np.all(conditions.control_surfaces.rudder.deflection == 0) 
+    no_bank   = np.all(conditions.aerodynamics.angles.phi == 0)  
+    
+    if no_beta and no_ail and no_rud and no_bank:
+        CY = CY * 0
     conditions.static_stability.coefficients.lift  = Clift
     conditions.static_stability.coefficients.drag  = Cdrag_visc 
     conditions.static_stability.coefficients.X     = CX
