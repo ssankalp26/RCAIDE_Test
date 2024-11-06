@@ -78,10 +78,18 @@ def compute_aircraft_moment_of_inertia(vehicle, CG_location, update_MOI=True):
         for fuel_line in network.fuel_lines:
             # Propulsor
             for propulsor in fuel_line.propulsors: 
-                if isinstance(propulsor,RCAIDE.Library.Components.Propulsors.Turbofan ):
+                if isinstance(propulsor,RCAIDE.Library.Components.Propulsors.Turbofan):
                     I, mass= compute_cylinder_moment_of_inertia(propulsor.origin, propulsor.mass_properties.mass, propulsor.engine_length, propulsor.nacelle.diameter/2, 0, 0, CG_location)                    
                     I_network += I
-                    total_mass += mass                   
+                    total_mass += mass
+                if isinstance(propulsor,RCAIDE.Library.Components.Propulsors.Turboprop):
+                    I, mass= compute_cylinder_moment_of_inertia(propulsor.origin, propulsor.mass_properties.mass, propulsor.engine_length, propulsor.engine_diameter/2, 0, 0, CG_location)                    
+                    I_network += I
+                    total_mass += mass
+                if isinstance(propulsor,RCAIDE.Library.Components.Propulsors.ICE_Propeller):
+                    I, mass= compute_cylinder_moment_of_inertia(propulsor.origin, propulsor.engine_mass, propulsor.engine_length, propulsor.engine_diameter/2, 0, 0, CG_location)                    
+                    I_network += I
+                    total_mass += mass                  
             # Fuel tank       
             for fuel_tank in fuel_line.fuel_tanks:
                 if isinstance(fuel_tank,RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Central_Fuel_Tank ): 
