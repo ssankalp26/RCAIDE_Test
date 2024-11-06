@@ -402,9 +402,7 @@ def vehicle_setup(new_regression=True) :
     for _ in range(number_of_modules):
         cruise_bus.battery_modules.append(deepcopy(bat))       
     
-    for battery_module in  cruise_bus.battery_modules:
-        cruise_bus.voltage  +=   battery_module.voltage 
-    
+    cruise_bus.initialize_bus_electrical_properties()
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Forward Bus Propulsors  
     #------------------------------------------------------------------------------------------------------------------------------------       
@@ -598,8 +596,7 @@ def vehicle_setup(new_regression=True) :
     for _ in range(number_of_modules):
         lift_bus.battery_modules.append(deepcopy(bat))
         
-    for battery_module in  lift_bus.battery_modules:
-        lift_bus.voltage  +=   battery_module.voltage 
+    lift_bus.initialize_bus_electrical_properties()
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Lift Propulsors 
@@ -644,13 +641,15 @@ def vehicle_setup(new_regression=True) :
                                                               rel_path + 'Airfoils' + separator + 'Polars' + separator + 'NACA_4412_polar_Re_7500000.txt' ]
     lift_rotor.append_airfoil(airfoil)                         
     lift_rotor.airfoil_polar_stations                      = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]    
-    if  new_regression:
+    test_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../Tests/analysis_weights'))
+    
+    if new_regression:
         design_lift_rotor(lift_rotor)
-        save_rotor(lift_rotor, 'stopped_rotor_geometry.res')
+        save_rotor(lift_rotor, os.path.join(test_dir, 'stopped_rotor_geometry.res'))
     else:
         regression_lift_rotor = deepcopy(lift_rotor)
-        design_lift_rotor(regression_lift_rotor,iterations = 2)
-        loaded_lift_rotor = load_rotor('stopped_rotor_geometry.res')
+        design_lift_rotor(regression_lift_rotor, iterations=2)
+        loaded_lift_rotor = load_rotor(os.path.join(test_dir, 'stopped_rotor_geometry.res'))
         
         for key,item in lift_rotor.items():
             lift_rotor[key] = loaded_lift_rotor[key] 

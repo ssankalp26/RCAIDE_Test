@@ -12,10 +12,10 @@ from RCAIDE.Library.Plots import *
 # Python imports
 import matplotlib.pyplot as plt  
 import sys 
+import os
 import numpy as np     
 
-# local imports 
-sys.path.append('../../Vehicles')
+sys.path.append(os.path.join(sys.path[0],'Vehicles'))
 from NASA_X57    import vehicle_setup, configs_setup     
 
 # ----------------------------------------------------------------------

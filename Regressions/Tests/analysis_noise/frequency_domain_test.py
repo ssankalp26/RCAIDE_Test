@@ -12,11 +12,12 @@ from RCAIDE.Library.Plots import *
 
 # Python Imports  
 import sys 
-import numpy as np 
+import numpy as np  
 import matplotlib.pyplot as plt 
-import time 
+import time   
+import os 
 
-sys.path.append('../../Vehicles/Rotors')
+sys.path.append(os.path.join(sys.path[0],'Vehicles','Rotors'))
 # the analysis functions
 
 from F8745_D4_Propeller  import F8745_D4_Propeller

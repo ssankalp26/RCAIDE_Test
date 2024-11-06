@@ -16,9 +16,9 @@ from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Electric  import conv
 import numpy as np  
 import sys
 import matplotlib.pyplot as plt  
-
+import os
 # local imports 
-sys.path.append('../../Vehicles')
+sys.path.append(os.path.join(sys.path[0], 'Vehicles'))
 from Embraer_190    import vehicle_setup as E190_vehicle_setup 
 from NASA_X57       import vehicle_setup as X57_vehicle_setup 
 from NASA_X57       import configs_setup as X57_configs_setup      

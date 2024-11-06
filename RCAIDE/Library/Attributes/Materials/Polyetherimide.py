@@ -36,6 +36,6 @@ class Polyetherimide(Solid):
         Properties Used:
         None
         """ 
-        self.conductivity              = 2.0    # [W/m-K]
+        self.conductivity              = 0.2    # [W/m-K]
         self.emissivity                = 0.96   # [uniteless]
         self.specific_heat             = 1100  

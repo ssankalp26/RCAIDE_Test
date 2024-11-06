@@ -15,8 +15,9 @@ from RCAIDE.Library.Methods.Weights.Moment_of_Inertia                        imp
 import numpy as  np
 import RCAIDE
 import sys   
+import os
 
-sys.path.append('../../Vehicles')
+sys.path.append(os.path.join(sys.path[0], 'Vehicles'))
 
 # the analysis functions
 from Lockheed_C5a           import vehicle_setup as transport_setup

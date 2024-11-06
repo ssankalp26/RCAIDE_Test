@@ -13,8 +13,9 @@ from RCAIDE.Framework.Core import Units ,Data
 # python imports     
 import numpy as np  
 import sys 
+import os
 
-sys.path.append('../../Vehicles')
+sys.path.append(os.path.join(sys.path[0], 'Vehicles'))
 # the analysis functions 
  
 from Cessna_172  import vehicle_setup ,configs_setup

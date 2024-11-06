@@ -153,7 +153,7 @@ class Lithium_Ion_NMC(Generic_Battery_Module):
         """              
         return battery_conditions.voltage_under_load 
     
-    def update_battery_age(self,battery_conditions,increment_battery_age_by_one_day = False):  
+    def update_battery_age(self,segment,battery_conditions,increment_battery_age_by_one_day = False):  
         """ This is an aging model for 18650 lithium-nickel-manganese-cobalt-oxide batteries.   
         
         Assumptions:
@@ -170,7 +170,7 @@ class Lithium_Ion_NMC(Generic_Battery_Module):
         Returns: 
             None
         """        
-        update_nmc_cell_age(self,battery_conditions,increment_battery_age_by_one_day) 
+        update_nmc_cell_age(self,segment,battery_conditions,increment_battery_age_by_one_day) 
         
         return  
 
@@ -191,8 +191,8 @@ def create_discharge_performance_map(raw_data):
         """   
     # Process raw data   
     processed_data = Data() 
-    processed_data.Voltage        = np.zeros((5,6,15,2)) # current , operating temperature , SOC vs voltage      
-    processed_data.Temperature    = np.zeros((5,6,15,2)) # current , operating temperature , SOC vs temperature 
+    processed_data.Voltage        = np.zeros((5,6,15,2)) # current , operating temperature , state_of_charge vs voltage      
+    processed_data.Temperature    = np.zeros((5,6,15,2)) # current , operating temperature , state_of_charge vs temperature 
 
     # Reshape  Data          
     raw_data.Voltage 
