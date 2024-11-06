@@ -82,12 +82,10 @@ def post_process_noise_data(results,
     # Step 4: Initalize Arrays 
     N_ctrl_pts            = ( num_fligth_segs-1) * (num_noise_time -1) + num_noise_time # ensures that noise is computed continuously across segments 
     SPL_dBA               = np.ones((N_ctrl_pts,N_gm_x,N_gm_y))*background_noise()  
-    Aircraft_pos          = np.zeros((N_ctrl_pts,3))  
-    Time                  = np.zeros(N_ctrl_pts)   
+    Aircraft_pos          = np.empty((0,3))
+    Time                  = np.empty((0))
     mic_locs              = np.zeros((N_ctrl_pts,n))   
-
-    starting_index = 0
-    ending_index   = num_noise_time
+ 
     idx =  0
     
     # Step 5: loop through segments and store noise 
@@ -107,12 +105,10 @@ def post_process_noise_data(results,
         if seg == (num_fligth_segs - 1):
             noise_time_ = noise_time 
         else:
-            noise_time_ = noise_time[:,-1] 
-    
-        Aircraft_pos[starting_index:ending_index] = noise_pos
-        Time[starting_index:ending_index]         = noise_time  
-        starting_index =+ len(noise_time_)
-        ending_index   =+ len(noise_time_)
+            noise_time_ = noise_time[:-1]
+             
+        Aircraft_pos = np.vstack((Aircraft_pos,noise_pos))
+        Time         = np.hstack((Time,noise_time_))
         
         for i in range(len(noise_time_)):
             # Step 5.2.1 :Noise interpolation 
@@ -140,6 +136,7 @@ def post_process_noise_data(results,
             SPL_dBA[idx]         = SPL_dBA_temp.reshape(N_gm_x,N_gm_y) 
             mic_locs[idx]        = locs 
             idx += 1
+            
             if noise_time[i] >= time[cpt+1]:
                 cpt += 1             
                 
