@@ -21,7 +21,7 @@ from copy import deepcopy
 import os
 
 # local imports 
-sys.path.append(os.path.join(sys.path[0],'Vehicles'))
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 from Embraer_190    import vehicle_setup as vehicle_setup
 from Embraer_190    import configs_setup as configs_setup 
 
@@ -45,8 +45,8 @@ def main():
     baseline_results  = basline_missions.base_mission.evaluate()   
      
     # SPL of rotor check during hover 
-    B737_SPL        = np.max(baseline_results.segments.takeoff.conditions.noise.SPL_dBA)
-    B737_SPL_true   = 103.7594057659708
+    B737_SPL        = np.max(baseline_results.segments.takeoff.conditions.noise.hemisphere_SPL_dBA) 
+    B737_SPL_true   = 155.21417984389177
     B737_diff_SPL   = np.abs(B737_SPL - B737_SPL_true)
     print('SPL difference: ',B737_diff_SPL)
     assert np.abs((B737_SPL - B737_SPL_true)/B737_SPL_true) < 1e-1    

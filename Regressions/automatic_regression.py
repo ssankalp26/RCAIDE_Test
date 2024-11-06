@@ -15,7 +15,8 @@ import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')
 import sys, os, traceback, time 
- 
+sys.path.append(os.path.join(sys.path[0], 'Vehicles'))
+
 modules = [ 
     # ----------------------- Regression List --------------------------
     'Tests/analysis_aerodynamics/airfoil_panel_method_test.py',    

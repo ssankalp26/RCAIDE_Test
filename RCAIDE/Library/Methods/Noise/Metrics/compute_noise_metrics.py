@@ -10,6 +10,7 @@
 # RCAIDE imports 
 from RCAIDE.Framework.Core import Units 
 from RCAIDE.Library.Methods.Noise.Common.background_noise     import background_noise
+from RCAIDE.Library.Methods.Noise.Common.decibel_arithmetic   import SPL_arithmetic  
 
 # Python package imports   
 import numpy as np  
@@ -51,9 +52,7 @@ def compute_noise_metrics(noise_data, flight_times = ['12:00:00'],time_period = 
     flight_time               = noise_data.time    
     time_step                 = flight_time[1]-flight_time[0] 
     number_of_flights         = len(flight_times)   
-    duration                  = t_end - t_start
-    time_period_timesteps     = int(duration / time_step)
-    time_history              = np.linspace(t_start,t_end,len(flight_time))
+    duration                  = t_end - t_start 
     p_div_p_ref_sq_L_eq       = np.zeros((N_gm_x,N_gm_y)) 
     p_div_p_ref_sq_L_24hr     = np.zeros((N_gm_x,N_gm_y))
     p_div_p_ref_sq_L_dn       = np.zeros((N_gm_x,N_gm_y)) 
@@ -92,36 +91,22 @@ def compute_noise_metrics(noise_data, flight_times = ['12:00:00'],time_period = 
     noise_data.L_eq_24hr         = 10*np.log10((1/(24*Units.hours))*p_div_p_ref_sq_L_24hr)   
     noise_data.L_dn              = 10*np.log10((1/(t_end-t_start))*p_div_p_ref_sq_L_dn)
       
-      
-      
-      
-      
-            
-
-               
-    # Compute Day-Night Sound Level and Noise Equivalent Noise    
-    
-    P_Pref_total            = np.ones((time_period_timesteps,N_gm_x,N_gm_y))* (10**(background_noise()/10))  # cumulative noise exposure 
-    for i in range(number_of_flights): 
-        t_flight_start = float(flight_times[i].split(':')[0])*60*60 +  float(flight_times[i].split(':')[1])*60 +  float(flight_times[i].split(':')[2])  
-        t_idx          = int((t_flight_start - t_start) /duration)
-        P_Pref_flight  = 10**(SPL/10) 
-        P_Pref_total[t_idx:t_idx+len(flight_time)]     = np.sum(np.concatenate((P_Pref_total[t_idx:t_idx+len(t),:,:][:,:,:,None] , P_Pref_flight[:,:,:,None]), axis=3), axis=3) 
+        
+    # Compute Day-Night Sound Level and Noise Equivalent Noise  
+    SPL_max = np.max(SPL,axis = 0)
      
-    SPL_history  = 10 * np.log(P_Pref_total)
-    
-    # get matrix of maximum noise levels 
-    SPL_max = np.max(SPL_history,axis = 0)
+    p_sq_ref_flight_sq_SEL  = time_step * (10**(SPL/10))     
     
     # subtract 10 db to get bounds 
-    SPL_max_min10 = SPL_max - 10
+    SPL_max_min10 = SPL_max - 10 
+    time_history  = np.tile(flight_time[:,None,None], (1,len(SPL[0,:,0]),len(SPL[0,0,:])))
+ 
+    t_window      = np.ma.masked_array(time_history, SPL >SPL_max_min10)
+    t_interval    = t_window[-1] -  t_window[0]
     
     # mask all noise values that are lower than L-10 level
-    SPL_valid  = np.ma.masked_array(SPL_history, SPL_history >SPL_max_min10)
-    SENEL      = SPL_arithmetic(SPL_valid,sum_axis=0)   
-    
-    # sum the noise 
-    noise_data.SENEL         = SENEL
-    noise_data.SPL_history   = SPL_history
-    noise_data.time_history  = time_history      
+    P0                = np.ma.masked_array(p_sq_ref_flight_sq_SEL, SPL >SPL_max_min10)
+    P0_tot            = np.nansum((1/(t_interval))*P0, axis=0)
+    SENEL             = 10*np.log10(P0_tot)
+    noise_data.SENEL  = SENEL      
     return  

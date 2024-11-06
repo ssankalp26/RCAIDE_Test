@@ -54,6 +54,7 @@ def post_process_noise_data(results,
 
     # Step 1: Unpack settings      
     settings   = results.segments[0].analyses.noise.settings
+    n          = settings.number_of_microphone_in_stencil
     N_gm_x     = settings.microphone_x_resolution
     N_gm_y     = settings.microphone_y_resolution    
     noise_data = Data()   
@@ -83,9 +84,11 @@ def post_process_noise_data(results,
     SPL_dBA               = np.ones((N_ctrl_pts,N_gm_x,N_gm_y))*background_noise()  
     Aircraft_pos          = np.zeros((N_ctrl_pts,3))  
     Time                  = np.zeros(N_ctrl_pts)   
+    mic_locs              = np.zeros((N_ctrl_pts,n))   
 
     starting_index = 0
     ending_index   = num_noise_time
+    idx =  0
     
     # Step 5: loop through segments and store noise 
     for seg in range(num_fligth_segs):  
@@ -93,7 +96,6 @@ def post_process_noise_data(results,
         settings   = segment.analyses.noise.settings  
         phi        = settings.noise_hemisphere_phi_angles
         theta      = settings.noise_hemisphere_theta_angles
-        n          = settings.number_of_microphone_in_stencil
         conditions = segment.state.conditions  
         time       = conditions.frames.inertial.time[:,0]
         
@@ -131,11 +133,13 @@ def post_process_noise_data(results,
             
             #  Step 5.2.4 Scale data using radius  
             R_ref                = settings.noise_hemisphere_radius  
-            SPL_dBA_scaled       = ((R_ref**2 )/ (R[locs] **2)) * SPL_dBA_unscaled  
-            SPL_dBA_temp         = SPL_dBA[i].flatten()
+            SPL_dBA_scaled       = SPL_dBA_unscaled - 20*np.log10(R[locs]/R_ref)
+            
+            SPL_dBA_temp         = SPL_dBA[idx].flatten()
             SPL_dBA_temp[locs]   = SPL_dBA_scaled
-            SPL_dBA[i]           = SPL_dBA_temp.reshape(N_gm_x,N_gm_y)    
-
+            SPL_dBA[idx]         = SPL_dBA_temp.reshape(N_gm_x,N_gm_y) 
+            mic_locs[idx]        = locs 
+            idx += 1
             if noise_time[i] >= time[cpt+1]:
                 cpt += 1             
                 
@@ -147,6 +151,7 @@ def post_process_noise_data(results,
     noise_data.SPL_dBA               = SPL_dBA
     noise_data.time                  = Time 
     noise_data.aircraft_position     = Aircraft_pos
+    noise_data.microhpone_locations  = mic_locs
     
     # Step 8: Perform noise metric calculations  
     compute_noise_metrics(noise_data, flight_times)

@@ -15,7 +15,7 @@ import sys
 import os
 import numpy as np     
 
-sys.path.append(os.path.join(sys.path[0],'Vehicles'))
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 from NASA_X57    import vehicle_setup, configs_setup     
 
 # ----------------------------------------------------------------------
@@ -48,19 +48,16 @@ def main():
 
     noise_data   = post_process_noise_data(results,
                                            flight_times = flight_times,  
-                                           time_period  = ['06:00:00','09:00:00'], 
-                                           compute_SENEL = False )  
+                                           time_period  = ['06:00:00','09:00:00'] )  
 
     
-    plot_results(results,noise_data,regression_plotting_flag)
-    
-    print(np.max(results.segments.cruise.conditions.noise.hemisphere_SPL_dBA))
+    plot_results(results,noise_data,regression_plotting_flag) 
 
-    #X57_SPL        = np.max(results.segments.cruise.conditions.noise.hemisphere_SPL_dBA) 
-    #X57_SPL_true   = 116.65380842952558
-    #X57_diff_SPL   = np.abs(X57_SPL - X57_SPL_true)
-    #print('Error: ',X57_diff_SPL)
-    #assert np.abs((X57_SPL - X57_SPL_true)/X57_SPL_true) < 1e-3 
+    X57_SPL        = np.max(results.segments.cruise.conditions.noise.hemisphere_SPL_dBA) 
+    X57_SPL_true   = 116.65380842952517
+    X57_diff_SPL   = np.abs(X57_SPL - X57_SPL_true)
+    print('Error: ',X57_diff_SPL)
+    assert np.abs((X57_SPL - X57_SPL_true)/X57_SPL_true) < 1e-3 
      
     return      
 
@@ -105,9 +102,9 @@ def base_analysis(vehicle):
     noise.settings.mean_sea_level_altitude          = False         
     noise.settings.aircraft_origin_coordinates      = [33.94067953101678, -118.40513722978149]# Los Angeles International Airport
     noise.settings.aircraft_destination_coordinates = [33.8146, -118.1459]  # Ontario International airport 
-    noise.settings.microphone_x_resolution          = 1200 # 150 # 1200
-    noise.settings.microphone_y_resolution          = 1600 #  200 # 1600  
-    noise.settings.noise_times_steps                = 200   #  50  # 50   
+    noise.settings.microphone_x_resolution          = 800  
+    noise.settings.microphone_y_resolution          = 1200  
+    noise.settings.noise_times_steps                = 50  
     noise.settings.number_of_microphone_in_stencil  = 25
     noise.settings.topography_file                  = 'LA_Metropolitan_Area.txt' 
     analyses.append(noise)
@@ -153,7 +150,7 @@ def mission_setup(analyses):
     segment.initial_battery_state_of_charge              = 1.0       
     segment.altitude                                     = 30
     segment.air_speed                                    = 100
-    segment.distance                                     = 5 * Units.miles
+    segment.distance                                     = 1 * Units.miles
     segment.true_course                                  = 130 *Units.degrees 
     
     # define flight dynamics to model 
@@ -184,26 +181,7 @@ def missions_setup(mission):
 # ----------------------------------------------------------------------
 #  Plot Resuls 
 # ---------------------------------------------------------------------- 
-def plot_results(results,noise_data,regression_plotting_flag): 
-    # Plot noise hemisphere
-    plot_noise_hemisphere(noise_data,
-                          noise_level      = noise_data.SPL_dBA[1], 
-                          min_noise_level  = 20,  
-                          max_noise_level  = 90, 
-                          noise_scale_label= 'SPL [dBA]',
-                          show_figure      = regression_plotting_flag)     
-    
-
-    # Plot noise hemisphere with vehicle 
-    plot_noise_hemisphere(noise_data,
-                          noise_level      = noise_data.SPL_dBA[1], 
-                          min_noise_level  = 20,  
-                          max_noise_level  = 90, 
-                          noise_scale_label= 'SPL [dBA]',
-                          save_filename    = "Noise_Hemisphere_With_Aircraft", 
-                          vehicle          = results.segments.cruise.analyses.aerodynamics.vehicle,
-                          show_figure      = regression_plotting_flag)       
-    
+def plot_results(results,noise_data,regression_plotting_flag):  
     plot_noise_level(noise_data,
                     noise_level  = noise_data.SPL_dBA[0], 
                     save_filename="Sideline_Noise_Levels")  
@@ -251,14 +229,14 @@ def plot_results(results,noise_data,regression_plotting_flag):
                        show_figure      = regression_plotting_flag)      
     
 
-    ## Single Event Noise Exposure Level
-    #plot_3D_noise_contour(noise_data,
-                       #noise_level      = noise_data.SENEL,
-                       #min_noise_level  = 0,  
-                       #max_noise_level  = 90, 
-                       #noise_scale_label= 'SENEL',
-                       #save_filename    = "SENEL_Noise_3D_Contour",
-                       #show_figure      = regression_plotting_flag)
+    # Single Event Noise Exposure Level
+    plot_3D_noise_contour(noise_data,
+                       noise_level      = noise_data.SENEL,
+                       min_noise_level  = 0,  
+                       max_noise_level  = 90, 
+                       noise_scale_label= 'SENEL',
+                       save_filename    = "SENEL_Noise_3D_Contour",
+                       show_figure      = regression_plotting_flag)
     
     # Maximum Sound Pressure Level   
     plot_2D_noise_contour(noise_data,
@@ -302,14 +280,14 @@ def plot_results(results,noise_data,regression_plotting_flag):
                        show_figure      = regression_plotting_flag)      
     
 
-    ## Single Event Noise Exposure Level
-    #plot_2D_noise_contour(noise_data,
-                       #noise_level      = noise_data.SENEL,
-                       #min_noise_level  = 20,  
-                       #max_noise_level  = 90, 
-                       #noise_scale_label= 'SENEL',
-                       #save_filename    = "SENEL_Noise_2D_Contour",
-                       #show_figure      = regression_plotting_flag)      
+    # Single Event Noise Exposure Level
+    plot_2D_noise_contour(noise_data,
+                       noise_level      = noise_data.SENEL,
+                       min_noise_level  = 20,  
+                       max_noise_level  = 90, 
+                       noise_scale_label= 'SENEL',
+                       save_filename    = "SENEL_Noise_2D_Contour",
+                       show_figure      = regression_plotting_flag)      
     return  
 
 if __name__ == '__main__': 

@@ -99,7 +99,7 @@ class Correlation_Buildup(Noise):
     
         # flap noise - only applicable for turbofan aircraft
         if 'flap' in config.wings.main_wing.control_surfaces:    
-            airframe_noise_res        = airframe_noise(segment,config,settings) 
+            airframe_noise_res        = airframe_noise(microphone_locations,segment,config,settings) 
             total_SPL_dBA             = SPL_arithmetic(np.concatenate((total_SPL_dBA[:,None,:],airframe_noise_res.SPL_dBA[:,None,:]),axis =1),sum_axis=1)
             total_SPL_spectra[:,:,5:] = SPL_arithmetic(np.concatenate((total_SPL_spectra[:,None,:,5:],airframe_noise_res.SPL_1_3_spectrum[:,None,:,:]),axis =1),sum_axis=1)
               
@@ -108,7 +108,7 @@ class Correlation_Buildup(Noise):
             if 'fuel_lines' in network:
                 for fuel_line in network.fuel_lines:  
                     for propulsor in fuel_line.propulsors:        
-                        engine_noise                = turbofan_engine_noise(propulsor,conditions.noise[fuel_line.tag][propulsor.tag].turbofan,segment,settings)    
+                        engine_noise                = turbofan_engine_noise(microphone_locations,propulsor,conditions.noise[fuel_line.tag][propulsor.tag].turbofan,segment,settings)    
                         total_SPL_dBA               = SPL_arithmetic(np.concatenate((total_SPL_dBA[:,None,:],engine_noise.SPL_dBA[:,None,:]),axis =1),sum_axis=1)
                         total_SPL_spectra[:,:,5:]   = SPL_arithmetic(np.concatenate((total_SPL_spectra[:,None,:,5:],engine_noise.SPL_1_3_spectrum[:,None,:,:]),axis =1),sum_axis=1)
                      
