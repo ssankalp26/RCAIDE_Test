@@ -54,7 +54,7 @@ def main():
     assert np.abs((B737_SPL - B737_SPL_true)/B737_SPL_true) < 1e-6
     
     # plot aircraft
-    plot_3d_vehicle(vehicle)
+    plot_3d_vehicle(vehicle, show_figure=False)
     return     
 
 def base_analysis(vehicle):
