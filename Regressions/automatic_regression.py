@@ -17,6 +17,7 @@ matplotlib.use('Agg')
 import sys, os, traceback, time
 
 sys.path.append(os.path.join(sys.path[0], 'Vehicles'))
+sys.path.append(os.path.join(sys.path[-1], 'Rotors'))
 
 modules = [ 
     # ----------------------- Regression List --------------------------
