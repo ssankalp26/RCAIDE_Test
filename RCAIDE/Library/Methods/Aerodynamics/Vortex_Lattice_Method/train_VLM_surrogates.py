@@ -1189,7 +1189,7 @@ def evaluate_VLM(conditions,settings,vehicle):
  
     Clift_wings         = Data()
     Cdrag_wings         = Data()
-    AoA_wing_induced = Data()
+    AoA_wing_induced    = Data()
     
     results = VLM(conditions,settings,vehicle)
     Clift   = results.CL       

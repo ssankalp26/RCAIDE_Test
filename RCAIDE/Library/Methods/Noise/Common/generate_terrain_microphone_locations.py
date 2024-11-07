@@ -54,9 +54,7 @@ def generate_terrain_microphone_locations(settings):
     Properties Used:
         N/A       
     """     
-    # convert cooordinates to array 
-    #origin_coordinates      =  settings.origin_coordinates 
-    #destination_coordinates =  settings.destination_coordinates 
+    
     y_res = settings.microphone_y_resolution 
     x_res = settings.microphone_x_resolution 
     
@@ -69,11 +67,12 @@ def generate_terrain_microphone_locations(settings):
     x_min_coord = np.min(Lat)
     x_max_coord = np.max(Lat)
     y_min_coord = np.min(Long)
-    y_max_coord = np.max(Long)
-    if np.min(Long)>180: 
-        y_min_coord = np.min(Long)-360
-    if np.max(Long)>180:
-        y_max_coord = np.max(Long)-360  
+    y_max_coord = np.max(Long) 
+
+    if y_min_coord < 0: 
+        y_min_coord = 360 + y_min_coord
+    if y_max_coord< 0:
+        y_max_coord=360 + y_max_coord 
     
     top_left_map_coords      = np.array([x_max_coord,y_min_coord])
     bottom_left_map_coords   = np.array([x_min_coord,y_min_coord])  
@@ -86,11 +85,7 @@ def generate_terrain_microphone_locations(settings):
     [long_deg,lat_deg] = np.meshgrid(np.linspace(np.min(Long),np.max(Long),y_res),np.linspace(np.min(Lat),np.max(Lat),x_res)) 
     z_deg              = griddata((Lat,Long), Elev, (lat_deg, long_deg), method='linear')        
     cartesian_pts      = np.dstack((np.dstack((x_pts[:,:,None],y_pts[:,:,None] )),z_deg[:,:,None])).reshape(x_res*y_res,3)
-    lat_long_pts       = np.dstack((np.dstack((lat_deg[:,:,None],long_deg[:,:,None] )),z_deg[:,:,None])).reshape(x_res*y_res,3)    
-        
-    settings.microphone_locations      = cartesian_pts 
-    settings.microphone_coordinates    = lat_long_pts
-    
-    return  
+    lat_long_pts       = np.dstack((np.dstack((lat_deg[:,:,None],long_deg[:,:,None] )),z_deg[:,:,None])).reshape(x_res*y_res,3)  
+    return cartesian_pts , lat_long_pts
 
 

@@ -6,17 +6,18 @@
 # ----------------------------------------------------------------------------------------------------------------------
 # cg_and_moi_test.py
 
-from RCAIDE.Framework.Core                                import Units,  Data ,  Container  
-from RCAIDE.Library.Methods.Weights.Correlation_Buildups  import Common 
-from RCAIDE.Library.Methods.Weights.Center_of_Gravity     import compute_vehicle_center_of_gravity
-from RCAIDE.Library.Methods.Weights.Moment_of_Inertia     import compute_aircraft_moment_of_inertia, compute_cuboid_moment_of_inertia
+from RCAIDE.Framework.Core                                                   import Units,  Data ,  Container  
+from RCAIDE.Library.Methods.Weights.Correlation_Buildups                     import Common
+from RCAIDE.Library.Methods.Weights.Moment_of_Inertia.compute_aircraft_moment_of_inertia import compute_aircraft_moment_of_inertia
+from RCAIDE.Library.Methods.Weights.Center_of_Gravity                        import compute_vehicle_center_of_gravity
+from RCAIDE.Library.Methods.Weights.Moment_of_Inertia                        import compute_cuboid_moment_of_inertia
 
 import numpy as  np
 import RCAIDE
 import sys   
 import os
 
-sys.path.append(os.path.join(os.path.split(sys.path[0])[0], 'Vehicles'))
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 
 # the analysis functions
 from Lockheed_C5a           import vehicle_setup as transport_setup
@@ -51,13 +52,14 @@ def Transport_Aircraft_Test():
     # ------------------------------------------------------------------
     #   Operating Aircraft MOI
     # ------------------------------------------------------------------    
-    MOI  = compute_aircraft_moment_of_inertia(weight_analysis.vehicle, CG_location)
-    
+    MOI, total_mass = compute_aircraft_moment_of_inertia(weight_analysis.vehicle, CG_location)
+
     # ------------------------------------------------------------------
     #   Payload MOI
     # ------------------------------------------------------------------    
     Cargo_MOI, mass =  compute_cuboid_moment_of_inertia(CG_location, 99790*Units.kg, 36.0, 3.66, 3, 0, 0, 0, CG_location)
-    MOI             += Cargo_MOI 
+    MOI             += Cargo_MOI
+    total_mass      += mass
     
     print(weight_analysis.vehicle.tag + ' Moment of Intertia')
     print(MOI)
@@ -100,14 +102,14 @@ def General_Aviation_Test():
     # ------------------------------------------------------------------
     #   Operating Aircraft MOI
     # ------------------------------------------------------------------    
-    MOI = compute_aircraft_moment_of_inertia(weight_analysis.vehicle, CG_location) 
+    MOI, total_mass = compute_aircraft_moment_of_inertia(weight_analysis.vehicle, CG_location) 
 
     print(weight_analysis.vehicle.tag + ' Moment of Intertia')
     print(MOI)
     
-    accepted  = np.array([[1290.55346634 ,  43.52720306  , 43.52720306],
-                          [  43.52720306 , 980.82840051  ,  0.      ],
-                          [  43.52720306 ,   0.     ,    2194.18580632]])
+    accepted  = np.array([[1289.47913257 ,  43.55214272,   43.55214272],
+                          [  43.55214272 , 964.5628582 ,    0.        ],
+                          [  43.55214272 ,   0.        , 2177.920264  ]])
     
     MOI_error     = MOI - accepted
 

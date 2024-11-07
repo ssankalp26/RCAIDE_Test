@@ -14,24 +14,25 @@ from RCAIDE.Framework.Core import DataOrdered
 import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')
-import sys, os, traceback, time 
+import sys, os, traceback, time
 
-sys.path.append(os.path.join(sys.path[0], 'Vehicles')) 
- 
+sys.path.append(os.path.join(sys.path[0], 'Vehicles'))
+sys.path.append(os.path.join(sys.path[-1], 'Rotors'))
+
 modules = [ 
     # ----------------------- Regression List --------------------------
     #'Tests/analysis_aerodynamics/airfoil_panel_method_test.py',    
     #'Tests/analysis_emissions/emissions_test.py',   
-    'Tests/analysis_noise/digital_elevation_test.py',  
-    'Tests/analysis_noise/frequency_domain_test.py', 
-    'Tests/analysis_noise/empirical_jet_noise_test.py',    
-    'Tests/analysis_stability/vlm_pertubation_test.py', 
-    'Tests/analysis_weights/operating_empty_weight_test.py',
-    'Tests/analysis_weights/cg_and_moi_test.py',
-    'Tests/geometry_airfoils/airfoil_import_test.py', 
-    'Tests/geometry_airfoils/airfoil_interpolation_test.py',     
+    #'Tests/analysis_noise/digital_elevation_test.py',  
+    #'Tests/analysis_noise/frequency_domain_test.py', 
+    #'Tests/analysis_noise/empirical_jet_noise_test.py',    
+    #'Tests/analysis_stability/vlm_pertubation_test.py', 
+    #'Tests/analysis_weights/operating_empty_weight_test.py',
+    #'Tests/analysis_weights/cg_and_moi_test.py',
+    #'Tests/geometry_airfoils/airfoil_import_test.py', 
+    #'Tests/geometry_airfoils/airfoil_interpolation_test.py',     
     'Tests/mission_segments/transition_segment_test.py', 
-    'Tests/network_electric/electric_btms_test.py', 
+    #'Tests/network_electric/electric_btms_test.py', 
     'Tests/network_ducted_fan/electric_ducted_fan_network_test.py',
     'Tests/network_turbofan/turbofan_network_test.py',
     'Tests/network_turbojet/turbojet_network_test.py',

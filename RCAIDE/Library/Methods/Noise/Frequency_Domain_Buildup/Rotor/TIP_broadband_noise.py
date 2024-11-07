@@ -48,6 +48,5 @@ def TIP_broadband_noise(alpha_tip,M,c,c_0,f,Dbar_h,r_e):
     M_max                  = M_max_div_M * M              # eqn 64 BPM Paper
     U_max                  = c_0*M_max 
     St_prime_prime         = f*l/U_max                    # eqn 62 BPM Paper 
-    SPL_TIP                = 10*np.log10(((M**2)*(M_max**3)*(l**2)*Dbar_h)/(r_e**2)) -\
-                             30.5*(np.log10(St_prime_prime + 0.3))**2 + 126 # eqn 61  
+    SPL_TIP                = 10*np.log10(((M**2)*(M_max**3)*(l**2)*Dbar_h)/(r_e**2)) - 30.5*(np.log10(St_prime_prime + 0.3))**2 + 126 # eqn 61  
     return SPL_TIP

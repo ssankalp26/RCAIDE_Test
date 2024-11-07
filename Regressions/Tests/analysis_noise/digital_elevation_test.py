@@ -21,11 +21,14 @@ from NASA_X57    import vehicle_setup, configs_setup
 # ----------------------------------------------------------------------
 #   Main
 # ---------------------------------------------------------------------- 
-def main():       
+def main(): 
+
+
+
     plot_elevation_contours(topography_file   ='LA_Metropolitan_Area.txt',use_lat_long_coordinates = True, save_filename = "Elevation_Contours_Lat_Long")
 
-    plot_elevation_contours(topography_file   ='LA_Metropolitan_Area.txt',use_lat_long_coordinates = False, save_filename = "Elevation_Contours_XY")  
-      
+    plot_elevation_contours(topography_file   ='LA_Metropolitan_Area.txt',use_lat_long_coordinates = False, save_filename = "Elevation_Contours_XY")
+    
     vehicle  = vehicle_setup()      
     vehicle.networks.electric.busses.bus.identical_propulsors     = False # only for regression     
     configs  = configs_setup(vehicle) 
@@ -35,31 +38,26 @@ def main():
     results  = missions.base_mission.evaluate()   
     
     regression_plotting_flag = False 
-    flight_times = np.array(['06:00:00','06:15:00','06:30:00','06:45:00',
-                             '07:00:00','07:15:00','07:30:00','07:45:00',
-                             '08:00:00','08:15:00','08:30:00','08:45:00',
-                             '09:00:00','09:15:00','09:30:00','09:45:00',
-                             '10:00:00','10:15:00','10:30:00','10:45:00',
-                             '11:00:00','11:15:00','11:30:00','11:45:00',
-                             '12:00:00','12:15:00','12:30:00','12:45:00',
-                             '13:00:00','13:15:00','13:30:00','13:45:00',
-                             '14:00:00','14:15:00','14:30:00','14:45:00',
-                             '15:00:00'])
+    flight_times = np.array(['06:00:00','06:05:00','06:10:00','06:15:00',
+                             '06:20:00','06:25:00','06:30:00','06:35:00',
+                             '06:40:00','06:45:00','06:50:00','06:55:00',
+                             '07:00:00','07:05:00','07:10:00','07:15:00',
+                             '07:20:00','07:25:00','07:30:00','07:35:00',
+                             '07:40:00','07:45:00','07:50:00','07:55:00', 
+                             '08:00:00'])
 
     noise_data   = post_process_noise_data(results,
-                                           flight_times = flight_times, 
-                                           DNL_time_period= 24*Units.hours,
-                                           LAeqt_time_period  = 15*Units.hours,
-                                           SENEL_time_period = 24*Units.hours)  
+                                           flight_times = flight_times,  
+                                           time_period  = ['06:00:00','09:00:00'] )  
 
     
-    plot_results(results,noise_data,regression_plotting_flag)   
+    plot_results(results,noise_data,regression_plotting_flag) 
 
-    X57_SPL        = np.max(results.segments.climb.conditions.noise.SPL_dBA) 
-    X57_SPL_true   = 45.232719642900996
+    X57_SPL        = np.max(results.segments.cruise.conditions.noise.hemisphere_SPL_dBA) 
+    X57_SPL_true   = 116.80876234676938
     X57_diff_SPL   = np.abs(X57_SPL - X57_SPL_true)
     print('Error: ',X57_diff_SPL)
-    assert np.abs((X57_SPL - X57_SPL_true)/X57_SPL_true) < 1e-3    
+    assert np.abs((X57_SPL - X57_SPL_true)/X57_SPL_true) < 1e-3 
      
     return      
 
@@ -87,7 +85,7 @@ def base_analysis(vehicle):
  
     # ------------------------------------------------------------------
     #  Weights
-    weights         = RCAIDE.Framework.Analyses.Weights.Weights_EVTOL()
+    weights         = RCAIDE.Framework.Analyses.Weights.Weights_General_Aviation()
     weights.vehicle = vehicle
     analyses.append(weights)
 
@@ -102,8 +100,12 @@ def base_analysis(vehicle):
     noise = RCAIDE.Framework.Analyses.Noise.Frequency_Domain_Buildup()   
     noise.vehicle = vehicle
     noise.settings.mean_sea_level_altitude          = False         
-    noise.settings.aircraft_departure_coordinates   = [33.94067953101678, -118.40513722978149]
-    noise.settings.aircraft_destination_coordinates = [33.81713622114423, -117.92111163722772]  
+    noise.settings.aircraft_origin_coordinates      = [33.94067953101678, -118.40513722978149]# Los Angeles International Airport
+    noise.settings.aircraft_destination_coordinates = [33.8146, -118.1459]  # Ontario International airport 
+    noise.settings.microphone_x_resolution          = 800  
+    noise.settings.microphone_y_resolution          = 1200  
+    noise.settings.noise_times_steps                = 50  
+    noise.settings.number_of_microphone_in_stencil  = 25
     noise.settings.topography_file                  = 'LA_Metropolitan_Area.txt' 
     analyses.append(noise)
 
@@ -139,34 +141,8 @@ def mission_setup(analyses):
     mission.tag   = 'mission' 
     Segments      = RCAIDE.Framework.Mission.Segments  
     base_segment  = Segments.Segment()   
-    base_segment.state.numerics.number_of_control_points  = 10
-    base_segment.state.numerics.discretization_method     = RCAIDE.Library.Methods.Utilities.Chebyshev.linear_data 
-    
-    # ------------------------------------------------------------------
-    #   Departure End of Runway Segment Flight 1 : 
-    # ------------------------------------------------------------------ 
-
-    segment = Segments.Climb.Linear_Speed_Constant_Rate(base_segment) 
-    segment.tag = "climb"   
-    segment.analyses.extend( analyses.base ) 
-    segment.initial_battery_state_of_charge              = 1.0 
-    segment.altitude_start                               = 10.0    * Units.feet  
-    segment.altitude_end                                 = 500.0   * Units.feet 
-    segment.air_speed_start                              = 100.    * Units['mph'] 
-    segment.air_speed_end                                = 120.    * Units['mph'] 
-    segment.climb_rate                                   = 50.     * Units['ft/min']         
-    segment.true_course                                  = 0
-    
-    # define flight dynamics to model 
-    segment.flight_dynamics.force_x                      = True  
-    segment.flight_dynamics.force_z                      = True     
-    
-    # define flight controls 
-    segment.assigned_control_variables.throttle.active               = True           
-    segment.assigned_control_variables.throttle.assigned_propulsors  = [['starboard_propulsor','port_propulsor']] 
-    segment.assigned_control_variables.body_angle.active             = True                
-       
-    mission.append_segment(segment)
+    base_segment.state.numerics.number_of_control_points  = 3
+    base_segment.state.numerics.discretization_method     = RCAIDE.Library.Methods.Utilities.Chebyshev.linear_data
     
     segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment) 
     segment.tag = "cruise"   
@@ -174,8 +150,8 @@ def mission_setup(analyses):
     segment.initial_battery_state_of_charge              = 1.0       
     segment.altitude                                     = 30
     segment.air_speed                                    = 100
-    segment.distance                                     = 1000  
-    segment.true_course                                  = 0
+    segment.distance                                     = 1 * Units.miles
+    segment.true_course                                  = 130 *Units.degrees 
     
     # define flight dynamics to model 
     segment.flight_dynamics.force_x                      = True  
@@ -205,26 +181,7 @@ def missions_setup(mission):
 # ----------------------------------------------------------------------
 #  Plot Resuls 
 # ---------------------------------------------------------------------- 
-def plot_results(results,noise_data,regression_plotting_flag): 
-    # Plot noise hemisphere
-    plot_noise_hemisphere(noise_data,
-                          noise_level      = noise_data.SPL_dBA[1], 
-                          min_noise_level  = 20,  
-                          max_noise_level  = 90, 
-                          noise_scale_label= 'SPL [dBA]',
-                          show_figure      = regression_plotting_flag)     
-    
-
-    # Plot noise hemisphere with vehicle 
-    plot_noise_hemisphere(noise_data,
-                          noise_level      = noise_data.SPL_dBA[1], 
-                          min_noise_level  = 20,  
-                          max_noise_level  = 90, 
-                          noise_scale_label= 'SPL [dBA]',
-                          save_filename    = "Noise_Hemisphere_With_Aircraft", 
-                          vehicle          = results.segments.cruise.analyses.aerodynamics.vehicle,
-                          show_figure      = regression_plotting_flag)       
-    
+def plot_results(results,noise_data,regression_plotting_flag):  
     plot_noise_level(noise_data,
                     noise_level  = noise_data.SPL_dBA[0], 
                     save_filename="Sideline_Noise_Levels")  
@@ -241,33 +198,33 @@ def plot_results(results,noise_data,regression_plotting_flag):
 
     # Day Night Average Noise Level 
     plot_3D_noise_contour(noise_data,
-                        noise_level      = noise_data.DNL,
-                        min_noise_level  = 20,  
+                        noise_level      = noise_data.L_dn,
+                        min_noise_level  = 0,  
                         max_noise_level  = 90, 
-                        noise_scale_label= 'DNL',
+                        noise_scale_label= 'L_dn',
                         show_microphones = True, 
-                        save_filename    = "DNL_Noise_3D_Contour",
+                        save_filename    = "L_dn_Noise_3D_Contour",
                         show_figure      = regression_plotting_flag) 
     
 
     # Equivalent Noise Level
     plot_3D_noise_contour(noise_data,
-                        noise_level      = noise_data.L_AeqT,
-                        min_noise_level  = 20,  
+                        noise_level      = noise_data.L_eq,
+                        min_noise_level  = 0,  
                         max_noise_level  = 90, 
-                        noise_scale_label= 'LAeqT',
+                        noise_scale_label= 'L_eq',
                         show_trajectory  = True,
-                        save_filename    = "LAeqT_Noise_3D_Contour",
+                        save_filename    = "L_eq_Noise_3D_Contour",
                         show_figure      = regression_plotting_flag)    
     
 
     # 24-hr Equivalent Noise Level
     plot_3D_noise_contour(noise_data,
-                       noise_level      = noise_data.L_AeqT,
-                       min_noise_level  = 20,  
+                       noise_level      = noise_data.L_eq,
+                       min_noise_level  = 0,  
                        max_noise_level  = 90, 
-                       noise_scale_label= '24hr-LAeqT',
-                       save_filename    = "24hr_LAeqT_Noise_3D_Contour", 
+                       noise_scale_label= '24hr-L_eq',
+                       save_filename    = "24hr_L_eq_Noise_3D_Contour", 
                        use_lat_long_coordinates = False,                         
                        show_figure      = regression_plotting_flag)      
     
@@ -275,7 +232,7 @@ def plot_results(results,noise_data,regression_plotting_flag):
     # Single Event Noise Exposure Level
     plot_3D_noise_contour(noise_data,
                        noise_level      = noise_data.SENEL,
-                       min_noise_level  = 20,  
+                       min_noise_level  = 0,  
                        max_noise_level  = 90, 
                        noise_scale_label= 'SENEL',
                        save_filename    = "SENEL_Noise_3D_Contour",
@@ -284,7 +241,7 @@ def plot_results(results,noise_data,regression_plotting_flag):
     # Maximum Sound Pressure Level   
     plot_2D_noise_contour(noise_data,
                         noise_level      = np.max(noise_data.SPL_dBA,axis=0), 
-                        min_noise_level  = 20,  
+                        min_noise_level  = 0,  
                         max_noise_level  = 90, 
                         noise_scale_label= 'SPL [dBA]',
                         save_filename    = "SPL_max_Noise_2D_Contour",
@@ -295,31 +252,31 @@ def plot_results(results,noise_data,regression_plotting_flag):
 
     # Day Night Average Noise Level 
     plot_2D_noise_contour(noise_data,
-                        noise_level      = noise_data.DNL,
-                        min_noise_level  = 20,  
+                        noise_level      = noise_data.L_dn,
+                        min_noise_level  = 0,  
                         max_noise_level  = 90, 
-                        noise_scale_label= 'DNL',
-                        save_filename    = "DNL_Noise_2D_Contour",
+                        noise_scale_label= 'L_dn',
+                        save_filename    = "L_dn_Noise_2D_Contour",
                         show_figure      = regression_plotting_flag) 
     
 
     # Equivalent Noise Level
     plot_2D_noise_contour(noise_data,
-                        noise_level      = noise_data.L_AeqT,
-                        min_noise_level  = 20,  
+                        noise_level      = noise_data.L_eq,
+                        min_noise_level  = 0,  
                         max_noise_level  = 90, 
-                        noise_scale_label= 'LAeqT',
-                        save_filename    = "LAeqT_Noise_2D_Contour",
+                        noise_scale_label= 'L_eq',
+                        save_filename    = "L_eq_Noise_2D_Contour",
                         show_figure      = regression_plotting_flag)    
     
 
     # 24-hr Equivalent Noise Level
     plot_2D_noise_contour(noise_data,
-                       noise_level      = noise_data.L_AeqT,
+                       noise_level      = noise_data.L_eq,
                        min_noise_level  = 20,  
                        max_noise_level  = 90, 
-                       noise_scale_label= '24hr-LAeqT',
-                       save_filename    = "24hr_LAeqT_Noise_2D_Contour",
+                       noise_scale_label= '24hr-L_eq',
+                       save_filename    = "24hr_L_eq_Noise_2D_Contour",
                        show_figure      = regression_plotting_flag)      
     
 

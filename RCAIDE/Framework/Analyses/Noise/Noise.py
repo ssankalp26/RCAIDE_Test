@@ -58,25 +58,26 @@ class Noise(Analysis):
         self.settings.sideline_x_position                    = 0 
         self.settings.print_noise_output                     = False  
         self.settings.mean_sea_level_altitude                = True 
-        self.settings.aircraft_destination_location          = np.array([0,0,0])
         self.settings.aircraft_origin_location               = np.array([0,0,0])
+        self.settings.aircraft_destination_location          = np.array([0,0,0])
         self.settings.aircraft_origin_coordinates            = np.array([0.0,0.0])
         self.settings.aircraft_destination_coordinates       = np.array([0.0,0.0])
         self.settings.topography_file                        = None
         self.settings.microphone_locations                   = None   
         self.settings.microphone_coordinates                 = None
-        self.settings.microphone_x_resolution                = 10 
-        self.settings.microphone_y_resolution                = 10  
+        self.settings.microphone_x_resolution                = 11 
+        self.settings.microphone_y_resolution                = 11 
+        self.settings.noise_times_steps                      = 101 
+        self.settings.number_of_microphone_in_stencil        = 10
         self.settings.microphone_min_x                       = 0  
-        self.settings.microphone_max_x                       = 5000 
-        self.settings.microphone_min_y                       = -450  
-        self.settings.microphone_max_y                       = 450  
+        self.settings.microphone_max_x                       = 1000 
+        self.settings.microphone_min_y                       = -100  
+        self.settings.microphone_max_y                       = 100  
         
         self.settings.noise_hemisphere                       = False 
-        self.settings.noise_hemisphere_radius                = 20 
-        self.settings.noise_hemisphere_microphone_resolution = 20
-        self.settings.noise_hemisphere_phi_angle_bounds      = np.array([0,np.pi])
-        self.settings.noise_hemisphere_theta_angle_bounds    = np.array([-1 * np.pi,1*np.pi])
+        self.settings.noise_hemisphere_radius                = 20  
+        self.settings.noise_hemisphere_phi_angles            = np.linspace(-np.pi / 2,np.pi / 2,12)
+        self.settings.noise_hemisphere_theta_angles          = np.linspace(-1 * np.pi, 1*np.pi,6)
          
                 
         # settings for acoustic frequency resolution

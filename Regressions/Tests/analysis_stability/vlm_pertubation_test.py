@@ -54,7 +54,8 @@ def main():
     aileron_deflection_true   = -0.5666380923616978
     aileron_deflection_diff   = np.abs(aileron_deflection - aileron_deflection_true)
     print('Error: ',aileron_deflection_diff)
-    assert np.abs(aileron_deflection_diff/aileron_deflection_true) < 1e-3 
+    assert np.abs(aileron_deflection_diff/aileron_deflection_true) < 1e-3
+    
 
     rudder_deflection        = results.segments.climb.conditions.control_surfaces.rudder.deflection[0,0] / Units.deg  
     rudder_deflection_true   = 2.8667861407853974
