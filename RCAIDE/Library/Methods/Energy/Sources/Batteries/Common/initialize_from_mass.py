@@ -1,11 +1,13 @@
+## @ingroup Methods-Energy-Sources-Battery-Common
 # RCAIDE/Methods/Energy/Sources/Battery/Common/initialize_from_mass.py
 # 
 # 
 # Created:  Jul 2023, M. Clarke 
 
 # ----------------------------------------------------------------------------------------------------------------------
-#  initialize_from_mass
-# ----------------------------------------------------------------------------------------------------------------------  
+#  METHOD
+# ---------------------------------------------------------------------------------------------------------------------- 
+## @ingroup Methods-Energy-Sources-Battery-Common
 def initialize_from_mass(battery_module,module_weight_factor = 1.42 ):
     """
     Calculate the max energy and power based of the mass
@@ -21,9 +23,25 @@ def initialize_from_mass(battery_module,module_weight_factor = 1.42 ):
     Outputs:
      battery_module.
        maximum_energy
-       maximum_power 
+       maximum_power
+       mass_properties.
+        mass
+
+
     """     
-    useful_mass                            = battery_module.mass_properties.mass/module_weight_factor 
-    battery_module.maximum_energy          = useful_mass*battery_module.cell.specific_energy  
-    battery_module.maximum_power           = useful_mass*battery_module.cell.specific_power
-    battery_module.initial_maximum_energy  = battery_module.maximum_energy         
+    mass = battery_module.mass_properties.mass/module_weight_factor
+    
+    if battery_module.cell.mass == None: 
+        n_series   = 1
+        n_parallel = 1 
+    else:
+        n_cells    = int(mass/battery_module.cell.mass)
+        n_series   = int(battery_module.maximum_voltage/battery_module.cell.maximum_voltage)
+        n_parallel = int(n_cells/n_series)
+        
+    battery_module.maximum_energy                    = mass*battery_module.cell.specific_energy  
+    battery_module.maximum_power                     = mass*battery_module.cell.specific_power
+    battery_module.initial_maximum_energy            = battery_module.maximum_energy    
+    battery_module.electrical_configuration.series   = n_series
+    battery_module.electrical_configuration.parallel = n_parallel 
+    battery_module.electrical_configuration.total    = n_parallel*n_series      

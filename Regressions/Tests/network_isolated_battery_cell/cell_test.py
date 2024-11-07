@@ -20,7 +20,8 @@ import matplotlib.cm as cm
 
 # local imports 
 import sys 
-sys.path.append('../../Vehicles') 
+import os
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 from Isolated_Battery_Cell   import vehicle_setup , configs_setup  
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -72,8 +73,8 @@ def lithium_ion_battery_test():
     C_rat                 = [0.5,1]  
     marker_size           = 5 
     mAh                   = np.array([3550,1500]) 
-    V_ul_true             = np.array([[3.975183741087232,3.6014269379449155], [3.91835673395705,3.6143636985487304]])
-    bat_temp_true         = np.array([[292.3879080392878,288.85765659521235], [296.3978928496251,289.5653131904246]])  
+    V_ul_true             = np.array([[3.979089016769657,3.6014784556230786], [3.92220237090634,3.6144686722140595]])
+    bat_temp_true         = np.array([[292.3915600365144,288.85811904395115], [296.40173907355614,289.567165791677]])  
 
     # PLot parameters 
     marker                = ['s' ,'o' ,'P']

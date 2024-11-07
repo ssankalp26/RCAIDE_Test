@@ -16,7 +16,9 @@ import numpy as np
 
 # local imports 
 import sys 
-sys.path.append('../../Vehicles') 
+import os
+
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 from Cessna_172                       import vehicle_setup  
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor import design_propeller
 

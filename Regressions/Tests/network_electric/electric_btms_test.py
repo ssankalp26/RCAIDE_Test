@@ -15,10 +15,10 @@ from RCAIDE.Library.Methods.Performance.estimate_stall_speed        import estim
 # python imports     
 import sys
 import matplotlib.pyplot as  plt
-
+import os
 
 # local imports 
-sys.path.append('../../Vehicles')
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 from Electric_Twin_Otter    import vehicle_setup, configs_setup 
 
 

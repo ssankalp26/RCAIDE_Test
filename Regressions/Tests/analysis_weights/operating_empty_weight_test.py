@@ -15,8 +15,9 @@ from RCAIDE.save import save as save_results
 
 import numpy as  np 
 import sys
+import os
 
-sys.path.append('../../Vehicles')
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 # the analysis functions
 
 from Boeing_737             import vehicle_setup as transport_setup
@@ -47,8 +48,9 @@ def Transport_Aircraft_Test():
         weight_analysis.method                        = method_type 
         weight                                        = weight_analysis.evaluate() 
     
-        #save_results(weight, 'weights_'+method_type.replace(' ','_')+'.res')
-        old_weight = load_results('weights_'+method_type.replace(' ','_')+'.res')
+       
+        #save_results(weight, os.path.join(os.path.dirname(__file__), 'weights_'+method_type.replace(' ','_')+'.res'))
+        old_weight = load_results(os.path.join(os.path.dirname(__file__), 'weights_'+method_type.replace(' ','_')+'.res'))
     
         check_list = [
             'payload_breakdown.total',        
@@ -85,8 +87,8 @@ def General_Aviation_Test():
     weight_analysis.vehicle  = general_aviation_setup()
     weight                   = weight_analysis.evaluate()
     
-    #save_results(weight, 'weights_General_Aviation.res')
-    old_weight = load_results('weights_General_Aviation.res')
+    #save_results(weight, os.path.join(os.path.dirname(__file__), 'weights_General_Aviation.res'))
+    old_weight = load_results(os.path.join(os.path.dirname(__file__), 'weights_General_Aviation.res'))
 
     check_list = [
         'empty',
@@ -116,8 +118,8 @@ def BWB_Aircraft_Test():
     weight_analysis.vehicle  = bwb_setup()
     weight                   = weight_analysis.evaluate()
     
-    #save_results(weight, 'weights_BWB.res')
-    old_weight = load_results('weights_BWB.res')
+    #save_results(weight, os.path.join(os.path.dirname(__file__), 'weights_BWB.res'))
+    old_weight = load_results(os.path.join(os.path.dirname(__file__), 'weights_BWB.res'))
     
     check_list = [
         'empty',
@@ -147,8 +149,8 @@ def EVTOL_Aircraft_Test():
     weight_analysis.vehicle  = evtol_setup(new_regression) 
     weight                   = weight_analysis.evaluate() 
 
-    #save_results(weight, 'weights_EVTOL.res')
-    old_weight = load_results('weights_EVTOL.res')
+    #save_results(weight, os.path.join(os.path.dirname(__file__), 'weights_EVTOL.res'))
+    old_weight = load_results(os.path.join(os.path.dirname(__file__), 'weights_EVTOL.res'))
     
     check_list = [
         'empty', 
@@ -177,8 +179,8 @@ def Human_Powered_Aircraft_Test():
     weight_analysis.vehicle  = hp_setup()
     weight                   = weight_analysis.evaluate()    
 
-    #save_results(weight, 'weights_Human_Powered.res')
-    old_weight = load_results('weights_Human_Powered.res')
+    #save_results(weight, os.path.join(os.path.dirname(__file__), 'weights_Human_Powered.res'))
+    old_weight = load_results(os.path.join(os.path.dirname(__file__), 'weights_Human_Powered.res'))
     
     check_list = [
         'empty', 
@@ -205,8 +207,8 @@ def UAV_Test():
     weight_analysis.vehicle  = uav_setup()
     weight                   = weight_analysis.evaluate() 
 
-    #save_results(weight, 'weights_UAV.res')
-    old_weight = load_results('weights_UAV.res')
+    #save_results(weight, os.path.join(os.path.dirname(__file__), 'weights_UAV.res'))
+    old_weight = load_results(os.path.join(os.path.dirname(__file__), 'weights_UAV.res'))
     
     check_list = [
         'empty', 

@@ -6,17 +6,18 @@
 # ----------------------------------------------------------------------------------------------------------------------
 # cg_and_moi_test.py
 
-from RCAIDE.Framework.Core                                                     import Units,  Data ,  Container  
-from RCAIDE.Library.Methods.Weights.Correlation_Buildups                       import Common
-from RCAIDE.Library.Methods.Stability.Moment_of_Inertia.calculate_aircraft_MOI import calculate_aircraft_MOI
-from RCAIDE.Library.Methods.Stability.Center_of_Gravity                        import compute_vehicle_center_of_gravity
-from RCAIDE.Library.Methods.Stability.Moment_of_Inertia                        import compute_cuboid_moment_of_inertia
+from RCAIDE.Framework.Core                                                   import Units,  Data ,  Container  
+from RCAIDE.Library.Methods.Weights.Correlation_Buildups                     import Common
+from RCAIDE.Library.Methods.Weights.Moment_of_Inertia.calculate_aircraft_MOI import calculate_aircraft_MOI
+from RCAIDE.Library.Methods.Weights.Center_of_Gravity                        import compute_vehicle_center_of_gravity
+from RCAIDE.Library.Methods.Weights.Moment_of_Inertia                        import compute_cuboid_moment_of_inertia
 
 import numpy as  np
 import RCAIDE
 import sys   
+import os
 
-sys.path.append('../../Vehicles')
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 
 # the analysis functions
 from Lockheed_C5a           import vehicle_setup as transport_setup
