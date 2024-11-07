@@ -606,7 +606,11 @@ def evaluate_no_surrogate(state,settings,vehicle):
     """Evaluates forces and moments directly using VLM.
     
     Assumptions:
-        None
+        CY_alpha multiplied by 0, based on theory 
+        CL_beta multiplied by -1, verified against literature and AVL 
+        p derivatives multiplied by -10, verified against literature and AVL 
+        r derivatives multiplied by -10, verified against literature and AVL 
+        dCN_ddelta_r multiplied by -1, verified against literature 
         
     Source:
         None
@@ -623,7 +627,9 @@ def evaluate_no_surrogate(state,settings,vehicle):
 
     # unpack 
     conditions    = state.conditions   
-    aerodynamics  = state.analyses.aerodynamics 
+    aerodynamics  = state.analyses.aerodynamics
+    
+    conditions.control_surfaces.rudder.deflection =  -conditions.control_surfaces.rudder.deflection
 
     # loop through wings to determine what control surfaces are present 
     for wing in vehicle.wings: 
@@ -640,7 +646,7 @@ def evaluate_no_surrogate(state,settings,vehicle):
             if type(control_surface) == RCAIDE.Library.Components.Wings.Control_Surfaces.Flap:  
                 settings.flap_flag     = True 
    
-    Clift,Cdrag,CX,CY,CZ,CL,CM,CN,S_ref,b_ref,c_ref,X_ref,Y_ref ,Z_ref,Clift_wings,Cdrag_wings,AoA_wing_induced= evaluate_VLM(conditions,settings,vehicle)
+    Clift,Cdrag,CX,CY,CZ,CL,CM,CN,S_ref,b_ref,c_ref,X_ref,Y_ref ,Z_ref,Clift_wings,Cdrag_wings,AoA_wing_induced= call_VLM(conditions,settings,vehicle)
     
     # Dimensionalize the lift and drag for each wing 
     for wing in vehicle.wings: 
@@ -715,7 +721,7 @@ def evaluate_no_surrogate(state,settings,vehicle):
     equilibrium_conditions.freestream.reynolds_number                  = equilibrium_conditions.freestream.density * equilibrium_conditions.freestream.velocity / equilibrium_conditions.freestream.dynamic_viscosity  
     
 
-    Clift_0,Cdrag_0,CX_0,CY_0,CZ_0,CL_0,CM_0,CN_0,_,_,_,_,_ ,_,Clift_0_wings,Cdrag_0_wings,_= evaluate_VLM(equilibrium_conditions,settings,vehicle)
+    Clift_0,Cdrag_0,CX_0,CY_0,CZ_0,CL_0,CM_0,CN_0,_,_,_,_,_ ,_,Clift_0_wings,Cdrag_0_wings,_= call_VLM(equilibrium_conditions,settings,vehicle)
     
     # Dimensionalize the lift and drag for each wing 
     for wing in vehicle.wings: 
@@ -760,7 +766,7 @@ def evaluate_no_surrogate(state,settings,vehicle):
     perturbation_state                                 = deepcopy(equilibrium_state)
     pertubation_conditions                             = deepcopy(equilibrium_conditions)  
     pertubation_conditions.aerodynamics.angles.alpha   += delta_angle 
-    Clift_alpha_prime,Cdrag_alpha_prime,CX_alpha_prime,CY_alpha_prime,CZ_alpha_prime,CL_alpha_prime,CM_alpha_prime,CN_alpha_prime,_,_,_,_,_ ,_,Clift_wings_alpha_prime,Cdrag_wings_alpha_prime,_= evaluate_VLM(pertubation_conditions,settings,vehicle)    
+    Clift_alpha_prime,Cdrag_alpha_prime,CX_alpha_prime,CY_alpha_prime,CZ_alpha_prime,CL_alpha_prime,CM_alpha_prime,CN_alpha_prime,_,_,_,_,_ ,_,Clift_wings_alpha_prime,Cdrag_wings_alpha_prime,_= call_VLM(pertubation_conditions,settings,vehicle)    
      
     for wing in vehicle.wings: 
         pertubation_conditions.aerodynamics.coefficients.lift.inviscid_wings[wing.tag]         = Clift_wings_alpha_prime[wing.tag]
@@ -815,7 +821,7 @@ def evaluate_no_surrogate(state,settings,vehicle):
 
     vehicle_shifted_CG = deepcopy(vehicle)
     vehicle_shifted_CG.mass_properties.center_of_gravity[0][0] += 1     
-    _,_,_,_,_,_,CM_alpha_cg_prime,_,_,_,_,_,_ ,_,_,_,_= evaluate_VLM(pertubation_conditions,settings,vehicle_shifted_CG)    
+    _,_,_,_,_,_,CM_alpha_cg_prime,_,_,_,_,_,_ ,_,_,_,_= call_VLM(pertubation_conditions,settings,vehicle_shifted_CG)    
   
     dCM_dalpha_cg = (CM_alpha_cg_prime   - CM_0) / (delta_angle)    
     dCM_dalpha    = (CM_alpha_prime   - CM_0) / (delta_angle)    
@@ -832,7 +838,7 @@ def evaluate_no_surrogate(state,settings,vehicle):
     pertubation_conditions                             = deepcopy(equilibrium_conditions)  
     pertubation_conditions.aerodynamics.angles.beta    += delta_angle 
     
-    Clift_beta_prime,Cdrag_beta_prime,CX_beta_prime,CY_beta_prime,CZ_beta_prime,CL_beta_prime,CM_beta_prime,CN_beta_prime ,_,_,_,_,_ ,_,_,_,_= evaluate_VLM(pertubation_conditions,settings,vehicle)   
+    Clift_beta_prime,Cdrag_beta_prime,CX_beta_prime,CY_beta_prime,CZ_beta_prime,CL_beta_prime,CM_beta_prime,CN_beta_prime ,_,_,_,_,_ ,_,_,_,_= call_VLM(pertubation_conditions,settings,vehicle)   
  
     conditions.static_stability.derivatives.Clift_beta = (Clift_beta_prime   - Clift_0) / (delta_angle)
     conditions.static_stability.derivatives.Cdrag_beta = (Cdrag_beta_prime   - Cdrag_0) / (delta_angle) 
@@ -854,7 +860,7 @@ def evaluate_no_surrogate(state,settings,vehicle):
     pertubation_conditions.freestream.reynolds_number            = pertubation_conditions.freestream.density * pertubation_conditions.freestream.velocity /equilibrium_conditions.freestream.dynamic_viscosity   
     pertubation_conditions.freestream.dynamic_pressure           = 0.5 * pertubation_conditions.freestream.density * np.sum( pertubation_conditions.freestream.velocity**2, axis=1)[:,None] 
        
-    Clift_u_prime,Cdrag_u_prime,CX_u_prime,CY_u_prime,CZ_u_prime,CL_u_prime,CM_u_prime,CN_u_prime ,_,_,_,_,_,_,Clift_wings_u_prime,Cdrag_wings_u_prime,_= evaluate_VLM(pertubation_conditions,settings,vehicle)
+    Clift_u_prime,Cdrag_u_prime,CX_u_prime,CY_u_prime,CZ_u_prime,CL_u_prime,CM_u_prime,CN_u_prime ,_,_,_,_,_,_,Clift_wings_u_prime,Cdrag_wings_u_prime,_= call_VLM(pertubation_conditions,settings,vehicle)
 
     # Dimensionalize the lift and drag for each wing 
     for wing in vehicle.wings: 
@@ -911,7 +917,7 @@ def evaluate_no_surrogate(state,settings,vehicle):
     pertubation_conditions.freestream.reynolds_number            = pertubation_conditions.freestream.density * pertubation_conditions.freestream.velocity / pertubation_conditions.freestream.dynamic_viscosity   
     pertubation_conditions.freestream.dynamic_pressure           = 0.5 * pertubation_conditions.freestream.density * np.sum( pertubation_conditions.freestream.velocity**2, axis=1)[:,None] 
     
-    Clift_v_prime,Cdrag_v_prime,CX_v_prime,CY_v_prime,CZ_v_prime,CL_v_prime,CM_v_prime,CN_v_prime ,_,_,_,_,_,_,_,_,_= evaluate_VLM(pertubation_conditions,settings,vehicle)   
+    Clift_v_prime,Cdrag_v_prime,CX_v_prime,CY_v_prime,CZ_v_prime,CL_v_prime,CM_v_prime,CN_v_prime ,_,_,_,_,_,_,_,_,_= call_VLM(pertubation_conditions,settings,vehicle)   
  
     conditions.static_stability.derivatives.Clift_v = (Clift_v_prime   - Clift_0) / (delta_speed)
     conditions.static_stability.derivatives.Cdrag_v = (Cdrag_v_prime   - Cdrag_0) / (delta_speed) 
@@ -932,7 +938,7 @@ def evaluate_no_surrogate(state,settings,vehicle):
     pertubation_conditions.freestream.reynolds_number            = pertubation_conditions.freestream.density * pertubation_conditions.freestream.velocity /  pertubation_conditions.freestream.dynamic_viscosity 
     pertubation_conditions.freestream.dynamic_pressure           = 0.5 * pertubation_conditions.freestream.density * np.sum( pertubation_conditions.freestream.velocity**2, axis=1)[:,None] 
     
-    Clift_w_prime,Cdrag_w_prime,CX_w_prime,CY_w_prime,CZ_w_prime,CL_w_prime,CM_w_prime,CN_w_prime ,_,_,_,_,_,_,_,_,_= evaluate_VLM(pertubation_conditions,settings,vehicle)   
+    Clift_w_prime,Cdrag_w_prime,CX_w_prime,CY_w_prime,CZ_w_prime,CL_w_prime,CM_w_prime,CN_w_prime ,_,_,_,_,_,_,_,_,_= call_VLM(pertubation_conditions,settings,vehicle)   
  
     conditions.static_stability.derivatives.Clift_w  = (Clift_w_prime   - Clift_0) / (delta_speed)
     conditions.static_stability.derivatives.Cdrag_w  = (Cdrag_w_prime   - Cdrag_0) / (delta_speed) 
@@ -951,7 +957,7 @@ def evaluate_no_surrogate(state,settings,vehicle):
     pertubation_conditions.static_stability.roll_rate[:,0]                 =  delta_rate 
     pertubation_conditions.frames.inertial.angular_velocity_vector[:,0]    =  delta_rate  
     
-    Clift_p_prime,Cdrag_p_prime,CX_p_prime,CY_p_prime,CZ_p_prime,CL_p_prime,CM_p_prime,CN_p_prime ,_,_,_,_,_,_,_,_,_= evaluate_VLM(pertubation_conditions,settings,vehicle)   
+    Clift_p_prime,Cdrag_p_prime,CX_p_prime,CY_p_prime,CZ_p_prime,CL_p_prime,CM_p_prime,CN_p_prime ,_,_,_,_,_,_,_,_,_= call_VLM(pertubation_conditions,settings,vehicle)   
 
     conditions.static_stability.derivatives.Clift_p  =     (Clift_p_prime   - Clift_0) / (delta_rate)
     conditions.static_stability.derivatives.Cdrag_p  =     (Cdrag_p_prime   - Cdrag_0) / (delta_rate) 
@@ -970,7 +976,7 @@ def evaluate_no_surrogate(state,settings,vehicle):
     pertubation_conditions.static_stability.pitch_rate[:,0]                =  delta_rate 
     pertubation_conditions.frames.inertial.angular_velocity_vector[:,1]    =  delta_rate  
     
-    Clift_q_prime,Cdrag_q_prime,CX_q_prime,CY_q_prime,CZ_q_prime,CL_q_prime,CM_q_prime,CN_q_prime  ,_,_,_,_,_ ,_,Clift_wings_q_prime,Cdrag_wings_q_prime,_= evaluate_VLM(pertubation_conditions,settings,vehicle)
+    Clift_q_prime,Cdrag_q_prime,CX_q_prime,CY_q_prime,CZ_q_prime,CL_q_prime,CM_q_prime,CN_q_prime  ,_,_,_,_,_ ,_,Clift_wings_q_prime,Cdrag_wings_q_prime,_= call_VLM(pertubation_conditions,settings,vehicle)
 
     # Dimensionalize the lift and drag for each wing 
     for wing in vehicle.wings: 
@@ -1024,7 +1030,7 @@ def evaluate_no_surrogate(state,settings,vehicle):
     pertubation_conditions.static_stability.yaw_rate[:,0]                  =  delta_rate 
     pertubation_conditions.frames.inertial.angular_velocity_vector[:,2]    =  delta_rate  
     
-    Clift_r_prime,Cdrag_r_prime,CX_r_prime,CY_r_prime,CZ_r_prime,CL_r_prime,CM_r_prime,CN_r_prime ,_,_,_,_,_,_,_,_,_= evaluate_VLM(pertubation_conditions,settings,vehicle)   
+    Clift_r_prime,Cdrag_r_prime,CX_r_prime,CY_r_prime,CZ_r_prime,CL_r_prime,CM_r_prime,CN_r_prime ,_,_,_,_,_,_,_,_,_= call_VLM(pertubation_conditions,settings,vehicle)   
 
     conditions.static_stability.derivatives.Clift_r  =    (Clift_r_prime   - Clift_0) / (delta_rate)
     conditions.static_stability.derivatives.Cdrag_r  =    (Cdrag_r_prime   - Cdrag_0) / (delta_rate) 
@@ -1040,7 +1046,7 @@ def evaluate_no_surrogate(state,settings,vehicle):
         pertubation_conditions                             = deepcopy(equilibrium_conditions)  
         pertubation_conditions.control_surfaces.aileron.deflection +=  delta_ctrl_surf * Units.degrees  
         
-        Clift_res,Cdrag_res,CX_res,CY_res,CZ_res,CL_res,CM_res,CN_res ,_,_,_,_,_,_,_,_,_= evaluate_VLM(pertubation_conditions,settings,vehicle)    
+        Clift_res,Cdrag_res,CX_res,CY_res,CZ_res,CL_res,CM_res,CN_res ,_,_,_,_,_,_,_,_,_= call_VLM(pertubation_conditions,settings,vehicle)    
                     
         Clift_delta_a_prime   = Clift_res
         Cdrag_delta_a_prime   = Cdrag_res
@@ -1073,7 +1079,7 @@ def evaluate_no_surrogate(state,settings,vehicle):
         pertubation_conditions                             = deepcopy(equilibrium_conditions)  
         pertubation_conditions.control_surfaces.elevator.deflection +=  delta_ctrl_surf * Units.degrees  
         
-        Clift_res,Cdrag_res,CX_res,CY_res,CZ_res,CL_res,CM_res,CN_res ,_,_,_,_,_,_,_,_,_= evaluate_VLM(pertubation_conditions,settings,vehicle)    
+        Clift_res,Cdrag_res,CX_res,CY_res,CZ_res,CL_res,CM_res,CN_res ,_,_,_,_,_,_,_,_,_= call_VLM(pertubation_conditions,settings,vehicle)    
          
         Clift_delta_e_prime   = Clift_res
         Cdrag_delta_e_prime   = Cdrag_res
@@ -1108,7 +1114,7 @@ def evaluate_no_surrogate(state,settings,vehicle):
         pertubation_conditions                             = deepcopy(equilibrium_conditions)  
         pertubation_conditions.control_surfaces.rudder.deflection +=  delta_ctrl_surf * Units.degrees  
         
-        Clift_res,Cdrag_res,CX_res,CY_res,CZ_res,CL_res,CM_res,CN_res ,_,_,_,_,_,_,_,_,_= evaluate_VLM(pertubation_conditions,settings,vehicle)     
+        Clift_res,Cdrag_res,CX_res,CY_res,CZ_res,CL_res,CM_res,CN_res ,_,_,_,_,_,_,_,_,_= call_VLM(pertubation_conditions,settings,vehicle)     
                     
         Clift_delta_r_prime   = Clift_res
         Cdrag_delta_r_prime   = Cdrag_res
@@ -1119,13 +1125,13 @@ def evaluate_no_surrogate(state,settings,vehicle):
         CM_delta_r_prime      = CM_res   
         CN_delta_r_prime      = CN_res   
         
-        dClift_ddelta_r = (Clift_delta_r_prime   - Clift_0) / (delta_ctrl_surf)
-        dCdrag_ddelta_r = (Cdrag_delta_r_prime   - Cdrag_0) / (delta_ctrl_surf)  
-        dCX_ddelta_r    = (CX_delta_r_prime      - CX_0) / (delta_ctrl_surf)  
-        dCY_ddelta_r    = (CY_delta_r_prime      - CY_0) / (delta_ctrl_surf) 
-        dCZ_ddelta_r    = (CZ_delta_r_prime      - CZ_0) / (delta_ctrl_surf) 
-        dCL_ddelta_r    = (CL_delta_r_prime      - CL_0) / (delta_ctrl_surf)  
-        dCM_ddelta_r    = (CM_delta_r_prime      - CM_0) / (delta_ctrl_surf)  
+        dClift_ddelta_r = -(Clift_delta_r_prime   - Clift_0) / (delta_ctrl_surf)
+        dCdrag_ddelta_r = -(Cdrag_delta_r_prime   - Cdrag_0) / (delta_ctrl_surf)  
+        dCX_ddelta_r    = -(CX_delta_r_prime      - CX_0) / (delta_ctrl_surf)  
+        dCY_ddelta_r    = -(CY_delta_r_prime      - CY_0) / (delta_ctrl_surf) 
+        dCZ_ddelta_r    = -(CZ_delta_r_prime      - CZ_0) / (delta_ctrl_surf) 
+        dCL_ddelta_r    = -(CL_delta_r_prime      - CL_0) / (delta_ctrl_surf)  
+        dCM_ddelta_r    = -(CM_delta_r_prime      - CM_0) / (delta_ctrl_surf)  
         dCN_ddelta_r    = -(CN_delta_r_prime      - CN_0) / (delta_ctrl_surf)
         
     
@@ -1142,7 +1148,7 @@ def evaluate_no_surrogate(state,settings,vehicle):
         pertubation_conditions                             = deepcopy(equilibrium_conditions)  
         pertubation_conditions.control_surfaces.flap.deflection +=  delta_ctrl_surf * Units.degrees  
         
-        Clift_res,Cdrag_res,CX_res,CY_res,CZ_res,CL_res,CM_res,CN_res ,_,_,_,_,_,_,_,_,_= evaluate_VLM(pertubation_conditions,settings,vehicle)    
+        Clift_res,Cdrag_res,CX_res,CY_res,CZ_res,CL_res,CM_res,CN_res ,_,_,_,_,_,_,_,_,_= call_VLM(pertubation_conditions,settings,vehicle)    
          
                     
         Clift_delta_f_prime   = Clift_res
@@ -1178,7 +1184,7 @@ def evaluate_no_surrogate(state,settings,vehicle):
         pertubation_conditions                             = deepcopy(equilibrium_conditions)  
         pertubation_conditions.control_surfaces.slat.deflection +=  delta_ctrl_surf * Units.degrees  
         
-        Clift_res,Cdrag_res,CX_res,CY_res,CZ_res,CL_res,CM_res,CN_res ,_,_,_,_,_,_,_,_,_= evaluate_VLM(pertubation_conditions,settings,vehicle)   
+        Clift_res,Cdrag_res,CX_res,CY_res,CZ_res,CL_res,CM_res,CN_res ,_,_,_,_,_,_,_,_,_= call_VLM(pertubation_conditions,settings,vehicle)   
                     
         Clift_delta_s_prime   = Clift_res
         Cdrag_delta_s_prime   = Cdrag_res
@@ -1288,7 +1294,7 @@ def compute_coefficient(sub_sur_coef,trans_sur_coef, sup_sur_coef, h_sub,h_sup,M
   
     return coef
 
-def evaluate_VLM(conditions,settings,vehicle):
+def call_VLM(conditions,settings,vehicle):
     """Calculate aerodynamics coefficients inluding specific wing coefficients using the VLM
         
     Assumptions:
