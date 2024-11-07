@@ -18,7 +18,7 @@ import numpy as np
 import sys 
 import os
 
-sys.path.append(os.path.join(sys.path[0], 'Vehicles'))
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 from Navion    import vehicle_setup, configs_setup     
 # ----------------------------------------------------------------------
 #   Main

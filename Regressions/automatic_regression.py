@@ -14,7 +14,8 @@ from RCAIDE.Framework.Core import DataOrdered
 import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')
-import sys, os, traceback, time 
+import sys, os, traceback, time
+
 sys.path.append(os.path.join(sys.path[0], 'Vehicles'))
 
 modules = [ 

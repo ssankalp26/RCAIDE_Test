@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 import os
 
 # local imports 
-sys.path.append(os.path.join(sys.path[0], 'Vehicles'))
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 from Concorde    import vehicle_setup as vehicle_setup
 from Concorde    import configs_setup as configs_setup 
 
