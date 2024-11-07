@@ -17,7 +17,7 @@ import numpy as  np
 import sys
 import os
 
-sys.path.append(os.path.join(sys.path[0],'Vehicles'))
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 # the analysis functions
 
 from Boeing_737             import vehicle_setup as transport_setup

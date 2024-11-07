@@ -11,7 +11,7 @@
 from RCAIDE.Framework.Core                import Data 
 from RCAIDE.Library.Components.Component  import Container
 from RCAIDE.Library.Components            import Component
-from RCAIDE.Library.Methods.Stability.Moment_of_Inertia.compute_fuselage_moment_of_inertia import  compute_fuselage_moment_of_inertia
+from RCAIDE.Library.Methods.Weights.Moment_of_Inertia.compute_fuselage_moment_of_inertia import  compute_fuselage_moment_of_inertia
 
  
 # ---------------------------------------------------------------------------------------------------------------------- 
