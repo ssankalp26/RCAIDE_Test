@@ -9,7 +9,6 @@
 # RCAIDE imports 
 import RCAIDE  
 from RCAIDE.Framework.Core                                    import Units 
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common   import initialize_from_circuit_configuration  
  
 # ----------------------------------------------------------------------------------------------------------------------
 #  Build the Vehicle
@@ -38,7 +37,6 @@ def vehicle_setup(current,C_rat,cell_chemistry,fixed_bus_voltage):
         battery = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC()
     elif cell_chemistry == 'lithium_ion_lfp': 
         battery = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_LFP()   
-    initialize_from_circuit_configuration(battery)  
     battery.voltage = battery.maximum_voltage 
     bus.battery_modules.append(battery)  
     bus.initialize_bus_electrical_properties()    

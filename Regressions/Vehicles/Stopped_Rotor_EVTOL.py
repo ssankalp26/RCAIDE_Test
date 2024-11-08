@@ -9,8 +9,7 @@
 # ---------------------------------------------------------------------
 import RCAIDE
 from RCAIDE.Framework.Core import Units 
-from RCAIDE.Library.Methods.Geometry.Planform                                  import segment_properties,wing_segmented_planform    
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common                    import initialize_from_circuit_configuration 
+from RCAIDE.Library.Methods.Geometry.Planform                                  import segment_properties,wing_segmented_planform 
 from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion            import compute_motor_weight
 from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor                     import design_motor
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor                        import design_propeller ,design_lift_rotor 
@@ -392,7 +391,6 @@ def vehicle_setup(new_regression=True) :
     bat.tag                                                = 'cruise_bus_battery'
     bat.electrical_configuration.series                     = 140  
     bat.electrical_configuration.parallel                   = 60
-    initialize_from_circuit_configuration(bat)  
    
     bat.geometrtic_configuration.total                      = bat.electrical_configuration.total
     bat.voltage                                             = bat.maximum_voltage 
@@ -587,7 +585,6 @@ def vehicle_setup(new_regression=True) :
     bat.tag                                                = 'lift_bus_battery'
     bat.electrical_configuration.series                    = 140   
     bat.electrical_configuration.parallel                  = 20
-    initialize_from_circuit_configuration(bat)  
     bat.geometrtic_configuration.total                      = bat.electrical_configuration.total
     bat.voltage                                             = bat.maximum_voltage 
     bat.geometrtic_configuration.normal_count               = 25

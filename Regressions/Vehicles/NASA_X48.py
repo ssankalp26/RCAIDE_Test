@@ -12,7 +12,6 @@ from RCAIDE.Library.Methods.Geometry.Planform                       import segme
 from RCAIDE.Library.Methods.Propulsors.Converters.Ducted_Fan        import design_ducted_fan
 from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor          import design_motor  
 from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion import compute_motor_weight
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common         import initialize_from_circuit_configuration 
 from RCAIDE.Library.Plots                                           import *     
  
 # python imports 
@@ -174,7 +173,6 @@ def vehicle_setup(regression_flag):
     bat.tag                                                = 'li_ion_battery'
     bat.electrical_configuration.series                    = 10  
     bat.electrical_configuration.parallel                  = 5
-    initialize_from_circuit_configuration(bat)   
     bat.geometrtic_configuration.total                      = bat.electrical_configuration.total
     bat.voltage                                             = bat.maximum_voltage 
     bat.geometrtic_configuration.normal_count               = 5

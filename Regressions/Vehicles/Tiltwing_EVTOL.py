@@ -8,7 +8,6 @@
 # ---------------------------------------------------------------------
 import RCAIDE
 from RCAIDE.Framework.Core import Units, Data    
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common                    import initialize_from_circuit_configuration 
 from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion            import compute_motor_weight
 from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor                     import design_motor
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor                        import design_prop_rotor ,design_prop_rotor 
@@ -227,7 +226,6 @@ def vehicle_setup(new_regression=True):
     bat.tag                                                = 'bus_battery'
     bat.electrical_configuration.series                     = 8 
     bat.electrical_configuration.parallel                   = 60
-    initialize_from_circuit_configuration(bat)  
    
     bat.geometrtic_configuration.total                      = bat.electrical_configuration.total
     bat.voltage                                             = bat.maximum_voltage 
