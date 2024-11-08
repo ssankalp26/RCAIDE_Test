@@ -31,3 +31,5 @@ class Butanol(Propellant):
         self.specific_energy           = 3.61e7                            # J/kg
         self.energy_density            = 2.92e10                           # J/m^3
         self.lower_heating_value       = 3.44e7                            # J/kg
+
+        #64.8% carbon, 13.6% hydrogen, 21.6% oxygen

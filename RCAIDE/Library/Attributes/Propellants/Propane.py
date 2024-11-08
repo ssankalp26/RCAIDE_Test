@@ -30,3 +30,8 @@ class Propane(Propellant):
         self.specific_energy           = 5.03e7                           # J/kg
         self.energy_density            = 2.94e10                          # J/m^3
         self.lower_heating_value       = 4.6e7                            # J/kg  
+
+ 
+
+        #Carbon: 81.71%
+#Hydrogen: 18.29%

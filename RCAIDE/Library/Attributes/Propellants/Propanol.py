@@ -31,3 +31,7 @@ class Propanol(Propellant):
         self.specific_energy           = 3.34e7                           # J/kg
         self.energy_density            = 2.69e10                          # J/m^3
         self.lower_heating_value       = 3.07e7                            # J/kg  
+
+               #Carbon: 59.95%
+       #Hydrogen: 13.42%
+        # Oxygen: 26.63%
