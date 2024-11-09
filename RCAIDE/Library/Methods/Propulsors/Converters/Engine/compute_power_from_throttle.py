@@ -76,15 +76,13 @@ def compute_power_from_throttle(engine,engine_conditions,conditions):
     P       = Pavailable * engine_conditions.throttle 
     P[P<0.] = 0.
     
-    P_hp                      = P / Units.horsepower # convert back to horse power  
-    fuel_flow_rate_lbs_per_hr = PSFC * P_hp
-    fuel_flow_rate_kgs_per_s  = fuel_flow_rate_lbs_per_hr * Units.lbs / Units.hr
+    m_dot  =  PSFC * P 
 
     # Compute engine torque
     torque = P/omega
     
     # Determine fuel flow rate and cap at 0
-    fuel_flow_rate  = np.fmax(fuel_flow_rate_kgs_per_s,np.zeros_like(altitude)) 
+    fuel_flow_rate  = np.fmax(m_dot,np.zeros_like(altitude)) 
     
     # Store results 
     engine_conditions.power                           = P
