@@ -61,16 +61,7 @@ class Lithium_Ion_LFP(Generic_Battery_Module):
         self.number_of_cells                                   = 1
         self.maximum_energy                                    = 0.0
         self.maximum_power                                     = 0.0
-        self.maximum_voltage                                   = 0.0        
-        self.electrical_configuration                          = Data()
-        self.electrical_configuration.series                   = 1
-        self.electrical_configuration.parallel                 = 1   
-        self.electrical_configuration.total                    = 1   
-        self.geometrtic_configuration                          = Data() 
-        self.geometrtic_configuration.normal_count             = 1       # number of cells normal to flow
-        self.geometrtic_configuration.parallel_count           = 1       # number of cells parallel to flow      
-        self.geometrtic_configuration.normal_spacing           = 0.02
-        self.geometrtic_configuration.parallel_spacing         = 0.02
+        self.maximum_voltage                                   = 0.0       
         
         # ----------------------------------------------------------------------------------------------------------------------
         #  Cell Level Properties

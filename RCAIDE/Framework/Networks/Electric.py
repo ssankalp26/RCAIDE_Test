@@ -162,7 +162,7 @@ class Electric(Network):
                 stored_results_flag  = False
                 stored_battery_tag   = None                          
                 for battery_module in  bus.battery_modules:                   
-                    if bus.identical_batteries == False:
+                    if bus.identical_battery_modules == False:
                         # run analysis  
                         stored_results_flag, stored_battery_tag =  battery_module.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
                     else:             

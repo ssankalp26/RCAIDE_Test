@@ -137,7 +137,7 @@ def compute_lfp_cell_performance(battery_module,state,bus,coolant_lines,t_idx, d
     # Calculate the current going into one cell  
     n_series          = battery_module.electrical_configuration.series  
     n_parallel        = battery_module.electrical_configuration.parallel 
-    n_total           = battery_module.electrical_configuration.total
+    n_total           = n_series * n_parallel
     no_modules        = len(bus.battery_modules)
     
     # ---------------------------------------------------------------------------------

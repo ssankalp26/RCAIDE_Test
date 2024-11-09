@@ -50,8 +50,15 @@ def compute_module_properties(battery_module):
     """
     
 
-    normal_count       = battery_module.electrical_configuration.series 
-    parallel_count     = battery_module.electrical_configuration.parallel
+    series_e           = battery_module.electrical_configuration.series
+    parallel_e         = battery_module.electrical_configuration.parallel 
+    normal_count       = battery_module.geometrtic_configuration.normal_count  
+    parallel_count     = battery_module.geometrtic_configuration.parallel_count   
+
+    if int(parallel_e*series_e) != int(normal_count*parallel_count):
+        assert ('Number of cells in gemetric layout not equal to number of cells in electric circuit configuration ')
+        
+        
     normal_spacing     = battery_module.geometrtic_configuration.normal_spacing   
     parallel_spacing   = battery_module.geometrtic_configuration.parallel_spacing
     volume_factor      = battery_module.volume_packaging_factor
@@ -86,15 +93,14 @@ def compute_module_properties(battery_module):
     battery_module.width  = width
     battery_module.height = height 
     
-    amp_hour_rating                               = battery_module.cell.nominal_capacity  
-    maximum_voltage                               = battery_module.cell.maximum_voltage   
-    total_battery_assemply_mass                   = battery_module.cell.mass * battery_module.electrical_configuration.series * battery_module.electrical_configuration.parallel   
+    amp_hour_rating                               = battery_module.cell.nominal_capacity   
+    total_battery_assemply_mass                   = battery_module.cell.mass * series_e * parallel_e  
     battery_module.mass_properties.mass           = total_battery_assemply_mass*weight_factor  
-    battery_module.specific_energy                = (amp_hour_rating*maximum_voltage)/battery_module.cell.mass  * Units.Wh/Units.kg
+    battery_module.specific_energy                = (amp_hour_rating*battery_module.cell.maximum_voltage)/battery_module.cell.mass  * Units.Wh/Units.kg
     battery_module.maximum_energy                 = total_battery_assemply_mass*battery_module.specific_energy    
     battery_module.specific_power                 = battery_module.specific_energy/battery_module.cell.nominal_capacity 
     battery_module.maximum_power                  = battery_module.specific_power*battery_module.mass_properties.mass  
-    battery_module.maximum_voltage                = battery_module.cell.maximum_voltage  * battery_module.electrical_configuration.series   
+    battery_module.maximum_voltage                = battery_module.cell.maximum_voltage  * series_e   
     battery_module.initial_maximum_energy         = battery_module.maximum_energy      
-    battery_module.electrical_configuration.total = battery_module.electrical_configuration.series * battery_module.electrical_configuration.parallel        
-    battery_module.nominal_capacity               = battery_module.cell.nominal_capacity* battery_module.electrical_configuration.parallel
+    battery_module.nominal_capacity               = battery_module.cell.nominal_capacity* parallel_e 
+    battery_module.voltage                        = battery_module.maximum_voltage 

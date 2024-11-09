@@ -216,25 +216,21 @@ def vehicle_setup(new_regression=True):
     # Lift Bus 
     #====================================================================================================================================          
     bus                                                    = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus()
-    bus.tag                                                = 'bus' 
+    bus.tag                                                = 'bus'
+    bus.number_of_battery_modules                          =  10
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Bus Battery
     #------------------------------------------------------------------------------------------------------------------------------------ 
-    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC()
-    number_of_modules                                      = 10 
+    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC() 
     bat.tag                                                = 'bus_battery'
-    bat.electrical_configuration.series                     = 8 
-    bat.electrical_configuration.parallel                   = 60
-   
-    bat.geometrtic_configuration.total                      = bat.electrical_configuration.total
-    bat.voltage                                             = bat.maximum_voltage 
-    bat.geometrtic_configuration.normal_count               = 20
-    bat.geometrtic_configuration.parallel_count             = 24  
+    bat.electrical_configuration.series                    = 8 
+    bat.electrical_configuration.parallel                  = 60 
+    bat.geometrtic_configuration.normal_count              = 20
+    bat.geometrtic_configuration.parallel_count            = 24  
     
-    for _ in range(number_of_modules):
-        bus.battery_modules.append(deepcopy(bat))  
-
+    for _ in range(bus.number_of_battery_modules):
+        bus.battery_modules.append(deepcopy(bat))   
     bus.initialize_bus_electrical_properties()
     
     #------------------------------------------------------------------------------------------------------------------------------------  
@@ -305,14 +301,13 @@ def vehicle_setup(new_regression=True):
     #------------------------------------------------------------------------------------------------------------------------------------    
     prop_rotor_motor                         = RCAIDE.Library.Components.Propulsors.Converters.DC_Motor()
     prop_rotor_motor.efficiency              = 0.95
-    prop_rotor_motor.nominal_voltage         = bus.voltage * 0.75
-    prop_rotor_motor.prop_rotor_radius       = prop_rotor.tip_radius 
-    prop_rotor_motor.no_load_current         = 0.1  
+    prop_rotor_motor.nominal_voltage         = bus.voltage *0.75
+    prop_rotor_motor.no_load_current         = 0.1
     prop_rotor_motor.rotor_radius            = prop_rotor.tip_radius
     prop_rotor_motor.design_torque           = prop_rotor.hover.design_torque
     prop_rotor_motor.angular_velocity        = prop_rotor.hover.design_angular_velocity/prop_rotor_motor.gear_ratio  
     design_motor(prop_rotor_motor)
-    prop_rotor_motor.mass_properties.mass    = compute_motor_weight(prop_rotor_motor.design_torque)     
+    prop_rotor_motor.mass_properties.mass    = compute_motor_weight(prop_rotor_motor)     
     lift_propulsor.motor                     = prop_rotor_motor
      
 

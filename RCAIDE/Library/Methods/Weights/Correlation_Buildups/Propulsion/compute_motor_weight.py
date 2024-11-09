@@ -7,13 +7,12 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-# RCAIDE 
-from RCAIDE.Framework.Core import  Units 
+# RCAIDE  
  
 # ----------------------------------------------------------------------------------------------------------------------
 #  Motor Weight 
 # ----------------------------------------------------------------------------------------------------------------------
-def compute_motor_weight(torque):
+def compute_motor_weight(motor):
     """ Calculate the weight of motor using NASA correlations 
              
     
@@ -27,7 +26,9 @@ def compute_motor_weight(torque):
         
     Properties Used:
             N/A
-    """   
+    """
+    
+    torque =  motor.design_torque
     mass  = -2E-7 * (torque ** 2) +  0.0117 * torque +  34.124
      
     return mass 

@@ -172,9 +172,7 @@ def vehicle_setup(regression_flag):
     bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC() 
     bat.tag                                                = 'li_ion_battery'
     bat.electrical_configuration.series                    = 10  
-    bat.electrical_configuration.parallel                  = 5
-    bat.geometrtic_configuration.total                      = bat.electrical_configuration.total
-    bat.voltage                                             = bat.maximum_voltage 
+    bat.electrical_configuration.parallel                  = 5 
     bat.geometrtic_configuration.normal_count               = 5
     bat.geometrtic_configuration.parallel_count             = 10
     bus.battery_modules.append(bat)      
@@ -231,7 +229,7 @@ def vehicle_setup(regression_flag):
     motor.design_torque                           = ducted_fan.cruise.design_torque
     motor.angular_velocity                        = ducted_fan.cruise.design_angular_velocity 
     design_motor(motor)   
-    motor.mass_properties.mass                    = compute_motor_weight(motor.design_torque) 
+    motor.mass_properties.mass                    = compute_motor_weight(motor) 
     center_propulsor.motor                        = motor 
   
      

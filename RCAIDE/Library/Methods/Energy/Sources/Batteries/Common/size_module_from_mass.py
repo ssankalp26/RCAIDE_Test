@@ -43,5 +43,4 @@ def size_module_from_mass(battery_module):
     battery_module.maximum_power                     = mass*battery_module.cell.specific_power
     battery_module.initial_maximum_energy            = battery_module.maximum_energy    
     battery_module.electrical_configuration.series   = n_series
-    battery_module.electrical_configuration.parallel = n_parallel 
-    battery_module.electrical_configuration.total    = n_parallel*n_series      
+    battery_module.electrical_configuration.parallel = n_parallel     

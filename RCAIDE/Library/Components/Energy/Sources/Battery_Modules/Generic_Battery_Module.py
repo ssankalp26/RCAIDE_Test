@@ -50,7 +50,16 @@ class Generic_Battery_Module(Component):
         self.cell.ragone.const_2                    = 0.0     # specific_power=ragone_const_1*10^(specific_energy*ragone_const_2)
         self.cell.ragone.lower_bound                = 0.0     # lower bound specific energy for which ragone curves no longer make sense
         self.cell.ragone.i                          = 0.0 
-                       
+ 
+        self.electrical_configuration                          = Data()
+        self.electrical_configuration.series                   = 1
+        self.electrical_configuration.parallel                 = 1   
+        
+        self.geometrtic_configuration                          = Data() 
+        self.geometrtic_configuration.normal_count             = 1
+        self.geometrtic_configuration.parallel_count           = 1
+        self.geometrtic_configuration.normal_spacing           = 0.02
+        self.geometrtic_configuration.parallel_spacing         = 0.02                
  
     def append_operating_conditions(self,segment,bus):  
         append_battery_conditions(self,segment,bus)  
