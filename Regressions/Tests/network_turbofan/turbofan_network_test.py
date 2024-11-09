@@ -67,7 +67,7 @@ def main():
     climb_throttle_2   = results.segments.climb_2.conditions.energy['fuel_line']['port_propulsor'].throttle[3][0]
     climb_throttle_3   = results.segments.climb_3.conditions.energy['fuel_line']['port_propulsor'].throttle[3][0]
     climb_throttle_4   = results.segments.climb_4.conditions.energy['fuel_line']['port_propulsor'].throttle[3][0]
-    climb_CL_5         = results.segments.climb_5.conditions.aerodynamics.coefficients.lift.total[2][0]
+    climb_throttle_5   = results.segments.climb_5.conditions.energy['fuel_line']['port_propulsor'].throttle[3][0]
     climb_throttle_6   = results.segments.climb_6.conditions.energy['fuel_line']['port_propulsor'].throttle[3][0]
     climb_throttle_7   = results.segments.climb_7.conditions.energy['fuel_line']['port_propulsor'].throttle[3][0] 
     climb_throttle_8   = results.segments.climb_8.conditions.energy['fuel_line']['port_propulsor'].throttle[3][0] 
@@ -91,7 +91,7 @@ def main():
     #print values for resetting regression
     show_vals = True
     if show_vals:
-        data = [takeoff_thrust, climb_throttle_1,   climb_throttle_2,   climb_throttle_3,   climb_throttle_4, climb_CL_5,  
+        data = [takeoff_thrust, climb_throttle_1,   climb_throttle_2,   climb_throttle_3,   climb_throttle_4,   climb_throttle_5,  
                 climb_throttle_6,   climb_throttle_7,   climb_throttle_8,   climb_throttle_9,   climb_10_CL,  
                 cruise_CL_1,  cruise_CL_2,  cruise_CL_3,   descent_throttle_1,  curved_cruise_CL, descent_throttle_2,
                 single_pt_CL_1,     single_pt_CL_2,     loiter_1_CL,   loiter_2_CL, reserve_1_CL,reserve_2_CL,
@@ -105,25 +105,25 @@ def main():
     climb_throttle_2_truth   = 1.0664183802948262
     climb_throttle_3_truth   = 0.5
     climb_throttle_4_truth   = 0.8628672372915984
-    climb_CL_5_truth         = 0.3035405817771495
-    climb_throttle_6_truth   = 1.1614006628744282
-    climb_throttle_7_truth   = 1.3123273648407747
-    climb_throttle_8_truth   = 0.6035605088642939
-    climb_throttle_9_truth   = 0.9253029855371857
-    climb_10_CL_truth        = 1.3868513834146128
-    cruise_CL_1_truth        = 0.6736746952306858
-    cruise_CL_2_truth        = 0.6684497112809968
-    cruise_CL_3_truth        = 0.4501739267924663
-    descent_throttle_1_truth = 0.11285525525101069
-    curved_cruise_CL_truth   = 1.288636022300432
+    climb_throttle_5_truth   = 0.8068894257776985
+    climb_throttle_6_truth   = 1.1611616774142637
+    climb_throttle_7_truth   = 1.3120475797890006
+    climb_throttle_8_truth   = 0.6034587148691749
+    climb_throttle_9_truth   = 0.9250685706904833
+    climb_10_CL_truth        = 1.3864800833821287
+    cruise_CL_1_truth        = 0.6734950921114504
+    cruise_CL_2_truth        = 0.6682709792443832
+    cruise_CL_3_truth        = 0.4501273640084763
+    descent_throttle_1_truth = 0.11281968912896728
+    curved_cruise_CL_truth   = 1.288305881445716
     descent_throttle_2_truth = 0.5
     single_pt_CL_1_truth     = 0.0005601872688765593
     single_pt_CL_2_truth     = 0.0006616284953266113
-    loiter_1_CL_truth        = 0.4797317779865313
-    loiter_2_CL_truth        = 0.4797257523746803
-    reserve_1_CL_truth       = 0.32387016030020177
-    reserve_2_CL_truth       = 0.31572885463129463
-    descent_throttle_3_truth = 0.14995076648441738
+    loiter_1_CL_truth        = 0.4796008807834709
+    loiter_2_CL_truth        = 0.4795948568549073
+    reserve_1_CL_truth       = 0.3237805897236255
+    reserve_2_CL_truth       = 0.31564030740128285
+    descent_throttle_3_truth = 0.149868122821522
     landing_thrust_truth     = 10914.920312664697
     
     # Store errors 
@@ -133,7 +133,7 @@ def main():
     error.climb_throttle_2   = np.max(np.abs(climb_throttle_2     - climb_throttle_2_truth))   
     error.climb_throttle_3   = np.max(np.abs(climb_throttle_3     - climb_throttle_3_truth))   
     error.climb_throttle_4   = np.max(np.abs(climb_throttle_4     - climb_throttle_4_truth))   
-    error.climb_CL_5         = np.max(np.abs(climb_CL_5           - climb_CL_5_truth))   
+    error.climb_throttle_5   = np.max(np.abs(climb_throttle_5     - climb_throttle_5_truth))   
     error.climb_throttle_6   = np.max(np.abs(climb_throttle_6     - climb_throttle_6_truth))   
     error.climb_throttle_7   = np.max(np.abs(climb_throttle_7     - climb_throttle_7_truth))   
     error.climb_throttle_8   = np.max(np.abs(climb_throttle_8     - climb_throttle_8_truth))  
@@ -158,7 +158,7 @@ def main():
     print(error)
      
     for k,v in list(error.items()): 
-        assert(np.abs(v)<1e-3)
+        assert(np.abs(v)<1e-6)
         
     plot_results(results)
     return 
@@ -341,7 +341,7 @@ def mission_setup(analyses):
     segment.tag = "climb_5"
     segment.analyses.extend( analyses.base )  
     segment.altitude_end                                             = 5.    * Units.km
-    segment.air_speed                                                = 230   * Units.m / Units.s
+    segment.air_speed                                                = 180   * Units.m / Units.s
     segment.climb_angle                                              = 3.    * Units.degrees 
                
     # define flight dynamics to model            
