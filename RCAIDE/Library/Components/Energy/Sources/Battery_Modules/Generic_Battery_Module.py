@@ -34,11 +34,12 @@ class Generic_Battery_Module(Component):
         self.current_capacitor_charge               = 0.0
         self.capacity                               = 0.0
 
-        self.mass_properties.volume                 = Data()
-        self.mass_properties.length                 = 0.0
-        self.mass_properties.length                 = 0.0
-        self.mass_properties.width                  = 0.0
-        self.mass_properties.height                 = 0.0
+        self.length                 = 0.0
+        self.width                  = 0.0
+        self.height                 = 0.0
+        self.packing_factor         = 0.0
+
+        self.orientation_euler_angles          = [0.,0.,0.]  # vector of angles defining default orientation of rotor        
          
         self.cell                                   = Data()
         self.cell.chemistry                         = None                             
