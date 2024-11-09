@@ -72,7 +72,7 @@ def compute_aircraft_moment_of_inertia(vehicle, CG_location, update_MOI=True):
                         I_network += I
                         MOI_mass += mass                        
                 for battery in bus.battery_modules: 
-                    I_battery, mass_battery = compute_cuboid_moment_of_inertia(battery.origin, battery.mass_properties.mass, 0, 0, 0, 0, 0, 0, CG_location)
+                    I_battery, mass_battery = compute_cuboid_moment_of_inertia(battery.origin, battery.mass_properties.mass, battery.length, battery.width, battery.height, 0, 0, 0, CG_location)
                     I_network += I_battery
                     MOI_mass  += mass_battery         
         
