@@ -62,12 +62,10 @@ def main():
     rudder_deflection_diff   = np.abs(rudder_deflection - rudder_deflection_true)
     print('Error: ',rudder_deflection_diff)
     assert np.abs(rudder_deflection_diff/rudder_deflection_true) < 1e-3    
-    
 
     # plt results
     plot_mission(results)
-
-
+    
     return  
 # ----------------------------------------------------------------------
 #   Define the Vehicle Analyses
@@ -104,6 +102,8 @@ def base_analysis(vehicle, configs):
     aerodynamics.vehicle                             = vehicle
     aerodynamics.settings.number_spanwise_vortices   = 30
     aerodynamics.settings.drag_coefficient_increment = 0.0000
+    aerodynamics.settings.model_fuselage             = True                
+    aerodynamics.settings.model_nacelle              = True
     analyses.append(aerodynamics) 
       
     stability                                       = RCAIDE.Framework.Analyses.Stability.Vortex_Lattice_Method() 
