@@ -1,5 +1,5 @@
 ## @ingroup Library-Plots-Weights
-# RCAIDE/Library/Plots/Weights/plot_evtol_weight_breakdown.py
+# RCAIDE/Library/Plots/Weights/plot_weight_breakdown.py
 # 
 # 
 # Created:  Jul 2023, M. Clarke 
@@ -16,7 +16,7 @@ import matplotlib.cm as cm
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------   
 ## @ingroup Library-Plots-Weights
-def plot_evtol_weight_breakdown(vehicle,
+def plot_weight_breakdown(vehicle,
                                 save_figure = False,
                                 show_legend=True,
                                 SI_Units   = True,
@@ -44,27 +44,27 @@ def plot_evtol_weight_breakdown(vehicle,
     N/A
     """
 
-    b         =  vehicle.weight_breakdown    
+    breakdown =  vehicle.weight_breakdown    
     weight    =  vehicle.mass_properties.max_takeoff    
     if aircraft_name == None:
         aircraft_name = vehicle.tag
         
-    vals_unorm =  np.array([b.rotors,
-                            b.hubs,
-                            b.booms,
-                            b.fuselage,
-                            b.landing_gear,
-                            b.wings_total,
-                            b.seats,
-                            b.avionics,
-                            b.ECS,
-                            b.motors,
-                            b.servos,
-                            b.wiring ,
-                            b.BRS,
-                            b.battery,
-                            b.payload,
-                            b.passengers])  
+    vals_unorm =  np.array([breakdown.rotors,
+                            breakdown.hubs,
+                            breakdown.booms,
+                            breakdown.fuselage,
+                            breakdown.landing_gear,
+                            breakdown.wings_total,
+                            breakdown.seats,
+                            breakdown.avionics,
+                            breakdown.ECS,
+                            breakdown.motors,
+                            breakdown.servos,
+                            breakdown.wiring ,
+                            breakdown.BRS,
+                            breakdown.battery,
+                            breakdown.payload,
+                            breakdown.passengers])  
     
 
     fig= plt.figure(save_filename)

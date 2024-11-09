@@ -50,7 +50,7 @@ def plot_reservoir_conditions(reservoir, results, coolant_line, save_figure,show
 
     fig = plt.figure(save_filename)
     fig.set_size_inches(width,height)  
-    axis_1 = fig.add_subplot(1,1,1)
+    axis_1 = plt.subplot(1,1,1)
     set_axes(axis_1)     
              
     b_i = 0  
@@ -62,19 +62,21 @@ def plot_reservoir_conditions(reservoir, results, coolant_line, save_figure,show
         segment_tag  = results.segments[i].tag
         segment_name = segment_tag.replace('_', ' ')  
                           
-        axis_1.plot(time, reservoir_temperature, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
+        axis_1.plot(time, reservoir_temperature, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width, label = segment_name)
         axis_1.set_ylabel(r'Coolant Temp. (K)')  
     b_i += 1     
             
     if show_legend:        
-        leg =  fig.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 4) 
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
                     
-    fig.tight_layout()
-    
     # Adjusting the sub-plots for legend 
-    fig.subplots_adjust(top=0.8)
-
+    fig.subplots_adjust(top=0.8) 
+    
+    # set title of plot 
+    title_text   = 'Reservoir Temperature'       
+    fig.suptitle(title_text) 
+    
     if save_figure:
         plt.savefig(save_filename + reservoir.tag + file_type)    
     return fig 
