@@ -7,7 +7,7 @@
 import RCAIDE 
 from RCAIDE.Framework.Core import Units   
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor     import design_propeller
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common import initialize_from_mass
+from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common import size_module_from_mass
 
 # python imports 
 import numpy as np   
@@ -164,7 +164,7 @@ def vehicle_setup():
     bat.cell.specific_energy = 600. * Units.Wh/Units.kg
     bat.cell.resistance      = 0.05
     bat.maximum_voltage      = 45.0
-    initialize_from_mass(bat)  
+    size_module_from_mass(bat)  
     bat.voltage              = bat.maximum_voltage   
     bus.initialize_bus_electrical_properties()
     

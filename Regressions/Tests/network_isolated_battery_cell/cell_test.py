@@ -9,7 +9,7 @@
 # RCAIDE imports 
 import RCAIDE  
 from RCAIDE.Framework.Core                                    import Units, Data 
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common   import initialize_from_mass ,initialize_from_energy_and_power, initialize_from_mass, find_mass_gain_rate, find_total_mass_gain, find_ragone_properties, find_ragone_optimum  
+from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common   import size_module_from_mass ,size_module_from_energy_and_power, find_mass_gain_rate, find_total_mass_gain, find_ragone_properties, find_ragone_optimum  
 from RCAIDE.Framework.Mission.Common                          import Conditions
 from RCAIDE.Library.Plots                                     import * 
 
@@ -47,7 +47,7 @@ def main():
      
 def aluminum_air_battery_test(Ereq,Preq): 
     battery_al_air                 = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Aluminum_Air()    
-    test_initialize_from_energy_and_power(battery_al_air, Ereq, Preq)
+    test_size_module_from_energy_and_power(battery_al_air, Ereq, Preq)
     test_mass_gain(battery_al_air, Preq)
     return 
    
@@ -63,7 +63,7 @@ def test_ragone(Ereq,Preq):
     battery_li_ion.outputs           = Data()  
     battery_li_ion.maximum_voltage   = battery_li_ion.cell.maximum_voltage
     test_find_ragone_optimum(battery_li_ion,Ereq,Preq)   
-    test_initialize_from_mass(battery_li_ion,20*Units.kg)
+    test_size_module_from_mass(battery_li_ion,20*Units.kg)
 
 
 def lithium_ion_battery_test():    
@@ -251,8 +251,8 @@ def test_mass_gain(battery,power):
     print('mass_gain_rate = ', mdot)
     return
 
-def test_initialize_from_energy_and_power(battery,energy,power):
-    initialize_from_energy_and_power(battery, energy, power)
+def test_size_module_from_energy_and_power(battery,energy,power):
+    size_module_from_energy_and_power(battery, energy, power)
     print(battery)
     return
 
@@ -269,8 +269,8 @@ def test_find_ragone_optimum(battery, energy, power):
     print('max_energy [W-h]=', battery.maximum_energy/Units.Wh)
     return
 
-def test_initialize_from_mass(battery,mass):
-    initialize_from_mass(battery,mass)
+def test_size_module_from_mass(battery,mass):
+    size_module_from_mass(battery,mass)
     print(battery)
     return
 

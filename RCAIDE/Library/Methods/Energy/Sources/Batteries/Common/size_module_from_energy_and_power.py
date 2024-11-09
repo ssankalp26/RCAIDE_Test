@@ -1,5 +1,5 @@
 ## @ingroup Methods-Energy-Sources-Battery-Common
-# RCAIDE/Methods/Energy/Sources/Battery/Common/initialize_from_energy_and_power.py
+# RCAIDE/Methods/Energy/Sources/Battery/Common/size_module_from_energy_and_power.py
 # 
 # 
 # Created:  Jul 2023, M. Clarke
@@ -17,7 +17,7 @@ import numpy as np
 #  METHOD
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Energy-Sources-Battery-Common
-def initialize_from_energy_and_power(battery, energy, power, max='hard'):
+def size_module_from_energy_and_power(battery, energy, power, max='hard'):
     """
     Uses a soft_max function to calculate the batter mass, maximum energy, and maximum power
     from the energy and power requirements, as well as the specific energy and specific power

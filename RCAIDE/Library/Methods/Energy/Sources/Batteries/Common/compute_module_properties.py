@@ -1,5 +1,5 @@
 ## @ingroup Methods-Energy-Sources-Battery-Common
-# RCAIDE/Methods/Energy/Sources/Battery/Common/initialize_from_circuit_configuration.py
+# RCAIDE/Methods/Energy/Sources/Battery/Common/compute_module_properties.py
 # 
 # 
 # Created:  Jul 2023, M. Clarke 
@@ -9,12 +9,13 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 from RCAIDE.Framework.Core import Units 
+import  numpy as  np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  METHOD
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Energy-Sources-Battery-Common
-def initialize_from_circuit_configuration(battery_module,module_weight_factor = 1.42):  
+def compute_module_properties(battery_module):  
     """Calculate module level properties of battery module using cell 
     properties and module configuraton
     
@@ -46,12 +47,47 @@ def initialize_from_circuit_configuration(battery_module,module_weight_factor = 
        charging_voltage       [volts]
        mass_properties.    
         mass                  [kilograms] 
-    """    
+    """
+    
+
+    normal_count       = battery_module.electrical_configuration.series 
+    parallel_count     = battery_module.electrical_configuration.parallel
+    normal_spacing     = battery_module.geometrtic_configuration.normal_spacing   
+    parallel_spacing   = battery_module.geometrtic_configuration.parallel_spacing
+    volume_factor      = battery_module.volume_packaging_factor
+    cell_diameter      = battery_module.cell.diameter
+    cell_height        = battery_module.cell.height  
+    euler_angles       = battery_module.orientation_euler_angles
+    weight_factor      = battery_module.BMS_additional_weight_factor
+    
+    x1 =  normal_count * (cell_diameter + normal_spacing) * volume_factor # distance in the module-level normal direction
+    x2 =  parallel_count * (cell_diameter + parallel_spacing) * volume_factor # distance in the module-level parallel direction
+    x3 =  cell_height * volume_factor # distance in the module-level height direction
+    
+    if  euler_angles[0] == (np.pi / 2):
+        x1prime      = x2
+        x2prime      = -x1
+        x3prime      = x3
+    
+    if euler_angles[1] == (np.pi / 2):
+        x1primeprime = -x3prime
+        x2primeprime = x2prime
+        x3primeprime = x1prime
+    if euler_angles[2] == (np.pi / 2):
+        length       = x1primeprime
+        width        = x3primeprime
+        height       = -x2primeprime
+
+    # store length, width and height
+    battery_module.length = length
+    battery_module.width  = width
+    battery_module.height = height 
+    
     amp_hour_rating                               = battery_module.cell.nominal_capacity    
     nominal_voltage                               = battery_module.cell.nominal_voltage
     maximum_voltage                               = battery_module.cell.maximum_voltage   
     total_battery_assemply_mass                   = battery_module.cell.mass * battery_module.electrical_configuration.series * battery_module.electrical_configuration.parallel   
-    battery_module.mass_properties.mass           = total_battery_assemply_mass*module_weight_factor  
+    battery_module.mass_properties.mass           = total_battery_assemply_mass*weight_factor  
     battery_module.specific_energy                = (amp_hour_rating*maximum_voltage)/battery_module.cell.mass  * Units.Wh/Units.kg
     battery_module.maximum_energy                 = total_battery_assemply_mass*battery_module.specific_energy    
     battery_module.specific_power                 = battery_module.specific_energy/battery_module.cell.nominal_capacity 

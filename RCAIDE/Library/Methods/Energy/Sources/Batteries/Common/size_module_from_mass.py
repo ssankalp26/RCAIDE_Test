@@ -1,5 +1,5 @@
 ## @ingroup Methods-Energy-Sources-Battery-Common
-# RCAIDE/Methods/Energy/Sources/Battery/Common/initialize_from_mass.py
+# RCAIDE/Methods/Energy/Sources/Battery/Common/size_module_from_mass.py
 # 
 # 
 # Created:  Jul 2023, M. Clarke 
@@ -8,7 +8,7 @@
 #  METHOD
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Energy-Sources-Battery-Common
-def initialize_from_mass(battery_module,module_weight_factor = 1.42 ):
+def size_module_from_mass(battery_module):
     """
     Calculate the max energy and power based of the mass
     Assumptions:
@@ -29,7 +29,7 @@ def initialize_from_mass(battery_module,module_weight_factor = 1.42 ):
 
 
     """     
-    mass = battery_module.mass_properties.mass/module_weight_factor
+    mass = battery_module.mass_properties.mass/battery_module.BMS_additional_weight_factor
     
     if battery_module.cell.mass == None: 
         n_series   = 1
