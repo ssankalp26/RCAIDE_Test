@@ -112,14 +112,30 @@ def lithium_ion_battery_test():
             # mission analysis 
             results = missions.base_mission.evaluate()  
             
-            # Voltage Regression
-            V_ul        = results.segments[0].conditions.energy.bus.battery_modules[battery_chemistry[i]].voltage_under_load[2][0]   
+            # Voltage Cell Regression
+            V_ul        = results.segments[0].conditions.energy.bus.battery_modules[battery_chemistry[i]].cell.voltage_under_load[2][0]   
             print('Under load voltage: ' + str(V_ul))
             V_ul_diff   = np.abs(V_ul - V_ul_true[j,i])
             print('Under load voltage difference')
             print(V_ul_diff) 
             assert np.abs((V_ul_diff)/V_ul_true[j,i]) < 1e-6 
-            
+           
+            # Voltage Bus Regression
+            V_ul        = results.segments[0].conditions.energy.bus.voltage_under_load[2][0]   
+            print('Under load voltage: ' + str(V_ul))
+            V_ul_diff   = np.abs(V_ul - V_ul_true[j,i])
+            print('Under load voltage difference')
+            print(V_ul_diff) 
+            assert np.abs((V_ul_diff)/V_ul_true[j,i]) < 1e-6 
+
+            # Voltage Battery Module Regression
+            V_ul        = results.segments[0].conditions.energy.bus.battery_modules[battery_chemistry[i]].voltage_under_load[2][0]      
+            print('Under load voltage: ' + str(V_ul))
+            V_ul_diff   = np.abs(V_ul - V_ul_true[j,i])
+            print('Under load voltage difference')
+            print(V_ul_diff) 
+            assert np.abs((V_ul_diff)/V_ul_true[j,i]) < 1e-6 
+           
             # Temperature Regression
             bat_temp        = results.segments[1].conditions.energy.bus.battery_modules[battery_chemistry[i]].cell.temperature[2][0]  
             print('Cell temperature: ' + str(bat_temp))
