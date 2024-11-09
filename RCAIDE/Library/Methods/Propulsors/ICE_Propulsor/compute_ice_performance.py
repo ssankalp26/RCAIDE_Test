@@ -31,16 +31,16 @@ def compute_ice_performance(propulsor,state,fuel_line,center_of_gravity= [[0.0, 
     N/A
 
     Inputs:  
-    conditions           - operating conditions data structure        [-]  
-    fuel_line            - fuelline                                   [-] 
-    propulsor        - propulsor data structure               [-] 
+    conditions           - operating conditions data structure    [-]  
+    fuel_line            - fuelline                               [-] 
+    propulsor            - propulsor data structure               [-] 
     total_thrust         - thrust of propulsor group              [N]
     total_power          - power of propulsor group               [W] 
 
     Outputs:  
     total_thrust         - thrust of propulsor group              [N]
     total_power          - power of propulsor group               [W] 
-    stored_results_flag  - boolean for stored results                 [-]     
+    stored_results_flag  - boolean for stored results             [-]     
     stored_propulsor_tag - name of propulsor with stored results  [-]
     
     Properties Used: 
