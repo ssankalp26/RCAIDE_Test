@@ -58,11 +58,11 @@ def plot_weight_breakdown(vehicle,
     sub_subgroup_color =  []
                 
 
-    structural_colors =  *len(group_name)
-    propulsion_colors =  *len(subgroup_name) 
-    payload_colors    =  *len(sub_subgroup_name) 
-    systems_colors    =  *len(sub_subgroup_name) 
-    opt_itels_colors  =  *len(sub_subgroup_name)
+    structural_colors =  0*len(group_name)
+    propulsion_colors =  0*len(subgroup_name) 
+    payload_colors    =  0*len(sub_subgroup_name) 
+    systems_colors    =  0*len(sub_subgroup_name) 
+    opt_itels_colors  =  0*len(sub_subgroup_name)
      
     i = 0           
     for item , tag in  breakdown.items():
