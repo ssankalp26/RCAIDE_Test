@@ -299,8 +299,8 @@ def compute_operating_empty_weight(vehicle, settings=None):
 
     else: 
         landing_gear_component = vehicle.landing_gear #landing gear previously defined
-        strut_length_main      = landing_gear_component.main_strut_length
-        strut_length_nose      = landing_gear_component.nose_strut_length 
+        strut_length_main      = landing_gear_component.main.strut_length
+        strut_length_nose      = landing_gear_component.nose.strut_length 
         W_landing_gear         = compute_landing_gear_weight(landing_weight, Nult, strut_length_main, strut_length_nose)
         
         landing_gear_component.mass_properties.mass = [W_landing_gear.main, W_landing_gear.nose]
