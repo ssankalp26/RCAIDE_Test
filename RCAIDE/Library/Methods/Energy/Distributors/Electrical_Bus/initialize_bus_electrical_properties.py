@@ -2,8 +2,7 @@
 # 
 # Created: Sep 2024, S. Shekar
 #
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common                    import compute_module_properties
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common                    import initialize_from_geometric_configuration
+from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common                    import compute_module_properties 
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  METHODS
@@ -28,8 +27,7 @@ def initialize_bus_electrical_properties(bus):
         bus.nominal_capacity = 0
         bus.maximum_energy   = 0
         for battery_module in  bus.battery_modules: 
-            compute_module_properties(battery_module)
-            initialize_from_geometric_configuration(battery_module)
+            compute_module_properties(battery_module) 
             bus.voltage         +=   battery_module.voltage
             bus.maximum_energy  +=  battery_module.maximum_energy
             bus.nominal_capacity =  max(battery_module.nominal_capacity, bus.nominal_capacity)  
@@ -37,8 +35,7 @@ def initialize_bus_electrical_properties(bus):
         bus.voltage = 0
         bus.maximum_energy   = 0
         for battery_module in  bus.battery_modules: 
-            compute_module_properties(battery_module)  
-            initialize_from_geometric_configuration(battery_module)            
+            compute_module_properties(battery_module)        
             bus.voltage           =  max(battery_module.voltage, bus.voltage)
             bus.nominal_capacity +=  battery_module.nominal_capacity        
             bus.maximum_energy  +=  battery_module.initial_maximum_energy 

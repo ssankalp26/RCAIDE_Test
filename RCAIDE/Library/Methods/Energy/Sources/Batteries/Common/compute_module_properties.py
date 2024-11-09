@@ -62,13 +62,16 @@ def compute_module_properties(battery_module):
     
     x1 =  normal_count * (cell_diameter + normal_spacing) * volume_factor # distance in the module-level normal direction
     x2 =  parallel_count * (cell_diameter + parallel_spacing) * volume_factor # distance in the module-level parallel direction
-    x3 =  cell_height * volume_factor # distance in the module-level height direction
+    x3 =  cell_height * volume_factor # distance in the module-level height direction 
+
+    length = x1
+    width  = x2
+    height = x3      
     
     if  euler_angles[0] == (np.pi / 2):
         x1prime      = x2
         x2prime      = -x1
-        x3prime      = x3
-    
+        x3prime      = x3 
     if euler_angles[1] == (np.pi / 2):
         x1primeprime = -x3prime
         x2primeprime = x2prime
@@ -83,8 +86,7 @@ def compute_module_properties(battery_module):
     battery_module.width  = width
     battery_module.height = height 
     
-    amp_hour_rating                               = battery_module.cell.nominal_capacity    
-    nominal_voltage                               = battery_module.cell.nominal_voltage
+    amp_hour_rating                               = battery_module.cell.nominal_capacity  
     maximum_voltage                               = battery_module.cell.maximum_voltage   
     total_battery_assemply_mass                   = battery_module.cell.mass * battery_module.electrical_configuration.series * battery_module.electrical_configuration.parallel   
     battery_module.mass_properties.mass           = total_battery_assemply_mass*weight_factor  
