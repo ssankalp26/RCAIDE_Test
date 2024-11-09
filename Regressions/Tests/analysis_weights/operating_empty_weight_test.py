@@ -13,6 +13,7 @@ from RCAIDE.Library.Plots  import *
  
 from RCAIDE.load import load as load_results
 from RCAIDE.save import save as save_results 
+import matplotlib.pyplot as plt  
 
 import numpy as  np 
 import sys
@@ -30,11 +31,11 @@ from Human_Powered_Glider   import vehicle_setup as hp_setup
 
 def main(): 
     Transport_Aircraft_Test()
-    BWB_Aircraft_Test()
-    General_Aviation_Test()
-    Human_Powered_Aircraft_Test()
-    EVTOL_Aircraft_Test()
-    UAV_Test()
+    #BWB_Aircraft_Test()
+    #General_Aviation_Test()
+    #Human_Powered_Aircraft_Test()
+    #EVTOL_Aircraft_Test()
+    #UAV_Test()
     return
 
 
@@ -48,26 +49,25 @@ def Transport_Aircraft_Test():
         weight_analysis.vehicle                       = transport_setup() 
         weight_analysis.method                        = method_type 
         weight                                        = weight_analysis.evaluate() 
-        plot_weight_breakdown(weight_analysis.vehicle)     
-    
+        plot_weight_breakdown(weight_analysis.vehicle)   
        
-        #save_results(weight, os.path.join(os.path.dirname(__file__), 'weights_'+method_type.replace(' ','_')+'.res'))
+        save_results(weight, os.path.join(os.path.dirname(__file__), 'weights_'+method_type.replace(' ','_')+'.res'))
         old_weight = load_results(os.path.join(os.path.dirname(__file__), 'weights_'+method_type.replace(' ','_')+'.res'))
     
         check_list = [
-            'payload_breakdown.total',        
-            'payload_breakdown.passengers',             
-            'payload_breakdown.baggage',                                   
-            'structural_breakdown.wing',            
-            'structural_breakdown.fuselage',        
-            'propulsion_breakdown.total',      
-            'structural_breakdown.nose_landing_gear',    
-            'structural_breakdown.main_landing_gear',                   
-            'systems_breakdown.total',         
-            'systems_breakdown.furnish',      
-            'structural_breakdown.horizontal_tail', 
-            'structural_breakdown.vertical_tail',
-            'empty',  
+            'payload.total',        
+            'payload.passengers',             
+            'payload.baggage',                                   
+            'empty.structural.wing',            
+            'empty.structural.fuselage',        
+            'empty.propulsion.total',      
+            'empty.structural.nose_landing_gear',    
+            'empty.structural.main_landing_gear',                   
+            'empty.systems.total',         
+            'empty.systems.furnish',      
+            'empty.structural.horizontal_tail', 
+            'empty.structural.vertical_tail',
+            'empty.total',  
         ]
     
         # do the check
@@ -235,3 +235,4 @@ def UAV_Test():
  
 if __name__ == '__main__':
     main()
+    plt.show()

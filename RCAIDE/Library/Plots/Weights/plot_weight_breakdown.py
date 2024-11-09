@@ -6,7 +6,8 @@
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
-# ----------------------------------------------------------------------------------------------------------------------  
+# ----------------------------------------------------------------------------------------------------------------------
+import RCAIDE
 from  RCAIDE.Framework.Core import Units   
 import numpy as np    
 import matplotlib.pyplot as plt  
@@ -23,7 +24,7 @@ def plot_weight_breakdown(vehicle,
                             save_filename = "Weight_Breakdown",
                             aircraft_name  = None,
                             file_type = ".png",
-                            width = 7.5, height = 7.2): 
+                            width = 10, height = 7.2): 
   
 
     """This plots the weight breakdown of an evtol aircraft
@@ -47,68 +48,76 @@ def plot_weight_breakdown(vehicle,
     breakdown =  vehicle.weight_breakdown    
     weight    =  vehicle.mass_properties.max_takeoff
 
-    group_name         =  []
-    group_weight       =  []
-    group_color        =  []
-    subgroup_name      =  []
-    subgroup_weight    =  []
-    sub_subgroup_name  =  []
-    sub_subgroup_weight=  []
-    subgroup_color     =  []
-    sub_subgroup_color =  []
-                
-
-    structural_colors =  0*len(group_name)
-    propulsion_colors =  0*len(subgroup_name) 
-    payload_colors    =  0*len(sub_subgroup_name) 
-    systems_colors    =  0*len(sub_subgroup_name) 
-    opt_itels_colors  =  0*len(sub_subgroup_name)
-     
+    group_names         =  []
+    group_weights       =  []
+    group_colors        =  []
+    subgroup_names      =  []
+    subgroup_weights    =  []
+    sub_subgroup_names  =  []
+    sub_subgroup_weights=  []
+    subgroup_colors     =  []
+    sub_subgroup_colors =  []
+            
+    tab10  = cm.tab10(np.linspace(0,1,10))
+    Pastel = cm.Pastel1(np.linspace(0,1,10))
     i = 0           
-    for item , tag in  breakdown.items():
-        if tag == 'total':
+    for tag ,  item in  breakdown.items():
+        if tag == 'zero_fuel_weight' or   tag == 'max_takeoff':
             pass
         else:
-            if item is Dict():
-                group_name.append(tag)
-                group_weight.append(item.total)
-                group_color.append( ) 
-                for sub_item , sub_tag in item():
-                    if sub_item is Dict():
+            if type(item)  == RCAIDE.Framework.Core.Data:
+                group_names.append(tag)
+                group_weights.append(item.total/weight)
+                group_colors.append(Pastel[i]) 
+                for  sub_tag  , sub_item in item.items():
+                    if type(sub_item) == RCAIDE.Framework.Core.Data:
                         if sub_tag == 'structural': 
-                            colormap       = structural_colors 
+                            color  = tab10[0]
+                            colors = cm.Blues(np.linspace(0.1,1,10))
                         if sub_tag == 'propulsion': 
-                            colormap       = propulsion_colors 
+                            color        = tab10[1] 
+                            colors = cm.Oranges(np.linspace(0.1,1,10))
                         if sub_tag == 'payload': 
-                            colormap       = payload_colors 
+                            color  = tab10[2]
+                            colors = cm.Greens(np.linspace(0.1,1,10))
                         if sub_tag == 'systems': 
-                            colormap       = systems_colors 
+                            color  = tab10[3] 
+                            colors = cm.Reds(np.linspace(0.1,1,10)) 
                         if sub_tag == 'operational_items': 
-                            colormap       = opt_itels_colors 
-                        subgroup_color.append(colormap[0])
-                        subgroup_name.append(sub_tag)
-                        subgroup_weight.append(sub_item.total)
+                            color  = tab10[4]
+                            colors = cm.Purples(np.linspace(0.1,1,10)) 
+                        subgroup_colors.append(color)
+                        subgroup_names.append(sub_tag)
+                        subgroup_weights.append(sub_item.total/weight)
                         k = 1
-                        for sub_sub_item , sub_sub_tag in sub_item():  
-                            sub_subgroup_color.append(colormap[k])
-                            sub_subgroup_name.append(sub_sub_tag)
-                            sub_subgroup_weight.append(sub_sub_item)
-                            k += 1 
+                        for sub_sub_tag ,  sub_sub_item in sub_item.items():  
+                            sub_subgroup_colors.append(colors[k])
+                            sub_subgroup_names.append(sub_sub_tag)
+                            sub_subgroup_weights.append(sub_sub_item)
+                            k += 1
+                    else: 
+                        subgroup_colors.append('white')
+                        subgroup_names.append(tag)
+                        subgroup_weights.append(item.total/weight)                            
             elif tag == 'fuel': 
-                group_name.append(tag)
-                group_weight.append(item)
+                group_names.append(tag)
+                group_weights.append(item/breakdown.total)
+                group_colors.append('black' ) 
+                subgroup_colors.append('white')
+                subgroup_names.append(tag)
+                subgroup_weights.append(item/breakdown.total)                
                 
-            i += 1
+        i += 1
                 
       
     plt.style.use('ggplot')
     plt.rcParams['font.sans-serif'] = ['WenQuanYi Micro Hei']
     plt.rcParams['legend.fontsize'] = 14
       
-    labels  = group_name + subgroup_name
-    pie_1_dummy_labels = ['']*len(group_name)
-    pie_2_dummy_labels = ['']*len(subgroup_name)
-    pie_3_dummy_labels = ['']*len(sub_subgroup_name)  
+    labels  = group_names + subgroup_names
+    pie_1_dummy_labels = ['']*len(group_names)
+    pie_2_dummy_labels = ['']*len(subgroup_names)
+    pie_3_dummy_labels = ['']*len(sub_subgroup_names)  
      
     fig, ax = plt.subplots()
     ax.axis('equal')  
@@ -118,24 +127,21 @@ def plot_weight_breakdown(vehicle,
     pie_1_radius = pie_chart_radius - 2 * pie_chart_width
     pie_2_radius = pie_chart_radius -  pie_chart_width
 
-    pie_1, _ = ax.pie(group_weight, radius = pie_1_radius, labels = pie_1_dummy_labels,  colors=group_color )
+    pie_1, _ = ax.pie(group_weights, radius = pie_1_radius, labels = pie_1_dummy_labels,  colors=group_colors )
     plt.setp(pie_1, width=pie_chart_width, edgecolor = 'white')
          
     
-    pie_2, _ = ax.pie(subgroup_weight, radius=pie_2_radius, labels = pie_2_dummy_labels,   colors=subgroup_color)
+    pie_2, _ = ax.pie(subgroup_weights, radius=pie_2_radius, labels = pie_2_dummy_labels,   colors=subgroup_colors)
     plt.setp(pie_2, width=pie_chart_width, edgecolor='white')
     
 
-    pie_3, _ = ax.pie(sub_subgroup_weight, radius=pie_chart_radius, labels = pie_3_dummy_labels,   colors=sub_subgroup_color)
-    plt.setp(pie_3, width=pie_chart_width, edgecolor='white')
+    #pie_3, _ = ax.pie(sub_subgroup_weights, radius=pie_chart_radius, labels = pie_3_dummy_labels,   colors=sub_subgroup_colors)
+    #plt.setp(pie_3, width=pie_chart_width, edgecolor='white')
     
     ax.axis('equal')  # Equal aspect ratio ensures a circular pie chart 
     
     # Add legend 
-    plt.margins(0, 0)
-    
-    plt.tight_layout() 
-    plt.show() 
+    #plt.margins(0, 0)
      
     # Add weight of aircraft 
     weight_text = str((round(weight,2))) + ' kg'
@@ -146,10 +152,13 @@ def plot_weight_breakdown(vehicle,
     ax.annotate(weight_text, (np.pi,0.2), size= 20)   
     
     if show_legend: 
-        ax.legend(labels, loc='lower center', ncol = 3, prop={'size': 14}  ,bbox_to_anchor= (0,-.25, 1, 0.3)  )
-    ax.set_axis_off()  
-    
+        fig.legend(labels, loc='center left', prop={'size': 14})
+    ax.set_axis_off()
+     
+    # Adjusting the sub-plots for legend 
     fig.tight_layout()
+    fig.subplots_adjust(left=0.5) 
+        
     
     if save_figure:
         plt.savefig(save_filename + '.pdf')    

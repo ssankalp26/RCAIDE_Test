@@ -408,7 +408,6 @@ def compute_operating_empty_weight(vehicle, settings=None, method_type='RCAIDE')
     ##-------------------------------------------------------------------------------                 
     # Accumulate Systems Weight
     ##-------------------------------------------------------------------------------
-    output.empty                                = Data() 
     output.empty.systems                        = Data()
     output.empty.systems.control_systems        = W_systems.W_flight_control
     output.empty.systems.apu                    = W_systems.W_apu

@@ -191,11 +191,11 @@ def compute_operating_empty_weight(vehicle,settings=None):
                                                              + output.empty.systems.anti_ice
           
                         
-    output.empty.operational_items                   = Data()
-    output.empty.operational_items                   = W_oper 
-    output.empty.total                               = output.empty.structural.total + output.empty.propulsion.total + output.empty.systems.total  + output.operational_items.total  
-    output.payload                                   = payload
-    output.zero_fuel_weight                          = output.empty.total + output.payload.total   
+    output.operational_items                   = Data()
+    output.operational_items                   = W_oper 
+    output.empty.total                         = output.empty.structural.total + output.empty.propulsion.total + output.empty.systems.total  + output.operational_items.total  
+    output.payload                             = payload
+    output.zero_fuel_weight                    = output.empty.total + output.payload.total   
    
     if use_max_fuel_weight:  # assume fuel is equally distributed in fuel tanks
         total_fuel_weight  = vehicle.mass_properties.max_takeoff -  output.zero_fuel_weight
