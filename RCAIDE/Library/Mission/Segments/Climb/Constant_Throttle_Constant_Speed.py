@@ -33,10 +33,22 @@ def unpack_body_angle(segment):
     Properties Used:
     N/A
     """          
+    
+    ctrls    = segment.assigned_control_variables 
 
-    # unpack unknowns 
-    segment.state.conditions.frames.body.inertial_rotations[:,0] = segment.state.unknowns.bank_angle[:,0]  
-    segment.state.conditions.frames.body.inertial_rotations[:,1] = segment.state.unknowns.body_angle[:,0]     
+    # Body Angle Control    
+    if ctrls.body_angle.active: 
+        segment.state.conditions.frames.body.inertial_rotations[:,1] = segment.state.unknowns.body_angle[:,0] 
+    else:
+        segment.state.conditions.frames.body.inertial_rotations[:,1] = segment.angle_of_attack            
+
+    if ctrls.bank_angle.active: 
+        segment.state.conditions.frames.body.inertial_rotations[:,0] = segment.state.unknowns.bank_angle[:,0]
+    else:
+        segment.state.conditions.frames.body.inertial_rotations[:,0] = segment.bank_angle
+            
+    segment.state.conditions.frames.body.inertial_rotations[:,2] =  segment.state.conditions.frames.planet.true_heading[:,0]     
+        
 
 
 # ----------------------------------------------------------------------
