@@ -57,7 +57,9 @@ def compute_vehicle_center_of_gravity(vehicle, update_CG=True):
     
     if update_CG:
         vehicle.mass_properties.center_of_gravity = total_moment/total_mass 
-            
-    return  total_moment/total_mass 
+    
+    CG =  total_moment/total_mass
+   
+    return CG, total_mass
 
 

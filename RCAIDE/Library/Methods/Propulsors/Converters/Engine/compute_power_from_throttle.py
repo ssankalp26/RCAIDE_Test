@@ -49,10 +49,10 @@ def compute_power_from_throttle(engine,engine_conditions,conditions):
     # Unpack
     altitude    = conditions.freestream.altitude
     delta_isa   = conditions.freestream.delta_ISA 
-    PSLS        = engine.sea_level_power
+    PSLS        = engine.sea_level_power  # SI Units 
     h_flat      = engine.flat_rate_altitude
     omega       = engine_conditions.speed
-    PSFC        = engine.power_specific_fuel_consumption
+    PSFC        = engine.power_specific_fuel_consumption  
 
     # shift in power lapse due to flat rate
     altitude_virtual = altitude - h_flat       
@@ -74,15 +74,17 @@ def compute_power_from_throttle(engine,engine_conditions,conditions):
 
     # Regulate using throttle 
     P       = Pavailable * engine_conditions.throttle 
-    P[P<0.] = 0. 
-    SFC     = PSFC * Units['lb/hp/hr']
+    P[P<0.] = 0.
+    
+    P_hp                      = P / Units.horsepower # convert back to horse power  
+    fuel_flow_rate_lbs_per_hr = PSFC * P_hp
+    fuel_flow_rate_kgs_per_s  = fuel_flow_rate_lbs_per_hr * Units.lbs / Units.hr
 
     # Compute engine torque
     torque = P/omega
     
-    # Determine fuel flow rate
-    alt_0           = np.zeros_like(altitude)
-    fuel_flow_rate  = np.fmax(P*SFC,alt_0) 
+    # Determine fuel flow rate and cap at 0
+    fuel_flow_rate  = np.fmax(fuel_flow_rate_kgs_per_s,np.zeros_like(altitude)) 
     
     # Store results 
     engine_conditions.power                           = P

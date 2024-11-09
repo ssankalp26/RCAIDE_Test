@@ -27,17 +27,18 @@ from Stopped_Rotor_EVTOL    import vehicle_setup as evtol_setup
 from Solar_UAV              import vehicle_setup as uav_setup
 from Human_Powered_Glider   import vehicle_setup as hp_setup
 
-def main(): 
-    Transport_Aircraft_Test()
-    BWB_Aircraft_Test()
-    General_Aviation_Test()
-    Human_Powered_Aircraft_Test()
-    EVTOL_Aircraft_Test()
-    UAV_Test()
+def main():
+    update_regression_values = False # should be false unless code functionally changes  
+    Transport_Aircraft_Test(update_regression_values)
+    BWB_Aircraft_Test(update_regression_values)
+    General_Aviation_Test(update_regression_values)
+    Human_Powered_Aircraft_Test(update_regression_values)
+    EVTOL_Aircraft_Test(update_regression_values)
+    UAV_Test(update_regression_values)
     return
 
 
-def Transport_Aircraft_Test():  
+def Transport_Aircraft_Test(update_regression_values):  
     method_types = ['RCAIDE', 'FLOPS Simple', 'FLOPS Complex', 'Raymer']
     
     for method_type in method_types:
@@ -48,8 +49,8 @@ def Transport_Aircraft_Test():
         weight_analysis.method                        = method_type 
         weight                                        = weight_analysis.evaluate() 
     
-       
-        #save_results(weight, os.path.join(os.path.dirname(__file__), 'weights_'+method_type.replace(' ','_')+'.res'))
+        if update_regression_values:
+            save_results(weight, os.path.join(os.path.dirname(__file__), 'weights_'+method_type.replace(' ','_')+'.res'))
         old_weight = load_results(os.path.join(os.path.dirname(__file__), 'weights_'+method_type.replace(' ','_')+'.res'))
     
         check_list = [
@@ -81,13 +82,14 @@ def Transport_Aircraft_Test():
             
     return 
 
-def General_Aviation_Test():
+def General_Aviation_Test(update_regression_values):
      
     weight_analysis          = RCAIDE.Framework.Analyses.Weights.Weights_General_Aviation()
     weight_analysis.vehicle  = general_aviation_setup()
     weight                   = weight_analysis.evaluate()
     
-    #save_results(weight, os.path.join(os.path.dirname(__file__), 'weights_General_Aviation.res'))
+    if update_regression_values:
+        save_results(weight, os.path.join(os.path.dirname(__file__), 'weights_General_Aviation.res'))
     old_weight = load_results(os.path.join(os.path.dirname(__file__), 'weights_General_Aviation.res'))
 
     check_list = [
@@ -112,13 +114,14 @@ def General_Aviation_Test():
         print('')
     return 
         
-def BWB_Aircraft_Test():
+def BWB_Aircraft_Test(update_regression_values):
     
     weight_analysis          = RCAIDE.Framework.Analyses.Weights.Weights_BWB()
     weight_analysis.vehicle  = bwb_setup()
     weight                   = weight_analysis.evaluate()
     
-    #save_results(weight, os.path.join(os.path.dirname(__file__), 'weights_BWB.res'))
+    if update_regression_values:
+        save_results(weight, os.path.join(os.path.dirname(__file__), 'weights_BWB.res'))
     old_weight = load_results(os.path.join(os.path.dirname(__file__), 'weights_BWB.res'))
     
     check_list = [
@@ -143,13 +146,13 @@ def BWB_Aircraft_Test():
         
     return
 
-def EVTOL_Aircraft_Test():
-    new_regression           = False # ONLY turn to True for a new regression, typically left false
+def EVTOL_Aircraft_Test(update_regression_values): 
     weight_analysis          = RCAIDE.Framework.Analyses.Weights.Weights_EVTOL()
-    weight_analysis.vehicle  = evtol_setup(new_regression) 
+    weight_analysis.vehicle  = evtol_setup(update_regression_values) 
     weight                   = weight_analysis.evaluate() 
 
-    #save_results(weight, os.path.join(os.path.dirname(__file__), 'weights_EVTOL.res'))
+    if update_regression_values:
+        save_results(weight, os.path.join(os.path.dirname(__file__), 'weights_EVTOL.res'))
     old_weight = load_results(os.path.join(os.path.dirname(__file__), 'weights_EVTOL.res'))
     
     check_list = [
@@ -174,12 +177,13 @@ def EVTOL_Aircraft_Test():
     return
 
         
-def Human_Powered_Aircraft_Test(): 
+def Human_Powered_Aircraft_Test(update_regression_values): 
     weight_analysis          = RCAIDE.Framework.Analyses.Weights.Weights_Human_Powered()
     weight_analysis.vehicle  = hp_setup()
     weight                   = weight_analysis.evaluate()    
 
-    #save_results(weight, os.path.join(os.path.dirname(__file__), 'weights_Human_Powered.res'))
+    if update_regression_values:
+        save_results(weight, os.path.join(os.path.dirname(__file__), 'weights_Human_Powered.res'))
     old_weight = load_results(os.path.join(os.path.dirname(__file__), 'weights_Human_Powered.res'))
     
     check_list = [
@@ -201,13 +205,14 @@ def Human_Powered_Aircraft_Test():
     return       
 
 
-def UAV_Test():
+def UAV_Test(update_regression_values):
 
     weight_analysis          = RCAIDE.Framework.Analyses.Weights.Weights_UAV()
     weight_analysis.vehicle  = uav_setup()
     weight                   = weight_analysis.evaluate() 
 
-    #save_results(weight, os.path.join(os.path.dirname(__file__), 'weights_UAV.res'))
+    if update_regression_values:
+        save_results(weight, os.path.join(os.path.dirname(__file__), 'weights_UAV.res'))
     old_weight = load_results(os.path.join(os.path.dirname(__file__), 'weights_UAV.res'))
     
     check_list = [

@@ -6,8 +6,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 # cg_and_moi_test.py
 
-from RCAIDE.Framework.Core                                                   import Units,  Data ,  Container  
-from RCAIDE.Library.Methods.Weights.Correlation_Buildups                     import Common
+from RCAIDE.Framework.Core                                                   import Units,  Data  
 from RCAIDE.Library.Methods.Weights.Moment_of_Inertia.compute_aircraft_moment_of_inertia import compute_aircraft_moment_of_inertia
 from RCAIDE.Library.Methods.Weights.Center_of_Gravity                        import compute_vehicle_center_of_gravity
 from RCAIDE.Library.Methods.Weights.Moment_of_Inertia                        import compute_cuboid_moment_of_inertia
@@ -25,9 +24,11 @@ from Cessna_172             import vehicle_setup as general_aviation_setup
 from Stopped_Rotor_EVTOL    import vehicle_setup as EVTOL_setup
 
 def main(): 
+    # make true only when resizing aircraft. should be left false for regression
+    update_regression_values = False    
     Transport_Aircraft_Test()
     General_Aviation_Test()
-    EVTOL_Aircraft_Test()
+    EVTOL_Aircraft_Test(update_regression_values)
     return
 
 def Transport_Aircraft_Test():
@@ -48,8 +49,7 @@ def Transport_Aircraft_Test():
     # ------------------------------------------------------------------
     #   CG Location
     # ------------------------------------------------------------------    
-    compute_vehicle_center_of_gravity( weight_analysis.vehicle) 
-    CG_location      =  weight_analysis.vehicle.mass_properties.center_of_gravity
+    CG_location, _ = compute_vehicle_center_of_gravity( weight_analysis.vehicle)  
     
     # ------------------------------------------------------------------
     #   Operating Aircraft MOI
@@ -98,8 +98,7 @@ def General_Aviation_Test():
     # ------------------------------------------------------------------
     #   CG Location
     # ------------------------------------------------------------------    
-    compute_vehicle_center_of_gravity(weight_analysis.vehicle) 
-    CG_location      = weight_analysis.vehicle.mass_properties.center_of_gravity
+    CG_location, _ = compute_vehicle_center_of_gravity(weight_analysis.vehicle)  
     
     # ------------------------------------------------------------------
     #   Operating Aircraft MOI
@@ -131,8 +130,8 @@ def General_Aviation_Test():
     
     return
 
-def EVTOL_Aircraft_Test():
-    vehicle = EVTOL_setup()
+def EVTOL_Aircraft_Test(update_regression_values):
+    vehicle = EVTOL_setup(update_regression_values)
     
     # ------------------------------------------------------------------
     #   Weight Breakdown 
@@ -144,8 +143,7 @@ def EVTOL_Aircraft_Test():
     # ------------------------------------------------------------------
     #   CG Location
     # ------------------------------------------------------------------    
-    compute_vehicle_center_of_gravity( weight_analysis.vehicle) 
-    CG_location      =  weight_analysis.vehicle.mass_properties.center_of_gravity
+    CG_location, _ =  compute_vehicle_center_of_gravity( weight_analysis.vehicle)  
     
     # ------------------------------------------------------------------
     #   Operating Aircraft MOI
