@@ -30,3 +30,6 @@ class Methane(Propellant):
         self.specific_energy           = 5.34e7                           # J/kg
         self.energy_density            = 2.26e10                          # J/m^3
         self.lower_heating_value       = 5.0e7                            # J/kg  
+        
+        # self.fuel_surrogate_chemical_properties    = {'CH4':1.0}
+        # self.air_chemical_properties               = {'O2':0.2095, 'N2':0.7809, 'AR':0.0096}

@@ -31,3 +31,6 @@ class Ethanol(Propellant):
         self.specific_energy           = 2.68e7                           # J/kg
         self.energy_density            = 2.13e10                          # J/m^3
         self.lower_heating_value       = 2.67e7                           # J/kg  
+        
+        # self.fuel_surrogate_chemical_properties    = {'CH3CH2OH':1.0}
+        # self.air_chemical_properties               = {'O2':0.2095, 'N2':0.7809, 'AR':0.0096}
