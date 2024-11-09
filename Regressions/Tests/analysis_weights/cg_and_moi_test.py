@@ -22,10 +22,12 @@ sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], '
 # the analysis functions
 from Lockheed_C5a           import vehicle_setup as transport_setup
 from Cessna_172             import vehicle_setup as general_aviation_setup
+from Stopped_Rotor_EVTOL    import vehicle_setup as EVTOL_setup
 
 def main(): 
     Transport_Aircraft_Test()
     General_Aviation_Test()
+    EVTOL_Aircraft_Test()
     return
 
 def Transport_Aircraft_Test():
@@ -129,5 +131,51 @@ def General_Aviation_Test():
     
     return
 
+def EVTOL_Aircraft_Test():
+    vehicle = EVTOL_setup()
+    
+    # ------------------------------------------------------------------
+    #   Weight Breakdown 
+    # ------------------------------------------------------------------  
+    weight_analysis                               = RCAIDE.Framework.Analyses.Weights.Weights_EVTOL()
+    weight_analysis.vehicle                       = vehicle
+    results                                       = weight_analysis.evaluate() 
+    
+    # ------------------------------------------------------------------
+    #   CG Location
+    # ------------------------------------------------------------------    
+    compute_vehicle_center_of_gravity( weight_analysis.vehicle) 
+    CG_location      =  weight_analysis.vehicle.mass_properties.center_of_gravity
+    
+    # ------------------------------------------------------------------
+    #   Operating Aircraft MOI
+    # ------------------------------------------------------------------    
+    MOI, total_mass = compute_aircraft_moment_of_inertia(weight_analysis.vehicle, CG_location)
+    
+    print(weight_analysis.vehicle.tag + ' Moment of Intertia')
+    print(MOI)
+    accepted  = np.array([[ 1964.5023309485,  15.4159204, -2148.8941479328],
+                          [ 15.4159204,  21575.7167391725,  0],
+                          [-2148.8941479328,  0,  22173.97383247]])
+    MOI_error     = MOI - accepted
+
+    # Check the errors
+    error = Data()
+    error.Ixx   = MOI_error[0, 0]
+    error.Iyy   = MOI_error[1, 1]
+    error.Izz   = MOI_error[2, 2]
+    error.Ixz   = MOI_error[2, 0]
+    error.Ixy   = MOI_error[1, 0]
+
+    print('Errors:')
+    print(error)
+
+    for k,v in list(error.items()):
+        assert(np.abs(v)<1e-6) 
+    
+    return  
+
 if __name__ == '__main__':
     main()
+
+
