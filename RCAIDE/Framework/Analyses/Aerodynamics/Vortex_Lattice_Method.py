@@ -80,7 +80,7 @@ class Vortex_Lattice_Method(Aerodynamics):
         settings.recalculate_total_wetted_area                      = False
         settings.propeller_wake_model                               = False 
         settings.discretize_control_surfaces                        = True
-        settings.model_fuselage                                     = True
+        settings.model_fuselage                                     = False
         settings.trim_aircraft                                      = False 
 
         # correction factors

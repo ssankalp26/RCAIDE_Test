@@ -35,8 +35,6 @@ class ICE_Propeller(Propulsor):
         self.engine_diameter              = 0.0      
         self.engine_length                = 0.0
         self.engine_mass                  = 0.0
-        self.origin                = [[0, 0, 0]]           
- 
 
     def append_operating_conditions(self,segment,fuel_line,add_additional_network_equation = False):
         append_ice_propeller_conditions(self,segment,fuel_line,add_additional_network_equation)

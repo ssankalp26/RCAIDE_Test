@@ -302,9 +302,7 @@ def compute_operating_empty_weight(vehicle, settings=None):
         strut_length_main      = landing_gear_component.main.strut_length
         strut_length_nose      = landing_gear_component.nose.strut_length 
         W_landing_gear         = compute_landing_gear_weight(landing_weight, Nult, strut_length_main, strut_length_nose)
-        
-        landing_gear_component.mass_properties.mass = [W_landing_gear.main, W_landing_gear.nose]
-        #landing_gear_component.mass_properties.mass = W_landing_gear.nose
+        landing_gear_component.mass_properties.mass =  W_landing_gear.main+ W_landing_gear.nose
 
     if 'avionics' not in vehicle: 
         avionics     = RCAIDE.Library.Components.Systems.Avionics()

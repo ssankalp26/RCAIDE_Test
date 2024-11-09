@@ -1225,7 +1225,6 @@ def call_VLM(conditions,settings,vehicle):
             Cdrag_wings[wing.tag]      = np.atleast_2d(dim_wing_drags[:,i]).T/ref
             AoA_wing_induced[wing.tag] = alpha_i[i]
         i+=1
-        
 
     return Clift,Cdrag,CX,CY,CZ,CL,CM,CN, S_ref,b_ref,c_ref,X_ref,Y_ref ,Z_ref, Clift_wings,Cdrag_wings,AoA_wing_induced  
 
