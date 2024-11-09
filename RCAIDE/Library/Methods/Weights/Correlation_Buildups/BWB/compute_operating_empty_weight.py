@@ -146,67 +146,76 @@ def compute_operating_empty_weight(vehicle,settings=None):
     
     vehicle.payload.passengers.mass_properties.mass = payload.passengers
     vehicle.payload.baggage.mass_properties.mass    = payload.baggage
-    vehicle.payload.cargo.mass_properties.mass      = payload.cargo    
-    
+    vehicle.payload.cargo.mass_properties.mass      = payload.cargo 
+    payload.total =  payload.passengers +  payload.baggage +  payload.cargo 
 
     # Compute Peripheral Operating Items Weights 
     W_oper = Transport.compute_operating_items_weight(vehicle)
     
     # Store Weights Results 
-    output = Data()
-    output.structural_breakdown                               = Data()
-    output.structural_breakdown.wing                          = W_wing
-    output.structural_breakdown.afterbody                     = W_aft_centerbody
-    output.structural_breakdown.fuselage                      = W_cabin
-    output.structural_breakdown.main_landing_gear             = landing_gear.main
-    output.structural_breakdown.nose_landing_gear             = landing_gear.nose
-    output.structural_breakdown.nacelle                       = 0
-    output.structural_breakdown.paint                         = 0   
-    output.structural_breakdown.total                         = output.structural_breakdown.wing + output.structural_breakdown.afterbody \
-                                                      + output.structural_breakdown.fuselage + output.structural_breakdown.main_landing_gear + output.structural_breakdown.nose_landing_gear \
-                                                      + output.structural_breakdown.paint + output.structural_breakdown.nacelle
+    output                                     = Data()
+    output.empty                               = Data()
+    output.empty.structural                    = Data()
+    output.empty.structural.wing               = W_wing
+    output.empty.structural.afterbody          = W_aft_centerbody
+    output.empty.structural.fuselage           = W_cabin
+    output.empty.structural.main_landing_gear  = landing_gear.main
+    output.empty.structural.nose_landing_gear  = landing_gear.nose
+    output.empty.structural.nacelle            = 0
+    output.empty.structural.paint              = 0   
+    output.empty.structural.total              = output.empty.structural.wing + output.empty.structural.afterbody \
+                                                      + output.empty.structural.fuselage + output.empty.structural.main_landing_gear + output.empty.structural.nose_landing_gear \
+                                                      + output.empty.structural.paint + output.empty.structural.nacelle
 
-    output.propulsion_breakdown                     = Data()
-    output.propulsion_breakdown.total               = W_propulsion
-    output.propulsion_breakdown.engines             = 0
-    output.propulsion_breakdown.thrust_reversers    = 0
-    output.propulsion_breakdown.miscellaneous       = 0
-    output.propulsion_breakdown.fuel_system         = 0
+    output.empty.propulsion                     = Data()
+    output.empty.propulsion.total               = W_propulsion
+    output.empty.propulsion.engines             = 0
+    output.empty.propulsion.thrust_reversers    = 0
+    output.empty.propulsion.miscellaneous       = 0
+    output.empty.propulsion.fuel_system         = 0
 
-    output.systems_breakdown                        = Data()
-    output.systems_breakdown.control_systems        = systems_weights.W_flight_control
-    output.systems_breakdown.apu                    = systems_weights.W_apu
-    output.systems_breakdown.electrical             = systems_weights.W_electrical
-    output.systems_breakdown.avionics               = systems_weights.W_avionics
-    output.systems_breakdown.hydraulics             = systems_weights.W_hyd_pnu
-    output.systems_breakdown.furnish                = systems_weights.W_furnish
-    output.systems_breakdown.air_conditioner        = systems_weights.W_ac
-    output.systems_breakdown.instruments            = systems_weights.W_instruments
-    output.systems_breakdown.anti_ice               = 0
-    output.systems_breakdown.total                  = output.systems_breakdown.control_systems + output.systems_breakdown.apu \
-                                                      + output.systems_breakdown.electrical + output.systems_breakdown.avionics \
-                                                       + output.systems_breakdown.hydraulics + output.systems_breakdown.furnish \
-                                                       + output.systems_breakdown.air_conditioner + output.systems_breakdown.instruments \
-                                                       + output.systems_breakdown.anti_ice
-         
-    output.payload_breakdown                         = Data()
-    output.payload_breakdown                         = payload
+    output.empty.systems                        = Data()
+    output.empty.systems.control_systems        = systems_weights.W_flight_control
+    output.empty.systems.apu                    = systems_weights.W_apu
+    output.empty.systems.electrical             = systems_weights.W_electrical
+    output.empty.systems.avionics               = systems_weights.W_avionics
+    output.empty.systems.hydraulics             = systems_weights.W_hyd_pnu
+    output.empty.systems.furnish                = systems_weights.W_furnish
+    output.empty.systems.air_conditioner        = systems_weights.W_ac
+    output.empty.systems.instruments            = systems_weights.W_instruments
+    output.empty.systems.anti_ice               = 0
+    output.empty.systems.total                  = output.empty.systems.control_systems + output.empty.systems.apu \
+                                                            + output.empty.systems.electrical + output.empty.systems.avionics \
+                                                             + output.empty.systems.hydraulics + output.empty.systems.furnish \
+                                                             + output.empty.systems.air_conditioner + output.empty.systems.instruments \
+                                                             + output.empty.systems.anti_ice
+          
                         
-    output.operational_items                         = Data()
-    output.operational_items                         = W_oper
-         
-    output.empty                                     = output.structural_breakdown.total + output.propulsion_breakdown.total + output.systems_breakdown.total
-    output.operating_empty                           = output.empty + output.operational_items.total
-    output.zero_fuel_weight                          = output.operating_empty + output.payload_breakdown.total
-    total_fuel_weight                                = vehicle.mass_properties.max_takeoff - output.zero_fuel_weight
-    
-    # assume fuel is equally distributed in fuel tanks
-    if use_max_fuel_weight:
+    output.empty.operational_items                   = Data()
+    output.empty.operational_items                   = W_oper 
+    output.empty.total                               = output.empty.structural.total + output.empty.propulsion.total + output.empty.systems.total  + output.operational_items.total  
+    output.payload                                   = payload
+    output.zero_fuel_weight                          = output.empty.total + output.payload.total   
+   
+    if use_max_fuel_weight:  # assume fuel is equally distributed in fuel tanks
+        total_fuel_weight  = vehicle.mass_properties.max_takeoff -  output.zero_fuel_weight
         for network in vehicle.networks: 
             for fuel_line in network.fuel_lines:  
                 for fuel_tank in fuel_line.fuel_tanks:
                     fuel_weight =  total_fuel_weight/number_of_tanks  
-                    fuel_tank.fuel.mass_properties.mass = fuel_weight   
+                    fuel_tank.fuel.mass_properties.mass = fuel_weight
+        output.fuel = total_fuel_weight 
+        output.total = output.zero_fuel_weight + output.fuel
+    else:
+        total_fuel_weight =  0
+        for network in vehicle.networks: 
+            for fuel_line in network.fuel_lines:  
+                for fuel_tank in fuel_line.fuel_tanks:
+                    fuel_mass =  fuel_tank.fuel.density * fuel_tank.volume
+                    fuel_tank.fuel.mass_properties.mass = fuel_mass * 9.81
+                    total_fuel_weight = fuel_mass * 9.81 
+        output.fuel = total_fuel_weight
+        output.total = output.zero_fuel_weight + output.fuel
      
     control_systems                                  = RCAIDE.Library.Components.Component()
     control_systems.tag                              = 'control_systems'  
@@ -225,18 +234,18 @@ def compute_operating_empty_weight(vehicle,settings=None):
     optionals.tag                                    = 'optionals'
          
     vehicle.landing_gear.nose                        = RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear()
-    vehicle.landing_gear.nose.mass                   = output.structural_breakdown.nose_landing_gear
+    vehicle.landing_gear.nose.mass                   = output.empty.structural.nose_landing_gear
     vehicle.landing_gear.main                        = RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()   
-    vehicle.landing_gear.main.mass                   = output.structural_breakdown.main_landing_gear  
+    vehicle.landing_gear.main.mass                   = output.empty.structural.main_landing_gear  
          
-    control_systems.mass_properties.mass             = output.systems_breakdown.control_systems
-    electrical_systems.mass_properties.mass          = output.systems_breakdown.electrical
-    furnishings.mass_properties.mass                 = output.systems_breakdown.furnish
-    avionics.mass_properties.mass                    = output.systems_breakdown.avionics \
-                                                     + output.systems_breakdown.instruments
-    air_conditioner.mass_properties.mass             = output.systems_breakdown.air_conditioner 
-    apu.mass_properties.mass                         = output.systems_breakdown.apu
-    hydraulics.mass_properties.mass                  = output.systems_breakdown.hydraulics
+    control_systems.mass_properties.mass             = output.empty.systems.control_systems
+    electrical_systems.mass_properties.mass          = output.empty.systems.electrical
+    furnishings.mass_properties.mass                 = output.empty.systems.furnish
+    avionics.mass_properties.mass                    = output.empty.systems.avionics \
+                                                     + output.empty.systems.instruments
+    air_conditioner.mass_properties.mass             = output.empty.systems.air_conditioner 
+    apu.mass_properties.mass                         = output.empty.systems.apu
+    hydraulics.mass_properties.mass                  = output.empty.systems.hydraulics
     optionals.mass_properties.mass                   = output.operational_items.operating_items_less_crew
 
     # assign components to vehicle
