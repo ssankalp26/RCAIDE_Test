@@ -12,6 +12,7 @@ import scipy.optimize
 import numpy as np
 
 from Legacy.trunk.S.Core.Arrays import array_type
+import  sys
 
 # ----------------------------------------------------------------------
 #  Converge Root

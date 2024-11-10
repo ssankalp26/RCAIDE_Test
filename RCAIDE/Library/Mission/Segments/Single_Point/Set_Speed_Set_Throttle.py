@@ -88,10 +88,6 @@ def unpack_unknowns(segment):
                                 
     """      
     
-    # unpack unknowns
-    acceleration  = segment.state.unknowns.acceleration
-    body_angle    = segment.state.unknowns.body_angle
-    
-    # apply unknowns
-    segment.state.conditions.frames.inertial.acceleration_vector[0,0] = acceleration
-    segment.state.conditions.frames.body.inertial_rotations[:,1]      = body_angle[:,0]      
+    # unpack unknowns  
+    acceleration  = segment.state.unknowns.acceleration 
+    segment.state.conditions.frames.inertial.acceleration_vector[0,0] = acceleration         

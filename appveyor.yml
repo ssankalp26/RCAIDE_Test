@@ -11,7 +11,7 @@ environment:
   COVERALLS_REPO_TOKEN: 25Sl8XjzDDuldcq2FscZnlq7ts1fRVhb3
 
 init:
-    - sudo apt-get update
+    - sudo apt-get update -y --allow-releaseinfo-change
     - sudo apt-get install -qq python3-pip
     
 install: 
@@ -24,7 +24,6 @@ install:
     - python3 -m pip install --upgrade plotly
     - python3 -m pip install --upgrade kaleido
     - python3 -m pip install --upgrade pandas
-    - python3 -m pip install --upgrade geopy
     - PATH=$PATH:/home/appveyor/.local/bin
     - python3 -m pip install coveralls==3.2.0
     - python3 setup.py develop --user

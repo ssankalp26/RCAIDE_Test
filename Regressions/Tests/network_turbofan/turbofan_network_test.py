@@ -16,9 +16,10 @@ from RCAIDE.Library.Plots             import *
 import numpy as np
 import pylab as plt 
 import sys
+import os
 
 # local imports 
-sys.path.append('../../Vehicles')
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 from Boeing_737    import vehicle_setup as vehicle_setup
 from Boeing_737    import configs_setup as configs_setup 
 
@@ -100,29 +101,29 @@ def main():
     
     # Truth values
     takeoff_thrust_truth     = 99134.27996755976
-    climb_throttle_1_truth   = 1.6807731422835253
-    climb_throttle_2_truth   = 1.3802422472208669
+    climb_throttle_1_truth   = 1.3941996549339815
+    climb_throttle_2_truth   = 1.0664183802948262
     climb_throttle_3_truth   = 0.5
-    climb_throttle_4_truth   = 0.8679225480622763
-    climb_throttle_5_truth   = 0.8141566430665748
-    climb_throttle_6_truth   = 1.1762742666064576
-    climb_throttle_7_truth   = 1.332670357416255
-    climb_throttle_8_truth   = 0.6090416731871708
-    climb_throttle_9_truth   = 0.949481595486631
-    climb_10_CL_truth        = -0.32447887650544344
-    cruise_CL_1_truth        = 0.6942226103682735
-    cruise_CL_2_truth        = 0.6893540984026312
-    cruise_CL_3_truth        = 0.7515285258841712
-    descent_throttle_1_truth = 0.11281363311739535
-    curved_cruise_CL_truth   = 1.3475619201503564
+    climb_throttle_4_truth   = 0.8628672372915984
+    climb_throttle_5_truth   = 0.8687307505016614
+    climb_throttle_6_truth   = 1.1614494328624863
+    climb_throttle_7_truth   = 1.3123844611934794
+    climb_throttle_8_truth   = 0.6035812826375762
+    climb_throttle_9_truth   = 0.9253508278878831
+    climb_10_CL_truth        = 1.386927153785698
+    cruise_CL_1_truth        = 0.6737113464846501
+    cruise_CL_2_truth        = 0.6684861848497764
+    cruise_CL_3_truth        = 0.4501834176128111
+    descent_throttle_1_truth = 0.11286251260646299
+    curved_cruise_CL_truth   = 1.2887033830216827
     descent_throttle_2_truth = 0.5
-    single_pt_CL_1_truth     = 0.010323140809804471
-    single_pt_CL_2_truth     = 0.011976421119820706
-    loiter_1_CL_truth        = 0.4950032875951481
-    loiter_2_CL_truth        = 0.4949969847042029
-    reserve_1_CL_truth       = 0.33559370637313746
-    reserve_2_CL_truth       = 0.32725135429473984
-    descent_throttle_3_truth = 0.15043551239042488
+    single_pt_CL_1_truth     = 0.0005601872688765593
+    single_pt_CL_2_truth     = 0.000661628495326631
+    loiter_1_CL_truth        = 0.4797584860397017
+    loiter_2_CL_truth        = 0.47975246008439104
+    reserve_1_CL_truth       = 0.32388843615255086
+    reserve_2_CL_truth       = 0.31574692167767204
+    descent_throttle_3_truth = 0.149967629349736
     landing_thrust_truth     = 10914.920312664697
     
     # Store errors 
@@ -340,8 +341,8 @@ def mission_setup(analyses):
     segment.tag = "climb_5"
     segment.analyses.extend( analyses.base )  
     segment.altitude_end                                             = 5.    * Units.km
-    segment.air_speed                                                = 180   * Units.m / Units.s
-    segment.climb_angle                                              = 3.    * Units.degrees 
+    segment.air_speed                                                = 200   * Units.m / Units.s
+    segment.climb_angle                                              = 3.5 * Units.degrees 
                
     # define flight dynamics to model            
     segment.flight_dynamics.force_x                                  = True  

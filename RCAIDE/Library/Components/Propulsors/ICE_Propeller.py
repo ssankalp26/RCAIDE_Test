@@ -1,8 +1,6 @@
-## @ingroup Components-Propulsors 
 # RCAIDE/Library/Components/Propulsors/ICE_Propeller.py
 # 
-# 
-# 
+#  
 # Created:  Mar 2024, M. Clarke
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -16,10 +14,9 @@ from RCAIDE.Library.Methods.Propulsors.ICE_Propulsor.append_ice_propeller_condit
 from RCAIDE.Library.Methods.Propulsors.ICE_Propulsor.compute_ice_performance         import compute_ice_performance, reuse_stored_ice_data
  
 
-# ----------------------------------------------------------------------
-#  Fan Component
-# ----------------------------------------------------------------------
-## @ingroup Components-Propulsors-Converters
+# ---------------------------------------------------------------------------------------------------------------------- 
+# ICE_Propeller
+# ---------------------------------------------------------------------------------------------------------------------- 
 class ICE_Propeller(Propulsor):
     """This is an internal engine-propeller propulsor
     
@@ -34,8 +31,10 @@ class ICE_Propeller(Propulsor):
         self.tag                          = 'ice_propeller'   
         self.active_fuel_tanks            = None
         self.engine                       = None
-        self.propeller                    = None   
- 
+        self.propeller                    = None
+        self.engine_diameter              = 0.0      
+        self.engine_length                = 0.0
+        self.engine_mass                  = 0.0
 
     def append_operating_conditions(self,segment,fuel_line,add_additional_network_equation = False):
         append_ice_propeller_conditions(self,segment,fuel_line,add_additional_network_equation)

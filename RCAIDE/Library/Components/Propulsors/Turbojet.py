@@ -1,8 +1,6 @@
-## @ingroup Components-Propulsors-Converters
-# RCAIDE/Library/Components/Propulsors/Converters/Fan.py
-# 
-# 
-# 
+# RCAIDE/Library/Components/Propulsors/Turbojet.py  
+#
+#
 # Created:  Mar 2024, M. Clarke
 
 # ----------------------------------------------------------------------------------------------------------------------

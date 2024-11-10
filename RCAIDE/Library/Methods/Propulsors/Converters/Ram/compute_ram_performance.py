@@ -76,5 +76,6 @@ def compute_ram_performance(ram,ram_conditions,conditions):
     ram_conditions.outputs.static_pressure                     = P0
     ram_conditions.outputs.mach_number                         = M0
     ram_conditions.outputs.velocity                            = V0
+    ram_conditions.outputs.speed_of_sound                      = a    
     
     return 

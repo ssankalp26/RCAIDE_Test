@@ -8,7 +8,6 @@
 # ---------------------------------------------------------------------
 import RCAIDE
 from RCAIDE.Framework.Core import Units, Data    
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common                    import initialize_from_circuit_configuration 
 from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion            import compute_motor_weight
 from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor                     import design_motor
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor                        import design_prop_rotor ,design_prop_rotor 
@@ -217,28 +216,22 @@ def vehicle_setup(new_regression=True):
     # Lift Bus 
     #====================================================================================================================================          
     bus                                                    = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus()
-    bus.tag                                                = 'bus' 
+    bus.tag                                                = 'bus'
+    bus.number_of_battery_modules                          =  10
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Bus Battery
     #------------------------------------------------------------------------------------------------------------------------------------ 
-    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC()
-    number_of_modules                                      = 10 
+    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC() 
     bat.tag                                                = 'bus_battery'
-    bat.electrical_configuration.series                     = 8 
-    bat.electrical_configuration.parallel                   = 60
-    initialize_from_circuit_configuration(bat)  
-   
-    bat.geometrtic_configuration.total                      = bat.electrical_configuration.total
-    bat.voltage                                             = bat.maximum_voltage 
-    bat.geometrtic_configuration.normal_count               = 20
-    bat.geometrtic_configuration.parallel_count             = 24  
+    bat.electrical_configuration.series                    = 8 
+    bat.electrical_configuration.parallel                  = 60 
+    bat.geometrtic_configuration.normal_count              = 20
+    bat.geometrtic_configuration.parallel_count            = 24  
     
-    for _ in range(number_of_modules):
-        bus.battery_modules.append(deepcopy(bat))  
-    
-    for battery_module in  bus.battery_modules:
-        bus.voltage  +=   battery_module.voltage 
+    for _ in range(bus.number_of_battery_modules):
+        bus.battery_modules.append(deepcopy(bat))   
+    bus.initialize_bus_electrical_properties()
     
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Lift Propulsors 
@@ -286,13 +279,16 @@ def vehicle_setup(new_regression=True):
                                                      rel_path + 'Airfoils' + separator + 'Polars' + separator + 'NACA_4412_polar_Re_7500000.txt' ]
     prop_rotor.append_airfoil(airfoil)                
     prop_rotor.airfoil_polar_stations             = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]    
-    if  new_regression:
+    current_dir = os.path.abspath(os.path.dirname(__file__))
+    test_dir = os.path.abspath(os.path.join(current_dir, '../Tests/mission_segments'))
+    
+    if new_regression:
         design_prop_rotor(prop_rotor)
-        save_rotor(prop_rotor, 'vahana_tilt_rotor_geometry.res')
+        save_rotor(prop_rotor, os.path.join(test_dir, 'vahana_tilt_rotor_geometry.res'))
     else:
         regression_prop_rotor = deepcopy(prop_rotor)
         design_prop_rotor(regression_prop_rotor, iterations=2)
-        loaded_prop_rotor = load_rotor('vahana_tilt_rotor_geometry.res')
+        loaded_prop_rotor = load_rotor(os.path.join(test_dir, 'vahana_tilt_rotor_geometry.res'))
         
         for key,item in prop_rotor.items():
             prop_rotor[key] = loaded_prop_rotor[key] 
@@ -305,14 +301,13 @@ def vehicle_setup(new_regression=True):
     #------------------------------------------------------------------------------------------------------------------------------------    
     prop_rotor_motor                         = RCAIDE.Library.Components.Propulsors.Converters.DC_Motor()
     prop_rotor_motor.efficiency              = 0.95
-    prop_rotor_motor.nominal_voltage         = bus.voltage * 0.75
-    prop_rotor_motor.prop_rotor_radius       = prop_rotor.tip_radius 
-    prop_rotor_motor.no_load_current         = 0.1  
+    prop_rotor_motor.nominal_voltage         = bus.voltage *0.75
+    prop_rotor_motor.no_load_current         = 0.1
     prop_rotor_motor.rotor_radius            = prop_rotor.tip_radius
     prop_rotor_motor.design_torque           = prop_rotor.hover.design_torque
     prop_rotor_motor.angular_velocity        = prop_rotor.hover.design_angular_velocity/prop_rotor_motor.gear_ratio  
     design_motor(prop_rotor_motor)
-    prop_rotor_motor.mass_properties.mass    = compute_motor_weight(prop_rotor_motor.design_torque)     
+    prop_rotor_motor.mass_properties.mass    = compute_motor_weight(prop_rotor_motor)     
     lift_propulsor.motor                     = prop_rotor_motor
      
 

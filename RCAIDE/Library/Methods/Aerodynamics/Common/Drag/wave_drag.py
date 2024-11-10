@@ -26,7 +26,7 @@ def wave_drag(conditions,wing):
 
     Args:
     conditions.freestream.mach_number        [Unitless]
-    conditions.aerodynamics.lift_coefficient [Unitless]
+    conditions.aerodynamics.coefficients.lift [Unitless]
     wing.spans.projected                     [m]
     wing.total_length                        [m]
     wing.aspect_ratio                        [-]

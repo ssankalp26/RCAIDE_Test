@@ -71,7 +71,7 @@ def plot_battery_module_C_rates(results,
         busses  = network.busses
         for bus in busses:
             for b_i, battery in enumerate(bus.battery_modules):
-                if b_i == 0 or bus.identical_batteries == False:
+                if b_i == 0 or bus.identical_battery_modules == False:
                     for i in range(len(results.segments)): 
                         time                  = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min    
                         battery_conditions    = results.segments[i].conditions.energy[bus.tag].battery_modules[battery.tag]     
@@ -97,8 +97,8 @@ def plot_battery_module_C_rates(results,
                         
      # Adjusting the sub-plots for legend 
     if show_legend:      
-        leg_1 =  fig_1.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
-        leg_2 =  fig_2.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg_1 =  fig_1.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4) 
+        leg_2 =  fig_2.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4) 
         leg_1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})  
         leg_2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'}) 
  

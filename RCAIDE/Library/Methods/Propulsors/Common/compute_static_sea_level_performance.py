@@ -34,17 +34,17 @@ def compute_static_sea_level_performance(propulsor):
     
     """  
     # Step 28: Static Sea Level Thrust  
-    planet         = RCAIDE.Library.Attributes.Planets.Earth()
-    atmosphere_sls = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
-    atmo_data      = atmosphere_sls.compute_values(0.0,0.0)
-    
-    p   = atmo_data.pressure          
-    T   = atmo_data.temperature       
-    rho = atmo_data.density          
-    a   = atmo_data.speed_of_sound    
-    mu  = atmo_data.dynamic_viscosity     
-        
-    conditions = RCAIDE.Framework.Mission.Common.Results() 
+    planet                                            = RCAIDE.Library.Attributes.Planets.Earth()
+    atmosphere_sls                                    = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
+    atmo_data                                         = atmosphere_sls.compute_values(0.0,0.0)
+                                                      
+    p                                                 = atmo_data.pressure          
+    T                                                 = atmo_data.temperature       
+    rho                                               = atmo_data.density          
+    a                                                 = atmo_data.speed_of_sound    
+    mu                                                = atmo_data.dynamic_viscosity     
+                                                      
+    conditions                                        = RCAIDE.Framework.Mission.Common.Results() 
     conditions.freestream.altitude                    = np.atleast_1d(0)
     conditions.freestream.mach_number                 = np.atleast_1d(0.01)
     conditions.freestream.pressure                    = np.atleast_1d(p)
@@ -58,13 +58,12 @@ def compute_static_sea_level_performance(propulsor):
     conditions.freestream.speed_of_sound              = np.atleast_1d(a)
     conditions.freestream.velocity                    = np.atleast_1d(a*0.01)   
 
-
-    ## setup conditions  
-    fuel_line                = RCAIDE.Library.Components.Energy.Distributors.Fuel_Line()
-    segment                  = RCAIDE.Framework.Mission.Segments.Segment()  
-    segment.state.conditions = conditions     
-    segment.state.conditions.energy[fuel_line.tag] = Conditions()
-    segment.state.conditions.noise[fuel_line.tag]  = Conditions()
+    # setup conditions  
+    fuel_line                                         = RCAIDE.Library.Components.Energy.Distributors.Fuel_Line()
+    segment                                           = RCAIDE.Framework.Mission.Segments.Segment()  
+    segment.state.conditions                          = conditions     
+    segment.state.conditions.energy[fuel_line.tag]    = Conditions()
+    segment.state.conditions.noise[fuel_line.tag]     = Conditions()
     propulsor.append_operating_conditions(segment,fuel_line) 
     for tag, item in  propulsor.items(): 
         if issubclass(type(item), RCAIDE.Library.Components.Component):
@@ -72,7 +71,7 @@ def compute_static_sea_level_performance(propulsor):
     
     # set throttle
     segment.state.conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0] = 1.0  
-    sls_T,sls_M,sls_P,_,_ = propulsor.compute_performance(segment.state,fuel_line)
+    sls_T,sls_M,sls_P,_,_                             = propulsor.compute_performance(segment.state,fuel_line)
         
-    propulsor.sealevel_static_thrust = sls_T[0][0]
+    propulsor.sealevel_static_thrust                  = sls_T[0][0]
     return 

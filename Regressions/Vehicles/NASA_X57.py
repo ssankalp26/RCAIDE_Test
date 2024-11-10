@@ -14,7 +14,6 @@ from RCAIDE.Framework.Core import Units
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor             import design_propeller 
 from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor          import design_motor 
 from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion import compute_motor_weight
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common         import initialize_from_circuit_configuration
 from RCAIDE.Library.Methods.Geometry.Planform                       import wing_segmented_planform 
 
 # python imports 
@@ -344,27 +343,21 @@ def vehicle_setup():
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Bus
     #------------------------------------------------------------------------------------------------------------------------------------  
-    bus                              = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus() 
+    bus                              = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus()
+    bus.number_of_battery_modules    = 8
 
     #------------------------------------------------------------------------------------------------------------------------------------           
     # Battery
     #------------------------------------------------------------------------------------------------------------------------------------  
-    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC()
-    number_of_modules                                      = 8 
+    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC() 
     bat.tag                                                = 'li_ion_battery'
     bat.electrical_configuration.series                    = 16   
     bat.electrical_configuration.parallel                  = 40
-    initialize_from_circuit_configuration(bat)  
-   
-    bat.geometrtic_configuration.total                      = bat.electrical_configuration.total
-    bat.voltage                                             = bat.maximum_voltage 
     bat.geometrtic_configuration.normal_count               = 20
     bat.geometrtic_configuration.parallel_count             = 32
      
-    for _ in range(number_of_modules):
-        bus.battery_modules.append(deepcopy(bat))    
-    
-    bus.battery_module_electric_configuration = 'Series' 
+    for _ in range(bus.number_of_battery_modules):
+        bus.battery_modules.append(deepcopy(bat))      
     bus.initialize_bus_electrical_properties()      
     #------------------------------------------------------------------------------------------------------------------------------------  
     #  Starboard Propulsor
@@ -415,7 +408,7 @@ def vehicle_setup():
     motor.design_torque                              = propeller.cruise.design_torque
     motor.angular_velocity                           = propeller.cruise.design_angular_velocity 
     design_motor(motor)  
-    motor.mass_properties.mass                       = compute_motor_weight(motor.design_torque) 
+    motor.mass_properties.mass                       = compute_motor_weight(motor) 
     starboard_propulsor.motor                        = motor 
  
 

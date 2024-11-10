@@ -45,7 +45,7 @@ class Cross_Flow_Heat_Exchanger(Component):
         self.coolant                                                = Glycol_Water() 
         self.air                                                    = Air() 
         self.design_heat_removed                                    = 0.0
-        self.minimum_air_speed                                      = 108 * Units.knots 
+        self.minimum_air_speed                                      = 105 * Units.knots 
         
         # heat exchanger: thermophysical properties                        
         self.heat_exchanger_efficiency                              = 0.8381

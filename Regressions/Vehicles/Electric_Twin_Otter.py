@@ -12,7 +12,6 @@ from RCAIDE.Framework.Core                                                      
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor                                   import design_propeller 
 from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor                                import design_motor 
 from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion                       import compute_motor_weight
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common                               import initialize_from_circuit_configuration
 from RCAIDE.Library.Methods.Geometry.Planform                                             import wing_segmented_planform
 from RCAIDE.Library.Methods.Thermal_Management.Heat_Exchangers.Cross_Flow_Heat_Exchanger  import design_cross_flow_heat_exchanger
 from RCAIDE.Library.Methods.Thermal_Management.Batteries.Liquid_Cooled_Wavy_Channel       import design_wavy_channel
@@ -444,13 +443,9 @@ def vehicle_setup(cell_chemistry, btms_type):
         bat_module                                             = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC()
         bat_module.electrical_configuration.series             = 10
         bat_module.electrical_configuration.parallel           = 210
-        bat_module.cell.nominal_capacity                       = 3.8
-        initialize_from_circuit_configuration(bat_module,module_weight_factor = 1.25)  
-        bat_module.geometrtic_configuration.total              = bat_module.electrical_configuration.parallel*bat_module.electrical_configuration.series  
-        bat_module.voltage                                     = bat_module.maximum_voltage 
+        bat_module.cell.nominal_capacity                       = 3.8 
         bat_module.geometrtic_configuration.normal_count       = 42
         bat_module.geometrtic_configuration.parallel_count     = 50
-        bat_module.nominal_capacity                            = bat_module.cell.nominal_capacity* bat_module.electrical_configuration.parallel
     
         for _ in range(12):
             bat_copy = deepcopy(bat_module)
@@ -466,10 +461,7 @@ def vehicle_setup(cell_chemistry, btms_type):
             bat_module                                             = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_LFP()
             bat_module.electrical_configuration.series             = 10
             bat_module.electrical_configuration.parallel           = 210
-            bat_module.cell.nominal_capacity                       = 3.8
-            initialize_from_circuit_configuration(bat_module,module_weight_factor = 1.25)  
-            bat_module.geometrtic_configuration.total              = bat_module.electrical_configuration.parallel*bat_module.electrical_configuration.series  
-            bat_module.voltage                                     = bat_module.maximum_voltage 
+            bat_module.cell.nominal_capacity                       = 3.8 
             bat_module.geometrtic_configuration.normal_count       = 42
             bat_module.geometrtic_configuration.parallel_count     = 50
             bat_module.nominal_capacity                            = bat_module.cell.nominal_capacity* bat_module.electrical_configuration.parallel
@@ -576,7 +568,7 @@ def vehicle_setup(cell_chemistry, btms_type):
     motor.design_torque                              = propeller.cruise.design_torque 
     motor.angular_velocity                           = propeller.cruise.design_angular_velocity # Horse power of gas engine variant  750 * Units['hp']
     design_motor(motor)  
-    motor.mass_properties.mass                       = compute_motor_weight(motor.design_torque) 
+    motor.mass_properties.mass                       = compute_motor_weight(motor) 
     starboard_propulsor.motor                        = motor 
  
     # append propulsor to distribution line 

@@ -54,7 +54,7 @@ def plot_cross_flow_heat_exchanger_conditions(cross_flow_hex, results, coolant_l
     line_colors   = cm.inferno(np.linspace(0,0.9,len(results.segments)))     
 
     fig_1 = plt.figure(save_filename + '_Effectiveness' )
-    fig_2 = plt.figure(save_filename + '_Inlet_Air_Temp' )
+    fig_2 = plt.figure(save_filename + '_outlet_coolant_temperature' )
     fig_3 = plt.figure(save_filename + '_Coolant_Flowrate' )
     fig_4 = plt.figure(save_filename + '_Air_Flowrate' )
     fig_5 = plt.figure(save_filename + '_Power' )
@@ -81,39 +81,39 @@ def plot_cross_flow_heat_exchanger_conditions(cross_flow_hex, results, coolant_l
         effectiveness_HEX          = cross_flow_hex_conditions.effectiveness_HEX[:,0]   
         power                      = cross_flow_hex_conditions.power[:,0]                       
         inlet_air_pressure         = cross_flow_hex_conditions.air_inlet_pressure[:,0]          
-        inlet_air_temperature      = cross_flow_hex_conditions.inlet_air_temperature[:,0]          
+        outlet_coolant_temperature = cross_flow_hex_conditions.outlet_coolant_temperature[:,0]          
         air_mass_flow_rate         = cross_flow_hex_conditions.air_mass_flow_rate[:,0]     
                             
 
         segment_tag  = results.segments[i].tag
         segment_name = segment_tag.replace('_', ' ') 
  
-        axis_1.plot(time, effectiveness_HEX, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name) 
+        axis_1.plot(time, effectiveness_HEX, color = line_colors[i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name) 
         axis_1.set_ylabel(r'Effectiveness') 
         axis_1.set_xlabel(r'Time (mins)')
         set_axes(axis_1)      
 
-        axis_2.plot(time,  inlet_air_temperature, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
-        axis_2.set_ylabel(r'Air Temp. (K)') 
+        axis_2.plot(time,  outlet_coolant_temperature, color = line_colors[i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
+        axis_2.set_ylabel(r'outlet_coolant_temperature . (K)') 
         axis_2.set_xlabel(r'Time (mins)')
         set_axes(axis_2)    
         
-        axis_3.plot(time, coolant_mass_flow_rate, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
+        axis_3.plot(time, coolant_mass_flow_rate, color = line_colors[i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
         axis_3.set_ylabel(r'Coolant $\dot{m}$ (kg/s)')
         axis_3.set_xlabel(r'Time (mins)')
         set_axes(axis_3) 
 
-        axis_4.plot(time, air_mass_flow_rate, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
+        axis_4.plot(time, air_mass_flow_rate, color = line_colors[i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
         axis_4.set_ylabel(r'Air $\dot{m}$ (kg/s)')
         axis_4.set_xlabel(r'Time (mins)')
         set_axes(axis_4)                               
  
-        axis_5.plot(time, power/1000, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
+        axis_5.plot(time, power/1000, color = line_colors[i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
         axis_5.set_ylabel(r'Power (KW)')
         axis_5.set_xlabel(r'Time (mins)')
         set_axes(axis_5)    
 
-        axis_6.plot(time, inlet_air_pressure/10e6 , color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
+        axis_6.plot(time, inlet_air_pressure/10e6 , color = line_colors[i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
         axis_6.set_ylabel(r'Air Pres. (MPa)')
         axis_6.set_xlabel(r'Time (mins)')
         set_axes(axis_6) 
@@ -122,12 +122,12 @@ def plot_cross_flow_heat_exchanger_conditions(cross_flow_hex, results, coolant_l
         b_i += 1 
             
     if show_legend:     
-        leg_1 =  fig_1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
-        leg_2 =  fig_2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
-        leg_3 =  fig_3.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
-        leg_4 =  fig_4.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
-        leg_5 =  fig_5.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
-        leg_6 =  fig_6.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 5) 
+        leg_1 =  fig_1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 4) 
+        leg_2 =  fig_2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 4) 
+        leg_3 =  fig_3.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 4) 
+        leg_4 =  fig_4.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 4) 
+        leg_5 =  fig_5.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 4) 
+        leg_6 =  fig_6.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 4) 
         leg_1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'}) 
         leg_2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'}) 
         leg_3.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'}) 

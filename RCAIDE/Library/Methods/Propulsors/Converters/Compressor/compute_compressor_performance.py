@@ -55,6 +55,7 @@ def compute_compressor_performance(compressor,compressor_conditions,conditions):
     # Compute the working fluid properties 
     gamma  = working_fluid.compute_gamma(T0,P0) 
     Cp     = working_fluid.compute_cp(T0,P0)    
+    R      = working_fluid.compute_R(T0,P0)
         
     # Compute the output properties based on the pressure ratio of the component
     ht_in     = Tt_in*Cp 
@@ -75,6 +76,9 @@ def compute_compressor_performance(compressor,compressor_conditions,conditions):
     compressor_conditions.outputs.static_temperature      = T_out
     compressor_conditions.outputs.static_pressure         = P_out 
     compressor_conditions.outputs.mach_number             = M_out
+    compressor_conditions.outputs.gas_constant            = R
+    compressor_conditions.outputs.gamma                   = gamma 
+    compressor_conditions.outputs.cp                      = Cp   
     
     return 
 

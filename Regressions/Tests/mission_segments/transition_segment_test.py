@@ -17,9 +17,10 @@ from RCAIDE.Library.Methods.Performance.estimate_stall_speed    import estimate_
 import numpy as np  
 import sys
 import matplotlib.pyplot as plt    
+import os
 
 # local imports 
-sys.path.append('../../Vehicles')
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 from Tiltwing_EVTOL         import vehicle_setup as  TW_vehicle_setup 
 from Tiltwing_EVTOL         import configs_setup as  TW_configs_setup 
 from Stopped_Rotor_EVTOL    import vehicle_setup as  SR_vehicle_setup 
@@ -30,18 +31,18 @@ from Stopped_Rotor_EVTOL    import configs_setup as  SR_configs_setup
 # ----------------------------------------------------------------------
 def main(): 
     # make true only when resizing aircraft. should be left false for regression
-    new_regression = False 
-    
+    update_regression_values = False
+     
     # TEST 1
-    tiltwing_transition_test(new_regression)
+    tiltwing_transition_test(update_regression_values)
     
     # TEST 2
-    stopped_rotor_transition_test(new_regression)
+    stopped_rotor_transition_test(update_regression_values)
     
     return 
 
-def tiltwing_transition_test(new_regression):    
-    TW_vehicle  = TW_vehicle_setup(new_regression)  
+def tiltwing_transition_test(update_regression_values):    
+    TW_vehicle  = TW_vehicle_setup(update_regression_values)  
         
     # Set up configs
     TW_configs  = TW_configs_setup(TW_vehicle)
@@ -85,8 +86,8 @@ def tiltwing_transition_test(new_regression):
         assert(np.abs(v)<1e-1)   # lower tolerance due to lose bounds on prop-rotor blade design 
     return
 
-def stopped_rotor_transition_test(new_regression):
-    SR_vehicle  = SR_vehicle_setup(new_regression)
+def stopped_rotor_transition_test(update_regression_values):
+    SR_vehicle  = SR_vehicle_setup(update_regression_values)
     
     # Set up configs
     SR_configs  = SR_configs_setup(SR_vehicle)

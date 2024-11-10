@@ -47,7 +47,8 @@ def compute_turbine_performance(turbine,turbine_conditions,conditions):
     P0              = turbine_conditions.inputs.static_pressure  
     M0              = turbine_conditions.inputs.mach_number   
     gamma           = working_fluid.compute_gamma(T0,P0) 
-    Cp              = working_fluid.compute_cp(T0,P0)
+    Cp              = working_fluid.compute_cp(T0,P0) 
+    R               = working_fluid.compute_R(T0,P0)    
     
     #Unpack turbine entering properties 
     eta_mech        = turbine.mechanical_efficiency
@@ -67,6 +68,8 @@ def compute_turbine_performance(turbine,turbine_conditions,conditions):
     Tt_out    = Tt_in+deltah_ht/Cp
     ht_out    = Cp*Tt_out   
     Pt_out    = Pt_in*(Tt_out/Tt_in)**(gamma/((gamma-1)*etapolt)) 
+    pi_t      = Pt_out/Pt_in
+    tau_t     = Tt_out/Tt_in
     T_out     = Tt_out/(1.+(gamma-1.)/2.*M0*M0)
     P_out     = Pt_out/((1.+(gamma-1.)/2.*M0*M0)**(gamma/(gamma-1.)))         
     
@@ -76,6 +79,11 @@ def compute_turbine_performance(turbine,turbine_conditions,conditions):
     turbine_conditions.outputs.stagnation_enthalpy     = ht_out
     turbine_conditions.outputs.static_temperature      = T_out
     turbine_conditions.outputs.static_pressure         = P_out 
-    turbine_conditions.outputs.mach_number             = M0     
+    turbine_conditions.outputs.mach_number             = M0 
+    turbine_conditions.outputs.gas_constant            = R 
+    turbine_conditions.outputs.pressure_ratio          = pi_t   
+    turbine_conditions.outputs.temperature_ratio       = tau_t     
+    turbine_conditions.outputs.gamma                   = gamma 
+    turbine_conditions.outputs.cp                      = Cp    
     
     return

@@ -79,7 +79,7 @@ def plot_battery_degradation(results,
         busses  = network.busses
         for bus in busses: 
             for b_i, battery in enumerate(bus.battery_modules):
-                if b_i == 0 or bus.identical_batteries == False: 
+                if b_i == 0 or bus.identical_battery_modules == False: 
                     for i in range(len(results.segments)): 
                         num_segs          = len(results.segments)
                         time_hrs          = np.zeros(num_segs)  
