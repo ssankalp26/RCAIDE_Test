@@ -179,13 +179,13 @@ def compute_operating_empty_weight(vehicle,settings=None):
     output.empty.systems.electrical             = systems_weights.W_electrical
     output.empty.systems.avionics               = systems_weights.W_avionics
     output.empty.systems.hydraulics             = systems_weights.W_hyd_pnu
-    output.empty.systems.furnish                = systems_weights.W_furnish
+    output.empty.systems.furnishings            = systems_weights.W_furnish
     output.empty.systems.air_conditioner        = systems_weights.W_ac
     output.empty.systems.instruments            = systems_weights.W_instruments
     output.empty.systems.anti_ice               = 0
     output.empty.systems.total                  = output.empty.systems.control_systems + output.empty.systems.apu \
                                                             + output.empty.systems.electrical + output.empty.systems.avionics \
-                                                             + output.empty.systems.hydraulics + output.empty.systems.furnish \
+                                                             + output.empty.systems.hydraulics + output.empty.systems.furnishings \
                                                              + output.empty.systems.air_conditioner + output.empty.systems.instruments \
                                                              + output.empty.systems.anti_ice
           
@@ -239,7 +239,7 @@ def compute_operating_empty_weight(vehicle,settings=None):
          
     control_systems.mass_properties.mass             = output.empty.systems.control_systems
     electrical_systems.mass_properties.mass          = output.empty.systems.electrical
-    furnishings.mass_properties.mass                 = output.empty.systems.furnish
+    furnishings.mass_properties.mass                 = output.empty.systems.furnishings
     avionics.mass_properties.mass                    = output.empty.systems.avionics \
                                                      + output.empty.systems.instruments
     air_conditioner.mass_properties.mass             = output.empty.systems.air_conditioner 

@@ -410,12 +410,12 @@ def compute_operating_empty_weight(vehicle, settings=None, method_type='RCAIDE')
     output.empty.systems.electrical             = W_systems.W_electrical
     output.empty.systems.avionics               = W_systems.W_avionics
     output.empty.systems.hydraulics             = W_systems.W_hyd_pnu
-    output.empty.systems.furnish                = W_systems.W_furnish
+    output.empty.systems.furnishings            = W_systems.W_furnish
     output.empty.systems.air_conditioner        = W_systems.W_ac + W_systems.W_anti_ice # Anti-ice is sometimes included in ECS
     output.empty.systems.instruments            = W_systems.W_instruments
     output.empty.systems.total                  = output.empty.systems.control_systems + output.empty.systems.apu \
                                                     + output.empty.systems.electrical + output.empty.systems.avionics \
-                                                    + output.empty.systems.hydraulics + output.empty.systems.furnish \
+                                                    + output.empty.systems.hydraulics + output.empty.systems.furnishings \
                                                     + output.empty.systems.air_conditioner + output.empty.systems.instruments
  
     output.payload    = payload 
@@ -451,7 +451,7 @@ def compute_operating_empty_weight(vehicle, settings=None, method_type='RCAIDE')
     electrical_systems.mass_properties.mass = output.empty.systems.electrical
     furnishings                             = RCAIDE.Library.Components.Component()
     furnishings.tag                         = 'furnishings'
-    furnishings.mass_properties.mass        = output.empty.systems.furnish
+    furnishings.mass_properties.mass        = output.empty.systems.furnishings
     air_conditioner                         = RCAIDE.Library.Components.Component() 
     air_conditioner.tag                     = 'air_conditioner'
     air_conditioner.mass_properties.mass    = output.empty.systems.air_conditioner

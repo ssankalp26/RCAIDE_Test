@@ -57,16 +57,13 @@ def Transport_Aircraft_Test():
         check_list = [
             'payload.total',        
             'payload.passengers',             
-            'payload.baggage',                                   
-            'empty.structural.wing',            
+            'payload.baggage',                    
             'empty.structural.fuselage',        
             'empty.propulsion.total',      
-            'empty.structural.nose_landing_gear',    
-            'empty.structural.main_landing_gear',                   
+            'empty.structural.landing_gear',                    
             'empty.systems.total',         
             'empty.systems.furnish',      
-            'empty.structural.horizontal_tail', 
-            'empty.structural.vertical_tail',
+            'empty.structural.wings',  
             'empty.total',  
         ]
     
