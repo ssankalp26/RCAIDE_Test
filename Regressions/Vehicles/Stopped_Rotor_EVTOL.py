@@ -9,8 +9,7 @@
 # ---------------------------------------------------------------------
 import RCAIDE
 from RCAIDE.Framework.Core import Units 
-from RCAIDE.Library.Methods.Geometry.Planform                                  import segment_properties,wing_segmented_planform    
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common                    import initialize_from_circuit_configuration 
+from RCAIDE.Library.Methods.Geometry.Planform                                  import segment_properties,wing_segmented_planform 
 from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion            import compute_motor_weight
 from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor                     import design_motor
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor                        import design_propeller ,design_lift_rotor 
@@ -383,23 +382,19 @@ def vehicle_setup(new_regression=True) :
     #====================================================================================================================================  
     cruise_bus                                             = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus() 
     cruise_bus.tag                                         = 'cruise_bus'
+    cruise_bus.number_of_battery_modules                   = 1
      
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Bus Battery
     #------------------------------------------------------------------------------------------------------------------------------------ 
-    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC()
-    number_of_modules                                      = 1
+    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC() 
     bat.tag                                                = 'cruise_bus_battery'
-    bat.electrical_configuration.series                     = 140  
-    bat.electrical_configuration.parallel                   = 60
-    initialize_from_circuit_configuration(bat)  
-   
-    bat.geometrtic_configuration.total                      = bat.electrical_configuration.total
-    bat.voltage                                             = bat.maximum_voltage 
-    bat.geometrtic_configuration.normal_count               = 25
-    bat.geometrtic_configuration.parallel_count             = 40 
+    bat.electrical_configuration.series                    = 140  
+    bat.electrical_configuration.parallel                  = 60 
+    bat.geometrtic_configuration.normal_count              = 25
+    bat.geometrtic_configuration.parallel_count            = 40 
      
-    for _ in range(number_of_modules):
+    for _ in range(cruise_bus.number_of_battery_modules):
         cruise_bus.battery_modules.append(deepcopy(bat))       
     
     cruise_bus.initialize_bus_electrical_properties()
@@ -466,7 +461,7 @@ def vehicle_setup(new_regression=True) :
     propeller_motor.design_torque                          = propeller.cruise.design_torque
     propeller_motor.angular_velocity                       = propeller.cruise.design_angular_velocity/propeller_motor.gear_ratio  
     design_motor(propeller_motor)  
-    propeller_motor.mass_properties.mass                   = compute_motor_weight(propeller_motor.design_torque)  
+    propeller_motor.mass_properties.mass                   = compute_motor_weight(propeller_motor)  
     cruise_propulsor_1.motor                               = propeller_motor 
       
     # rear propeller nacelle 
@@ -577,23 +572,20 @@ def vehicle_setup(new_regression=True) :
     # Lift Bus 
     #====================================================================================================================================          
     lift_bus                                               = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus()
-    lift_bus.tag                                           = 'lift_bus' 
+    lift_bus.tag                                           = 'lift_bus'
+    lift_bus.number_of_battery_modules                     = 1
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Bus Battery
     #------------------------------------------------------------------------------------------------------------------------------------ 
-    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC()
-    number_of_modules                                      = 1 
+    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC() 
     bat.tag                                                = 'lift_bus_battery'
     bat.electrical_configuration.series                    = 140   
-    bat.electrical_configuration.parallel                  = 20
-    initialize_from_circuit_configuration(bat)  
-    bat.geometrtic_configuration.total                      = bat.electrical_configuration.total
-    bat.voltage                                             = bat.maximum_voltage 
-    bat.geometrtic_configuration.normal_count               = 25
-    bat.geometrtic_configuration.parallel_count             = 40 
+    bat.electrical_configuration.parallel                  = 20 
+    bat.geometrtic_configuration.normal_count              = 25
+    bat.geometrtic_configuration.parallel_count            = 40 
 
-    for _ in range(number_of_modules):
+    for _ in range(lift_bus.number_of_battery_modules):
         lift_bus.battery_modules.append(deepcopy(bat))
         
     lift_bus.initialize_bus_electrical_properties()
@@ -672,7 +664,7 @@ def vehicle_setup(new_regression=True) :
     lift_rotor_motor.design_torque                         = lift_rotor.hover.design_torque
     lift_rotor_motor.angular_velocity                      = lift_rotor.hover.design_angular_velocity/lift_rotor_motor.gear_ratio  
     design_motor(lift_rotor_motor)
-    lift_rotor_motor.mass_properties.mass                  = compute_motor_weight(lift_rotor_motor.design_torque)     
+    lift_rotor_motor.mass_properties.mass                  = compute_motor_weight(lift_rotor_motor)     
     lift_propulsor_1.motor                                 = lift_rotor_motor
     
 

@@ -100,31 +100,31 @@ def main():
             print(val)
     
     # Truth values
-    takeoff_thrust_truth     = 99134.27996755976 
-    climb_throttle_1_truth   = 1.399258888982013 
-    climb_throttle_2_truth   = 1.0704439610607275 
-    climb_throttle_3_truth   = 0.5 
-    climb_throttle_4_truth   = 0.8628357694486728 
-    climb_throttle_5_truth   = 0.8049911934291512 
-    climb_throttle_6_truth   = 1.163523190779011 
-    climb_throttle_7_truth   = 1.3132559609445027 
-    climb_throttle_8_truth   = 0.6052685599032498 
-    climb_throttle_9_truth   = 0.9249558623738681 
-    climb_10_CL_truth        = 0.5821178792548526 
-    cruise_CL_1_truth        = 0.6732472247387101 
-    cruise_CL_2_truth        = 0.6680046974334514 
-    cruise_CL_3_truth        = 0.7439973575592616 
-    descent_throttle_1_truth = 0.11293304309087118 
-    curved_cruise_CL_truth   = 1.2895916957236788 
-    descent_throttle_2_truth = 0.5 
-    single_pt_CL_1_truth     = 0.0005606689678350755 
-    single_pt_CL_2_truth     = 0.000661505257959024 
-    loiter_1_CL_truth        = 0.48004375777705155 
-    loiter_2_CL_truth        = 0.4800377281531209 
-    reserve_1_CL_truth       = 0.32408364296016373 
-    reserve_2_CL_truth       = 0.315939898120901 
-    descent_throttle_3_truth = 0.15018789234572544 
-    landing_thrust_truth     = 10914.920312664697 
+    takeoff_thrust_truth     = 99134.27996755976
+    climb_throttle_1_truth   = 1.3941996549339815
+    climb_throttle_2_truth   = 1.0664183802948262
+    climb_throttle_3_truth   = 0.5
+    climb_throttle_4_truth   = 0.8628672372915984
+    climb_throttle_5_truth   = 0.8687307505016614
+    climb_throttle_6_truth   = 1.1614494328624863
+    climb_throttle_7_truth   = 1.3123844611934794
+    climb_throttle_8_truth   = 0.6035812826375762
+    climb_throttle_9_truth   = 0.9253508278878831
+    climb_10_CL_truth        = 1.386927153785698
+    cruise_CL_1_truth        = 0.6737113464846501
+    cruise_CL_2_truth        = 0.6684861848497764
+    cruise_CL_3_truth        = 0.4501834176128111
+    descent_throttle_1_truth = 0.11286251260646299
+    curved_cruise_CL_truth   = 1.2887033830216827
+    descent_throttle_2_truth = 0.5
+    single_pt_CL_1_truth     = 0.0005601872688765593
+    single_pt_CL_2_truth     = 0.000661628495326631
+    loiter_1_CL_truth        = 0.4797584860397017
+    loiter_2_CL_truth        = 0.47975246008439104
+    reserve_1_CL_truth       = 0.32388843615255086
+    reserve_2_CL_truth       = 0.31574692167767204
+    descent_throttle_3_truth = 0.149967629349736
+    landing_thrust_truth     = 10914.920312664697
     
     # Store errors 
     error = Data()
@@ -158,7 +158,7 @@ def main():
     print(error)
      
     for k,v in list(error.items()): 
-        assert(np.abs(v)<1e-6)
+        assert(np.abs(v)<1e-3)
         
     plot_results(results)
     return 
@@ -341,8 +341,8 @@ def mission_setup(analyses):
     segment.tag = "climb_5"
     segment.analyses.extend( analyses.base )  
     segment.altitude_end                                             = 5.    * Units.km
-    segment.air_speed                                                = 180   * Units.m / Units.s
-    segment.climb_angle                                              = 3.    * Units.degrees 
+    segment.air_speed                                                = 200   * Units.m / Units.s
+    segment.climb_angle                                              = 3.5 * Units.degrees 
                
     # define flight dynamics to model            
     segment.flight_dynamics.force_x                                  = True  

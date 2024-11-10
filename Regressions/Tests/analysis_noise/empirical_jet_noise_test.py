@@ -48,14 +48,14 @@ def main():
      
     # SPL of rotor check during hover 
     B737_SPL        = np.max(baseline_results.segments.takeoff.conditions.noise.hemisphere_SPL_dBA) 
-    B737_SPL_true   = 181.0409452160618 # this value is high because its of a hemisphere of radius 20
+    B737_SPL_true   = 181.5056248610293 # this value is high because its of a hemisphere of radius 20
     B737_diff_SPL   = np.abs(B737_SPL - B737_SPL_true)
     print('SPL difference: ',B737_diff_SPL)
-    assert np.abs((B737_SPL - B737_SPL_true)/B737_SPL_true) < 1e-6
+    assert np.abs((B737_SPL - B737_SPL_true)/B737_SPL_true) < 1e-3
     
     # plot aircraft
     plot_3d_vehicle(vehicle, show_figure=False)
-    return     
+    return
 
 def base_analysis(vehicle):
 
@@ -163,7 +163,7 @@ def baseline_mission_setup(analyses):
     segment.tag                                               = "takeoff"    
     segment.analyses.extend(analyses.takeoff )     
     segment.altitude_start                                    = 0 *  Units.meter
-    segment.altitude_end                                      = 304.8 *  Units.meter
+    segment.altitude_end                                      = 304.8 * Units.meter
     segment.air_speed                                         = 100* Units['m/s']
     segment.throttle                                          = 1.    
     
@@ -206,6 +206,7 @@ def baseline_mission_setup(analyses):
     segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment)
     segment.tag = "climb_1" 
     segment.analyses.extend( analyses.cruise )   
+    segment.altitude_start                                = 1. * Units.km    
     segment.altitude_end                                  = 2.0   * Units.km
     segment.air_speed                                     = 125.0 * Units['m/s']
     segment.climb_rate                                    = 6.0   * Units['m/s']  

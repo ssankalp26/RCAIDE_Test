@@ -1,15 +1,20 @@
-## @ingroup Library-Methods-Geometry-Planform
-# populate_control_sections 
-# 
- 
-# ----------------------------------------------------------------------
-#  Append Control Surfaces to Wing Segments
-# ----------------------------------------------------------------------   
-import numpy as np 
+# RCAIDE/Library/Methods/Geometry/Planform/populate_control_sections.py
+#  
+# Created: Oct 2024, M. Clarke
 
-# ----------------------------------------------------------------------
-#  Methods
-# ----------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------
+#  IMPORT
+# ----------------------------------------------------------------------------------------------------------------------
+
+# RCAIDE imports   
+from RCAIDE.Framework.Core import  Container 
+
+# package imports
+import numpy   as np  
+
+# ----------------------------------------------------------------------------------------------------------------------
+#  populate_control_sections
+# ---------------------------------------------------------------------------------------------------------------------- 
 def populate_control_sections(wing):
     """This function takes the control surfaces defined on a wing and appends them to wing segments
     Conditional statements are used to determine where the control surface bounds are in relation 
@@ -27,7 +32,10 @@ def populate_control_sections(wing):
     N/A
     """
     w_cs  = wing.control_surfaces  
-    w_seg = wing.Segments
+    w_seg = wing.Segments 
+
+    for i , seg in enumerate(w_seg):
+        seg.control_surfaces = Container()
     
     # loop throught the control surfaces on the wing 
     for cs in w_cs :
@@ -36,50 +44,52 @@ def populate_control_sections(wing):
         sf[1] = cs.span_fraction_end
         
         # loop though the segments on the wing
-        for i , seg in enumerate(w_seg): 
+        for i , seg in enumerate(w_seg):
             append_CS = False
             s_sf = np.zeros(2) 
             if i == 0: # the first segment (root) cannot have any control surfaces 
                 pass
             else: # the following block determines where the bounds of the control surface are in relation to the segment breaks
-                # Case 1 
-                if (sf[0] < w_seg[i-1].percent_span_location) and (sf[1] < w_seg[i].percent_span_location) and (sf[1] > w_seg[i-1].percent_span_location) :
-                    s_sf = np.array([w_seg[i-1].percent_span_location,sf[1]])   
+                # Case 1
+                prev_seg    =  list(w_seg.keys())[i-1]
+                current_seg =  list(w_seg.keys())[i]
+                if (sf[0] < w_seg[prev_seg].percent_span_location) and (sf[1] < w_seg[current_seg].percent_span_location) and (sf[1] > w_seg[prev_seg].percent_span_location) :
+                    s_sf = np.array([w_seg[prev_seg].percent_span_location,sf[1]])   
                     append_CS = True 
                 
                 # Case 2
-                elif (sf[0] < w_seg[i-1].percent_span_location) and (sf[1] == w_seg[i].percent_span_location):
-                    s_sf = np.array([w_seg[i-1].percent_span_location,w_seg[i].percent_span_location])       
+                elif (sf[0] < w_seg[prev_seg].percent_span_location) and (sf[1] == w_seg[current_seg].percent_span_location):
+                    s_sf = np.array([w_seg[prev_seg].percent_span_location,w_seg[current_seg].percent_span_location])       
                     append_CS = True 
                     
                 # Case 3   
-                elif (sf[0] < w_seg[i-1].percent_span_location) and (sf[1] > w_seg[i].percent_span_location):
-                    s_sf = np.array([w_seg[i-1].percent_span_location,w_seg[i].percent_span_location])       
+                elif (sf[0] < w_seg[prev_seg].percent_span_location) and (sf[1] > w_seg[current_seg].percent_span_location):
+                    s_sf = np.array([w_seg[prev_seg].percent_span_location,w_seg[current_seg].percent_span_location])       
                     append_CS = True                 
                 
                 # Case 4 
-                elif (sf[0] == w_seg[i-1].percent_span_location) and (sf[1] < w_seg[i].percent_span_location):
-                    s_sf = np.array([w_seg[i-1].percent_span_location,sf[1]])   
+                elif (sf[0] == w_seg[prev_seg].percent_span_location) and (sf[1] < w_seg[current_seg].percent_span_location):
+                    s_sf = np.array([w_seg[prev_seg].percent_span_location,sf[1]])   
                     append_CS = True 
                    
                 # Case 5 
-                elif (sf[0] == w_seg[i-1].percent_span_location) and (sf[1] == w_seg[i].percent_span_location): 
-                    s_sf = np.array([w_seg[i-1].percent_span_location,w_seg[i].percent_span_location])       
+                elif (sf[0] == w_seg[prev_seg].percent_span_location) and (sf[1] == w_seg[current_seg].percent_span_location): 
+                    s_sf = np.array([w_seg[prev_seg].percent_span_location,w_seg[current_seg].percent_span_location])       
                     append_CS = True
                     
                 # Case 6 
-                elif (sf[0] > w_seg[i-1].percent_span_location) and (sf[1] < w_seg[i].percent_span_location):
+                elif (sf[0] > w_seg[prev_seg].percent_span_location) and (sf[1] < w_seg[current_seg].percent_span_location):
                     s_sf = np.array([sf[0],sf[1]])
                     append_CS = True
                     
                 # Case 7 
-                elif (sf[0] > w_seg[i-1].percent_span_location) and (sf[1] == w_seg[i].percent_span_location) :
-                    s_sf = np.array([sf[0],w_seg[i].percent_span_location]) 
+                elif (sf[0] > w_seg[prev_seg].percent_span_location) and (sf[1] == w_seg[current_seg].percent_span_location) :
+                    s_sf = np.array([sf[0],w_seg[current_seg].percent_span_location]) 
                     append_CS = True                    
                     
                 # Case 8
-                elif (sf[0] > w_seg[i-1].percent_span_location) and (sf[1] > w_seg[i].percent_span_location) and (sf[0] < w_seg[i].percent_span_location):
-                    s_sf = np.array([sf[0],w_seg[i].percent_span_location]) 
+                elif (sf[0] > w_seg[prev_seg].percent_span_location) and (sf[1] > w_seg[current_seg].percent_span_location) and (sf[0] < w_seg[current_seg].percent_span_location):
+                    s_sf = np.array([sf[0],w_seg[current_seg].percent_span_location]) 
                     append_CS = True
                     
                 else: 
@@ -103,7 +113,7 @@ def populate_control_sections(wing):
                     if 'cs_type' in cs.keys():
                         control_surface.cs_type           = cs.cs_type
                     
-                    w_seg[i].control_surfaces.append(control_surface)        
+                    w_seg[current_seg].control_surfaces.append(control_surface)        
                 
     # returns an updated wing with control surfaces appended onto the wing segments                  
     return wing  

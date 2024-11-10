@@ -23,7 +23,7 @@ from .Ethanol            import Ethanol
 from .Liquid_Hydrogen    import Liquid_Hydrogen
 from .LH2                import LH2
 from .RP1                import RP1
-from .Butanol		 	 import Butanol
-from .Propanol			 import Propanol
+from .Butanol		 import Butanol
+from .Propanol		 import Propanol
 from .Alkane_Mixture	 import Alkane_Mixture
 from .Alcohol_Mixture	 import Alcohol_Mixture

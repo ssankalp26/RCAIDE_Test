@@ -80,7 +80,7 @@ Units.Quantity.__array_wrap__    = None
 
 # doc string
 Units.__doc__ = \
-""" SUAVE.Attributes.Units()
+""" RCAIDE.Attributes.Units()
     Unit conversion toolbox
     Works by converting values in to and out of the base unit
     
@@ -111,7 +111,7 @@ Units.__doc__ = \
       luminsoity  : candela
       
     
-    Based on the Pint package, included in SUAVE.Plugins
+    Based on the Pint package, included in RCAIDE.Plugins
     https://pint.readthedocs.org/en/latest/
     
 """
