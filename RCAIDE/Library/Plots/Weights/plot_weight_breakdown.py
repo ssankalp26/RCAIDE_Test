@@ -19,9 +19,9 @@ import pandas as pd
 # ----------------------------------------------------------------------------------------------------------------------   
 ## @ingroup Library-Plots-Weights
 def plot_weight_breakdown(vehicle,
-                            save_figure    = True,
+                            save_figure    = False,
                             show_figure    = True, 
-                            show_legend    =True,
+                            show_legend    = True,
                             SI_Units       = True,
                             save_filename  = "Weight_Breakdown",
                             aircraft_name  = None,
