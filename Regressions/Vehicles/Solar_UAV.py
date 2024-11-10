@@ -166,7 +166,7 @@ def vehicle_setup():
     bat.maximum_voltage      = 45.0
     size_module_from_mass(bat)  
     bat.voltage              = bat.maximum_voltage   
-    bus.initialize_bus_electrical_properties()
+    bus.initialize_bus_properties()
     
     #------------------------------------------------------------------------------------------------------------------------------------  
     #  Starboard Propulsor

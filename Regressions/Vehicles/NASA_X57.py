@@ -358,7 +358,7 @@ def vehicle_setup():
      
     for _ in range(bus.number_of_battery_modules):
         bus.battery_modules.append(deepcopy(bat))      
-    bus.initialize_bus_electrical_properties()      
+    bus.initialize_bus_properties()      
     #------------------------------------------------------------------------------------------------------------------------------------  
     #  Starboard Propulsor
     #------------------------------------------------------------------------------------------------------------------------------------   

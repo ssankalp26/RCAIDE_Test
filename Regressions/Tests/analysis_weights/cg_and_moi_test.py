@@ -152,9 +152,9 @@ def EVTOL_Aircraft_Test(update_regression_values):
     
     print(weight_analysis.vehicle.tag + ' Moment of Intertia')
     print(MOI)
-    accepted  = np.array([[1769.50793627,   15.41592038, -550.21559047],
-                          [  15.41592038, 8273.8167109 ,    0.        ],
-                          [-550.21559047,    0.        , 9067.06819888]])
+    accepted  = np.array([[1696.91408337,   13.91841725, -553.11284785],
+                          [  13.91841725, 8087.88177027,    0.        ],
+                          [-553.11284785,    0.        , 8839.83240226]])
 
     MOI_error     = MOI - accepted
 

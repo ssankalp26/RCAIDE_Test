@@ -1,4 +1,4 @@
-#  RCAIDE/Methods/Energy/Distributors/Electrical_Bus/initialize_bus_electrical_properties.py
+#  RCAIDE/Methods/Energy/Distributors/Electrical_Bus/initialize_bus_properties.py
 # 
 # Created: Sep 2024, S. Shekar
 #
@@ -7,7 +7,7 @@ from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common                    i
 # ----------------------------------------------------------------------------------------------------------------------
 #  METHODS
 # ---------------------------------------------------------------------------------------------------------------------- 
-def initialize_bus_electrical_properties(bus): 
+def initialize_bus_properties(bus): 
     """ Initializes the bus electrical properties based what is appended onto the bus
         
         Assumptions:

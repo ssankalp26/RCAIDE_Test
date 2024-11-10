@@ -177,7 +177,7 @@ def vehicle_setup(regression_flag):
     bat.geometrtic_configuration.normal_count              = 5
     bat.geometrtic_configuration.parallel_count            = 10
     bus.battery_modules.append(bat)      
-    bus.initialize_bus_electrical_properties()
+    bus.initialize_bus_properties()
     
     #------------------------------------------------------------------------------------------------------------------------------------  
     #  Starboard Propulsor

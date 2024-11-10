@@ -397,7 +397,7 @@ def vehicle_setup(new_regression=True) :
     for _ in range(cruise_bus.number_of_battery_modules):
         cruise_bus.battery_modules.append(deepcopy(bat))       
     
-    cruise_bus.initialize_bus_electrical_properties()
+    cruise_bus.initialize_bus_properties()
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Forward Bus Propulsors  
     #------------------------------------------------------------------------------------------------------------------------------------       
@@ -588,7 +588,7 @@ def vehicle_setup(new_regression=True) :
     for _ in range(lift_bus.number_of_battery_modules):
         lift_bus.battery_modules.append(deepcopy(bat))
         
-    lift_bus.initialize_bus_electrical_properties()
+    lift_bus.initialize_bus_properties()
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Lift Propulsors 
