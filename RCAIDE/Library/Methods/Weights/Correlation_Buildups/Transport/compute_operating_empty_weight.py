@@ -93,7 +93,7 @@ def compute_operating_empty_weight(vehicle, settings=None, method_type='RCAIDE')
                             -.total: total payload weight
 
                         -.operational_items: operational items weight
-                            -.operating_items_less_crew: unusable fuel, engine oil, passenger service weight and cargo containers
+                            -.misc: unusable fuel, engine oil, passenger service weight and cargo containers
                             -.flight_crew: flight crew weight
                             -.flight_attendants: flight attendants weight
                             -.total: total operating items weight
@@ -390,19 +390,15 @@ def compute_operating_empty_weight(vehicle, settings=None, method_type='RCAIDE')
     # Accumulate Structural Weight
     ##-------------------------------------------------------------------------------   
     output.empty.structural                       = Data()
-    output.empty.structural.wing                  = W_main_wing
-    output.empty.structural.horizontal_tail       = W_tail_horizontal
-    output.empty.structural.vertical_tail         = W_tail_vertical
+    output.empty.structural.wings                  = W_main_wing +   W_tail_horizontal +  W_tail_vertical 
     output.empty.structural.fuselage              = W_fuselage_total
-    output.empty.structural.main_landing_gear     = landing_gear.main
-    output.empty.structural.nose_landing_gear     = landing_gear.nose 
+    output.empty.structural.landing_gear          = landing_gear.main +  landing_gear.nose  
     output.empty.structural.nacelle               = W_energy_network.W_nacelle
     
     if 'FLOPS' in method_type:
         print('Paint weight is currently ignored in FLOPS calculations.')
     output.empty.structural.paint = 0  # TODO reconcile FLOPS paint calculations with Raymer and RCAIDE baseline
-    output.empty.structural.total = output.empty.structural.wing + output.empty.structural.horizontal_tail + output.empty.structural.vertical_tail \
-                              + output.empty.structural.fuselage + output.empty.structural.main_landing_gear + output.empty.structural.nose_landing_gear \
+    output.empty.structural.total = output.empty.structural.wings   + output.empty.structural.fuselage + output.empty.structural.landing_gear\
                               + output.empty.structural.paint + output.empty.structural.nacelle 
 
     ##-------------------------------------------------------------------------------                 
@@ -440,10 +436,10 @@ def compute_operating_empty_weight(vehicle, settings=None, method_type='RCAIDE')
                     
     if not hasattr(vehicle.landing_gear, 'nose'):
         vehicle.landing_gear.nose   =  RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()
-    vehicle.landing_gear.nose.mass  = output.empty.structural.nose_landing_gear
+    vehicle.landing_gear.nose.mass  =  landing_gear.nose 
     if not hasattr(vehicle.landing_gear, 'main'):
         vehicle.landing_gear.main   =  RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear()   
-    vehicle.landing_gear.main.mass  = output.empty.structural.main_landing_gear  
+    vehicle.landing_gear.main.mass  = landing_gear.main  
 
 
 
@@ -470,7 +466,7 @@ def compute_operating_empty_weight(vehicle, settings=None, method_type='RCAIDE')
     optionals                               = RCAIDE.Library.Components.Component()
     optionals.tag                           = 'optionals'
     optionals                               = RCAIDE.Library.Components.Component()
-    optionals.mass_properties.mass          = output.operational_items.operating_items_less_crew
+    optionals.mass_properties.mass          = output.operational_items.misc
     
     # assign components to vehicle
     vehicle.systems.control_systems         = control_systems

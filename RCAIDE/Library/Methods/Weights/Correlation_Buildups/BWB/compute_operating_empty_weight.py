@@ -159,12 +159,11 @@ def compute_operating_empty_weight(vehicle,settings=None):
     output.empty.structural.wing               = W_wing
     output.empty.structural.afterbody          = W_aft_centerbody
     output.empty.structural.fuselage           = W_cabin
-    output.empty.structural.main_landing_gear  = landing_gear.main
-    output.empty.structural.nose_landing_gear  = landing_gear.nose
+    output.empty.structural.landing_gear       = landing_gear.main +  landing_gear.nose 
     output.empty.structural.nacelle            = 0
     output.empty.structural.paint              = 0   
     output.empty.structural.total              = output.empty.structural.wing + output.empty.structural.afterbody \
-                                                      + output.empty.structural.fuselage + output.empty.structural.main_landing_gear + output.empty.structural.nose_landing_gear \
+                                                      + output.empty.structural.fuselage + output.empty.structural.landing_gear \
                                                       + output.empty.structural.paint + output.empty.structural.nacelle
 
     output.empty.propulsion                     = Data()
@@ -246,7 +245,7 @@ def compute_operating_empty_weight(vehicle,settings=None):
     air_conditioner.mass_properties.mass             = output.empty.systems.air_conditioner 
     apu.mass_properties.mass                         = output.empty.systems.apu
     hydraulics.mass_properties.mass                  = output.empty.systems.hydraulics
-    optionals.mass_properties.mass                   = output.operational_items.operating_items_less_crew
+    optionals.mass_properties.mass                   = output.operational_items.misc
 
     # assign components to vehicle
     vehicle.control_systems    = control_systems

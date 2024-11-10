@@ -341,16 +341,13 @@ def compute_operating_empty_weight(vehicle, settings=None):
     output                                    = Data()
     output.empty                              = Data()
     output.empty.structural                   = Data()
-    output.empty.structural.wing              = W_wing
-    output.empty.structural.horizontal_tail   = W_tail_horizontal
-    output.empty.structural.vertical_tail     = output_3.W_tail_vertical
+    output.empty.structural.wings             = W_wing +  W_tail_horizontal +  output_3.W_tail_vertical 
     output.empty.structural.fuselage          = W_fuselage
-    output.empty.structural.main_landing_gear = W_landing_gear.main
-    output.empty.structural.nose_landing_gear = W_landing_gear.nose
+    output.empty.structural.landing_gear      = W_landing_gear.main +  W_landing_gear.nose 
     output.empty.structural.nacelle           = 0
     output.empty.structural.paint             = 0  
-    output.empty.structural.total             = output.empty.structural.wing + output.empty.structural.horizontal_tail + output.empty.structural.vertical_tail \
-                                                     + output.empty.structural.fuselage + output.empty.structural.main_landing_gear + output.empty.structural.nose_landing_gear \
+    output.empty.structural.total             = output.empty.structural.wings \
+                                                     + output.empty.structural.fuselage  + output.empty.structural.landing_gear \
                                                      + output.empty.structural.paint + output.empty.structural.nacelle
           
     output.empty.propulsion                   = Data()
