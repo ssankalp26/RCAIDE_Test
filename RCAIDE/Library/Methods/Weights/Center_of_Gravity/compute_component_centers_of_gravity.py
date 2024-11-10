@@ -9,11 +9,12 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE 
-import RCAIDE
+import RCAIDE 
+from RCAIDE.Library.Methods.Weights.mass_and_intertia_functions import * 
 from RCAIDE.Library.Methods.Geometry.Planform import compute_span_location_from_chord_length
-from RCAIDE.Library.Methods.Geometry.Planform import compute_chord_length_from_span_location
+from RCAIDE.Library.Methods.Geometry.Planform import compute_chord_length_from_span_location 
 from RCAIDE.Library.Methods.Geometry.Planform import convert_sweep
-from RCAIDE.Library.Components import  Component
+from RCAIDE.Library.Components                import Component
 
 # package imports 
 import numpy as np 
@@ -142,7 +143,7 @@ def compute_component_centers_of_gravity(vehicle, nose_load = 0.06):
                 
     # unpack all components:
     try: 
-        avionics                                                   = vehicle.systems.avionics
+        avionics                                                   = vehicle.systems.avionics 
         avionics.origin[0][0]                                      = 0.4 * nose_length
         avionics.mass_properties.center_of_gravity[0][0]           = 0.0 
     except:
@@ -218,8 +219,9 @@ def compute_component_centers_of_gravity(vehicle, nose_load = 0.06):
     
 
     try:  
-        main_gear                                                  = vehicle.landing_gear.main  
-        moment_sans_main                                           = vehicle.center_of_gravity()[0][0]*(vehicle.sum_mass()-main_gear.mass_properties.mass) 
+        main_gear                                                  = vehicle.landing_gear.main
+        CG0, M0                                                    = compute_vehicle_center_of_gravity(vehicle, update_CG=False)
+        moment_sans_main                                           = CG0[0][0] * (M0-main_gear.mass_properties.mass) 
         main_gear_location                                         = moment_sans_main/(vehicle.mass_properties.takeoff-main_gear.mass_properties.mass)/(1-nose_load)
         main_gear.origin[0][0]                                     = main_gear_location
         main_gear.mass_properties.center_of_gravity                = 0.0 
@@ -244,3 +246,23 @@ def compute_component_centers_of_gravity(vehicle, nose_load = 0.06):
     
     return 
     
+# ----------------------------------------------------------------------------------------------------------------------
+#  Computer Aircraft Center of Gravity
+# ----------------------------------------------------------------------------------------------------------------------  
+## @ingroup Methods-Center_of_Gravity 
+def compute_vehicle_center_of_gravity(vehicle):  
+    
+    # compute compoment center of gravity     
+    compute_component_centers_of_gravity(vehicle)
+    
+    # compute total aircraft center of grabity 
+    total_moment = np.array([[0.0,0.0,0.0]])
+    total_mass   = 0
+
+    for key in vehicle.keys():
+        item = vehicle[key]
+        if isinstance(item,Component.Container):
+            Moment, Mass  = sum_moment(item)  
+            total_moment += Moment
+            total_mass   += Mass          
+    return CG , total_mass 

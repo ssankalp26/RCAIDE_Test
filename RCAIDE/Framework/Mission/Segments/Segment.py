@@ -1,5 +1,5 @@
 ## @ingroup Analyses-Mission-Segments
-# RCAIDE/Framework/Analyses/Mission/Segment/Segment.py
+# RCAIDE/Framework/Mission/Segment/Segment.py
 # 
 # 
 # Created:  Jul 2023, M. Clarke
@@ -230,7 +230,7 @@ class Segment(Analysis):
         self.assigned_control_variables.aileron_deflection                           = Data() 
         self.assigned_control_variables.aileron_deflection.active                    = False      
         self.assigned_control_variables.aileron_deflection.assigned_surfaces         = None 
-        self.assigned_control_variables.aileron_deflection.initial_guess_false       = None
+        self.assigned_control_variables.aileron_deflection.initial_guess_values      = None
     
         self.assigned_control_variables.thrust_vector_angle                          = Data() 
         self.assigned_control_variables.thrust_vector_angle.active                   = False        

@@ -178,7 +178,10 @@ class Results(Conditions):
         self.aerodynamics.coefficients.drag.induced.inviscid_wings             = Conditions()
         self.aerodynamics.coefficients.drag.induced.total                      = ones_1col * 0 
         self.aerodynamics.coefficients.drag.cooling                            = Conditions()
-        self.aerodynamics.coefficients.drag.cooling.total                      = ones_1col * 0 
+        self.aerodynamics.coefficients.drag.cooling.total                      = ones_1col * 0
+        
+        self.aerodynamics.coefficients.drag.induced.efficiency_factor          = ones_1col * 0 
+        self.aerodynamics.oswald_efficiency                                    = ones_1col * 0 
  
         # ----------------------------------------------------------------------------------------------------------------------
         # Control Surfaces 
@@ -288,7 +291,10 @@ class Results(Conditions):
         self.static_stability.coefficients.Z                                   = ones_1col * 0
         self.static_stability.coefficients.L                                   = ones_1col * 0
         self.static_stability.coefficients.M                                   = ones_1col * 0
-        self.static_stability.coefficients.N                                   = ones_1col * 0  
+        self.static_stability.coefficients.N                                   = ones_1col * 0 
+        self.static_stability.coefficients.roll                                = ones_1col * 0
+        self.static_stability.coefficients.pitch                               = ones_1col * 0
+        self.static_stability.coefficients.yaw                                 = ones_1col * 0  
                                                                                
         self.static_stability.derivatives                                      = Conditions()
                                                                                
@@ -374,8 +380,9 @@ class Results(Conditions):
         self.static_stability.derivatives.CM_w                                 = ones_1col * 0
         self.static_stability.derivatives.CN_u                                 = ones_1col * 0
         self.static_stability.derivatives.CN_v                                 = ones_1col * 0
-        self.static_stability.derivatives.CN_w                                 = ones_1col * 0
-        
+        self.static_stability.derivatives.CN_w                                 = ones_1col * 0 
+        self.static_stability.derivatives.CZ_alpha_dot                         = ones_1col * 0
+        self.static_stability.derivatives.CM_alpha_dot                         = ones_1col * 0 
         self.static_stability.derivatives.Clift_p                              = ones_1col * 0
         self.static_stability.derivatives.Clift_q                              = ones_1col * 0
         self.static_stability.derivatives.Clift_r                              = ones_1col * 0

@@ -234,7 +234,7 @@ def vehicle_setup():
     engine.sea_level_power                     = 180. * Units.horsepower
     engine.flat_rate_altitude                  = 0.0
     engine.rated_speed                         = 2700. * Units.rpm
-    engine.power_specific_fuel_consumption     = 0.52 
+    engine.power_specific_fuel_consumption     = 0.52 * Units['lb/hp/hr']
     ice_prop.engine                            = engine 
      
     # Propeller 

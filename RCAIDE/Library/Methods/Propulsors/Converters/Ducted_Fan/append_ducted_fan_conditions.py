@@ -23,9 +23,5 @@ def append_ducted_fan_conditions(ducted_fan,segment,energy_conditions):
     energy_conditions[ducted_fan.tag].tip_mach                      = 0. * ones_row(1)
     energy_conditions[ducted_fan.tag].efficiency                    = 0. * ones_row(1)
     energy_conditions[ducted_fan.tag].figure_of_merit               = 0. * ones_row(1)
-    energy_conditions[ducted_fan.tag].power_coefficient             = 0. * ones_row(1)
-    
-    ducted_fan.fan.append_fan_conditions(segment,energy_conditions[ducted_fan.tag])
-    ducted_fan.ram.append_ram_conditions(segment,energy_conditions[ducted_fan.tag])
-    ducted_fan.inlet_nozzle.append_ram_conditions(segment,energy_conditions[ducted_fan.tag])
+    energy_conditions[ducted_fan.tag].power_coefficient             = 0. * ones_row(1)  
     return 

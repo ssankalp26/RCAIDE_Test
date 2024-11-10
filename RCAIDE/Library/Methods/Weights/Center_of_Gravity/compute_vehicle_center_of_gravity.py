@@ -9,8 +9,7 @@
 
 # RCAIDE imports   
 from RCAIDE.Library.Components import Component 
-from RCAIDE.Library.Methods.Weights.mass_and_intertia_functions import *   # Updated : 
-from RCAIDE.Library.Methods.Stability.Common import * 
+from RCAIDE.Library.Methods.Weights.mass_and_intertia_functions import *  
 from .compute_component_centers_of_gravity import compute_component_centers_of_gravity
 
 # package imports 
@@ -20,7 +19,7 @@ import numpy as np
 #  Computer Aircraft Center of Gravity
 # ----------------------------------------------------------------------------------------------------------------------  
 ## @ingroup Methods-Center_of_Gravity 
-def compute_vehicle_center_of_gravity(vehicle): 
+def compute_vehicle_center_of_gravity(vehicle, update_CG=True): 
     ''' Computes the moment of intertia of aircraft 
     
     Source:
@@ -54,9 +53,12 @@ def compute_vehicle_center_of_gravity(vehicle):
             Moment, Mass  = sum_moment(item)  
             total_moment += Moment
             total_mass   += Mass         
-            
-    vehicle.mass_properties.center_of_gravity = total_moment/total_mass 
-            
-    return  
+    
+    if update_CG:
+        vehicle.mass_properties.center_of_gravity = total_moment/total_mass 
+    
+    CG =  total_moment/total_mass
+   
+    return CG, total_mass
 
 

@@ -49,13 +49,8 @@ def stability(segment):
         # dimensionalize
         F      = segment.state.ones_row(3) * 0.0
         F[:,2] = ( -CL * q * Sref )[:,0]
-        F[:,1] = ( CY * q * Sref * span )[:,0]
+        F[:,1] = ( -CY * q * Sref )[:,0]
         F[:,0] = ( -CD * q * Sref )[:,0]
-
-        # to implement when doing lateral stability
-        phi    = conditions.frames.body.inertial_rotations[:,0]
-        W      = conditions.weights.total_mass * conditions.freestream.gravity
-        F[:,1] = F[:,1] + W[:,0]*np.sin(phi) 
 
         # rewrite aerodynamic CL and CD
         conditions.aerodynamics.coefficients.lift.total  = CL
