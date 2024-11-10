@@ -45,20 +45,20 @@ def main():
     results = missions.base_mission.evaluate() 
 
     elevator_deflection        = results.segments.climb.conditions.control_surfaces.elevator.deflection[0,0] / Units.deg  
-    elevator_deflection_true   = -1.120419640303546
+    elevator_deflection_true   = -1.0513420164974345
     elevator_deflection_diff   = np.abs(elevator_deflection - elevator_deflection_true)
     print('Error: ',elevator_deflection_diff)
     assert np.abs(elevator_deflection_diff/elevator_deflection_true) < 1e-3
 
     aileron_deflection        = results.segments.climb.conditions.control_surfaces.aileron.deflection[0,0] / Units.deg  
-    aileron_deflection_true   = -0.5666381679867604
+    aileron_deflection_true   = -0.7469959227473798
     aileron_deflection_diff   = np.abs(aileron_deflection - aileron_deflection_true)
     print('Error: ',aileron_deflection_diff)
     assert np.abs(aileron_deflection_diff/aileron_deflection_true) < 1e-3
     
 
     rudder_deflection        = results.segments.climb.conditions.control_surfaces.rudder.deflection[0,0] / Units.deg  
-    rudder_deflection_true   = 2.8667861078126156
+    rudder_deflection_true   = 1.6352971113028725
     rudder_deflection_diff   = np.abs(rudder_deflection - rudder_deflection_true)
     print('Error: ',rudder_deflection_diff)
     assert np.abs(rudder_deflection_diff/rudder_deflection_true) < 1e-3    
@@ -219,8 +219,7 @@ def missions_setup(mission):
     missions.append(mission)
  
     return missions  
-
-
+ 
 
 if __name__ == '__main__': 
     main()    

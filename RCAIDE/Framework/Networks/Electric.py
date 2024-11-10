@@ -173,6 +173,7 @@ class Electric(Network):
                             # use previous battery results 
                             battery_module.reuse_stored_data(state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag)
                 bus.compute_distributor_conditions(state,t_idx, delta_t)
+                
                 # Thermal Management Calculations                    
                 for coolant_line in  coolant_lines:
                     if t_idx != state.numerics.number_of_control_points-1:

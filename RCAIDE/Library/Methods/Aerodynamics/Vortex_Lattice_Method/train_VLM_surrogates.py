@@ -139,11 +139,11 @@ def train_model(aerodynamics, Mach):
     Clift_alpha_0   =  np.tile(Clift_alpha[2][None,:],(2,1))
     Cdrag_alpha_0   =  np.tile(Cdrag_alpha[2][None,:],(2,1))
     CX_alpha_0      =  np.tile(CX_alpha[2][None,:],(2, 1)) 
-    CY_alpha_0      =  np.tile(CY_alpha[2][None,:],(2, 1)) 
+    CY_alpha_0      =  0 * np.tile(CY_alpha[2][None,:],(2, 1)) 
     CZ_alpha_0      =  np.tile(CZ_alpha[2][None,:],(2, 1)) 
-    CL_alpha_0      =  np.tile(CL_alpha[2][None,:],(2, 1)) 
+    CL_alpha_0      =  0 * np.tile(CL_alpha[2][None,:],(2, 1)) 
     CM_alpha_0      =  np.tile(CM_alpha[2][None,:],(2, 1)) 
-    CN_alpha_0      =  np.tile(CN_alpha[2][None,:],(2, 1))  
+    CN_alpha_0      =  0 * np.tile(CN_alpha[2][None,:],(2, 1))  
 
     aerodynamics.reference_values.S_ref = S_ref
     aerodynamics.reference_values.b_ref = b_ref
@@ -492,30 +492,25 @@ def train_model(aerodynamics, Mach):
                 CL_d_a         = np.zeros((len_d_a,len_Mach)) 
                 CM_d_a         = np.zeros((len_d_a,len_Mach)) 
                 CN_d_a         = np.zeros((len_d_a,len_Mach))
-                config_delta_a = deepcopy(control_surface.deflection)
-                for a_i in range(len_d_a):   
-                    Delta_a_s                                       = np.atleast_2d(np.tile(delta_a[a_i],len_Mach).T.flatten()).T 
+                
+                for a_i in range(len_d_a):    
                     Machs                                           = np.atleast_2d(np.repeat(Mach,1)).T         
                     conditions                                      = RCAIDE.Framework.Mission.Common.Results()
                     conditions.aerodynamics.angles.alpha            = np.ones_like(Machs) *1E-12
                     conditions.aerodynamics.angles.beta             = np.zeros_like(Machs) 
-                    conditions.freestream.mach_number               = Machs 
-                    conditions.control_surfaces.aileron.deflection  = np.ones_like(Machs)*Delta_a_s
-                    control_surface.deflection                      = delta_a[a_i]
+                    conditions.freestream.mach_number               = Machs    
+                    vehicle.wings[wing.tag].control_surfaces.aileron.deflection =  delta_a[a_i]
+                    Clift_res,Cdrag_res,CX_res,CY_res,CZ_res,CL_res,CM_res,CN_res ,_,_,_,_,_,_,_,_,_= call_VLM(conditions,settings,vehicle)
+                    vehicle.wings[wing.tag].control_surfaces.aileron.deflection = 0
                     
-                    Clift_res,Cdrag_res,CX_res,CY_res,CZ_res,CL_res,CM_res,CN_res ,_,_,_,_,_,_,_,_,_= call_VLM(conditions,settings,vehicle)   
-                    Clift_d_a[a_i,:] =   Clift_res[:,0]  - Clift_alpha_0[0,:]
-                    Cdrag_d_a[a_i,:] =   Cdrag_res[:,0]  - Cdrag_alpha_0[0,:]                                
-                    CX_d_a[a_i,:]    =   CX_res[:,0]   - CX_alpha_0[0,:]   
-                    CY_d_a[a_i,:]    =   CY_res[:,0]   - CY_alpha_0[0,:]  
-                    CZ_d_a[a_i,:]    =   CZ_res[:,0]   - CZ_alpha_0[0,:]  
-                    CL_d_a[a_i,:]    =   CL_res[:,0]   - CL_alpha_0[0,:]
-                    CM_d_a[a_i,:]    =   CM_res[:,0]   - CM_alpha_0[0,:]  
-                    CN_d_a[a_i,:]    =   CN_res[:,0]   - CN_alpha_0[0,:]
-                    
-                # reset deflection 
-                control_surface.deflection =  config_delta_a 
-
+                    Clift_d_a[a_i,:] =  -(Clift_res[:,0]  - Clift_alpha_0[0,:])
+                    Cdrag_d_a[a_i,:] =  -(Cdrag_res[:,0]  - Cdrag_alpha_0[0,:])                              
+                    CX_d_a[a_i,:]    =  -(CX_res[:,0]   - CX_alpha_0[0,:])   
+                    CY_d_a[a_i,:]    =  -(CY_res[:,0]   - CY_alpha_0[0,:])  
+                    CZ_d_a[a_i,:]    =  -(CZ_res[:,0]   - CZ_alpha_0[0,:])  
+                    CL_d_a[a_i,:]    =  -(CL_res[:,0]   - CL_alpha_0[0,:])
+                    CM_d_a[a_i,:]    =  -(CM_res[:,0]   - CM_alpha_0[0,:])  
+                    CN_d_a[a_i,:]    =  -(CN_res[:,0]   - CN_alpha_0[0,:])  
  
                 training.Clift_delta_a  = Clift_d_a
                 training.Cdrag_delta_a  = Cdrag_d_a 
@@ -528,12 +523,12 @@ def train_model(aerodynamics, Mach):
                 
                 training.dClift_ddelta_a = (Clift_d_a[0,:] - Clift_d_a[1,:]) / (delta_a[0] - delta_a[1])
                 training.dCdrag_ddelta_a = (Cdrag_d_a[0,:] - Cdrag_d_a[1,:]) / (delta_a[0] - delta_a[1]) 
-                training.dCX_ddelta_a = (CX_d_a[0,:] - CX_d_a[1,:]) / (delta_a[0] - delta_a[1]) 
-                training.dCY_ddelta_a = (CY_d_a[0,:] - CY_d_a[1,:]) / (delta_a[0] - delta_a[1]) 
-                training.dCZ_ddelta_a = (CZ_d_a[0,:] - CZ_d_a[1,:]) / (delta_a[0] - delta_a[1]) 
-                training.dCL_ddelta_a = (CL_d_a[0,:] - CL_d_a[1,:]) / (delta_a[0] - delta_a[1]) 
-                training.dCM_ddelta_a = (CM_d_a[0,:] - CM_d_a[1,:]) / (delta_a[0] - delta_a[1]) 
-                training.dCN_ddelta_a = (CN_d_a[0,:] - CN_d_a[1,:]) / (delta_a[0] - delta_a[1])
+                training.dCX_ddelta_a    = (CX_d_a[0,:] - CX_d_a[1,:]) / (delta_a[0] - delta_a[1]) 
+                training.dCY_ddelta_a    = (CY_d_a[0,:] - CY_d_a[1,:]) / (delta_a[0] - delta_a[1]) 
+                training.dCZ_ddelta_a    = (CZ_d_a[0,:] - CZ_d_a[1,:]) / (delta_a[0] - delta_a[1]) 
+                training.dCL_ddelta_a    = (CL_d_a[0,:] - CL_d_a[1,:]) / (delta_a[0] - delta_a[1]) 
+                training.dCM_ddelta_a    = (CM_d_a[0,:] - CM_d_a[1,:]) / (delta_a[0] - delta_a[1]) 
+                training.dCN_ddelta_a    = (CN_d_a[0,:] - CN_d_a[1,:]) / (delta_a[0] - delta_a[1])
 
             # --------------------------------------------------------------------------------------------------------------
             # Elevator 
@@ -548,19 +543,16 @@ def train_model(aerodynamics, Mach):
                 CL_d_e         = np.zeros((len_d_e,len_Mach)) 
                 CM_d_e         = np.zeros((len_d_e,len_Mach)) 
                 CN_d_e         = np.zeros((len_d_e,len_Mach))
-
-                config_delta_e = deepcopy(control_surface.deflection) 
-                for e_i in range(len_d_e):   
-                    Delta_e_s                                       = np.atleast_2d(np.tile(delta_e[e_i],len_Mach).T.flatten()).T 
+ 
+                for e_i in range(len_d_e): 
                     Machs                                           = np.atleast_2d(np.repeat(Mach,1)).T         
                     conditions                                      = RCAIDE.Framework.Mission.Common.Results()
                     conditions.aerodynamics.angles.alpha            = np.ones_like(Machs) *1E-12
                     conditions.aerodynamics.angles.beta             = np.zeros_like(Machs) 
-                    conditions.freestream.mach_number               = Machs 
-                    conditions.control_surfaces.elevator.deflection = np.ones_like(Machs)*Delta_e_s
-                    control_surface.deflection                      = delta_e[e_i]
-                    
-                    Clift_res,Cdrag_res,CX_res,CY_res,CZ_res,CL_res,CM_res,CN_res ,_,_,_,_,_,_,_,_,_= call_VLM(conditions,settings,vehicle)   
+                    conditions.freestream.mach_number               = Machs     
+                    vehicle.wings[wing.tag].control_surfaces.elevator.deflection =  delta_e[e_i]
+                    Clift_res,Cdrag_res,CX_res,CY_res,CZ_res,CL_res,CM_res,CN_res ,_,_,_,_,_,_,_,_,_= call_VLM(conditions,settings,vehicle)
+                    vehicle.wings[wing.tag].control_surfaces.elevator.deflection = 0 
                     Clift_d_e[e_i,:] = Clift_res[:,0]  - Clift_alpha_0[0,:]
                     Cdrag_d_e[e_i,:] = Cdrag_res[:,0]  - Cdrag_alpha_0[0,:]                                
                     CX_d_e[e_i,:]    = CX_res[:,0]   - CX_alpha_0[0,:]   
@@ -568,10 +560,7 @@ def train_model(aerodynamics, Mach):
                     CZ_d_e[e_i,:]    = CZ_res[:,0]   - CZ_alpha_0[0,:]  
                     CL_d_e[e_i,:]    = CL_res[:,0]   - CL_alpha_0[0,:]  
                     CM_d_e[e_i,:]    = CM_res[:,0]   - CM_alpha_0[0,:]  
-                    CN_d_e[e_i,:]    = CN_res[:,0]   - CN_alpha_0[0,:]                   
-
-                # reset deflection 
-                control_surface.deflection =  config_delta_e 
+                    CN_d_e[e_i,:]    = CN_res[:,0]   - CN_alpha_0[0,:]     
                 
                 training.Clift_delta_e  = Clift_d_e
                 training.Cdrag_delta_e  = Cdrag_d_e  
@@ -603,19 +592,16 @@ def train_model(aerodynamics, Mach):
                 CL_d_r         = np.zeros((len_d_r,len_Mach)) 
                 CM_d_r         = np.zeros((len_d_r,len_Mach)) 
                 CN_d_r         = np.zeros((len_d_r,len_Mach))
-
-                config_delta_r = deepcopy(control_surface.deflection)              
-                for r_i in range(len_d_r):   
-                    Delta_r_s                                       = np.atleast_2d(np.tile(delta_r[r_i],len_Mach).T.flatten()).T 
+              
+                for r_i in range(len_d_r): 
                     Machs                                           = np.atleast_2d(np.repeat(Mach,1)).T         
                     conditions                                      = RCAIDE.Framework.Mission.Common.Results()
                     conditions.aerodynamics.angles.alpha            = np.ones_like(Machs) *1E-12
                     conditions.aerodynamics.angles.beta             = np.zeros_like(Machs) 
-                    conditions.freestream.mach_number               = Machs 
-                    conditions.control_surfaces.rudder.deflection  = np.ones_like(Machs)*Delta_r_s
-                    control_surface.deflection                      = delta_r[r_i]
-                    
-                    Clift_res,Cdrag_res,CX_res,CY_res,CZ_res,CL_res,CM_res,CN_res ,_,_,_,_,_,_,_,_,_= call_VLM(conditions,settings,vehicle)   
+                    conditions.freestream.mach_number               = Machs    
+                    vehicle.wings[wing.tag].control_surfaces.rudder.deflection =  delta_r[r_i]
+                    Clift_res,Cdrag_res,CX_res,CY_res,CZ_res,CL_res,CM_res,CN_res ,_,_,_,_,_,_,_,_,_= call_VLM(conditions,settings,vehicle)
+                    vehicle.wings[wing.tag].control_surfaces.rudder.deflection = 0 
                     Clift_d_r[r_i,:] =   -(Clift_res[:,0]  - Clift_alpha_0[0,:])
                     Cdrag_d_r[r_i,:] =   -(Cdrag_res[:,0]  - Cdrag_alpha_0[0,:])                            
                     CX_d_r[r_i,:]    =   -(CX_res[:,0]   - CX_alpha_0[0,:])   
@@ -623,27 +609,24 @@ def train_model(aerodynamics, Mach):
                     CZ_d_r[r_i,:]    =   -(CZ_res[:,0]   - CZ_alpha_0[0,:])  
                     CL_d_r[r_i,:]    =   -(CL_res[:,0]   - CL_alpha_0[0,:])  
                     CM_d_r[r_i,:]    =   -(CM_res[:,0]   - CM_alpha_0[0,:])  
-                    CN_d_r[r_i,:]    =   -(CN_res[:,0]   - CN_alpha_0[0,:])
-
-                # reset deflection 
-                control_surface.deflection =  config_delta_r
+                    CN_d_r[r_i,:]    =   -(CN_res[:,0]   - CN_alpha_0[0,:]) 
                 
                 training.Clift_delta_r  = Clift_d_r
                 training.Cdrag_delta_r  = Cdrag_d_r     
-                training.CX_delta_r  = CX_d_r   
-                training.CY_delta_r  = CY_d_r 
-                training.CZ_delta_r  = CZ_d_r 
-                training.CL_delta_r  = CL_d_r  
-                training.CM_delta_r  = CM_d_r                   
-                training.CN_delta_r  = CN_d_r    
+                training.CX_delta_r     = CX_d_r   
+                training.CY_delta_r     = CY_d_r 
+                training.CZ_delta_r     = CZ_d_r 
+                training.CL_delta_r     = CL_d_r  
+                training.CM_delta_r     = CM_d_r                   
+                training.CN_delta_r     = CN_d_r    
                 training.dClift_ddelta_r = (Clift_d_r[0,:] - Clift_d_r[1,:]) / (delta_r[0] - delta_r[1])
                 training.dCdrag_ddelta_r = (Cdrag_d_r[0,:] - Cdrag_d_r[1,:]) / (delta_r[0] - delta_r[1])  
-                training.dCX_ddelta_r = (CX_d_r[0,:] - CX_d_r[1,:]) / (delta_r[0] - delta_r[1])   
-                training.dCY_ddelta_r = (CY_d_r[0,:] - CY_d_r[1,:]) / (delta_r[0] - delta_r[1]) 
-                training.dCZ_ddelta_r = (CZ_d_r[0,:] - CZ_d_r[1,:]) / (delta_r[0] - delta_r[1])  
-                training.dCL_ddelta_r = (CL_d_r[0,:] - CL_d_r[1,:]) / (delta_r[0] - delta_r[1])  
-                training.dCM_ddelta_r = (CM_d_r[0,:] - CM_d_r[1,:]) / (delta_r[0] - delta_r[1]) 
-                training.dCN_ddelta_r = (CN_d_r[0,:] - CN_d_r[1,:]) / (delta_r[0] - delta_r[1])  
+                training.dCX_ddelta_r    = (CX_d_r[0,:] - CX_d_r[1,:]) / (delta_r[0] - delta_r[1])   
+                training.dCY_ddelta_r    = (CY_d_r[0,:] - CY_d_r[1,:]) / (delta_r[0] - delta_r[1]) 
+                training.dCZ_ddelta_r    = (CZ_d_r[0,:] - CZ_d_r[1,:]) / (delta_r[0] - delta_r[1])  
+                training.dCL_ddelta_r    = (CL_d_r[0,:] - CL_d_r[1,:]) / (delta_r[0] - delta_r[1])  
+                training.dCM_ddelta_r    = (CM_d_r[0,:] - CM_d_r[1,:]) / (delta_r[0] - delta_r[1]) 
+                training.dCN_ddelta_r    = (CN_d_r[0,:] - CN_d_r[1,:]) / (delta_r[0] - delta_r[1])  
                     
             # --------------------------------------------------------------------------------------------------------------
             # Flap
@@ -657,19 +640,16 @@ def train_model(aerodynamics, Mach):
                 CL_d_f         = np.zeros((len_d_f,len_Mach)) 
                 CM_d_f         = np.zeros((len_d_f,len_Mach)) 
                 CN_d_f         = np.zeros((len_d_f,len_Mach))
-
-                config_delta_f = deepcopy(control_surface.deflection)                 
-                for f_i in range(len_d_f):   
-                    Delta_f_s                                       = np.atleast_2d(np.tile(delta_f[f_i],len_Mach).T.flatten()).T 
+                
+                for f_i in range(len_d_f): 
                     Machs                                           = np.atleast_2d(np.repeat(Mach,1)).T         
                     conditions                                      = RCAIDE.Framework.Mission.Common.Results()
                     conditions.aerodynamics.angles.alpha            = np.ones_like(Machs) *1E-12
                     conditions.aerodynamics.angles.beta             = np.zeros_like(Machs) 
-                    conditions.freestream.mach_number               = Machs 
-                    conditions.control_surfaces.flap.deflection     = np.ones_like(Machs)*Delta_f_s
-                    control_surface.deflection                      = delta_f[f_i]
-                    
-                    Clift_res,Cdrag_res,CX_res,CY_res,CZ_res,CL_res,CM_res,CN_res ,_,_,_,_,_,_,_,_,_= call_VLM(conditions,settings,vehicle)   
+                    conditions.freestream.mach_number               = Machs    
+                    vehicle.wings[wing.tag].control_surfaces.flap.deflection = delta_f[f_i]
+                    Clift_res,Cdrag_res,CX_res,CY_res,CZ_res,CL_res,CM_res,CN_res ,_,_,_,_,_,_,_,_,_= call_VLM(conditions,settings,vehicle)
+                    vehicle.wings[wing.tag].control_surfaces.flap.deflection = 0   
                     Clift_d_f[f_i,:] = Clift_res[:,0]  - Clift_alpha_0[0,:]
                     Cdrag_d_f[f_i,:] = Cdrag_res[:,0]  - Cdrag_alpha_0[0,:]                                
                     CX_d_f[f_i,:]    = CX_res[:,0]   - CX_alpha_0[0,:]   
@@ -678,10 +658,7 @@ def train_model(aerodynamics, Mach):
                     CL_d_f[f_i,:]    = CL_res[:,0]   - CL_alpha_0[0,:]  
                     CM_d_f[f_i,:]    = CM_res[:,0]   - CM_alpha_0[0,:]  
                     CN_d_f[f_i,:]    = CN_res[:,0]   - CN_alpha_0[0,:]         
-
-                # reset deflection 
-                control_surface.deflection =  config_delta_f
-                
+ 
                 training.Clift_delta_f  = Clift_d_f    
                 training.Cdrag_delta_f  = Cdrag_d_f    
                 training.CX_delta_f     = CX_d_f  
@@ -703,7 +680,6 @@ def train_model(aerodynamics, Mach):
             # Slat
             # --------------------------------------------------------------------------------------------------------------  
             if type(control_surface) == RCAIDE.Library.Components.Wings.Control_Surfaces.Slat:
-                
                 Clift_d_s      = np.zeros((len_d_s,len_Mach)) 
                 Cdrag_d_s      = np.zeros((len_d_s,len_Mach)) 
                 CX_d_s         = np.zeros((len_d_s,len_Mach)) 
@@ -712,19 +688,16 @@ def train_model(aerodynamics, Mach):
                 CL_d_s         = np.zeros((len_d_s,len_Mach)) 
                 CM_d_s         = np.zeros((len_d_s,len_Mach)) 
                 CN_d_s         = np.zeros((len_d_s,len_Mach))
-
-                config_delta_s = deepcopy(control_surface.deflection)      
-                for s_i in range(len_d_s):   
-                    Delta_s_s                                       = np.atleast_2d(np.tile(delta_s[s_i],len_Mach).T.flatten()).T 
+       
+                for s_i in range(len_d_s):
                     Machs                                           = np.atleast_2d(np.repeat(Mach,1)).T         
                     conditions                                      = RCAIDE.Framework.Mission.Common.Results()
                     conditions.aerodynamics.angles.alpha            = np.ones_like(Machs) *1E-12
                     conditions.aerodynamics.angles.beta             = np.zeros_like(Machs) 
-                    conditions.freestream.mach_number               = Machs 
-                    conditions.control_surfaces.slat.deflection     = np.ones_like(Machs)*Delta_s_s
-                    control_surface.deflection                      = delta_s[s_i]
-                    
-                    Clift_res,Cdrag_res,CX_res,CY_res,CZ_res,CL_res,CM_res,CN_res ,_,_,_,_,_,_,_,_,_= call_VLM(conditions,settings,vehicle)   
+                    conditions.freestream.mach_number               = Machs     
+                    vehicle.wings[wing.tag].control_surfaces.slat.deflection = delta_s[s_i]
+                    Clift_res,Cdrag_res,CX_res,CY_res,CZ_res,CL_res,CM_res,CN_res ,_,_,_,_,_,_,_,_,_= call_VLM(conditions,settings,vehicle)
+                    vehicle.wings[wing.tag].control_surfaces.slat.deflection = 0 
                     Clift_d_s[s_i,:] = Clift_res[:,0]  - Clift_alpha_0[0,:]
                     Cdrag_d_s[s_i,:] = Cdrag_res[:,0]  - Cdrag_alpha_0[0,:]                                
                     CX_d_s[s_i,:]    = CX_res[:,0]   - CX_alpha_0[0,:]   
@@ -733,26 +706,24 @@ def train_model(aerodynamics, Mach):
                     CL_d_s[s_i,:]    = CL_res[:,0]   - CL_alpha_0[0,:]  
                     CM_d_s[s_i,:]    = CM_res[:,0]   - CM_alpha_0[0,:]  
                     CN_d_s[s_i,:]    = CN_res[:,0]   - CN_alpha_0[0,:] 
-
-                # reset deflection 
-                control_surface.deflection =  config_delta_s                        
-
-                training.Clift_delta_s  = Clift_d_s
-                training.Cdrag_delta_s  = Cdrag_d_s
-                training.CX_delta_s  = CX_d_s
-                training.CY_delta_s  = CY_d_s 
-                training.CZ_delta_s  = CZ_d_s 
-                training.CL_delta_s  = CL_d_s 
-                training.CM_delta_s  = CM_d_s
-                training.CN_delta_s  = CN_d_s  
+ 
+                training.Clift_delta_s   = Clift_d_s
+                training.Cdrag_delta_s   = Cdrag_d_s
+                training.CX_delta_s      = CX_d_s
+                training.CY_delta_s      = CY_d_s 
+                training.CZ_delta_s      = CZ_d_s 
+                training.CL_delta_s      = CL_d_s 
+                training.CM_delta_s      = CM_d_s
+                training.CN_delta_s      = CN_d_s  
                 training.dClift_ddelta_s = (Clift_d_s[0,:] - Clift_d_s[1,:]) / (delta_s[0] - delta_s[1])
                 training.dCdrag_ddelta_s = (Cdrag_d_s[0,:] - Cdrag_d_s[1,:]) / (delta_s[0] - delta_s[1])
-                training.dCX_ddelta_s = (CX_d_s[0,:] - CX_d_s[1,:]) / (delta_s[0] - delta_s[1])
-                training.dCY_ddelta_s = (CY_d_s[0,:] - CY_d_s[1,:]) / (delta_s[0] - delta_s[1])
-                training.dCZ_ddelta_s = (CZ_d_s[0,:] - CZ_d_s[1,:]) / (delta_s[0] - delta_s[1]) 
-                training.dCL_ddelta_s = (CL_d_s[0,:] - CL_d_s[1,:]) / (delta_s[0] - delta_s[1]) 
-                training.dCM_ddelta_s = (CM_d_s[0,:] - CM_d_s[1,:]) / (delta_s[0] - delta_s[1])  
-                training.dCN_ddelta_s = (CN_d_s[0,:] - CN_d_s[1,:]) / (delta_s[0] - delta_s[1])  
+                training.dCX_ddelta_s    = (CX_d_s[0,:] - CX_d_s[1,:]) / (delta_s[0] - delta_s[1])
+                training.dCY_ddelta_s    = (CY_d_s[0,:] - CY_d_s[1,:]) / (delta_s[0] - delta_s[1])
+                training.dCZ_ddelta_s    = (CZ_d_s[0,:] - CZ_d_s[1,:]) / (delta_s[0] - delta_s[1]) 
+                training.dCL_ddelta_s    = (CL_d_s[0,:] - CL_d_s[1,:]) / (delta_s[0] - delta_s[1]) 
+                training.dCM_ddelta_s    = (CM_d_s[0,:] - CM_d_s[1,:]) / (delta_s[0] - delta_s[1])  
+                training.dCN_ddelta_s    = (CN_d_s[0,:] - CN_d_s[1,:]) / (delta_s[0] - delta_s[1])
+  
     training.NP            = 0  
     
     return training

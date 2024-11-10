@@ -120,26 +120,7 @@ class Lithium_Ion_NMC(Generic_Battery_Module):
     
     def reuse_stored_data(self,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag):
         reuse_stored_nmc_cell_data(self,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag)
-        return
-        
-    
-    def compute_voltage(self,battery_conditions):  
-        """ Computes the voltage of a single NMC cell or a battery pack of NMC cells   
-        
-        Assumptions:
-            None
-        
-        Source:
-            None
-    
-        Args:
-            self               : battery          [unitless] 
-            battery_conditions : state of battery [unitless]
-            
-        Returns: 
-            None
-        """              
-        return battery_conditions.voltage_under_load 
+        return 
     
     def update_battery_age(self,segment,battery_conditions,increment_battery_age_by_one_day = False):  
         """ This is an aging model for 18650 lithium-nickel-manganese-cobalt-oxide batteries.   

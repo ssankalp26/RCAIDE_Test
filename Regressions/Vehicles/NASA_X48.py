@@ -164,17 +164,18 @@ def vehicle_setup(regression_flag):
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Bus
     #------------------------------------------------------------------------------------------------------------------------------------  
-    bus                              = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus() 
+    bus                              = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus()
+    bus.number_of_battery_modules    = 2
 
     #------------------------------------------------------------------------------------------------------------------------------------           
     # Battery
     #------------------------------------------------------------------------------------------------------------------------------------  
-    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC() 
+    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_LFP() 
     bat.tag                                                = 'li_ion_battery'
-    bat.electrical_configuration.series                    = 10  
+    bat.electrical_configuration.series                    = 50  
     bat.electrical_configuration.parallel                  = 5 
-    bat.geometrtic_configuration.normal_count               = 5
-    bat.geometrtic_configuration.parallel_count             = 10
+    bat.geometrtic_configuration.normal_count              = 5
+    bat.geometrtic_configuration.parallel_count            = 10
     bus.battery_modules.append(bat)      
     bus.initialize_bus_electrical_properties()
     
