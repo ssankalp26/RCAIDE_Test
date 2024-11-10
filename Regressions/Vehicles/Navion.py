@@ -156,7 +156,7 @@ def vehicle_setup():
     elevator.span_fraction_start          = 0.1
     elevator.span_fraction_end            = 0.9
     elevator.deflection                   = 0.0  * Units.deg
-    elevator.chord_fraction               = 0.3
+    elevator.chord_fraction               = 0.35
     wing.append_control_surface(elevator)       
 
     RCAIDE.Library.Methods.Geometry.Planform.wing_planform(wing)     
@@ -192,10 +192,10 @@ def vehicle_setup():
     
     rudder                                = RCAIDE.Library.Components.Wings.Control_Surfaces.Rudder()
     rudder.tag                            = 'rudder'
-    rudder.span_fraction_start            = 0.2
-    rudder.span_fraction_end              = 0.8
+    rudder.span_fraction_start            = 0.1
+    rudder.span_fraction_end              = 0.9
     rudder.deflection                     = 0.0  * Units.deg
-    rudder.chord_fraction                 = 0.2
+    rudder.chord_fraction                 = 0.4
     wing.append_control_surface(rudder) 
     
     # add to vehicle

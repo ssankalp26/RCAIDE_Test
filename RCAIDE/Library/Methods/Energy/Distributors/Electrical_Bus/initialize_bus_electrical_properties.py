@@ -2,6 +2,8 @@
 # 
 # Created: Sep 2024, S. Shekar
 #
+from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common                    import compute_module_properties 
+
 # ----------------------------------------------------------------------------------------------------------------------
 #  METHODS
 # ---------------------------------------------------------------------------------------------------------------------- 
@@ -21,11 +23,20 @@ def initialize_bus_electrical_properties(bus):
         Properties Used:
         None
         """
-    if bus.battery_module_electric_configuration is 'Series': 
-        for battery_module in  bus.battery_modules:
-            bus.voltage         +=   battery_module.voltage  
-    elif bus.battery_module_electric_configuration is 'Parallel':
+    if bus.battery_module_electric_configuration == 'Series':
+        bus.nominal_capacity = 0
+        bus.maximum_energy   = 0
+        for battery_module in  bus.battery_modules: 
+            compute_module_properties(battery_module) 
+            bus.voltage         +=  battery_module.voltage
+            bus.maximum_energy  +=  battery_module.maximum_energy
+            bus.nominal_capacity =  max(battery_module.nominal_capacity, bus.nominal_capacity)  
+    elif bus.battery_module_electric_configuration == 'Parallel':
         bus.voltage = 0
-        for battery_module in  bus.battery_modules:
-            bus.voltage           =  max(battery_module.voltage, bus.voltage) 
+        bus.maximum_energy   = 0
+        for battery_module in  bus.battery_modules: 
+            compute_module_properties(battery_module)        
+            bus.voltage           =  max(battery_module.voltage, bus.voltage)
+            bus.nominal_capacity +=  battery_module.nominal_capacity        
+            bus.maximum_energy  +=  battery_module.initial_maximum_energy 
     return

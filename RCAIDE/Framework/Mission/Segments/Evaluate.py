@@ -8,7 +8,8 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-# RCAIDE imports  
+# RCAIDE imports
+from RCAIDE.Framework.Core import Units
 from RCAIDE.Framework.Mission.Segments         import Segment
 from RCAIDE.Framework.Mission.Common.Results   import Results
 from RCAIDE.Library.Mission            import Common , Solver 
@@ -63,6 +64,8 @@ class Evaluate(Segment):
         # conditions
         self.temperature_deviation                = 0.0
         self.sideslip_angle                       = 0.0 
+        self.angle_of_attack                      = 1.0 *  Units.degree
+        self.bank_angle                           = 0.0 
         self.state.conditions.update(Results())
         
         # ---------------------------------------------------------------

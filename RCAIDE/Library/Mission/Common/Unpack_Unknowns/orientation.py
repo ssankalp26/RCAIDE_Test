@@ -9,19 +9,27 @@
 ## @ingroup Library-Missions-Common-Unpack_Unknowns
 def orientation(segment): 
         
-    # Body Angle Control
-    if segment.assigned_control_variables.body_angle.active:  
-        segment.state.conditions.frames.body.inertial_rotations[:,1] = segment.state.unknowns.body_angle[:,0]
+    ctrls    = segment.assigned_control_variables 
 
-    if segment.assigned_control_variables.bank_angle.active: 
+    # Body Angle Control    
+    if ctrls.body_angle.active: 
+        segment.state.conditions.frames.body.inertial_rotations[:,1] = segment.state.unknowns.body_angle[:,0] 
+    else:
+        segment.state.conditions.frames.body.inertial_rotations[:,1] = segment.angle_of_attack            
+
+    if ctrls.bank_angle.active: 
         segment.state.conditions.frames.body.inertial_rotations[:,0] = segment.state.unknowns.bank_angle[:,0]
+    else:
+        segment.state.conditions.frames.body.inertial_rotations[:,0] = segment.bank_angle
+        
+    segment.state.conditions.frames.body.inertial_rotations[:,2] =  segment.state.conditions.frames.planet.true_heading[:,0] 
     
     # Velocity Control
-    if segment.assigned_control_variables.velocity.active:
+    if ctrls.velocity.active:
         segment.state.conditions.frames.inertial.velocity_vector[:,0] = segment.state.unknowns.velocity[:,0]
         
     # Altitude Control
-    if segment.assigned_control_variables.altitude.active:
+    if ctrls.altitude.active:
         segment.state.conditions.frames.inertial.position_vector[:,2] = -segment.state.unknowns.altitude[:,0]
         
     return 

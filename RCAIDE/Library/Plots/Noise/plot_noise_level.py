@@ -46,8 +46,8 @@ def plot_noise_level(noise_data,
     Properties Used:
     N/A
     """      
-    N_gm_y       = noise_data.ground_microphone_y_resolution 
-    gm           = noise_data.ground_microphone_locations    
+    N_gm_y       = noise_data.microphone_y_resolution 
+    gm           = noise_data.microphone_locations    
     gm_x         = gm[:,:,0]
     gm_y         = gm[:,:,1]    
     

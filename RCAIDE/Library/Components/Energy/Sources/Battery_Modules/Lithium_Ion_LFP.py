@@ -10,7 +10,7 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
 
 # RCAIDE imports 
-from RCAIDE.Framework.Core          import Units,Data
+from RCAIDE.Framework.Core          import Units
 from RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Generic_Battery_Module import  Generic_Battery_Module
 from RCAIDE.Library.Methods.Energy.Sources.Batteries.Lithium_Ion_LFP  import * 
 
@@ -61,16 +61,7 @@ class Lithium_Ion_LFP(Generic_Battery_Module):
         self.number_of_cells                                   = 1
         self.maximum_energy                                    = 0.0
         self.maximum_power                                     = 0.0
-        self.maximum_voltage                                   = 0.0        
-        self.electrical_configuration                          = Data()
-        self.electrical_configuration.series                   = 1
-        self.electrical_configuration.parallel                 = 1   
-        self.electrical_configuration.total                    = 1   
-        self.geometrtic_configuration                          = Data() 
-        self.geometrtic_configuration.normal_count             = 1       # number of cells normal to flow
-        self.geometrtic_configuration.parallel_count           = 1       # number of cells parallel to flow      
-        self.geometrtic_configuration.normal_spacing           = 0.02
-        self.geometrtic_configuration.parallel_spacing         = 0.02
+        self.maximum_voltage                                   = 0.0       
         
         # ----------------------------------------------------------------------------------------------------------------------
         #  Cell Level Properties
@@ -128,28 +119,9 @@ class Lithium_Ion_LFP(Generic_Battery_Module):
     
     def reuse_stored_data(self,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag):
         reuse_stored_lfp_cell_data(self,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag)
-        return    
+        return     
     
-    def compute_voltage(self,battery_conditions):
-        """ Computes the voltage of a single LFP cell  
-    
-        Assumptions:
-            None
-        
-        Source:
-            None
-    
-        Args:
-            self               : battery          [unitless] 
-            battery_conditions : state of battery [unitless]
-            
-        Returns: 
-            None
-        """              
-
-        return battery_conditions.voltage_under_load 
-    
-    def update_battery_age(self,segment,increment_battery_age_by_one_day = False):   
+    def update_battery_age(self,segment, battery_conditions,increment_battery_age_by_one_day): 
         """ This does nothing. """
         pass 
         return 

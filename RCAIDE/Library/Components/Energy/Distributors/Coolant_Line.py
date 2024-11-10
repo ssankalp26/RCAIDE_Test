@@ -44,7 +44,7 @@ class Coolant_Line(Component):
  
             
         for tag, item in  distributor.items():
-            self.identical_batteries  =  distributor.identical_batteries
+            self.identical_battery_modules  =  distributor.identical_battery_modules
             if tag == 'battery_modules':
                 self.battery_modules  = Container()
                 for battery in item:

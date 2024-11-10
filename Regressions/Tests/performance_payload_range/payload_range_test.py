@@ -16,9 +16,9 @@ from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Electric  import conv
 import numpy as np  
 import sys
 import matplotlib.pyplot as plt  
-
+import os
 # local imports 
-sys.path.append('../../Vehicles')
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 from Embraer_190    import vehicle_setup as E190_vehicle_setup 
 from NASA_X57       import vehicle_setup as X57_vehicle_setup 
 from NASA_X57       import configs_setup as X57_configs_setup      
@@ -28,17 +28,17 @@ from NASA_X57       import configs_setup as X57_configs_setup
 # ----------------------------------------------------------------------------------------------------------------------  
 def main(): 
     fuel_payload_range_res = fuel_aircraft_payload_range()
-    fuel_r                 =  fuel_payload_range_res.range
-    fuel_r_true            = 6669202.69357804
-    print('Fuel Range: ' + str(fuel_r[-1]))
-    fuel_error =  abs(fuel_r[-1]- fuel_r_true) /fuel_r_true
+    fuel_r                 = fuel_payload_range_res.range[-1]
+    fuel_r_true            = 6686763.504868567
+    print('Fuel Range: ' + str(fuel_r))
+    fuel_error =  abs(fuel_r - fuel_r_true) /fuel_r_true
     assert(abs(fuel_error)<1e-6)
     
     electric_r_true = 37039.99999999999
     electric_payload_range_res = electric_aircraft_payload_range()       
-    electric_r         =  electric_payload_range_res.range
-    print('Electric Range: ' + str(electric_r[-1]))
-    electric_error =  abs(electric_r[-1]- electric_r_true) /electric_r_true
+    electric_r         =  electric_payload_range_res.range[-1]
+    print('Electric Range: ' + str(electric_r ))
+    electric_error =  abs(electric_r - electric_r_true) /electric_r_true
     assert(abs(electric_error)<1e-6)
     return 
     

@@ -54,9 +54,8 @@ class Curved_Constant_Radius_Constant_Speed_Constant_Altitude(Evaluate):
         # -------------------------------------------------------------------------------------------------------------- 
         self.altitude          = None
         self.air_speed         = None 
-        self.turn_radius       = None 
-        self.bank_angle        = 0.0 * Units.degrees
-        self.turn_angle        = 0.0 * Units.degrees # + indicated right hand turn, negative indicates left-hand turn defaults to straight flight 
+        self.turn_radius       = None
+        self.turn_angle        = 0.0 * Units.degrees # + indicated right hand turn, negative indicates left-hand turn defaults to straight flight
         self.true_course       = 0.0 * Units.degrees 
 
         # -------------------------------------------------------------------------------------------------------------- 

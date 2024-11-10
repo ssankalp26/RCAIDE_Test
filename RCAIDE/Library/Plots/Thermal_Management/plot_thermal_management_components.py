@@ -31,7 +31,7 @@ def plot_thermal_management_component(results,
     for network in  results.segments[0].analyses.energy.vehicle.networks:
         for coolant_line in  network.coolant_lines:
             for tag, item in  coolant_line.items():
-                if coolant_line.identical_batteries:
+                if coolant_line.identical_battery_modules:
                     if tag == 'battery_modules':
                             for i, battery in enumerate(item):
                                 for btms in  (battery):
