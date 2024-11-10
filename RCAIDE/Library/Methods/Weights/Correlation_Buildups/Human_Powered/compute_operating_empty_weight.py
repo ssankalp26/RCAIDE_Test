@@ -123,11 +123,8 @@ def compute_operating_empty_weight(vehicle,settings=None):
     output                                  = Data()
     output.empty                            = Data()  
     output.empty.structural                 =  Data()
-    output.empty.structural.wing            = W_wing
-    output.empty.structural.fuselage        = W_tb
-    output.empty.structural.horizontal_tail = W_ht
-    output.empty.structural.vertical_tail   = W_vt
-    
+    output.empty.structural.wings           = W_wing +  W_ht +  W_vt
+    output.empty.structural.fuselage        = W_tb  
     output.empty.total = W_ht + W_tb + W_vt + W_wing
     
     return output

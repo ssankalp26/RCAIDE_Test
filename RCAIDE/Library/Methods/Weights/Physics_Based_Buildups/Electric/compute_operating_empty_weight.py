@@ -355,7 +355,7 @@ def compute_operating_empty_weight(vehicle,settings = None):
     output.empty.propulsion.servos                    = miscelleneous_weight_factor *weight.servos
     output.empty.propulsion.wiring                    = miscelleneous_weight_factor *weight.wiring 
     output.empty.propulsion.battery                   = miscelleneous_weight_factor *weight.battery
-    output.empty.propulsion.thermal_management_system = miscelleneous_weight_factor *weight.thermal_management_system.total
+    output.empty.propulsion.TMS                       = miscelleneous_weight_factor *weight.thermal_management_system.total
     output.empty.propulsion.total                     = weight.rotors + weight.hubs +  weight.battery +  weight.motors +   weight.wiring +   weight.servos +  weight.thermal_management_system.total 
 
     output.empty.systems                              = Data()
@@ -365,7 +365,8 @@ def compute_operating_empty_weight(vehicle,settings = None):
     output.empty.systems.balistic_recovery_system     = miscelleneous_weight_factor * weight.BRS
     output.empty.systems.total                        = weight.ECS + weight.avionics +   weight.BRS +  weight.seats  
     
-    output.empty.total        = output.empty.systems.total +  output.empty.propulsion.total +  output.empty.structural.total 
+    output.empty.total        = output.empty.systems.total +  output.empty.propulsion.total +  output.empty.structural.total
+    output.payload            = Data()
     output.payload.total      = weight.passengers + weight.payload
     output.payload.passengers = weight.passengers  
     output.payload.payload    = weight.payload 

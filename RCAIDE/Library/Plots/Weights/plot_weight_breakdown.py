@@ -19,14 +19,14 @@ import pandas as pd
 # ----------------------------------------------------------------------------------------------------------------------   
 ## @ingroup Library-Plots-Weights
 def plot_weight_breakdown(vehicle,
-                            save_figure = True,
-                            show_figure = True, 
-                            show_legend=True,
-                            SI_Units   = True,
-                            save_filename = "Weight_Breakdown",
+                            save_figure    = True,
+                            show_figure    = True, 
+                            show_legend    =True,
+                            SI_Units       = True,
+                            save_filename  = "Weight_Breakdown",
                             aircraft_name  = None,
-                            file_type = ".png",
-                            width = 10, height = 7.2): 
+                            file_type      = ".png",
+                            width          = 10, height = 7.2): 
   
 
     """This plots the weight breakdown of an evtol aircraft
@@ -47,8 +47,7 @@ def plot_weight_breakdown(vehicle,
     N/A
     """
 
-    breakdown =  vehicle.weight_breakdown    
-    weight    =  vehicle.mass_properties.max_takeoff
+    breakdown =  vehicle.weight_breakdown     
     
     level_1 = []
     level_2 = []
@@ -81,8 +80,7 @@ def plot_weight_breakdown(vehicle,
                   
     df = pd.DataFrame(
         dict(level_1=level_1, level_2=level_2, level_3=level_3, values=values)
-    )
-    print(df)
+    ) 
     fig = px.sunburst(df,
                       path=['level_1', 'level_2', 'level_3'], 
                       values='values',  

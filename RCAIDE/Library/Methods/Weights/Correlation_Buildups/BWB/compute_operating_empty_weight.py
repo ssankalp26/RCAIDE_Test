@@ -156,13 +156,13 @@ def compute_operating_empty_weight(vehicle,settings=None):
     output                                     = Data()
     output.empty                               = Data()
     output.empty.structural                    = Data()
-    output.empty.structural.wing               = W_wing
+    output.empty.structural.wings              = W_wing
     output.empty.structural.afterbody          = W_aft_centerbody
     output.empty.structural.fuselage           = W_cabin
     output.empty.structural.landing_gear       = landing_gear.main +  landing_gear.nose 
     output.empty.structural.nacelle            = 0
     output.empty.structural.paint              = 0   
-    output.empty.structural.total              = output.empty.structural.wing + output.empty.structural.afterbody \
+    output.empty.structural.total              = output.empty.structural.wings + output.empty.structural.afterbody \
                                                       + output.empty.structural.fuselage + output.empty.structural.landing_gear \
                                                       + output.empty.structural.paint + output.empty.structural.nacelle
 
@@ -233,9 +233,9 @@ def compute_operating_empty_weight(vehicle,settings=None):
     optionals.tag                                    = 'optionals'
          
     vehicle.landing_gear.nose                        = RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear()
-    vehicle.landing_gear.nose.mass                   = output.empty.structural.nose_landing_gear
+    vehicle.landing_gear.nose.mass                   = landing_gear.nose 
     vehicle.landing_gear.main                        = RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()   
-    vehicle.landing_gear.main.mass                   = output.empty.structural.main_landing_gear  
+    vehicle.landing_gear.main.mass                   = landing_gear.main  
          
     control_systems.mass_properties.mass             = output.empty.systems.control_systems
     electrical_systems.mass_properties.mass          = output.empty.systems.electrical

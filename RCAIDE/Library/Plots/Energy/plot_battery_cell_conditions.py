@@ -56,7 +56,7 @@ def plot_battery_cell_conditions(results,
     plt.rcParams.update(parameters)
      
 
-    fig = plt.figure('Identical_'+ save_filename + battery.tag)
+    fig = plt.figure(save_filename)
     fig.set_size_inches(width,height)
     # get line colors for plots 
     line_colors   = cm.inferno(np.linspace(0,0.9,len(results.segments)))      
@@ -67,8 +67,7 @@ def plot_battery_cell_conditions(results,
     axis_5 = plt.subplot(3,2,5) 
     axis_6 = plt.subplot(3,2,6)
     
-    
-    b_i = 0 
+     
     for network in results.segments[0].analyses.energy.vehicle.networks: 
         busses  = network.busses 
         for bus in busses:
@@ -89,7 +88,7 @@ def plot_battery_cell_conditions(results,
                         segment_name = segment_tag.replace('_', ' ') 
     
                         if b_i == 0:                     
-                            axis_1.plot(time, cell_SOC, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width, label = segment_name)
+                            axis_1.plot(time, cell_SOC, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width, label = battery.tag)
                         else:
                             axis_1.plot(time, cell_SOC, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
                         axis_1.set_ylabel(r'SOC')
@@ -117,11 +116,10 @@ def plot_battery_cell_conditions(results,
                         set_axes(axis_6)  
                   
     if show_legend:      
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
-        leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})                                                    
-            
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5)   
     
     # Adjusting the sub-plots for legend 
+    fig.tight_layout()
     fig.subplots_adjust(top=0.8) 
     
     # set title of plot 

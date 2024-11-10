@@ -97,7 +97,6 @@ def plot_longitudinal_stability(results,
     if show_legend:
         leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})     
-    
           
     # Adjusting the sub-plots for legend 
     fig.subplots_adjust(top=0.8)

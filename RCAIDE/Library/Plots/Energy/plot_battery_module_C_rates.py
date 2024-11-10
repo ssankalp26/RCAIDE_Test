@@ -46,7 +46,7 @@ def plot_battery_module_C_rates(results,
     Properties Used:
     N/A	
     """ 
-    
+     
     # get plotting style 
     ps      = plot_style()  
 
@@ -54,25 +54,22 @@ def plot_battery_module_C_rates(results,
                   'xtick.labelsize': ps.axis_font_size,
                   'ytick.labelsize': ps.axis_font_size,
                   'axes.titlesize': ps.title_font_size}
-    plt.rcParams.update(parameters) 
-   
+    plt.rcParams.update(parameters)
+     
 
-    fig_1 = plt.figure('Instantaneous_'+ save_filename)
-    fig_2 = plt.figure('Nominal_'+ save_filename)
-    fig_1.set_size_inches(width,height)
-    fig_2.set_size_inches(width,height)    
-    axis_1 = fig_1.add_subplot(1,1,1)
-    axis_2 = fig_2.add_subplot(1,1,1)
-
+    fig = plt.figure(save_filename)
+    fig.set_size_inches(width,height)
     # get line colors for plots 
-    line_colors   = cm.inferno(np.linspace(0,0.9,len(results.segments)))
-    
+    line_colors   = cm.inferno(np.linspace(0,0.9,len(results.segments)))      
+    axis_1 = plt.subplot(1,2,1)
+    axis_2 = plt.subplot(1,2,2)  
+     
     for network in results.segments[0].analyses.energy.vehicle.networks: 
-        busses  = network.busses
+        busses  = network.busses 
         for bus in busses:
             for b_i, battery in enumerate(bus.battery_modules):
                 if b_i == 0 or bus.identical_battery_modules == False:
-                    for i in range(len(results.segments)): 
+                    for i in range(len(results.segments)):  
                         time                  = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min    
                         battery_conditions    = results.segments[i].conditions.energy[bus.tag].battery_modules[battery.tag]     
                         module_energy         = battery_conditions.energy[:,0]
@@ -80,8 +77,8 @@ def plot_battery_module_C_rates(results,
                         module_current        = battery_conditions.current[:,0]  
                         module_battery_amp_hr = (module_energy/ Units.Wh )/module_volts
                         module_C_instant      = module_current/module_battery_amp_hr
-                        module_C_nominal      = module_current/np.max(module_battery_amp_hr)  
-                        
+                        module_C_nominal      = module_current/np.max(module_battery_amp_hr)   
+    
                         if i == 0: 
                             axis_1.plot(time, module_C_instant, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = battery.tag)
                         else: 
@@ -94,24 +91,22 @@ def plot_battery_module_C_rates(results,
                         axis_2.set_ylabel(r'Nom. C-Rate (C)')
                         axis_2.set_xlabel('Time (mins)')
                         set_axes(axis_2)    
-                        
-     # Adjusting the sub-plots for legend 
     if show_legend:      
-        leg_1 =  fig_1.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4) 
-        leg_2 =  fig_2.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4) 
-        leg_1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})  
-        leg_2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'}) 
- 
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5)  
     
-    fig_1.tight_layout()    
-    fig_2.tight_layout()
-        
-    fig_1.subplots_adjust(top=0.8) 
-    fig_2.subplots_adjust(top=0.8)  
+    # Adjusting the sub-plots for legend 
+    fig.tight_layout()
+    fig.subplots_adjust(top=0.8) 
+    
+    # set title of plot 
+    title_text   = 'Battery Cell Conditions'       
+    fig.suptitle(title_text) 
     
     if save_figure:
-        fig_1.savefig('Instantaneous_'+ save_filename +  '_'+battery.tag +  file_type) 
-        fig_2.savefig('Nominal_'+ save_filename + '_'+ battery.tag +  file_type) 
-    return fig_1,fig_2 
+        plt.savefig(save_filename + battery.tag + file_type)    
+    return fig
+
+
+    return  
  
                  

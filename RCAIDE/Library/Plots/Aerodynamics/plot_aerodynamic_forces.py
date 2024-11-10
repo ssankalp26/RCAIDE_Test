@@ -65,8 +65,7 @@ def plot_aerodynamic_forces(results,
         Thrust = results.segments[i].conditions.frames.body.thrust_force_vector[:,0]
         Lift   = -results.segments[i].conditions.frames.wind.force_vector[:,2]
         Drag   = -results.segments[i].conditions.frames.wind.force_vector[:,0]
-        
-                       
+         
         segment_tag  =  results.segments[i].tag
         segment_name = segment_tag.replace('_', ' ')
         
@@ -99,6 +98,7 @@ def plot_aerodynamic_forces(results,
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
     # Adjusting the sub-plots for legend 
+    fig.tight_layout()
     fig.subplots_adjust(top=0.8)
     
     # set title of plot 

@@ -26,7 +26,7 @@ def evaluate_surrogate(state,settings,vehicle):
     """Evaluates surrogates forces and moments using built surrogates 
     
     Assumptions:
-        None
+        Aileron deflection is inverted to match convention 
         
     Source:
         None
@@ -611,7 +611,10 @@ def evaluate_no_surrogate(state,settings,vehicle):
         CL_beta multiplied by -1, verified against literature and AVL 
         p derivatives multiplied by -10, verified against literature and AVL 
         r derivatives multiplied by -10, verified against literature and AVL 
-        dCN_ddelta_r multiplied by -1, verified against literature 
+        Rudder derivatives multiplied by -1, verified against literature  
+        Aileron derivatives multiplied by -1, verified against literature
+        Aileron deflection is inverted to match convention 
+         
         
     Source:
         None

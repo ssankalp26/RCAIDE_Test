@@ -68,10 +68,7 @@ def plot_altitude_sfc_weight(results,
         Weight   = results.segments[i].conditions.weights.total_mass[:, 0] * 9.81   
         mdot     = results.segments[i].conditions.weights.vehicle_mass_rate[:, 0]
         thrust   = results.segments[i].conditions.frames.body.thrust_force_vector[:, 0]
-        sfc      = (mdot / Units.lb) / (thrust / Units.lbf) * Units.hr       
-            
-        segment_tag  =  results.segments[i].tag
-        segment_name = segment_tag.replace('_', ' ') 
+        sfc      = (mdot / Units.lb) / (thrust / Units.lbf) * Units.hr        
         
         axis_1.set_ylabel(r'Throttle')
         set_axes(axis_1)               
@@ -85,7 +82,7 @@ def plot_altitude_sfc_weight(results,
                     for j ,  propulsor in enumerate(bus.propulsors):
                         eta = results.segments[i].conditions.energy[bus.tag][propulsor.tag].throttle[:,0]  
                         if j == 0: 
-                            axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name  )
+                            axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = propulsor.tag    )
                         else:
                             axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)  
                 for fuel_line in fuel_lines:  
@@ -93,12 +90,12 @@ def plot_altitude_sfc_weight(results,
                         eta = results.segments[i].conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0]
                         eta = results.segments[i].conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0]  
                         if j == 0: 
-                            axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name   )
+                            axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = propulsor.tag   )
                         else:
                             axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)  
         
         if i == 0:
-            axis_2.plot(time, Weight/1000 , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name) 
+            axis_2.plot(time, Weight/1000 , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = propulsor.tag  ) 
         else:
             axis_2.plot(time, Weight/1000 , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width) 
         axis_2.set_ylabel(r'Weight (kN)')  
@@ -116,10 +113,10 @@ def plot_altitude_sfc_weight(results,
         
     
     if show_legend:
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
-        leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5)    
     
     # Adjusting the sub-plots for legend 
+    fig.tight_layout()
     fig.subplots_adjust(top=0.8)
     
     # set title of plot 
