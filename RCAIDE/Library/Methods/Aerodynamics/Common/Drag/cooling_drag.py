@@ -53,7 +53,7 @@ def cooling_drag(state,settings,geometry):
     density                    = conditions.freestream.density
     velocity                   = conditions.freestream.velocity
     pressure                   = conditions.freestream.pressure
-    reference_area             = state.analyses.aerodynamics.vehicle.reference_area
+    reference_area             = geometry.reference_area
     
     # Create an empty array for cooling drag coefficient
     cd_cooling  = np.zeros_like(density)

@@ -31,7 +31,6 @@ def energy(segment):
         if 'busses' in network: 
             busses  = network.busses
             for bus in busses:
-                #bus.compute_distributor_conditions(segment.state) DELETE
                 for battery in bus.battery_modules: 
                     increment_day = segment.increment_battery_age_by_one_day
                     battery_conditions  = segment.conditions.energy[bus.tag].battery_modules[battery.tag] 
