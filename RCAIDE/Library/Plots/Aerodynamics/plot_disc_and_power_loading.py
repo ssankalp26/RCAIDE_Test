@@ -107,7 +107,7 @@ def plot_propulsor_data(results,distributor,propulsor,axis_1,axis_2,line_colors,
         time         = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min    
         DL           = bus_results[propulsor.tag][thrustor.tag].disc_loading[:,0]
         PL           = bus_results[propulsor.tag][thrustor.tag].power_loading[:,0]   
-        if pi == 0: 
+        if pi == 0 and i ==0: 
             axis_1.plot(time,DL, color = line_colors[i], marker = ps.markers[pi], linewidth = ps.line_width, label = thrustor.tag) 
         else:
             axis_1.plot(time,DL, color = line_colors[i], marker = ps.markers[pi], linewidth = ps.line_width) 
