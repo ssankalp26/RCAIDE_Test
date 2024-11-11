@@ -105,12 +105,17 @@ def compute_li_generic_cell_performance(battery,state,bus,coolant_lines,t_idx, d
     # ---------------------------------------------------------------------------------
     # Compute battery cell temperature 
     # ---------------------------------------------------------------------------------
-    a   =
-    b   =
-    c   =
-    d   =
+    
+    A = battery.cell.hyperbolic_curve_disharge_parameters[0]
+    B = battery.cell.hyperbolic_curve_disharge_parameters[1]
+    C = battery.cell.hyperbolic_curve_disharge_parameters[2]
+    D = battery.cell.hyperbolic_curve_disharge_parameters[3]
+    E = battery.cell.hyperbolic_curve_disharge_parameters[4]
+    F = battery.cell.hyperbolic_curve_disharge_parameters[5]
+    G = battery.cell.hyperbolic_curve_disharge_parameters[6]
     DOD =  1 - SOC_cell
-    V_oc_cell[t_idx] = (a - np.sinh(x-DOD))  
+    
+    V_oc_cell[t_idx] = hyperbolic_sine(DOD, A, B, C, D, E, F, G )    
     V_oc_cell[t_idx][V_oc_cell[t_idx] > V_max_cell] = V_max_cell
          
     # Voltage under load:
@@ -168,6 +173,11 @@ def compute_li_generic_cell_performance(battery,state,bus,coolant_lines,t_idx, d
     stored_battery_tag     = battery.tag  
         
     return stored_results_flag, stored_battery_tag
+def hyperbolic_sine(x,A,B,C,D, E,F,G):
+    sinh_func = 0.5*(np.exp((G*x-A)) - np.exp(-(G*x-A))) #sinh_func = np.sinh(G*x-A)
+    func = F*((B - sinh_func)/D + C*x) + E
+    return func
+
 def reuse_stored_lfp_cell_data(battery,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag):
     '''Reuses results from one propulsor for identical batteries
     

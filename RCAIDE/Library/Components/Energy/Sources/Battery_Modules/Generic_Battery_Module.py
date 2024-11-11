@@ -52,7 +52,7 @@ class Generic_Battery_Module(Component):
         self.cell.ragone.lower_bound                      = 0.0     # lower bound specific energy for which ragone curves no longer make sense 
         self.cell.ragone.i                                = 0.0
         
-        self.cell.hyperbolic_curve_disharge_parameters    = [17.1, 0, 2.8, 6.9]
+        self.cell.hyperbolic_curve_disharge_parameters    = [  7.2533586, 1.88260754, -4.5058183, 1.37190552,  3.86687984,  0.2072,  9.35559597]
  
         self.electrical_configuration                     = Data()
         self.electrical_configuration.series              = 1
