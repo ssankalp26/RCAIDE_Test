@@ -353,8 +353,8 @@ def vehicle_setup():
     bat.tag                                                = 'li_ion_battery'
     bat.electrical_configuration.series                    = 16   
     bat.electrical_configuration.parallel                  = 40
-    bat.geometrtic_configuration.normal_count               = 20
-    bat.geometrtic_configuration.parallel_count             = 32
+    bat.geometrtic_configuration.normal_count              = 20
+    bat.geometrtic_configuration.parallel_count            = 32
      
     for _ in range(bus.number_of_battery_modules):
         bus.battery_modules.append(deepcopy(bat))      
