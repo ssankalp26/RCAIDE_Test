@@ -16,60 +16,10 @@ from copy import deepcopy
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Energy-Sources-Batteries-Lithium_Ion_LFP
 def compute_li_generic_cell_performance(battery,state,bus,coolant_lines,t_idx, delta_t): 
-    """This is an electric cycle model for 18650 lithium-iron_phosphate battery cells. It
-       models losses based on an empirical correlation Based on method taken 
-       from Datta and Johnson.
-       
-       Assumptions: 
-       1) Constant Peukart coefficient
-       2) All battery modules exhibit the same themal behaviour.
-       
-       Source:
-       Internal Resistance:
-       Nikolian, Alexandros, et al. "Complete cell-level lithium-ion electrical ECM model 
-       for different chemistries (NMC, LFP, LTO) and temperatures (− 5° C to 45° C)–
-       Optimized modelling techniques." International Journal of Electrical Power &
-       Energy Systems 98 (2018): 133-146.
-      
-       Voltage:
-       Chen, M. and Rincon-Mora, G. A., "Accurate Electrical
-       Battery Model Capable of Predicting Runtime and I - V Performance" IEEE
-       Transactions on Energy Conversion, Vol. 21, No. 2, June 2006, pp. 504-511
-       
-       Inputs:
-         battery. 
-               I_bat             (currnet)                             [Amperes]
-               cell_mass         (battery cell mass)                   [kilograms]
-               Cp                (battery cell specific heat capacity) [J/(K kg)] 
-               E_max             (max energy)                          [Joules]
-               E_current         (current energy)                      [Joules]
-               Q_prior           (charge throughput)                   [Amp-hrs]
-               R_growth_factor   (internal resistance growth factor)   [unitless]
-               E_growth_factor   (capactance (energy) growth factor)   [unitless] 
-           
-         inputs.
-               I_bat             (current)                             [amps]
-               P_bat             (power)                               [Watts]
-       
-       Outputs:
-         battery.          
-              current_energy                                           [Joules]
-              heat_energy_generated                                         [Watts] 
-              load_power                                               [Watts]
-              current                                                  [Amps]
-              battery_voltage_open_circuit                             [Volts]
-              cell.temperature                                         [Kelvin]
-              cell.charge_throughput                                   [Amp-hrs]
-              internal_resistance                                      [Ohms]
-              battery_state_of_charge                                  [unitless]
-              depth_of_discharge                                       [unitless]
-              battery_voltage_under_load                               [Volts]   
+    """ 
         
     """ 
      
-    # Unpack varibles 
-     # Unpack varibles 
-
     # Battery Properties
 
     cell_mass          = battery.cell.mass    
@@ -155,10 +105,10 @@ def compute_li_generic_cell_performance(battery,state,bus,coolant_lines,t_idx, d
     # ---------------------------------------------------------------------------------
     # Compute battery cell temperature 
     # ---------------------------------------------------------------------------------
-    a =
-    b =
-    c =
-    d =
+    a   =
+    b   =
+    c   =
+    d   =
     DOD =  1 - SOC_cell
     V_oc_cell[t_idx] = (a - np.sinh(x-DOD))  
     V_oc_cell[t_idx][V_oc_cell[t_idx] > V_max_cell] = V_max_cell
@@ -182,7 +132,7 @@ def compute_li_generic_cell_performance(battery,state,bus,coolant_lines,t_idx, d
     P_module[t_idx]       = P_bus[t_idx] /no_modules  - np.abs(Q_heat_module[t_idx]) 
 
         
-   # store remaining variables 
+    # store remaining variables 
     V_oc_module[t_idx]     = V_oc_cell[t_idx]*n_series 
     V_ul_module[t_idx]     = V_ul_cell[t_idx]*n_series  
     T_module[t_idx]        = T_cell[t_idx]   # Assume the cell temperature is the temperature of the module
