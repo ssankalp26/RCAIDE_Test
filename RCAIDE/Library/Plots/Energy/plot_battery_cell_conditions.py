@@ -65,12 +65,11 @@ def plot_battery_cell_conditions(results,
     axis_3 = plt.subplot(3,2,3) 
     axis_4 = plt.subplot(3,2,4)
     axis_5 = plt.subplot(3,2,5) 
-    axis_6 = plt.subplot(3,2,6)
-    
+    axis_6 = plt.subplot(3,2,6) 
      
     for network in results.segments[0].analyses.energy.vehicle.networks: 
         busses  = network.busses 
-        for bus in busses:
+        for bus_i, bus in enumerate(busses):
             for b_i, battery in enumerate(bus.battery_modules):
                 if b_i == 0 or bus.identical_battery_modules == False:
                     for i in range(len(results.segments)):  
@@ -88,30 +87,30 @@ def plot_battery_cell_conditions(results,
                         segment_name = segment_tag.replace('_', ' ') 
     
                         if b_i == 0 and i ==0:                    
-                            axis_1.plot(time, cell_SOC, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width, label = battery.tag)
+                            axis_1.plot(time, cell_SOC, color = line_colors[i], marker = ps.markers[bus_i], linewidth = ps.line_width, label = battery.tag)
                         else:
-                            axis_1.plot(time, cell_SOC, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+                            axis_1.plot(time, cell_SOC, color = line_colors[i], marker = ps.markers[bus_i], linewidth = ps.line_width)
                         axis_1.set_ylabel(r'SOC')
                         axis_1.set_ylim([0,1.1])
                         set_axes(axis_1)     
                          
-                        axis_2.plot(time, cell_energy/Units.Wh, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+                        axis_2.plot(time, cell_energy/Units.Wh, color = line_colors[i], marker = ps.markers[bus_i], linewidth = ps.line_width)
                         axis_2.set_ylabel(r'Energy (W-hr)')
                         set_axes(axis_2) 
                  
-                        axis_3.plot(time, cell_current, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+                        axis_3.plot(time, cell_current, color = line_colors[i], marker = ps.markers[bus_i], linewidth = ps.line_width)
                         axis_3.set_ylabel(r'Current (A)')
                         set_axes(axis_3)  
                  
-                        axis_4.plot(time, cell_power, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+                        axis_4.plot(time, cell_power, color = line_colors[i], marker = ps.markers[bus_i], linewidth = ps.line_width)
                         axis_4.set_ylabel(r'Power (W)')
                         set_axes(axis_4)     
                          
-                        axis_5.plot(time, cell_volts, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width) 
+                        axis_5.plot(time, cell_volts, color = line_colors[i], marker = ps.markers[bus_i], linewidth = ps.line_width) 
                         axis_5.set_ylabel(r'Voltage (V)')
                         set_axes(axis_5) 
                  
-                        axis_6.plot(time, cell_temperature, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+                        axis_6.plot(time, cell_temperature, color = line_colors[i], marker = ps.markers[bus_i], linewidth = ps.line_width)
                         axis_6.set_ylabel(r'Temperature, $\degree$C')
                         set_axes(axis_6)  
                   

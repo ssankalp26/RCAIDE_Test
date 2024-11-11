@@ -306,7 +306,10 @@ def compute_operating_empty_weight(vehicle,settings = None):
         weight.wings_total           += wing_weight
 
         # compute_wiring_weight weight
-        wiring_weight  = compute_wiring_weight(wing, vehicle, maxLiftPower/(eta*total_number_of_rotors)) * Units.kg  
+        if isinstance(wing, RCAIDE.Library.Components.Wings.Main_Wing):
+            wiring_weight  = compute_wiring_weight(wing, vehicle, maxLiftPower/(eta*total_number_of_rotors)) * Units.kg
+        else:
+            wiring_weight =  0
         weight.wiring  += wiring_weight 
 
     #-------------------------------------------------------------------------------
