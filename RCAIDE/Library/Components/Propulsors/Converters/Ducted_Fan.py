@@ -7,6 +7,7 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 # RCAIDE imports
+import RCAIDE
 from RCAIDE.Framework.Core     import Data
 from RCAIDE.Library.Components import Component
 from RCAIDE.Library.Methods.Propulsors.Converters.Ducted_Fan.append_ducted_fan_conditions import  append_ducted_fan_conditions
@@ -52,6 +53,12 @@ class Ducted_Fan(Component):
         self.hub_radius                        = 0.1
         self.blade_clearance                   = 0.01
         self.length                            = 1
+        self.fidelity                          = 'polytropic'
+        self.nacelle                           = None  
+        self.fan                               = RCAIDE.Library.Components.Propulsors.Converters.Fan()   
+        self.ram                               = RCAIDE.Library.Components.Propulsors.Converters.Ram()  
+        self.inlet_nozzle                      = RCAIDE.Library.Components.Propulsors.Converters.Compression_Nozzle()  
+        
         self.orientation_euler_angles          = [0.,0.,0.]  # vector of angles defining default orientation of rotor
         self.rotor                             = Data()
         self.stator                            = Data()
@@ -66,7 +73,8 @@ class Ducted_Fan(Component):
         self.cruise.design_freestream_mach     = None
         self.cruise.design_reference_mach      = None 
         self.duct_airfoil                      = Data()
-        self.hub_airfoil                       = Data()
+        self.hub_airfoil                       = Data() 
+      
     
     def append_duct_airfoil(self,airfoil):
         """ Adds an airfoil to the segment 

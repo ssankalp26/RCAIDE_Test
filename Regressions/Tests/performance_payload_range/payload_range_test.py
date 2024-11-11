@@ -76,7 +76,7 @@ def electric_aircraft_payload_range():
     weight_analysis          = RCAIDE.Framework.Analyses.Weights.Weights()
     weight_analysis.vehicle  = X57_vehicle
     weight                   = weight_analysis.evaluate()
-    X57_vehicle.mass_properties.operating_empty =  weight.empty 
+    X57_vehicle.mass_properties.operating_empty =  weight.empty.total 
     
     # Set up vehicle configs
     X57_configs  = X57_configs_setup(X57_vehicle)

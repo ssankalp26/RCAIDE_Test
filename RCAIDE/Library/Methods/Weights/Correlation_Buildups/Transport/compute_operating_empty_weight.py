@@ -67,14 +67,14 @@ def compute_operating_empty_weight(vehicle, settings=None, method_type='RCAIDE')
                             -.paint: paint weight
                             -.total: total strucural weight
 
-                        -.propulsion_breakdown: propulsive system weight
+                        -.propulsion: propulsive system weight
                             -.engines: dry engine weight
                             -.thrust_reversers: thrust reversers weight
                             -.miscellaneous: miscellaneous items includes electrical system for engines and starter engine
                             -.fuel_system: fuel system weight
                             -.total: total propulsive system weight
 
-                        -.systems_breakdown: system weight
+                        -.systems: system weight
                             -.control_systems: control system weight
                             -.apu: apu weight
                             -.electrical: electrical system weight
@@ -86,21 +86,21 @@ def compute_operating_empty_weight(vehicle, settings=None, method_type='RCAIDE')
                             -.anti_ice: anti ice system weight
                             -.total: total system weight
 
-                        -.payload_breakdown: payload weight
+                        -.payload: payload weight
                             -.passengers: passenger weight
                             -.bagage: baggage weight
                             -.cargo: cargo weight
                             -.total: total payload weight
 
                         -.operational_items: operational items weight
-                            -.operating_items_less_crew: unusable fuel, engine oil, passenger service weight and cargo containers
+                            -.misc: unusable fuel, engine oil, passenger service weight and cargo containers
                             -.flight_crew: flight crew weight
                             -.flight_attendants: flight attendants weight
                             -.total: total operating items weight
 
-                        -.empty = structures.total + propulsion_breakdown.total + systems_breakdown.total
+                        -.empty = structures.total + propulsion.total + systems.total
                         -.operating_empty = empty + operational_items.total
-                        -.zero_fuel_weight = operating_empty + payload_breakdown.total
+                        -.zero_fuel_weight = operating_empty + payload.total
                         -.fuel = vehicle.mass_properties.max_takeoff - zero_fuel_weight
 
 
@@ -196,13 +196,14 @@ def compute_operating_empty_weight(vehicle, settings=None, method_type='RCAIDE')
     ##-------------------------------------------------------------------------------                 
     # Propulsion Weight 
     ##-------------------------------------------------------------------------------
-    output                                          = Data()
-    output.propulsion_breakdown                     = Data() 
-    output.propulsion_breakdown.total               = 0
-    output.propulsion_breakdown.engines             = 0
-    output.propulsion_breakdown.thrust_reversers    = 0
-    output.propulsion_breakdown.miscellaneous       = 0
-    output.propulsion_breakdown.fuel_system         = 0
+    output                                      = Data()
+    output.empty                                = Data() 
+    output.empty.propulsion                     = Data() 
+    output.empty.propulsion.total               = 0
+    output.empty.propulsion.engines             = 0
+    output.empty.propulsion.thrust_reversers    = 0
+    output.empty.propulsion.miscellaneous       = 0
+    output.empty.propulsion.fuel_system         = 0
 
     W_energy_network                   = Data()
     W_energy_network.total             = 0
@@ -296,13 +297,13 @@ def compute_operating_empty_weight(vehicle, settings=None, method_type='RCAIDE')
         WPOD += WTNFA / np.max([1, NENG]) + W_energy_network.W_nacelle / np.max(
             [1.0, NENG + 1. / 2 * (NENG - 2 * np.floor(NENG / 2.))])
  
-    output.propulsion_breakdown.total               = W_energy_network_cumulative
-    output.propulsion_breakdown.battery             = W_energy_network.W_battery
-    output.propulsion_breakdown.motors              = W_energy_network.W_motor
-    output.propulsion_breakdown.engines             = W_energy_network.W_engine
-    output.propulsion_breakdown.thrust_reversers    = W_energy_network.W_thrust_reverser
-    output.propulsion_breakdown.miscellaneous       = W_energy_network.W_engine_controls + W_energy_network.W_starter
-    output.propulsion_breakdown.fuel_system         = W_energy_network.W_fuel_system
+    output.empty.propulsion.total               = W_energy_network_cumulative
+    output.empty.propulsion.battery             = W_energy_network.W_battery
+    output.empty.propulsion.motors              = W_energy_network.W_motor
+    output.empty.propulsion.engines             = W_energy_network.W_engine
+    output.empty.propulsion.thrust_reversers    = W_energy_network.W_thrust_reverser
+    output.empty.propulsion.miscellaneous       = W_energy_network.W_engine_controls + W_energy_network.W_starter
+    output.empty.propulsion.fuel_system         = W_energy_network.W_fuel_system
 
     ##-------------------------------------------------------------------------------                 
     # Wing Weight 
@@ -388,46 +389,40 @@ def compute_operating_empty_weight(vehicle, settings=None, method_type='RCAIDE')
     ##-------------------------------------------------------------------------------                 
     # Accumulate Structural Weight
     ##-------------------------------------------------------------------------------   
-    output.structural_breakdown                       = Data()
-    output.structural_breakdown.wing                  = W_main_wing
-    output.structural_breakdown.horizontal_tail       = W_tail_horizontal
-    output.structural_breakdown.vertical_tail         = W_tail_vertical
-    output.structural_breakdown.fuselage              = W_fuselage_total
-    output.structural_breakdown.main_landing_gear     = landing_gear.main
-    output.structural_breakdown.nose_landing_gear     = landing_gear.nose 
-    output.structural_breakdown.nacelle               = W_energy_network.W_nacelle
+    output.empty.structural                       = Data()
+    output.empty.structural.wings                  = W_main_wing +   W_tail_horizontal +  W_tail_vertical 
+    output.empty.structural.fuselage              = W_fuselage_total
+    output.empty.structural.landing_gear          = landing_gear.main +  landing_gear.nose  
+    output.empty.structural.nacelle               = W_energy_network.W_nacelle
     
     if 'FLOPS' in method_type:
         print('Paint weight is currently ignored in FLOPS calculations.')
-    output.structural_breakdown.paint = 0  # TODO reconcile FLOPS paint calculations with Raymer and RCAIDE baseline
-    output.structural_breakdown.total = output.structural_breakdown.wing + output.structural_breakdown.horizontal_tail + output.structural_breakdown.vertical_tail \
-                              + output.structural_breakdown.fuselage + output.structural_breakdown.main_landing_gear + output.structural_breakdown.nose_landing_gear \
-                              + output.structural_breakdown.paint + output.structural_breakdown.nacelle 
+    output.empty.structural.paint = 0  # TODO reconcile FLOPS paint calculations with Raymer and RCAIDE baseline
+    output.empty.structural.total = output.empty.structural.wings   + output.empty.structural.fuselage + output.empty.structural.landing_gear\
+                              + output.empty.structural.paint + output.empty.structural.nacelle 
 
     ##-------------------------------------------------------------------------------                 
     # Accumulate Systems Weight
-    ##-------------------------------------------------------------------------------     
-    output.systems_breakdown                        = Data()
-    output.systems_breakdown.control_systems        = W_systems.W_flight_control
-    output.systems_breakdown.apu                    = W_systems.W_apu
-    output.systems_breakdown.electrical             = W_systems.W_electrical
-    output.systems_breakdown.avionics               = W_systems.W_avionics
-    output.systems_breakdown.hydraulics             = W_systems.W_hyd_pnu
-    output.systems_breakdown.furnish                = W_systems.W_furnish
-    output.systems_breakdown.air_conditioner        = W_systems.W_ac + W_systems.W_anti_ice # Anti-ice is sometimes included in ECS
-    output.systems_breakdown.instruments            = W_systems.W_instruments
-    output.systems_breakdown.total                  = output.systems_breakdown.control_systems + output.systems_breakdown.apu \
-                                                    + output.systems_breakdown.electrical + output.systems_breakdown.avionics \
-                                                    + output.systems_breakdown.hydraulics + output.systems_breakdown.furnish \
-                                                    + output.systems_breakdown.air_conditioner + output.systems_breakdown.instruments
-
-    output.payload_breakdown    = Data()
-    output.payload_breakdown    = payload 
+    ##-------------------------------------------------------------------------------
+    output.empty.systems                        = Data()
+    output.empty.systems.control_systems        = W_systems.W_flight_control
+    output.empty.systems.apu                    = W_systems.W_apu
+    output.empty.systems.electrical             = W_systems.W_electrical
+    output.empty.systems.avionics               = W_systems.W_avionics
+    output.empty.systems.hydraulics             = W_systems.W_hyd_pnu
+    output.empty.systems.furnishings            = W_systems.W_furnish
+    output.empty.systems.air_conditioner        = W_systems.W_ac + W_systems.W_anti_ice # Anti-ice is sometimes included in ECS
+    output.empty.systems.instruments            = W_systems.W_instruments
+    output.empty.systems.total                  = output.empty.systems.control_systems + output.empty.systems.apu \
+                                                    + output.empty.systems.electrical + output.empty.systems.avionics \
+                                                    + output.empty.systems.hydraulics + output.empty.systems.furnishings \
+                                                    + output.empty.systems.air_conditioner + output.empty.systems.instruments
+ 
+    output.payload    = payload 
     output.operational_items    = Data()
     output.operational_items    = W_oper 
-    output.empty                = output.structural_breakdown.total + output.propulsion_breakdown.total + output.systems_breakdown.total
-    output.operating_empty      = output.empty + output.operational_items.total
-    output.zero_fuel_weight     = output.operating_empty + output.payload_breakdown.total
+    output.empty.total          = output.empty.structural.total + output.empty.propulsion.total + output.empty.systems.total 
+    output.zero_fuel_weight     = output.empty.total + output.operational_items.total + output.payload.total
     output.max_takeoff          = vehicle.mass_properties.max_takeoff
     total_fuel_weight           = vehicle.mass_properties.max_takeoff - output.zero_fuel_weight
     
@@ -441,37 +436,37 @@ def compute_operating_empty_weight(vehicle, settings=None, method_type='RCAIDE')
                     
     if not hasattr(vehicle.landing_gear, 'nose'):
         vehicle.landing_gear.nose   =  RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()
-    vehicle.landing_gear.nose.mass  = output.structural_breakdown.nose_landing_gear
+    vehicle.landing_gear.nose.mass  =  landing_gear.nose 
     if not hasattr(vehicle.landing_gear, 'main'):
         vehicle.landing_gear.main   =  RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear()   
-    vehicle.landing_gear.main.mass  = output.structural_breakdown.main_landing_gear  
+    vehicle.landing_gear.main.mass  = landing_gear.main  
 
 
 
     control_systems                         = RCAIDE.Library.Components.Component()
     control_systems.tag                     = 'control_systems'  
-    control_systems.mass_properties.mass    = output.systems_breakdown.control_systems
+    control_systems.mass_properties.mass    = output.empty.systems.control_systems
     electrical_systems                      = RCAIDE.Library.Components.Component()
     electrical_systems.tag                  = 'electrical_systems'
-    electrical_systems.mass_properties.mass = output.systems_breakdown.electrical
+    electrical_systems.mass_properties.mass = output.empty.systems.electrical
     furnishings                             = RCAIDE.Library.Components.Component()
     furnishings.tag                         = 'furnishings'
-    furnishings.mass_properties.mass        = output.systems_breakdown.furnish
+    furnishings.mass_properties.mass        = output.empty.systems.furnishings
     air_conditioner                         = RCAIDE.Library.Components.Component() 
     air_conditioner.tag                     = 'air_conditioner'
-    air_conditioner.mass_properties.mass    = output.systems_breakdown.air_conditioner
+    air_conditioner.mass_properties.mass    = output.empty.systems.air_conditioner
     apu                                     = RCAIDE.Library.Components.Component()
     apu.tag                                 = 'apu'
-    apu.mass_properties.mass                = output.systems_breakdown.apu
+    apu.mass_properties.mass                = output.empty.systems.apu
     hydraulics                              = RCAIDE.Library.Components.Component()
     hydraulics.tag                          = 'hydraulics' 
-    hydraulics.mass_properties.mass         = output.systems_breakdown.hydraulics
+    hydraulics.mass_properties.mass         = output.empty.systems.hydraulics
     avionics                                = RCAIDE.Library.Components.Systems.Avionics()
-    avionics.mass_properties.mass           = output.systems_breakdown.avionics + output.systems_breakdown.instruments
+    avionics.mass_properties.mass           = output.empty.systems.avionics + output.empty.systems.instruments
     optionals                               = RCAIDE.Library.Components.Component()
     optionals.tag                           = 'optionals'
     optionals                               = RCAIDE.Library.Components.Component()
-    optionals.mass_properties.mass          = output.operational_items.operating_items_less_crew
+    optionals.mass_properties.mass          = output.operational_items.misc
     
     # assign components to vehicle
     vehicle.systems.control_systems         = control_systems
