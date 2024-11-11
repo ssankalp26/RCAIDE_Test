@@ -23,7 +23,7 @@ def plot_solar_network_conditions(results,
                     show_legend   = True,
                     save_filename = "Solar_Flux",
                     file_type     = ".png",
-                    width = 8, height = 6):
+                    width = 11, height = 7):
     """This plots the solar flux and power train performance of an solar powered aircraft
 
     Assumptions:
@@ -73,7 +73,7 @@ def plot_solar_network_conditions(results,
                         current             = bus_results.current_draw[:,0]
                         energy              = bus_results.energy[:,0] / Units.MJ 
                         axis_1 = plt.subplot(2,2,1)
-                        if i == 0: 
+                        if b_i == 0 and i ==0:              
                             axis_1.plot(time, flux, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = battery.tag)
                         else:
                             axis_1.plot(time, flux, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)
@@ -98,7 +98,7 @@ def plot_solar_network_conditions(results,
                         set_axes(axis_4)   
                             
     if show_legend:        
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5)  
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4)  
     
     # Adjusting the sub-plots for legend 
     fig.tight_layout()

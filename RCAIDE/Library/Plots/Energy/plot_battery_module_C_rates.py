@@ -79,7 +79,7 @@ def plot_battery_module_C_rates(results,
                         module_C_instant      = module_current/module_battery_amp_hr
                         module_C_nominal      = module_current/np.max(module_battery_amp_hr)   
     
-                        if i == 0: 
+                        if i == 0 and i ==0:              
                             axis_1.plot(time, module_C_instant, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = battery.tag)
                         else: 
                             axis_1.plot(time, module_C_instant, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)                                
@@ -92,7 +92,7 @@ def plot_battery_module_C_rates(results,
                         axis_2.set_xlabel('Time (mins)')
                         set_axes(axis_2)    
     if show_legend:      
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5)  
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4)  
     
     # Adjusting the sub-plots for legend 
     fig.tight_layout()

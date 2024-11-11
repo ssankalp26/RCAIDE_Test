@@ -22,7 +22,7 @@ def plot_altitude_sfc_weight(results,
                              show_legend = True,
                              save_filename = "Altitude_SFC_Weight" ,
                              file_type = ".png",
-                             width = 8, height = 6):
+                             width = 11, height = 7):
     """This plots the altitude, specific fuel consumption and vehicle weight.
 
     Assumptions:
@@ -81,7 +81,7 @@ def plot_altitude_sfc_weight(results,
                 for bus in busses:
                     for j ,  propulsor in enumerate(bus.propulsors):
                         eta = results.segments[i].conditions.energy[bus.tag][propulsor.tag].throttle[:,0]  
-                        if j == 0: 
+                        if j == 0 and i ==0: 
                             axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = propulsor.tag    )
                         else:
                             axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)  
@@ -89,7 +89,7 @@ def plot_altitude_sfc_weight(results,
                     for j ,  propulsor in enumerate(fuel_line.propulsors):
                         eta = results.segments[i].conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0]
                         eta = results.segments[i].conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0]  
-                        if j == 0: 
+                        if j == 0 and i ==0: 
                             axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = propulsor.tag   )
                         else:
                             axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)  
@@ -113,7 +113,7 @@ def plot_altitude_sfc_weight(results,
         
     
     if show_legend:
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5)    
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4)    
     
     # Adjusting the sub-plots for legend 
     fig.tight_layout()

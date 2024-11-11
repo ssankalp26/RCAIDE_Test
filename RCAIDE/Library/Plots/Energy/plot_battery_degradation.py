@@ -23,7 +23,7 @@ def plot_battery_degradation(results,
                             line_color2 = 'rs--',
                             save_filename = "Battery_Degradation",
                             file_type = ".png",
-                            width = 8, height = 6):
+                            width = 11, height = 7):
     """This plots the solar flux and power train performance of an solar powered aircraft
 
     Assumptions:

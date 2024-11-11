@@ -23,7 +23,7 @@ def plot_battery_module_conditions(results,
                                   show_legend = True,
                                   save_filename = "Battery_Module_Conditions_",
                                   file_type = ".png",
-                                  width = 8, height = 6):
+                                  width = 11, height = 7):
     """Plots the module-level conditions of the battery throughout flight.
 
     Assumptions:
@@ -77,13 +77,12 @@ def plot_battery_module_conditions(results,
                         battery_conditions  = results.segments[i].conditions.energy[bus.tag].battery_modules[battery.tag]    
                         module_power          = battery_conditions.power[:,0]
                         module_energy         = battery_conditions.energy[:,0]
-                        module_volts          = battery_conditions.voltage_under_load[:,0]
-                        module_volts_oc       = battery_conditions.voltage_open_circuit[:,0]
+                        module_volts          = battery_conditions.voltage_under_load[:,0] 
                         module_current        = battery_conditions.current[:,0]
                         module_SOC            = battery_conditions.cell.state_of_charge[:,0]   
                         module_temperature    = battery_conditions.temperature[:,0]   
                     
-                        if b_i == 0:                     
+                        if b_i == 0 and i ==0:                             
                             axis_1.plot(time, module_SOC, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width, label = battery.tag)
                         else:
                             axis_1.plot(time, module_SOC, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
@@ -112,7 +111,7 @@ def plot_battery_module_conditions(results,
                         set_axes(axis_6)  
                   
     if show_legend:      
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5)  
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4)  
     
     # Adjusting the sub-plots for legend 
     fig.tight_layout()

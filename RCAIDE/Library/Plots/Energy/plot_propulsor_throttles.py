@@ -22,7 +22,7 @@ def plot_propulsor_throttles(results,
                              show_legend = True,
                              save_filename = "Propulsor_Throttles" ,
                              file_type = ".png",
-                             width = 8, height = 6):
+                             width = 11, height = 7):
     """This plots the altitude, specific fuel consumption and vehicle weight.
 
     Assumptions:
@@ -74,7 +74,7 @@ def plot_propulsor_throttles(results,
             for bus in busses:
                 for j ,  propulsor in enumerate(bus.propulsors):
                     eta = results.segments[i].conditions.energy[bus.tag][propulsor.tag].throttle[:,0]  
-                    if j == 0: 
+                    if j == 0 and i ==0:               
                         axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name + ': '+ propulsor.tag )
                     else:
                         axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width) 
@@ -83,14 +83,14 @@ def plot_propulsor_throttles(results,
                 for j ,  propulsor in enumerate(fuel_line.propulsors):
                     eta = results.segments[i].conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0]
                     eta = results.segments[i].conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0]  
-                    if j == 0: 
+                    if j == 0 and i ==0:              
                         axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name + ': '+ propulsor.tag )
                     else:
                         axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)
                                  
     
     if show_legend:
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4) 
         leg.set_title('Propulsor', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
     # Adjusting the sub-plots for legend 

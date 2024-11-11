@@ -20,7 +20,7 @@ def plot_airfoil_polars(polar_data,
                         save_figure   = False,
                         save_filename = "Airfoil_Polars",
                         file_type = ".png",
-                        width = 8, height = 6):
+                        width = 11, height = 7):
     """This plots all the airfoil polars of a specfic airfoil
 
     Assumptions:

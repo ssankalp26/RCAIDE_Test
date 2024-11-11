@@ -22,7 +22,7 @@ def plot_longitudinal_stability(results,
                              show_legend=True,
                              save_filename = "Longitudinal_Stability",
                              file_type = ".png",
-                             width = 8, height = 6):
+                             width = 11, height = 7):
     """This plots the static stability characteristics of an aircraft 
     """  
 
@@ -91,14 +91,15 @@ def plot_longitudinal_stability(results,
         axis_6.plot(time,CL_alpha, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)
         axis_6.set_xlabel('Time (mins)')
         axis_6.set_ylabel(r'$C_L\alpha$')
-        axis_6.set_ylim([-5, 5]) 
+        axis_6.set_ylim([-1, 10]) 
         set_axes(axis_6)    
         
     if show_legend:
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4) 
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})     
           
-    # Adjusting the sub-plots for legend 
+    # Adjusting the sub-plots for legend
+    fig.tight_layout()
     fig.subplots_adjust(top=0.8)
     
     # set title of plot 

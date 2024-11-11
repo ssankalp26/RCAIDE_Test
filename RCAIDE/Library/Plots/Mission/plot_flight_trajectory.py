@@ -24,7 +24,7 @@ def plot_flight_trajectory(results,
                            show_legend   = True,
                            save_filename = "Flight_Trajectory",
                            file_type = ".png",
-                           width = 8, height = 6):
+                           width = 11, height = 7):
     """This plots the 3D flight trajectory of the aircraft.
 
     Assumptions:
@@ -103,7 +103,7 @@ def plot_flight_trajectory(results,
         set_axes(axes)         
         
     if show_legend:        
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4) 
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
     # Adjusting the sub-plots for legend 

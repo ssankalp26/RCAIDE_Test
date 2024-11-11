@@ -23,7 +23,7 @@ def plot_battery_cell_conditions(results,
                                   show_legend = True,
                                   save_filename = "Battery_Cell_Conditions_",
                                   file_type = ".png",
-                                  width = 8, height = 6):
+                                  width = 11, height = 7):
     """Plots the cell-level conditions of the battery throughout flight.
 
     Assumptions:
@@ -87,7 +87,7 @@ def plot_battery_cell_conditions(results,
                         segment_tag  = results.segments[i].tag
                         segment_name = segment_tag.replace('_', ' ') 
     
-                        if b_i == 0:                     
+                        if b_i == 0 and i ==0:                    
                             axis_1.plot(time, cell_SOC, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width, label = battery.tag)
                         else:
                             axis_1.plot(time, cell_SOC, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
@@ -116,7 +116,7 @@ def plot_battery_cell_conditions(results,
                         set_axes(axis_6)  
                   
     if show_legend:      
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5)   
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4)   
     
     # Adjusting the sub-plots for legend 
     fig.tight_layout()

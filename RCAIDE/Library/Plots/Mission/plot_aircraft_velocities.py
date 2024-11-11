@@ -22,7 +22,7 @@ def plot_aircraft_velocities(results,
                              show_legend = True,
                              save_filename = "Aircraft Velocities" ,
                              file_type = ".png",
-                             width = 8, height = 6): 
+                             width = 11, height = 7): 
 
     """This plots true, equivalent, and calibrated airspeeds along with mach
 
@@ -96,7 +96,7 @@ def plot_aircraft_velocities(results,
     
     
     if show_legend:    
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4) 
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
     # Adjusting the sub-plots for legend

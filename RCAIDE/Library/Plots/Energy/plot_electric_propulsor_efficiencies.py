@@ -23,7 +23,7 @@ def plot_electric_propulsor_efficiencies(results,
                                   show_legend=True,
                                   save_filename = "Electric_Efficiencies",
                                   file_type = ".png",
-                                  width = 8, height = 6):
+                                  width = 11, height = 7):
     """This plots the electric driven network propeller efficiencies 
 
     Assumptions:
@@ -73,7 +73,7 @@ def plot_electric_propulsor_efficiencies(results,
                     pi += 1
                
     if show_legend:     
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5)  
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4)  
     
     # Adjusting the sub-plots for legend 
     fig.tight_layout()
@@ -103,7 +103,7 @@ def plot_propulsor_data(results,bus,propulsor,axis_1,axis_2,axis_3,line_colors,p
         fom          = bus_results[propulsor.tag][thrustor.tag].figure_of_merit[:,0]
         effm         = bus_results[propulsor.tag][motor.tag].efficiency[:,0]  
         
-        if pi == 0:
+        if pi == 0 and i ==0:              
             axis_1.plot(time, effp, color = line_colors[i], marker = ps.markers[pi], markersize= ps.marker_size, linewidth = ps.line_width, label = thrustor.tag)
         else:
             axis_1.plot(time, effp, color = line_colors[i], marker = ps.markers[pi], markersize= ps.marker_size, linewidth = ps.line_width) 

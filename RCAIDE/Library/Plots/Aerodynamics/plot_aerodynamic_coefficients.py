@@ -22,7 +22,7 @@ def plot_aerodynamic_coefficients(results,
                              show_legend = True,
                              save_filename = "Aerodynamic_Coefficents",
                              file_type = ".png",
-                             width = 8, height = 6):
+                             width = 11, height = 7):
     """This plots the aerodynamic coefficients
     
     Assumptions:
@@ -68,34 +68,34 @@ def plot_aerodynamic_coefficients(results,
                        
         segment_tag  =  results.segments[i].tag
         segment_name = segment_tag.replace('_', ' ')
-        axis_1 = plt.subplot(2,2,1)
-        axis_1.plot(time, aoa, color = line_colors[i], marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
+        axis_1 = plt.subplot(2,2,1) 
+        axis_1.plot(time, aoa, color = line_colors[i], marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name) 
         axis_1.set_ylabel(r'AoA (deg)') 
         axis_1.set_xlabel('Time (mins)')        
         axis_1.set_ylim([-5,15])
         set_axes(axis_1)    
 
         axis_2 = plt.subplot(2,2,2)        
-        axis_2.plot(time, l_d, color = line_colors[i], marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name) 
+        axis_2.plot(time, l_d, color = line_colors[i], marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width) 
         axis_2.set_ylabel(r'L/D')
         axis_2.set_xlabel('Time (mins)')
         set_axes(axis_2) 
 
         axis_3 = plt.subplot(2,2,3) 
-        axis_3.plot(time, cl, color = line_colors[i], marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
+        axis_3.plot(time, cl, color = line_colors[i], marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width)
         axis_3.set_xlabel('Time (mins)')
         axis_3.set_ylabel(r'$C_L$')
         set_axes(axis_3) 
 
         axis_4 = plt.subplot(2,2,4)        
-        axis_4.plot(time, cd, color = line_colors[i], marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
+        axis_4.plot(time, cd, color = line_colors[i], marker = ps.markers[0],markersize = ps.marker_size, linewidth = ps.line_width)
         axis_4.set_xlabel('Time (mins)')
         axis_4.set_ylabel(r'$C_D$')
         axis_4.set_ylim([0,0.1])
         set_axes(axis_4) 
         
     if show_legend:
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5)  
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4)  
     
     # Adjusting the sub-plots for legend
     fig.tight_layout() 
