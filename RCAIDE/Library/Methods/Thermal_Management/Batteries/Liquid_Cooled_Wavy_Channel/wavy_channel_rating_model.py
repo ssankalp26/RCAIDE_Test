@@ -187,20 +187,7 @@ def  wavy_channel_rating_model(HAS,battery,bus,coolant_line,Q_heat_gen,T_cell,st
     
     if not state.conditions.energy.recharging:
         state.conditions.energy[bus.tag].power_draw[t_idx+1]                                  += Power 
-
-    # To be introduced when turndown ratio is a thing in the future. 
-    #if turndown_ratio == 0:
-    #battery_conditions.thermal_management_system.heat_generated[t_idx+1]                    = Q_pack
-    #battery_conditions.thermal_management_system.HAS.heat_removed[t_idx+1]                  = 0
-    #battery_conditions.thermal_management_system.HAS.outlet_coolant_temperature[t_idx+1]    = T_cell_new     
-    #battery_conditions.thermal_management_system.HAS.coolant_mass_flow_rate[t_idx+1]        = 0
-    #battery_conditions.thermal_management_system.HAS.power[t_idx+1]                         = 0
-    #battery_conditions.thermal_management_system.HAS.effectiveness[t_idx+1]                 = 0
-    #battery_conditions.cell.temperature[t_idx+1]                                            = T_cell_new     
-
-    #else: 
-
-
+ 
     return T_cell_new
 
 def compute_coolant_properties(HAS,T_inlet,state,delta_t,t_idx):

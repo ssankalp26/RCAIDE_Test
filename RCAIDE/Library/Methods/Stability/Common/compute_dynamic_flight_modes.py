@@ -44,8 +44,13 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
     Properties Used:
        N/A
      """
-    
-    if np.count_nonzero(aircraft.mass_properties.moments_of_inertia.tensor) > 0: 
+    vertical_fligth_flag = False
+    if isinstance(state,RCAIDE.Framework.Mission.Segments.Vertical_Flight.Climb) or \
+       isinstance(state,RCAIDE.Framework.Mission.Segments.Vertical_Flight.Hover) or \
+       isinstance(state,RCAIDE.Framework.Mission.Segments.Vertical_Flight.Descent):
+        vertical_fligth_flag = True
+            
+    if np.count_nonzero(aircraft.mass_properties.moments_of_inertia.tensor) > 0 and  vertical_fligth_flag !=  True:
         conditions = state.conditions 
         g          = conditions.freestream.gravity  
         rho        = conditions.freestream.density

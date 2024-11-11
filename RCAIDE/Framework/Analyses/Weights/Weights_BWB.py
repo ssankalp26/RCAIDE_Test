@@ -71,7 +71,7 @@ class Weights_BWB(Weights):
         vehicle.weight_breakdown = results
 
         # updating empty weight
-        vehicle.mass_properties.operating_empty = results.empty
+        vehicle.mass_properties.operating_empty = results.empty.total
 
         # done!
         return results        

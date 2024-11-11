@@ -23,7 +23,8 @@ def train_VLM_surrogates(aerodynamics):
         CL_beta multiplied by -1, verified against literature and AVL 
         p derivatives multiplied by -10, verified against literature and AVL 
         r derivatives multiplied by -10, verified against literature and AVL 
-        dCN_ddelta_r multiplied by -1, verified against literature 
+        Rudder derivatives multiplied by -1, verified against literature  
+        Aileron derivatives multiplied by -1, verified against literature
         
     Source:
         None

@@ -174,10 +174,10 @@ def vehicle_setup(regression_flag):
     bat.tag                                                = 'li_ion_battery'
     bat.electrical_configuration.series                    = 50  
     bat.electrical_configuration.parallel                  = 5 
-    bat.geometrtic_configuration.normal_count              = 5
+    bat.geometrtic_configuration.normal_count              = 25
     bat.geometrtic_configuration.parallel_count            = 10
     bus.battery_modules.append(bat)      
-    bus.initialize_bus_electrical_properties()
+    bus.initialize_bus_properties()
     
     #------------------------------------------------------------------------------------------------------------------------------------  
     #  Starboard Propulsor

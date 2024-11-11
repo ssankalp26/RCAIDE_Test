@@ -231,7 +231,7 @@ def vehicle_setup(new_regression=True):
     
     for _ in range(bus.number_of_battery_modules):
         bus.battery_modules.append(deepcopy(bat))   
-    bus.initialize_bus_electrical_properties()
+    bus.initialize_bus_properties()
     
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Lift Propulsors 
@@ -356,15 +356,7 @@ def vehicle_setup(new_regression=True):
     avionics.mass_properties.mass   = 1.0 * Units.kg
     bus.avionics                    = avionics    
    
-    network.busses.append(bus)
-    
-    # append motor origin spanwise locations onto wing data structure
-    motor_origins_front                                   = np.array(origins[:4])
-    motor_origins_rear                                    = np.array(origins[5:])
-    vehicle.wings['canard_wing'].motor_spanwise_locations = motor_origins_front[:,1]/ vehicle.wings['canard_wing'].spans.projected
-    vehicle.wings['canard_wing'].motor_spanwise_locations = motor_origins_front[:,1]/ vehicle.wings['canard_wing'].spans.projected
-    vehicle.wings['main_wing'].motor_spanwise_locations   = motor_origins_rear[:,1]/ vehicle.wings['main_wing'].spans.projected
-      
+    network.busses.append(bus) 
         
     # append energy network 
     vehicle.append_energy_network(network)  
