@@ -56,7 +56,7 @@ def compute_module_properties(battery_module):
     parallel_count     = battery_module.geometrtic_configuration.parallel_count   
 
     if int(parallel_e*series_e) != int(normal_count*parallel_count):
-        assert ('Number of cells in gemetric layout not equal to number of cells in electric circuit configuration ')
+        raise Exception('Number of cells in gemetric layout not equal to number of cells in electric circuit configuration ')
         
         
     normal_spacing     = battery_module.geometrtic_configuration.normal_spacing   

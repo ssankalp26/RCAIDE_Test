@@ -54,8 +54,8 @@ class Electrical_Bus(Component):
         append_bus_segment_conditions(self, conditions, segment)
         return    
     
-    def initialize_bus_electrical_properties(self):
-        initialize_bus_electrical_properties(self)
+    def initialize_bus_properties(self):
+        initialize_bus_properties(self)
         return
     def compute_distributor_conditions(self,state,t_idx, delta_t):
         compute_bus_conditions(self,state,t_idx, delta_t)

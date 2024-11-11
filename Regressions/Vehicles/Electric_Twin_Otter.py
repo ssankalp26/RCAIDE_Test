@@ -452,7 +452,7 @@ def vehicle_setup(cell_chemistry, btms_type):
             bus.battery_modules.append(bat_copy)
 
         bus.battery_module_electric_configuration = 'Series' 
-        bus.initialize_bus_electrical_properties()
+        bus.initialize_bus_properties()
 
     elif cell_chemistry == 'lithium_ion_lfp':
         #------------------------------------------------------------------------------------------------------------------------------------           
@@ -471,7 +471,7 @@ def vehicle_setup(cell_chemistry, btms_type):
                 bus.battery_modules.append(bat_copy)
         
             bus.battery_module_electric_configuration = 'Series' 
-            bus.initialize_bus_electrical_properties()
+            bus.initialize_bus_properties()
             
     if btms_type ==  None:
         pass

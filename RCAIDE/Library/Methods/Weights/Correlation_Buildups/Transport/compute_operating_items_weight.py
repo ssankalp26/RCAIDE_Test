@@ -81,9 +81,9 @@ def compute_operating_items_weight(vehicle):
     W_flight_crew = flight_crew * (190 + 50)  # FLOPS: WFLCRB
 
     output                           = Data()
-    output.operating_items_less_crew = operitems_wt
+    output.misc = operitems_wt
     output.flight_crew               = W_flight_crew * Units.lbs
     output.flight_attendants         = W_flight_attendants * Units.lbs
-    output.total                     = output.operating_items_less_crew + output.flight_crew + \
+    output.total                     = output.misc + output.flight_crew + \
                                        output.flight_attendants
     return output

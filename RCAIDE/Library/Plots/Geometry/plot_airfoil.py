@@ -22,7 +22,7 @@ def plot_airfoil(airfoil_paths,
                  save_figure = False, 
                  save_filename = "Airfoil_Geometry",
                  file_type = ".png", 
-                 width = 8, height = 6):
+                 width = 11, height = 7):
     """This plots all airfoil defined in the list "airfoil_names" 
 
     Assumptions:

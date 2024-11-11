@@ -18,11 +18,7 @@ import numpy as np
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------      
 ## @ingroup Library-Plots-Performance-Aerodynamics  
-def plot_rotor_disc_inflow(prop,velocities, grid_points, 
-                           save_filename = "Rotor_Disc_Inflow",
-                           file_type = ".png",
-                           save_figure = False, 
-                           width = 8, height = 6):
+def plot_rotor_disc_inflow(prop,velocities, grid_points):
 
     """Plots rotor disc inflow velocities
 
@@ -59,46 +55,36 @@ def plot_rotor_disc_inflow(prop,velocities, grid_points,
     vmax = round(np.max([u,v,w,vtot]),3)
     levels = np.linspace(vmin,vmax, 21)
     
-    # plot the grid point velocities 
     # plot the grid point velocities
-    fig_1   = plt.figure(save_filename + '_Axial_Velocity' )
-    fig_2   = plt.figure(save_filename + '_Spanwise_Velocity' )
-    fig_3   = plt.figure(save_filename + '_Downwash_Velocity' )
-    fig_4   = plt.figure(save_filename + '_Total_Velocity' ) 
+    fig  = plt.figure(figsize=(10,8))
+    ax1 = plt.subplot(221)
+    ax2 = plt.subplot(222)
+    ax3 = plt.subplot(223)
+    ax4 = plt.subplot(224)
     
-    fig_1.set_size_inches(width,height)
-    fig_2.set_size_inches(width,height)
-    fig_3.set_size_inches(width,height)
-    fig_4.set_size_inches(width,height)  
-     
-    axis_1    = fig_1.add_subplot(111)
-    axis_2    = fig_2.add_subplot(111) 
-    axis_3    = fig_3.add_subplot(111)  
-    axis_4    = fig_4.add_subplot(111)   
-    
-    c1 = axis_1.tricontourf(y,z, u, levels=levels, vmax=vmax, vmin=vmin, cmap='seismic')
-    plt.colorbar(c1, ax=axis_1)#, orientation="horizontal")           
+    c1 = ax1.tricontourf(y,z, u, levels=levels, vmax=vmax, vmin=vmin, cmap='seismic')
+    plt.colorbar(c1, ax=ax1)#, orientation="horizontal")           
                                
-    c2 = axis_2.tricontourf(y,z, v, levels=levels, vmax=vmax, vmin=vmin, cmap='seismic')
-    plt.colorbar(c2, ax=axis_2)#, orientation="horizontal")           
+    c2 = ax2.tricontourf(y,z, v, levels=levels, vmax=vmax, vmin=vmin, cmap='seismic')
+    plt.colorbar(c2, ax=ax2)#, orientation="horizontal")           
                                
-    c3 = axis_3.tricontourf(y,z, w, levels=levels, vmax=vmax, vmin=vmin, cmap='seismic')
-    plt.colorbar(c3, ax=axis_3)#, orientation="horizontal")
+    c3 = ax3.tricontourf(y,z, w, levels=levels, vmax=vmax, vmin=vmin, cmap='seismic')
+    plt.colorbar(c3, ax=ax3)#, orientation="horizontal")
     
-    c4 = axis_4.tricontourf(y,z, vtot, levels=levels, vmax=vmax, vmin=vmin, cmap='seismic')
-    plt.colorbar(c4, ax=axis_4)#, orientation="horizontal")    
+    c4 = ax4.tricontourf(y,z, vtot, levels=levels, vmax=vmax, vmin=vmin, cmap='seismic')
+    plt.colorbar(c4, ax=ax4)#, orientation="horizontal")    
     
     # plot the rotor radius
-    axis_1.plot(R*np.cos(psi_360), R*np.sin(psi_360), 'k')
-    axis_2.plot(R*np.cos(psi_360), R*np.sin(psi_360), 'k')
-    axis_3.plot(R*np.cos(psi_360), R*np.sin(psi_360), 'k')
-    axis_4.plot(R*np.cos(psi_360), R*np.sin(psi_360), 'k')
+    ax1.plot(R*np.cos(psi_360), R*np.sin(psi_360), 'k')
+    ax2.plot(R*np.cos(psi_360), R*np.sin(psi_360), 'k')
+    ax3.plot(R*np.cos(psi_360), R*np.sin(psi_360), 'k')
+    ax4.plot(R*np.cos(psi_360), R*np.sin(psi_360), 'k')
     
     # plot the rotor hub
-    axis_1.plot(Rh*np.cos(psi_360), Rh*np.sin(psi_360), 'k')
-    axis_2.plot(Rh*np.cos(psi_360), Rh*np.sin(psi_360), 'k')
-    axis_3.plot(Rh*np.cos(psi_360), Rh*np.sin(psi_360), 'k')
-    axis_4.plot(Rh*np.cos(psi_360), Rh*np.sin(psi_360), 'k')
+    ax1.plot(Rh*np.cos(psi_360), Rh*np.sin(psi_360), 'k')
+    ax2.plot(Rh*np.cos(psi_360), Rh*np.sin(psi_360), 'k')
+    ax3.plot(Rh*np.cos(psi_360), Rh*np.sin(psi_360), 'k')
+    ax4.plot(Rh*np.cos(psi_360), Rh*np.sin(psi_360), 'k')
     
     # plot rotation direction
     style = "Simple, tail_width=0.5, head_width=4, head_length=8"
@@ -117,38 +103,28 @@ def plot_rotor_disc_inflow(prop,velocities, grid_points,
         arrow3 = patches.FancyArrowPatch((0.8*R,-0.8*R),(-0.8*R,-0.8*R), connectionstyle="arc3,rad=-0.4", **kw)
         arrow4 = patches.FancyArrowPatch((0.8*R,-0.8*R),(-0.8*R,-0.8*R), connectionstyle="arc3,rad=-0.4", **kw) 
     
-    axis_1.add_patch(arrow1)
-    axis_2.add_patch(arrow2)
-    axis_3.add_patch(arrow3)
-    axis_4.add_patch(arrow4)
+    ax1.add_patch(arrow1)
+    ax2.add_patch(arrow2)
+    ax3.add_patch(arrow3)
+    ax4.add_patch(arrow4)
     
-    axis_1.set_aspect('equal', 'box')
-    axis_2.set_aspect('equal', 'box')
-    axis_3.set_aspect('equal', 'box')
-    axis_4.set_aspect('equal', 'box')
-    axis_1.set_xlabel('y')
-    axis_1.set_ylabel("z")
-    axis_2.set_xlabel('y')
-    axis_2.set_ylabel("z")
-    axis_3.set_xlabel('y')
-    axis_3.set_ylabel("z")
-    axis_4.set_xlabel('y')
-    axis_4.set_ylabel("z")
-    axis_1.set_title("Axial Velocity, u")        
-    axis_2.set_title("Spanwise Velocity, v")
-    axis_3.set_title("Downwash Velocity, w")
-    axis_4.set_title("Total Velocity") 
-
-
-    fig_1.tight_layout()    
-    fig_2.tight_layout()    
-    fig_3.tight_layout()    
-    fig_4.tight_layout()     
-         
-    if save_figure:
-        fig_1.savefig(save_filename + file_type) 
-        fig_2.savefig(save_filename + file_type) 
-        fig_3.savefig(save_filename + file_type) 
-        fig_4.savefig(save_filename + file_type)
-        
-    return fig_1,fig_2,fig_3, fig_4
+    ax1.set_aspect('equal', 'box')
+    ax2.set_aspect('equal', 'box')
+    ax3.set_aspect('equal', 'box')
+    ax4.set_aspect('equal', 'box')
+    ax1.set_xlabel('y')
+    ax1.set_ylabel("z")
+    ax2.set_xlabel('y')
+    ax2.set_ylabel("z")
+    ax3.set_xlabel('y')
+    ax3.set_ylabel("z")
+    ax4.set_xlabel('y')
+    ax4.set_ylabel("z")
+    ax1.set_title("Axial Velocity, u")        
+    ax2.set_title("Spanwise Velocity, v")
+    ax3.set_title("Downwash Velocity, w")
+    ax4.set_title("Total Velocity")
+    
+    fig.suptitle("Induced Velocities at Rotor")
+    
+    return fig 
