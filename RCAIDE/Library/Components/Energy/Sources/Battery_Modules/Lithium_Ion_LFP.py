@@ -17,7 +17,7 @@ from RCAIDE.Library.Methods.Energy.Sources.Batteries.Lithium_Ion_LFP  import *
 # package imports 
 import numpy as np  
 import os
-from scipy.interpolate  import LinearNDInterpolator 
+from scipy.interpolate  import NearestNDInterpolator
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Lithium_Ion_LFP
@@ -185,7 +185,7 @@ def create_discharge_performance_map(raw_data):
     values = np.array(voltages)
 
     # Create the interpolant
-    battery_data = LinearNDInterpolator(points, values)
+    battery_data = NearestNDInterpolator(points, values)
 
     return battery_data  
 
@@ -205,7 +205,7 @@ def load_battery_results():
         battery_data: raw data from battery   [unitless]
     '''    
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    full_path = os.path.join(current_dir, 'LFP_raw_data.res')
+    full_path = os.path.join(current_dir, 'lfp_raw_data.res')
 
     # Load the raw_data using RCAIDE.load()
     raw_data = RCAIDE.load(full_path)
