@@ -34,6 +34,7 @@ def evaluate_CRN_emission_indices_no_surrogate(segment,settings,vehicle):
                         if propulsor.active == True: 
                             if (type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbofan) or \
                                 type(propulsor) == RCAIDE.Library.Components.Propulsors.Turboshaft or \
+                                type(propulsor) == RCAIDE.Library.Components.Propulsors.Turboprop or \
                                 type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbojet:    
                             
                                 combustor = propulsor.combustor
@@ -117,6 +118,7 @@ def evaluate_CRN_emission_indices_surrogate(segment,settings,vehicle):
                 for propulsor in fuel_line.propulsors:
                     if propulsor.active == True:
                         if (type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbofan) or \
+                            type(propulsor) == RCAIDE.Library.Components.Propulsors.Turboprop or \
                             type(propulsor) == RCAIDE.Library.Components.Propulsors.Turboshaft or \
                             type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbojet:    
                         

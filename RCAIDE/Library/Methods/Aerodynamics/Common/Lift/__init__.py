@@ -18,6 +18,6 @@ from .BET_calculations                                                          
 from .BET_calculations                                                                                     import compute_inflow_and_tip_loss
 from .fuselage_correction                                                                                  import fuselage_correction 
 from Legacy.trunk.S.Methods.Aerodynamics.Common.Fidelity_Zero.Lift.generate_propeller_grid                 import generate_propeller_grid
-from Legacy.trunk.S.Methods.Aerodynamics.Common.Fidelity_Zero.Lift.generate_wing_wake_grid                 import generate_wing_wake_grid
+from .generate_wing_wake_grid                 import generate_wing_wake_grid
 from Legacy.trunk.S.Methods.Aerodynamics.Common.Fidelity_Zero.Lift.compute_wing_wake                       import compute_wing_wake
-from Legacy.trunk.S.Methods.Aerodynamics.Common.Fidelity_Zero.Lift.compute_propeller_nonuniform_freestream import compute_propeller_nonuniform_freestream
+from .compute_propeller_nonuniform_freestream import compute_propeller_nonuniform_freestream

@@ -56,7 +56,7 @@ def sum_moment(component):
 #  Recursive Moment of Intertia 
 # ----------------------------------------------------------------------------------------------------------------------  
 ## @ingroup Methods-Stability-Common 
-def sum_moment_of_intertia(component, vehicle_center_of_gravity = None): 
+def sum_moment_of_inertia(component, vehicle_center_of_gravity = None): 
     """ Recursively sums up the moment of intertia of all compoments and subcomponents
 
     Assumptions:
@@ -75,7 +75,7 @@ def sum_moment_of_intertia(component, vehicle_center_of_gravity = None):
     total_I = np.array([[0.0,0.0,0.0]]) 
     for key,Comp in component.items():
         if  isinstance(Comp,Component.Container):
-            total_I += sum_moment_of_intertia(Comp,vehicle_center_of_gravity )   
+            total_I += sum_moment_of_inertia(Comp,vehicle_center_of_gravity )   
         elif isinstance(Comp,Component):   
             global_cg_loc = Comp.mass_properties.center_of_gravity + Comp.origin 
             total_I += Comp.mass_properties.moments_of_inertia.center + Comp.mass_properties.mass*((vehicle_center_of_gravity - global_cg_loc)**2)

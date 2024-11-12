@@ -50,31 +50,37 @@ def plot_reservoir_conditions(reservoir, results, coolant_line, save_figure,show
 
     fig = plt.figure(save_filename)
     fig.set_size_inches(width,height)  
-    axis_1 = fig.add_subplot(1,1,1)
-    set_axes(axis_1)     
-             
-    b_i = 0  
-    for i in range(len(results.segments)):  
-        time                  = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min    
-        reservoir_conditions    = results.segments[i].conditions.energy[coolant_line.tag][reservoir.tag]   
-        reservoir_temperature =  reservoir_conditions.coolant_temperature[:,0]
-        
-        segment_tag  = results.segments[i].tag
-        segment_name = segment_tag.replace('_', ' ')  
-                          
-        axis_1.plot(time, reservoir_temperature, color = line_colors[i], marker = ps.markers[b_i],markersize = ps.marker_size, linewidth = ps.line_width, label = segment_name)
-        axis_1.set_ylabel(r'Coolant Temp. (K)')  
-    b_i += 1     
+    axis_1 = plt.subplot(1,1,1)
+    set_axes(axis_1)      
+ 
+    for network in results.segments[0].analyses.energy.vehicle.networks: 
+        busses  = network.busses 
+        for bus in busses:
+            for b_i, battery in enumerate(bus.battery_modules):
+                if b_i == 0 or bus.identical_battery_modules == False:
+                    for i in range(len(results.segments)): 
+                        time                  = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min    
+                        reservoir_conditions    = results.segments[i].conditions.energy[coolant_line.tag][reservoir.tag]   
+                        reservoir_temperature =  reservoir_conditions.coolant_temperature[:,0] 
+                        
+                        if i == 0: 
+                            axis_1.plot(time, reservoir_temperature, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width, label = battery.tag)
+                        else:
+                            axis_1.plot(time, reservoir_temperature, color = line_colors[i], marker = ps.markers[b_i], linewidth = ps.line_width)
+                        axis_1.set_ylabel(r'Coolant Temp. (K)')   
             
     if show_legend:        
-        leg =  fig.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 4) 
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4) 
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
                     
-    fig.tight_layout()
-    
     # Adjusting the sub-plots for legend 
-    fig.subplots_adjust(top=0.8)
-
+    fig.tight_layout()
+    fig.subplots_adjust(top=0.8) 
+    
+    # set title of plot 
+    title_text   = 'Reservoir Temperature'       
+    fig.suptitle(title_text) 
+    
     if save_figure:
         plt.savefig(save_filename + reservoir.tag + file_type)    
     return fig 

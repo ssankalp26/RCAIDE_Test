@@ -37,13 +37,14 @@ class Electrical_Bus(Component):
         self.avionics                              = RCAIDE.Library.Components.Systems.Avionics()
         self.payload                               = RCAIDE.Library.Components.Payloads.Payload()        
         self.identical_propulsors                  = True
-        self.identical_batteries                   = True  
+        self.identical_battery_modules             = True  
         self.active                                = True
         self.efficiency                            = 1.0
         self.voltage                               = 0.0 
         self.power_split_ratio                     = 1.0
         self.nominal_capacity                      = 0.0
         self.charging_c_rate                       = 1.0
+        self.number_of_battery_modules             = 1
         self.battery_module_electric_configuration = "Series" 
         
     def append_operating_conditions(self, segment):
@@ -53,8 +54,8 @@ class Electrical_Bus(Component):
         append_bus_segment_conditions(self, conditions, segment)
         return    
     
-    def initialize_bus_electrical_properties(self):
-        initialize_bus_electrical_properties(self)
+    def initialize_bus_properties(self):
+        initialize_bus_properties(self)
         return
     def compute_distributor_conditions(self,state,t_idx, delta_t):
         compute_bus_conditions(self,state,t_idx, delta_t)

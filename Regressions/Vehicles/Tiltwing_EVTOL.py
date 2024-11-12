@@ -8,7 +8,6 @@
 # ---------------------------------------------------------------------
 import RCAIDE
 from RCAIDE.Framework.Core import Units, Data    
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common                    import initialize_from_circuit_configuration 
 from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion            import compute_motor_weight
 from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor                     import design_motor
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor                        import design_prop_rotor ,design_prop_rotor 
@@ -217,27 +216,22 @@ def vehicle_setup(new_regression=True):
     # Lift Bus 
     #====================================================================================================================================          
     bus                                                    = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus()
-    bus.tag                                                = 'bus' 
+    bus.tag                                                = 'bus'
+    bus.number_of_battery_modules                          =  10
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Bus Battery
     #------------------------------------------------------------------------------------------------------------------------------------ 
-    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC()
-    number_of_modules                                      = 10 
+    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC() 
     bat.tag                                                = 'bus_battery'
-    bat.electrical_configuration.series                     = 8 
-    bat.electrical_configuration.parallel                   = 60
-    initialize_from_circuit_configuration(bat)  
-   
-    bat.geometrtic_configuration.total                      = bat.electrical_configuration.total
-    bat.voltage                                             = bat.maximum_voltage 
-    bat.geometrtic_configuration.normal_count               = 20
-    bat.geometrtic_configuration.parallel_count             = 24  
+    bat.electrical_configuration.series                    = 8 
+    bat.electrical_configuration.parallel                  = 60 
+    bat.geometrtic_configuration.normal_count              = 20
+    bat.geometrtic_configuration.parallel_count            = 24  
     
-    for _ in range(number_of_modules):
-        bus.battery_modules.append(deepcopy(bat))  
-
-    bus.initialize_bus_electrical_properties()
+    for _ in range(bus.number_of_battery_modules):
+        bus.battery_modules.append(deepcopy(bat))   
+    bus.initialize_bus_properties()
     
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Lift Propulsors 
@@ -307,14 +301,13 @@ def vehicle_setup(new_regression=True):
     #------------------------------------------------------------------------------------------------------------------------------------    
     prop_rotor_motor                         = RCAIDE.Library.Components.Propulsors.Converters.DC_Motor()
     prop_rotor_motor.efficiency              = 0.95
-    prop_rotor_motor.nominal_voltage         = bus.voltage * 0.75
-    prop_rotor_motor.prop_rotor_radius       = prop_rotor.tip_radius 
-    prop_rotor_motor.no_load_current         = 0.1  
+    prop_rotor_motor.nominal_voltage         = bus.voltage *0.75
+    prop_rotor_motor.no_load_current         = 0.1
     prop_rotor_motor.rotor_radius            = prop_rotor.tip_radius
     prop_rotor_motor.design_torque           = prop_rotor.hover.design_torque
     prop_rotor_motor.angular_velocity        = prop_rotor.hover.design_angular_velocity/prop_rotor_motor.gear_ratio  
     design_motor(prop_rotor_motor)
-    prop_rotor_motor.mass_properties.mass    = compute_motor_weight(prop_rotor_motor.design_torque)     
+    prop_rotor_motor.mass_properties.mass    = compute_motor_weight(prop_rotor_motor)     
     lift_propulsor.motor                     = prop_rotor_motor
      
 
@@ -363,15 +356,7 @@ def vehicle_setup(new_regression=True):
     avionics.mass_properties.mass   = 1.0 * Units.kg
     bus.avionics                    = avionics    
    
-    network.busses.append(bus)
-    
-    # append motor origin spanwise locations onto wing data structure
-    motor_origins_front                                   = np.array(origins[:4])
-    motor_origins_rear                                    = np.array(origins[5:])
-    vehicle.wings['canard_wing'].motor_spanwise_locations = motor_origins_front[:,1]/ vehicle.wings['canard_wing'].spans.projected
-    vehicle.wings['canard_wing'].motor_spanwise_locations = motor_origins_front[:,1]/ vehicle.wings['canard_wing'].spans.projected
-    vehicle.wings['main_wing'].motor_spanwise_locations   = motor_origins_rear[:,1]/ vehicle.wings['main_wing'].spans.projected
-      
+    network.busses.append(bus) 
         
     # append energy network 
     vehicle.append_energy_network(network)  

@@ -15,7 +15,7 @@ import numpy as np
 #  Relative Noise Evaluatation Locations
 # ----------------------------------------------------------------------------------------------------------------------      
 ## @ingroup Methods-Noise-Common 
-def compute_relative_noise_evaluation_locations(settings,segment):
+def compute_relative_noise_evaluation_locations(settings,microphone_locations, segment):
     """This computes the relative locations on the surface in the computational domain where the 
     propogated sound is computed. Vectors point from observer/microphone to aircraft/source  
             
@@ -39,27 +39,35 @@ def compute_relative_noise_evaluation_locations(settings,segment):
         N/A       
     """       
   
-    MSL_altitude      = settings.mean_sea_level_altitude  
-    pos               = segment.state.conditions.frames.inertial.position_vector  
-    num_gm_mic        = len(settings.microphone_locations)  
-    RML               = np.zeros((len(pos),num_gm_mic,3)) 
-    PHI               = np.zeros((len(pos),num_gm_mic))
-    THETA             = np.zeros((len(pos),num_gm_mic))
-        
+    MSL_altitude      = settings.mean_sea_level_altitude
+    N                 = settings.noise_times_steps
+    pos               = segment.state.conditions.frames.inertial.position_vector
     
-    for cpt in range(len(pos)):  
-        relative_locations           = np.zeros((num_gm_mic,3,1))
-        relative_locations[:,0,0]    = settings.microphone_locations[:,0] -  (pos[cpt,0] + settings.aircraft_origin_location[0])  # X
-        relative_locations[:,1,0]    = settings.microphone_locations[:,1] -  (pos[cpt,1] + settings.aircraft_origin_location[1])  # Y
+    # rediscretize time and aircraft position to get finer resolution 
+    time              = segment.state.conditions.frames.inertial.time[:,0]
+    noise_time        = np.linspace(time[0], time[-1], N) 
+    noise_pos         = np.zeros((N,3)) 
+    noise_pos[:,0]    = np.interp(noise_time,time,pos[:,0])
+    noise_pos[:,1]    = np.interp(noise_time,time,pos[:,1])
+    noise_pos[:,2]    = np.interp(noise_time,time,pos[:,2])
+    
+    num_gm_mic        = len(microphone_locations)  
+    RML               = np.zeros((N,num_gm_mic,3)) 
+    PHI               = np.zeros((N,num_gm_mic))
+    THETA             = np.zeros((N,num_gm_mic)) 
+    
+    for cpt in range(N):  
+        relative_locations         = np.zeros((num_gm_mic,3))
+        relative_locations[:,0]    = microphone_locations[:,0] - (settings.aircraft_origin_location[0] + noise_pos[cpt,0])    
+        relative_locations[:,1]    = microphone_locations[:,1] - (settings.aircraft_origin_location[1] + noise_pos[cpt,1]) 
         if MSL_altitude:
-            relative_locations[:,2,0]    = -(pos[cpt,2])  - settings.microphone_locations[:,2] # Z
+            relative_locations[:,2]    = -(noise_pos[cpt,2])  - microphone_locations[:,2] 
         else:
-            relative_locations[:,2,0]    = -(pos[cpt,2])    # Z
-        
-        RML[cpt,:,:]   = relative_locations[:,:,0]
-        
-        PHI[cpt,:]     =  np.arctan2(np.sqrt(np.square(relative_locations[:, 0, 0]) + np.square(relative_locations[:, 1, 0])),  relative_locations[:, 2, 0]) # AIDAN TO COMPUTE. DONE !!
-        THETA[cpt,:]   =  np.arctan2(relative_locations[:, 1, 0], relative_locations[:, 0, 0]) # AIDAN TO COMPUTE. DONE !! 
+            relative_locations[:,2]    = -(noise_pos[cpt,2])
+            
+        RML[cpt,:,:]   = relative_locations 
+        PHI[cpt,:]     =  np.arctan2(np.sqrt(np.square(relative_locations[:, 0]) + np.square(relative_locations[:, 1])),  relative_locations[:, 2])  
+        THETA[cpt,:]   =  np.arctan2(relative_locations[:, 1], relative_locations[:, 0]) 
     
-    return RML,PHI,THETA,num_gm_mic 
+    return noise_time,noise_pos,RML,PHI,THETA,num_gm_mic 
  

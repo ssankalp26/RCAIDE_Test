@@ -14,11 +14,16 @@ from RCAIDE.Framework.Core import DataOrdered
 import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')
-import sys, os, traceback, time 
- 
+import sys, os, traceback, time
+
+sys.path.append(os.path.join(sys.path[0], 'Vehicles'))
+sys.path.append(os.path.join(sys.path[-1], 'Rotors'))
+
 modules = [ 
     # ----------------------- Regression List --------------------------
     'Tests/analysis_aerodynamics/airfoil_panel_method_test.py',    
+    'Tests/analysis_aerodynamics/airfoil_panel_method_convergence.py',    
+    'Tests/analysis_aerodynamics/VLM_test.py',    
     'Tests/analysis_emissions/emissions_test.py',   
     'Tests/analysis_noise/digital_elevation_test.py',  
     'Tests/analysis_noise/frequency_domain_test.py', 

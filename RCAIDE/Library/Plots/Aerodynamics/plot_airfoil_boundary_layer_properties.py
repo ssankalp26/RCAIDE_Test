@@ -25,7 +25,7 @@ def plot_airfoil_boundary_layer_properties(ap,
                                            show_legend = False,
                                            file_type = ".png",
                                            save_filename = 'Airfoil_with_Boundary_Layers', 
-                                           width = 8, height = 6):
+                                           width = 11, height = 7):
     """Plots viscous distributions
     
     Assumptions:
@@ -133,7 +133,7 @@ def plot_quantity(ap, q, qaxis, qname,ylim_low,ylim_high,file_type,show_legend,s
             axis.set_ylim([ylim_low,ylim_high]) 
      
     if show_legend:
-        leg =  fig.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 4) 
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4) 
         
         # Adjusting the sub-plots for legend 
         fig.subplots_adjust(top=0.8)

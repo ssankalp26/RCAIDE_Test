@@ -18,7 +18,7 @@ import numpy as np
 import sys 
 import os
 
-sys.path.append(os.path.join(sys.path[0], 'Vehicles'))
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 from Cessna_172                       import vehicle_setup  
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor import design_propeller
 
@@ -47,8 +47,8 @@ def main():
     # mission analysis 
     results = missions.base_mission.evaluate()   
     
-    P_truth     = 54521.82437744922
-    mdot_truth  = 0.004790412309609632
+    P_truth     = 54443.40207010908
+    mdot_truth  = 0.004783521946150232 
     
     P    = results.segments.cruise.state.conditions.energy.fuel_line.ice_constant_speed_propeller.internal_combustion_engine.power[-1,0]
     mdot = results.segments.cruise.state.conditions.weights.vehicle_mass_rate[-1,0]     

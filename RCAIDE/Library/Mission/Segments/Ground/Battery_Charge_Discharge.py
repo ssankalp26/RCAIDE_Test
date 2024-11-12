@@ -46,7 +46,6 @@ def initialize_conditions(segment):
                 time           += segment.cooling_time
             t_initial = segment.state.conditions.frames.inertial.time[0,0]
             t_nondim  = segment.state.numerics.dimensionless.control_points
-            #segment.state.
             charging_time      = t_nondim * ( time ) + t_initial 
             segment.state.conditions.frames.inertial.time[:,0] = charging_time[:,0]
 

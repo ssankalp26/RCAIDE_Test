@@ -62,8 +62,10 @@ def APC_11x4_Propeller():
     airfoil.number_of_points        = 301
     airfoil.coordinate_file         = rel_path +'../Airfoils/Clark_y.txt'
     airfoil.polar_files             = [rel_path +'../Airfoils/Polars/Clark_y_polar_Re_50000.txt',
-                                     rel_path +'../Airfoils/Polars/Clark_y_polar_Re_100000.txt',rel_path +'../Airfoils/Polars/Clark_y_polar_Re_200000.txt',
-                                     rel_path +'../Airfoils/Polars/Clark_y_polar_Re_500000.txt',rel_path +'../Airfoils/Polars/Clark_y_polar_Re_1000000.txt']
+                                     rel_path +'../Airfoils/Polars/Clark_y_polar_Re_100000.txt',
+                                     rel_path +'../Airfoils/Polars/Clark_y_polar_Re_200000.txt',
+                                     rel_path +'../Airfoils/Polars/Clark_y_polar_Re_500000.txt',
+                                     rel_path +'../Airfoils/Polars/Clark_y_polar_Re_1000000.txt']
     airfoil.geometry                = import_airfoil_geometry(airfoil.coordinate_file,airfoil.number_of_points)
     airfoil.polars                  = compute_airfoil_properties(airfoil.geometry,airfoil.polar_files)
     prop.append_airfoil(airfoil) 

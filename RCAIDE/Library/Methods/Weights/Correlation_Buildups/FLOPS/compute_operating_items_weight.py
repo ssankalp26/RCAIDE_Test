@@ -114,9 +114,9 @@ def compute_operating_items_weight(vehicle):
     WFLCRB = NFLCR * 225  # flight crew and baggage weight
 
     output                           = Data()
-    output.operating_items_less_crew = WUF * Units.lbs + WOIL * Units.lbs + WSRV * Units.lbs + WCON * Units.lbs
+    output.misc = WUF * Units.lbs + WOIL * Units.lbs + WSRV * Units.lbs + WCON * Units.lbs
     output.flight_crew               = WFLCRB * Units.lbs
     output.flight_attendants         = WFLAAB * Units.lbs
-    output.total                     = output.operating_items_less_crew + output.flight_crew + \
+    output.total                     = output.misc + output.flight_crew + \
                                        output.flight_attendants
     return output

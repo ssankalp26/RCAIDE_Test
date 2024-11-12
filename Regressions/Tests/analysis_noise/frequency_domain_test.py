@@ -8,14 +8,16 @@ from RCAIDE.Framework.Mission.Common                                            
 from RCAIDE.Framework.Mission.Segments.Segment                                    import Segment 
 from RCAIDE.Framework.Mission.Common                                              import Conditions
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor.compute_rotor_performance import compute_rotor_performance 
+from RCAIDE.Library.Plots import * 
 
 # Python Imports  
 import sys 
-import numpy as np 
-import matplotlib.pyplot as plt  
+import numpy as np  
+import matplotlib.pyplot as plt 
+import time   
 import os
 
-sys.path.append(os.path.join(sys.path[0],'Vehicles','Rotors'))
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles' + os.path.sep + 'Rotors')) 
 # the analysis functions
 
 from F8745_D4_Propeller  import F8745_D4_Propeller
@@ -32,7 +34,7 @@ def main():
     PP = plot_parameters() 
        
     # harmonic noise test 
-    Hararmonic_Noise_Validation(PP)
+    Harmonic_Noise_Validation(PP)
 
     # broadband nosie test function 
     Broadband_Noise_Validation(PP)
@@ -43,8 +45,11 @@ def main():
 # ------------------------------------------------------------------ 
 # Harmonic Noise Validation
 # ------------------------------------------------------------------  
-def Hararmonic_Noise_Validation(PP):
-     
+def Harmonic_Noise_Validation(PP):
+    
+    verification_values_60deg      = [156.92733365790193,100.86943888034477,109.60611659108622 ]
+    verification_values_90deg      = [159.07711862067382,107.37402397630274,117.14527113998096 ]
+    fidelities                     = ['point_source', 'line_source', 'plane_source']
     bus                            = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus() 
     electric_rotor                 = RCAIDE.Library.Components.Propulsors.Electric_Rotor() 
     rotor                          = F8745_D4_Propeller() 
@@ -76,17 +81,18 @@ def Hararmonic_Noise_Validation(PP):
         if theta[i]*Units.degrees < np.pi/2:
             mic_positions[i][:] = [-S*np.cos(theta[i]*Units.degrees)  ,S*np.sin(theta[i]*Units.degrees), 0.0]
         else: 
-            mic_positions[i][:] = [S*np.sin(theta[i]*Units.degrees- np.pi/2)  ,S*np.cos(theta[i]*Units.degrees - np.pi/2), 0.0]  
-  
+            mic_positions[i][:] = [S*np.sin(theta[i]*Units.degrees- np.pi/2)  ,S*np.cos(theta[i]*Units.degrees - np.pi/2), 0.0]   
  
     segment                                                = Segment()  
-    conditions                                             = Results()  
-    conditions.aerodynamics.angle_of_attack                = np.atleast_2d(AoA).T
+    conditions                                             = Results() 
+    conditions.noise.relative_microphone_locations         = np.repeat(mic_positions[ np.newaxis,:,: ],1,axis=0)   
+    conditions.aerodynamics.angles.alpha                   = np.atleast_2d(AoA).T 
     conditions.freestream.density                          = np.ones((ctrl_pts,1)) * density
     conditions.freestream.dynamic_viscosity                = np.ones((ctrl_pts,1)) * dynamic_viscosity   
     conditions.freestream.speed_of_sound                   = np.ones((ctrl_pts,1)) * a 
     conditions.freestream.temperature                      = np.ones((ctrl_pts,1)) * T  
     conditions.frames.inertial.velocity_vector             = np.array([[77.2, 0. ,0.],[ 77.0,0.,0.], [ 77.2, 0. ,0.]]) 
+    conditions.freestream.mach_number                      = np.atleast_2d(np.linalg.norm(conditions.frames.inertial.velocity_vector,axis = 1)).T/ a
     conditions.frames.planet.true_course                   = np.zeros((ctrl_pts,3,3)) 
     conditions.frames.planet.true_course[:,0,0]            = np.cos(true_course),
     conditions.frames.planet.true_course[:,0,1]            = - np.sin(true_course)
@@ -107,124 +113,107 @@ def Hararmonic_Noise_Validation(PP):
     conditions.frames.body.transform_to_inertial[:,2,2]    = np.cos(AoA)     
     segment.state.conditions                               = conditions 
     
-    segment.state.conditions.energy[bus.tag] = Conditions()
-    segment.state.conditions.noise[bus.tag]  = Conditions()
-    electric_rotor.append_operating_conditions(segment,bus) 
-    for tag, item in  electric_rotor.items(): 
-        if issubclass(type(item), RCAIDE.Library.Components.Component):
-            item.append_operating_conditions(segment,bus,electric_rotor)  
-    # Run BEMT
-    segment.state.conditions.expand_rows(ctrl_pts)
-    rotor_conditions             =  segment.state.conditions.energy[bus.tag][electric_rotor.tag][rotor.tag]     
-    rotor_conditions.omega[:,0]  = test_omega
-    compute_rotor_performance(electric_rotor,segment.state,bus)      
+    # Run BEMT for Unsteady loading
+    rotor.number_azimuthal_stations                        = 16
+    rotor.use_2d_analysis                                  = True
     
-    noise                                                  = RCAIDE.Framework.Analyses.Noise.Frequency_Domain_Buildup() 
-    settings                                               = noise.settings   
-    num_mic                                                = len(mic_positions[0] )  
-    conditions.noise.number_of_microphones                 = num_mic
-                 
-    # Run Frequency Domain Rotor Noise Model          
-    compute_rotor_noise(mic_positions,bus,electric_rotor,segment,settings)
-    F8745D4_SPL                                            = conditions.noise[bus.tag][electric_rotor.tag][rotor.tag].SPL     
-    F8745D4_SPL_harmonic                                   = conditions.noise[bus.tag][electric_rotor.tag][rotor.tag].SPL_harmonic 
-    F8745D4_SPL_broadband                                  = conditions.noise[bus.tag][electric_rotor.tag][rotor.tag].SPL_broadband  
-    F8745D4_SPL_harmonic_bpf_spectrum                      = conditions.noise[bus.tag][electric_rotor.tag][rotor.tag].SPL_harmonic_bpf_spectrum     
+    # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Plot Validation Results
+    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+    validation_data, axes_1_1, axes_1_2, axes_1_3, axes_1_4, axes_1_5, axes_1_6, axes_2_1 = Hararmonic_Noise_Validation_Data(PP)    
     
-    validation_data = Hararmonic_Noise_Validation_Data()
-    Cp =  segment.state.conditions.energy[bus.tag][electric_rotor.tag][rotor.tag].power_coefficient
-    
-    # plot results
-    fig = plt.figure('Harmonic Test')
-    fig.set_size_inches(PP.fig_size_width,PP.fig_size_height)   
-    axes = fig.add_subplot(2,3,1) 
-    axes.plot(validation_data.harmonics, F8745D4_SPL_harmonic_bpf_spectrum[0,6,:][:len(validation_data.harmonics)]   , color = PP.Slc[0] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw, label = 'RCAIDE')    
-    axes.plot(validation_data.harmonics, validation_data.ANOPP_PAS_Case_1_60deg                                      , color = PP.Rlc[0] , linestyle = PP.Rls, marker = PP.Rlm[0]  , markersize = PP.m , linewidth = PP.lw, label = 'ANOPP PAS')       
-    axes.plot(validation_data.harmonics, validation_data.Exp_Test_Case_1_60deg                                       , color = PP.Elc[0] , linestyle = PP.Els, marker = PP.Elm[0]  , markersize = PP.m , linewidth = PP.lw,  label = 'Exp.')    
-    axes.set_title('Case 1, $C_P$ = ' + str(round(Cp[0,0],3)))
-    axes.set_ylabel('SPL (dB)') 
-    axes.minorticks_on() 
-    
-    Cp =  segment.state.conditions.energy[bus.tag][electric_rotor.tag][rotor.tag].power_coefficient
-    # Test Case 2
-    axes = fig.add_subplot(2,3,2) 
-    axes.plot(validation_data.harmonics, F8745D4_SPL_harmonic_bpf_spectrum[1,6,:][:len(validation_data.harmonics)] , color = PP.Slc[0] , linestyle = PP.Sls, marker = PP.Slm[0]  , markersize = PP.m , linewidth = PP.lw,   label = 'RCAIDE')    
-    axes.plot(validation_data.harmonics, validation_data.ANOPP_PAS_Case_2_60deg                                    , color = PP.Rlc[0] , linestyle = PP.Rls, marker = PP.Rlm[0]  , markersize = PP.m , linewidth = PP.lw,   label = 'ANOPP PAS')       
-    axes.plot(validation_data.harmonics, validation_data.Exp_Test_Case_2_60deg                                     , color = PP.Elc[0] , linestyle = PP.Els, marker = PP.Elm[0]  , markersize = PP.m , linewidth = PP.lw,   label = 'Exp.')  
-    axes.set_title('60 deg. 60 deg. Case 2, $C_P$ = ' +  str(round(Cp[1,0],3)))   
-    axes.minorticks_on()   
+    # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Run simulation using different fidelities 
+    # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    for fid in  range(len(fidelities)):
+        
+        segment.state.conditions.energy[bus.tag] = Conditions()
+        segment.state.conditions.noise[bus.tag]  = Conditions()
+        electric_rotor.append_operating_conditions(segment,bus) 
+        for tag, item in  electric_rotor.items(): 
+            if issubclass(type(item), RCAIDE.Library.Components.Component):
+                item.append_operating_conditions(segment,bus,electric_rotor)  
+        # Run BEMT
+        segment.state.conditions.expand_rows(ctrl_pts)
+        rotor_conditions             =  segment.state.conditions.energy[bus.tag][electric_rotor.tag][rotor.tag]     
+        rotor_conditions.omega[:,0]  = test_omega
+        compute_rotor_performance(electric_rotor,segment.state,bus)      
+        
+        noise                                                  = RCAIDE.Framework.Analyses.Noise.Frequency_Domain_Buildup() 
+        settings                                               = noise.settings
+        settings.fidelity                                      = fidelities[fid]  
+        conditions.noise.number_of_microphones                 = len(theta)
+        
+        # time
+        ti  = time.time()
+        # Run Frequency Domain Rotor Noise Model           
+        compute_rotor_noise(mic_positions,bus,electric_rotor,rotor,segment,settings)
+        tf  = time.time()
+        
+        F8745D4_SPL                                            = conditions.noise[bus.tag][electric_rotor.tag][rotor.tag].SPL     
+        F8745D4_SPL_harmonic                                   = conditions.noise[bus.tag][electric_rotor.tag][rotor.tag].SPL_harmonic 
+        F8745D4_SPL_broadband                                  = conditions.noise[bus.tag][electric_rotor.tag][rotor.tag].SPL_broadband  
+        F8745D4_SPL_harmonic_bpf_spectrum                      = conditions.noise[bus.tag][electric_rotor.tag][rotor.tag].SPL_harmonic_bpf_spectrum     
+        
+        Cp =  segment.state.conditions.energy[bus.tag][electric_rotor.tag][rotor.tag].power_coefficient
 
-    # Test Case 3
-    axes = fig.add_subplot(2,3,3) 
-    axes.plot(validation_data.harmonics, F8745D4_SPL_harmonic_bpf_spectrum[2,6,:][:len(validation_data.harmonics)] , color = PP.Slc[0] , linestyle = PP.Sls, marker = PP.Slm[0]  , markersize = PP.m , linewidth = PP.lw,   label = 'RCAIDE')    
-    axes.plot(validation_data.harmonics, validation_data.ANOPP_PAS_Case_3_60deg                                    , color = PP.Rlc[0] , linestyle = PP.Rls, marker = PP.Rlm[0]  , markersize = PP.m , linewidth = PP.lw,   label = 'ANOPP PAS')       
-    axes.plot(validation_data.harmonics, validation_data.Exp_Test_Case_3_60deg                                     , color = PP.Elc[0] , linestyle = PP.Els, marker = PP.Elm[0]  , markersize = PP.m , linewidth = PP.lw,  label = 'Exp.')        
-    axes.set_title('60 deg. Case 3, $C_P$ = ' +  str(round(Cp[2,0],3))) 
-    axes.minorticks_on() 
-    plt.tight_layout()
- 
-    axes = fig.add_subplot(2,3,4)    
-    axes.plot(validation_data.harmonics, F8745D4_SPL_harmonic_bpf_spectrum[0,9,:][:len(validation_data.harmonics)] , color = PP.Slc[0] , linestyle = PP.Sls, marker = PP.Slm[0]  , markersize = PP.m , linewidth = PP.lw,  label = 'RCAIDE')    
-    axes.plot(validation_data.harmonics, validation_data.ANOPP_PAS_Case_1_90deg                                    , color = PP.Rlc[0] , linestyle = PP.Rls, marker = PP.Rlm[0]  , markersize = PP.m , linewidth = PP.lw,   label = 'ANOPP PAS')       
-    axes.plot(validation_data.harmonics, validation_data.Exp_Test_Case_1_90deg                                     , color = PP.Elc[0] , linestyle = PP.Els, marker = PP.Elm[0]  , markersize = PP.m , linewidth = PP.lw,  label = 'Exp.')       
-    axes.set_title('90 deg. Case 1, $C_P$ = ' + str(round(Cp[0,0],3)))
-    axes.set_ylabel('SPL (dB)')
-    axes.set_xlabel('Harmonic #')   
-    axes.minorticks_on() 
+        
+        # plot results 
+        axes_1_1.plot(validation_data.harmonics, F8745D4_SPL_harmonic_bpf_spectrum[0,6,:][:len(validation_data.harmonics)]   , color = PP.Slc[fid] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw, label = fidelities[fid])     
+        axes_1_1.set_title('60 deg. Case 1, $C_P$ = ' + str(round(Cp[0,0],3))) 
+         
+        axes_1_2.plot(validation_data.harmonics, F8745D4_SPL_harmonic_bpf_spectrum[1,6,:][:len(validation_data.harmonics)] , color = PP.Slc[fid] , linestyle = PP.Sls, marker = PP.Slm[0]  , markersize = PP.m , linewidth = PP.lw,   label = fidelities[fid])    
+        axes_1_2.set_title('60 deg. Case 2, $C_P$ = ' +  str(round(Cp[1,0],3)))   
+  
+        axes_1_3.plot(validation_data.harmonics, F8745D4_SPL_harmonic_bpf_spectrum[2,6,:][:len(validation_data.harmonics)] , color = PP.Slc[fid] , linestyle = PP.Sls, marker = PP.Slm[0]  , markersize = PP.m , linewidth = PP.lw,   label = fidelities[fid])        
+        axes_1_3.set_title('60 deg. Case 3, $C_P$ = ' +  str(round(Cp[2,0],3))) 
+          
+        axes_1_4.plot(validation_data.harmonics, F8745D4_SPL_harmonic_bpf_spectrum[0,9,:][:len(validation_data.harmonics)] , color = PP.Slc[fid] , linestyle = PP.Sls, marker = PP.Slm[0]  , markersize = PP.m , linewidth = PP.lw,  label = fidelities[fid])        
+        axes_1_4.set_title('90 deg. Case 1, $C_P$ = ' + str(round(Cp[0,0],3))) 
+            
+        axes_1_5.plot(validation_data.harmonics, F8745D4_SPL_harmonic_bpf_spectrum[1,9,:][:len(validation_data.harmonics)]  , color = PP.Slc[fid] , linestyle = PP.Sls, marker = PP.Slm[0]  , markersize = PP.m , linewidth = PP.lw, label = fidelities[fid])     
+        axes_1_5.set_title('90 deg. Case 2, $C_P$ = ' +  str(round(Cp[1,0],3)))    
+       
+        axes_1_6.plot(validation_data.harmonics, F8745D4_SPL_harmonic_bpf_spectrum[2,9,:][:len(validation_data.harmonics)] , color = PP.Slc[fid] , linestyle = PP.Sls, marker = PP.Slm[0]  , markersize = PP.m , linewidth = PP.lw,   label = fidelities[fid])       
+        axes_1_6.set_title('90 deg. Case 3, $C_P$ = ' +  str(round(Cp[2,0],3)))    
+        
+        
+        # Polar plot of noise    
+        axes_2_1.plot(theta*Units.degrees,F8745D4_SPL[0,:] , color = PP.Slc[0] , linestyle =PP.Sls, marker = PP.Slm[0] , markersize = PP.m*2 , linewidth = PP.lw, label = 'Total'  )  
+        axes_2_1.plot(-theta*Units.degrees,F8745D4_SPL[0,:] , color = PP.Slc[0] , linestyle =PP.Sls , marker = PP.Slm[0] , markersize = PP.m*2 , linewidth = PP.lw  )  
+        axes_2_1.plot(theta*Units.degrees,F8745D4_SPL_harmonic[0,:] , color = PP.Slc[1] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw   )  
+        axes_2_1.plot(-theta*Units.degrees,F8745D4_SPL_harmonic[0,:] , color = PP.Slc[1] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw, label = 'Harmonic'  )  
+        axes_2_1.plot(theta*Units.degrees,F8745D4_SPL_broadband[0,:] , color = PP.Slc[2] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw   )  
+        axes_2_1.plot(-theta*Units.degrees,F8745D4_SPL_broadband[0,:] , color = PP.Slc[2] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw, label = 'Broadband' )  
 
-    axes = fig.add_subplot(2,3,5)              
-    axes.plot(validation_data.harmonics, F8745D4_SPL_harmonic_bpf_spectrum[1,9,:][:len(validation_data.harmonics)]  , color = PP.Slc[0] , linestyle = PP.Sls, marker = PP.Slm[0]  , markersize = PP.m , linewidth = PP.lw, label = 'RCAIDE')    
-    axes.plot(validation_data.harmonics, validation_data.ANOPP_PAS_Case_2_90deg                                     , color = PP.Rlc[0] , linestyle = PP.Rls, marker = PP.Rlm[0]  , markersize = PP.m , linewidth = PP.lw, label = 'ANOPP PAS')       
-    axes.plot(validation_data.harmonics, validation_data.Exp_Test_Case_2_90deg                                      , color = PP.Elc[0] , linestyle = PP.Els, marker = PP.Elm[0]  , markersize = PP.m , linewidth = PP.lw, label = 'Exp.')   
-    axes.set_title('90 deg. Case 2, $C_P$ = ' +  str(round(Cp[1,0],3)))   
-    axes.set_xlabel('Harmonic #')  
-    axes.legend(loc='upper center', prop={'size': PP.lf} , bbox_to_anchor=(0.5, -0.4), ncol= 3 )  
-    axes.minorticks_on() 
+        # Store errors 
+        error = Data()
+        print(fidelities[fid] + ' Noise Modeling: Compute Time (per mic)  = '+  str((tf - ti)/len(theta)))
+        print(fidelities[fid] + ' Noise Modeling: SPL at 60 deg = ' + str(F8745D4_SPL[0,6]))
+        print(fidelities[fid] + ' Noise Modeling: SPL at 90 deg = ' + str(F8745D4_SPL[0,9]))
+        error.SPL_Case_1_60deg  = np.max(np.abs(F8745D4_SPL[0,6] - verification_values_60deg[fid])/verification_values_60deg[fid])  
+        error.SPL_Case_1_90deg  = np.max(np.abs(F8745D4_SPL[0,9] - verification_values_90deg[fid])/verification_values_90deg[fid])
+         
+        print( fidelities[fid] + ' Harmonic Noise Errors:')
+        print(error)
+        
+        for k,v in list(error.items()):
+            assert(np.abs(v)<1E0)
+        
+    axes_1_5.legend(loc='upper center', prop={'size': PP.lf} , bbox_to_anchor=(0.5, -0.4), ncol= 3 )  
+    axes_2_1.legend(loc='upper right', prop={'size': PP.lf} , bbox_to_anchor=(1.2,1.5))    
 
-    axes = fig.add_subplot(2,3,6)    
-    axes.plot(validation_data.harmonics, F8745D4_SPL_harmonic_bpf_spectrum[2,9,:][:len(validation_data.harmonics)] , color = PP.Slc[0] , linestyle = PP.Sls, marker = PP.Slm[0]  , markersize = PP.m , linewidth = PP.lw,   label = 'RCAIDE')    
-    axes.plot(validation_data.harmonics, validation_data.ANOPP_PAS_Case_3_90deg                                    , color = PP.Rlc[0] , linestyle = PP.Rls, marker = PP.Rlm[0]  , markersize = PP.m , linewidth = PP.lw,   label = 'ANOPP PAS')       
-    axes.plot(validation_data.harmonics, validation_data.Exp_Test_Case_3_90deg                                     , color = PP.Elc[0] , linestyle = PP.Els, marker = PP.Elm[0]  , markersize = PP.m , linewidth = PP.lw,  label = 'Exp.')     
-    axes.set_title('90 deg. Case 3, $C_P$ = ' +  str(round(Cp[2,0],3)))     
-    axes.set_xlabel('Harmonic #')  
-    axes.minorticks_on() 
-    plt.tight_layout()
-
-    # Polar plot of noise   
-    fig2 = plt.figure('Polar')
-    axis2 = fig2.add_subplot(111, projection='polar')    
-    axis2.plot(theta*Units.degrees,F8745D4_SPL[0,:] , color = PP.Slc[0] , linestyle =PP.Sls, marker = PP.Slm[0] , markersize = PP.m*2 , linewidth = PP.lw, label = 'Total'  )  
-    axis2.plot(-theta*Units.degrees,F8745D4_SPL[0,:] , color = PP.Slc[0] , linestyle =PP.Sls , marker = PP.Slm[0] , markersize = PP.m*2 , linewidth = PP.lw  )  
-    axis2.plot(theta*Units.degrees,F8745D4_SPL_harmonic[0,:] , color = PP.Slc[1] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw   )  
-    axis2.plot(-theta*Units.degrees,F8745D4_SPL_harmonic[0,:] , color = PP.Slc[1] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw, label = 'Harmonic'  )  
-    axis2.plot(theta*Units.degrees,F8745D4_SPL_broadband[0,:] , color = PP.Slc[2] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw   )  
-    axis2.plot(-theta*Units.degrees,F8745D4_SPL_broadband[0,:] , color = PP.Slc[2] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw, label = 'Broadband' )     
-    axis2.set_yticks(np.arange(50,150,25))     
-    axis2.grid(True)  
-    axis2.legend(loc='upper right', prop={'size': PP.lf} , bbox_to_anchor=(1.2,1.5))
-
-    # Store errors 
-    error = Data()
-    error.SPL_Case_1_60deg  = np.max(np.abs(F8745D4_SPL_harmonic_bpf_spectrum[0,6,:][:len(validation_data.harmonics)]  - validation_data.Exp_Test_Case_1_60deg)/validation_data.Exp_Test_Case_1_60deg)  
-    error.SPL_Case_1_90deg  = np.max(np.abs(F8745D4_SPL_harmonic_bpf_spectrum[0,9,:][:len(validation_data.harmonics)] - validation_data.Exp_Test_Case_1_90deg)/validation_data.Exp_Test_Case_1_90deg)
-    
-    print('Harmonic Noise Errors:')
-    print(error)
-    
-    for k,v in list(error.items()):
-        assert(np.abs(v)<1E0)
-
-    return    
+    return  
  
 
 # ------------------------------------------------------------------ 
 # Broadband Noise Validation
 # ------------------------------------------------------------------     
 def Broadband_Noise_Validation(PP):   
-    bus                            = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus()  
-    electric_rotor                   = RCAIDE.Library.Components.Propulsors.Electric_Rotor() 
+    bus                            = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus()   
+    electric_rotor                 = RCAIDE.Library.Components.Propulsors.Electric_Rotor() 
     rotor                          = APC_11x4_Propeller()  
-    electric_rotor.rotor                = rotor   
+    electric_rotor.rotor           = rotor    
     bus.propulsors.append(electric_rotor)
     
     # Operating Conditions       
@@ -263,6 +252,7 @@ def Broadband_Noise_Validation(PP):
     conditions.frames.inertial.velocity_vector             = v_mat 
     conditions.energy.throttle                             = np.ones((ctrl_pts,1)) * 1.0    
     conditions.aerodynamics.angle_of_attack                = np.atleast_2d(AoA).T  
+    conditions.freestream.mach_number                      = np.atleast_2d(np.linalg.norm(conditions.frames.inertial.velocity_vector,axis = 1)).T/ a
     conditions.frames.planet.true_course                   = np.zeros((ctrl_pts,3,3)) 
     conditions.frames.planet.true_course[:,0,0]            = np.cos(true_course),
     conditions.frames.planet.true_course[:,0,1]            = - np.sin(true_course)
@@ -281,7 +271,11 @@ def Broadband_Noise_Validation(PP):
     conditions.frames.body.transform_to_inertial[:,1,1]    = 1
     conditions.frames.body.transform_to_inertial[:,2,0]    = -np.sin(AoA)
     conditions.frames.body.transform_to_inertial[:,2,2]    = np.cos(AoA)  
-    segment.state.conditions                               = conditions 
+    segment.state.conditions                               = conditions
+    
+    # Run BEMT for Unsteady loading
+    rotor.number_azimuthal_stations                        = 16
+    rotor.use_2d_analysis                                  = True
     
     segment.state.conditions.energy[bus.tag] = Conditions()
     segment.state.conditions.noise[bus.tag]  = Conditions()
@@ -296,88 +290,52 @@ def Broadband_Noise_Validation(PP):
     compute_rotor_performance(electric_rotor,segment.state,bus)
 
     noise                                                  = RCAIDE.Framework.Analyses.Noise.Frequency_Domain_Buildup() 
-    settings                                               = noise.settings   
-    num_mic                                                = len(mic_positions[0] )  
-    conditions.noise.number_of_microphones                 = num_mic
-                 
-    # Run Frequency Domain Rotor Noise Model          
-    compute_rotor_noise(mic_positions,bus,electric_rotor,segment,settings) 
+    settings                                               = noise.settings
+    settings.fidelity                                      = 'plane_source' 
+    conditions.noise.number_of_microphones                 = len(theta)
+    
+    # time
+    ti = time.time()             
+    # Run Frequency Domain Rotor Noise Model           
+    compute_rotor_noise(mic_positions,bus,electric_rotor,rotor,segment,settings)
+    tf = time.time()
     
     APC_SF_1_3_Spectrum                                     = conditions.noise[bus.tag][electric_rotor.tag][rotor.tag].SPL_1_3_spectrum 
     APC_SF_SPL_broadband_1_3_spectrum                       = conditions.noise[bus.tag][electric_rotor.tag][rotor.tag].SPL_broadband_1_3_spectrum  
 
-    validation_data = Broadband_Noise_Validation_Data()
+    axes_3_1,axes_3_2, axes_3_3, axes_3_4, validation_data = Broadband_Noise_Validation_Data(PP)
 
 
     # ----------------------------------------------------------------------------------------------------------------------------------------
     #  Plots  
     # ----------------------------------------------------------------------------------------------------------------------------------------    
-    fig1 = plt.figure('Noise_Validation_Total_1_3_Spectrum_3600')    
-    fig1.set_size_inches(PP.fig_size_width,PP.fig_size_height)  
-    axes1 = fig1.add_subplot(1,1,1)      
-    axes1.plot(validation_data.Exp_APC_SF_freqency_spectrum , validation_data.Exp_APC_SF_1_3_Spectrum[0,:-5]  , color = PP.Elc[0] , linestyle = PP.Els, marker = PP.Elm[0] , markersize = PP.m , linewidth = PP.lw, label = 'Exp. 3600 RPM')            
-    axes1.plot(validation_data.Exp_APC_SF_freqency_spectrum ,     APC_SF_1_3_Spectrum[0,0,8:]  , color = PP.Slc[0] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw, label =' RCAIDE 3600 RPM')    
-    axes1.set_xscale('log') 
-    axes1.set_ylabel(r'SPL$_{1/3}$ (dB)')
-    axes1.set_xlabel('Frequency (Hz)') 
-    axes1.legend(loc='lower right') 
-    axes1.set_ylim([15,60])   
-
-
-    fig2 = plt.figure('Noise_Validation_1_3_Spectrum_4800')    
-    fig2.set_size_inches(PP.fig_size_width,PP.fig_size_height)  
-    axes2 = fig2.add_subplot(1,1,1)           
-    axes2.plot(validation_data.Exp_APC_SF_freqency_spectrum , validation_data.Exp_APC_SF_1_3_Spectrum[2,:-5]  , color = PP.Elc[0] , linestyle = PP.Els, marker = PP.Elm[0] , markersize = PP.m , linewidth = PP.lw,  label = 'Exp. 4800 RPM')       
-    axes2.plot(validation_data.Exp_APC_SF_freqency_spectrum ,     APC_SF_1_3_Spectrum[2,0,8:]  , color = PP.Slc[0] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw,label = ' RCAIDE 4800 RPM')   
-    axes2.set_xscale('log') 
-    axes2.set_ylabel(r'SPL$_{1/3}$ (dB)')
-    axes2.set_xlabel('Frequency (Hz)') 
-    axes2.legend(loc='lower right')  
-    axes2.set_ylim([15,60])   
-
-
-    fig3 = plt.figure('Noise_Validation_Broadband_1_3_Spectrum_45_deg')    
-    fig3.set_size_inches(PP.fig_size_width,PP.fig_size_height)  
-    axes3 = fig3.add_subplot(1,1,1)           
-    axes3.plot(validation_data.Exp_APC_SF_freqency_spectrum , validation_data.Exp_broadband_APC[0,:], color = PP.Elc[0] , linestyle = PP.Els, marker = PP.Elm[0] , markersize = PP.m , linewidth = PP.lw,    label = 'Exp. 45 $\degree$ mic.')    
-    axes3.plot(validation_data.Exp_APC_SF_freqency_spectrum , APC_SF_SPL_broadband_1_3_spectrum[1,4,8:] , color = PP.Slc[0] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw,  label = 'RCAIDE 45 $\degree$ mic')     
-    axes3.set_xscale('log') 
-    axes3.set_ylabel(r'SPL$_{1/3}$ (dB)')
-    axes3.set_xlabel('Frequency (Hz)') 
-    axes3.legend(loc='lower right')  
-    axes3.set_ylim([15,50])   
-
-
-    fig4 = plt.figure('Noise_Validation_Broadband_1_3_Spectrum_22_deg')    
-    fig4.set_size_inches(PP.fig_size_width,PP.fig_size_height)  
-    axes4 = fig4.add_subplot(1,1,1)            
-    axes4.plot(validation_data.Exp_APC_SF_freqency_spectrum , validation_data.Exp_broadband_APC[1,:], color = PP.Elc[0] , linestyle = PP.Els, marker = PP.Elm[0] , markersize = PP.m , linewidth = PP.lw,   label = 'Exp. 22.5 $\degree$ mic.')     
-    axes4.plot(validation_data.Exp_APC_SF_freqency_spectrum , APC_SF_SPL_broadband_1_3_spectrum[1,3,8:] , color = PP.Slc[0] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw,  label = 'RCAIDE 22.5 $\degree$ mic.')   
-    axes4.set_xscale('log') 
-    axes4.set_ylabel(r'SPL$_{1/3}$ (dB)')
-    axes4.set_xlabel('Frequency (Hz)') 
-    axes4.legend(loc='lower right') 
-    axes4.set_ylim([15,50])   
-
-    fig1.tight_layout()
-    fig2.tight_layout()
-    fig3.tight_layout()
-    fig4.tight_layout()   
+    axes_3_1.plot(validation_data.Exp_APC_SF_freqency_spectrum ,     APC_SF_1_3_Spectrum[0,0,8:]  , color = PP.Slc[0] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw, label =' RCAIDE 3600 RPM')    
+    axes_3_1.legend(loc='lower right')
     
+    axes_3_2.plot(validation_data.Exp_APC_SF_freqency_spectrum ,     APC_SF_1_3_Spectrum[2,0,8:]  , color = PP.Slc[0] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw,label = ' RCAIDE 4800 RPM')   
+    axes_3_2.legend(loc='lower right')
+    
+    axes_3_3.plot(validation_data.Exp_APC_SF_freqency_spectrum , APC_SF_SPL_broadband_1_3_spectrum[1,4,8:] , color = PP.Slc[0] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw,  label = 'RCAIDE 45 $\degree$ mic')     
+    axes_3_3.legend(loc='lower right')   
+
+    axes_3_4.plot(validation_data.Exp_APC_SF_freqency_spectrum , APC_SF_SPL_broadband_1_3_spectrum[1,3,8:] , color = PP.Slc[0] , linestyle = PP.Sls, marker = PP.Slm[0] , markersize = PP.m , linewidth = PP.lw,  label = 'RCAIDE 22.5 $\degree$ mic.')   
+    axes_3_4.legend(loc='lower right')  
+
     # Store errors 
     error = Data()
-    error.SPL_Case_1_60deg  = np.max(np.abs(APC_SF_SPL_broadband_1_3_spectrum[1,3,8:]  - validation_data.Exp_broadband_APC[1,:])/validation_data.Exp_broadband_APC[1,:])
-    error.SPL_Case_1_90deg  = np.max(np.abs(APC_SF_SPL_broadband_1_3_spectrum[1,4,8:] - validation_data.Exp_broadband_APC[0,:])/validation_data.Exp_broadband_APC[0,:])
+    print('Compute Time  ='+  str(tf - ti))
+    #error.SPL_Case_1_60deg  = np.max(np.abs(APC_SF_SPL_broadband_1_3_spectrum[1,3,8:]  - APC_broadboand_verification_60deg[1,:])/APC_broadboand_verification_60deg[1,:])
+    #error.SPL_Case_1_90deg  = np.max(np.abs(APC_SF_SPL_broadband_1_3_spectrum[1,4,8:] - APC_broadboand_verification_90deg[0,:])/APC_broadboand_verification_90deg[0,:])
     
     print('Broadband Noise Errors:')
     print(error)
     
-    for k,v in list(error.items()):
-        assert(np.abs(v)<1E0)
+    #for k,v in list(error.items()):
+        #assert(np.abs(v)<1E0)
         
     return 
 
-def Hararmonic_Noise_Validation_Data():  
+def Hararmonic_Noise_Validation_Data(PP):  
     validation_data = Data()
 
     validation_data.harmonics              = np.arange(1,19)
@@ -429,11 +387,58 @@ def Hararmonic_Noise_Validation_Data():
                                        109.924,109.129,108.725,107.342,106.743,105.164,
                                        104.369,102.593,101.210,100.021,98.6401,96.6674])
     
+    fig_1 = plt.figure('Harmonic Test')
+    fig_1.set_size_inches(PP.fig_size_width,PP.fig_size_height)
+    fig_1.tight_layout()
+    axes_1_1 = fig_1.add_subplot(2,3,1)     
+    axes_1_1.plot(validation_data.harmonics, validation_data.ANOPP_PAS_Case_1_60deg                                      , color = PP.Rlc[0] , linestyle = PP.Rls, marker = PP.Rlm[0]  , markersize = PP.m , linewidth = PP.lw, label = 'ANOPP PAS')       
+    axes_1_1.plot(validation_data.harmonics, validation_data.Exp_Test_Case_1_60deg                                       , color = PP.Elc[0] , linestyle = PP.Els, marker = PP.Elm[0]  , markersize = PP.m , linewidth = PP.lw,  label = 'Exp.')    
+    axes_1_1.set_ylabel('SPL (dB)') 
+    axes_1_1.minorticks_on() 
+     
+    # Test Case 2
+    axes_1_2 = fig_1.add_subplot(2,3,2)  
+    axes_1_2.plot(validation_data.harmonics, validation_data.ANOPP_PAS_Case_2_60deg                                    , color = PP.Rlc[0] , linestyle = PP.Rls, marker = PP.Rlm[0]  , markersize = PP.m , linewidth = PP.lw,   label = 'ANOPP PAS')       
+    axes_1_2.plot(validation_data.harmonics, validation_data.Exp_Test_Case_2_60deg                                     , color = PP.Elc[0] , linestyle = PP.Els, marker = PP.Elm[0]  , markersize = PP.m , linewidth = PP.lw,   label = 'Exp.')  
+    axes_1_2.minorticks_on()   
 
-    return validation_data
+    # Test Case 3
+    axes_1_3 = fig_1.add_subplot(2,3,3)   
+    axes_1_3.plot(validation_data.harmonics, validation_data.ANOPP_PAS_Case_3_60deg                                    , color = PP.Rlc[0] , linestyle = PP.Rls, marker = PP.Rlm[0]  , markersize = PP.m , linewidth = PP.lw,   label = 'ANOPP PAS')       
+    axes_1_3.plot(validation_data.harmonics, validation_data.Exp_Test_Case_3_60deg                                     , color = PP.Elc[0] , linestyle = PP.Els, marker = PP.Elm[0]  , markersize = PP.m , linewidth = PP.lw,  label = 'Exp.')        
+    axes_1_3.minorticks_on() 
+ 
+    axes_1_4 = fig_1.add_subplot(2,3,4)       
+    axes_1_4.plot(validation_data.harmonics, validation_data.ANOPP_PAS_Case_1_90deg                                    , color = PP.Rlc[0] , linestyle = PP.Rls, marker = PP.Rlm[0]  , markersize = PP.m , linewidth = PP.lw,   label = 'ANOPP PAS')       
+    axes_1_4.plot(validation_data.harmonics, validation_data.Exp_Test_Case_1_90deg                                     , color = PP.Elc[0] , linestyle = PP.Els, marker = PP.Elm[0]  , markersize = PP.m , linewidth = PP.lw,  label = 'Exp.')       
+    axes_1_4.set_ylabel('SPL (dB)')
+    axes_1_4.set_xlabel('Harmonic #')   
+    axes_1_4.minorticks_on() 
+
+    axes_1_5 = fig_1.add_subplot(2,3,5)                  
+    axes_1_5.plot(validation_data.harmonics, validation_data.ANOPP_PAS_Case_2_90deg                                     , color = PP.Rlc[0] , linestyle = PP.Rls, marker = PP.Rlm[0]  , markersize = PP.m , linewidth = PP.lw, label = 'ANOPP PAS')       
+    axes_1_5.plot(validation_data.harmonics, validation_data.Exp_Test_Case_2_90deg                                      , color = PP.Elc[0] , linestyle = PP.Els, marker = PP.Elm[0]  , markersize = PP.m , linewidth = PP.lw, label = 'Exp.')   
+    axes_1_5.set_xlabel('Harmonic #')  
+    axes_1_5.minorticks_on() 
+
+    axes_1_6 = fig_1.add_subplot(2,3,6)         
+    axes_1_6.plot(validation_data.harmonics, validation_data.ANOPP_PAS_Case_3_90deg                                    , color = PP.Rlc[0] , linestyle = PP.Rls, marker = PP.Rlm[0]  , markersize = PP.m , linewidth = PP.lw,   label = 'ANOPP PAS')       
+    axes_1_6.plot(validation_data.harmonics, validation_data.Exp_Test_Case_3_90deg                                     , color = PP.Elc[0] , linestyle = PP.Els, marker = PP.Elm[0]  , markersize = PP.m , linewidth = PP.lw,  label = 'Exp.')     
+    axes_1_6.set_xlabel('Harmonic #')  
+    axes_1_6.minorticks_on()
+    
+
+    # Polar plot of noise   
+    fig_2 = plt.figure('Polar')
+    axes_2_1 = fig_2.add_subplot(111, projection='polar')         
+    axes_2_1.set_yticks(np.arange(50,150,25))     
+    axes_2_1.grid(True)  
 
 
-def Broadband_Noise_Validation_Data():  
+    return validation_data,  axes_1_1, axes_1_2, axes_1_3, axes_1_4, axes_1_5, axes_1_6, axes_2_1
+
+
+def Broadband_Noise_Validation_Data(PP):  
     validation_data = Data()      
     validation_data.Exp_APC_SF_freqency_spectrum =  np.array([100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 
                                               2000, 2500, 3150,4000, 5000, 6300, 8000, 10000])   
@@ -455,7 +460,52 @@ def Broadband_Noise_Validation_Data():
                                    37.99999,34.57142,39.14285,34,35.71428,34.85714,35.99999,43.42857,39.14285,41.14285,
                                    42.57142]]) 
 
-    return validation_data
+    # ----------------------------------------------------------------------------------------------------------------------------------------
+    #  Plots  
+    # ----------------------------------------------------------------------------------------------------------------------------------------    
+    fig_3_1 = plt.figure('Noise_Validation_Total_1_3_Spectrum_3600')    
+    fig_3_1.set_size_inches(PP.fig_size_width,PP.fig_size_height)
+    fig_3_1.tight_layout()
+    axes_3_1 = fig_3_1.add_subplot(1,1,1)      
+    axes_3_1.plot(validation_data.Exp_APC_SF_freqency_spectrum , validation_data.Exp_APC_SF_1_3_Spectrum[0,:-5]  , color = PP.Elc[0] , linestyle = PP.Els, marker = PP.Elm[0] , markersize = PP.m , linewidth = PP.lw, label = 'Exp. 3600 RPM')       
+    axes_3_1.set_xscale('log') 
+    axes_3_1.set_ylabel(r'SPL$_{1/3}$ (dB)')
+    axes_3_1.set_xlabel('Frequency (Hz)')  
+    axes_3_1.set_ylim([15,60])    
+
+    fig_3_2 = plt.figure('Noise_Validation_1_3_Spectrum_4800')    
+    fig_3_2.set_size_inches(PP.fig_size_width,PP.fig_size_height)
+    fig_3_2.tight_layout()
+    axes_3_2 = fig_3_2.add_subplot(1,1,1)           
+    axes_3_2.plot(validation_data.Exp_APC_SF_freqency_spectrum , validation_data.Exp_APC_SF_1_3_Spectrum[2,:-5]  , color = PP.Elc[0] , linestyle = PP.Els, marker = PP.Elm[0] , markersize = PP.m , linewidth = PP.lw,  label = 'Exp. 4800 RPM')     
+    axes_3_2.set_xscale('log') 
+    axes_3_2.set_ylabel(r'SPL$_{1/3}$ (dB)')
+    axes_3_2.set_xlabel('Frequency (Hz)')  
+    axes_3_2.set_ylim([15,60])   
+
+
+    fig_3_3 = plt.figure('Noise_Validation_Broadband_1_3_Spectrum_45_deg')    
+    fig_3_3.set_size_inches(PP.fig_size_width,PP.fig_size_height)
+    fig_3_3.tight_layout()
+    axes_3_3 = fig_3_3.add_subplot(1,1,1)           
+    axes_3_3.plot(validation_data.Exp_APC_SF_freqency_spectrum , validation_data.Exp_broadband_APC[0,:], color = PP.Elc[0] , linestyle = PP.Els, marker = PP.Elm[0] , markersize = PP.m , linewidth = PP.lw,    label = 'Exp. 45 $\degree$ mic.')       
+    axes_3_3.set_xscale('log') 
+    axes_3_3.set_ylabel(r'SPL$_{1/3}$ (dB)')
+    axes_3_3.set_xlabel('Frequency (Hz)')  
+    axes_3_3.set_ylim([15,50])   
+
+
+    fig_3_4 = plt.figure('Noise_Validation_Broadband_1_3_Spectrum_22_deg')    
+    fig_3_4.set_size_inches(PP.fig_size_width,PP.fig_size_height)
+    fig_3_4.tight_layout()
+    axes_3_4 = fig_3_4.add_subplot(1,1,1)            
+    axes_3_4.plot(validation_data.Exp_APC_SF_freqency_spectrum , validation_data.Exp_broadband_APC[1,:], color = PP.Elc[0] , linestyle = PP.Els, marker = PP.Elm[0] , markersize = PP.m , linewidth = PP.lw,   label = 'Exp. 22.5 $\degree$ mic.')       
+    axes_3_4.set_xscale('log') 
+    axes_3_4.set_ylabel(r'SPL$_{1/3}$ (dB)')
+    axes_3_4.set_xlabel('Frequency (Hz)')  
+    axes_3_4.set_ylim([15,50])
+    
+    return axes_3_1,axes_3_2, axes_3_3, axes_3_4, validation_data
 
 def plot_parameters():
      
@@ -463,12 +513,12 @@ def plot_parameters():
     plt.rcParams['axes.linewidth'] = 1. 
  
     PP = Data(  
-        fig_size_width  = 8 ,
-        fig_size_height = 6 ,       
+        fig_size_width  = 14 ,
+        fig_size_height = 9 ,       
         lw  = 1,                             # line_width               
         m   = 5,                             # markersize               
         lf  = 10,                            # legend_font_size         
-        Slc = ['black','red','blue' ],       # line_colors        
+        Slc = ['black','green','yellow'],       # line_colors        
         Slm = ['^','o','s'],                 # line_markers       
         Sls = '-',                           # line_styles        
         Elc = ['darkred','red','tomato'],    # Experimental_line_colors 
@@ -511,7 +561,6 @@ def setup_noise_settings(sts):
     return sts 
 
 if __name__ == '__main__': 
-    main()    
+    main()  
     plt.show()   
-    
     

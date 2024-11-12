@@ -42,9 +42,9 @@ class Weights_EVTOL(Weights):
         Outputs:
         None 
         """           
-        self.tag      = 'weights_evtol'
-        self.vehicle  = None 
-        self.settings = Data()    
+        self.tag                                    = 'weights_evtol'
+        self.vehicle                                = None 
+        self.settings                               = Data()    
         self.settings.miscelleneous_weight_factor   = 1.1 
         self.settings.safety_factor                 = 1.5   
         self.settings.disk_area_factor              = 1.15     
@@ -74,7 +74,7 @@ class Weights_EVTOL(Weights):
         vehicle.weight_breakdown = results
 
         # updating empty weight
-        vehicle.mass_properties.operating_empty = results.empty
+        vehicle.mass_properties.operating_empty = results.empty.total
 
         # done!
         return results        

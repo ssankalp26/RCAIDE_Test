@@ -64,7 +64,7 @@ class Rotor(Component):
         self.mid_chord_alignment               = 0.0
         self.blade_solidity                    = 0.0 
         self.flap_angle                        = 0.0
-        self.number_azimuthal_stations         = 24  
+        self.number_azimuthal_stations         = 16 
         self.vtk_airfoil_points                = 40        
         self.Airfoils                          = Airfoil_Container()
         self.airfoil_polar_stations            = None 

@@ -15,7 +15,7 @@ import numpy as np
 import sys 
 import os
 
-sys.path.append(os.path.join(sys.path[0], 'Vehicles'))
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 # the analysis functions 
  
 from Cessna_172  import vehicle_setup ,configs_setup
@@ -46,8 +46,8 @@ def main():
     
     # evaluate
     results     = mission.evaluate()  
-    P_truth     = 54482.84055310519
-    mdot_truth  = 0.004786987102002009
+    P_truth     = 54402.838230022855
+    mdot_truth  = 0.004779957914295229
     
     P    = results.segments.cruise.state.conditions.energy.fuel_line.ice_propeller.internal_combustion_engine.power[-1,0]
     mdot = results.segments.cruise.state.conditions.weights.vehicle_mass_rate[-1,0]

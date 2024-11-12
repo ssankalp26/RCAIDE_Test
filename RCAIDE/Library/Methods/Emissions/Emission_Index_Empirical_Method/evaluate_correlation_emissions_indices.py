@@ -33,7 +33,7 @@ def evaluate_correlation_emissions_indices(segment,settings,vehicle):
     """    
     # unpack
     state      = segment.state
-    I          = state.numerics.dimensionless.integrate 
+    I          = state.numerics.time.integrate
     NOx_total  = 0 * state.ones_row(1)  
     CO2_total  = 0 * state.ones_row(1) 
     SO2_total  = 0 * state.ones_row(1) 
