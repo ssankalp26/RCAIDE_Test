@@ -1,5 +1,4 @@
-# RCAIDE/Library/Compoments/Energy/Sources/Batteries/Lithium_Ion_LiFePO4_1
-# y
+# RCAIDE/Library/Compoments/Energy/Sources/Batteries/Lithium_Ion_LFP
 # 
 # 
 # Created: Nov 2024, S. Shekar
@@ -77,32 +76,29 @@ class Lithium_Ion_LFP(Generic_Battery_Module):
         # ----------------------------------------------------------------------------------------------------------------------
         #  Cell Level Properties
         # ----------------------------------------------------------------------------------------------------------------------        
-        self.cell.chemistry                   = ''
-        self.cell.diameter                    = 0.0185                                                   # [m]
-        self.cell.height                      = 0.0653                                                   # [m]
-        self.cell.mass                        = 0.03  * Units.kg                                         # [kg]
-        self.cell.surface_area                = (np.pi*self.cell.height*self.cell.diameter) + (0.5*np.pi*self.cell.diameter**2)  # [m^2]
+        self.cell.chemistry                   = 'LiFePO4'
+        self.cell.diameter                    = 0.0185                                                    # [m]
+        self.cell.height                      = 0.0653                                                    # [m]
+        self.cell.mass                        = 0.03  * Units.kg                                          # [kg]
+        self.cell.surface_area                = (np.pi*self.cell.height*self.cell.diameter) \
+                                                + (0.5*np.pi*self.cell.diameter**2)                       # [m^2]
 
-        self.cell.volume                      = np.pi*(0.5*self.cell.diameter)**2*self.cell.height       # [m^3] 
-        self.cell.density                     = self.cell.mass/self.cell.volume                          # [kg/m^3]
-        self.cell.electrode_area              = 0.0342                                                   # [m^2]  # estimated 
+        self.cell.volume                      = np.pi*(0.5*self.cell.diameter)**2*self.cell.height        # [m^3] 
+        self.cell.density                     = self.cell.mass/self.cell.volume                           # [kg/m^3]
+        self.cell.electrode_area              = 0.0342                                                    # [m^2]  # estimated 
                                                         
-        self.cell.maximum_voltage             = 3.6                                                      # [V]
-        self.cell.nominal_capacity            = 2.6                                                      # [Amp-Hrs]
-        self.cell.nominal_voltage             = 3.6                                                      # [V]
+        self.cell.maximum_voltage             = 3.6                                                       # [V]
+        self.cell.nominal_capacity            = 2.6                                                       # [Amp-Hrs]
+        self.cell.nominal_voltage             = 3.6                                                       # [V]
          
         self.cell.watt_hour_rating            = self.cell.nominal_capacity  * self.cell.nominal_voltage   # [Watt-hours]      
         self.cell.specific_energy             = self.cell.watt_hour_rating*Units.Wh/self.cell.mass        # [J/kg]
         self.cell.specific_power              = self.cell.specific_energy/self.cell.nominal_capacity      # [W/kg]   
-        # self.cell.ragone.const_1              = 88.818  * Units.kW/Units.kg
-        # self.cell.ragone.const_2              = -.01533 / (Units.Wh/Units.kg)
-        # self.cell.ragone.lower_bound          = 60.     * Units.Wh/Units.kg
-        # self.cell.ragone.upper_bound          = 225.    * Units.Wh/Units.kg         
-        self.cell.resistance                  = 0.022                                                    # [Ohms]
+        self.cell.resistance                  = 0.022                                                     # [Ohms]
                                                                                                             
-        self.cell.specific_heat_capacity      = 1115                                                     # [J/kgK]                                                     
-        self.cell.radial_thermal_conductivity = 0.475                                                    # [J/kgK]  
-        self.cell.axial_thermal_conductivity  = 37.6                                                        # [J/kgK]  
+        self.cell.specific_heat_capacity      = 1115                                                      # [J/kgK]                                                     
+        self.cell.radial_thermal_conductivity = 0.475                                                     # [J/kgK]  
+        self.cell.axial_thermal_conductivity  = 37.6                                                      # [J/kgK]  
 
         battery_raw_data                      = load_battery_results()                                                   
         self.cell.discharge_performance_map   = create_discharge_performance_map(battery_raw_data)
@@ -134,33 +130,26 @@ class Lithium_Ion_LFP(Generic_Battery_Module):
     def reuse_stored_data(self,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag):
         reuse_stored_lfp_cell_data(self,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag)
         return    
-    
-     # ****************************I think this does nothing, can be deleted*************************
-    # def compute_voltage(self,battery_conditions):
-    #     """ Computes the voltage of a single LFP cell  
-    
-    #     Assumptions:
-    #         None
-        
-    #     Source:
-    #         None
-    
-    #     Args:
-    #         self               : battery          [unitless] 
-    #         battery_conditions : state of battery [unitless]
-            
-    #     Returns: 
-    #         None
-    #     """              
-
-    #     return battery_conditions.voltage_under_load 
-     # ****************************I think this does nothing, can be deleted*************************
-    
+      
     def update_battery_age(self,segment, battery_conditions,increment_battery_age_by_one_day): 
         update_lfp_cell_age(self,segment, battery_conditions,increment_battery_age_by_one_day)
         return 
     
 def create_discharge_performance_map(raw_data):
+    '''Interpolation
+        
+    Assumptions:
+        
+        
+    Source:
+        
+    
+    Args: 
+        None
+        
+    Returns:
+        battery_data: ]
+    '''    
     # Prepare lists for the data needed for interpolation
     c_rates = []
     temperatures = []
@@ -185,7 +174,7 @@ def create_discharge_performance_map(raw_data):
     values = np.array(voltages)
 
     # Create the interpolant
-    battery_data = NearestNDInterpolator(points, values)
+    battery_data = NearestNDInterpolator(points, values) # Can be replaced by a Linear Interpolator for a better fit but computation time increases by 30 times. 
 
     return battery_data  
 
