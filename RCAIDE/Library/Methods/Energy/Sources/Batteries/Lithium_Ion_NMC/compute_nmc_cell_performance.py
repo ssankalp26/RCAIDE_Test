@@ -128,7 +128,7 @@ def compute_nmc_cell_performance(battery_module,state,bus,coolant_lines,t_idx, d
     # -------------------------------------------------------------------------    
     battery_module_conditions = state.conditions.energy[bus.tag].battery_modules[battery_module.tag]  
    
-    E_module_max       = battery_module.maximum_energy * battery_module_conditions.cell.capacity_fade_factor
+    E_module_max       = np.float32(battery_module.maximum_energy * battery_module_conditions.cell.capacity_fade_factor)
     
     V_oc_module        = battery_module_conditions.voltage_open_circuit
     V_oc_cell          = battery_module_conditions.cell.voltage_open_circuit   
@@ -165,7 +165,7 @@ def compute_nmc_cell_performance(battery_module,state,bus,coolant_lines,t_idx, d
     n_series          = battery_module.electrical_configuration.series
     n_parallel        = battery_module.electrical_configuration.parallel 
     n_total           = n_series*n_parallel 
-    no_modules        = len(bus.battery_modules)
+    no_modules        = bus.number_of_battery_modules
     
     # ---------------------------------------------------------------------------------
     # Examine Thermal Management System
@@ -186,7 +186,7 @@ def compute_nmc_cell_performance(battery_module,state,bus,coolant_lines,t_idx, d
     if bus_config == 'Series':
         I_module[t_idx]      = I_bus[t_idx]
     elif bus_config  == 'Parallel':
-        I_module[t_idx]      = I_bus[t_idx] / len(bus.battery_modules)
+        I_module[t_idx]      = I_bus[t_idx] / bus.number_of_battery_modules
 
     I_cell[t_idx] = I_module[t_idx] / n_parallel   
        
@@ -238,7 +238,7 @@ def compute_nmc_cell_performance(battery_module,state,bus,coolant_lines,t_idx, d
             T_cell[t_idx+1]    =  T_cell[t_idx] + dT_dt*delta_t[t_idx]
             
         # Compute state of charge and depth of discarge of the battery_module
-        E_module[t_idx+1]                                     = E_module[t_idx] -P_module[t_idx]*delta_t[t_idx] 
+        E_module[t_idx+1]                                     = np.float32(E_module[t_idx] -P_module[t_idx]*delta_t[t_idx] )
         E_module[t_idx+1][E_module[t_idx+1] > E_module_max]   = E_module_max
         SOC_cell[t_idx+1]                                     = E_module[t_idx+1]/E_module_max 
         SOC_cell[t_idx+1][SOC_cell[t_idx+1]>1]                = 1.

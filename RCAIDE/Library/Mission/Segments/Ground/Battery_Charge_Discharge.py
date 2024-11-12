@@ -35,12 +35,12 @@ def initialize_conditions(segment):
         for network in segment.analyses.energy.vehicle.networks:
             time =  0 
             for bus in  network.busses:
-                if not segment.state.initials.keys():
+                if not 'initial_battery_state_of_charge' in segment:  
                     end_of_flight_soc = 1
                     for battery_module in segment.state.conditions.energy.bus.battery_modules:
                         end_of_flight_soc = min(end_of_flight_soc,battery_module.cell.state_of_charge[-1])
                 else:
-                    end_of_flight_soc =  segment.state.initials.conditions.energy[bus.tag].state_of_charge[-1]
+                    end_of_flight_soc =  segment.initial_battery_state_of_charge
                 
                 time           =  max(((segment.cutoff_SOC-end_of_flight_soc) / bus.charging_c_rate )*Units.hrs  , time) 
                 time           += segment.cooling_time
