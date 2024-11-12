@@ -37,7 +37,7 @@ def initialize_conditions(segment):
             for bus in  network.busses:
                 if not 'initial_battery_state_of_charge' in segment:  
                     end_of_flight_soc = 1
-                    for battery_module in segment.state.conditions.energy.bus.battery_modules:
+                    for battery_module in segment.state.conditions.energy[bus.tag].battery_modules:
                         end_of_flight_soc = min(end_of_flight_soc,battery_module.cell.state_of_charge[-1])
                 else:
                     end_of_flight_soc =  segment.initial_battery_state_of_charge
