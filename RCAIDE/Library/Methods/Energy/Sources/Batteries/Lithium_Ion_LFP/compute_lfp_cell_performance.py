@@ -10,7 +10,7 @@ from RCAIDE.Framework.Core import Units
 import numpy as np  
 from copy import deepcopy
 # ----------------------------------------------------------------------------------------------------------------------
-# compute_nmc_cell_performance
+# compute_lfp_cell_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Energy-Sources-Batteries-Lithium_Ion_LFP
 def compute_lfp_cell_performance(battery_module,state,bus,coolant_lines,t_idx, delta_t): 
@@ -126,10 +126,7 @@ def compute_lfp_cell_performance(battery_module,state,bus,coolant_lines,t_idx, d
     # R_0_cell[t_idx][R_0_cell[t_idx]<0]  = 0. 
 
     # Determine temperature increase         
-    sigma                 =  100 #?????????? # Electrical conductivity
-    # n                     = 1
-    # F                     = 96485 # C/mol Faraday constant    
-    # delta_S               = 
+    sigma                 =  100  
 
     i_cell                = I_cell[t_idx]/electrode_area # current intensity (A/m²)
     q_dot_entropy         = (4.6810 * SOC_cell[t_idx]**4 + (-8.3729) * SOC_cell[t_idx]**3 + 3.7197 * SOC_cell[t_idx]**2 + 0.4356 * SOC_cell[t_idx]+ (-0.3027)) # Obtained from curve fitting the dUdt curve  
@@ -138,14 +135,11 @@ def compute_lfp_cell_performance(battery_module,state,bus,coolant_lines,t_idx, d
     Q_heat_module[t_idx]  = Q_heat_cell[t_idx]*n_total  
     
     V_ul_cell[t_idx]      = compute_lfp_cell_state(battery_module,battery_module_data,SOC_cell[t_idx],T_cell[t_idx],abs(I_cell[t_idx])) 
-
-    #V_oc_cell[t_idx]      = V_ul_cell[t_idx] + (abs(I_cell[t_idx]) * R_0_cell[t_idx])              
-  
+ 
     # Effective Power flowing through battery_module 
     P_module[t_idx]       = P_bus[t_idx] /no_modules  - np.abs(Q_heat_module[t_idx]) 
 
-    # store remaining variables 
-    #V_oc_module[t_idx]     = V_oc_cell[t_idx]*n_series 
+    # store remaining variables  
     V_ul_module[t_idx]     = V_ul_cell[t_idx]*n_series  
     T_module[t_idx]        = T_cell[t_idx]   # Assume the cell temperature is the temperature of the module
     P_cell[t_idx]          = P_module[t_idx]/n_total 
