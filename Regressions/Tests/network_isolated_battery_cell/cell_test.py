@@ -9,7 +9,7 @@
 # RCAIDE imports 
 import RCAIDE  
 from RCAIDE.Framework.Core                                    import Units, Data 
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common   import size_module_from_mass ,size_module_from_energy_and_power, find_mass_gain_rate, find_total_mass_gain, find_ragone_properties, find_ragone_optimum  
+from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common   import size_module_from_mass ,size_module_from_energy_and_power, find_mass_gain_rate, find_total_mass_gain, find_ragone_properties  
 from RCAIDE.Framework.Mission.Common                          import Conditions
 from RCAIDE.Library.Plots                                     import * 
 

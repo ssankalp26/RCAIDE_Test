@@ -23,7 +23,7 @@ from scipy.interpolate  import NearestNDInterpolator
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Library-Compoments-Energy-Batteries 
 class Lithium_Ion_LFP(Generic_Battery_Module):
-    """ 18650 lithium-iron-phosphate-oxide battery cell.  
+    """ 26650 A123 Lithium Ion LFP cell.  
         """ 
     def __defaults__(self):
         """This sets the default values.
@@ -32,27 +32,13 @@ class Lithium_Ion_LFP(Generic_Battery_Module):
             None
 
         Source:
-            # Cell Information 
-            Saw, L. H., Yonghuang Ye, and A. A. O. Tay. "Electrochemical–thermal analysis of 
-            18650 Lithium Iron Phosphate cell." Energy Conversion and Management 75 (2013): 
-            162-174.
+         # Cell Information 
+           Datasheet: https://a123batteries.com/product_images/uploaded_images/26650.pdf
             
-            # Electrode Area
-            Muenzel, Valentin, et al. "A comparative testing study of commercial
-            18650-format lithium-ion battery cells." Journal of The Electrochemical
-            Society 162.8 (2015): A1592.
-            
-            # Cell Thermal Conductivities 
-            (radial)
-            Murashko, Kirill A., Juha Pyrhönen, and Jorma Jokiniemi. "Determination of the 
-            through-plane thermal conductivity and specific heat capacity of a Li-ion cylindrical 
-            cell." International Journal of Heat and Mass Transfer 162 (2020): 120330.
-            
-            (axial)
-            Saw, L. H., Yonghuang Ye, and A. A. O. Tay. "Electrochemical–thermal analysis of 
-            18650 Lithium Iron Phosphate cell." Energy Conversion and Management 75 (2013): 
-            162-174.
-        
+            Arora, Shashank, and Ajay Kapoor. “Experimental Study of Heat Generation 
+            Rate during Discharge of LiFePO4 Pouch Cells of Different Nominal Capacities
+            and Thickness.” Batteries 5, no. 4 (November 11, 2019): 70. 
+            https://doi.org/10.3390/batteries5040070.        
         """
         # ----------------------------------------------------------------------------------------------------------------------
         #  Module Level Properties
@@ -127,12 +113,16 @@ class Lithium_Ion_LFP(Generic_Battery_Module):
         return 
     
 def create_discharge_performance_map(raw_data):
-    '''Interpolation
+    '''Creates multiple surfaces from the data generated from 
         
     Assumptions:
         
         
     Source:
+         Lin, Xinfan, Hector Perez, Jason B. Siegel, and Anna G. Stefanopoulou.
+        “An Electro-Thermal Model for the A123 26650 LiFePO4 Battery.” 
+        University of Michigan. Accessed November 11, 2024. 
+        https://hdl.handle.net/2027.42/97341.
         
     
     Args: 
