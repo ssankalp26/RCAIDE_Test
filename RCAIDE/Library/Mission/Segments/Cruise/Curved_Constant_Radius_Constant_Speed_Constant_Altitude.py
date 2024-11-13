@@ -58,7 +58,7 @@ def initialize_conditions(segment):
     # check for initial altitude
     if alt is None:
         if not segment.state.initials: raise AttributeError('altitude not set')
-        alt = -1.0 * segment.state.initials.conditions.frames.inertial.position_vector[-1,2][:,0]
+        alt = -1.0 * segment.state.initials.conditions.frames.inertial.position_vector[-1,2]
     
     # check for turn radius
     if radius is None:
