@@ -582,7 +582,7 @@ def load_battery_results():
     
     Source:
     Automotive Industrial Systems Company of Panasonic Group, Technical Information of 
-    NCR18650G, URL https://cdn.shopify.com/s/files/1/0481/9678/0183/files/panasonic_ncr18650g.pdf
+    NCR18650G, URL https://www.imrbatteries.com/content/panasonic_ncr18650g.pdf
     
     Assumptions:
     N/A
