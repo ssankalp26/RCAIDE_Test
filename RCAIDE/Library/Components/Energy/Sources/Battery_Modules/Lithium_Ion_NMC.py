@@ -205,8 +205,7 @@ def load_battery_results():
            
        Source:
            Automotive Industrial Systems Company of Panasonic Group, Technical Information of 
-           NCR18650G, URL https://www.imrbatteries.com/content/panasonic_ncr18650g.pdf
-    
+           NCR18650G, URL https://www.orbtronic.com/content/Datasheet-specs-Sanyo-Panasonic-NCR18650GA-3500mah.pdf
        Args: 
            None
            
