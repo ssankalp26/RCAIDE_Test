@@ -238,8 +238,8 @@ def compute_nmc_cell_performance(battery_module,state,bus,coolant_lines,t_idx, d
             T_cell[t_idx+1]    =  T_cell[t_idx] + dT_dt*delta_t[t_idx]
             
         # Compute state of charge and depth of discarge of the battery_module
-        E_module[t_idx+1]                                     = E_module[t_idx] -P_module[t_idx]*delta_t[t_idx]
-        E_module[t_idx+1][E_module[t_idx+1] > E_module_max]   = E_module_max
+        E_module[t_idx+1]                                     = (E_module[t_idx]) -P_module[t_idx]*delta_t[t_idx]
+        E_module[t_idx+1][E_module[t_idx+1] > E_module_max]   = np.float32(E_module_max)
         SOC_cell[t_idx+1]                                     = E_module[t_idx+1]/E_module_max 
         SOC_cell[t_idx+1][SOC_cell[t_idx+1]>1]                = 1.
         SOC_cell[t_idx+1][SOC_cell[t_idx+1]<0]                = 0. 
