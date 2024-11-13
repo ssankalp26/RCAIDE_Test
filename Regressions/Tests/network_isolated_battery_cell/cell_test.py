@@ -37,9 +37,6 @@ def main():
     
     # Lithium Sulfur Test 
     lithium_sulphur_battery_test(Ereq,Preq)
-    
-    # test ragone 
-    test_ragone(Ereq,Preq)
         
     # Lithium-Ion Test
     lithium_ion_battery_test()
@@ -58,24 +55,16 @@ def lithium_sulphur_battery_test(Ereq,Preq):
     plot_battery_ragone_diagram(battery_li_s,   save_filename =  'lithium_sulfur')     
     return 
 
-def test_ragone(Ereq,Preq):  
-    battery_li_ion                      = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_LFP() 
-    battery_li_ion.outputs              = Data()  
-    battery_li_ion.maximum_voltage      = battery_li_ion.cell.maximum_voltage
-    battery_li_ion.mass_properties.mass = 20*Units.kg 
-    test_find_ragone_optimum(battery_li_ion,Ereq,Preq)   
-    test_size_module_from_mass(battery_li_ion)
-
 
 def lithium_ion_battery_test():    
     
-    # Operating conditions for battery 
+    # Operating conditions for battery p
     curr                  = [1.5,3]  
     C_rat                 = [0.5,1]  
     marker_size           = 5 
-    mAh                   = np.array([3550,1500]) 
-    V_ul_true             = np.array([[3.193099725157952,3.285079010092685], [3.193099725157952,3.285079010092685]])
-    bat_temp_true         = np.array([[306.8071576359712,289.31561124904295], [306.9732557172469,289.3523203925924]])  
+    mAh                   = np.array([3800,2600]) 
+    V_ul_true             = np.array([[3.176391931635407,3.1422615279089],[3.176391931635407,3.1422615279089]])
+    bat_temp_true         = np.array([[309.47942727882105,304.7804077267032], [309.65733640183896,304.9861235766863]])  
 
     # PLot parameters 
     marker                = ['s' ,'o' ,'P']
@@ -119,7 +108,7 @@ def lithium_ion_battery_test():
             V_ul_diff   = np.abs(V_ul - V_ul_true[j,i])
             print('Under load voltage difference')
             print(V_ul_diff) 
-            #assert np.abs((V_ul_diff)/V_ul_true[j,i]) < 1e-6  
+            assert np.abs((V_ul_diff)/V_ul_true[j,i]) < 1e-6  
            
             # Temperature Regression
             bat_temp        = results.segments[1].conditions.energy.bus.battery_modules[battery_chemistry[i]].cell.temperature[2][0]  
@@ -127,7 +116,7 @@ def lithium_ion_battery_test():
             bat_temp_diff   = np.abs(bat_temp  - bat_temp_true[j,i]) 
             print('cell temperature difference')
             print(bat_temp_diff)
-            #assert np.abs((bat_temp_diff)/bat_temp_true[j,i]) < 1e-6
+            assert np.abs((bat_temp_diff)/bat_temp_true[j,i]) < 1e-6
        
             for segment in results.segments.values(): 
                 volts         = segment.conditions.energy.bus.voltage_under_load[:,0] 
@@ -266,17 +255,17 @@ def test_find_ragone_properties(specific_energy,battery,energy,power):
     print('specific_energy (Wh/kg) = ',battery.specific_energy/(Units.Wh/Units.kg))
     return
 
-def test_find_ragone_optimum(battery, energy, power):
-    find_ragone_optimum(battery,energy,power)
-    print(battery)
-    print('specific_energy (Wh/kg) = ',battery.specific_energy/(Units.Wh/Units.kg))
-    print('max_energy [W-h]=', battery.maximum_energy/Units.Wh)
-    return
+# def test_find_ragone_optimum(battery, energy, power):
+#     find_ragone_optimum(battery,energy,power)
+#     print(battery)
+#     print('specific_energy (Wh/kg) = ',battery.specific_energy/(Units.Wh/Units.kg))
+#     print('max_energy [W-h]=', battery.maximum_energy/Units.Wh)
+#     return
 
-def test_size_module_from_mass(battery):
-    size_module_from_mass(battery)
-    print(battery)
-    return
+# def test_size_module_from_mass(battery):
+#     size_module_from_mass(battery)
+#     print(battery)
+#     return
 
 if __name__ == '__main__':
     main()

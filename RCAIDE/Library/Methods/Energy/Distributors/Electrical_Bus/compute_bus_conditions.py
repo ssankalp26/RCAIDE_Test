@@ -25,9 +25,8 @@ def compute_bus_conditions(bus, state, t_idx, delta_t):
         bus_conditions.efficiency[t_idx]            = (bus_conditions.power_draw[t_idx] + bus_conditions.heat_energy_generated[t_idx])/bus_conditions.power_draw[t_idx]
         if t_idx != state.numerics.number_of_control_points-1:  
             bm_conditions                              = [bus_conditions.battery_modules[bm.tag] for bm in bus.battery_modules]
-            bus_conditions.temperature[t_idx+1]        = sum(bm.temperature[t_idx+1] for bm in bm_conditions)
+            bus_conditions.temperature[t_idx+1]        = sum(bm.temperature[t_idx+1] for bm in bm_conditions)/ bus.number_of_battery_modules
             bus_conditions.energy[t_idx+1]             = sum(bm.energy[t_idx+1] for bm in bm_conditions)
-            bus_conditions.temperature[t_idx+1]       /= bus.number_of_battery_modules
             bus_conditions.state_of_charge[t_idx+1]    = bm_conditions[-1].state_of_charge[t_idx+1]
 
     elif bus.battery_module_electric_configuration == 'Parallel':

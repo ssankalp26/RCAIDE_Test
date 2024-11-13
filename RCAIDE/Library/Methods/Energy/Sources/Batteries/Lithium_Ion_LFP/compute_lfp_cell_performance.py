@@ -126,7 +126,7 @@ def compute_lfp_cell_performance(battery_module,state,bus,coolant_lines,t_idx, d
     # R_0_cell[t_idx][R_0_cell[t_idx]<0]  = 0. 
 
     # Determine temperature increase         
-    sigma                 =  100  
+    sigma                 =  130  
 
     i_cell                = I_cell[t_idx]/electrode_area # current intensity (A/m²)
     q_dot_entropy         = (4.6810 * SOC_cell[t_idx]**4 + (-8.3729) * SOC_cell[t_idx]**3 + 3.7197 * SOC_cell[t_idx]**2 + 0.4356 * SOC_cell[t_idx]+ (-0.3027)) # Obtained from curve fitting the dUdt curve  
