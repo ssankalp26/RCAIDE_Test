@@ -52,7 +52,7 @@ class Vertical_Tail(Wing):
         Properties Used:
         N/A
         """ 
-        self.tag       = 'vertical_stabilizer'
+        self.tag       = 'vertical_tail'
         self.vertical  = True
         self.symmetric = False 
         
