@@ -102,8 +102,7 @@ def conventional_payload_range_diagram(vehicle,mission,cruise_segment_tag,reserv
     #Point  = [ RANGE WITH MAX. PLD   , RANGE WITH MAX. FUEL , FERRY RANGE   ]
     TOW     = [ MTOW                               , MTOW                   , OEW + MaxFuel ]
     FUEL    = [ min(TOW[1] - OEW - MaxPLD,MaxFuel) , MaxFuel                , MaxFuel       ]
-    PLD     = [ MaxPLD                             , MTOW - MaxFuel - OEW   , 0.            ]
-
+    PLD     = [ MaxPLD                             , min(MTOW - MaxFuel - OEW, MaxPLD)   , 0.            ]
     # allocating Range array
     R       = [0,0,0]
 

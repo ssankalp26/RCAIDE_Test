@@ -28,7 +28,7 @@ def aerodynamics(mission):
     last_tag = None
     for tag,segment in mission.segments.items():
         if segment.analyses.aerodynamics != None:
-            if last_tag and  'compute' in mission.segments[last_tag].analyses.aerodynamics.process: 
+            if (last_tag!=  None) and  ('compute' in mission.segments[last_tag].analyses.aerodynamics.process.keys()): 
                 segment.analyses.aerodynamics.process.compute.lift.inviscid_wings = mission.segments[last_tag].analyses.aerodynamics.process.compute.lift.inviscid_wings
                 segment.analyses.aerodynamics.surrogates       = mission.segments[last_tag].analyses.aerodynamics.surrogates 
                 segment.analyses.aerodynamics.reference_values = mission.segments[last_tag].analyses.aerodynamics.reference_values  

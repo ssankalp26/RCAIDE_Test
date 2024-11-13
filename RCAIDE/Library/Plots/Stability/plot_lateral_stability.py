@@ -22,7 +22,7 @@ def plot_lateral_stability(results,
                              show_legend=True,
                              save_filename = "Lateral_Stability",
                              file_type = ".png",
-                             width = 8, height = 6):
+                             width = 11, height = 7):
     """This plots the static stability characteristics of an aircraft 
     """  
 
@@ -38,17 +38,11 @@ def plot_lateral_stability(results,
     # get line colors for plots 
     line_colors   = cm.inferno(np.linspace(0,0.9,len(results.segments)))     
      
-    fig_1   = plt.figure(save_filename+"_Bank_Angle")
-    fig_2   = plt.figure(save_filename+"_Aileron_Deflection")
-    fig_3   = plt.figure(save_filename+"_Rudder_Deflection")
-    
-    fig_1.set_size_inches(width,height)
-    fig_2.set_size_inches(width,height)
-    fig_3.set_size_inches(width,height)
-    
-    axis_1 = fig_1.add_subplot(1,1,1) 
-    axis_2 = fig_2.add_subplot(1,1,1)  
-    axis_3 = fig_3.add_subplot(1,1,1)    
+    fig   = plt.figure(save_filename)
+    fig.set_size_inches(width,height) 
+    axis_1 = plt.subplot(2,2,1) 
+    axis_2 = plt.subplot(2,2,2)  
+    axis_3 = plt.subplot(2,2,3)    
     
     for i in range(len(results.segments)): 
         time     = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min  
@@ -59,40 +53,32 @@ def plot_lateral_stability(results,
         segment_tag  =  results.segments[i].tag
         segment_name = segment_tag.replace('_', ' ')
         
-        axis_1.plot(time, phi, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name, markersize = ps.marker_size)
+        axis_1.plot(time, phi, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name)
         axis_1.set_ylabel(r'$Bank Angle \phi$') 
         set_axes(axis_1)     
 
-        axis_2.plot(time,delta_a , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name, markersize = ps.marker_size)
+        axis_2.plot(time,delta_a , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)
         axis_2.set_xlabel('Time (mins)')
         axis_2.set_ylabel(r'Aileron Defl. (deg)')
         set_axes(axis_2)  
 
-        axis_3.plot(time,delta_r , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = segment_name, markersize = ps.marker_size)
+        axis_3.plot(time,delta_r , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)
         axis_3.set_xlabel('Time (mins)')
         axis_3.set_ylabel(r'Rudder Defl. (deg)')
         set_axes(axis_3)         
          
     if show_legend:
-        leg1 =  fig_1.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 4)
-        leg2 =  fig_2.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 4)
-        leg3 =  fig_3.legend(bbox_to_anchor=(0.5, 1.0), loc='upper center', ncol = 4)
-        
-        leg1.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
-        leg2.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})
-        leg3.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})   
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4) 
+        leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
     # Adjusting the sub-plots for legend
-    fig_1.tight_layout()
-    fig_2.tight_layout()
-    fig_3.tight_layout()
+    fig.tight_layout()
+    fig.subplots_adjust(top=0.8) 
     
-    fig_1.subplots_adjust(top=0.8)
-    fig_2.subplots_adjust(top=0.8)
-    fig_3.subplots_adjust(top=0.8)  
+    # set title of plot 
+    title_text    = 'Stability Coefficents'      
+    fig.suptitle(title_text)
  
     if save_figure:
-        fig_1.savefig(save_filename + "_Bank_Angle" + file_type)
-        fig_2.savefig(save_filename + "_Aileron_Deflection" + file_type)
-        fig_3.savefig(save_filename + "_Rudder_Deflection" + file_type)   
-    return fig_1,fig_2,fig_3 
+        plt.savefig(save_filename + file_type)   
+    return fig 

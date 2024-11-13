@@ -23,7 +23,7 @@ def plot_noise_level(noise_data,
                      save_figure = False,
                      save_filename="Sideline_Noise_Levels",
                      file_type=".png",
-                     width = 8, height = 6): 
+                     width = 11, height = 7): 
     """This plots the A-weighted Sound Pressure Level as a function of time at various aximuthal angles
     on the ground
 

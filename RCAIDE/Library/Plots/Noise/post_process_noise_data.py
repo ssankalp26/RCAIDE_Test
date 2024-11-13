@@ -33,10 +33,8 @@ def post_process_noise_data(results,
                                                      '09:00:00','09:30:00','10:00:00','10:30:00','11:00:00','11:30:00',
                                                      '12:00:00','12:30:00','13:00:00','13:30:00','14:00:00','14:30:00',
                                                      '15:00:00']),
-                            time_period        = ['06:00:00','20:00:00'], 
-                            compute_L_dn       = True, 
-                            compute_SENEL      = True,    
-                            compute_L_eq       = True,): 
+                            time_period             = ['06:00:00','20:00:00'], 
+                            evalaute_noise_metrics  = True): 
     """This translates all noise data into metadata for plotting 
     
     Assumptions:
@@ -150,7 +148,8 @@ def post_process_noise_data(results,
     noise_data.aircraft_position     = Aircraft_pos
     noise_data.microhpone_locations  = mic_locs
     
-    # Step 8: Perform noise metric calculations  
-    compute_noise_metrics(noise_data, flight_times)
+    # Step 8: Perform noise metric calculations
+    if evalaute_noise_metrics:
+        compute_noise_metrics(noise_data, flight_times)
     
     return noise_data

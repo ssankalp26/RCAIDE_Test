@@ -10,4 +10,4 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-from . import plot_evtol_weight_breakdown
+from .plot_weight_breakdown import plot_weight_breakdown

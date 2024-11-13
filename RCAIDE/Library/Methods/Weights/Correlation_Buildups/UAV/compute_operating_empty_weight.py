@@ -61,7 +61,8 @@ def compute_operating_empty_weight(vehicle):
     W_airframe   = (5.58*(S**1.59)*(AR**0.71))/g  
     
     # Pack
-    weight       = Data()
-    weight.empty = W_airframe
+    weight              = Data()
+    weight.empty        = Data()
+    weight.empty.total  = W_airframe
     
     return weight

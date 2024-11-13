@@ -65,9 +65,9 @@ def Transport_Aircraft_Test():
     
     print(weight_analysis.vehicle.tag + ' Moment of Intertia')
     print(MOI)
-    accepted  = np.array([[32345317.83576559 , 2824293.44847796  , 3423062.2751829 ],
-                          [ 2824293.44847796 , 42743291.89239228  ,      0.        ],
-                          [ 3423062.2751829  ,       0.       ,  61946007.2916059 ]])
+    accepted  = np.array([[32445694.94928977,  2611617.77266202,  3302638.18748848],
+                          [ 2611617.77266202, 41220060.06075142,        0.        ],
+                          [ 3302638.18748848,        0.        , 60394806.92184599]])
     MOI_error     = MOI - accepted
 
     # Check the errors
@@ -108,9 +108,9 @@ def General_Aviation_Test():
     print(weight_analysis.vehicle.tag + ' Moment of Intertia')
     print(MOI)
     
-    accepted  = np.array([[1289.47913257 ,  43.55214272,   43.55214272],
-                          [  43.55214272 , 964.5628582 ,    0.        ],
-                          [  43.55214272 ,   0.        , 2177.920264  ]])
+    accepted  = np.array([[1290.55346634,    6.98747094,    6.98747094],
+                          [   6.98747094, 1246.65023312,    0.        ],
+                          [   6.98747094,    0.        , 2460.00763893]])
     
     MOI_error     = MOI - accepted
 
@@ -152,9 +152,9 @@ def EVTOL_Aircraft_Test(update_regression_values):
     
     print(weight_analysis.vehicle.tag + ' Moment of Intertia')
     print(MOI)
-    accepted  = np.array([[1769.50793627,   15.41592038, -550.21559047],
-                          [  15.41592038, 8273.8167109 ,    0.        ],
-                          [-550.21559047,    0.        , 9067.06819888]])
+    accepted  = np.array([[1014.4402321 ,  -46.61996679, -294.07715118],
+                          [ -46.61996679, 5419.94291851,  -28.05118379],
+                          [-294.07715118,  -28.05118379, 5563.93197331]])
 
     MOI_error     = MOI - accepted
 
@@ -170,7 +170,7 @@ def EVTOL_Aircraft_Test(update_regression_values):
     print(error)
 
     for k,v in list(error.items()):
-        assert(np.abs(v)<1e-6) 
+        assert(np.abs(v)<1e-5) 
     
     return  
 

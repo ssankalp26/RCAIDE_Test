@@ -83,7 +83,7 @@ def compute_component_centers_of_gravity(vehicle, nose_load = 0.06):
     for network in vehicle.networks:
         for bus in network.busses:
             for tag, item in  bus.items():
-                if tag == 'batteries':
+                if tag == 'battery_modules':
                     for sub_tag, sub_item in  item.items():
                         if isinstance(sub_item,Component):
                             network_moment += sub_item.mass_properties.mass*(np.array(sub_item.origin) + np.array( sub_item.mass_properties.center_of_gravity))
@@ -91,8 +91,12 @@ def compute_component_centers_of_gravity(vehicle, nose_load = 0.06):
                 elif tag == 'propulsors':
                     for sub_tag, sub_item in  item.items():
                         if isinstance(sub_item,Component):
-                            network_moment += sub_item.mass_properties.mass*(np.array(sub_item.origin) + np.array( sub_item.mass_properties.center_of_gravity))
-                            network_mass   += sub_item.mass_properties.mass 
+                            for sub_sub_tag, sub_sub_item in  sub_item.items():
+                                if isinstance(sub_sub_item,Component):
+                                    network_moment += sub_sub_item.mass_properties.mass*(np.array(sub_sub_item.origin) + np.array( sub_sub_item.mass_properties.center_of_gravity))
+                                    network_mass   += sub_sub_item.mass_properties.mass
+                                                                        
+                            
                 elif isinstance(item,Component):
                     network_moment += item.mass_properties.mass*(np.array(item.origin) + np.array(item.mass_properties.center_of_gravity))
                     network_mass   += item.mass_properties.mass                                     
@@ -107,11 +111,18 @@ def compute_component_centers_of_gravity(vehicle, nose_load = 0.06):
                     for sub_tag, sub_item in  item.items():
                         if isinstance(sub_item,Component):
                             network_moment += sub_item.mass_properties.mass*(np.array(sub_item.origin) + np.array( sub_item.mass_properties.center_of_gravity))
-                            network_mass   += sub_item.mass_properties.mass 
+                            network_mass   += sub_item.mass_properties.mass
+                            for sub_sub_tag, sub_sub_item in  sub_item.items():
+                                if isinstance(sub_sub_item,Component):
+                                    network_moment += sub_sub_item.mass_properties.mass*(np.array(sub_sub_item.origin) + np.array( sub_sub_item.mass_properties.center_of_gravity))
+                                    network_mass   += sub_sub_item.mass_properties.mass                            
                 elif isinstance(item,Component):
                     network_moment += item.mass_properties.mass*(np.array(item.origin) + np.array(item.mass_properties.center_of_gravity))
                     network_mass   += item.mass_properties.mass             
-
+     
+        network.mass_properties.mass   = network_mass
+        network.mass_properties.center_of_gravity = (network_moment / network_mass).tolist()
+        
     if network_mass!= 0.:
         propulsion_cg = network_moment/network_mass
     else:
