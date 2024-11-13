@@ -102,18 +102,14 @@ class Frequency_Domain_Buildup(Noise):
         # iterate through sources and iteratively add rotor noise
         rotor_tag = None
         for network in config.networks:
-            for tag , item in  network.items():
-                if (tag == 'busses') or (tag == 'fuel_line'): 
-                    for distributor in item:
-                        i = 0
-                        for propulsor in distributor.propulsors:
-                            for sub_tag , sub_item in  propulsor.items():
-                                if isinstance(sub_item, RCAIDE.Library.Components.Propulsors.Converters.Rotor): 
-                                    rotor_tag         = compute_rotor_noise(microphone_locations,distributor,propulsor,sub_item,segment,settings, rotor_index = i, previous_rotor_tag= rotor_tag) 
-                                    total_SPL_dBA     = SPL_arithmetic(np.concatenate((total_SPL_dBA[:,None,:],conditions.noise[distributor.tag][propulsor.tag][sub_item.tag].SPL_dBA[:,None,:]),axis =1),sum_axis=1)
-                                    total_SPL_spectra = SPL_arithmetic(np.concatenate((total_SPL_spectra[:,None,:,:],conditions.noise[distributor.tag][propulsor.tag][sub_item.tag].SPL_1_3_spectrum[:,None,:,:]),axis =1),sum_axis=1) 
-                                    i += 1
-                                    
+            for propulsor in network.propulsors:
+                for sub_tag , sub_item in  propulsor.items():
+                    if isinstance(sub_item, RCAIDE.Library.Components.Propulsors.Converters.Rotor): 
+                        rotor_tag         = compute_rotor_noise(microphone_locations,network,propulsor,sub_item,segment,settings, rotor_index = i, previous_rotor_tag= rotor_tag) 
+                        total_SPL_dBA     = SPL_arithmetic(np.concatenate((total_SPL_dBA[:,None,:],conditions.noise[propulsor.tag][sub_item.tag].SPL_dBA[:,None,:]),axis =1),sum_axis=1)
+                        total_SPL_spectra = SPL_arithmetic(np.concatenate((total_SPL_spectra[:,None,:,:],conditions.noise[propulsor.tag][sub_item.tag].SPL_1_3_spectrum[:,None,:,:]),axis =1),sum_axis=1) 
+                        i += 1
+                        
         conditions.noise.hemisphere_SPL_dBA              = total_SPL_dBA
         conditions.noise.hemisphere_SPL_1_3_spectrum_dBA = total_SPL_spectra  
         return

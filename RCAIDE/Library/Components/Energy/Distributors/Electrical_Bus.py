@@ -32,7 +32,7 @@ class Electrical_Bus(Component):
         """                
         self.tag                                   = 'bus' 
         self.battery_modules                       = Container()
-        self.propulsors                            = Container() 
+        self.assigned_propulsors                   = Container() 
         self.solar_panel                           = None 
         self.avionics                              = RCAIDE.Library.Components.Systems.Avionics()
         self.payload                               = RCAIDE.Library.Components.Payloads.Payload()        

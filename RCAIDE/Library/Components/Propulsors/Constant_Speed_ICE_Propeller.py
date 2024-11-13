@@ -31,14 +31,14 @@ class Constant_Speed_ICE_Propeller(Propulsor):
         self.propeller                    = None  
           
 
-    def append_operating_conditions(self,segment,fuel_line,add_additional_network_equation = False):
-        append_ice_cs_propeller_conditions(self,segment,fuel_line,add_additional_network_equation)
+    def append_operating_conditions(self,segment,network,add_additional_network_equation = False):
+        append_ice_cs_propeller_conditions(self,segment,network,add_additional_network_equation)
         return
 
-    def unpack_propulsor_unknowns(self,segment,fuel_line,add_additional_network_equation = False):   
+    def unpack_propulsor_unknowns(self,segment,network,add_additional_network_equation = False):   
         return 
 
-    def pack_propulsor_residuals(self,segment,fuel_line,add_additional_network_equation = False): 
+    def pack_propulsor_residuals(self,segment,network,add_additional_network_equation = False): 
         return        
     
     def compute_performance(self,state,fuel_line,center_of_gravity = [[0, 0, 0]]):

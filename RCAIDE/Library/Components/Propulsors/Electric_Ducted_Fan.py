@@ -32,20 +32,19 @@ class Electric_Ducted_Fan(Propulsor):
         # setting the default values
         self.tag                          = 'electric_ducted_fan'    
         self.motor                        = None
-        self.ducted_fan                        = None 
-        self.electronic_speed_controller  = None
-        self.active_busses                = None 
+        self.ducted_fan                   = None 
+        self.electronic_speed_controller  = None 
 
-    def append_operating_conditions(self,segment,bus,add_additional_network_equation = False):
-        append_electric_ducted_fan_conditions(self,segment,bus,add_additional_network_equation)
+    def append_operating_conditions(self,segment,network,add_additional_network_equation = False):
+        append_electric_ducted_fan_conditions(self,segment,network,add_additional_network_equation)
         return 
 
-    def unpack_propulsor_unknowns(self,reference_propulsor,segment,bus):  
-        unpack_electric_ducted_fan_unknowns(self,reference_propulsor,segment,bus)
+    def unpack_propulsor_unknowns(self,reference_propulsor,segment,network):  
+        unpack_electric_ducted_fan_unknowns(self,reference_propulsor,segment,network)
         return 
 
-    def pack_propulsor_residuals(self,segment,bus): 
-        pack_electric_ducted_fan_residuals(self,segment,bus)
+    def pack_propulsor_residuals(self,segment,network): 
+        pack_electric_ducted_fan_residuals(self,segment,network)
         return        
     
     def compute_performance(self,state,bus,voltage,center_of_gravity = [[0, 0, 0]]):

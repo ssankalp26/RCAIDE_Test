@@ -104,13 +104,11 @@ class Correlation_Buildup(Noise):
             total_SPL_spectra[:,:,5:] = SPL_arithmetic(np.concatenate((total_SPL_spectra[:,None,:,5:],airframe_noise_res.SPL_1_3_spectrum[:,None,:,:]),axis =1),sum_axis=1)
               
           # iterate through sources  
-        for network in config.networks: 
-            if 'fuel_lines' in network:
-                for fuel_line in network.fuel_lines:  
-                    for propulsor in fuel_line.propulsors:        
-                        engine_noise                = turbofan_engine_noise(microphone_locations,propulsor,conditions.noise[fuel_line.tag][propulsor.tag].turbofan,segment,settings)    
-                        total_SPL_dBA               = SPL_arithmetic(np.concatenate((total_SPL_dBA[:,None,:],engine_noise.SPL_dBA[:,None,:]),axis =1),sum_axis=1)
-                        total_SPL_spectra[:,:,5:]   = SPL_arithmetic(np.concatenate((total_SPL_spectra[:,None,:,5:],engine_noise.SPL_1_3_spectrum[:,None,:,:]),axis =1),sum_axis=1)
+        for network in config.networks:  
+            for propulsor in network.propulsors:        
+                engine_noise                = turbofan_engine_noise(microphone_locations,propulsor,conditions.noise[fuel_line.tag][propulsor.tag].turbofan,segment,settings)    
+                total_SPL_dBA               = SPL_arithmetic(np.concatenate((total_SPL_dBA[:,None,:],engine_noise.SPL_dBA[:,None,:]),axis =1),sum_axis=1)
+                total_SPL_spectra[:,:,5:]   = SPL_arithmetic(np.concatenate((total_SPL_spectra[:,None,:,5:],engine_noise.SPL_1_3_spectrum[:,None,:,:]),axis =1),sum_axis=1)
                      
         conditions.noise.hemisphere_SPL_dBA              = total_SPL_dBA
         conditions.noise.hemisphere_SPL_1_3_spectrum_dBA = total_SPL_spectra                                                      

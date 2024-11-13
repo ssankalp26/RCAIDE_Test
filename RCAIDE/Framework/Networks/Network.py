@@ -26,6 +26,7 @@ class Network(Component):
                 None 
         """
         self.tag                          = 'network'
+        self.propulsors                   = Container()
         self.busses                       = Container()
         self.coolant_lines                = Container()
         self.fuel_lines                   = Container()
