@@ -68,15 +68,16 @@ def compute_propulsion_system_weight(vehicle,ref_propulsor):
     NENG =  0 
     number_of_tanks =  0
     for network in  vehicle.networks:
+        for propulsor in network.propulsors:
+            if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
+                ref_propulsor = propulsor  
+                NENG  += 1 
+            if 'nacelle' in propulsor:
+                ref_nacelle =  propulsor.nacelle   
         for fuel_line in network.fuel_lines:
             for fuel_tank in fuel_line.fuel_tanks:
                 number_of_tanks +=  1
-            for propulsor in fuel_line.propulsors:
-                if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
-                    ref_propulsor = propulsor  
-                    NENG  += 1 
-                if 'nacelle' in propulsor:
-                    ref_nacelle =  propulsor.nacelle          
+                  
      
     WNAC            = nacelle_FLOPS(ref_propulsor,ref_nacelle,NENG ) 
     WFSYS           = fuel_system_FLOPS(vehicle, NENG)

@@ -67,17 +67,16 @@ def compute_landing_gear_weight(vehicle):
             main_fuselage = fuselage 
         
     for network in vehicle.networks:
-        for fuel_line in network.fuel_lines:
-            for propulsor in  fuel_line.propulsors:
-                if 'nacelle' in propulsor:
-                    nacelle =  propulsor.nacelle 
-                    FNAC    = nacelle.diameter / Units.ft
-                    DIH     = main_wing.dihedral
-                    YEE     = np.max(np.abs(np.array(network.origin)[:, 1])) / Units.ft
-                    WF      = main_fuselage.width / Units.ft
-                    XMLG    = 12 * FNAC + (0.26 - np.tan(DIH)) * (YEE - 6 * WF)  # length of extended main landing gear
-                else:
-                    XMLG    = 0.75 * main_fuselage.lengths.total / Units.ft  # length of extended nose landing gear
+        for propulsor in  network.propulsors:
+            if 'nacelle' in propulsor:
+                nacelle =  propulsor.nacelle 
+                FNAC    = nacelle.diameter / Units.ft
+                DIH     = main_wing.dihedral
+                YEE     = np.max(np.abs(np.array(network.origin)[:, 1])) / Units.ft
+                WF      = main_fuselage.width / Units.ft
+                XMLG    = 12 * FNAC + (0.26 - np.tan(DIH)) * (YEE - 6 * WF)  # length of extended main landing gear
+            else:
+                XMLG    = 0.75 * main_fuselage.lengths.total / Units.ft  # length of extended nose landing gear
     XNLG = 0.7 * XMLG
     WLGM = (0.0117 - 0.0012 * DFTE) * WLDG ** 0.95 * XMLG ** 0.43
     WLGN = (0.048 - 0.0080 * DFTE) * WLDG ** 0.67 * XNLG ** 0.43 * (1 + 0.8 * CARBAS)

@@ -97,53 +97,26 @@ def generate_wing_wake_grid(geometry, H, L, hf, x_plane, Nzo=20, Nzf=35, Nyo=20,
         plot_prop=True
         if plot_prop: 
             for network in geometry.networks: 
-                if 'busses' in network:  
-                    for bus in network.busses:
-                        for propulsor in bus.propulsors:  
-                            if 'rotor' in propulsor:
-                                rotor  =  propulsor.rotor
-                                R      = rotor.tip_radius
-                                origin = rotor.origin
-                                Na     = rotor.number_azimuthal_stations
-                                
-                                psi    = np.linspace(0,2*np.pi,Na+1)[:-1]
-                                ycoords = origin[0][1] + R*np.cos(psi)
-                                zcoords = origin[0][2] + R*np.sin(psi)
-                                axes.plot(ycoords,zcoords,'r')
-                            if 'propeller' in propulsor:
-                                propeller  =  propulsor.propeller 
-                                R      = propeller.tip_radius
-                                origin = propeller.origin
-                                Na     = propeller.number_azimuthal_stations
-                                
-                                psi    = np.linspace(0,2*np.pi,Na+1)[:-1]
-                                ycoords = origin[0][1] + R*np.cos(psi)
-                                zcoords = origin[0][2] + R*np.sin(psi)
-                                axes.plot(ycoords,zcoords,'r')
-                                 
-             
-                if 'fuel_lines' in network:  
-                    for fuel_line in network.fuel_lines:
-                        for propulsor in fuel_line.propulsors: 
-                            if 'rotor' in propulsor:
-                                rotor  =  propulsor.rotor
-                                R      = rotor.tip_radius
-                                origin = rotor.origin
-                                Na     = rotor.number_azimuthal_stations
-                                
-                                psi    = np.linspace(0,2*np.pi,Na+1)[:-1]
-                                ycoords = origin[0][1] + R*np.cos(psi)
-                                zcoords = origin[0][2] + R*np.sin(psi)
-                                axes.plot(ycoords,zcoords,'r')
-                            if 'propeller' in propulsor:
-                                propeller  =  propulsor.propeller 
-                                R      = propeller.tip_radius
-                                origin = propeller.origin
-                                Na     = propeller.number_azimuthal_stations
-                                
-                                psi    = np.linspace(0,2*np.pi,Na+1)[:-1]
-                                ycoords = origin[0][1] + R*np.cos(psi)
-                                zcoords = origin[0][2] + R*np.sin(psi)
-                                axes.plot(ycoords,zcoords,'r') 
-        
+                for propulsor in network.propulsors:  
+                    if 'rotor' in propulsor:
+                        rotor  =  propulsor.rotor
+                        R      = rotor.tip_radius
+                        origin = rotor.origin
+                        Na     = rotor.number_azimuthal_stations
+                        
+                        psi    = np.linspace(0,2*np.pi,Na+1)[:-1]
+                        ycoords = origin[0][1] + R*np.cos(psi)
+                        zcoords = origin[0][2] + R*np.sin(psi)
+                        axes.plot(ycoords,zcoords,'r')
+                    if 'propeller' in propulsor:
+                        propeller  =  propulsor.propeller 
+                        R      = propeller.tip_radius
+                        origin = propeller.origin
+                        Na     = propeller.number_azimuthal_stations
+                        
+                        psi    = np.linspace(0,2*np.pi,Na+1)[:-1]
+                        ycoords = origin[0][1] + R*np.cos(psi)
+                        zcoords = origin[0][2] + R*np.sin(psi)
+                        axes.plot(ycoords,zcoords,'r')
+                    
     return grid_points

@@ -88,13 +88,12 @@ def compute_wing_weight(vehicle, wing, WPOD, complexity, settings, num_main_wing
     NENG = 0
     NEW  = 0
     for network in  vehicle.networks:
-        for fuel_line in network.fuel_lines:
-            for propulsor in fuel_line.propulsors:
-                if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
-                    NENG += 1  
-                    if propulsor.wing_mounted: 
-                        NEW += 1
-                         
+        for propulsor in network.propulsors:
+            if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
+                NENG += 1  
+                if propulsor.wing_mounted: 
+                    NEW += 1
+                        
     DG              = vehicle.mass_properties.max_takeoff / Units.lbs  # Design gross weight in lb
 
     if complexity == 'Simple':
@@ -446,11 +445,10 @@ def get_spanwise_engine(networks, SEMISPAN):
     """
     EETA =  []
     for network in  networks:
-        for fuel_line in network.fuel_lines:
-            for propulsor in fuel_line.propulsors:
-                if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
-                    if propulsor.wing_mounted and propulsor.origin[0][1] > 0:  
-                        EETA.append((propulsor.origin[0][1] / Units.ft) * 1 / SEMISPAN) 
+        for propulsor in network.propulsors:
+            if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
+                if propulsor.wing_mounted and propulsor.origin[0][1] > 0:  
+                    EETA.append((propulsor.origin[0][1] / Units.ft) * 1 / SEMISPAN) 
     EETA =  np.array(EETA)
     return EETA
 

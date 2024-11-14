@@ -92,12 +92,11 @@ def compute_wing_weight(wing,
 
     motor_locs    = []
     for network in config.networks:
-        for bus in network.busses:
-            for propulsor in bus.propulsors:
-                if propulsor.wing_mounted: 
-                    motor = propulsor.motor                   
-                    if motor.origin[0][1] >= 0: 
-                        motor_locs.append(motor.origin[0][1]) 
+        for propulsor in network.propulsors:
+            if propulsor.wing_mounted: 
+                motor = propulsor.motor                   
+                if motor.origin[0][1] >= 0: 
+                    motor_locs.append(motor.origin[0][1]) 
 
     motor_spanwise_locations = np.array(motor_locs)
     N       = num_analysis_points                   # Number of spanwise points

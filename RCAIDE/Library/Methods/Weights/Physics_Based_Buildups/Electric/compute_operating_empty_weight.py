@@ -211,39 +211,39 @@ def compute_operating_empty_weight(vehicle,settings = None):
             total_number_of_rotors  = 0.0      
             lift_rotor_servo_weight = 0.0  
             
-            for propulsor in bus.propulsors: 
-                # Rotor 
-                rotor = propulsor.rotor   
-                if type(rotor) == RCAIDE.Library.Components.Propulsors.Converters.Propeller:
-                    ''' Propeller Weight '''  
-                    number_of_propellers       += 1   
-                    rTip_ref                   = rotor.tip_radius 
-                    bladeSol_ref               = rotor.blade_solidity 
-                    prop_servo_weight          = 5.2 * Units.kg  
-                    propeller_mass             = compute_rotor_weight(rotor, maxLift/5.) * Units.kg
-                    weight.rotors              += propeller_mass 
-                    rotor.mass_properties.mass  =  propeller_mass + prop_hub_weight + prop_servo_weight
-                    maxVTip                     = rotor.cruise.design_angular_velocity * rotor.tip_radius
-                    weight.servos              += prop_servo_weight
-                    weight.hubs                += prop_hub_weight
-                    
-                if (type(rotor) == RCAIDE.Library.Components.Propulsors.Converters.Lift_Rotor or type(rotor) == RCAIDE.Library.Components.Propulsors.Converters.Prop_Rotor) or type(rotor) == RCAIDE.Library.Components.Propulsors.Converters.Rotor:
-                    ''' Lift Rotor, Prop-Rotor or Rotor Weight '''  
-                    number_of_lift_rotors       += 1  
-                    rTip_ref                    = rotor.tip_radius
-                    bladeSol_ref                = rotor.blade_solidity 
-                    maxVTip                     = rotor.hover.design_angular_velocity * rotor.tip_radius
-                    lift_rotor_servo_weight     = 0.65 * Units.kg 
-                    if rotor.oei.design_thrust == None:
-                        design_thrust = rotor.hover.design_thrust
-                    else:
-                        design_thrust =rotor.oei.design_thrust
-                    lift_rotor_mass             = compute_rotor_weight(rotor,design_thrust)
-                    weight.rotors               += lift_rotor_mass 
-                    rotor.mass_properties.mass  =  lift_rotor_mass + lift_rotor_hub_weight + lift_rotor_servo_weight
-                    weight.servos               += lift_rotor_servo_weight
-                    weight.hubs                 += lift_rotor_hub_weight 
+        for propulsor in network.propulsors: 
+            # Rotor 
+            rotor = propulsor.rotor   
+            if type(rotor) == RCAIDE.Library.Components.Propulsors.Converters.Propeller:
+                ''' Propeller Weight '''  
+                number_of_propellers       += 1   
+                rTip_ref                   = rotor.tip_radius 
+                bladeSol_ref               = rotor.blade_solidity 
+                prop_servo_weight          = 5.2 * Units.kg  
+                propeller_mass             = compute_rotor_weight(rotor, maxLift/5.) * Units.kg
+                weight.rotors              += propeller_mass 
+                rotor.mass_properties.mass  =  propeller_mass + prop_hub_weight + prop_servo_weight
+                maxVTip                     = rotor.cruise.design_angular_velocity * rotor.tip_radius
+                weight.servos              += prop_servo_weight
+                weight.hubs                += prop_hub_weight
                 
+            if (type(rotor) == RCAIDE.Library.Components.Propulsors.Converters.Lift_Rotor or type(rotor) == RCAIDE.Library.Components.Propulsors.Converters.Prop_Rotor) or type(rotor) == RCAIDE.Library.Components.Propulsors.Converters.Rotor:
+                ''' Lift Rotor, Prop-Rotor or Rotor Weight '''  
+                number_of_lift_rotors       += 1  
+                rTip_ref                    = rotor.tip_radius
+                bladeSol_ref                = rotor.blade_solidity 
+                maxVTip                     = rotor.hover.design_angular_velocity * rotor.tip_radius
+                lift_rotor_servo_weight     = 0.65 * Units.kg 
+                if rotor.oei.design_thrust == None:
+                    design_thrust = rotor.hover.design_thrust
+                else:
+                    design_thrust =rotor.oei.design_thrust
+                lift_rotor_mass             = compute_rotor_weight(rotor,design_thrust)
+                weight.rotors               += lift_rotor_mass 
+                rotor.mass_properties.mass  =  lift_rotor_mass + lift_rotor_hub_weight + lift_rotor_servo_weight
+                weight.servos               += lift_rotor_servo_weight
+                weight.hubs                 += lift_rotor_hub_weight 
+            
                 # Motor 
                 eta             = propulsor.motor.efficiency  
                 weight.motors  += propulsor.motor.mass_properties.mass  

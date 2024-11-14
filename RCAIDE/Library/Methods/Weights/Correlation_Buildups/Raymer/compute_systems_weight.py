@@ -110,10 +110,9 @@ def compute_systems_weight(vehicle):
     num_pax        = vehicle.passengers 
     NENG = 0 
     for network in  vehicle.networks:
-        for fuel_line in network.fuel_lines:
-            for propulsor in fuel_line.propulsors:
-                if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
-                    NENG += 1  
+        for propulsor in network.propulsors:
+            if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
+                NENG += 1  
     fuse_w         = ref_fuselage.width / Units.ft
     fuse_h         = ref_fuselage.heights.maximum / Units.ft   
     cargo_weight   = vehicle.payload.cargo.mass_properties.mass / Units.lbs
