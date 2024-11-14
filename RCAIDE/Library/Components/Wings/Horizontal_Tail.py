@@ -52,7 +52,7 @@ class Horizontal_Tail(Wing):
         Properties Used:
         N/A
         """ 
-        self.tag = 'horizontal_stabilizer'
+        self.tag = 'horizontal_tail'
     
     def moment_of_inertia(wing,center_of_gravity):
         I =  compute_wing_moment_of_inertia(wing,center_of_gravity) 

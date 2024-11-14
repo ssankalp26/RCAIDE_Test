@@ -120,21 +120,7 @@ class Container(ContainerBase):
             elif isinstance(Comp,Component):
                 total += Comp.mass_properties.mass*(np.sum(np.array(Comp.origin),axis=0)/len(Comp.origin)+Comp.mass_properties.center_of_gravity)
 
-        return total
-    
-    def moment_of_inertia(self):
-        """  
-        """   
-        total = np.array([[0.0,0.0,0.0]])
-        
-        # AIDAN 
-        #for key,Comp in self.items():
-            #if isinstance(Comp,Component.Container):
-                #total += Comp.moment_of_inertia() # recursive!
-            #elif isinstance(Comp,Component):
-                #total += Comp.mass_properties.mass*(np.sum(np.array(Comp.origin),axis=0)/len(Comp.origin)+Comp.mass_properties.center_of_gravity)
-
-        return total    
+        return total  
     
 # ------------------------------------------------------------
 #  Handle Linking

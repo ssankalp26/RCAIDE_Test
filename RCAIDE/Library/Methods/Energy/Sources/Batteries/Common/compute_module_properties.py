@@ -53,7 +53,8 @@ def compute_module_properties(battery_module):
     series_e           = battery_module.electrical_configuration.series
     parallel_e         = battery_module.electrical_configuration.parallel 
     normal_count       = battery_module.geometrtic_configuration.normal_count  
-    parallel_count     = battery_module.geometrtic_configuration.parallel_count   
+    parallel_count     = battery_module.geometrtic_configuration.parallel_count
+    stacking_rows      = battery_module.geometrtic_configuration.stacking_rows
 
     if int(parallel_e*series_e) != int(normal_count*parallel_count):
         pass #raise Exception('Number of cells in gemetric layout not equal to number of cells in electric circuit configuration ')
@@ -71,9 +72,9 @@ def compute_module_properties(battery_module):
     x2 =  parallel_count * (cell_diameter + parallel_spacing) * volume_factor # distance in the module-level parallel direction
     x3 =  cell_height * volume_factor # distance in the module-level height direction 
 
-    length = x1
+    length = x1 / stacking_rows
     width  = x2
-    height = x3      
+    height = x3 *stacking_rows     
     
     if  euler_angles[0] == (np.pi / 2):
         x1prime      = x2

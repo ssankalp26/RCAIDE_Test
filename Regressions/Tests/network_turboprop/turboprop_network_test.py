@@ -47,9 +47,35 @@ def main():
     missions = missions_setup(mission) 
      
     # mission analysis 
-    results = missions.base_mission.evaluate() 
+    results = missions.base_mission.evaluate()
     
-    ## plt the old results
+    # Extract sample values from computation  
+    thrust     = results.segments.climbing_cruise.conditions.energy['fuel_line']['starboard_propulsor'].thrust[3][0]
+    throttle   = results.segments.climbing_cruise.conditions.energy['fuel_line']['starboard_propulsor'].throttle[3][0]  
+    
+    #print values for resetting regression
+    show_vals = True
+    if show_vals:
+        data = [thrust, throttle]
+        for val in data:
+            print(val)
+    
+    # Truth values
+    thrust_truth     = 19625.172836614165
+    throttle_truth   = 0.8532683842006159
+    
+    # Store errors 
+    error = Data()
+    error.thrust    = np.max(np.abs(thrust - thrust_truth )/thrust_truth) 
+    error.throttle  = np.max(np.abs(throttle  - throttle_truth  )/throttle_truth)  
+     
+    print('Errors:')
+    print(error)
+     
+    for k,v in list(error.items()): 
+        assert(np.abs(v)<1e-6)
+    
+    # plt the old results
     plot_mission(results)   
     return 
 
@@ -178,37 +204,7 @@ def missions_setup(mission):
     missions.append(mission)
     
     # done!
-    return missions  
-    
-def check_results(new_results,old_results):
-
-    # check segment values
-    check_list = [
-        'segments.climbing_cruise.conditions.aerodynamics.angles.alpha',
-        'segments.climbing_cruise.conditions.aerodynamics.coefficients.drag.total',
-        'segments.climbing_cruise.conditions.aerodynamics.coefficients.lift.total', 
-        'segments.climbing_cruise.conditions.weights.vehicle_mass_rate', 
-    ]
-
-    # do the check
-    for k in check_list:
-        print(k)
-
-        old_val = np.max( old_results.deep_get(k) )
-        new_val = np.max( new_results.deep_get(k) )
-        err = (new_val-old_val)/old_val
-        print('Error at Max:' , err)
-        assert np.abs(err) < 1e-6 , 'Max Check Failed : %s' % k
-
-        old_val = np.min( old_results.deep_get(k) )
-        new_val = np.min( new_results.deep_get(k) )
-        err = (new_val-old_val)/old_val
-        print('Error at Min:' , err)
-        assert np.abs(err) < 1e-6 , 'Min Check Failed : %s' % k        
-
-        print('') 
-
-    return 
+    return missions
 
 if __name__ == '__main__': 
     main()    

@@ -16,15 +16,15 @@ from copy import deepcopy
 def compute_lfp_cell_performance(battery_module,state,bus,coolant_lines,t_idx, delta_t): 
     """
        Assumptions: 
+        - All battery_module modules exhibit the same thermal behavior.
+        - The cell temperature is assumed to be the temperature of the entire module.
        
        Source:
        Internal Resistance:
        
-       Voltage:
-       
        Inputs:
          battery. 
-
+                *** will be done in sphinx format.
            
          inputs.
         
@@ -65,8 +65,6 @@ def compute_lfp_cell_performance(battery_module,state,bus,coolant_lines,t_idx, d
     P_module           = battery_module_conditions.power
     P_cell             = battery_module_conditions.cell.power
     
-    # R_0_module         = battery_module_conditions.internal_resistance
-    # R_0_cell           = battery_module_conditions.cell.internal_resistance
     
     Q_heat_module      = battery_module_conditions.heat_energy_generated
     Q_heat_cell        = battery_module_conditions.cell.heat_energy_generated
@@ -122,18 +120,13 @@ def compute_lfp_cell_performance(battery_module,state,bus,coolant_lines,t_idx, d
     # ---------------------------------------------------------------------------------
     # Compute battery_module cell temperature 
     # ---------------------------------------------------------------------------------
-    # R_0_cell[t_idx]                     =  *battery_module_conditions.cell.resistance_growth_factor  
-    # R_0_cell[t_idx][R_0_cell[t_idx]<0]  = 0. 
-
     # Determine temperature increase         
-    sigma                 =  100  
-
+    sigma                 =  130  
     i_cell                = I_cell[t_idx]/electrode_area # current intensity (A/m²)
     q_dot_entropy         = (4.6810 * SOC_cell[t_idx]**4 + (-8.3729) * SOC_cell[t_idx]**3 + 3.7197 * SOC_cell[t_idx]**2 + 0.4356 * SOC_cell[t_idx]+ (-0.3027)) # Obtained from curve fitting the dUdt curve  
     q_dot_joule           = (i_cell**2)/(sigma)          
     Q_heat_cell[t_idx]    = (q_dot_joule + q_dot_entropy)*As_cell 
     Q_heat_module[t_idx]  = Q_heat_cell[t_idx]*n_total  
-    
     V_ul_cell[t_idx]      = compute_lfp_cell_state(battery_module,battery_module_data,SOC_cell[t_idx],T_cell[t_idx],abs(I_cell[t_idx])) 
  
     # Effective Power flowing through battery_module 
@@ -227,9 +220,9 @@ def compute_lfp_cell_state(battery_module,battery_module_data,SOC,T,I):
     
 
     T              = T-273
-    #T[np.isnan(T)] = 302.65
+    # Operating Limits of the cell
     T[T<-10]       = -10 # model does not fit for below -10  degrees
-    T[T>60]       =  60 # model does not fit for above 60 degrees
+    T[T>60]        =  60 # model does not fit for above 60 degrees
 
     
     I[I<0.0]      = 0.0
