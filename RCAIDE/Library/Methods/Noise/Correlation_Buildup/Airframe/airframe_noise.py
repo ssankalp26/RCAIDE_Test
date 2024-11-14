@@ -99,7 +99,7 @@ def airframe_noise(microphone_locations,segment,config,settings):
     Hp           = 0
     Hn           = 0 
     nose_wheels  = 0 
-    for landing_gear in  config.landing_gears():
+    for landing_gear in  config.landing_gears:
         if isinstance(landing_gear,RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear):
             Dp            = landing_gear.tire_diameter  / Units.ft           # MLG tyre diameter, ft
             Dn            = landing_gear.strut_length   / Units.ft           # NLG tyre diameter, ft
