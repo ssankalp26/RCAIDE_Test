@@ -231,11 +231,24 @@ def compute_operating_empty_weight(vehicle,settings=None):
     avionics                                         = RCAIDE.Library.Components.Systems.Avionics()
     optionals                                        = RCAIDE.Library.Components.Component()
     optionals.tag                                    = 'optionals'
-         
-    vehicle.landing_gear.nose                        = RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear()
-    vehicle.landing_gear.nose.mass                   = landing_gear.nose 
-    vehicle.landing_gear.main                        = RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()   
-    vehicle.landing_gear.main.mass                   = landing_gear.main  
+          
+    nose_landing_gear = False
+    main_landing_gear = False
+    for LG in vehicle.landing_gears:
+        if isinstance(LG, RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear):
+            LG.mass_properties.mass = landing_gear.main
+            main_landing_gear = True
+        elif isinstance(LG, RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear):
+            LG.mass_properties.mass = landing_gear.nose
+            nose_landing_gear = True 
+    if nose_landing_gear == False:
+        nose_gear = RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()  
+        nose_gear.mass_properties.mass = landing_gear.nose    
+        vehicle.append_component(nose_gear) 
+    if main_landing_gear == False:
+        main_gear = RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear()  
+        main_gear.mass_properties.mass = landing_gear.main  
+        vehicle.append_component(main_gear) 
          
     control_systems.mass_properties.mass             = output.empty.systems.control_systems
     electrical_systems.mass_properties.mass          = output.empty.systems.electrical

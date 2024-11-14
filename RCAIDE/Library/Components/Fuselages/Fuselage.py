@@ -144,7 +144,6 @@ class Fuselage(Component):
         return
     
 
-    def compute_fuselage_moment_of_inertia(fuselage, center_of_gravity):
-                    
+    def compute_fuselage_moment_of_inertia(fuselage, center_of_gravity): 
         I =  compute_fuselage_moment_of_inertia(fuselage,center_of_gravity) 
         return I    

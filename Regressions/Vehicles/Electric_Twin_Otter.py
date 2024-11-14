@@ -415,18 +415,12 @@ def vehicle_setup(cell_chemistry, btms_type):
     # ------------------------------------------------------------------
     #   Landing gear
     # ------------------------------------------------------------------  
-    landing_gear                                = RCAIDE.Library.Components.Landing_Gear.Landing_Gear()
     main_gear                                   = RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear()
-    nose_gear                                   = RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()
-    main_gear.strut_length                      = 12. * Units.inches  
+    main_gear.strut_length                      = 12. * Units.inches
+    vehicle.append_component(main_gear) 
+    nose_gear                                   = RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()    
     nose_gear.strut_length                      = 6. * Units.inches 
-                                                
-    landing_gear.main                           = main_gear
-    landing_gear.nose                           = nose_gear
-                                                
-    #add to vehicle                             
-    vehicle.landing_gear                        = landing_gear
-
+    vehicle.append_component(nose_gear) 
  
     # ########################################################  Energy Network  #########################################################  
     net                              = RCAIDE.Framework.Networks.Electric()   

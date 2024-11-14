@@ -45,7 +45,7 @@ class Vehicle(Data):
         self.costs.industrial                         = Attributes.Costs.Industrial_Costs()
         self.costs.operating                          = Attributes.Costs.Operating_Costs()    
         self.envelope                                 = Attributes.Envelope()
-        self.landing_gear                             = Components.Landing_Gear.Landing_Gear.Container()
+        self.landing_gears                            = Components.Landing_Gear.Landing_Gear.Container()  
         self.reference_area                           = 0.0
         self.passengers                               = 0.0
         self.maximum_cross_sectional_area             = 0.0
@@ -90,7 +90,7 @@ class Vehicle(Data):
             Components.Nacelles.Nacelle                : self['nacelles']         ,
             Attributes.Envelope                        : self['envelope']         ,
             Components.Booms.Boom                      : self['booms']            ,
-            Components.Landing_Gear.Landing_Gear       : self['landing_gear']     ,
+            Components.Landing_Gear.Landing_Gear       : self['landing_gears']     ,
             Vehicle_Mass_Properties                    : self['mass_properties']  ,
         }
          

@@ -9,8 +9,8 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE Imports
-from RCAIDE.Framework.Core                      import Data , Units
-
+import  RCAIDE
+from RCAIDE.Framework.Core                      import Data , Units 
 from .clean_wing_noise             import clean_wing_noise
 from .landing_gear_noise           import landing_gear_noise
 from .leading_edge_slat_noise      import leading_edge_slat_noise
@@ -91,15 +91,28 @@ def airframe_noise(microphone_locations,segment,config,settings):
     deltaf   = flap.deflection                                              # flap delection, rad
     Sf       = flap.area  / (Units.ft)**2                                   # flap area, sq.ft        
     cf       = flap.chord_dimensional  / Units.ft                           # flap chord, ft
-    Dp       = config.landing_gear.main_tire_diameter  / Units.ft           # MLG tyre diameter, ft
-    Hp       = config.landing_gear.nose_tire_diameter  / Units.ft           # MLG strut length, ft
-    Dn       = config.landing_gear.main_strut_length   / Units.ft           # NLG tyre diameter, ft
-    Hn       = config.landing_gear.nose_strut_length   / Units.ft           # NLG strut length, ft
-    gear     = config.landing_gear.gear_condition                           # Gear up or gear down
+
+    Dp           = 0
+    Dn           = 0
+    main_wheels  = 0
+    main_units   = 0
+    Hp           = 0
+    Hn           = 0 
+    nose_wheels  = 0 
+    for landing_gear in  config.landing_gears():
+        if isinstance(landing_gear,RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear):
+            Dp            = landing_gear.tire_diameter  / Units.ft           # MLG tyre diameter, ft
+            Dn            = landing_gear.strut_length   / Units.ft           # NLG tyre diameter, ft
+            main_wheels   = landing_gear.wheels                          # Number of wheels   
+            gear_extended = landing_gear.gear_extended                   # Gear up or gear down 
+            main_units    = landing_gear.units                           # Number of main units
+        elif isinstance(landing_gear,RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear):
+            Hp            = landing_gear.tire_diameter  / Units.ft           # MLG strut length, ft
+            Hn            = landing_gear.strut_length   / Units.ft           # NLG strut length, ft
+            gear_extended = landing_gear.gear_extended                   # Gear up or gear down 
+            nose_wheels   = landing_gear.wheels                          # Number of wheels   
     
-    nose_wheels  = config.landing_gear.nose_wheels                          # Number of wheels   
-    main_wheels  = config.landing_gear.main_wheels                          # Number of wheels   
-    main_units   = config.landing_gear.main_units                           # Number of main units   
+    
     velocity     = segment.conditions.freestream.velocity                  # aircraft velocity  
     noise_time   = segment.conditions.frames.inertial.time[:,0]             # time discretization 
 
@@ -162,7 +175,7 @@ def airframe_noise(microphone_locations,segment,config,settings):
             else:
                 SPL_flap = trailing_edge_flap_noise(Sf,cf,deltaf,slots,velocity[i,0],M[i],phi,theta,distance,frequency) - delta_atmo #Trailing Edge Flaps Noise
      
-            if gear=='up': #0
+            if gear_extended == False:  
                 SPL_main_landing_gear = np.zeros(num_f)
                 SPL_nose_landing_gear = np.zeros(num_f)
             else:

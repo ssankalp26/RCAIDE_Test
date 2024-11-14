@@ -106,8 +106,7 @@ def E190_configs_setup(vehicle):
 
     configs     = RCAIDE.Library.Components.Configs.Config.Container() 
     base_config = RCAIDE.Library.Components.Configs.Config(vehicle)
-    base_config.tag = 'base' 
-    base_config.landing_gear.gear_condition                      = 'up'
+    base_config.tag = 'base'  
     configs.append(base_config)
 
     # ------------------------------------------------------------------
