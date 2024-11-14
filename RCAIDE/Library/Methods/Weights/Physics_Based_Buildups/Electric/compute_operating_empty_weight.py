@@ -211,8 +211,7 @@ def compute_operating_empty_weight(vehicle,settings = None):
             total_number_of_rotors  = 0.0      
             lift_rotor_servo_weight = 0.0  
             
-        for propulsor in network.propulsors: 
-            # Rotor 
+        for propulsor in network.propulsors:
             rotor = propulsor.rotor   
             if type(rotor) == RCAIDE.Library.Components.Propulsors.Converters.Propeller:
                 ''' Propeller Weight '''  
@@ -244,10 +243,10 @@ def compute_operating_empty_weight(vehicle,settings = None):
                 weight.servos               += lift_rotor_servo_weight
                 weight.hubs                 += lift_rotor_hub_weight 
             
-                # Motor 
-                eta             = propulsor.motor.efficiency  
-                weight.motors  += propulsor.motor.mass_properties.mass  
-               
+            # Motor 
+            eta             = propulsor.motor.efficiency  
+            weight.motors  += propulsor.motor.mass_properties.mass  
+                
         total_number_of_rotors  = int(number_of_lift_rotors + number_of_propellers)  
         if total_number_of_rotors > 1:
             prop_BRS_weight     = 16.   * Units.kg
