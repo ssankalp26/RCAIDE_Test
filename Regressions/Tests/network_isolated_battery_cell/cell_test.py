@@ -133,7 +133,6 @@ def lithium_ion_battery_test():
                     axes4.plot(Amp_Hrs , SOC   , marker= marker[i] , linestyle = linestyles[i],  color= linecolors[j], markersize=marker_size   ,label = battery_chemistry[i] + ': '+ str(C_rat[j]) + ' C') 
                     axes6.plot(Amp_Hrs , cell_temp, marker= marker[i] , linestyle = linestyles[i],  color= linecolors[j] , markersize=marker_size,label = battery_chemistry[i] + ': '+ str(C_rat[j]) + ' C')              
              
-
     legend_font_size = 6                     
     axes1.set_ylabel('Voltage $(V_{UL}$)')  
     axes1.legend(loc='upper right', ncol = 2, prop={'size': legend_font_size})  
@@ -254,18 +253,6 @@ def test_find_ragone_properties(specific_energy,battery,energy,power):
     print(battery)
     print('specific_energy (Wh/kg) = ',battery.specific_energy/(Units.Wh/Units.kg))
     return
-
-# def test_find_ragone_optimum(battery, energy, power):
-#     find_ragone_optimum(battery,energy,power)
-#     print(battery)
-#     print('specific_energy (Wh/kg) = ',battery.specific_energy/(Units.Wh/Units.kg))
-#     print('max_energy [W-h]=', battery.maximum_energy/Units.Wh)
-#     return
-
-# def test_size_module_from_mass(battery):
-#     size_module_from_mass(battery)
-#     print(battery)
-#     return
 
 if __name__ == '__main__':
     main()

@@ -52,7 +52,8 @@ class Fuselage(Component):
         self.aerodynamic_center                     = [0.0,0.0,0.0] 
         self.differential_pressure                  = 0.0    
         self.seats_abreast                          = 0.0
-        self.seat_pitch                             = 0.0 
+        self.seat_pitch                             = 0.0
+        self.number_coach_seats                     = 0.0
 
         self.areas                                  = Data()
         self.areas.front_projected                  = 0.0
