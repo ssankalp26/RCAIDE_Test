@@ -8,7 +8,7 @@
 # ----------------------------------------------------------------------------------------------------------------------  
 
 def unpack_electric_rotor_unknowns(propulsor,reference_propulsor,segment,bus): 
-    bus_results = segment.state.conditions.energy[bus.tag]
-    motor       =  propulsor.motor  
-    bus_results[propulsor.tag][motor.tag].rotor_power_coefficient = segment.state.unknowns[reference_propulsor.tag  + '_rotor_cp'] 
+    propulsor_results = segment.state.conditions.energy
+    motor              =  propulsor.motor  
+    propulsor_results[propulsor.tag][motor.tag].rotor_power_coefficient = segment.state.unknowns[reference_propulsor.tag  + '_rotor_cp'] 
     return 

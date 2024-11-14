@@ -56,6 +56,6 @@ class Combustor(Component):
         self.number_of_assigned_PSR_2nd_mixers = 2                                                     # [-]       Number of assigned mixers to each mixer in the second row of mixers (CRN network model)
     
     def append_operating_conditions(self,segment,fuel_line,propulsor):
-        propulsor_conditions =  segment.state.conditions.energy[fuel_line.tag][propulsor.tag]
+        propulsor_conditions =  segment.state.conditions.energy[propulsor.tag]
         append_combustor_conditions(self,segment,propulsor_conditions)
         return

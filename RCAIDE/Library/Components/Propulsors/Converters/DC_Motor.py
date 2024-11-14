@@ -57,7 +57,7 @@ class DC_Motor(Component):
         self.interpolated_func  = None
         
     def append_operating_conditions(self,segment,bus,propulsor):
-        propulsor_conditions =  segment.state.conditions.energy[bus.tag][propulsor.tag]
+        propulsor_conditions =  segment.state.conditions.energy[propulsor.tag]
         append_motor_conditions(self,segment,propulsor_conditions)
         return
     

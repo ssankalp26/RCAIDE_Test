@@ -30,6 +30,6 @@ class Offtake_Shaft(Component):
         self.reference_pressure    = 1.01325 * 10 ** 5 
 
     def append_operating_conditions(self,segment,fuel_line,propulsor): 
-        propulsor_conditions =  segment.state.conditions.energy[fuel_line.tag][propulsor.tag]
+        propulsor_conditions =  segment.state.conditions.energy[propulsor.tag]
         append_offtake_shaft_conditions(self,segment,propulsor_conditions)
         return                         

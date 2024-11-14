@@ -93,7 +93,7 @@ def compute_rotor_performance(propulsor,state,disributor,center_of_gravity= [[0.
     elif 'propeller' in  propulsor:
         rotor =  propulsor.propeller
      
-    propulsor_conditions  = conditions.energy[disributor.tag][propulsor.tag]
+    propulsor_conditions  = conditions.energy[propulsor.tag]
     rotor_conditions      = propulsor_conditions[rotor.tag]
     commanded_TV          = propulsor_conditions.commanded_thrust_vector_angle
     eta                   = rotor_conditions.throttle 
@@ -494,6 +494,6 @@ def compute_rotor_performance(propulsor,state,disributor,center_of_gravity= [[0.
                 figure_of_merit                   = FoM, 
         ) 
     
-    conditions.energy[disributor.tag][propulsor.tag][rotor.tag] = outputs   
+    conditions.energy[propulsor.tag][rotor.tag] = outputs   
     
     return  

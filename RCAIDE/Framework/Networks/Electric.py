@@ -126,7 +126,7 @@ class Electric(Network):
                     # compute energy consumption of each battery on bus 
                     stored_results_flag  = False
                     stored_propulsor_tag = None 
-                    for propulsor in bus.propulsors:  
+                    for propulsor in bus.assigned_propulsors:  
                         if propulsor.active == True:  
                             if bus.identical_propulsors == False:
                                 # run analysis  
@@ -225,9 +225,9 @@ class Electric(Network):
         for bus in busses:           
             if type(segment) == RCAIDE.Framework.Mission.Segments.Ground.Battery_Recharge or type(segment) == RCAIDE.Framework.Mission.Segments.Ground.Battery_Discharge:
                 pass 
-            elif bus.active and len(bus.propulsors) > 0:
-                reference_propulsor = bus.propulsors[list(bus.propulsors.keys())[0]]                 
-                for propulsor in  bus.propulsors: 
+            elif bus.active and len(bus.assigned_propulsors) > 0:
+                reference_propulsor = bus.assigned_propulsors[list(bus.assigned_propulsors.keys())[0]]                 
+                for propulsor in  bus.assigned_propulsors: 
                     propulsor.unpack_propulsor_unknowns(reference_propulsor,segment,bus)
 
         return     
@@ -258,8 +258,8 @@ class Electric(Network):
         for bus in busses:             
             if type(segment) == RCAIDE.Framework.Mission.Segments.Ground.Battery_Recharge or type(segment) == RCAIDE.Framework.Mission.Segments.Ground.Battery_Discharge:
                 pass 
-            elif bus.active and len(bus.propulsors) > 0:
-                propulsor = bus.propulsors[list(bus.propulsors.keys())[0]]
+            elif bus.active and len(bus.assigned_propulsors) > 0:
+                propulsor = bus.assigned_propulsors[list(bus.assigned_propulsors.keys())[0]]
                 propulsor.pack_propulsor_residuals(segment,bus)  
         return     
 
@@ -306,7 +306,7 @@ class Electric(Network):
                 if tag == 'battery_modules':
                     for battery in item:
                         battery.append_operating_conditions(segment,bus)
-                elif tag == 'propulsors':  
+                elif tag == 'assigned_propulsors':  
                     for i, propulsor in enumerate(item):  
                         add_additional_network_equation = (bus.active) and  (i == 0)   
                         propulsor.append_operating_conditions(segment,bus,add_additional_network_equation)

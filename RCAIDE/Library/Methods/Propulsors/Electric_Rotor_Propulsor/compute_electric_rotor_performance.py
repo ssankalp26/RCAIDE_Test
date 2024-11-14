@@ -50,14 +50,14 @@ def compute_electric_rotor_performance(propulsor,state,bus,voltage,center_of_gra
     N.A.        
     ''' 
     conditions                 = state.conditions    
-    electric_rotor_conditions  = conditions.energy[bus.tag][propulsor.tag] 
+    electric_rotor_conditions  = conditions.energy[propulsor.tag] 
     motor                      = propulsor.motor 
     rotor                      = propulsor.rotor 
     esc                        = propulsor.electronic_speed_controller  
     esc_conditions             = electric_rotor_conditions[esc.tag]
     motor_conditions           = electric_rotor_conditions[motor.tag]
     rotor_conditions           = electric_rotor_conditions[rotor.tag]
-    eta                        = conditions.energy[bus.tag][propulsor.tag].throttle
+    eta                        = conditions.energy[propulsor.tag].throttle
     
     esc_conditions.inputs.voltage   = voltage
     esc_conditions.throttle         = eta 
@@ -85,12 +85,12 @@ def compute_electric_rotor_performance(propulsor,state,bus,voltage,center_of_gra
     stored_propulsor_tag    = propulsor.tag 
     
     # compute total forces and moments from propulsor (future work would be to add moments from motors)
-    electric_rotor_conditions.thrust      = conditions.energy[bus.tag][propulsor.tag][rotor.tag].thrust 
-    electric_rotor_conditions.moment      = conditions.energy[bus.tag][propulsor.tag][rotor.tag].moment 
+    electric_rotor_conditions.thrust      = conditions.energy[propulsor.tag][rotor.tag].thrust 
+    electric_rotor_conditions.moment      = conditions.energy[propulsor.tag][rotor.tag].moment 
     
-    T  = conditions.energy[bus.tag][propulsor.tag][rotor.tag].thrust 
-    M  = conditions.energy[bus.tag][propulsor.tag][rotor.tag].moment 
-    P  = conditions.energy[bus.tag][propulsor.tag][esc.tag].power 
+    T  = conditions.energy[propulsor.tag][rotor.tag].thrust 
+    M  = conditions.energy[propulsor.tag][rotor.tag].moment 
+    P  = conditions.energy[propulsor.tag][esc.tag].power 
     
     return T,M,P, stored_results_flag,stored_propulsor_tag 
                 
@@ -124,16 +124,16 @@ def reuse_stored_electric_rotor_data(propulsor,state,bus,stored_propulsor_tag,ce
     motor                      = propulsor.motor 
     rotor                      = propulsor.rotor 
     esc                        = propulsor.electronic_speed_controller  
-    motor_0                    = bus.propulsors[stored_propulsor_tag].motor 
-    rotor_0                    = bus.propulsors[stored_propulsor_tag].rotor 
-    esc_0                      = bus.propulsors[stored_propulsor_tag].electronic_speed_controller
+    motor_0                    = bus.assigned_propulsors[stored_propulsor_tag].motor 
+    rotor_0                    = bus.assigned_propulsors[stored_propulsor_tag].rotor 
+    esc_0                      = bus.assigned_propulsors[stored_propulsor_tag].electronic_speed_controller
     
-    conditions.energy[bus.tag][propulsor.tag][motor.tag]        = deepcopy(conditions.energy[bus.tag][stored_propulsor_tag][motor_0.tag])
-    conditions.energy[bus.tag][propulsor.tag][rotor.tag]        = deepcopy(conditions.energy[bus.tag][stored_propulsor_tag][rotor_0.tag])
-    conditions.energy[bus.tag][propulsor.tag][esc.tag]          = deepcopy(conditions.energy[bus.tag][stored_propulsor_tag][esc_0.tag])
+    conditions.energy[propulsor.tag][motor.tag]        = deepcopy(conditions.energy[stored_propulsor_tag][motor_0.tag])
+    conditions.energy[propulsor.tag][rotor.tag]        = deepcopy(conditions.energy[stored_propulsor_tag][rotor_0.tag])
+    conditions.energy[propulsor.tag][esc.tag]          = deepcopy(conditions.energy[stored_propulsor_tag][esc_0.tag])
   
-    thrust                  = conditions.energy[bus.tag][propulsor.tag][rotor.tag].thrust 
-    power                   = conditions.energy[bus.tag][propulsor.tag][esc.tag].power 
+    thrust                  = conditions.energy[propulsor.tag][rotor.tag].thrust 
+    power                   = conditions.energy[propulsor.tag][esc.tag].power 
     
     moment_vector           = 0*state.ones_row(3) 
     moment_vector[:,0]      = rotor.origin[0][0]  -  center_of_gravity[0][0] 
@@ -141,8 +141,8 @@ def reuse_stored_electric_rotor_data(propulsor,state,bus,stored_propulsor_tag,ce
     moment_vector[:,2]      = rotor.origin[0][2]  -  center_of_gravity[0][2]
     moment                  =  np.cross(moment_vector, thrust)
     
-    conditions.energy[bus.tag][propulsor.tag][rotor.tag].moment = moment  
-    conditions.energy[bus.tag][propulsor.tag].thrust            = thrust   
-    conditions.energy[bus.tag][propulsor.tag].moment            = moment  
+    conditions.energy[propulsor.tag][rotor.tag].moment = moment  
+    conditions.energy[propulsor.tag].thrust            = thrust   
+    conditions.energy[propulsor.tag].moment            = moment  
     
     return thrust,moment,power

@@ -42,6 +42,6 @@ class Electronic_Speed_Controller(Component):
         self.efficiency       = 0.0 
 
     def append_operating_conditions(self,segment,network,propulsor): 
-        propulsor_conditions =  segment.state.conditions.energy[network.tag][propulsor.tag]
+        propulsor_conditions =  segment.state.conditions.energy[propulsor.tag]
         append_esc_conditions(self,segment,propulsor_conditions)
         return 

@@ -20,13 +20,13 @@ from RCAIDE.Library.Components.Propulsors.Converters.Prop_Rotor  import Prop_Rot
 def append_electric_rotor_conditions(propulsor,segment,bus,add_additional_network_equation): 
     ones_row    = segment.state.ones_row
                 
-    segment.state.conditions.energy[bus.tag][propulsor.tag]                               = Conditions()  
-    segment.state.conditions.energy[bus.tag][propulsor.tag].throttle                      = 0. * ones_row(1)      
-    segment.state.conditions.energy[bus.tag][propulsor.tag].commanded_thrust_vector_angle = 0. * ones_row(1)  
-    segment.state.conditions.energy[bus.tag][propulsor.tag].thrust                        = 0. * ones_row(3) 
-    segment.state.conditions.energy[bus.tag][propulsor.tag].power                         = 0. * ones_row(1) 
-    segment.state.conditions.energy[bus.tag][propulsor.tag].moment                        = 0. * ones_row(3)  
-    segment.state.conditions.noise[bus.tag][propulsor.tag]                                = Conditions()
+    segment.state.conditions.energy[propulsor.tag]                               = Conditions()  
+    segment.state.conditions.energy[propulsor.tag].throttle                      = 0. * ones_row(1)      
+    segment.state.conditions.energy[propulsor.tag].commanded_thrust_vector_angle = 0. * ones_row(1)  
+    segment.state.conditions.energy[propulsor.tag].thrust                        = 0. * ones_row(3) 
+    segment.state.conditions.energy[propulsor.tag].power                         = 0. * ones_row(1) 
+    segment.state.conditions.energy[propulsor.tag].moment                        = 0. * ones_row(3)  
+    segment.state.conditions.noise[propulsor.tag]                                = Conditions()
     
     if add_additional_network_equation:                       
         rotor   = propulsor.rotor  
