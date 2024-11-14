@@ -178,9 +178,9 @@ def vehicle_setup():
     fuselage.width                              = 42.         * Units.inches     # Width of the fuselage
     fuselage.heights.maximum                    = 62. * Units.inches    # Height of the fuselage
     fuselage.lengths.total                      = 326.         * Units.inches            # Length of the fuselage
-    fuselage.lengths.empennage                  = 161. * Units.inches  
+    fuselage.lengths.tail                       = 161. * Units.inches  
     fuselage.lengths.cabin                      = 105. * Units.inches
-    fuselage.lengths.structure                  = fuselage.lengths.total-fuselage.lengths.empennage 
+    fuselage.lengths.structure                  = fuselage.lengths.total-fuselage.lengths.tail 
     fuselage.mass_properties.volume             = .4*fuselage.lengths.total*(np.pi/4.)*(fuselage.heights.maximum**2.) #try this as approximation
     fuselage.mass_properties.internal_volume    = .3*fuselage.lengths.total*(np.pi/4.)*(fuselage.heights.maximum**2.)
     fuselage.areas.wetted                       = 30000. * Units.inches**2.

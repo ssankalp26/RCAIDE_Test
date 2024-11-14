@@ -53,8 +53,9 @@ class Vehicle(Data):
         self.flight_envelope.design_dynamic_pressure  = None 
         self.flight_envelope.design_mach_number       = None  
         self.flight_envelope.design_cruise_altitude   = None
-        self.flight_envelope.design_range             = None
-        self.vehicle.flight_envelope.ultimate_load    = None
+        self.flight_envelope.design_range             = None 
+        self.flight_envelope.ultimate_load            = 5.7 
+        self.flight_envelope.limit_load               = 3.8          
         self.performance                              = DataOrdered()
          
     _energy_network_root_map = None 
