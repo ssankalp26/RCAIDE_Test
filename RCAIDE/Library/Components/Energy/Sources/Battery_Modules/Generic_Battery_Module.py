@@ -37,7 +37,7 @@ class Generic_Battery_Module(Component):
         self.length                                            = 0.0
         self.width                                             = 0.0
         self.height                                            = 0.0
-        self.volume_packaging_factor                           = 0.0
+        self.volume_packaging_factor                           = 1.05
         self.BMS_additional_weight_factor                      = 1.42
                  
         self.orientation_euler_angles                          = [0.,0.,0.]  # vector of angles defining default orientation of rotor        
@@ -59,6 +59,7 @@ class Generic_Battery_Module(Component):
         self.geometrtic_configuration.normal_count             = 1
         self.geometrtic_configuration.parallel_count           = 1
         self.geometrtic_configuration.normal_spacing           = 0.02
+        self.geometrtic_configuration.stacking_rows            = 3
         self.geometrtic_configuration.parallel_spacing         = 0.02                
  
     def append_operating_conditions(self,segment,bus):  

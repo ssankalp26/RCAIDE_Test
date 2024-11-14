@@ -777,8 +777,8 @@ def configs_setup(vehicle):
     config.networks.fuel.fuel_lines['fuel_line'].propulsors['outer_port_propulsor'].fan.angular_velocity      =  2316 * Units.rpm
     config.networks.fuel.fuel_lines['fuel_line'].propulsors['inner_starboard_propulsor'].fan.angular_velocity =  2316 * Units.rpm
     config.networks.fuel.fuel_lines['fuel_line'].propulsors['inner_port_propulsor'].fan.angular_velocity      =  2316 * Units.rpm    
-    config.landing_gear.main_gear.gear_extended    = True
-    config.landing_gear.nose_gear.gear_extended    = True  
+    config.landing_gears.main_gear.gear_extended    = True
+    config.landing_gears.nose_gear.gear_extended    = True  
     config.Vref_VS_ratio = 1.3
     configs.append(config)   
      
@@ -794,8 +794,8 @@ def configs_setup(vehicle):
     config.networks.fuel.fuel_lines['fuel_line'].propulsors['outer_port_propulsor'].fan.angular_velocity      =   4091* Units.rpm
     config.networks.fuel.fuel_lines['fuel_line'].propulsors['inner_starboard_propulsor'].fan.angular_velocity =   4091* Units.rpm
     config.networks.fuel.fuel_lines['fuel_line'].propulsors['inner_port_propulsor'].fan.angular_velocity      =   4091* Units.rpm    
-    config.landing_gear.main_gear.gear_extended    = True
-    config.landing_gear.nose_gear.gear_extended    = True  
+    config.landing_gears.main_gear.gear_extended    = True
+    config.landing_gears.nose_gear.gear_extended    = True  
     config.V2_VS_ratio = 1.21 
     configs.append(config)    
 
