@@ -222,13 +222,10 @@ class Wing(Component):
         self.Fuel_Tanks.append(fuel_tank)
 
         return
-
-    
-    def moment_of_inertia(wing,center_of_gravity):
-        
-        I =  compute_wing_moment_of_inertia(wing,center_of_gravity) 
-        return I  
-    
+ 
+    def compute_moment_of_inertia(self,mass,center_of_gravity=[[0, 0, 0]], fuel_flag = False): 
+        I =  compute_wing_moment_of_inertia(self,mass, center_of_gravity, fuel_flag) 
+        return I   
     
 class Container(Component.Container):
     def get_children(self):

@@ -37,6 +37,5 @@ class Main_Landing_Gear(Landing_Gear):
         self.tag           = 'main_gear'
         self.units         = 0. # number of main landing gear units        
         self.strut_length  = 0.
-        self.tire_diameter = 0.
-        self.units         = 0. # number of main landing gear units
+        self.tire_diameter = 0. 
         self.wheels        = 0. # number of wheels on the main landing gear 

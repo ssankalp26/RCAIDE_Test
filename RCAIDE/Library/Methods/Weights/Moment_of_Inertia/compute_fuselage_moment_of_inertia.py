@@ -4,18 +4,14 @@
  
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORTS
-# ----------------------------------------------------------------------------------------------------------------------
-
-# RCAIDE 
-import RCAIDE
-
+# ---------------------------------------------------------------------------------------------------------------------- 
 # package imports 
 import numpy as np 
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Compute Fuselage Moment of Intertia
 # ----------------------------------------------------------------------------------------------------------------------   
-def compute_fuselage_moment_of_inertia(fuselage,center_of_gravity): 
+def compute_fuselage_moment_of_inertia(fuselage,center_of_gravity=[[0, 0, 0]]): 
     ''' computes the moment of ienrtia tensor for a generic fuselage about a given center of gravity. 
 
     Assumptions:

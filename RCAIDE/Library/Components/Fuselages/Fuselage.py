@@ -141,9 +141,8 @@ class Fuselage(Component):
         # Store data
         self.Fuel_Tanks.append(fuel_tank)
 
-        return
-    
+        return 
 
-    def compute_fuselage_moment_of_inertia(fuselage, center_of_gravity): 
-        I =  compute_fuselage_moment_of_inertia(fuselage,center_of_gravity) 
+    def compute_moment_of_inertia(self, center_of_gravity=[[0, 0, 0]]): 
+        I =  compute_fuselage_moment_of_inertia(self,center_of_gravity) 
         return I    
