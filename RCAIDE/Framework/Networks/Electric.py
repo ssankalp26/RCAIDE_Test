@@ -95,6 +95,9 @@ class Electric(Network):
         reverse_thrust  = self.reverse_thrust
 
         for bus in busses:
+            T               = 0. * state.ones_row(1) 
+            total_power     = 0. * state.ones_row(1) 
+            M               = 0. * state.ones_row(1) 
             if bus.active:             
                 avionics              = bus.avionics
                 payload               = bus.payload  
