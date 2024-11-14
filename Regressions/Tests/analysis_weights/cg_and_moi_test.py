@@ -64,10 +64,10 @@ def Transport_Aircraft_Test():
     total_mass      += mass
     
     print(weight_analysis.vehicle.tag + ' Moment of Intertia')
-    print(MOI)
+    print(MOI) 
     accepted  = np.array([[32409132.05077419 , 2788242.874520242 , 3490205.5546855293 ],
                           [ 2788242.874520242 , 42517739.94307241  ,  -1.4551915228366852e-11   ],
-                          [ 3490205.5546855293  ,  -1.4551915228366852e-11 , 61703157.13898332]])
+                          [ 3490205.5546855293  ,  -1.4551915228366852e-11 , 61703157.13898332]]) 
     MOI_error     = MOI - accepted
 
     # Check the errors
@@ -107,10 +107,10 @@ def General_Aviation_Test():
 
     print(weight_analysis.vehicle.tag + ' Moment of Intertia')
     print(MOI)
-    
+     
     accepted  = np.array([[3015.572165204822,   43.457295151869346, 43.457295151869346],
                           [ 43.457295151869346, 2279.844443272549,    0.        ],
-                          [ 43.457295151869346,    0.        , 1763.957848987589]])
+                          [ 43.457295151869346,    0.        , 1763.957848987589]]) 
     
     MOI_error     = MOI - accepted
 
@@ -151,11 +151,10 @@ def EVTOL_Aircraft_Test(update_regression_values):
     MOI, total_mass = compute_aircraft_moment_of_inertia(weight_analysis.vehicle, CG_location)
     
     print(weight_analysis.vehicle.tag + ' Moment of Intertia')
-    print(MOI)
+    print(MOI) 
     accepted  = np.array([[904.2015803152474, 4.580290549186294, -402.6794951358139],
                           [4.580290549186294, 6875.497169811672,  0.00000000e+00],
-                          [-402.6794951358139,  0.00000000e+00, 7129.729854819771]])
-
+                          [-402.6794951358139,  0.00000000e+00, 7129.729854819771]]) 
     MOI_error     = MOI - accepted
 
     # Check the errors
