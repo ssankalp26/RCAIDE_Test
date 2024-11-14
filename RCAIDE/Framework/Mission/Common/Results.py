@@ -432,7 +432,7 @@ class Results(Conditions):
         self.energy.thrust_breakdown                          = Conditions()
         self.energy.thrust_breakdown                          = Conditions()
         self.energy.thrust_force_vector                       = ones_3col * 0
-        self.energy.moment_vector                             = ones_3col * 0
+        self.energy.thrust_moment_vector                      = ones_3col * 0
         self.energy.power                                     = ones_1col * 0
         self.energy.vehicle_mass_rate                         = ones_1col * 0
         
