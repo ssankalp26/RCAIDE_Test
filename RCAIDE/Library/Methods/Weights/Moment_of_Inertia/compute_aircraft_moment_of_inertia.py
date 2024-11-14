@@ -90,7 +90,7 @@ def compute_aircraft_moment_of_inertia(vehicle, CG_location, update_MOI=True):
                     I_network += I
                     MOI_mass += mass
                 if isinstance(propulsor,RCAIDE.Library.Components.Propulsors.ICE_Propeller):
-                    I, mass= compute_cylinder_moment_of_inertia(propulsor.origin, propulsor.engine_mass, propulsor.engine_length, propulsor.engine_diameter/2, 0, 0, CG_location)                    
+                    I, mass= compute_cylinder_moment_of_inertia(propulsor.origin, propulsor.mass_properties.mass, propulsor.engine_length, propulsor.engine_diameter/2, 0, 0, CG_location)                    
                     I_network += I
                     MOI_mass += mass                  
             # Fuel tank       
