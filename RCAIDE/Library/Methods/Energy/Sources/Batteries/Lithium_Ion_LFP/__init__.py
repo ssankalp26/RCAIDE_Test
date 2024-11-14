@@ -9,3 +9,4 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 from .compute_lfp_cell_performance   import * 
+from .update_lfp_cell_age            import * 

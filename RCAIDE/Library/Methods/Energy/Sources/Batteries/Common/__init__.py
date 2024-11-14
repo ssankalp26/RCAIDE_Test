@@ -13,7 +13,6 @@
 from .append_battery_conditions               import append_battery_conditions, append_battery_segment_conditions
 from .find_ragone_properties                  import find_ragone_properties
 from .find_specific_power                     import find_specific_power
-from .find_ragone_optimum                     import find_ragone_optimum
 from .find_mass_gain_rate                     import find_mass_gain_rate
 from .find_total_mass_gain                    import find_total_mass_gain
 from .size_module_from_mass                    import size_module_from_mass

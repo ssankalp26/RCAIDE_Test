@@ -406,6 +406,15 @@ def vehicle_setup():
                                                 
     landing_gear.main                           = main_gear
     landing_gear.nose                           = nose_gear
+    
+    
+    
+    
+    
+    
+    
+    
+    
                                                 
     #add to vehicle                             
     vehicle.landing_gear                        = landing_gear

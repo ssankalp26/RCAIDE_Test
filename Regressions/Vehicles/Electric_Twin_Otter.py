@@ -415,18 +415,12 @@ def vehicle_setup(cell_chemistry, btms_type):
     # ------------------------------------------------------------------
     #   Landing gear
     # ------------------------------------------------------------------  
-    landing_gear                                = RCAIDE.Library.Components.Landing_Gear.Landing_Gear()
     main_gear                                   = RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear()
-    nose_gear                                   = RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()
-    main_gear.strut_length                      = 12. * Units.inches  
+    main_gear.strut_length                      = 12. * Units.inches
+    vehicle.append_component(main_gear) 
+    nose_gear                                   = RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()    
     nose_gear.strut_length                      = 6. * Units.inches 
-                                                
-    landing_gear.main                           = main_gear
-    landing_gear.nose                           = nose_gear
-                                                
-    #add to vehicle                             
-    vehicle.landing_gear                        = landing_gear
-
+    vehicle.append_component(nose_gear) 
  
     # ########################################################  Energy Network  #########################################################  
     net                              = RCAIDE.Framework.Networks.Electric()   
@@ -487,7 +481,7 @@ def vehicle_setup(cell_chemistry, btms_type):
         atmo_data                                              = atmosphere.compute_values(altitude = HAS.design_altitude)     
         HAS.coolant_inlet_temperature                          = atmo_data.temperature[0,0]  
         HAS.design_battery_operating_temperature               = 313
-        HAS.design_heat_removed                                = 50000 /len(bus.battery_modules) 
+        HAS.design_heat_removed                                = 50000 /bus.number_of_battery_modules
         HAS                                                    = design_wavy_channel(HAS,bat_module) 
         
         for battery_module in bus.battery_modules:

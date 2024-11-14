@@ -77,7 +77,7 @@ class Lithium_Ion_NMC(Generic_Battery_Module):
         self.cell.electrode_area              = 0.0342                                                                           # [m^2] 
                                                                                                                            
         self.cell.maximum_voltage             = 4.2                                                                              # [V]
-        self.cell.nominal_capacity            = 3.55                                                                             # [Amp-Hrs]
+        self.cell.nominal_capacity            = 3.8                                                                             # [Amp-Hrs]
         self.cell.nominal_voltage             = 3.6                                                                              # [V] 
         self.cell.charging_voltage            = self.cell.nominal_voltage                                                        # [V] 
         

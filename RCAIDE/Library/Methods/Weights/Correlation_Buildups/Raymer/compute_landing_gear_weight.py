@@ -7,7 +7,8 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-# RCAIDE 
+# RCAIDE
+import RCAIDE
 from RCAIDE.Framework.Core    import Units ,  Data 
  
 # ----------------------------------------------------------------------------------------------------------------------
@@ -56,13 +57,22 @@ def compute_landing_gear_weight(vehicle):
     WLDG        = vehicle.mass_properties.max_takeoff / Units.lbs * (1 - RFACT * DESRNG)
     Ngear       = 3  # gear load factor, usually around 3
     Nl          = Ngear * 1.5  # ultimate landing load factor
-    Lm          = vehicle.landing_gear.main_strut_length / Units.inch
-    Nmss        = 2  # number of main gear shock struts assumed to be 2
-    Nmw         = vehicle.landing_gear.main_wheels * Nmss
+      
+    Nmw  = 0
+    Lm   = 0 
+    Ln   = 0
+    Nnw  = 0
+    Nmss = 2  # number of main gear shock struts assumed to be 2
+    for landing_gear in  vehicle.landing_gears:
+        if isinstance(landing_gear,RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear):
+            Nmw  = landing_gear.wheels * Nmss    
+            Lm   = landing_gear.strut_length / Units.inch 
+        elif isinstance(landing_gear,RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear): 
+            Ln          = landing_gear.strut_length / Units.inch
+            Nnw         = landing_gear.wheels  
+        
     Vstall      = 51 * Units.kts  # stall speed
     Knp         = 1  # assuming not a reciprocating engine
-    Ln          = vehicle.landing_gear.nose_strut_length / Units.inch
-    Nnw         = vehicle.landing_gear.nose_wheels
     W_main_landing_gear = 0.0106 * Kmp * WLDG ** 0.888 * Nl ** 0.25 * Lm ** 0.4 * Nmw ** 0.321 * Nmss ** (-0.5) * Vstall ** 0.1
     W_nose_landing_gear = 0.032 * Knp * WLDG ** 0.646 * Nl ** 0.2 * Ln ** 0.5 * Nnw ** 0.45
 

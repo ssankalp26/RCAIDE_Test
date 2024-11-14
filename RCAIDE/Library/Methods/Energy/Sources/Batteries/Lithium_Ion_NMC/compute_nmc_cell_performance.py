@@ -165,7 +165,7 @@ def compute_nmc_cell_performance(battery_module,state,bus,coolant_lines,t_idx, d
     n_series          = battery_module.electrical_configuration.series
     n_parallel        = battery_module.electrical_configuration.parallel 
     n_total           = n_series*n_parallel 
-    no_modules        = len(bus.battery_modules)
+    no_modules        = bus.number_of_battery_modules
     
     # ---------------------------------------------------------------------------------
     # Examine Thermal Management System
@@ -186,7 +186,7 @@ def compute_nmc_cell_performance(battery_module,state,bus,coolant_lines,t_idx, d
     if bus_config == 'Series':
         I_module[t_idx]      = I_bus[t_idx]
     elif bus_config  == 'Parallel':
-        I_module[t_idx]      = I_bus[t_idx] / len(bus.battery_modules)
+        I_module[t_idx]      = I_bus[t_idx] / bus.number_of_battery_modules
 
     I_cell[t_idx] = I_module[t_idx] / n_parallel   
        
@@ -203,9 +203,9 @@ def compute_nmc_cell_performance(battery_module,state,bus,coolant_lines,t_idx, d
     delta_S               = -496.66*(SOC_cell[t_idx])**6 +  1729.4*(SOC_cell[t_idx])**5 + -2278 *(SOC_cell[t_idx])**4 +  1382.2 *(SOC_cell[t_idx])**3 + \
                             -380.47*(SOC_cell[t_idx])**2 +  46.508*(SOC_cell[t_idx])  + -10.692  
 
-    i_cell                = I_cell[t_idx]/electrode_area # current intensity 
+    i_cell                = I_cell[t_idx]/electrode_area # current intensity
     q_dot_entropy         = -(T_cell[t_idx])*delta_S*i_cell/(n*F)       
-    q_dot_joule           = (i_cell**2)/sigma                   
+    q_dot_joule           = (i_cell**2)*(battery_module_conditions.cell.resistance_growth_factor)/(sigma)          
     Q_heat_cell[t_idx]    = (q_dot_joule + q_dot_entropy)*As_cell 
     Q_heat_module[t_idx]  = Q_heat_cell[t_idx]*n_total  
 
@@ -238,8 +238,8 @@ def compute_nmc_cell_performance(battery_module,state,bus,coolant_lines,t_idx, d
             T_cell[t_idx+1]    =  T_cell[t_idx] + dT_dt*delta_t[t_idx]
             
         # Compute state of charge and depth of discarge of the battery_module
-        E_module[t_idx+1]                                     = E_module[t_idx] -P_module[t_idx]*delta_t[t_idx] 
-        E_module[t_idx+1][E_module[t_idx+1] > E_module_max]   = E_module_max
+        E_module[t_idx+1]                                     = (E_module[t_idx]) -P_module[t_idx]*delta_t[t_idx]
+        E_module[t_idx+1][E_module[t_idx+1] > E_module_max]   = np.float32(E_module_max)
         SOC_cell[t_idx+1]                                     = E_module[t_idx+1]/E_module_max 
         SOC_cell[t_idx+1][SOC_cell[t_idx+1]>1]                = 1.
         SOC_cell[t_idx+1][SOC_cell[t_idx+1]<0]                = 0. 

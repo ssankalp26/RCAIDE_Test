@@ -50,18 +50,13 @@ def vehicle_setup():
     
     #------------------------------------------------------------------------------------------------------------------------------------
     # ##################################################### Landing Gear ################################################################    
-    #------------------------------------------------------------------------------------------------------------------------------------
-    landing_gear                                = RCAIDE.Library.Components.Landing_Gear.Landing_Gear()
+    #------------------------------------------------------------------------------------------------------------------------------------ 
     main_gear                                   = RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear()
-    nose_gear                                   = RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()
-    main_gear.strut_length                      = 12. * Units.inches  
+    main_gear.strut_length                      = 12. * Units.inches
+    vehicle.append_component(main_gear) 
+    nose_gear                                   = RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()    
     nose_gear.strut_length                      = 6. * Units.inches 
-                                                
-    landing_gear.main                           = main_gear
-    landing_gear.nose                           = nose_gear
-                                                
-    #add to vehicle                             
-    vehicle.landing_gear                        = landing_gear 
+    vehicle.append_component(nose_gear)
 
 
     #------------------------------------------------------------------------------------------------------------------------------------
@@ -178,9 +173,8 @@ def vehicle_setup():
     fuselage.width                              = 42.         * Units.inches     # Width of the fuselage
     fuselage.heights.maximum                    = 62. * Units.inches    # Height of the fuselage
     fuselage.lengths.total                      = 326.         * Units.inches            # Length of the fuselage
-    fuselage.lengths.empennage                  = 161. * Units.inches  
-    fuselage.lengths.cabin                      = 105. * Units.inches
-    fuselage.lengths.structure                  = fuselage.lengths.total-fuselage.lengths.empennage 
+    fuselage.lengths.tail                       = 161. * Units.inches  
+    fuselage.lengths.cabin                      = 105. * Units.inches 
     fuselage.mass_properties.volume             = .4*fuselage.lengths.total*(np.pi/4.)*(fuselage.heights.maximum**2.) #try this as approximation
     fuselage.mass_properties.internal_volume    = .3*fuselage.lengths.total*(np.pi/4.)*(fuselage.heights.maximum**2.)
     fuselage.areas.wetted                       = 30000. * Units.inches**2.

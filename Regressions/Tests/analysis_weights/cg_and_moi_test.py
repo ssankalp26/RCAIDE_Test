@@ -64,10 +64,10 @@ def Transport_Aircraft_Test():
     total_mass      += mass
     
     print(weight_analysis.vehicle.tag + ' Moment of Intertia')
-    print(MOI)
-    accepted  = np.array([[32445694.94928977,  2611617.77266202,  3302638.18748848],
-                          [ 2611617.77266202, 41220060.06075142,        0.        ],
-                          [ 3302638.18748848,        0.        , 60394806.92184599]])
+    print(MOI) 
+    accepted  = np.array([[32501492.046498284 , 2589698.2777274568 , 3358696.76322818],
+                          [ 2589698.2777274568 , 41119945.60953963 ,  -1.4551915228366852e-11   ],
+                          [ 3358696.76322818 ,  -1.4551915228366852e-11 , 60277432.15941405]]) 
     MOI_error     = MOI - accepted
 
     # Check the errors
@@ -107,10 +107,10 @@ def General_Aviation_Test():
 
     print(weight_analysis.vehicle.tag + ' Moment of Intertia')
     print(MOI)
-    
-    accepted  = np.array([[1290.55346634,    6.98747094,    6.98747094],
-                          [   6.98747094, 1246.65023312,    0.        ],
-                          [   6.98747094,    0.        , 2460.00763893]])
+     
+    accepted  = np.array([[3015.5721652048214,   9.410202950934249, 9.410202950934249],
+                          [ 9.410202950934249, 4217.63369281284,    0.        ],
+                          [ 9.410202950934249,    0.           , 3701.7470985278796]]) 
     
     MOI_error     = MOI - accepted
 
@@ -151,11 +151,10 @@ def EVTOL_Aircraft_Test(update_regression_values):
     MOI, total_mass = compute_aircraft_moment_of_inertia(weight_analysis.vehicle, CG_location)
     
     print(weight_analysis.vehicle.tag + ' Moment of Intertia')
-    print(MOI)
-    accepted  = np.array([[1014.4402321 ,  -46.61996679, -294.07715118],
-                          [ -46.61996679, 5419.94291851,  -28.05118379],
-                          [-294.07715118,  -28.05118379, 5563.93197331]])
-
+    print(MOI) 
+    accepted  = np.array([[1300.5071644417767, -47.59533102847911, -303.63837897868945],
+                          [-47.59533102847911,5681.519926122367, -26.879553233126806],
+                          [-303.63837897868945,-26.879553233126806, 6121.673140736512]]) 
     MOI_error     = MOI - accepted
 
     # Check the errors

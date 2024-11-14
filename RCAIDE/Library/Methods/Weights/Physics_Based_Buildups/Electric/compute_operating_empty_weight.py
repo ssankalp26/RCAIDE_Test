@@ -314,14 +314,17 @@ def compute_operating_empty_weight(vehicle,settings = None):
 
     #-------------------------------------------------------------------------------
     # Landing Gear Weight
-    #-------------------------------------------------------------------------------
-    if not hasattr(vehicle.landing_gear, 'nose'):
-        vehicle.landing_gear.nose       = RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()
-    vehicle.landing_gear.nose.mass      = 0.0
-    if not hasattr(vehicle.landing_gear, 'main'):
-        vehicle.landing_gear.main       = RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear()
-    vehicle.landing_gear.main.mass      = weight.landing_gear
-
+    #-------------------------------------------------------------------------------  
+    main_landing_gear =  False
+    for LG in vehicle.landing_gears:
+        if isinstance(LG, RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear):
+            LG.mass_properties.mass =  weight.landing_gear
+            main_landing_gear = True 
+    if main_landing_gear == False:
+        main_gear = RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear()  
+        main_gear.mass_properties.mass =  weight.landing_gear
+        vehicle.append_component(main_gear)
+        
     #-------------------------------------------------------------------------------
     # Fuselage  Weight  
     #-------------------------------------------------------------------------------

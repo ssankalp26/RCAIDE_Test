@@ -52,7 +52,8 @@ class Fuselage(Component):
         self.aerodynamic_center                     = [0.0,0.0,0.0] 
         self.differential_pressure                  = 0.0    
         self.seats_abreast                          = 0.0
-        self.seat_pitch                             = 0.0 
+        self.seat_pitch                             = 0.0
+        self.number_coach_seats                     = 0.0
 
         self.areas                                  = Data()
         self.areas.front_projected                  = 0.0
@@ -72,8 +73,8 @@ class Fuselage(Component):
         self.lengths                                = Data()     
         self.lengths.nose                           = 0.0
         self.lengths.tail                           = 0.0
-        self.lengths.total                          = 0.0
-        self.lengths.cabin                          = 0.0
+        self.lengths.total                          = 0.0 
+        self.lengths.cabin                          = 0.0 
         self.lengths.fore_space                     = 0.0
         self.lengths.aft_space                      = 0.0 
         
@@ -140,10 +141,8 @@ class Fuselage(Component):
         # Store data
         self.Fuel_Tanks.append(fuel_tank)
 
-        return
-    
+        return 
 
-    def compute_fuselage_moment_of_inertia(fuselage, center_of_gravity):
-                    
-        I =  compute_fuselage_moment_of_inertia(fuselage,center_of_gravity) 
+    def compute_moment_of_inertia(self, center_of_gravity=[[0, 0, 0]]): 
+        I =  compute_fuselage_moment_of_inertia(self,center_of_gravity) 
         return I    
