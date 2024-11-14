@@ -24,6 +24,11 @@ from scipy.interpolate  import RegularGridInterpolator
 class Lithium_Ion_NMC(Generic_Battery_Module):
     """ 18650 lithium-nickel-manganese-cobalt-oxide battery cellc.
     """       
+    def __init__(self, data_type='experimental'):
+            """Initialize the Lithium Ion NMC battery with specified data type."""
+            self.data_type = data_type
+            self.__defaults__()
+
     
     def __defaults__(self):   
         """This sets the default values.
@@ -90,9 +95,8 @@ class Lithium_Ion_NMC(Generic_Battery_Module):
         self.cell.radial_thermal_conductivity = 0.4                                                                              # [J/kgK]  
         self.cell.axial_thermal_conductivity  = 32.2                                                                             # [J/kgK] # estimated
     
-                                              
-        battery_raw_data                      = load_battery_results()                                                   
-        self.cell.discharge_performance_map   = create_discharge_performance_map(battery_raw_data)  
+        battery_raw_data                      = load_battery_results(self.data_type)                                                   
+        self.cell.discharge_performance_map   = create_discharge_performance_map(battery_raw_data,self.data_type)  
 
         return  
     
@@ -143,7 +147,7 @@ class Lithium_Ion_NMC(Generic_Battery_Module):
         
         return  
 
-def create_discharge_performance_map(raw_data):
+def create_discharge_performance_map(raw_data,data_type):
     """ Creates discharge and charge response surface for a LiNiMnCoO2 battery cell   
         
         Assumptions:
@@ -158,46 +162,80 @@ def create_discharge_performance_map(raw_data):
         Returns: 
             battery_data : response surface of battery properties [unitless]  
         """   
-    # Process raw data   
-    processed_data = Data() 
-    processed_data.Voltage        = np.zeros((5,6,15,2)) # current , operating temperature , state_of_charge vs voltage      
-    processed_data.Temperature    = np.zeros((5,6,15,2)) # current , operating temperature , state_of_charge vs temperature 
+    if data_type == 'experimental':
+        # Process raw data   
+        processed_data = Data() 
+        processed_data.Voltage        = np.zeros((5,6,15,2)) # current , operating temperature , state_of_charge vs voltage      
+        processed_data.Temperature    = np.zeros((5,6,15,2)) # current , operating temperature , state_of_charge vs temperature 
 
-    # Reshape  Data          
-    raw_data.Voltage 
-    for i, Amps in enumerate(raw_data.Voltage):
-        for j , Deg in enumerate(Amps):
-            min_x    = 0 
-            max_x    = max(Deg[:,0])
-            x        = np.linspace(min_x,max_x,15)
-            y        = np.interp(x,Deg[:,0],Deg[:,1])
-            vec      = np.zeros((15,2))
-            vec[:,0] = x/max_x
-            vec[:,1] = y
-            processed_data.Voltage[i,j,:,:]= vec   
+        # Reshape  Data          
+        raw_data.Voltage 
+        for i, Amps in enumerate(raw_data.Voltage):
+            for j , Deg in enumerate(Amps):
+                min_x    = 0 
+                max_x    = max(Deg[:,0])
+                x        = np.linspace(min_x,max_x,15)
+                y        = np.interp(x,Deg[:,0],Deg[:,1])
+                vec      = np.zeros((15,2))
+                vec[:,0] = x/max_x
+                vec[:,1] = y
+                processed_data.Voltage[i,j,:,:]= vec   
 
-    for i, Amps in enumerate(raw_data.Temperature):
-        for j , Deg in enumerate(Amps):
-            min_x    = 0   
-            max_x    = max(Deg[:,0])
-            x        = np.linspace(min_x,max_x,15)
-            y        = np.interp(x,Deg[:,0],Deg[:,1])
-            vec      = np.zeros((15,2))
-            vec[:,0] = x/max_x
-            vec[:,1] = y
-            processed_data.Temperature[i,j,:,:]= vec  
-    
-    # Create performance maps  
-    battery_data             = Data() 
-    amps                    = np.linspace(0, 8, 5)
-    temp                    = np.linspace(0, 50, 6) +  272.65
-    SOC                     = np.linspace(0, 1, 15)
-    battery_data.Voltage     = RegularGridInterpolator((amps, temp, SOC), processed_data.Voltage,bounds_error=False,fill_value=None)
-    battery_data.Temperature = RegularGridInterpolator((amps, temp, SOC), processed_data.Temperature,bounds_error=False,fill_value=None) 
-     
+        for i, Amps in enumerate(raw_data.Temperature):
+            for j , Deg in enumerate(Amps):
+                min_x    = 0   
+                max_x    = max(Deg[:,0])
+                x        = np.linspace(min_x,max_x,15)
+                y        = np.interp(x,Deg[:,0],Deg[:,1])
+                vec      = np.zeros((15,2))
+                vec[:,0] = x/max_x
+                vec[:,1] = y
+                processed_data.Temperature[i,j,:,:]= vec  
+        
+        # Create performance maps  
+        battery_data             = Data() 
+        amps                    = np.linspace(0, 8, 5)
+        temp                    = np.linspace(0, 50, 6) +  272.65
+        SOC                     = np.linspace(0, 1, 15)
+        battery_data.Voltage     = RegularGridInterpolator((amps, temp, SOC), processed_data.Voltage,bounds_error=False,fill_value=None)
+        battery_data.Temperature = RegularGridInterpolator((amps, temp, SOC), processed_data.Temperature,bounds_error=False,fill_value=None) 
+    elif data_type =='curve_fit':
+        amps_values = [2, 4, 6, 8]
+        temp_values = [0, 10, 20, 30, 40, 50]
+        
+        # Stack all parameters into a single 3D array (amps_values, temp_values, 7)
+        data = np.stack([
+            np.array([raw_data['a'][f'Amps_{amp}'] for amp in amps_values]),
+            np.array([raw_data['b'][f'Amps_{amp}'] for amp in amps_values]),
+            np.array([raw_data['c'][f'Amps_{amp}'] for amp in amps_values]),
+            np.array([raw_data['d'][f'Amps_{amp}'] for amp in amps_values]),
+            np.array([raw_data['e'][f'Amps_{amp}'] for amp in amps_values]),
+            np.array([raw_data['f'][f'Amps_{amp}'] for amp in amps_values]),
+            np.array([raw_data['g'][f'Amps_{amp}'] for amp in amps_values])
+        ], axis=-1)  # Shape: (4, 6, 7)
+
+        # Create the interpolator across amps and temp, interpolating each of the 7 parameters
+        curve_fitter = RegularGridInterpolator((amps_values, temp_values), data, bounds_error=False, fill_value=None)
+
+            
+        # Function of functions LOL 
+        def interpolator(x,amps, temp):
+            parameter = curve_fitter(np.array([[amps,temp]]))
+            parameter = np.reshape(parameter,(7,1))
+            a = parameter[0]
+            b = parameter[1]
+            c = parameter[2]
+            d = parameter[3]
+            e = parameter[4]
+            f = parameter[5]
+            g = parameter[6]
+            return  f*((b-np.sinh(g*x-a))/d+c*x)+e
+        
+        battery_data =interpolator
+
     return battery_data  
 
-def load_battery_results(): 
+def load_battery_results(data_type): 
     '''Load experimental raw data of NMC cells 
         
        Assumptions:
@@ -214,5 +252,8 @@ def load_battery_results():
     '''    
     ospath    = os.path.abspath(__file__)
     separator = os.path.sep
-    rel_path  = os.path.dirname(ospath) + separator     
-    return RCAIDE.load(rel_path+ 'NMC_Raw_Data.res')
+    rel_path  = os.path.dirname(ospath) + separator    
+    if data_type == 'experimental': 
+        return RCAIDE.load(rel_path+ 'NMC_Raw_Data.res')
+    elif data_type == 'curve_fit':
+        return RCAIDE.load(rel_path+ 'nmc_fit_parameters_data.res')
