@@ -68,7 +68,7 @@ def compute_aircraft_moment_of_inertia(vehicle, CG_location, update_MOI=True):
                     if isinstance(item, RCAIDE.Library.Components.Propulsors.Converters.Rotor):
                         pass
                     if isinstance(item,RCAIDE.Library.Components.Propulsors.Converters.DC_Motor):
-                        I, mass = compute_cylinder_moment_of_inertia(item.origin,item.mass_properties.mass, 0, 0, 0,0, CG_location)
+                        I, mass = compute_cylinder_moment_of_inertia((item.origin+item.mass_properties.center_of_gravity),item.mass_properties.mass, 0, 0, 0,0, CG_location)
                         I_network += I
                         MOI_mass += mass                        
             for battery in bus.battery_modules: 
