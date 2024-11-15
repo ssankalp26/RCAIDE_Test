@@ -293,51 +293,53 @@ class Electric(Network):
         busses                          = segment.analyses.energy.vehicle.networks.electric.busses
         coolant_lines                   = segment.analyses.energy.vehicle.networks.electric.coolant_lines 
         segment.state.residuals.network = Residuals()
-
-        for bus_i, bus in enumerate(busses):  
-            # ------------------------------------------------------------------------------------------------------            
-            # Create bus results data structure  
-            # ------------------------------------------------------------------------------------------------------
-            segment.state.conditions.energy[bus.tag] = RCAIDE.Framework.Mission.Common.Conditions() 
-            segment.state.conditions.noise[bus.tag]  = RCAIDE.Framework.Mission.Common.Conditions()   
-
-            # ------------------------------------------------------------------------------------------------------
-            # Assign network-specific  residuals, unknowns and results data structures
-            # ------------------------------------------------------------------------------------------------------ 
-            bus.append_operating_conditions(segment)
-            for tag, item in  bus.items():
-                if tag == 'battery_modules':
-                    for battery in item:
-                        battery.append_operating_conditions(segment,bus)
-                elif tag == 'assigned_propulsors':  
-                    for i, propulsor in enumerate(item):  
-                        add_additional_network_equation = (bus.active) and  (i == 0)   
-                        propulsor.append_operating_conditions(segment,bus,add_additional_network_equation)
-                        for sub_tag, sub_item in  propulsor.items(): 
-                            if issubclass(type(sub_item), RCAIDE.Library.Components.Component):
-                                sub_item.append_operating_conditions(segment,bus,propulsor)  
-                elif issubclass(type(item), RCAIDE.Library.Components.Component):
-                    item.append_operating_conditions(segment,bus)
-
-        for coolant_line_i, coolant_line in enumerate(coolant_lines):  
-            # ------------------------------------------------------------------------------------------------------            
-            # Create coolant_lines results data structure  
-            # ------------------------------------------------------------------------------------------------------
-            segment.state.conditions.energy[coolant_line.tag] = RCAIDE.Framework.Mission.Common.Conditions()        
-            # ------------------------------------------------------------------------------------------------------
-            # Assign network-specific  residuals, unknowns and results data structures
-            # ------------------------------------------------------------------------------------------------------ 
-            for tag, item in  coolant_line.items(): 
-                if tag == 'battery_modules':
-                    for battery in item:
-                        for btms in  battery:
-                            btms.append_operating_conditions(segment,coolant_line)
-                if tag == 'heat_exchangers':
-                    for heat_exchanger in  item:
-                        heat_exchanger.append_operating_conditions(segment, coolant_line)
-                if tag == 'reservoirs':
-                    for reservoir in  item:
-                        reservoir.append_operating_conditions(segment, coolant_line)                
+        
+        for network in segment.analyses.energy.vehicle.networks: 
+            for bus_i, bus in enumerate(network.busses):   
+                # ------------------------------------------------------------------------------------------------------            
+                # Create bus results data structure  
+                # ------------------------------------------------------------------------------------------------------
+                segment.state.conditions.energy[bus.tag] = RCAIDE.Framework.Mission.Common.Conditions() 
+                segment.state.conditions.noise[bus.tag]  = RCAIDE.Framework.Mission.Common.Conditions()   
+    
+                # ------------------------------------------------------------------------------------------------------
+                # Assign network-specific  residuals, unknowns and results data structures
+                # ------------------------------------------------------------------------------------------------------ 
+                bus.append_operating_conditions(segment)
+                for tag, item in  bus.items():
+                    if tag == 'battery_modules':
+                        for battery in item:
+                            battery.append_operating_conditions(segment,bus)
+                    elif tag == 'assigned_propulsors':  
+                        for i, propulsor_tag in enumerate(item):
+                            propulsor =  network.propulsors[propulsor_tag] 
+                            add_additional_network_equation = (bus.active) and (bus.identical_propulsors == False)   
+                            propulsor.append_operating_conditions(segment,bus,add_additional_network_equation) # FIX 
+                            for sub_tag, sub_item in  propulsor.items(): 
+                                if issubclass(type(sub_item), RCAIDE.Library.Components.Component):
+                                    sub_item.append_operating_conditions(segment,bus,propulsor)  
+                    elif issubclass(type(item), RCAIDE.Library.Components.Component):
+                        item.append_operating_conditions(segment,bus)
+    
+            for coolant_line_i, coolant_line in enumerate(coolant_lines):  
+                # ------------------------------------------------------------------------------------------------------            
+                # Create coolant_lines results data structure  
+                # ------------------------------------------------------------------------------------------------------
+                segment.state.conditions.energy[coolant_line.tag] = RCAIDE.Framework.Mission.Common.Conditions()        
+                # ------------------------------------------------------------------------------------------------------
+                # Assign network-specific  residuals, unknowns and results data structures
+                # ------------------------------------------------------------------------------------------------------ 
+                for tag, item in  coolant_line.items(): 
+                    if tag == 'battery_modules':
+                        for battery in item:
+                            for btms in  battery:
+                                btms.append_operating_conditions(segment,coolant_line)
+                    if tag == 'heat_exchangers':
+                        for heat_exchanger in  item:
+                            heat_exchanger.append_operating_conditions(segment, coolant_line)
+                    if tag == 'reservoirs':
+                        for reservoir in  item:
+                            reservoir.append_operating_conditions(segment, coolant_line)                
 
         # Ensure the mission knows how to pack and unpack the unknowns and residuals
         segment.process.iterate.unknowns.network            = self.unpack_unknowns

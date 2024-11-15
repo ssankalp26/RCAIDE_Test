@@ -18,22 +18,25 @@ class Network(Component):
     """
     def __defaults__(self):
         """ This sets the default attributes for the network.
-        
+
             Assumptions:
                 None
-            
+
             Source:
                 None 
         """
         self.tag                          = 'network'
-        self.propulsors                   = Propulsor_Container() # Speocial container that when I do propulsor.append() 
+        self.propulsors                   = Container()  
         self.busses                       = Container()
         self.coolant_lines                = Container()
-        self.fuel_lines                   = Container()
+        self.fuel_lines                   = Container()  
 
-    def append(self,propulsor):
-       
-        
+    def initalize_network_properties(self):   
+        for propulsor in self.propulsors: 
+            for bus in self.busses:  
+                bus.assigned_propulsors.append(propulsor.tag) 
+            for fuel_line in self.fuel_lines:
+                fuel_line.assigned_propulsors.append(propulsor.tag)  
         return
 
 # ----------------------------------------------------------------------
@@ -44,32 +47,22 @@ class Container(Component.Container):
     """
     def evaluate(self,state,center_of_gravity):
         """ This is used to evaluate the thrust produced by the network.
-        
+
             Assumptions:  
                 If multiple networks are attached their performances will be summed
-            
+
             Source:
                 None
-            
+
             Args:
                 State (dict): flight conditions 
-            
+
             Returns:
                 results (dict): Results of the evaluate method 
         """ 
         for net in self.values(): 
             net.evaluate(state,center_of_gravity)  
-        return  
-    
-   
-class Propulsor_Container(Container):
-    def append(self,propulsor):
-         assigned_bus = propulsor.active_busses
-         for bus in self.busses:
-            #  pass first add to the network.propulsors then add it to [assigned_bus].assigned_propulsor
-         for fuel_line in self.fuel_lines:
-               pass
-
+        return   
 
 # ----------------------------------------------------------------------
 #  Handle Linking
