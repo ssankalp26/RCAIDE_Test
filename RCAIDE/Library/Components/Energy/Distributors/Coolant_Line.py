@@ -28,7 +28,7 @@ class Coolant_Line(Component):
         self.tag                           = 'coolant_line'  
 
                     
-    def __init__ (self, distributor=None):
+    def __init__ (self, distributors=None):
         
         """This initializes empty containers to add heat acqusition systems
            for battery modules that are present on a particular bus.
@@ -41,11 +41,12 @@ class Coolant_Line(Component):
         """               
         self.active                        = True 
         self.efficiency                    = 1.0
- 
-            
-        for tag, item in  distributor.items():
-            self.identical_battery_modules  =  distributor.identical_battery_modules
-            if tag == 'battery_modules':
-                self.battery_modules  = Container()
-                for battery in item:
-                    self.battery_modules[battery.tag] = Container()
+        if distributors is not None:
+            for distributor in distributors:    
+                for tag, item in  distributor.items():
+                    self.identical_battery_modules  =  distributor.identical_battery_modules
+                    if tag == 'battery_modules':
+                        if not hasattr(self, 'battery_modules'):
+                            self.battery_modules = Container()
+                        for battery in item:
+                            self.battery_modules[battery.tag] = Container()
