@@ -180,6 +180,7 @@ def compute_operating_empty_weight(vehicle,settings = None):
     maxLiftPower           = 0
     total_number_of_rotors = 0
     maxVTip                = 0
+    eta                    = 0
     for network in vehicle.networks: 
         for bus in network.busses:  
             #------------------------------------------------------------------------------- 

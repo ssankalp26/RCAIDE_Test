@@ -1,4 +1,4 @@
-# RCAIDE/Library/Components/Propulsors/Propusor.py
+# RCAIDE/Library/Components/Propulsors/Propuslor.py
 #  
 # 
 # Created:  Mar 2024, M. Clarke 
@@ -45,6 +45,8 @@ class Propulsor(Component):
         """          
         self.tag                          = 'propulsor' 
         self.active                       = True 
-        self.wing_mounted                 = True         
+        self.wing_mounted                 = True
+        self.active_busses                = []
+        self.active_fuel_lines            = []
         
     
