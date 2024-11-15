@@ -44,20 +44,22 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
     Properties Used:
        N/A
      """
+
+    conditions = state.conditions 
+    AoA        = conditions.aerodynamics.angles.alpha
+    
     vertical_fligth_flag = False
     if isinstance(state,RCAIDE.Framework.Mission.Segments.Vertical_Flight.Climb) or \
        isinstance(state,RCAIDE.Framework.Mission.Segments.Vertical_Flight.Hover) or \
        isinstance(state,RCAIDE.Framework.Mission.Segments.Vertical_Flight.Descent):
         vertical_fligth_flag = True
-            
-    if np.count_nonzero(aircraft.mass_properties.moments_of_inertia.tensor) > 0 and  vertical_fligth_flag !=  True:
-        conditions = state.conditions 
+    
+    if (np.count_nonzero(aircraft.mass_properties.moments_of_inertia.tensor) > 0) and  (vertical_fligth_flag !=  True) and (np.all(np.isnan(AoA)) !=  True):
         g          = conditions.freestream.gravity  
         rho        = conditions.freestream.density
         u0         = conditions.freestream.velocity
         qDyn0      = conditions.freestream.dynamic_pressure  
-        theta0     = np.arctan(conditions.frames.inertial.velocity_vector[:,2]/conditions.frames.inertial.velocity_vector[:,0])[:,None]
-        AoA        = conditions.aerodynamics.angles.alpha    
+        theta0     = np.arctan(conditions.frames.inertial.velocity_vector[:,2]/conditions.frames.inertial.velocity_vector[:,0])[:,None] 
         SS         = conditions.static_stability
         SSD        = SS.derivatives 
         DS         = conditions.dynamic_stability
@@ -199,7 +201,7 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
         Ixzp = np.zeros((num_cases,1))
         
         for c_i2 in range(num_cases): 
-            R       = np.array( [[np.cos(AoA[c_i2][0]*Units.degrees) ,  - np.sin(AoA[c_i2][0]*Units.degrees) ], [ np.sin( AoA[c_i2][0]*Units.degrees) , np.cos(AoA[i][0]*Units.degrees)]])
+            R       = np.array( [[np.cos(AoA[c_i2][0]) ,  - np.sin(AoA[c_i2][0]) ], [ np.sin( AoA[c_i2][0]) , np.cos(AoA[i][0])]])
             modI    = np.array([[moments_of_inertia[0][0],moments_of_inertia[0][2]],[moments_of_inertia[2][0],moments_of_inertia[2][2]]] ) 
             INew    = R * modI  * np.transpose(R)
             IxxStab =  INew[0,0]
@@ -264,33 +266,35 @@ def compute_dynamic_flight_modes(state,settings,aircraft):
         spiralDamping               = np.zeros((num_cases,1))
         dutchRoll_mode_real         = np.zeros((num_cases,1))
         
-        for i_lat in range(num_cases):        
-            D  , V = np.linalg.eig(ALat[i_lat,:,:]) # State order: u, w, q, theta
-            LatModes[i_lat,:] = D  
-            
-            real_parts = LatModes[i_lat,:].real
-            unique_elements, counts = np.unique(real_parts, return_counts=True)
-            idx = np.where(counts==2)[0]
-
-            dutchRollFreqHz[i_lat]         = abs(D[idx]) / (2 * np.pi)
-            dutchRollDamping[i_lat]        = np.sqrt(1/ (1 + ( D[idx].imag/ D[idx].real )**2 ))  
-            dutchRollTimeDoubleHalf[i_lat] = np.log(2) / abs(2 * np.pi * dutchRollFreqHz[i_lat] * dutchRollDamping[i_lat])
-            dutchRoll_mode_real[i_lat]     = D[idx].real / (2 * np.pi)
-            
-            dutch_roll_idx                 = np.where( unique_elements[idx] == D.real )[0]
-            
-            remaining_modes                    = np.delete(D, dutch_roll_idx)
-            rollInd                            = np.argmin(remaining_modes) 
-            rollSubsistenceFreqHz[i_lat]       = abs(remaining_modes[rollInd]) / 2 / np.pi
-            rollSubsistenceDamping[i_lat]      = - np.sign(remaining_modes[rollInd].real)
-            rollSubsistenceTimeConstant[i_lat] = 1 / (2 * np.pi * rollSubsistenceFreqHz[i_lat] * rollSubsistenceDamping[i_lat])
-            
-            # Find spiral mode 
-            sprial_mode                 = np.delete(remaining_modes,rollInd)             
-            spiralFreqHz[i_lat]         = abs(sprial_mode) / 2 / np.pi
-            spiralDamping[i_lat]        = - np.sign(sprial_mode.real)
-            spiralTimeDoubleHalf[i_lat] = np.log(2) / abs(2 * np.pi * spiralFreqHz[i_lat] * spiralDamping[i_lat])
-             
+        for i_lat in range(num_cases):
+            try: 
+                D  , V = np.linalg.eig(ALat[i_lat,:,:]) # State order: u, w, q, theta
+                LatModes[i_lat,:] = D  
+                
+                real_parts = LatModes[i_lat,:].real
+                unique_elements, counts = np.unique(real_parts, return_counts=True)
+                idx = np.where(counts==2)[0]
+    
+                dutchRollFreqHz[i_lat]         = abs(D[idx]) / (2 * np.pi)
+                dutchRollDamping[i_lat]        = np.sqrt(1/ (1 + ( D[idx].imag/ D[idx].real )**2 ))  
+                dutchRollTimeDoubleHalf[i_lat] = np.log(2) / abs(2 * np.pi * dutchRollFreqHz[i_lat] * dutchRollDamping[i_lat])
+                dutchRoll_mode_real[i_lat]     = D[idx].real / (2 * np.pi)
+                
+                dutch_roll_idx                 = np.where( unique_elements[idx] == D.real )[0]
+                
+                remaining_modes                    = np.delete(D, dutch_roll_idx)
+                rollInd                            = np.argmin(remaining_modes) 
+                rollSubsistenceFreqHz[i_lat]       = abs(remaining_modes[rollInd]) / 2 / np.pi
+                rollSubsistenceDamping[i_lat]      = - np.sign(remaining_modes[rollInd].real)
+                rollSubsistenceTimeConstant[i_lat] = 1 / (2 * np.pi * rollSubsistenceFreqHz[i_lat] * rollSubsistenceDamping[i_lat])
+                
+                # Find spiral mode 
+                sprial_mode                 = np.delete(remaining_modes,rollInd)             
+                spiralFreqHz[i_lat]         = abs(sprial_mode) / 2 / np.pi
+                spiralDamping[i_lat]        = - np.sign(sprial_mode.real)
+                spiralTimeDoubleHalf[i_lat] = np.log(2) / abs(2 * np.pi * spiralFreqHz[i_lat] * spiralDamping[i_lat])
+            except:
+                pass 
         
         # Inertial coupling susceptibility
         # See Etkin & Reid pg. 118 

@@ -28,7 +28,7 @@ def fuel_line_unknowns(segment,fuel_lines):
     # Thrust Vector Control 
     if assigned_control_variables.thrust_vector_angle.active:                
         for i in range(len(assigned_control_variables.thrust_vector_angle.assigned_propulsors)): 
-            propulsor_tags = assigned_control_variables.throttle.assigned_propulsors[i]
+            propulsor_tags = assigned_control_variables.thrust_vector_angle.assigned_propulsors[i]
             for j in range(len(propulsor_tags)): 
                 for fuel_line in fuel_lines:
                     if propulsor_tags[j] in fuel_line.propulsors:
@@ -55,7 +55,7 @@ def bus_unknowns(segment,busses):
     # Thrust Vector Control 
     if assigned_control_variables.thrust_vector_angle.active:                
         for i in range(len(assigned_control_variables.thrust_vector_angle.assigned_propulsors)): 
-            propulsor_tags = assigned_control_variables.throttle.assigned_propulsors[i]
+            propulsor_tags = assigned_control_variables.thrust_vector_angle.assigned_propulsors[i]
             for j in range(len(propulsor_tags)): 
                 for bus in busses:
                     if propulsor_tags[j] in bus.propulsors:
