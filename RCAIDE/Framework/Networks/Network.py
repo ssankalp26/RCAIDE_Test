@@ -26,15 +26,10 @@ class Network(Component):
                 None 
         """
         self.tag                          = 'network'
-        self.propulsors                   = Propulsor_Container() # Speocial container that when I do propulsor.append() 
+        self.propulsors                   = Container()
         self.busses                       = Container()
         self.coolant_lines                = Container()
         self.fuel_lines                   = Container()
-
-    def append(self,propulsor):
-       
-        
-        return
 
 # ----------------------------------------------------------------------
 #  Component Container
@@ -61,16 +56,6 @@ class Container(Component.Container):
             net.evaluate(state,center_of_gravity)  
         return  
     
-   
-class Propulsor_Container(Container):
-    def append(self,propulsor):
-         assigned_bus = propulsor.active_busses
-         for bus in self.busses:
-            #  pass first add to the network.propulsors then add it to [assigned_bus].assigned_propulsor
-         for fuel_line in self.fuel_lines:
-               pass
-
-
 # ----------------------------------------------------------------------
 #  Handle Linking
 # ----------------------------------------------------------------------
