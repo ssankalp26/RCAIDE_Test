@@ -39,8 +39,8 @@ class Electric_Ducted_Fan(Propulsor):
         append_electric_ducted_fan_conditions(self,segment,network,add_additional_network_equation)
         return 
 
-    def unpack_propulsor_unknowns(self,reference_propulsor,segment,network):  
-        unpack_electric_ducted_fan_unknowns(self,reference_propulsor,segment,network)
+    def unpack_propulsor_unknowns(self,reference_propulsor,segment):  
+        unpack_electric_ducted_fan_unknowns(self,reference_propulsor,segment)
         return 
 
     def pack_propulsor_residuals(self,segment,network): 

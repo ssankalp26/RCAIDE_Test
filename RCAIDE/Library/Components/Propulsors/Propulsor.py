@@ -46,7 +46,7 @@ class Propulsor(Component):
         self.tag                          = 'propulsor' 
         self.active                       = True 
         self.wing_mounted                 = True
-        self.active_busses                = []
-        self.active_fuel_lines            = []
+        #self.active_busses                = []
+        #self.active_fuel_lines            = []
         
     

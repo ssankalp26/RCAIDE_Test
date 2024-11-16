@@ -109,7 +109,7 @@ class Rotor(Component):
         self.optimization_parameters.ideal_efficiency                   = 1.0     
         self.optimization_parameters.ideal_figure_of_merit              = 1.0
 
-    def append_operating_conditions(rotor,segment,distribution_line,propulsor): 
+    def append_operating_conditions(rotor,segment,propulsor): 
         energy_conditions       = segment.state.conditions.energy[propulsor.tag]
         noise_conditions        = segment.state.conditions.noise[propulsor.tag]
         append_rotor_conditions(rotor,segment,energy_conditions,noise_conditions)

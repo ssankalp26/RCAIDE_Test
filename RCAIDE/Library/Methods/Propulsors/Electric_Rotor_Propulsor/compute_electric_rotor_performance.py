@@ -21,7 +21,7 @@ from copy import deepcopy
 # compute_electric_rotor_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Energy-Propulsors-Electric_Rotor_Propulsor
-def compute_electric_rotor_performance(propulsor,state,bus,voltage,center_of_gravity= [[0.0, 0.0,0.0]]):   
+def compute_electric_rotor_performance(propulsor,state,voltage,center_of_gravity= [[0.0, 0.0,0.0]]):   
     ''' Computes the perfomrance of one propulsor
     
     Assumptions: 
@@ -70,7 +70,7 @@ def compute_electric_rotor_performance(propulsor,state,bus,voltage,center_of_gra
     # Spin the rotor 
     rotor_conditions.omega           = motor_conditions.omega
     rotor_conditions.throttle        = esc_conditions.throttle 
-    compute_rotor_performance(propulsor,state,bus,center_of_gravity)  
+    compute_rotor_performance(propulsor,state,center_of_gravity)  
 
     # Run the motor for current
     compute_current_from_RPM_and_voltage(motor,motor_conditions,conditions)
@@ -94,7 +94,7 @@ def compute_electric_rotor_performance(propulsor,state,bus,voltage,center_of_gra
     
     return T,M,P, stored_results_flag,stored_propulsor_tag 
                 
-def reuse_stored_electric_rotor_data(propulsor,state,bus,stored_propulsor_tag,center_of_gravity= [[0.0, 0.0,0.0]]):
+def reuse_stored_electric_rotor_data(propulsor,state,network,stored_propulsor_tag,center_of_gravity= [[0.0, 0.0,0.0]]):
     '''Reuses results from one propulsor for identical propulsors
     
     Assumptions: 
@@ -124,9 +124,9 @@ def reuse_stored_electric_rotor_data(propulsor,state,bus,stored_propulsor_tag,ce
     motor                      = propulsor.motor 
     rotor                      = propulsor.rotor 
     esc                        = propulsor.electronic_speed_controller  
-    motor_0                    = bus.assigned_propulsors[stored_propulsor_tag].motor 
-    rotor_0                    = bus.assigned_propulsors[stored_propulsor_tag].rotor 
-    esc_0                      = bus.assigned_propulsors[stored_propulsor_tag].electronic_speed_controller
+    motor_0                    = network.propulsors[stored_propulsor_tag].motor 
+    rotor_0                    = network.propulsors[stored_propulsor_tag].rotor 
+    esc_0                      = network.propulsors[stored_propulsor_tag].electronic_speed_controller
     
     conditions.energy[propulsor.tag][motor.tag]        = deepcopy(conditions.energy[stored_propulsor_tag][motor_0.tag])
     conditions.energy[propulsor.tag][rotor.tag]        = deepcopy(conditions.energy[stored_propulsor_tag][rotor_0.tag])

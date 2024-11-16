@@ -29,16 +29,9 @@ class Network(Component):
         self.propulsors                   = Container()  
         self.busses                       = Container()
         self.coolant_lines                = Container()
-        self.fuel_lines                   = Container()  
-
-    def initalize_network_properties(self):   
-        for propulsor in self.propulsors: 
-            for bus in self.busses:  
-                bus.assigned_propulsors.append(propulsor.tag) 
-            for fuel_line in self.fuel_lines:
-                fuel_line.assigned_propulsors.append(propulsor.tag)  
-        return
-
+        self.fuel_lines                   = Container() 
+        self.identical_propulsors         = True
+        
 # ----------------------------------------------------------------------
 #  Component Container
 # ---------------------------------------------------------------------- 

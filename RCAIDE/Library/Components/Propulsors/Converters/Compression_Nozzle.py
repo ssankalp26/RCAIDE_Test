@@ -35,7 +35,7 @@ class Compression_Nozzle(Component):
         self.compression_levels              = 0.0
         self.theta                           = 0.0
 
-    def append_operating_conditions(self,segment,fuel_line,propulsor): 
+    def append_operating_conditions(self,segment,propulsor): 
         propulsor_conditions =  segment.state.conditions.energy[propulsor.tag]
         append_compression_nozzle_conditions(self,segment,propulsor_conditions)
         return

@@ -18,7 +18,7 @@ import  numpy as  np
 #  Generalized Rotor Class
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Energy-Propulsion-Converters
-def compute_rotor_performance(propulsor,state,disributor,center_of_gravity= [[0.0, 0.0,0.0]]):
+def compute_rotor_performance(propulsor,state,center_of_gravity= [[0.0, 0.0,0.0]]):
     """Analyzes a general rotor given geometry and operating conditions.
 
     Assumptions:

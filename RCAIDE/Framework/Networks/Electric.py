@@ -64,7 +64,7 @@ class Electric(Network):
         self.wing_mounted                 = True        
 
     # manage process with a driver function
-    def evaluate(self,state,center_of_gravity):
+    def evaluate(network,state,center_of_gravity):
         """ Calculate thrust given the current state of the vehicle
 
             Assumptions:
@@ -87,12 +87,12 @@ class Electric(Network):
 
         # unpack   
         conditions      = state.conditions 
-        busses          = self.busses
-        coolant_lines   = self.coolant_lines
+        busses          = network.busses
+        coolant_lines   = network.coolant_lines
         total_thrust    = 0. * state.ones_row(3) 
         total_power     = 0. * state.ones_row(1) 
         total_moment    = 0. * state.ones_row(3)  
-        reverse_thrust  = self.reverse_thrust
+        reverse_thrust  = network.reverse_thrust
 
         for bus in busses:
             T               = 0. * state.ones_row(1) 
@@ -129,18 +129,18 @@ class Electric(Network):
                     # compute energy consumption of each battery on bus 
                     stored_results_flag  = False
                     stored_propulsor_tag = None 
-                    for propulsor in bus.assigned_propulsors:  
+                    for propulsor in network.propulsors:  
                         if propulsor.active == True:  
-                            if bus.identical_propulsors == False:
+                            if network.identical_propulsors == False:
                                 # run analysis  
-                                T,M,P,stored_results_flag,stored_propulsor_tag = propulsor.compute_performance(state,bus,bus_voltage,center_of_gravity)
+                                T,M,P,stored_results_flag,stored_propulsor_tag = propulsor.compute_performance(state,bus_voltage,center_of_gravity)
                             else:             
                                 if stored_results_flag == False: 
                                     # run propulsor analysis 
-                                    T,M,P,stored_results_flag,stored_propulsor_tag = propulsor.compute_performance(state,bus,bus_voltage,center_of_gravity)
+                                    T,M,P,stored_results_flag,stored_propulsor_tag = propulsor.compute_performance(state,bus_voltage,center_of_gravity)
                                 else:
                                     # use previous propulsor results 
-                                    T,M,P = propulsor.reuse_stored_data(state,bus,stored_propulsor_tag,center_of_gravity)
+                                    T,M,P = propulsor.reuse_stored_data(state,network,stored_propulsor_tag,center_of_gravity)
 
                             total_thrust += T   
                             total_moment += M   
@@ -179,18 +179,15 @@ class Electric(Network):
                 
                 # Thermal Management Calculations                    
                 for coolant_line in  coolant_lines:
-                    if t_idx != state.numerics.number_of_control_points-1:
-                        for tag, item in  coolant_line.items(): 
-                            if tag == 'heat_exchangers':
-                                for heat_exchanger in  item:
-                                    heat_exchanger.compute_heat_exchanger_performance(state,bus,coolant_line,delta_t[t_idx],t_idx)
-                            if tag == 'reservoirs':
-                                for reservoir in  item:
-                                    reservoir.compute_reservior_coolant_temperature(state,coolant_line,delta_t[t_idx],t_idx)
+                    if t_idx != state.numerics.number_of_control_points-1: 
+                        for heat_exchanger in coolant_line.heat_exchangers: 
+                            heat_exchanger.compute_heat_exchanger_performance(state,bus,coolant_line,delta_t[t_idx],t_idx) 
+                        for reservoir in coolant_line.reservoirs:   
+                            reservoir.compute_reservior_coolant_temperature(state,coolant_line,delta_t[t_idx],t_idx)
         
         if reverse_thrust ==  True:
             total_thrust =  total_thrust * -1     
-            total_moment =  total_moment* -1                    
+            total_moment =  total_moment * -1                    
         conditions.energy.thrust_force_vector  = total_thrust
         conditions.energy.power                = total_power 
         conditions.energy.thrust_moment_vector = total_moment
@@ -220,19 +217,18 @@ class Electric(Network):
 
             Properties Used:
             N/A
-        """                          
-        # unpack the ones function 
-        busses       = segment.analyses.energy.vehicle.networks.electric.busses
-        bus_unknowns(segment,busses) 
-
-        for bus in busses:           
-            if type(segment) == RCAIDE.Framework.Mission.Segments.Ground.Battery_Recharge or type(segment) == RCAIDE.Framework.Mission.Segments.Ground.Battery_Discharge:
-                pass 
-            elif bus.active and len(bus.assigned_propulsors) > 0:
-                reference_propulsor = bus.assigned_propulsors[list(bus.assigned_propulsors.keys())[0]]                 
-                for propulsor in  bus.assigned_propulsors: 
-                    propulsor.unpack_propulsor_unknowns(reference_propulsor,segment,bus)
-
+        """
+ 
+        bus_unknowns(segment)
+        
+        if issubclass(type(segment), type(RCAIDE.Framework.Mission.Segments.Ground)):
+            pass 
+        for network in segment.analyses.energy.vehicle.networks:
+            for bus_i, bus in enumerate(network.busses):    
+                if bus.active:
+                    for propulsor_group in  bus.assigned_propulsors:
+                        propulsor = network.propulsors[propulsor_group[0]]
+                        propulsor.unpack_propulsor_unknowns(segment) 
         return     
 
     def residuals(self,segment):
@@ -255,15 +251,17 @@ class Electric(Network):
 
            Properties Used: 
            N/A
-        """           
+        """
+         
 
-        busses   = segment.analyses.energy.vehicle.networks.electric.busses 
-        for bus in busses:             
-            if type(segment) == RCAIDE.Framework.Mission.Segments.Ground.Battery_Recharge or type(segment) == RCAIDE.Framework.Mission.Segments.Ground.Battery_Discharge:
-                pass 
-            elif bus.active and len(bus.assigned_propulsors) > 0:
-                propulsor = bus.assigned_propulsors[list(bus.assigned_propulsors.keys())[0]]
-                propulsor.pack_propulsor_residuals(segment,bus)  
+        if issubclass(type(segment), type(RCAIDE.Framework.Mission.Segments.Ground)):
+            pass          
+        for network in segment.analyses.energy.vehicle.networks:
+            for bus_i, bus in enumerate(network.busses):    
+                if bus.active:
+                    for propulsor_group in  bus.assigned_propulsors:
+                        propulsor =  network.propulsors[propulsor_group[0]]
+                        propulsor.pack_propulsor_residuals(segment)   
         return     
 
     ## @ingroup Components-Energy-Networks
@@ -289,12 +287,18 @@ class Electric(Network):
 
             Properties Used:
             N/A
-        """              
-        busses                          = segment.analyses.energy.vehicle.networks.electric.busses
+        """               
         coolant_lines                   = segment.analyses.energy.vehicle.networks.electric.coolant_lines 
         segment.state.residuals.network = Residuals()
         
-        for network in segment.analyses.energy.vehicle.networks: 
+        for network in segment.analyses.energy.vehicle.networks:
+            for p_i, propulsor in enumerate(network.propulsors): 
+                propulsor.append_operating_conditions(segment)           
+    
+                for tag, propulsor_item in  propulsor.items():  
+                    if issubclass(type(propulsor_item), RCAIDE.Library.Components.Component):
+                        propulsor_item.append_operating_conditions(segment,propulsor)            
+            
             for bus_i, bus in enumerate(network.busses):   
                 # ------------------------------------------------------------------------------------------------------            
                 # Create bus results data structure  
@@ -304,22 +308,23 @@ class Electric(Network):
     
                 # ------------------------------------------------------------------------------------------------------
                 # Assign network-specific  residuals, unknowns and results data structures
+                # ------------------------------------------------------------------------------------------------------
+                if bus.active:
+                    for propulsor_group in  bus.assigned_propulsors:
+                        propulsor =  network.propulsors[propulsor_group[0]]
+                        propulsor.append_propulsor_unknowns_and_residuals(segment)
+                        
+                # ------------------------------------------------------------------------------------------------------
+                # Assign sub component results data structures
                 # ------------------------------------------------------------------------------------------------------ 
                 bus.append_operating_conditions(segment)
-                for tag, item in  bus.items():
-                    if tag == 'battery_modules':
-                        for battery in item:
-                            battery.append_operating_conditions(segment,bus)
-                    elif tag == 'assigned_propulsors':  
-                        for i, propulsor_tag in enumerate(item):
-                            propulsor =  network.propulsors[propulsor_tag] 
-                            add_additional_network_equation = (bus.active) and (bus.identical_propulsors == False)   
-                            propulsor.append_operating_conditions(segment,bus,add_additional_network_equation) # FIX 
-                            for sub_tag, sub_item in  propulsor.items(): 
-                                if issubclass(type(sub_item), RCAIDE.Library.Components.Component):
-                                    sub_item.append_operating_conditions(segment,bus,propulsor)  
-                    elif issubclass(type(item), RCAIDE.Library.Components.Component):
-                        item.append_operating_conditions(segment,bus)
+                for battery_module in  bus.battery_modules: 
+                    battery_module.append_operating_conditions(segment,bus) 
+    
+                    
+                for tag, bus_item in  bus.items():  
+                    if issubclass(type(bus_item), RCAIDE.Library.Components.Component):
+                        bus_item.append_operating_conditions(segment,bus)                     
     
             for coolant_line_i, coolant_line in enumerate(coolant_lines):  
                 # ------------------------------------------------------------------------------------------------------            
@@ -329,17 +334,16 @@ class Electric(Network):
                 # ------------------------------------------------------------------------------------------------------
                 # Assign network-specific  residuals, unknowns and results data structures
                 # ------------------------------------------------------------------------------------------------------ 
-                for tag, item in  coolant_line.items(): 
-                    if tag == 'battery_modules':
-                        for battery in item:
-                            for btms in  battery:
-                                btms.append_operating_conditions(segment,coolant_line)
-                    if tag == 'heat_exchangers':
-                        for heat_exchanger in  item:
-                            heat_exchanger.append_operating_conditions(segment, coolant_line)
-                    if tag == 'reservoirs':
-                        for reservoir in  item:
-                            reservoir.append_operating_conditions(segment, coolant_line)                
+                 
+                for battery_module in coolant_line.battery_modules: 
+                    for btms in battery_module:
+                        btms.append_operating_conditions(segment,coolant_line)
+                        
+                for heat_exchanger in coolant_line.heat_exchangers: 
+                    heat_exchanger.append_operating_conditions(segment, coolant_line)
+                        
+                for reservoir in coolant_line.reservoirs: 
+                    reservoir.append_operating_conditions(segment, coolant_line)                           
 
         # Ensure the mission knows how to pack and unpack the unknowns and residuals
         segment.process.iterate.unknowns.network            = self.unpack_unknowns

@@ -133,7 +133,7 @@ class Ducted_Fan(Component):
 
         return 
 
-    def append_operating_conditions(ducted_fan,segment,distribution_line,propulsor): 
+    def append_operating_conditions(ducted_fan,segment,propulsor): 
         energy_conditions       = segment.state.conditions.energy[propulsor.tag]
         append_ducted_fan_conditions(ducted_fan,segment,energy_conditions)
         return        

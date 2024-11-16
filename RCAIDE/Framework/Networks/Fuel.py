@@ -49,7 +49,7 @@ class Fuel(Network):
         self.reverse_thrust               = False
         self.wing_mounted                 = True   
     # linking the different network components
-    def evaluate(self,state,center_of_gravity):
+    def evaluate(network,state,center_of_gravity):
         """ Calculate thrust given the current state of the vehicle
     
             Assumptions:
@@ -65,8 +65,8 @@ class Fuel(Network):
 
         # Step 1: Unpack
         conditions     = state.conditions  
-        fuel_lines     = self.fuel_lines 
-        reverse_thrust = self.reverse_thrust
+        fuel_lines     = network.fuel_lines 
+        reverse_thrust = network.reverse_thrust
         total_thrust   = 0. * state.ones_row(3) 
         total_moment   = 0. * state.ones_row(3) 
         total_power    = 0. * state.ones_row(1) 
@@ -79,7 +79,7 @@ class Fuel(Network):
                 stored_propulsor_tag = None 
                 for propulsor in fuel_line.propulsors:  
                     if propulsor.active == True:  
-                        if fuel_line.identical_propulsors == False:
+                        if network.identical_propulsors == False:
                             # run analysis  
                             T,M,P,stored_results_flag,stored_propulsor_tag = propulsor.compute_performance(state,fuel_line,center_of_gravity)
                         else:             

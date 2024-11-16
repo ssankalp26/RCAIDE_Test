@@ -52,7 +52,7 @@ class Supersonic_Nozzle(Component):
         self.max_area_ratio                  = 1000.
         self.min_area_ratio                  = 0.
 
-    def append_operating_conditions(self,segment,fuel_line,propulsor): 
+    def append_operating_conditions(self,segment,propulsor): 
         propulsor_conditions =  segment.state.conditions.energy[propulsor.tag]
         append_supersonic_nozzle_conditions(self,segment,propulsor_conditions)
         return 
