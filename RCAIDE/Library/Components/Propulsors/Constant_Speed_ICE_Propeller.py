@@ -40,7 +40,10 @@ class Constant_Speed_ICE_Propeller(Propulsor):
 
     def pack_propulsor_residuals(self,segment,network): 
         return        
-    
+
+    def append_propulsor_unknowns_and_residuals(self,segment): 
+        return
+        
     def compute_performance(self,state,fuel_line,center_of_gravity = [[0, 0, 0]]):
         thrust,moment,power,stored_results_flag,stored_propulsor_tag =  compute_cs_ice_performance(self,state,fuel_line,center_of_gravity)
         return thrust,moment,power,stored_results_flag,stored_propulsor_tag

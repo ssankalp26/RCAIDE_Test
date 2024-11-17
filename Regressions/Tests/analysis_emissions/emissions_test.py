@@ -33,7 +33,7 @@ def main():
     cantera_installation = False 
     try: 
         import cantera as ct
-        cantera_installation == True 
+        cantera_installation = True 
     except:
         pass 
     

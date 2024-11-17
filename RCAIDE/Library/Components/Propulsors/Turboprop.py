@@ -52,6 +52,9 @@ class Turboprop(Propulsor):
 
     def pack_propulsor_residuals(self,segment,fuel_line): 
         return
+
+    def append_propulsor_unknowns_and_residuals(self,segment): 
+        return    
     
     def compute_performance(self,state,fuel_line,center_of_gravity = [[0, 0, 0]]):
         thrust,moment,power,stored_results_flag,stored_propulsor_tag =  compute_turboprop_performance(self,state,fuel_line,center_of_gravity)

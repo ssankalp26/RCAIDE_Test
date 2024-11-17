@@ -30,60 +30,60 @@ def evaluate_CRN_emission_indices_no_surrogate(segment,settings,vehicle):
     for network in vehicle.networks:  
         for fuel_line in network.fuel_lines:
             if fuel_line.active:  
-                    for p_i ,  propulsor in enumerate(fuel_line.propulsors):
-                        if propulsor.active == True: 
-                            if (type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbofan) or \
-                                type(propulsor) == RCAIDE.Library.Components.Propulsors.Turboshaft or \
-                                type(propulsor) == RCAIDE.Library.Components.Propulsors.Turboprop or \
-                                type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbojet:    
-                            
-                                combustor = propulsor.combustor
-                            
-                                # unpack component conditions
-                                n_cp                 = state.numerics.number_of_control_points 
-                                propulsor_conditions = state.conditions.energy[propulsor.tag] 
-                                combustor_conditions = propulsor_conditions[combustor.tag]  
+                for p_i ,  propulsor in enumerate(network.propulsors):
+                    if propulsor.active == True: 
+                        if (type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbofan) or \
+                            type(propulsor) == RCAIDE.Library.Components.Propulsors.Turboshaft or \
+                            type(propulsor) == RCAIDE.Library.Components.Propulsors.Turboprop or \
+                            type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbojet:    
+                        
+                            combustor = propulsor.combustor
+                        
+                            # unpack component conditions
+                            n_cp                 = state.numerics.number_of_control_points 
+                            propulsor_conditions = state.conditions.energy[propulsor.tag] 
+                            combustor_conditions = propulsor_conditions[combustor.tag]  
 
+                            
+                            T    = combustor_conditions.inputs.stagnation_temperature
+                            P    = combustor_conditions.inputs.stagnation_pressure 
+                            mdot = propulsor_conditions.core_mass_flow_rate 
+                            FAR  = combustor_conditions.outputs.fuel_to_air_ratio 
+
+                            EI_CO2_comb   = 0 * state.ones_row(1)   
+                            EI_CO_comb    = 0 * state.ones_row(1)  
+                            EI_H2O_comb   = 0 * state.ones_row(1)  
+                            EI_NO_comb    = 0 * state.ones_row(1)  
+                            EI_NO2_comb   = 0 * state.ones_row(1)                              
+                            if network.identical_propulsors == True and p_i != 0:
+                                EI_CO2_comb = EI_CO2_prev
+                                EI_CO_comb  = EI_CO_prev
+                                EI_H2O_comb = EI_H2O_prev
+                                EI_NO_comb  = EI_NO_prev
+                                EI_NO2_comb = EI_NO2_prev 
                                 
-                                T    = combustor_conditions.inputs.stagnation_temperature
-                                P    = combustor_conditions.inputs.stagnation_pressure 
-                                mdot = propulsor_conditions.core_mass_flow_rate 
-                                FAR  = combustor_conditions.outputs.fuel_to_air_ratio 
-
-                                EI_CO2_comb   = 0 * state.ones_row(1)   
-                                EI_CO_comb    = 0 * state.ones_row(1)  
-                                EI_H2O_comb   = 0 * state.ones_row(1)  
-                                EI_NO_comb    = 0 * state.ones_row(1)  
-                                EI_NO2_comb   = 0 * state.ones_row(1)                              
-                                if fuel_line.identical_propulsors == True and p_i != 0:
-                                    EI_CO2_comb = EI_CO2_prev
-                                    EI_CO_comb  = EI_CO_prev
-                                    EI_H2O_comb = EI_H2O_prev
-                                    EI_NO_comb  = EI_NO_prev
-                                    EI_NO2_comb = EI_NO2_prev 
+                            else:     
+                                for t_idx in range(n_cp):
+                                    # Call cantera 
+                                    results = evaluate_cantera(combustor,T[t_idx,0],P[t_idx,0],mdot[t_idx,0],FAR[t_idx,0])
                                     
-                                else:     
-                                    for t_idx in range(n_cp):
-                                        # Call cantera 
-                                        results = evaluate_cantera(combustor,T[t_idx,0],P[t_idx,0],mdot[t_idx,0],FAR[t_idx,0])
-                                        
-                                        EI_CO2_comb[t_idx,0] = results.EI_CO2
-                                        EI_CO_comb[t_idx,0]  = results.EI_CO 
-                                        EI_H2O_comb[t_idx,0] = results.EI_H2O
-                                        EI_NO_comb[t_idx,0]  = results.EI_NO 
-                                        EI_NO2_comb[t_idx,0] = results.EI_NO2
-                                        
-                                        EI_CO2_prev = EI_CO2_comb 
-                                        EI_CO_prev  =  EI_CO_comb  
-                                        EI_H2O_prev = EI_H2O_comb 
-                                        EI_NO_prev  =  EI_NO_comb  
-                                        EI_NO2_prev = EI_NO2_comb 
+                                    EI_CO2_comb[t_idx,0] = results.EI_CO2
+                                    EI_CO_comb[t_idx,0]  = results.EI_CO 
+                                    EI_H2O_comb[t_idx,0] = results.EI_H2O
+                                    EI_NO_comb[t_idx,0]  = results.EI_NO 
+                                    EI_NO2_comb[t_idx,0] = results.EI_NO2
                                     
-                                CO2_total  += np.dot(I,mdot*EI_CO2_comb)
-                                CO_total   += np.dot(I,mdot *EI_CO_comb )
-                                H2O_total  += np.dot(I,mdot*EI_H2O_comb)
-                                NO_total   += np.dot(I,mdot *EI_NO_comb ) 
-                                NO2_total  += np.dot(I,mdot *EI_NO2_comb)
+                                    EI_CO2_prev = EI_CO2_comb 
+                                    EI_CO_prev  =  EI_CO_comb  
+                                    EI_H2O_prev = EI_H2O_comb 
+                                    EI_NO_prev  =  EI_NO_comb  
+                                    EI_NO2_prev = EI_NO2_comb 
+                                
+                            CO2_total  += np.dot(I,mdot*EI_CO2_comb)
+                            CO_total   += np.dot(I,mdot *EI_CO_comb )
+                            H2O_total  += np.dot(I,mdot*EI_H2O_comb)
+                            NO_total   += np.dot(I,mdot *EI_NO_comb ) 
+                            NO2_total  += np.dot(I,mdot *EI_NO2_comb)
 
     emissions                 = Data()
     emissions.total           = Data()

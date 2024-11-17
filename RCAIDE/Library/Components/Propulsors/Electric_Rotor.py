@@ -12,7 +12,7 @@ from RCAIDE.Library.Methods.Propulsors.Electric_Rotor_Propulsor.unpack_electric_
 from RCAIDE.Library.Methods.Propulsors.Electric_Rotor_Propulsor.pack_electric_rotor_residuals              import pack_electric_rotor_residuals
 from RCAIDE.Library.Methods.Propulsors.Electric_Rotor_Propulsor.append_electric_rotor_conditions           import append_electric_rotor_conditions
 from RCAIDE.Library.Methods.Propulsors.Electric_Rotor_Propulsor.compute_electric_rotor_performance         import compute_electric_rotor_performance, reuse_stored_electric_rotor_data
-from RCAIDE.Library.Methods.Propulsors.Electric_Rotor_Propulsor.append_electric_rotor_residual_and_unknown import  append_electric_rotor_residual_and_unknown
+from RCAIDE.Library.Methods.Propulsors.Electric_Rotor_Propulsor.append_electric_rotor_residual_and_unknown import append_electric_rotor_residual_and_unknown
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Electric_Rotor

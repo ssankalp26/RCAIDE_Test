@@ -75,16 +75,13 @@ def design_turbofan(turbofan):
         conditions.freestream.R                           = np.atleast_1d(turbofan.working_fluid.gas_specific_constant)
         conditions.freestream.speed_of_sound              = np.atleast_1d(a)
         conditions.freestream.velocity                    = np.atleast_1d(U) 
-    
-    fuel_line                = RCAIDE.Library.Components.Energy.Distributors.Fuel_Line()
+     
     segment                  = RCAIDE.Framework.Mission.Segments.Segment()  
-    segment.state.conditions = conditions
-    segment.state.conditions.energy[fuel_line.tag] = Conditions()
-    segment.state.conditions.noise[fuel_line.tag]  = Conditions()
-    turbofan.append_operating_conditions(segment,fuel_line) 
+    segment.state.conditions = conditions 
+    turbofan.append_operating_conditions(segment) 
     for tag, item in  turbofan.items(): 
         if issubclass(type(item), RCAIDE.Library.Components.Component):
-            item.append_operating_conditions(segment,fuel_line,turbofan) 
+            item.append_operating_conditions(segment,turbofan) 
     
     ram                       = turbofan.ram
     inlet_nozzle              = turbofan.inlet_nozzle

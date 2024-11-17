@@ -58,18 +58,21 @@ class Turbofan(Propulsor):
         self.mass_flow_rate_design                    = 0.0
         self.OpenVSP_flow_through                     = False
     
-    def append_operating_conditions(self,segment,fuel_line):
-        append_turbofan_conditions(self,segment,fuel_line)
+    def append_operating_conditions(self,segment):
+        append_turbofan_conditions(self,segment)
         return
 
-    def unpack_propulsor_unknowns(self,segment,fuel_line):   
+    def unpack_propulsor_unknowns(self,segment):   
         return 
 
-    def pack_propulsor_residuals(self,segment,fuel_line): 
+    def pack_propulsor_residuals(self,segment): 
+        return
+
+    def append_propulsor_unknowns_and_residuals(self,segment): 
         return
     
-    def compute_performance(self,state,fuel_line,center_of_gravity = [[0, 0, 0]]):
-        thrust,moment,power,stored_results_flag,stored_propulsor_tag =  compute_turbofan_performance(self,state,fuel_line,center_of_gravity)
+    def compute_performance(self,state,center_of_gravity = [[0, 0, 0]]):
+        thrust,moment,power,stored_results_flag,stored_propulsor_tag =  compute_turbofan_performance(self,state,center_of_gravity)
         return thrust,moment,power,stored_results_flag,stored_propulsor_tag
     
     def reuse_stored_data(turbofan,state,network,stored_propulsor_tag,center_of_gravity = [[0, 0, 0]]):

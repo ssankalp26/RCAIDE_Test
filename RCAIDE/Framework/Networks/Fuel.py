@@ -77,15 +77,15 @@ class Fuel(Network):
             if fuel_line.active:     
                 stored_results_flag  = False
                 stored_propulsor_tag = None 
-                for propulsor in fuel_line.propulsors:  
+                for propulsor in network.propulsors:  
                     if propulsor.active == True:  
                         if network.identical_propulsors == False:
                             # run analysis  
-                            T,M,P,stored_results_flag,stored_propulsor_tag = propulsor.compute_performance(state,fuel_line,center_of_gravity)
+                            T,M,P,stored_results_flag,stored_propulsor_tag = propulsor.compute_performance(state,center_of_gravity)
                         else:             
                             if stored_results_flag == False: 
                                 # run propulsor analysis 
-                                T,M,P,stored_results_flag,stored_propulsor_tag = propulsor.compute_performance(state,fuel_line,center_of_gravity)
+                                T,M,P,stored_results_flag,stored_propulsor_tag = propulsor.compute_performance(state,center_of_gravity)
                             else:
                                 # use previous propulsor results 
                                 T,M,P = propulsor.reuse_stored_data(state,network,stored_propulsor_tag,center_of_gravity)
@@ -97,7 +97,7 @@ class Fuel(Network):
                 # Step 2.2: Link each propulsor the its respective fuel tank(s)
                 for fuel_tank in fuel_line.fuel_tanks:
                     mdot = 0. * state.ones_row(1)   
-                    for propulsor in fuel_line.propulsors:
+                    for propulsor in network.propulsors:
                         for source in (propulsor.active_fuel_tanks):
                             if fuel_tank.tag == source: 
                                 mdot += conditions.energy[propulsor.tag].fuel_flow_rate 
@@ -139,13 +139,16 @@ class Fuel(Network):
         N/A
         """            
          
-        fuel_lines = segment.analyses.energy.vehicle.networks.fuel.fuel_lines
-        unknowns(segment,fuel_lines)  
-        for fuel_line in fuel_lines: 
-            if fuel_line.active and len(fuel_line.propulsors) > 0:
-                reference_propulsor = fuel_line.propulsors[list(fuel_line.propulsors.keys())[0]]                 
-                for propulsor in  fuel_line.propulsors: 
-                    propulsor.unpack_propulsor_unknowns(reference_propulsor,segment,fuel_line) 
+        unknowns(segment)
+        
+        if issubclass(type(segment), type(RCAIDE.Framework.Mission.Segments.Ground)):
+            pass 
+        for network in segment.analyses.energy.vehicle.networks:
+            for fuel_line_i, fuel_line in enumerate(network.fuel_lines):    
+                if fuel_line.active:
+                    for propulsor_group in  fuel_line.assigned_propulsors:
+                        propulsor = network.propulsors[propulsor_group[0]]
+                        propulsor.unpack_propulsor_unknowns(segment) 
         return    
      
     def residuals(self,segment):
@@ -169,13 +172,13 @@ class Fuel(Network):
            Properties Used: 
            N/A
        """           
-
-        fuel_lines = segment.analyses.energy.vehicle.networks.fuel.fuel_lines 
-        for fuel_line in  fuel_lines: 
-            if fuel_line.active and len(fuel_line.propulsors) > 0:
-                propulsor = fuel_line.propulsors[list(fuel_line.propulsors.keys())[0]] 
-                propulsor.pack_propulsor_residuals(segment,fuel_line) 
-         
+ 
+        for network in segment.analyses.energy.vehicle.networks:
+            for fuel_line_i, fuel_line in enumerate(network.fuel_lines):    
+                if fuel_line.active:
+                    for propulsor_group in  fuel_line.assigned_propulsors:
+                        propulsor =  network.propulsors[propulsor_group[0]]
+                        propulsor.pack_propulsor_residuals(segment)  
         return      
     
     def add_unknowns_and_residuals_to_segment(self, segment):
@@ -197,36 +200,61 @@ class Fuel(Network):
     
             Properties Used:
             N/A
-        """                  
-        fuel_lines  = segment.analyses.energy.vehicle.networks.fuel.fuel_lines 
-        segment.state.residuals.network = Residuals()  
-
-        # ------------------------------------------------------------------------------------------------------            
-        # Create fuel_line results data structure  
-        # ------------------------------------------------------------------------------------------------------        
-        for fuel_line_i, fuel_line in enumerate(fuel_lines):    
-            # ------------------------------------------------------------------------------------------------------            
-            # Create fuel_line results data structure  
-            # ------------------------------------------------------------------------------------------------------
-            segment.state.conditions.energy[fuel_line.tag] = Conditions()        
-            segment.state.conditions.noise[fuel_line.tag]  = Conditions()      
-            # ------------------------------------------------------------------------------------------------------
-            # Assign network-specific  residuals, unknowns and results data structures
-            # ------------------------------------------------------------------------------------------------------ 
-            for tag, item in  fuel_line.items(): 
-                if tag == 'fuel_tanks':
-                    for fuel_tank in item:
-                        fuel_tank.append_operating_conditions(segment,fuel_line) 
-                if tag == 'propulsors':  
-                    for i, propulsor in enumerate(item):  
-                        add_additional_network_equation = (fuel_line.active) and  (i == 0)   
-                        propulsor.append_operating_conditions(segment,fuel_line)
-                        for sub_tag, sub_item in  propulsor.items(): 
-                            if issubclass(type(sub_item), RCAIDE.Library.Components.Component):
-                                sub_item.append_operating_conditions(segment,fuel_line,propulsor)  
-                elif issubclass(type(item), RCAIDE.Library.Components.Component):
-                    item.append_operating_conditions(segment,fuel_line)
-                      
+        """                   
+        segment.state.residuals.network = Residuals()
+        
+        for network in segment.analyses.energy.vehicle.networks:
+            for p_i, propulsor in enumerate(network.propulsors): 
+                propulsor.append_operating_conditions(segment)           
+    
+                for tag, propulsor_item in  propulsor.items():  
+                    if issubclass(type(propulsor_item), RCAIDE.Library.Components.Component):
+                        propulsor_item.append_operating_conditions(segment,propulsor)            
+    
+            for fuel_line_i, fuel_line in enumerate(network.fuel_lines):   
+                # ------------------------------------------------------------------------------------------------------            
+                # Create fuel_line results data structure  
+                # ------------------------------------------------------------------------------------------------------
+                segment.state.conditions.energy[fuel_line.tag] = RCAIDE.Framework.Mission.Common.Conditions() 
+                segment.state.conditions.noise[fuel_line.tag]  = RCAIDE.Framework.Mission.Common.Conditions()   
+    
+                # ------------------------------------------------------------------------------------------------------
+                # Assign network-specific  residuals, unknowns and results data structures
+                # ------------------------------------------------------------------------------------------------------
+                if fuel_line.active:
+                    for propulsor_group in  fuel_line.assigned_propulsors:
+                        propulsor =  network.propulsors[propulsor_group[0]]
+                        propulsor.append_propulsor_unknowns_and_residuals(segment)
+    
+                # ------------------------------------------------------------------------------------------------------
+                # Assign sub component results data structures
+                # ------------------------------------------------------------------------------------------------------  
+                for fuel_tank in  fuel_line.fuel_tanks: 
+                    fuel_tank.append_operating_conditions(segment,fuel_line)  
+    
+                for tag, fuel_line_item in  fuel_line.items():  
+                    if issubclass(type(fuel_line_item), RCAIDE.Library.Components.Component):
+                        fuel_line_item.append_operating_conditions(segment,fuel_line)                     
+    
+            for coolant_line_i, coolant_line in enumerate(network.coolant_lines):  
+                # ------------------------------------------------------------------------------------------------------            
+                # Create coolant_lines results data structure  
+                # ------------------------------------------------------------------------------------------------------
+                segment.state.conditions.energy[coolant_line.tag] = RCAIDE.Framework.Mission.Common.Conditions()        
+                # ------------------------------------------------------------------------------------------------------
+                # Assign network-specific  residuals, unknowns and results data structures
+                # ------------------------------------------------------------------------------------------------------ 
+    
+                for battery_module in coolant_line.battery_modules: 
+                    for btms in battery_module:
+                        btms.append_operating_conditions(segment,coolant_line)
+    
+                for heat_exchanger in coolant_line.heat_exchangers: 
+                    heat_exchanger.append_operating_conditions(segment, coolant_line)
+    
+                for reservoir in coolant_line.reservoirs: 
+                    reservoir.append_operating_conditions(segment, coolant_line)
+                     
         segment.process.iterate.unknowns.network   = self.unpack_unknowns      
         segment.process.iterate.residuals.network  = self.residuals
         

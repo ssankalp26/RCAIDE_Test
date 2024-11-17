@@ -25,11 +25,5 @@ def append_electric_ducted_fan_conditions(propulsor,segment,bus):
     segment.state.conditions.energy[propulsor.tag].commanded_thrust_vector_angle = 0. * ones_row(1)  
     segment.state.conditions.energy[propulsor.tag].thrust                        = 0. * ones_row(3) 
     segment.state.conditions.energy[propulsor.tag].power                         = 0. * ones_row(1) 
-    segment.state.conditions.energy[propulsor.tag].moment                        = 0. * ones_row(3)   
-
-    if add_additional_network_equation:                       
-        ducted_fan   = propulsor.ducted_fan
-        cp_init      = ducted_fan.cruise.design_power_coefficient
-        segment.state.unknowns[ propulsor.tag  + '_ducted_fan_cp']               = cp_init * ones_row(1)  
-        segment.state.residuals.network[ propulsor.tag  + '_ducted_fan_motor_torque'] = 0. * ones_row(1)        
+    segment.state.conditions.energy[propulsor.tag].moment                        = 0. * ones_row(3)         
     return

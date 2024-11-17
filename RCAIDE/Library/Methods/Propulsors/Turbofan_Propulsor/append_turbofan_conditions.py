@@ -8,7 +8,7 @@ from RCAIDE.Framework.Mission.Common     import   Conditions
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  append_turbofan_conditions
 # ----------------------------------------------------------------------------------------------------------------------    
-def append_turbofan_conditions(turbofan,segment,fuel_line):  
+def append_turbofan_conditions(turbofan,segment):  
     ones_row    = segment.state.ones_row                  
     segment.state.conditions.energy[turbofan.tag]                               = Conditions()  
     segment.state.conditions.energy[turbofan.tag].throttle                      = 0. * ones_row(1)      

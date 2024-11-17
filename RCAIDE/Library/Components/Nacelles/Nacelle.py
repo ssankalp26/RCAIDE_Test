@@ -60,7 +60,7 @@ class Nacelle(Component):
         self.differential_pressure     = 0.0    
         self.cowling_airfoil_angle     = 0.0
 
-    def append_operating_conditions(self,segment,fuel_line,propulsor): 
+    def append_operating_conditions(self,segment,propulsor): 
         return
 
     def nac_vel_to_body(self):

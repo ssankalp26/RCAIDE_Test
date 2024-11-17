@@ -219,9 +219,7 @@ class Electric(Network):
         """
  
         unknowns(segment)
-        
-        if issubclass(type(segment), type(RCAIDE.Framework.Mission.Segments.Ground)):
-            pass 
+         
         for network in segment.analyses.energy.vehicle.networks:
             for bus_i, bus in enumerate(network.busses):    
                 if bus.active:
@@ -251,10 +249,7 @@ class Electric(Network):
            Properties Used: 
            N/A
         """
-         
-
-        if issubclass(type(segment), type(RCAIDE.Framework.Mission.Segments.Ground)):
-            pass          
+              
         for network in segment.analyses.energy.vehicle.networks:
             for bus_i, bus in enumerate(network.busses):    
                 if bus.active:
@@ -286,8 +281,7 @@ class Electric(Network):
 
             Properties Used:
             N/A
-        """               
-        coolant_lines                   = segment.analyses.energy.vehicle.networks.electric.coolant_lines 
+        """                
         segment.state.residuals.network = Residuals()
         
         for network in segment.analyses.energy.vehicle.networks:
@@ -325,7 +319,7 @@ class Electric(Network):
                     if issubclass(type(bus_item), RCAIDE.Library.Components.Component):
                         bus_item.append_operating_conditions(segment,bus)                     
     
-            for coolant_line_i, coolant_line in enumerate(coolant_lines):  
+            for coolant_line_i, coolant_line in enumerate(network.coolant_lines):  
                 # ------------------------------------------------------------------------------------------------------            
                 # Create coolant_lines results data structure  
                 # ------------------------------------------------------------------------------------------------------

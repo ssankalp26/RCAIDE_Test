@@ -10,10 +10,11 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
  # RCAIDE imports 
 from .   import Propulsor  
-from RCAIDE.Library.Methods.Propulsors.Electric_Ducted_Fan_Propulsor.append_electric_ducted_fan_conditions     import append_electric_ducted_fan_conditions
-from RCAIDE.Library.Methods.Propulsors.Electric_Ducted_Fan_Propulsor.unpack_electric_ducted_fan_unknowns       import unpack_electric_ducted_fan_unknowns
-from RCAIDE.Library.Methods.Propulsors.Electric_Ducted_Fan_Propulsor.pack_electric_ducted_fan_residuals        import pack_electric_ducted_fan_residuals 
-from RCAIDE.Library.Methods.Propulsors.Electric_Ducted_Fan_Propulsor.compute_electric_ducted_fan_performance   import compute_electric_ducted_fan_performance, reuse_stored_electric_ducted_fan_data
+from RCAIDE.Library.Methods.Propulsors.Electric_Ducted_Fan_Propulsor.append_electric_ducted_fan_conditions           import append_electric_ducted_fan_conditions
+from RCAIDE.Library.Methods.Propulsors.Electric_Ducted_Fan_Propulsor.unpack_electric_ducted_fan_unknowns             import unpack_electric_ducted_fan_unknowns
+from RCAIDE.Library.Methods.Propulsors.Electric_Ducted_Fan_Propulsor.pack_electric_ducted_fan_residuals              import pack_electric_ducted_fan_residuals 
+from RCAIDE.Library.Methods.Propulsors.Electric_Ducted_Fan_Propulsor.compute_electric_ducted_fan_performance         import compute_electric_ducted_fan_performance, reuse_stored_electric_ducted_fan_data
+from RCAIDE.Library.Methods.Propulsors.Electric_Ducted_Fan_Propulsor.append_electric_ducted_fan_residual_and_unknown import  append_electric_ducted_fan_residual_and_unknown
 
 # ----------------------------------------------------------------------
 #  Electric Ducted Fan Component
@@ -46,6 +47,10 @@ class Electric_Ducted_Fan(Propulsor):
     def pack_propulsor_residuals(self,segment,network): 
         pack_electric_ducted_fan_residuals(self,segment,network)
         return        
+
+    def append_propulsor_unknowns_and_residuals(self,segment):
+        append_electric_ducted_fan_residual_and_unknown(self,segment)
+        return 
     
     def compute_performance(self,state,bus,voltage,center_of_gravity = [[0, 0, 0]]):
         thrust,moment,power,stored_results_flag,stored_propulsor_tag =  compute_electric_ducted_fan_performance(self,state,bus,voltage,center_of_gravity)
