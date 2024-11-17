@@ -128,22 +128,24 @@ class Electric(Network):
                 # compute energy consumption of each battery on bus 
                 stored_results_flag  = False
                 stored_propulsor_tag = None 
-                for propulsor in network.propulsors:  
-                    if propulsor.active and bus.active:       
-                        if network.identical_propulsors == False:
-                            # run analysis  
-                            T,M,P,stored_results_flag,stored_propulsor_tag = propulsor.compute_performance(state,bus_voltage,center_of_gravity)
-                        else:             
-                            if stored_results_flag == False: 
-                                # run propulsor analysis 
+                for propulsor_group in bus.assigned_propulsors:
+                    for propulsor_tag in propulsor_group:
+                        propulsor =  network.propulsors[propulsor_tag]
+                        if propulsor.active and bus.active:       
+                            if network.identical_propulsors == False:
+                                # run analysis  
                                 T,M,P,stored_results_flag,stored_propulsor_tag = propulsor.compute_performance(state,bus_voltage,center_of_gravity)
-                            else:
-                                # use previous propulsor results 
-                                T,M,P = propulsor.reuse_stored_data(state,network,stored_propulsor_tag,center_of_gravity)
-
-                        total_thrust += T   
-                        total_moment += M   
-                        total_power  += P 
+                            else:             
+                                if stored_results_flag == False: 
+                                    # run propulsor analysis 
+                                    T,M,P,stored_results_flag,stored_propulsor_tag = propulsor.compute_performance(state,bus_voltage,center_of_gravity)
+                                else:
+                                    # use previous propulsor results 
+                                    T,M,P = propulsor.reuse_stored_data(state,network,stored_propulsor_tag,center_of_gravity)
+    
+                            total_thrust += T   
+                            total_moment += M   
+                            total_power  += P 
 
                 # compute power from each componemnt 
                 avionics_power  = (avionics_conditions.power*bus.power_split_ratio)* state.ones_row(1) 

@@ -323,7 +323,7 @@ def vehicle_setup(new_regression=True):
     # Front Rotors Locations 
     origins = [[-0.2, 1.347, 0.0], [-0.2, 3.2969999999999997, 0.0], [-0.2, -1.347, 0.0], [-0.2, -3.2969999999999997, 0.0],\
                [4.938, 1.347, 1.54], [4.938, 3.2969999999999997, 1.54],[4.938, -1.347, 1.54], [4.938, -3.2969999999999997, 1.54]] 
-    
+    assigned_propulsor_list =  []
     for i in range(8): 
         lift_propulsor_i                                       = deepcopy(lift_propulsor)
         lift_propulsor_i.tag                                   = 'lift_rotor_propulsor_' + str(i + 1)
@@ -338,9 +338,10 @@ def vehicle_setup(new_regression=True):
         lift_propulsor_i.electronic_speed_controller.tag       = 'prop_rotor_esc_' + str(i + 1)  
         lift_propulsor_i.electronic_speed_controller.origin    = [origins[i]]  
         lift_propulsor_i.nacelle.tag                           = 'prop_rotor_nacelle_' + str(i + 1)  
-        lift_propulsor_i.nacelle.origin                        = [origins[i]]   
-        bus.propulsors.append(lift_propulsor_i)  
-
+        lift_propulsor_i.nacelle.origin                        = [origins[i]]
+        assigned_propulsor_list.append(lift_propulsor_i.tag)
+        network.propulsors.append(lift_propulsor_i)  
+    bus.assigned_propulsors = [assigned_propulsor_list]       
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Additional Bus Loads
     #------------------------------------------------------------------------------------------------------------------------------------            
@@ -355,7 +356,7 @@ def vehicle_setup(new_regression=True):
     avionics.power_draw             = 10. # Watts  
     avionics.mass_properties.mass   = 1.0 * Units.kg
     bus.avionics                    = avionics    
-   
+    
     network.busses.append(bus) 
         
     # append energy network 
@@ -398,10 +399,9 @@ def configs_setup(vehicle):
     config.wings.main_wing.twists.tip                      = vector_angle
     config.wings.canard_wing.twists.root                   = vector_angle
     config.wings.canard_wing.twists.tip                    = vector_angle    
-    for network in  config.networks: 
-        for bus in network.busses: 
-            for propulsor in  bus.propulsors:
-                propulsor.rotor.orientation_euler_angles =  [0, vector_angle, 0]
+    for network in  config.networks:  
+        for propulsor in  network.propulsors:
+            propulsor.rotor.orientation_euler_angles =  [0, vector_angle, 0]
     configs.append(config)
 
     # ------------------------------------------------------------------
@@ -414,11 +414,10 @@ def configs_setup(vehicle):
     config.wings.main_wing.twists.tip                 = vector_angle
     config.wings.canard_wing.twists.root              = vector_angle
     config.wings.canard_wing.twists.tip               = vector_angle
-    for network in  config.networks: 
-        for bus in network.busses: 
-            for propulsor in  bus.propulsors:
-                propulsor.rotor.orientation_euler_angles =  [0, vector_angle, 0]
-                propulsor.rotor.pitch_command   = propulsor.rotor.hover.design_pitch_command * 0.5 
+    for network in  config.networks:  
+        for propulsor in  network.propulsors:
+            propulsor.rotor.orientation_euler_angles =  [0, vector_angle, 0]
+            propulsor.rotor.pitch_command   = propulsor.rotor.hover.design_pitch_command * 0.5 
     configs.append(config) 
 
     # ------------------------------------------------------------------
@@ -431,11 +430,10 @@ def configs_setup(vehicle):
     config.wings.main_wing.twists.tip                 = vector_angle
     config.wings.canard_wing.twists.root              = vector_angle
     config.wings.canard_wing.twists.tip               = vector_angle 
-    for network in  config.networks: 
-        for bus in network.busses: 
-            for propulsor in  bus.propulsors:
-                propulsor.rotor.orientation_euler_angles =  [0, vector_angle, 0]
-                propulsor.rotor.pitch_command     = propulsor.rotor.cruise.design_pitch_command  
+    for network in  config.networks:  
+        for propulsor in  network.propulsors:
+            propulsor.rotor.orientation_euler_angles =  [0, vector_angle, 0]
+            propulsor.rotor.pitch_command     = propulsor.rotor.cruise.design_pitch_command  
     configs.append(config) 
 
     # ------------------------------------------------------------------
@@ -448,11 +446,10 @@ def configs_setup(vehicle):
     config.wings.main_wing.twists.tip                 = vector_angle
     config.wings.canard_wing.twists.root              = vector_angle
     config.wings.canard_wing.twists.tip               = vector_angle  
-    for network in  config.networks: 
-        for bus in network.busses: 
-            for propulsor in  bus.propulsors:
-                propulsor.rotor.orientation_euler_angles =  [0, vector_angle, 0]
-                propulsor.rotor.pitch_command   = propulsor.rotor.cruise.design_pitch_command  
+    for network in  config.networks:  
+        for propulsor in  network.propulsors:
+            propulsor.rotor.orientation_euler_angles =  [0, vector_angle, 0]
+            propulsor.rotor.pitch_command   = propulsor.rotor.cruise.design_pitch_command  
     configs.append(config)     
     
     # ------------------------------------------------------------------
@@ -465,11 +462,10 @@ def configs_setup(vehicle):
     config.wings.main_wing.twists.tip                      = vector_angle
     config.wings.canard_wing.twists.root                   = vector_angle
     config.wings.canard_wing.twists.tip                    = vector_angle
-    for network in  config.networks: 
-        for bus in network.busses: 
-            for propulsor in  bus.propulsors:
-                propulsor.rotor.orientation_euler_angles =  [0, vector_angle, 0]
-                propulsor.rotor.pitch_command   = propulsor.rotor.cruise.design_pitch_command * 0.5
+    for network in  config.networks:  
+        for propulsor in  network.propulsors:
+            propulsor.rotor.orientation_euler_angles =  [0, vector_angle, 0]
+            propulsor.rotor.pitch_command   = propulsor.rotor.cruise.design_pitch_command * 0.5
     configs.append(config)  
 
     # ------------------------------------------------------------------
@@ -482,10 +478,9 @@ def configs_setup(vehicle):
     config.wings.main_wing.twists.tip                 = vector_angle
     config.wings.canard_wing.twists.root              = vector_angle
     config.wings.canard_wing.twists.tip               = vector_angle     
-    for network in  config.networks: 
-        for bus in network.busses: 
-            for propulsor in  bus.propulsors:
-                propulsor.rotor.orientation_euler_angles =  [0, vector_angle, 0]
+    for network in  config.networks:  
+        for propulsor in  network.propulsors:
+            propulsor.rotor.orientation_euler_angles =  [0, vector_angle, 0]
     configs.append(config)
 
     return configs 

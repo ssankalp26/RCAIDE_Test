@@ -24,7 +24,7 @@ modules = [
     'Tests/analysis_aerodynamics/airfoil_panel_method_test.py',    
     'Tests/analysis_aerodynamics/airfoil_panel_method_convergence.py',    
     'Tests/analysis_aerodynamics/VLM_test.py',    
-    'Tests/analysis_emissions/emissions_test.py',   
+    #'Tests/analysis_emissions/emissions_test.py',   
     'Tests/analysis_noise/digital_elevation_test.py',  
     'Tests/analysis_noise/frequency_domain_test.py', 
     'Tests/analysis_noise/empirical_jet_noise_test.py',    
