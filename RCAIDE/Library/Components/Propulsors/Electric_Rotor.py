@@ -54,6 +54,6 @@ class Electric_Rotor(Propulsor):
         thrust,moment,power,stored_results_flag,stored_propulsor_tag =  compute_electric_rotor_performance(self,state,voltage,center_of_gravity)
         return thrust,moment,power,stored_results_flag,stored_propulsor_tag
     
-    def reuse_stored_data(turboshaft,state,network,stored_propulsor_tag,center_of_gravity = [[0, 0, 0]]):
-        thrust,moment,power = reuse_stored_electric_rotor_data(turboshaft,state,network,stored_propulsor_tag,center_of_gravity)
+    def reuse_stored_data(electric_rotor,state,network,stored_propulsor_tag,center_of_gravity = [[0, 0, 0]]):
+        thrust,moment,power = reuse_stored_electric_rotor_data(electric_rotor,state,network,stored_propulsor_tag,center_of_gravity)
         return thrust,moment,power
