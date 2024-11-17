@@ -9,7 +9,7 @@ from RCAIDE.Framework.Core               import Units
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  append_ice_propeller_conditions
 # ----------------------------------------------------------------------------------------------------------------------    
-def append_ice_propeller_conditions(propulsor,segment,fuel_line,add_additional_network_equation):  
+def append_ice_propeller_conditions(propulsor,segment,fuel_line):  
     ones_row    = segment.state.ones_row                  
     segment.state.conditions.energy[propulsor.tag]                               = Conditions()  
     segment.state.conditions.energy[propulsor.tag].throttle                      = 0. * ones_row(1)      

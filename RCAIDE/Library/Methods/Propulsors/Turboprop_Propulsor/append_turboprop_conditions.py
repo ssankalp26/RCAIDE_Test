@@ -8,7 +8,7 @@ from RCAIDE.Framework.Mission.Common     import   Conditions
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  append_turboprop_conditions
 # ----------------------------------------------------------------------------------------------------------------------    
-def append_turboprop_conditions(turboprop,segment,fuel_line,add_additional_network_equation):  
+def append_turboprop_conditions(turboprop,segment,fuel_line):  
     ones_row    = segment.state.ones_row                  
     segment.state.conditions.energy[turboprop.tag]                               = Conditions()  
     segment.state.conditions.energy[turboprop.tag].throttle                      = 0. * ones_row(1)     

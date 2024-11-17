@@ -24,7 +24,7 @@ from copy import  deepcopy
 # compute_turbojet_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Energy-Propulsors-Turbojet_Propulsor
-def compute_turbojet_performance(turbojet,state,fuel_line,center_of_gravity= [[0.0, 0.0,0.0]]):  
+def compute_turbojet_performance(turbojet,state,center_of_gravity= [[0.0, 0.0,0.0]]):  
     ''' Computes the perfomrance of one turbojet
     
     Assumptions: 
@@ -50,8 +50,8 @@ def compute_turbojet_performance(turbojet,state,fuel_line,center_of_gravity= [[0
     N.A.          
     ''' 
     conditions                = state.conditions
-    noise_conditions          = conditions.noise[fuel_line.tag][turbojet.tag]  
-    turbojet_conditions       = conditions.energy[fuel_line.tag][turbojet.tag]
+    noise_conditions          = conditions.noise[turbojet.tag]  
+    turbojet_conditions       = conditions.energy[turbojet.tag]
     rho                       = conditions.freestream.density
     ram                       = turbojet.ram
     inlet_nozzle              = turbojet.inlet_nozzle
@@ -234,7 +234,7 @@ def compute_turbojet_performance(turbojet,state,fuel_line,center_of_gravity= [[0
     
     return thrust_vector,moment,power,stored_results_flag,stored_propulsor_tag
 
-def reuse_stored_turbojet_data(turbojet,state,fuel_line,stored_propulsor_tag,center_of_gravity= [[0.0, 0.0,0.0]]):
+def reuse_stored_turbojet_data(turbojet,state,network,stored_propulsor_tag,center_of_gravity= [[0.0, 0.0,0.0]]):
     '''Reuses results from one turbojet for identical propulsors
     
     Assumptions: 
@@ -258,19 +258,19 @@ def reuse_stored_turbojet_data(turbojet,state,fuel_line,stored_propulsor_tag,cen
     N.A.        
     ''' 
     conditions                              = state.conditions  
-    conditions.energy[fuel_line.tag][turbojet.tag]  =deepcopy(conditions.energy[fuel_line.tag][stored_propulsor_tag])
-    conditions.noise[fuel_line.tag][turbojet.tag]   =deepcopy(conditions.noise[fuel_line.tag][stored_propulsor_tag])
+    conditions.energy[turbojet.tag]  =deepcopy(conditions.energy[stored_propulsor_tag])
+    conditions.noise[turbojet.tag]   =deepcopy(conditions.noise[stored_propulsor_tag])
     
     # compute moment  
     moment_vector      = 0*state.ones_row(3)
     thrust_vector      = 0*state.ones_row(3)
-    thrust_vector[:,0] = conditions.energy[fuel_line.tag][turbojet.tag].thrust[:,0] 
+    thrust_vector[:,0] = conditions.energy[turbojet.tag].thrust[:,0] 
     moment_vector[:,0] = turbojet.origin[0][0] -   center_of_gravity[0][0] 
     moment_vector[:,1] = turbojet.origin[0][1]  -  center_of_gravity[0][1] 
     moment_vector[:,2] = turbojet.origin[0][2]  -  center_of_gravity[0][2]
     moment             = np.cross(moment_vector, thrust_vector)    
   
-    power              = conditions.energy[fuel_line.tag][turbojet.tag].power 
-    conditions.energy[fuel_line.tag][turbojet.tag].moment =  moment 
+    power              = conditions.energy[turbojet.tag].power 
+    conditions.energy[turbojet.tag].moment =  moment 
  
     return thrust_vector,moment,power    

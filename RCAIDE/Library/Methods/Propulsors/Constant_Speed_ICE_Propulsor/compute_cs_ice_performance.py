@@ -45,11 +45,11 @@ def compute_cs_ice_performance(propulsor,state,fuel_line,center_of_gravity= [[0.
     N.A.        
     '''  
     conditions              = state.conditions  
-    ice_cs_conditions       = conditions.energy[fuel_line.tag][propulsor.tag] 
+    ice_cs_conditions       = conditions.energy[propulsor.tag] 
     engine                  = propulsor.engine 
     propeller               = propulsor.propeller
     engine_conditions       = ice_cs_conditions[engine.tag]
-    engine_conditions.rpm   = conditions.energy[fuel_line.tag][propulsor.tag].rpm 
+    engine_conditions.rpm   = conditions.energy[propulsor.tag].rpm 
 
     # Run the propeller to get the power
     propeller_conditions                = ice_cs_conditions[propeller.tag]
@@ -59,7 +59,7 @@ def compute_cs_ice_performance(propulsor,state,fuel_line,center_of_gravity= [[0.
     compute_rotor_performance(propulsor,state,fuel_line,center_of_gravity)
 
     # Run the engine to calculate the throttle setting and the fuel burn
-    engine_conditions.power        = conditions.energy[fuel_line.tag][propulsor.tag][propeller.tag].power 
+    engine_conditions.power        = conditions.energy[propulsor.tag][propeller.tag].power 
     compute_throttle_from_power(engine,engine_conditions,conditions) 
     
     # Create the outputs
@@ -68,16 +68,16 @@ def compute_cs_ice_performance(propulsor,state,fuel_line,center_of_gravity= [[0.
     stored_propulsor_tag                     = propulsor.tag  
 
     # compute total forces and moments from propulsor (future work would be to add moments from motors)
-    conditions.energy[fuel_line.tag][propulsor.tag].thrust      = conditions.energy[fuel_line.tag][propulsor.tag][propeller.tag].thrust 
-    conditions.energy[fuel_line.tag][propulsor.tag].moment      = conditions.energy[fuel_line.tag][propulsor.tag][propeller.tag].moment
-    conditions.energy[fuel_line.tag][propulsor.tag].power       = conditions.energy[fuel_line.tag][propulsor.tag][propeller.tag].power 
-    T  = conditions.energy[fuel_line.tag][propulsor.tag].thrust 
-    M  = conditions.energy[fuel_line.tag][propulsor.tag].moment 
-    P  = conditions.energy[fuel_line.tag][propulsor.tag].power 
+    conditions.energy[propulsor.tag].thrust      = conditions.energy[propulsor.tag][propeller.tag].thrust 
+    conditions.energy[propulsor.tag].moment      = conditions.energy[propulsor.tag][propeller.tag].moment
+    conditions.energy[propulsor.tag].power       = conditions.energy[propulsor.tag][propeller.tag].power 
+    T  = conditions.energy[propulsor.tag].thrust 
+    M  = conditions.energy[propulsor.tag].moment 
+    P  = conditions.energy[propulsor.tag].power 
     
     return T,M,P,stored_results_flag,stored_propulsor_tag 
     
-def reuse_stored_ice_cs_prop_data(propulsor,state,fuel_line,stored_propulsor_tag,center_of_gravity= [[0.0, 0.0,0.0]]):
+def reuse_stored_ice_cs_prop_data(propulsor,state,network,stored_propulsor_tag,center_of_gravity= [[0.0, 0.0,0.0]]):
     '''Reuses results from one propulsor for identical propulsors
     
     Assumptions: 
@@ -106,11 +106,11 @@ def reuse_stored_ice_cs_prop_data(propulsor,state,fuel_line,stored_propulsor_tag
     engine_0                   = fuel_line.propulsors[stored_propulsor_tag].engine
     propeller_0                = fuel_line.propulsors[stored_propulsor_tag].propeller  
     
-    conditions.energy[fuel_line.tag][propulsor.tag][engine.tag]        = conditions.energy[fuel_line.tag][stored_propulsor_tag][engine_0.tag]
-    conditions.energy[fuel_line.tag][propulsor.tag][propeller.tag]        = conditions.energy[fuel_line.tag][stored_propulsor_tag][propeller_0.tag] 
+    conditions.energy[propulsor.tag][engine.tag]        = conditions.energy[stored_propulsor_tag][engine_0.tag]
+    conditions.energy[propulsor.tag][propeller.tag]        = conditions.energy[stored_propulsor_tag][propeller_0.tag] 
   
-    thrust                  = conditions.energy[fuel_line.tag][propulsor.tag][propeller.tag].thrust 
-    power                   = conditions.energy[fuel_line.tag][propulsor.tag][propeller.tag].power 
+    thrust                  = conditions.energy[propulsor.tag][propeller.tag].thrust 
+    power                   = conditions.energy[propulsor.tag][propeller.tag].power 
     
     moment_vector           = 0*state.ones_row(3) 
     moment_vector[:,0]      = propeller.origin[0][0]  -  center_of_gravity[0][0] 
@@ -118,10 +118,10 @@ def reuse_stored_ice_cs_prop_data(propulsor,state,fuel_line,stored_propulsor_tag
     moment_vector[:,2]      = propeller.origin[0][2]  -  center_of_gravity[0][2]
     moment                  =  np.cross(moment_vector, thrust)
     
-    conditions.energy[fuel_line.tag][propulsor.tag][propeller.tag].moment = moment  
-    conditions.energy[fuel_line.tag][propulsor.tag].thrust            = thrust   
-    conditions.energy[fuel_line.tag][propulsor.tag].moment            = moment  
-    conditions.energy[fuel_line.tag][propulsor.tag].power             = power
+    conditions.energy[propulsor.tag][propeller.tag].moment = moment  
+    conditions.energy[propulsor.tag].thrust            = thrust   
+    conditions.energy[propulsor.tag].moment            = moment  
+    conditions.energy[propulsor.tag].power             = power
  
     return thrust,moment,power
  

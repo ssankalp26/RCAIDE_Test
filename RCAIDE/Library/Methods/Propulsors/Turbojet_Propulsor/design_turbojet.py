@@ -83,7 +83,7 @@ def design_turbojet(turbojet):
     core_nozzle               = turbojet.core_nozzle
 
     # unpack component conditions
-    turbojet_conditions     = conditions.energy[fuel_line.tag][turbojet.tag]
+    turbojet_conditions     = conditions.energy[turbojet.tag]
     ram_conditions          = turbojet_conditions[ram.tag]     
     inlet_nozzle_conditions = turbojet_conditions[inlet_nozzle.tag]
     core_nozzle_conditions  = turbojet_conditions[core_nozzle.tag] 

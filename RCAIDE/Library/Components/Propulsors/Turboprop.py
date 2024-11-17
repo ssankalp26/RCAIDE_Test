@@ -43,20 +43,20 @@ class Turboprop(Propulsor):
         self.reference_temperature                    = 288.15
         self.reference_pressure                       = 1.01325*10**5  
     
-    def append_operating_conditions(self,segment,fuel_line,add_additional_network_equation = False):
-        append_turboprop_conditions(self,segment,fuel_line,add_additional_network_equation)
+    def append_operating_conditions(self,segment,fuel_line):
+        append_turboprop_conditions(self,segment,fuel_line)
         return
 
-    def unpack_propulsor_unknowns(self,segment,fuel_line,add_additional_network_equation = False):   
+    def unpack_propulsor_unknowns(self,segment,fuel_line):   
         return 
 
-    def pack_propulsor_residuals(self,segment,fuel_line,add_additional_network_equation = False): 
+    def pack_propulsor_residuals(self,segment,fuel_line): 
         return
     
     def compute_performance(self,state,fuel_line,center_of_gravity = [[0, 0, 0]]):
         thrust,moment,power,stored_results_flag,stored_propulsor_tag =  compute_turboprop_performance(self,state,fuel_line,center_of_gravity)
         return thrust,moment,power,stored_results_flag,stored_propulsor_tag
     
-    def reuse_stored_data(turboprop,state,fuel_line,stored_propulsor_tag,center_of_gravity = [[0, 0, 0]]):
-        thrust,moment,power  = reuse_stored_turboprop_data(turboprop,state,fuel_line,stored_propulsor_tag,center_of_gravity)
+    def reuse_stored_data(turboprop,state,network,stored_propulsor_tag,center_of_gravity = [[0, 0, 0]]):
+        thrust,moment,power  = reuse_stored_turboprop_data(turboprop,state,network,stored_propulsor_tag,center_of_gravity)
         return thrust,moment,power 

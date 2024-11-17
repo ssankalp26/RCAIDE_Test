@@ -10,7 +10,7 @@
 # RCAIDE Imports
 import  RCAIDE 
 from RCAIDE.Framework.Mission.Common                      import Residuals , Conditions 
-from RCAIDE.Library.Mission.Common.Unpack_Unknowns.energy import fuel_line_unknowns
+from RCAIDE.Library.Mission.Common.Unpack_Unknowns.energy import unknowns
 from .Network                                             import Network   
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ class Fuel(Network):
                                 T,M,P,stored_results_flag,stored_propulsor_tag = propulsor.compute_performance(state,fuel_line,center_of_gravity)
                             else:
                                 # use previous propulsor results 
-                                T,M,P = propulsor.reuse_stored_data(state,fuel_line,stored_propulsor_tag,center_of_gravity)
+                                T,M,P = propulsor.reuse_stored_data(state,network,stored_propulsor_tag,center_of_gravity)
                           
                         total_thrust += T   
                         total_moment += M   
@@ -100,7 +100,7 @@ class Fuel(Network):
                     for propulsor in fuel_line.propulsors:
                         for source in (propulsor.active_fuel_tanks):
                             if fuel_tank.tag == source: 
-                                mdot += conditions.energy[fuel_line.tag][propulsor.tag].fuel_flow_rate 
+                                mdot += conditions.energy[propulsor.tag].fuel_flow_rate 
                         
                     # Step 2.3 : Determine cumulative fuel flow from fuel tank 
                     fuel_tank_mdot = fuel_tank.fuel_selector_ratio*mdot + fuel_tank.secondary_fuel_flow 
@@ -140,7 +140,7 @@ class Fuel(Network):
         """            
          
         fuel_lines = segment.analyses.energy.vehicle.networks.fuel.fuel_lines
-        fuel_line_unknowns(segment,fuel_lines)  
+        unknowns(segment,fuel_lines)  
         for fuel_line in fuel_lines: 
             if fuel_line.active and len(fuel_line.propulsors) > 0:
                 reference_propulsor = fuel_line.propulsors[list(fuel_line.propulsors.keys())[0]]                 
@@ -220,7 +220,7 @@ class Fuel(Network):
                 if tag == 'propulsors':  
                     for i, propulsor in enumerate(item):  
                         add_additional_network_equation = (fuel_line.active) and  (i == 0)   
-                        propulsor.append_operating_conditions(segment,fuel_line,add_additional_network_equation)
+                        propulsor.append_operating_conditions(segment,fuel_line)
                         for sub_tag, sub_item in  propulsor.items(): 
                             if issubclass(type(sub_item), RCAIDE.Library.Components.Component):
                                 sub_item.append_operating_conditions(segment,fuel_line,propulsor)  

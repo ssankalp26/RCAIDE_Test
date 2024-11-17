@@ -36,8 +36,8 @@ class ICE_Propeller(Propulsor):
         self.engine_length                = 0.0
         self.engine_mass                  = 0.0
 
-    def append_operating_conditions(self,segment,fuel_line,add_additional_network_equation = False):
-        append_ice_propeller_conditions(self,segment,fuel_line,add_additional_network_equation)
+    def append_operating_conditions(self,segment,fuel_line):
+        append_ice_propeller_conditions(self,segment,fuel_line)
         return
 
     def unpack_propulsor_unknowns(self,reference_propulsor,segment,fuel_line):  
@@ -52,6 +52,6 @@ class ICE_Propeller(Propulsor):
         thrust,moment,power,stored_results_flag,stored_propulsor_tag =  compute_ice_performance(self,state,fuel_line,center_of_gravity)
         return thrust,moment,power,stored_results_flag,stored_propulsor_tag
     
-    def reuse_stored_data(ICE_prop,state,fuel_line,stored_propulsor_tag,center_of_gravity = [[0, 0, 0]]):
-        thrust,moment,power  = reuse_stored_ice_data(ICE_prop,state,fuel_line,stored_propulsor_tag,center_of_gravity)
+    def reuse_stored_data(ICE_prop,state,network,stored_propulsor_tag,center_of_gravity = [[0, 0, 0]]):
+        thrust,moment,power  = reuse_stored_ice_data(ICE_prop,state,network,stored_propulsor_tag,center_of_gravity)
         return thrust,moment,power 

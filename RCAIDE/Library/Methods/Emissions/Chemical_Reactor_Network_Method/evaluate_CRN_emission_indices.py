@@ -41,7 +41,7 @@ def evaluate_CRN_emission_indices_no_surrogate(segment,settings,vehicle):
                             
                                 # unpack component conditions
                                 n_cp                 = state.numerics.number_of_control_points 
-                                propulsor_conditions = state.conditions.energy[fuel_line.tag][propulsor.tag] 
+                                propulsor_conditions = state.conditions.energy[propulsor.tag] 
                                 combustor_conditions = propulsor_conditions[combustor.tag]  
 
                                 
@@ -112,40 +112,38 @@ def evaluate_CRN_emission_indices_surrogate(segment,settings,vehicle):
     NO_total  = 0 * segment.state.ones_row(1) 
     NO2_total = 0 * segment.state.ones_row(1) 
 
-    for network in vehicle.networks:  
-        for fuel_line in network.fuel_lines:
-            if fuel_line.active: 
-                for propulsor in fuel_line.propulsors:
-                    if propulsor.active == True:
-                        if (type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbofan) or \
-                            type(propulsor) == RCAIDE.Library.Components.Propulsors.Turboprop or \
-                            type(propulsor) == RCAIDE.Library.Components.Propulsors.Turboshaft or \
-                            type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbojet:    
-                        
-                            combustor = propulsor.combustor
-                        
-                            # unpack component conditions
-                            propulsor_conditions = segment.state.conditions.energy[fuel_line.tag][propulsor.tag] 
-                            combustor_conditions = propulsor_conditions[combustor.tag]  
+    for network in vehicle.networks:    
+        for propulsor in network.propulsors:
+            if propulsor.active == True:
+                if (type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbofan) or \
+                    type(propulsor) == RCAIDE.Library.Components.Propulsors.Turboprop or \
+                    type(propulsor) == RCAIDE.Library.Components.Propulsors.Turboshaft or \
+                    type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbojet:    
+                
+                    combustor = propulsor.combustor
+                
+                    # unpack component conditions
+                    propulsor_conditions = segment.state.conditions.energy[propulsor.tag] 
+                    combustor_conditions = propulsor_conditions[combustor.tag]  
 
-                            T    = combustor_conditions.inputs.stagnation_temperature
-                            P    = combustor_conditions.inputs.stagnation_pressure 
-                            mdot = propulsor_conditions.core_mass_flow_rate 
-                            FAR  = combustor_conditions.outputs.fuel_to_air_ratio 
-                            
-                            pts = np.hstack((T,P,mdot,FAR )) 
+                    T    = combustor_conditions.inputs.stagnation_temperature
+                    P    = combustor_conditions.inputs.stagnation_pressure 
+                    mdot = propulsor_conditions.core_mass_flow_rate 
+                    FAR  = combustor_conditions.outputs.fuel_to_air_ratio 
+                    
+                    pts = np.hstack((T,P,mdot,FAR )) 
 
-                            EI_CO2_comb  = np.atleast_2d(surrogates.EI_CO2(pts)).T
-                            EI_CO_comb   = np.atleast_2d(surrogates.EI_CO(pts)).T 
-                            EI_H2O_comb  = np.atleast_2d(surrogates.EI_H2O(pts)).T 
-                            EI_NO_comb   = np.atleast_2d(surrogates.EI_NO(pts)).T 
-                            EI_NO2_comb  = np.atleast_2d(surrogates.EI_NO2(pts)).T        
-                                  
-                            CO2_total += np.dot(I,mdot*EI_CO2_comb)
-                            CO_total  += np.dot(I,mdot *EI_CO_comb )
-                            H2O_total += np.dot(I,mdot*EI_H2O_comb)
-                            NO_total  += np.dot(I,mdot *EI_NO_comb ) 
-                            NO2_total += np.dot(I,mdot *EI_NO2_comb)
+                    EI_CO2_comb  = np.atleast_2d(surrogates.EI_CO2(pts)).T
+                    EI_CO_comb   = np.atleast_2d(surrogates.EI_CO(pts)).T 
+                    EI_H2O_comb  = np.atleast_2d(surrogates.EI_H2O(pts)).T 
+                    EI_NO_comb   = np.atleast_2d(surrogates.EI_NO(pts)).T 
+                    EI_NO2_comb  = np.atleast_2d(surrogates.EI_NO2(pts)).T        
+                          
+                    CO2_total += np.dot(I,mdot*EI_CO2_comb)
+                    CO_total  += np.dot(I,mdot *EI_CO_comb )
+                    H2O_total += np.dot(I,mdot*EI_H2O_comb)
+                    NO_total  += np.dot(I,mdot *EI_NO_comb ) 
+                    NO2_total += np.dot(I,mdot *EI_NO2_comb)
 
     emissions                 = Data()
     emissions.total           = Data()

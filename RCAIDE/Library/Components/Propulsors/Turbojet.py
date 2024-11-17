@@ -61,20 +61,20 @@ class Turbojet(Propulsor):
         self.areas.inflow                             = 0.0 
 
 
-    def append_operating_conditions(self,segment,fuel_line,add_additional_network_equation = False):
-        append_turbojet_conditions(self,segment,fuel_line,add_additional_network_equation)
+    def append_operating_conditions(self,segment,fuel_line):
+        append_turbojet_conditions(self,segment,fuel_line)
         return
 
-    def unpack_propulsor_unknowns(self,segment,fuel_line,add_additional_network_equation = False):   
+    def unpack_propulsor_unknowns(self,segment,fuel_line):   
         return 
 
-    def pack_propulsor_residuals(self,segment,fuel_line,add_additional_network_equation = False): 
+    def pack_propulsor_residuals(self,segment,fuel_line): 
         return        
     
     def compute_performance(self,state,fuel_line,center_of_gravity = [[0, 0, 0]]):
         thrust,moment,power,stored_results_flag,stored_propulsor_tag =  compute_turbojet_performance(self,state,fuel_line,center_of_gravity)
         return thrust,moment,power,stored_results_flag,stored_propulsor_tag
     
-    def reuse_stored_data(turbojet,state,fuel_line,stored_propulsor_tag,center_of_gravity = [[0, 0, 0]]):
-        thrust,moment,power  = reuse_stored_turbojet_data(turbojet,state,fuel_line,stored_propulsor_tag,center_of_gravity)
+    def reuse_stored_data(turbojet,state,network,stored_propulsor_tag,center_of_gravity = [[0, 0, 0]]):
+        thrust,moment,power  = reuse_stored_turbojet_data(turbojet,state,network,stored_propulsor_tag,center_of_gravity)
         return thrust,moment,power 

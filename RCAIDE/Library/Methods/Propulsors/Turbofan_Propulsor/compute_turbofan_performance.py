@@ -25,7 +25,7 @@ from copy import  deepcopy
 # compute_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Energy-Propulsors-Turbofan_Propulsor  
-def compute_turbofan_performance(turbofan,state,fuel_line,center_of_gravity= [[0.0, 0.0,0.0]]):  
+def compute_turbofan_performance(turbofan,state,center_of_gravity= [[0.0, 0.0,0.0]]):  
     ''' Computes the perfomrance of one turbofan
     
     Assumptions: 
@@ -51,8 +51,8 @@ def compute_turbofan_performance(turbofan,state,fuel_line,center_of_gravity= [[0
     N.A.        
     ''' 
     conditions                = state.conditions   
-    noise_conditions          = conditions.noise[fuel_line.tag][turbofan.tag] 
-    turbofan_conditions       = conditions.energy[fuel_line.tag][turbofan.tag] 
+    noise_conditions          = conditions.noise[turbofan.tag] 
+    turbofan_conditions       = conditions.energy[turbofan.tag] 
     rho                       = conditions.freestream.density
     U0                        = conditions.freestream.velocity
     ram                       = turbofan.ram
@@ -264,7 +264,7 @@ def compute_turbofan_performance(turbofan,state,fuel_line,center_of_gravity= [[0
     
     return thrust_vector,moment,power,stored_results_flag,stored_propulsor_tag 
     
-def reuse_stored_turbofan_data(turbofan,state,fuel_line,stored_propulsor_tag,center_of_gravity= [[0.0, 0.0,0.0]]):
+def reuse_stored_turbofan_data(turbofan,state,network,stored_propulsor_tag,center_of_gravity= [[0.0, 0.0,0.0]]):
     '''Reuses results from one turbofan for identical turbofans
     
     Assumptions: 
@@ -288,19 +288,19 @@ def reuse_stored_turbofan_data(turbofan,state,fuel_line,stored_propulsor_tag,cen
     N.A.        
     ''' 
     conditions                                      = state.conditions  
-    conditions.energy[fuel_line.tag][turbofan.tag]  = deepcopy(conditions.energy[fuel_line.tag][stored_propulsor_tag])
-    conditions.noise[fuel_line.tag][turbofan.tag]   = deepcopy(conditions.noise[fuel_line.tag][stored_propulsor_tag])
+    conditions.energy[turbofan.tag]  = deepcopy(conditions.energy[stored_propulsor_tag])
+    conditions.noise[turbofan.tag]   = deepcopy(conditions.noise[stored_propulsor_tag])
     
     # compute moment  
     moment_vector      = 0*state.ones_row(3)
     thrust_vector      = 0*state.ones_row(3)
-    thrust_vector[:,0] = conditions.energy[fuel_line.tag][turbofan.tag].thrust[:,0] 
+    thrust_vector[:,0] = conditions.energy[turbofan.tag].thrust[:,0] 
     moment_vector[:,0] = turbofan.origin[0][0] -   center_of_gravity[0][0] 
     moment_vector[:,1] = turbofan.origin[0][1]  -  center_of_gravity[0][1] 
     moment_vector[:,2] = turbofan.origin[0][2]  -  center_of_gravity[0][2]
     moment             = np.cross(moment_vector,thrust_vector)    
   
-    power                                   = conditions.energy[fuel_line.tag][turbofan.tag].power 
-    conditions.energy[fuel_line.tag][turbofan.tag].moment =  moment 
+    power                                   = conditions.energy[turbofan.tag].power 
+    conditions.energy[turbofan.tag].moment =  moment 
  
     return thrust_vector,moment,power    

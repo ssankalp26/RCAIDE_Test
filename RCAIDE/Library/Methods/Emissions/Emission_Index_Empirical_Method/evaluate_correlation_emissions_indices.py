@@ -45,10 +45,10 @@ def evaluate_correlation_emissions_indices(segment,settings,vehicle):
             if fuel_line.active: 
                 for fuel_tank in fuel_line.fuel_tanks:
                     mdot = 0. * state.ones_row(1)   
-                    for propulsor in fuel_line.propulsors:
+                    for propulsor in network.propulsors:
                         for source in (propulsor.active_fuel_tanks):
                             if fuel_tank.tag == source:  
-                                propulsor_results =  state.conditions.energy[fuel_line.tag][propulsor.tag]
+                                propulsor_results =  state.conditions.energy[propulsor.tag]
                                 fuel =  fuel_tank.fuel
                                 if (type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turbofan) or \
                                     type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turboprop or \

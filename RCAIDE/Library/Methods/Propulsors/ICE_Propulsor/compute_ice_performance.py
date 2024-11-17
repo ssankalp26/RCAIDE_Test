@@ -21,7 +21,7 @@ import numpy as np
 # compute_ice_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Energy-Propulsors-ICE_Propulsor
-def compute_ice_performance(propulsor,state,fuel_line,center_of_gravity= [[0.0, 0.0,0.0]]):  
+def compute_ice_performance(propulsor,state,center_of_gravity= [[0.0, 0.0,0.0]]):  
     ''' Computes the perfomrance of one propulsor
     
     Assumptions: 
@@ -47,7 +47,7 @@ def compute_ice_performance(propulsor,state,fuel_line,center_of_gravity= [[0.0, 
     N.A.        
     '''  
     conditions              = state.conditions  
-    ice_conditions          = conditions.energy[fuel_line.tag][propulsor.tag]
+    ice_conditions          = conditions.energy[propulsor.tag]
     engine                  = propulsor.engine 
     propeller               = propulsor.propeller
     eta                     = ice_conditions.throttle
@@ -63,7 +63,7 @@ def compute_ice_performance(propulsor,state,fuel_line,center_of_gravity= [[0.0, 
     propeller_conditions                = ice_conditions[propeller.tag]
     propeller_conditions.omega          = RPM * Units.rpm 
     propeller_conditions.throttle       = engine_conditions.throttle
-    compute_rotor_performance(propulsor,state,fuel_line,center_of_gravity)
+    compute_rotor_performance(propulsor,state,center_of_gravity)
     
     # Create the outputs
     ice_conditions.fuel_flow_rate            = engine_conditions.fuel_flow_rate  
@@ -72,19 +72,19 @@ def compute_ice_performance(propulsor,state,fuel_line,center_of_gravity= [[0.0, 
 
 
     # compute total forces and moments from propulsor (future work would be to add moments from motors)
-    ice_conditions.thrust      = conditions.energy[fuel_line.tag][propulsor.tag][propeller.tag].thrust 
-    ice_conditions.moment      = conditions.energy[fuel_line.tag][propulsor.tag][propeller.tag].moment
-    ice_conditions.power       = conditions.energy[fuel_line.tag][propulsor.tag][propeller.tag].power 
+    ice_conditions.thrust      = conditions.energy[propulsor.tag][propeller.tag].thrust 
+    ice_conditions.moment      = conditions.energy[propulsor.tag][propeller.tag].moment
+    ice_conditions.power       = conditions.energy[propulsor.tag][propeller.tag].power 
     
-    T  = conditions.energy[fuel_line.tag][propulsor.tag][propeller.tag].thrust  
-    M  = conditions.energy[fuel_line.tag][propulsor.tag][propeller.tag].moment 
-    P  = conditions.energy[fuel_line.tag][propulsor.tag][propeller.tag].power 
+    T  = conditions.energy[propulsor.tag][propeller.tag].thrust  
+    M  = conditions.energy[propulsor.tag][propeller.tag].moment 
+    P  = conditions.energy[propulsor.tag][propeller.tag].power 
     
     return T,M,P,stored_results_flag,stored_propulsor_tag 
     
     
     
-def reuse_stored_ice_data(propulsor,state,fuel_line,stored_propulsor_tag,center_of_gravity= [[0.0, 0.0,0.0]]):
+def reuse_stored_ice_data(propulsor,state,network,stored_propulsor_tag,center_of_gravity= [[0.0, 0.0,0.0]]):
     '''Reuses results from one propulsor for identical propulsors
     
     Assumptions: 
@@ -112,14 +112,14 @@ def reuse_stored_ice_data(propulsor,state,fuel_line,stored_propulsor_tag,center_
     conditions   = state.conditions 
     engine       = propulsor.engine
     propeller    = propulsor.propeller 
-    engine_0     = fuel_line.propulsors[stored_propulsor_tag].engine
-    propeller_0  = fuel_line.propulsors[stored_propulsor_tag].propeller  
+    engine_0     = network.propulsors[stored_propulsor_tag].engine
+    propeller_0  = network.propulsors[stored_propulsor_tag].propeller  
     
-    conditions.energy[fuel_line.tag][propulsor.tag][engine.tag]        = deepcopy(conditions.energy[fuel_line.tag][stored_propulsor_tag][engine_0.tag])
-    conditions.energy[fuel_line.tag][propulsor.tag][propeller.tag]     = deepcopy(conditions.energy[fuel_line.tag][stored_propulsor_tag][propeller_0.tag])
+    conditions.energy[propulsor.tag][engine.tag]        = deepcopy(conditions.energy[stored_propulsor_tag][engine_0.tag])
+    conditions.energy[propulsor.tag][propeller.tag]     = deepcopy(conditions.energy[stored_propulsor_tag][propeller_0.tag])
   
-    thrust                  = conditions.energy[fuel_line.tag][propulsor.tag][propeller.tag].thrust 
-    power                   = conditions.energy[fuel_line.tag][propulsor.tag][propeller.tag].power 
+    thrust                  = conditions.energy[propulsor.tag][propeller.tag].thrust 
+    power                   = conditions.energy[propulsor.tag][propeller.tag].power 
     
     moment_vector           = 0*state.ones_row(3) 
     moment_vector[:,0]      = propeller.origin[0][0]  -  center_of_gravity[0][0] 
@@ -127,10 +127,10 @@ def reuse_stored_ice_data(propulsor,state,fuel_line,stored_propulsor_tag,center_
     moment_vector[:,2]      = propeller.origin[0][2]  -  center_of_gravity[0][2]
     moment                  =  np.cross(moment_vector, thrust)
     
-    conditions.energy[fuel_line.tag][propulsor.tag][propeller.tag].moment = moment  
-    conditions.energy[fuel_line.tag][propulsor.tag].thrust            = thrust   
-    conditions.energy[fuel_line.tag][propulsor.tag].moment            = moment  
-    conditions.energy[fuel_line.tag][propulsor.tag].power             = power
+    conditions.energy[propulsor.tag][propeller.tag].moment = moment  
+    conditions.energy[propulsor.tag].thrust            = thrust   
+    conditions.energy[propulsor.tag].moment            = moment  
+    conditions.energy[propulsor.tag].power             = power
  
     return thrust,moment,power 
 

@@ -42,8 +42,8 @@ class Air_Cooled(Component):
         self.heat_transfer_efficiency                 = 1.0      
    
     
-    def append_operating_conditions(self,segment,coolant_line,add_additional_network_equation = False):
-        append_air_cooled_conditions(self,segment,coolant_line,add_additional_network_equation)
+    def append_operating_conditions(self,segment,coolant_line):
+        append_air_cooled_conditions(self,segment,coolant_line)
         return
     def append_segment_conditions(self, segment,coolant_line, conditions):
         append_air_cooled_segment_conditions(self, segment,coolant_line, conditions)

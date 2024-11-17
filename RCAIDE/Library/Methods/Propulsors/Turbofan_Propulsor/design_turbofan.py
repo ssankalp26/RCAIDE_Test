@@ -99,7 +99,7 @@ def design_turbofan(turbofan):
     bypass_ratio              = turbofan.bypass_ratio  
 
     # unpack component conditions
-    turbofan_conditions     = conditions.energy[fuel_line.tag][turbofan.tag]
+    turbofan_conditions     = conditions.energy[turbofan.tag]
     ram_conditions          = turbofan_conditions[ram.tag]    
     inlet_nozzle_conditions = turbofan_conditions[inlet_nozzle.tag]
     fan_conditions          = turbofan_conditions[fan.tag]    

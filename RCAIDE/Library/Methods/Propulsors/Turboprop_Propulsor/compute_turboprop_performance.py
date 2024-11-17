@@ -27,7 +27,7 @@ import numpy as np
 # compute_turboprop_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Methods-Energy-Propulsors-Turboshaft_Propulsor
-def compute_turboprop_performance(turboprop,state,fuel_line,center_of_gravity= [[0.0, 0.0,0.0]]):    
+def compute_turboprop_performance(turboprop,state,center_of_gravity= [[0.0, 0.0,0.0]]):    
     
     ''' Computes the performance of one turboprop
     
@@ -53,8 +53,8 @@ def compute_turboprop_performance(turboprop,state,fuel_line,center_of_gravity= [
     N.A.        
     ''' 
     conditions                = state.conditions 
-    noise_conditions          = conditions.noise[fuel_line.tag][turboprop.tag]  
-    turboprop_conditions      = conditions.energy[fuel_line.tag][turboprop.tag]
+    noise_conditions          = conditions.noise[turboprop.tag]  
+    turboprop_conditions      = conditions.energy[turboprop.tag]
     
     ram                                                   = turboprop.ram
     inlet_nozzle                                          = turboprop.inlet_nozzle
@@ -65,7 +65,7 @@ def compute_turboprop_performance(turboprop,state,fuel_line,center_of_gravity= [
     core_nozzle                                           = turboprop.core_nozzle  
 
     # unpack component conditions
-    turboprop_conditions                                  = conditions.energy[fuel_line.tag][turboprop.tag]
+    turboprop_conditions                                  = conditions.energy[turboprop.tag]
     ram_conditions                                        = turboprop_conditions[ram.tag]     
     inlet_nozzle_conditions                               = turboprop_conditions[inlet_nozzle.tag]
     core_nozzle_conditions                                = turboprop_conditions[core_nozzle.tag] 
@@ -205,7 +205,7 @@ def compute_turboprop_performance(turboprop,state,fuel_line,center_of_gravity= [
     
     return thrust_vector,moment,power,stored_results_flag,stored_propulsor_tag
 
-def reuse_stored_turboprop_data(turboprop,state,fuel_line,stored_propulsor_tag,center_of_gravity= [[0.0, 0.0,0.0]]):
+def reuse_stored_turboprop_data(turboprop,state,network,stored_propulsor_tag,center_of_gravity= [[0.0, 0.0,0.0]]):
     '''Reuses results from one turboprop for identical propulsors
     
     Assumptions: 
@@ -227,18 +227,18 @@ def reuse_stored_turboprop_data(turboprop,state,fuel_line,stored_propulsor_tag,c
     N.A.        
     ''' 
     conditions                                      = state.conditions  
-    conditions.energy[fuel_line.tag][turboprop.tag]  = deepcopy(conditions.energy[fuel_line.tag][stored_propulsor_tag])
-    conditions.noise[fuel_line.tag][turboprop.tag]   = deepcopy(conditions.noise[fuel_line.tag][stored_propulsor_tag])
+    conditions.energy[turboprop.tag]  = deepcopy(conditions.energy[stored_propulsor_tag])
+    conditions.noise[turboprop.tag]   = deepcopy(conditions.noise[stored_propulsor_tag])
     
     # compute moment  
     moment_vector      = 0*state.ones_row(3)
     thrust_vector      = 0*state.ones_row(3)
-    thrust_vector[:,0] = conditions.energy[fuel_line.tag][turboprop.tag].thrust[:,0] 
+    thrust_vector[:,0] = conditions.energy[turboprop.tag].thrust[:,0] 
     moment_vector[:,0] = turboprop.origin[0][0] -   center_of_gravity[0][0] 
     moment_vector[:,1] = turboprop.origin[0][1]  -  center_of_gravity[0][1] 
     moment_vector[:,2] = turboprop.origin[0][2]  -  center_of_gravity[0][2]
     moment             = np.cross(moment_vector, thrust_vector)         
   
-    power                                   = conditions.energy[fuel_line.tag][turboprop.tag].power 
-    conditions.energy[fuel_line.tag][turboprop.tag].moment =  moment 
+    power                                   = conditions.energy[turboprop.tag].power 
+    conditions.energy[turboprop.tag].moment =  moment 
     return thrust_vector,moment,power    

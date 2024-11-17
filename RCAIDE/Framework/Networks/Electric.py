@@ -11,7 +11,7 @@
     # RCAIDE imports 
 import RCAIDE  
 from RCAIDE.Framework.Mission.Common                      import Residuals
-from RCAIDE.Library.Mission.Common.Unpack_Unknowns.energy import bus_unknowns
+from RCAIDE.Library.Mission.Common.Unpack_Unknowns.energy import unknowns
 from .Network                                             import Network              
 from RCAIDE.Library.Methods.Propulsors.Common.compute_avionics_power_draw import compute_avionics_power_draw
 from RCAIDE.Library.Methods.Propulsors.Common.compute_payload_power_draw  import compute_payload_power_draw
@@ -218,7 +218,7 @@ class Electric(Network):
             N/A
         """
  
-        bus_unknowns(segment)
+        unknowns(segment)
         
         if issubclass(type(segment), type(RCAIDE.Framework.Mission.Segments.Ground)):
             pass 

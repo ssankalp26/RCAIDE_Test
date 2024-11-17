@@ -84,7 +84,7 @@ def design_turboshaft(turboshaft):
     core_nozzle                                           = turboshaft.core_nozzle  
 
     # unpack component conditions
-    turboshaft_conditions   = conditions.energy[fuel_line.tag][turboshaft.tag]
+    turboshaft_conditions   = conditions.energy[turboshaft.tag]
     ram_conditions          = turboshaft_conditions[ram.tag]     
     inlet_nozzle_conditions = turboshaft_conditions[inlet_nozzle.tag]
     core_nozzle_conditions  = turboshaft_conditions[core_nozzle.tag] 
