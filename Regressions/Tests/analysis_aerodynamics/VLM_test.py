@@ -2,12 +2,7 @@
 #   Imports
 # ----------------------------------------------------------------------     
 import RCAIDE
-from RCAIDE.Framework.Core import Units, Data   
-from RCAIDE.Framework.Mission.Common                       import Results 
-from RCAIDE.Library.Methods.Stability.Common               import compute_dynamic_flight_modes    
-from RCAIDE.Library.Methods.Aerodynamics.Vortex_Lattice_Method.evaluate_VLM import evaluate_no_surrogate
-from RCAIDE.Library.Mission.Common.Update  import orientations
-from RCAIDE.Library.Mission.Common.Unpack_Unknowns import orientation
+from RCAIDE.Framework.Core import Units, Data
 
 # Routines   
 import numpy as np
@@ -16,74 +11,43 @@ import os
 from copy import  deepcopy
 
 sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
-from Navion    import vehicle_setup 
+from Navion    import vehicle_setup , configs_setup
 
 # ----------------------------------------------------------------------
 #   Main
 # ----------------------------------------------------------------------
 
-def main(): 
-    
+def main():  
     # vehicle data
-    vehicle     = vehicle_setup() 
-    g           = 9.81   
-    m           = vehicle.mass_properties.max_takeoff 
-    S           = vehicle.reference_area
-    atmosphere  = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
-    atmo_data   = atmosphere.compute_values(altitude = 5000*Units.feet )       
-      
+    vehicle  = vehicle_setup() 
     
-    # ------------------------------------------------------------------------------------------------------------------------  
-    # Stick Fixed 
-    # ------------------------------------------------------------------------------------------------------------------------       
-    # ------------------------------------------------------------------------------------------------------------------------  
-    # initialize run conditions                                         
-    stick_fixed_conditions                                             = Results()
-    stick_fixed_conditions.freestream.density[:,0]                     = atmo_data.density[0,0]
-    stick_fixed_conditions.freestream.gravity[:,0]                     = g          
-    stick_fixed_conditions.freestream.speed_of_sound[:,0]              = atmo_data.speed_of_sound[0,0] 
-    stick_fixed_conditions.freestream.dynamic_viscosity[:,0]           = atmo_data.dynamic_viscosity[0,0] 
-    stick_fixed_conditions.freestream.temperature                      = atmo_data.temperature[0,0] 
-    stick_fixed_conditions.freestream.velocity[:,0]                    = 60 
-    stick_fixed_conditions.frames.inertial.velocity_vector[:,0]        = 60 
-    stick_fixed_conditions.freestream.mach_number                      = stick_fixed_conditions.freestream.velocity/stick_fixed_conditions.freestream.speed_of_sound
-    stick_fixed_conditions.freestream.dynamic_pressure                 = 0.5 * stick_fixed_conditions.freestream.density *  (stick_fixed_conditions.freestream.velocity ** 2)
-    stick_fixed_conditions.freestream.reynolds_number                  = stick_fixed_conditions.freestream.density * stick_fixed_conditions.freestream.velocity / stick_fixed_conditions.freestream.dynamic_viscosity  
-     
-    # ------------------------------------------------------------------------------------------------------------------------  
-    # initialize analyses                                      
-    aerodynamics                                      = RCAIDE.Framework.Analyses.Stability.Vortex_Lattice_Method()   
-    aerodynamics.settings.number_of_spanwise_vortices = 40
-    aerodynamics.vehicle                              = vehicle 
-    aerodynamics.settings.use_surrogate               = False 
-    aerodynamics.initialize()
-     
-    # ------------------------------------------------------------------------------------------------------------------------  
-    # Run VLM 
-    equilibrium_state                               = RCAIDE.Framework.Mission.Common.State()
-    equilibrium_state.conditions                    = stick_fixed_conditions  
-    stick_fixed_segment                             = RCAIDE.Framework.Mission.Segments.Single_Point.Set_Speed_Set_Altitude()
-    stick_fixed_segment.conditions                  = stick_fixed_conditions
-    stick_fixed_segment.state.conditions            = stick_fixed_conditions
-    stick_fixed_segment.analyses                    = Data()
-    stick_fixed_segment.analyses.aerodynamics       = aerodynamics
-    orientation(stick_fixed_segment)
-    orientations(stick_fixed_segment) 
-    
-    evaluate_no_surrogate(stick_fixed_segment,aerodynamics.settings,vehicle) 
-    compute_dynamic_flight_modes(stick_fixed_segment,aerodynamics.settings,vehicle)
+    # Set up vehicle configs
+    configs  = configs_setup(vehicle)
 
+    # create analyses
+    analyses = analyses_setup(configs)
+
+    # mission analyses 
+    mission = mission_setup(analyses)
+    
+    # create mission instances (for multiple types of missions)
+    missions = missions_setup(mission) 
+     
+    # mission analysis 
+    results = missions.base_mission.evaluate() 
+
+    segment_results =  results.segments.cruise.conditions
     # ------------------------------------------------------------------------------------------------------------------------  
     # Post Process Results 
     # ------------------------------------------------------------------------------------------------------------------------     
-    CD                      = stick_fixed_conditions.static_stability.coefficients.drag[0,0]  
-    CM                      = abs(stick_fixed_conditions.static_stability.coefficients.M[0,0])
-    spiral_criteria         = stick_fixed_conditions.static_stability.spiral_criteria[0,0]
-    NP                      = stick_fixed_conditions.static_stability.neutral_point[0,0]
+    CD                      = segment_results.static_stability.coefficients.drag[0,0]  
+    CM                      = abs(segment_results.static_stability.coefficients.M[0,0])
+    spiral_criteria         = segment_results.static_stability.spiral_criteria[0,0]
+    NP                      = segment_results.static_stability.neutral_point[0,0]
     cg                      = vehicle.mass_properties.center_of_gravity[0][0]
     MAC                     = vehicle.wings.main_wing.chords.mean_aerodynamic
     static_margin           = (NP - cg)/MAC
-    CM_alpha                = stick_fixed_conditions.static_stability.derivatives.CM_alpha[0,0] 
+    CM_alpha                = segment_results.static_stability.derivatives.CM_alpha[0,0] 
    
     print("Drag Coefficient           : " + str(CD))
     print("Moment Coefficient         : " + str(CM))
@@ -91,10 +55,10 @@ def main():
     print("CM alpla                   : " + str(CM_alpha))    
     print("Spiral Criteria            : " + str(spiral_criteria))
     
-    CD_true       =  0.016760164266095924
-    CM_true       =  0.014948948535811293
-    NP_true       =  2.5672633278782984
-    CM_alpha_true =  -1.6388205972121546
+    CD_true       =  0.016000109659799963
+    CM_true       =  0.03418551375391235
+    NP_true       =  2.5671448424629455
+    CM_alpha_true =  -1.6388574504280666
     
     error =  Data()
     error.CD        =  np.abs((CD - CD_true)/CD_true)  
@@ -108,7 +72,110 @@ def main():
     for k,v in list(error.items()):
         assert(np.abs(v)<1e-6) 
         
-    return    
+    return
+
+# ----------------------------------------------------------------------
+#   Define the Vehicle Analyses
+# ----------------------------------------------------------------------
+
+def analyses_setup(configs):
+
+    analyses = RCAIDE.Framework.Analyses.Analysis.Container()
+
+    # build a base analysis for each config
+    for tag,config in list(configs.items()):
+        analysis = base_analysis(config)
+        analyses[tag] = analysis
+ 
+    return analyses
+
+
+def base_analysis(vehicle):
+
+    # ------------------------------------------------------------------
+    #   Initialize the Analyses
+    # ------------------------------------------------------------------     
+    analyses = RCAIDE.Framework.Analyses.Vehicle() 
+
+    # ------------------------------------------------------------------
+    #  Weights
+    weights                                          = RCAIDE.Framework.Analyses.Weights.Weights_Transport()
+    weights.vehicle                                  = vehicle
+    analyses.append(weights)
+ 
+    #  Aerodynamics Analysis
+    aerodynamics                                        = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method()
+    aerodynamics.vehicle                                = vehicle
+    aerodynamics.settings.number_of_spanwise_vortices   = 40
+    aerodynamics.settings.use_surrogate                 = False  
+    analyses.append(aerodynamics)
+     
+    # Stability Analysis
+    stability                                        = RCAIDE.Framework.Analyses.Stability.Vortex_Lattice_Method()
+    stability.vehicle                                = vehicle
+    stability.settings.number_of_spanwise_vortices   = 40  
+    stability.settings.use_surrogate                 = False  
+    analyses.append(stability)    
+  
+    #  Energy
+    energy                                           = RCAIDE.Framework.Analyses.Energy.Energy()
+    energy.vehicle                                   = vehicle 
+    analyses.append(energy)
+ 
+    #  Planet Analysis
+    planet                                           = RCAIDE.Framework.Analyses.Planets.Planet()
+    analyses.append(planet)
+
+    # ------------------------------------------------------------------
+    #  Atmosphere Analysis
+    atmosphere                                       = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
+    atmosphere.features.planet                       = planet.features
+    analyses.append(atmosphere)   
+
+    # done!
+    return analyses 
+   
+# ----------------------------------------------------------------------
+#   Define the Mission
+# ----------------------------------------------------------------------
+
+def mission_setup(analyses): 
+
+    mission = RCAIDE.Framework.Mission.Sequential_Segments()
+    mission.tag = 'mission'
+  
+    # unpack Segments module
+    Segments = RCAIDE.Framework.Mission.Segments
+
+    #   Cruise Segment: constant Speed, constant altitude 
+    segment                           = Segments.Untrimmed.Untrimmed()
+    segment.analyses.extend( analyses.base )   
+    segment.tag                       = "cruise"
+    segment.angle_of_attack           = 0
+    segment.bank_angle                = 0
+    segment.altitude                  = 5000 * Units.feet
+    segment.air_speed                 = 60
+
+    segment.flight_dynamics.force_x   = True    
+    segment.flight_dynamics.force_z   = True    
+    segment.flight_dynamics.force_y   = True     
+    segment.flight_dynamics.moment_y  = True 
+    segment.flight_dynamics.moment_x  = True
+    segment.flight_dynamics.moment_z  = True
+    
+    mission.append_segment(segment)  
+    
+    return mission
+
+
+
+def missions_setup(mission): 
+ 
+    missions     = RCAIDE.Framework.Mission.Missions() 
+    mission.tag  = 'base_mission'
+    missions.append(mission)
+ 
+    return missions  
 
 if __name__ == '__main__': 
     main()    

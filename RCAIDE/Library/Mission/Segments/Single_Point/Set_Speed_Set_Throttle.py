@@ -46,9 +46,9 @@ def initialize_conditions(segment):
     air_speed               = segment.air_speed
     beta                    = segment.sideslip_angle  
     linear_acceleration_z   = segment.linear_acceleration_z
-    angular_acceleration_x = segment.angular_acceleration_x
-    angular_acceleration_y = segment.angular_acceleration_y
-    angular_acceleration_z = segment.angular_acceleration_z
+    angular_acceleration_x  = segment.angular_acceleration_x
+    angular_acceleration_y  = segment.angular_acceleration_y
+    angular_acceleration_z  = segment.angular_acceleration_z
     acceleration            = segment.state.unknowns.acceleration[0][0]
     
     # check for initial altitude
