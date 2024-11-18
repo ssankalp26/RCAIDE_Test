@@ -53,6 +53,7 @@ def parasite_drag_wing(state,settings,geometry):
     
     # unpack inputs
     C                             = settings.wing_parasite_drag_form_factor 
+    recalculate_total_wetted_area = settings.recalculate_total_wetted_area
     freestream                    = state.conditions.freestream
     
     # conditions

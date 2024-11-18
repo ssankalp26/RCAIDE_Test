@@ -29,7 +29,7 @@ from NASA_X57       import configs_setup as X57_configs_setup
 def main(): 
     fuel_payload_range_res = fuel_aircraft_payload_range()
     fuel_r                 = fuel_payload_range_res.range[-1]
-    fuel_r_true            = 6686763.504868567
+    fuel_r_true            = 7043315.924243388
     print('Fuel Range: ' + str(fuel_r))
     fuel_error =  abs(fuel_r - fuel_r_true) /fuel_r_true
     assert(abs(fuel_error)<1e-6)

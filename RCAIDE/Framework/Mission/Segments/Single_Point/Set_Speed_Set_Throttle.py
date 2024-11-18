@@ -58,7 +58,12 @@ class Set_Speed_Set_Throttle(Evaluate):
         self.altitude                                = None
         self.air_speed                               = 10. * Units['km/hr']
         self.throttle                                = 1.
-        self.linear_acceleration_z                   = 0. # note that down is positive
+        self.linear_acceleration_x                   = 0.  
+        self.linear_acceleration_y                   = 0.  
+        self.linear_acceleration_z                   = 0. # note that down is positive 
+        self.angular_acceleration_x                  = 0
+        self.angular_acceleration_y                  = 0
+        self.angular_acceleration_z                  = 0  
         self.state.numerics.number_of_control_points = 1  
 
         # -------------------------------------------------------------------------------------------------------------- 
