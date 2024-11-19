@@ -8,10 +8,10 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------  
 import RCAIDE
-from RCAIDE.Framework.Core import Units, Data
+from RCAIDE.Framework.Core import Units 
 from scipy.interpolate import griddata
 import numpy as np
-#from  RCAIDE.Framework.Analyses.Geodesics.Geodesics import Calculate_Distance
+
 # ----------------------------------------------------------------------
 #  Compute Point to Point Geospacial Data
 # ---------------------------------------------------------------------

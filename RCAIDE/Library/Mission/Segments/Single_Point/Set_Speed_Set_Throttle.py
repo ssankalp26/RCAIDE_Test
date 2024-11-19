@@ -46,9 +46,9 @@ def initialize_conditions(segment):
     air_speed               = segment.air_speed
     beta                    = segment.sideslip_angle  
     linear_acceleration_z   = segment.linear_acceleration_z
-    angular_acceleration_x  = segment.angular_acceleration_x
-    angular_acceleration_y  = segment.angular_acceleration_y
-    angular_acceleration_z  = segment.angular_acceleration_z
+    roll_rate               = segment.roll_rate
+    pitch_rate              = segment.pitch_rate
+    yaw_rate                = segment.yaw_rate
     acceleration            = segment.state.unknowns.acceleration[0][0]
     
     # check for initial altitude
@@ -64,8 +64,11 @@ def initialize_conditions(segment):
     segment.state.conditions.frames.inertial.position_vector[:,2] = -alt # z points down
     segment.state.conditions.frames.inertial.velocity_vector[:,0] = v_x 
     segment.state.conditions.frames.inertial.velocity_vector[:,1] = v_y 
-    segment.state.conditions.frames.inertial.acceleration_vector  = np.array([[acceleration,0.0,linear_acceleration_z]]) 
-    segment.state.conditions.frames.inertial.angular_acceleration_vector  = np.array([[angular_acceleration_x,angular_acceleration_y,angular_acceleration_z]]) 
+    segment.state.conditions.frames.inertial.acceleration_vector  = np.array([[acceleration,0.0,linear_acceleration_z]])  
+    segment.state.conditions.static_stability.roll_rate[:,0]      = roll_rate         
+    segment.state.conditions.static_stability.pitch_rate[:,0]     = pitch_rate
+    segment.state.conditions.static_stability.yaw_rate[:,0]       = yaw_rate      
+
     
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Unpack Unknowns 

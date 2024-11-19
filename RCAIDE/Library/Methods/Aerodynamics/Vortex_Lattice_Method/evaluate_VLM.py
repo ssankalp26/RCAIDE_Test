@@ -603,7 +603,7 @@ def evaluate_surrogate(state,settings,vehicle):
     return
 
  
-def evaluate_no_surrogate(state,settings,vehicle):
+def evaluate_no_surrogate(state,settings,base_vehicle):
     """Evaluates forces and moments directly using VLM.
     
     Assumptions:
@@ -632,9 +632,9 @@ def evaluate_no_surrogate(state,settings,vehicle):
     # unpack 
     conditions    = state.conditions   
     aerodynamics  = state.analyses.aerodynamics
+    vehicle       = aerodynamics.vehicle 
     Mach          = state.conditions.freestream.mach_number
-    trim          = aerodynamics.settings.trim_aircraft
-
+    trim          = aerodynamics.settings.trim_aircraft 
 
     for wing in vehicle.wings: 
         for control_surface in wing.control_surfaces:  
@@ -652,33 +652,29 @@ def evaluate_no_surrogate(state,settings,vehicle):
     for i in  range(len(Mach)): 
         for wing in vehicle.wings: 
             for control_surface in wing.control_surfaces:  
-                if type(control_surface) == RCAIDE.Library.Components.Wings.Control_Surfaces.Aileron: 
-                    settings.aileron_flag  = True 
+                if type(control_surface) == RCAIDE.Library.Components.Wings.Control_Surfaces.Aileron:  
                     if trim ==  True:
-                        control_surface.deflection = -conditions.control_surfaces.aileron.deflection[i,0]
-                    else:
-                        control_surface.deflection = -control_surface.deflection
+                        control_surface.deflection = conditions.control_surfaces.aileron.deflection[i,0]
+                    else: 
+                        conditions.control_surfaces.aileron.deflection[i, 0] = control_surface.deflection
                         
-                if type(control_surface) == RCAIDE.Library.Components.Wings.Control_Surfaces.Elevator:   
-                    settings.elevator_flag = True 
+                if type(control_surface) == RCAIDE.Library.Components.Wings.Control_Surfaces.Elevator:    
                     if trim ==  True: 
                         control_surface.deflection = conditions.control_surfaces.elevator.deflection[i,0]
-                    else:  
-                        control_surface.deflection = control_surface.deflection
+                    else:   
+                        conditions.control_surfaces.elevator.deflection[i, 0] = control_surface.deflection
                         
-                if type(control_surface) == RCAIDE.Library.Components.Wings.Control_Surfaces.Rudder:   
-                    settings.rudder_flag   = True 
+                if type(control_surface) == RCAIDE.Library.Components.Wings.Control_Surfaces.Rudder:    
                     if trim ==  True: 
                         control_surface.deflection = conditions.control_surfaces.rudder.deflection[i,0]
-                    else:  
-                        control_surface.deflection = control_surface.deflection
+                    else:   
+                        conditions.control_surfaces.rudder.deflection[i, 0] = control_surface.deflection
                                             
-                if type(control_surface) == RCAIDE.Library.Components.Wings.Control_Surfaces.Slat: 
-                    settings.slat_flag     = True 
-                    control_surface.deflection = control_surface.deflection                     
-                if type(control_surface) == RCAIDE.Library.Components.Wings.Control_Surfaces.Flap: 
-                    settings.flap_flag     = True           
-                    control_surface.deflection = control_surface.deflection  
+                if type(control_surface) == RCAIDE.Library.Components.Wings.Control_Surfaces.Slat:  
+                    conditions.control_surfaces.slat.deflection[i, 0] = control_surface.deflection
+                    
+                if type(control_surface) == RCAIDE.Library.Components.Wings.Control_Surfaces.Flap:   
+                    conditions.control_surfaces.flap.deflection[i, 0] = control_surface.deflection
         
         Clift,Cdrag,CX,CY,CZ,CL,CM,CN,S_ref,b_ref,c_ref,X_ref,Y_ref ,Z_ref,Clift_wings,Cdrag_wings,AoA_wing_induced= call_VLM(conditions,settings,vehicle)
         
@@ -989,9 +985,8 @@ def evaluate_no_surrogate(state,settings,vehicle):
     # --------------------------------------------------------------------------------------------      
     # Roll Rate (p) Purtubation
     # --------------------------------------------------------------------------------------------  
-    pertubation_conditions                             = deepcopy(equilibrium_conditions)  
-    pertubation_conditions.static_stability.roll_rate[:,0]                 =  delta_rate 
-    pertubation_conditions.frames.inertial.angular_velocity_vector[:,0]    =  delta_rate  
+    pertubation_conditions                                 = deepcopy(equilibrium_conditions)  
+    pertubation_conditions.static_stability.roll_rate[:,0] =  delta_rate   
     
     Clift_p_prime,Cdrag_p_prime,CX_p_prime,CY_p_prime,CZ_p_prime,CL_p_prime,CM_p_prime,CN_p_prime ,_,_,_,_,_,_,_,_,_= call_VLM(pertubation_conditions,settings,vehicle)   
 
@@ -1007,10 +1002,9 @@ def evaluate_no_surrogate(state,settings,vehicle):
     # ---------------------------------------------------------------------------------------------------      
     # Pitch Rate (q) Purtubation
     # ---------------------------------------------------------------------------------------------------    
-    perturbation_state                                 = deepcopy(equilibrium_state)
-    pertubation_conditions                             = deepcopy(equilibrium_conditions)  
-    pertubation_conditions.static_stability.pitch_rate[:,0]                =  delta_rate 
-    pertubation_conditions.frames.inertial.angular_velocity_vector[:,1]    =  delta_rate  
+    perturbation_state                                      = deepcopy(equilibrium_state)
+    pertubation_conditions                                  = deepcopy(equilibrium_conditions)  
+    pertubation_conditions.static_stability.pitch_rate[:,0] =  delta_rate  
     
     Clift_q_prime,Cdrag_q_prime,CX_q_prime,CY_q_prime,CZ_q_prime,CL_q_prime,CM_q_prime,CN_q_prime  ,_,_,_,_,_ ,_,Clift_wings_q_prime,Cdrag_wings_q_prime,_= call_VLM(pertubation_conditions,settings,vehicle)
 
@@ -1062,9 +1056,8 @@ def evaluate_no_surrogate(state,settings,vehicle):
     # ---------------------------------------------------------------------------------------------------      
     # Yaw Rate (r) Purtubation
     # ---------------------------------------------------------------------------------------------------     
-    pertubation_conditions                             = deepcopy(equilibrium_conditions)  
-    pertubation_conditions.static_stability.yaw_rate[:,0]                  =  delta_rate 
-    pertubation_conditions.frames.inertial.angular_velocity_vector[:,2]    =  delta_rate  
+    pertubation_conditions                                = deepcopy(equilibrium_conditions)  
+    pertubation_conditions.static_stability.yaw_rate[:,0] =  delta_rate   
     
     Clift_r_prime,Cdrag_r_prime,CX_r_prime,CY_r_prime,CZ_r_prime,CL_r_prime,CM_r_prime,CN_r_prime ,_,_,_,_,_,_,_,_,_= call_VLM(pertubation_conditions,settings,vehicle)   
 

@@ -73,12 +73,12 @@ def post_process_noise_data(results,
     noise_data.microphone_locations          = microphone_locations.reshape(N_gm_x,N_gm_y,3)         
     
     # Step 3: Create empty arrays to store noise data 
-    num_fligth_segs = len(results.segments)
+    N_segs = len(results.segments)
     num_gm_mic      = len(microphone_locations)
     num_noise_time  = settings.noise_times_steps 
     
     # Step 4: Initalize Arrays 
-    N_ctrl_pts            = ( num_fligth_segs-1) * (num_noise_time -1) + num_noise_time # ensures that noise is computed continuously across segments 
+    N_ctrl_pts            = ( N_segs-1) * (num_noise_time -1) + num_noise_time # ensures that noise is computed continuously across segments 
     SPL_dBA               = np.ones((N_ctrl_pts,N_gm_x,N_gm_y))*background_noise()  
     Aircraft_pos          = np.empty((0,3))
     Time                  = np.empty((0))
@@ -87,7 +87,7 @@ def post_process_noise_data(results,
     idx =  0
     
     # Step 5: loop through segments and store noise 
-    for seg in range(num_fligth_segs):  
+    for seg in range(N_segs):  
         segment    = results.segments[seg]
         settings   = segment.analyses.noise.settings  
         phi        = settings.noise_hemisphere_phi_angles
@@ -100,7 +100,7 @@ def post_process_noise_data(results,
          
         # Step 5.2: Compute aircraft position and npose at interpolated hemisphere locations
         cpt   = 0 
-        if seg == (num_fligth_segs - 1):
+        if seg == (N_segs - 1):
             noise_time_ = noise_time 
         else:
             noise_time_ = noise_time[:-1]

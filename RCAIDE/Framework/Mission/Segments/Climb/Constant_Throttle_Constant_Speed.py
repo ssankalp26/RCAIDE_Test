@@ -72,12 +72,12 @@ class Constant_Throttle_Constant_Speed(Evaluate):
         iterate.conditions.velocities                 = Segments.Climb.Constant_Throttle_Constant_Speed.update_velocity_vector_from_wind_angle 
         iterate.conditions.angles                     = Segments.Climb.Constant_Throttle_Constant_Speed.unpack_body_angle  
         iterate.conditions.differentials_altitude     = Segments.Climb.Constant_Throttle_Constant_Speed.update_differentials_altitude  
-        iterate.conditions.differentials              = Common.Update.differentials_time    
+        iterate.conditions.differentials              = Common.Update.differentials_time 
+        iterate.conditions.orientations               = Common.Update.orientations   
         iterate.conditions.acceleration               = Common.Update.acceleration          
         iterate.conditions.atmosphere                 = Common.Update.atmosphere
         iterate.conditions.gravity                    = Common.Update.gravity
-        iterate.conditions.freestream                 = Common.Update.freestream
-        iterate.conditions.orientations               = Common.Update.orientations
+        iterate.conditions.freestream                 = Common.Update.freestream 
         iterate.conditions.energy                     = Common.Update.thrust
         iterate.conditions.aerodynamics               = Common.Update.aerodynamics
         iterate.conditions.stability                  = Common.Update.stability
