@@ -35,7 +35,6 @@ def cross_flow_heat_exchanger_geometry_setup(HEX,coolant_line_base):
     RCAIDE.Library.Components.Thermal_Management.Batteries.Liquid_Cooled_Wavy_Channel(coolant_line)
     
     HEX.coolant_temperature_of_hot_fluid                  = 323
-    HEX.design_heat_removed                               = 100000 
     coolant_line.heat_exchangers.cross_flow_hex           = HEX     
 
     net.coolant_lines.append(coolant_line) 

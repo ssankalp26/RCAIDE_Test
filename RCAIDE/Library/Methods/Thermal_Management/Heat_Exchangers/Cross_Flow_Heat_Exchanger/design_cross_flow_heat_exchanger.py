@@ -92,8 +92,8 @@ def crossflow_heat_exchanger_design_problem_setup(HEX,coolant_line,print_iterati
     #               variable   initial   lower limit   upper limit     scaling       units 
     inputs.append([ 'p_c_1'   ,   200e3     ,  200e3     , 220e3+1       , 1     ,  1*Units.less]) 
     inputs.append([ 'p_h_1'   ,   160e3     ,  160e3     , 180e3+1       , 1     ,  1*Units.less]) 
-    inputs.append([ 'm_dot_c' ,   1         ,  0.1       , 5          , 1.0       ,  1*Units.less])  
-    inputs.append([ 'm_dot_h' ,   0.1       ,  0.1       , 1             , 1.0       ,  1*Units.less])  
+    inputs.append([ 'm_dot_c' ,   1         ,  0.01       , 5          , 1.0       ,  1*Units.less])  
+    inputs.append([ 'm_dot_h' ,   0.1       ,  0.01       , 1             , 1.0       ,  1*Units.less])  
    
         
     problem.inputs = np.array(inputs,dtype=object)   
@@ -110,12 +110,12 @@ def crossflow_heat_exchanger_design_problem_setup(HEX,coolant_line,print_iterati
     # Constraints
     # ----------------------------------------------------------------------------------------------------------  
     constraints = []      
-    constraints.append([ 'L'         ,  '<'  ,  2.0 ,   1.0   , 1*Units.less])
-    constraints.append([ 'W'         ,  '<'  ,  3.0 ,   1.0   , 1*Units.less])  
-    constraints.append([ 'H'         ,  '<'  ,  2.0 ,   1.0   , 1*Units.less]) 
-    constraints.append([ 'L'         ,  '>'  ,  0.1 ,   1.0   , 1*Units.less])
-    constraints.append([ 'W'         ,  '>'  ,  0.1 ,   1.0   , 1*Units.less])  
-    constraints.append([ 'H'         ,  '>'  ,  0.1 ,   1.0   , 1*Units.less])
+    constraints.append([ 'L'         ,  '<'  ,  5.0 ,   1.0   , 1*Units.less])
+    constraints.append([ 'W'         ,  '<'  ,  5.0 ,   1.0   , 1*Units.less])  
+    constraints.append([ 'H'         ,  '<'  ,  5.0 ,   1.0   , 1*Units.less]) 
+    constraints.append([ 'L'         ,  '>'  ,  0.01 ,   1.0   , 1*Units.less])
+    constraints.append([ 'W'         ,  '>'  ,  0.01 ,   1.0   , 1*Units.less])  
+    constraints.append([ 'H'         ,  '>'  ,  0.01 ,   1.0   , 1*Units.less])
     constraints.append([ 'Q_res'     ,  '<'  ,  5,   1.0   , 1*Units.less])
     problem.constraints =  np.array(constraints,dtype=object)                
     

@@ -114,7 +114,7 @@ def wavy_channel_design_problem_setup(HAS,battery,print_iterations):
     # ----------------------------------------------------------------------------------------------------------       
     inputs = []   
     #               variable   initial      lower limit           upper limit       scaling       units 
-    inputs.append([ 'm_dot' ,  m_dot_0     ,   0.05         ,  2.5                , 1E-1       ,  1*Units.less])   
+    inputs.append([ 'm_dot' ,  m_dot_0     ,   0.005         ,  2.5                , 1E-1       ,  1*Units.less])   
     inputs.append([ 'd'     ,  d_0         ,   0.001        ,  0.01               , 1E-3       ,  1*Units.less])  
     inputs.append([ 'b'     ,  b_0         ,   0.001        ,  0.002              , 1E-3       ,  1*Units.less]) 
     inputs.append([ 'theta' ,  theta_0     ,48*Units.degrees, 70*Units.degrees    , 1.0        ,  1*Units.less])         
