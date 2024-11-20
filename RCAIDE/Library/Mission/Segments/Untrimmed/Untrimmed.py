@@ -48,9 +48,9 @@ def initialize_conditions(segment):
     linear_acceleration_x  = segment.linear_acceleration_x
     linear_acceleration_y  = segment.linear_acceleration_y 
     linear_acceleration_z  = segment.linear_acceleration_z
-    roll_rate = segment.roll_rate
-    pitch_rate = segment.pitch_rate
-    yaw_rate = segment.yaw_rate
+    roll_rate              = segment.roll_rate
+    pitch_rate             = segment.pitch_rate
+    yaw_rate               = segment.yaw_rate
     
     
     # check for initial altitude
