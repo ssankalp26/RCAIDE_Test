@@ -40,5 +40,5 @@ class Propane(Propellant):
         self.surrogate_species_list                = ['CO', 'CO2', 'H2O']
         self.species_list                          = ['CO', 'CO2', 'H2O', 'NO', 'NO2', 'CSOLID']   
         self.surrogate_chemical_kinetics           = 'Fuel_Surrogate.yaml'
-        self.chemical_kinetics                     = 'Jet_A_Low_Fidelity.yaml'
+        self.chemical_kinetics                     = 'Fuel.yaml'
         self.oxidizer                              = 'Air.yaml'        
