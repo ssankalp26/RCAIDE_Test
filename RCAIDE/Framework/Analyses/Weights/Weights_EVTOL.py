@@ -75,6 +75,8 @@ class Weights_EVTOL(Weights):
 
         # updating empty weight
         vehicle.mass_properties.operating_empty = results.empty.total
+        vehicle.mass_properties.takeoff         = results.total
+        vehicle.mass_properties.max_takeoff     = results.total
 
         # done!
         return results        
