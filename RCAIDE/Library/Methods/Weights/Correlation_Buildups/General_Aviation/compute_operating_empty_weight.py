@@ -202,6 +202,10 @@ def compute_operating_empty_weight(vehicle, settings=None):
                     number_of_piston_engines += 1
                     rated_power   = propulsor.engine.sea_level_power
                     piston_engine_flag =  True 
+                elif type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turboprop:      
+                    number_of_piston_engines += 1
+                    rated_power   = propulsor.design_power
+                    piston_engine_flag =  True                    
                           
             if turbofan_flag:
                 W_engine_jet            = Propulsion.compute_jet_engine_weight(thrust_sls)
@@ -256,6 +260,8 @@ def compute_operating_empty_weight(vehicle, settings=None):
             main_wing  =  wing
         
     l_w2h = 0
+    W_tail_horizontal =  0
+    W_tail_vertical   =  0
     for wing in vehicle.wings:            
         if isinstance(wing,RCAIDE.Library.Components.Wings.Horizontal_Tail):
             S_h                = wing.areas.reference
@@ -318,7 +324,7 @@ def compute_operating_empty_weight(vehicle, settings=None):
         main_gear.mass_properties.mass = W_landing_gear.main
         vehicle.append_component(main_gear)
          
-    if 'avionics' not in vehicle: 
+    if len(vehicle.avionics) == 0:
         avionics     = RCAIDE.Library.Components.Systems.Avionics()
         W_uav        = 0. 
     else:
