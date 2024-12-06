@@ -74,7 +74,7 @@ class Noise(Analysis):
         self.settings.microphone_min_y                       = -100  
         self.settings.microphone_max_y                       = 100  
         
-        self.settings.noise_hemisphere                       = False 
+        self.settings.noise_hemisphere                       = True 
         self.settings.noise_hemisphere_radius                = 20  
         self.settings.noise_hemisphere_phi_angles            = np.linspace(np.pi/2,np.pi,6)  
         self.settings.noise_hemisphere_theta_angles          = np.linspace(0, 2*np.pi,6)
