@@ -49,6 +49,6 @@ def generate_hemisphere_microphone_locations(settings):
     gm_mic_locations      = np.zeros((num_gm,3))  
     gm_mic_locations[:,0] = x.flatten() 
     gm_mic_locations[:,1] = y.flatten() 
-    gm_mic_locations[:,2] = r -z.flatten()
+    gm_mic_locations[:,2] = z.flatten()
     
     return gm_mic_locations   
