@@ -20,7 +20,7 @@ import scipy as sp
 # Compute Harmonic Noise 
 # ----------------------------------------------------------------------------------------------------------------------
 ## @ingroup Methods-Noise-Frequency_Domain_Buildup-Rotor 
-def harmonic_noise_plane(harmonics_blade,harmonics_load,conditions,propulsor_conditions,coordinates,rotor,settings,Noise):
+def harmonic_noise_plane(harmonics_blade,harmonics_load,conditions,propulsor_conditions,coordinates,rotor,settings,Noise,cpt):
     '''This computes the harmonic noise (i.e. thickness and loading noise) in the frequency domain 
     of a rotor at any angle of attack with load distribution along the blade span and blade chord. This is a 
     level 3 fidelity approach. All sources are computed using the helicoidal surface theory.
@@ -74,8 +74,8 @@ def harmonic_noise_plane(harmonics_blade,harmonics_load,conditions,propulsor_con
     '''     
 
     aeroacoustic_data       = propulsor_conditions[rotor.tag] 
-    angle_of_attack         = conditions.aerodynamics.angles.alpha 
-    velocity_vector         = conditions.frames.inertial.velocity_vector 
+    angle_of_attack         = conditions.aerodynamics.angles.alpha[cpt]  
+    velocity_vector         = conditions.frames.inertial.velocity_vector[cpt]  
     freestream              = conditions.freestream       
     num_h_b                 = len(harmonics_blade)
     num_h_l                 = len(harmonics_load)
@@ -88,7 +88,7 @@ def harmonic_noise_plane(harmonics_blade,harmonics_load,conditions,propulsor_con
     body2thrust             = sp.spatial.transform.Rotation.from_rotvec(orientation).as_matrix() 
     for jj,airfoil in enumerate(airfoils):
         airfoil_points      = airfoil.number_of_points
-    commanded_thrust_vector = propulsor_conditions.commanded_thrust_vector_angle
+    commanded_thrust_vector = propulsor_conditions.commanded_thrust_vector_angle[cpt] 
     chord_coord             = int(np.floor(airfoil_points/2))
  
     # Lift and Drag - coefficients and distributions 
