@@ -8,8 +8,6 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-## @ingroup Energy
-
 from .Combustor                                  import Combustor
 from .Compressor                                 import Compressor
 from .Compression_Nozzle                         import Compression_Nozzle

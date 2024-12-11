@@ -15,8 +15,7 @@ from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Common.compute_operatin
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Vehicle
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Vehicle
+# ----------------------------------------------------------------------------------------------------------------------  
 class Vehicle(Data):
     """RCAIDE Vehicle container class with database + input / output functionality
     """    
@@ -295,9 +294,7 @@ class Vehicle(Data):
             raise Exception("Unable to place energy_network type %s" % energy_network.typestring())
 
         return energy_network_root
-
-
-## @ingroup Vehicle
+ 
 class Vehicle_Mass_Properties(Components.Mass_Properties): 
     """ The vehicle's mass properties.
         

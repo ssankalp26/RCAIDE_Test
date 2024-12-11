@@ -83,8 +83,7 @@ class Segment(Component):
         # store data
         self.Airfoil.append(airfoil)
 
-        
-## @ingroup Components-Wings
+         
 class Segment_Container(Container):
     """ Container for wing segment
     

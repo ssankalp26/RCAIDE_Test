@@ -17,7 +17,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Plots-Geometry
 def plot_3d_wing(plot_data,wing,number_of_airfoil_points = 21, color_map='greys',alpha=1):
     """ This plots the wings of a vehicle
 
@@ -83,8 +82,7 @@ def plot_3d_wing(plot_data,wing,number_of_airfoil_points = 21, color_map='greys'
             
              
     return plot_data
-
-## @ingroup Library-Plots-Geometry 
+ 
 def generate_3d_wing_points(wing,n_points,dim):
     """ This generates the coordinates of the blade surface for plotting in the aircraft frame (x-back, z-up)
 

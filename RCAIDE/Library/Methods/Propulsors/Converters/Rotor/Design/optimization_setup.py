@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors-Rotor_Design  
 # RCAIDE/Methods/Energy/Propulsors/Rotor_Design/optimization_setup.py
 # 
 # 
@@ -20,8 +19,7 @@ import numpy as np
     
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Optimization Setuo 
-# ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Methods-Energy-Propulsors-Rotor_Design   
+# ----------------------------------------------------------------------------------------------------------------------    
 def optimization_setup(rotor,number_of_stations,print_iterations):
     """ Sets up rotor optimization problem including design variables, constraints and objective function
         using RCAIDE's Nexus optimization framework. Appends methodolody of planform modification to Nexus.

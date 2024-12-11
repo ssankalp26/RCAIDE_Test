@@ -15,8 +15,7 @@ from RCAIDE.Library.Plots.Thermal_Management.plot_reservoir_conditions          
 
 # ----------------------------------------------------------------------
 #  Reservoir
-# ----------------------------------------------------------------------
-## @ingroup Attributes-Coolants
+# ---------------------------------------------------------------------- 
 class Reservoir(Component):
     """Holds values for a coolant reservoir
 

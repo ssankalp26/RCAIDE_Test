@@ -20,7 +20,6 @@ import scipy as sp
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Generalized Rotor Class
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Energy-Propulsion-Converters
 class Rotor(Component):
     """This is a general rotor component.
 

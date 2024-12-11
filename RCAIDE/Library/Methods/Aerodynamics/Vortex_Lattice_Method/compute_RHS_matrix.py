@@ -7,15 +7,14 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------   
  
-from RCAIDE.Framework.Core import Data, interp2d 
+from RCAIDE.Framework.Core import Data 
 
 # package imports 
 import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Compute RHS matrix 
-# ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Methods-Aerodynamics-Common-Lift 
+# ----------------------------------------------------------------------------------------------------------------------    
 def compute_RHS_matrix(delta,phi,conditions,settings,geometry,propeller_wake_model):
 
     """ This computes the right hand side matrix for the VLM. In this

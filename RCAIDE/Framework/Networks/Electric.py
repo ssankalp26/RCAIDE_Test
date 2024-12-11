@@ -18,8 +18,7 @@ import  numpy as  np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  All Electric
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Energy-Networks
+# ----------------------------------------------------------------------------------------------------------------------  
 class Electric(Network):
     """ A network comprising battery pack(s) to power rotors using electric motors via a bus.
         Electronic speed controllers, thermal management system, avionics, and other eletric 

@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors-Electric_Rotor_Propulsor
 # RCAIDE/Methods/Energy/Propulsors/Electric_Rotor_Propulsor/compute_electric_rotor_performance.py
 # 
 # 
@@ -19,8 +18,7 @@ from copy import deepcopy
 
 # ----------------------------------------------------------------------------------------------------------------------
 # compute_electric_rotor_performance
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Energy-Propulsors-Electric_Rotor_Propulsor
+# ----------------------------------------------------------------------------------------------------------------------  
 def compute_electric_rotor_performance(propulsor,state,voltage,center_of_gravity= [[0.0, 0.0,0.0]]):   
     ''' Computes the perfomrance of one propulsor
     

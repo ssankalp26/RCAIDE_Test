@@ -1,4 +1,3 @@
-## @ingroup Methods-Aerodynamics-Common-Drag
 # RCAIDE/Methods/Aerodynamics/Common/Drag/parasite_drag_wing.py
 # 
 # 
@@ -7,7 +6,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------   
- 
 from RCAIDE.Framework.Core import Data  
 from Legacy.trunk.S.Methods.Aerodynamics.Common.Fidelity_Zero.Helper_Functions import compressible_mixed_flat_plate
 from Legacy.trunk.S.Methods.Aerodynamics.Supersonic_Zero.Drag.Cubic_Spline_Blender import Cubic_Spline_Blender
@@ -17,8 +15,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------  
 #   Parasite Drag Wing 
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Methods-Aerodynamics-Common-Fidelity_Zero-Drag
+# ----------------------------------------------------------------------------------------------------------------------   
 def parasite_drag_wing(state,settings,geometry):
     """Computes the parasite drag due to wings
 

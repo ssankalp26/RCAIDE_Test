@@ -12,8 +12,7 @@ from RCAIDE.Library.Methods.Propulsors.Converters.Supersonic_Nozzle.append_super
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Compressor 
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Components-Energy-Converters
+# ----------------------------------------------------------------------------------------------------------------------  
 class Supersonic_Nozzle(Component):
     """This is a nozzle component that allows for supersonic outflow.
     Calling this class calls the compute function.

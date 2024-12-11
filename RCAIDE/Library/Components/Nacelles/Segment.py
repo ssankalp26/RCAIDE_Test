@@ -40,8 +40,7 @@ class Segment(Component):
         self.height                   = 0 
         self.width                    = 0 
         self.curvature                = 2 # super ellipse 
-        
-## @ingroup Components-Wings
+         
 class Segment_Container(Container):
     """ Container for fuselage segment
     

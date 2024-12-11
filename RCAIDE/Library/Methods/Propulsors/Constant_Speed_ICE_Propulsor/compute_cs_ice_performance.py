@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors-Constant_Speed_ICE_Propulsor
 # RCAIDE/Methods/Energy/Propulsors/Constant_Speed_ICE_Propulsor/compute_cs_ice_performance.py
 # 
 # 
@@ -17,8 +16,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 # internal_combustion_engine_constant_speed_propulsor
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Energy-Propulsors-Networks
+# ----------------------------------------------------------------------------------------------------------------------  
 def compute_cs_ice_performance(propulsor,state,fuel_line,center_of_gravity= [[0.0, 0.0,0.0]]):  
     ''' Computes the perfomrance of one propulsor
     

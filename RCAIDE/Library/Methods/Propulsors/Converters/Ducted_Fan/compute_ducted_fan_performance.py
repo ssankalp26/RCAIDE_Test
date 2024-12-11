@@ -15,7 +15,6 @@ import  numpy as  np
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Generalized Rotor Class
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Energy-Propulsion-Converters
 def compute_ducted_fan_performance(propulsor,state,distributor,center_of_gravity= [[0.0, 0.0,0.0]]):
     """Analyzes a general ducted_fan given geometry and operating conditions.
 

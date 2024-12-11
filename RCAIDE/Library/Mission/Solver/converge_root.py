@@ -15,7 +15,6 @@ import  sys
 # ----------------------------------------------------------------------------------------------------------------------
 # converge root
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Missions-Segments
 def converge_root(segment):
     """Interfaces the mission to a numerical solver. The solver may be changed by using root_finder.
 
@@ -67,7 +66,6 @@ def converge_root(segment):
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Helper Functions
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Missions-Segments
 def iterate(unknowns, segment):
     
     """Runs one iteration of of all analyses for the mission.

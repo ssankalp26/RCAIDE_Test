@@ -17,7 +17,6 @@ import matplotlib.pyplot as plt
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Plots-Geometry
 def plot_airfoil(airfoil_paths,
                  save_figure = False, 
                  save_filename = "Airfoil_Geometry",

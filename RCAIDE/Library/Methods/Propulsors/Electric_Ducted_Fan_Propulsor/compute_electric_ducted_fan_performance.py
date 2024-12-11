@@ -18,8 +18,7 @@ from copy import deepcopy
 
 # ----------------------------------------------------------------------------------------------------------------------
 # compute_electric_ducted_fan_performance
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Energy-Propulsors-Electric_Ducted_Fan_Propulsor
+# ----------------------------------------------------------------------------------------------------------------------  
 def compute_electric_ducted_fan_performance(propulsor,state,bus,voltage,center_of_gravity= [[0.0, 0.0,0.0]]):   
     ''' Computes the perfomrance of one propulsor
     

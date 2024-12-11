@@ -5,9 +5,7 @@ from RCAIDE.Framework.Analyses import Analysis
 
 # ----------------------------------------------------------------------
 #  Analysis
-# ----------------------------------------------------------------------
-
-## @ingroup Analyses-Stability
+# ---------------------------------------------------------------------- 
 class Stability(Analysis):
     """This is the base class for stability analyses. It contains functions
     that are built into the default class.

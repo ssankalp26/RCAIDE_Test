@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors-Rotor_Design  
 # RCAIDE/Methods/Energy/Propulsors/Rotor_Design/optimization_setup.py
 # 
 # 
@@ -18,8 +17,7 @@ import numpy as np
     
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Blade Geometry Setup 
-# ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Methods-Energy-Propulsors-Rotor_Design    
+# ----------------------------------------------------------------------------------------------------------------------    
 def blade_geometry_setup(rotor,number_of_stations): 
     """ Defines a dummy vehicle for prop-rotor blade optimization.
           
