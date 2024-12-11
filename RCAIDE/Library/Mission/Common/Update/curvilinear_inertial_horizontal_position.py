@@ -14,8 +14,7 @@ from RCAIDE.Framework.Core import Units
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Integrate Position
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Common-Update 
+# ---------------------------------------------------------------------------------------------------------------------- 
 def curvilinear_inertial_horizontal_position(segment):
     """ Determines how far the airplane has traveled and calculates position. 
     

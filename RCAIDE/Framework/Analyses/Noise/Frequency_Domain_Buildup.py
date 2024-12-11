@@ -1,4 +1,3 @@
-## @ingroup Analyses-Noise
 # RCAIDE/Framework/Analyses/Noise/Frequency_Domain_Buildup.py
 # 
 # 
@@ -21,7 +20,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Frequency_Domain_Buildup
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Analyses-Noise
 class Frequency_Domain_Buildup(Noise):
     """This is an acoustic analysis based on a collection of frequency domain methods 
 

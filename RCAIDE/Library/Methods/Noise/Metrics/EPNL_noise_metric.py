@@ -13,8 +13,7 @@ import numpy as np
     
 # ----------------------------------------------------------------------------------------------------------------------  
 #  EPNL_noise_metric
-# ----------------------------------------------------------------------------------------------------------------------     
-## @ingroup Methods-Noise-Metrics   
+# ----------------------------------------------------------------------------------------------------------------------        
 def EPNL_noise_metric(PNLT):
     """This method calculates the effective perceived noise level (EPNL) based on a
     time history Perceived Noise Level with Tone Correction (PNLT).

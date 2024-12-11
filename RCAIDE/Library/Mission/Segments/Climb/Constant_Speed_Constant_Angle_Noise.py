@@ -57,8 +57,7 @@ def expand_state(segment):
 
 # ----------------------------------------------------------------------
 #  Initialize Conditions
-# ----------------------------------------------------------------------
-## @ingroup Library-Missions-segments-climb
+# ---------------------------------------------------------------------- 
 def initialize_conditions(segment):
     """Gets the overall time step for the segment type.
     

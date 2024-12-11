@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Common 
 # RCAIDE/Methods/Noise/Common/compute_rotor_point_source_coordinates.py
 # 
 # 
@@ -16,7 +15,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Source Coordinates 
 # ----------------------------------------------------------------------------------------------------------------------      
-## @ingroup Methods-Noise-Common 
 def compute_rotor_point_source_coordinates(network,propulsor,rotor,conditions,mls,settings):
     """This calculated the position vector from a point source to the observer 
             

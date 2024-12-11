@@ -1,4 +1,3 @@
-## @ingroup Methods-Aerodynamics-Common-Fidelity_Zero-Lift
 # compute_propeller_nonuniform_freestream.py
 # 
 # Created:   April 2021, R. Erhard

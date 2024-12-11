@@ -14,7 +14,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Update Freestream
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Common-Update
 def freestream(segment):
     """ Updates the freestream conditions 
         

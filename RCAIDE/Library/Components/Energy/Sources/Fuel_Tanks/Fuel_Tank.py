@@ -1,4 +1,3 @@
-## @ingroup Library-Compoments-Energy-Fuel_Tanks Fuel_Tanks
 # RCAIDE/Library/Compoments/Energy/Fuel_Tanks/Fuel_Tank.py
 # 
 # 

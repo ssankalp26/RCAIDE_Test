@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Booms
 # RCAIDE/Compoments/Booms/Boom.py
 # 
 # 

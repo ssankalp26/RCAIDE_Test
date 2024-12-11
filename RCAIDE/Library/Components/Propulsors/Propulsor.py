@@ -13,7 +13,6 @@ from RCAIDE.Library.Components                   import Component
 # ----------------------------------------------------------------------------------------------------------------------
 #  Propusor
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Energy-Distributors
 class Propulsor(Component):
     """  This controls the flow of energy into and from a battery-powered nework 
     

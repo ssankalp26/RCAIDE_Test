@@ -246,7 +246,7 @@ def compute_wing_weight(vehicle, wing, WPOD, complexity, settings, num_main_wing
 
     return WWING * Units.lbs
 
-## @ingroup Methods-Weights-Correlations-FLOPS
+
 def generate_wing_stations(fuselage_width, wing):
     """ Divides half the wing in sections, using the defined sections
         and adding a section at the intersection of wing and fuselage
@@ -337,7 +337,7 @@ def generate_wing_stations(fuselage_width, wing):
     SWP[-1] = np.arctan(np.tan(wing.Segments[segment_keys[-2]].sweeps.quarter_chord) - (C[-2] - C[-1]))
     return ETA, C, T, SWP
 
-## @ingroup Methods-Weights-Correlations-FLOPS
+
 def generate_int_stations(NSD, ETA):
     """ Divides half of the wing in integration stations
 
@@ -370,7 +370,7 @@ def generate_int_stations(NSD, ETA):
             Y.append(Y[-1] + AINT)
     return NS, Y
 
-## @ingroup Methods-Weights-Correlations-FLOPS
+
 def calculate_load(ETA):
     """ Returns load factor assuming elliptical load distribution
 
@@ -391,7 +391,7 @@ def calculate_load(ETA):
     PS = np.sqrt(1. - ETA ** 2)
     return PS
 
-## @ingroup Methods-Weights-Correlations-FLOPS
+
 def find_sweep(y, lst_y, swp):
     """ Finds sweep angle for a certain y-location along the wing
 
@@ -422,7 +422,7 @@ def find_sweep(y, lst_y, swp):
 
     return swps
 
-## @ingroup Methods-Weights-Correlations-FLOPS
+
 def get_spanwise_engine(networks, SEMISPAN):
     """ Returns EETA for the engine locations along the wing
 
@@ -452,7 +452,7 @@ def get_spanwise_engine(networks, SEMISPAN):
     EETA =  np.array(EETA)
     return EETA
 
-## @ingroup Methods-Weights-Correlations-FLOPS
+
 def wing_weight_constants_FLOPS(ac_type):
     """Defines wing weight constants as defined by FLOPS
         Inputs: ac_type - determines type of instruments, electronics, and operating items based on types:
@@ -467,7 +467,7 @@ def wing_weight_constants_FLOPS(ac_type):
         A = [8.8, 6.25, 0.68, 0.34, 0.6, 0.035, 1.5]
     return A
 
-## @ingroup Methods-Weights-Correlations-FLOPS
+
 def determine_fuselage_chord(fuselage_width, wing):
     """ Determine chord at wing and fuselage intersection
 

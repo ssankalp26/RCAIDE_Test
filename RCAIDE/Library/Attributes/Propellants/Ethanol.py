@@ -11,7 +11,6 @@ from .Propellant import Propellant
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Ethanol Propellant Class
 # ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup  Library-Attributes-Propellants
 class Ethanol(Propellant):
     """Ethanol class propellant  
     """

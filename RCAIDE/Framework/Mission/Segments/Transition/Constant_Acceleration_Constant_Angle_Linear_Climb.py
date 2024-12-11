@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Transition
 # RCAIDE/Framework/Analyses/Mission/Segments/Transition/Constant_Acceleration_Constant_Angle_Linear_Climb.py
 # 
 # 

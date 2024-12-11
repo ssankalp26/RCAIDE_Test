@@ -1,4 +1,3 @@
-## @ingroup Energy-Thermal_Management-Cryogenics
 # RCAIDE/Energy/Thermal_Management/Cryogenics/Cryocooler.py
 # 
 # 
@@ -14,8 +13,7 @@ from RCAIDE.Library.Methods.Thermal_Management.Cryogenics.cryocooler_model impor
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Cryocooler
-# ----------------------------------------------------------------------------------------------------------------------     
-## @ingroup Energy-Thermal_Management-Cryogenics
+# ----------------------------------------------------------------------------------------------------------------------      
 class Cryocooler(Component):
     
     """

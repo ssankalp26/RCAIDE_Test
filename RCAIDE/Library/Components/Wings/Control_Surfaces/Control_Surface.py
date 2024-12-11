@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Wings-Control_Surfaces
 # RCAIDE/Compoments/Wings/Control_Surfaces/Control_Surface.py
 # 
 # 

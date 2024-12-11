@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Descent
 # RCAIDE/Framework/Analyses/Mission/Segments/Descent/Constant_EAS_Constant_Rate.py
 # 
 # 

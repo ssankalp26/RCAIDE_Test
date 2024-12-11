@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Common 
 # RCAIDE/Methods/Noise/Common/decibel_arithmetic.py
 # 
 # 
@@ -12,8 +11,7 @@ import numpy as np
     
 # ----------------------------------------------------------------------------------------------------------------------  
 #  pressure_ratio_to_SPL_arithmetic
-# ----------------------------------------------------------------------------------------------------------------------      
-## @ingroup Methods-Noise-Common  
+# ----------------------------------------------------------------------------------------------------------------------       
 def pressure_ratio_to_SPL_arithmetic(p_pref_total):
     ''' This computes the total SPL given mutiple acoustic pressure ratios 
     of one of mutiple sources

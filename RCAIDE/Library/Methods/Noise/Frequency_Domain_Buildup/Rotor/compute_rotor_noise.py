@@ -27,7 +27,6 @@ from RCAIDE.Framework.Core import interp2d
 # ----------------------------------------------------------------------------------------------------------------------    
 #  Rotor Noise 
 # ----------------------------------------------------------------------------------------------------------------------    
-## @ingroup Methods-Noise-Frequency_Domain_Buildup-Rotor
 def compute_rotor_noise(microphone_locations,network,propulsor,rotor,segment,settings, rotor_index = 0, previous_rotor_tag = None):
     ''' This is a collection medium-fidelity frequency domain methods for rotor acoustic noise prediction which 
     computes the acoustic signature (sound pressure level, weighted sound pressure levels,

@@ -1,4 +1,3 @@
-## @ingroup Library-Attributes-Coolants 
 # RCAIDE/Library/Attributes/Coolants/Coolant.py
 # 
 #

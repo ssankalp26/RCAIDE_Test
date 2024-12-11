@@ -1,4 +1,3 @@
-## @ingroup Analyses-Noise
 # RCAIDE/Framework/Analyses/Noise/Frequency_Domain_Buildup.py
 # 
 # 

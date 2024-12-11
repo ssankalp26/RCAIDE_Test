@@ -1,4 +1,3 @@
-## @ingroup Analyses-Noise
 # RCAIDE/Framework/Analyses/Noise/Noise.py
 # 
 # 
@@ -15,7 +14,6 @@ import numpy as np
 # ----------------------------------------------------------------------
 #  Noise
 # ----------------------------------------------------------------------
-## @ingroup Analyses-Noise
 class Noise(Analysis):
     """ RCAIDE.Framework.Analyses.Noise.Noise()
     

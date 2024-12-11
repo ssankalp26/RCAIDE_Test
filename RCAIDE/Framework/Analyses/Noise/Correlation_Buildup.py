@@ -1,4 +1,3 @@
-## @ingroup Analyses-Noise
 # RCAIDE/Framework/Analyses/Noise/Correlation_Buildup.py
 # 
 # 
@@ -19,8 +18,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Correlation_Buildup
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Analyses-Noise
+# ---------------------------------------------------------------------------------------------------------------------- 
 class Correlation_Buildup(Noise): 
     """This is an acoustic analysis based on a collection of correlative modes
 

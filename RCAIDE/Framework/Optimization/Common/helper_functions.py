@@ -76,7 +76,7 @@ def set_values(dictionary,input_dictionary,converted_values,aliases):
             
     return dictionary
         
-## @ingroup Optimization
+
 def find_a_star(dictionary,string):
     """ Searches through a dictionary looking for an *
 
@@ -114,7 +114,7 @@ def find_a_star(dictionary,string):
         
     return newstrings
 
-## @ingroup Optimization
+
 def scale_input_values(inputs,x):
     """ Scales the values according to the a provided scale
 
@@ -174,7 +174,7 @@ def limit_input_values(inputs):
     return inputs
     
 
-## @ingroup Optimization
+
 def convert_values(inputs): 
     """ Converts an inputs from an optimization into the right units
 
@@ -209,7 +209,7 @@ def convert_values(inputs):
 #   Get
 # ----------------------------------------------------------------------  
 
-## @ingroup Optimization
+
 def get_values(dictionary,outputs,aliases):
     """ Retrieves values saved in a dictionary 
 
@@ -254,7 +254,7 @@ def get_values(dictionary,outputs,aliases):
     
     return values
 
-## @ingroup Optimization
+
 def scale_obj_values(inputs,x):
     """ Rescales an objective based on Nexus inputs scale
 
@@ -283,7 +283,7 @@ def scale_obj_values(inputs,x):
     
     return scaled
 
-## @ingroup Optimization
+
 def scale_const_values(inputs,x):
     """ Rescales constraint values based on Nexus inputs scale
 
@@ -309,7 +309,7 @@ def scale_const_values(inputs,x):
     
     return scaled
 
-## @ingroup Optimization
+
 def scale_const_bnds(inputs):
     """ Rescales constraint bounds based on Nexus inputs scale
 
@@ -339,7 +339,7 @@ def scale_const_bnds(inputs):
     
     return converted_values
 
-## @ingroup Optimization
+
 def unscale_const_values(inputs,x):
     """ Rescales values based on Nexus inputs scale
 

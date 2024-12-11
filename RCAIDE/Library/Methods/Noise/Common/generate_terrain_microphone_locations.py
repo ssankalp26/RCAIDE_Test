@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Common 
 # RCAIDE/Methods/Noise/Common/generate_microphone_locations.py
 # 
 # 
@@ -17,8 +16,7 @@ import numpy as np
  
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  generate_terrain_microphone_locations
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Noise-Common  
+# ----------------------------------------------------------------------------------------------------------------------  
 def generate_terrain_microphone_locations(settings):
     """This computes the absolute microphone/observer locations on a defined topography
             

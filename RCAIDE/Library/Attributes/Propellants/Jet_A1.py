@@ -1,4 +1,3 @@
-## @ingroup Library-Attributes-Propellants
 # RCAIDE/Library/Attributes/Propellants/Jet_A1.py
 # 
 #
@@ -9,13 +8,11 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
 
 from .Propellant import Propellant
-from RCAIDE.Framework.Core import Data 
-import  os
+from RCAIDE.Framework.Core import Data  
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Jet_A1 Propellant Class
 # ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup  Library-Attributes-Propellants
 class Jet_A1(Propellant):
     """Jet A1 class propellant  
     """

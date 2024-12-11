@@ -16,7 +16,6 @@ from RCAIDE.Library.Methods.Propulsors.Modulators.Electronic_Speed_Controller.ap
 # ----------------------------------------------------------------------------------------------------------------------
 #  Electronic Speed Controller Class
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Energy-Distributors
 class Electronic_Speed_Controller(Component):
     
     def __defaults__(self):

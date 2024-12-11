@@ -1,4 +1,3 @@
-## @defgroup Analyses-Noise Noise
 # RCAIDE/Framework/Analyses/Geodesics/__init__.py
 # 
 

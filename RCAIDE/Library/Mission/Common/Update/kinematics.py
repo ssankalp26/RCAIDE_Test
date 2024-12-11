@@ -13,7 +13,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Update Acceleration
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Segments-Common-Update
 def kinematics(segment):
     """ Updates the kinematics of the rigid body (aircraft) 
         

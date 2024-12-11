@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Vertical_Flight
 # RCAIDE/Framework/Analyses/Mission/Segments/Vertical_Flight/Climb.py
 # 
 # 

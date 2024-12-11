@@ -7,7 +7,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  Update Atmosphere
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Common-Update
 def atmosphere(segment):
     """ Computes conditions of the atmosphere at given altitudes
     

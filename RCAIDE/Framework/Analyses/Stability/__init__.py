@@ -1,4 +1,3 @@
-## @defgroup Framework-Analyses-Stability Stability
 # RCAIDE/Framework/Analyses/Stability/__init__.py
 # 
 

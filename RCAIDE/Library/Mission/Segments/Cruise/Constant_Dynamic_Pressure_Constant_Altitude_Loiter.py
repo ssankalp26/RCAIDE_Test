@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Cruise
 # RCAIDE/Library/Missions/Segments/Cruise/Constant_Dynamic_Pressure_Constant_Altitude_Loiter.py
 # 
 # 

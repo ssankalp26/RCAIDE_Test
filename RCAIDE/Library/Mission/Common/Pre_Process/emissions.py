@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Common-Pre_Process
 # RCAIDE/Library/Missions/Common/Pre_Process/emissions.py
 # 
 # 
@@ -11,7 +10,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  stability
 # ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Missions-Segments-Common-Pre_Process
 def emissions(mission):
     """ Runs emissions model and build surrogate
     

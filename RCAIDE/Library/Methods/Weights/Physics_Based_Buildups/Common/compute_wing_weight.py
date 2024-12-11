@@ -1,4 +1,3 @@
-## @ingroup Methods-Weights-Buildups-Common 
 # RCAIDE/Library/Methods/Weights/Buildups/Common/compute_boom_weight.py
 # 
 # 

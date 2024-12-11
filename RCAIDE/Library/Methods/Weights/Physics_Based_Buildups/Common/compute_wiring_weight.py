@@ -1,4 +1,3 @@
-## @ingroup Methods-Weights-Buildups-Common 
 # RCAIDE/Library/Methods/Weights/Buildups/Common/compute_boom_weight.py
 # 
 # 
@@ -14,7 +13,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 # Compute wiring weight
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Methods-Weights-Buildups-Common 
 def compute_wiring_weight(wing, config, cablePower):
     """ Calculates mass of wiring required for a wing, including DC power
         cables and communication cables, assuming power cables run an average of

@@ -1,4 +1,3 @@
-## @ingroup Methods-Aerodynamics-Common-Fidelity_Zero-Lift
 # generate_wing_wake_grid.py
 # 
 # Created:   April 2021, R. Erhard

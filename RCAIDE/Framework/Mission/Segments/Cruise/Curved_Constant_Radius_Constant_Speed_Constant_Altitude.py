@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Cruise 
 # RCAIDE/Framework/Analyses/Mission/Segments/Cruise/Curved_Constant_Radius_Constant_Speed_Constant_Altitude.py
 # 
 # 

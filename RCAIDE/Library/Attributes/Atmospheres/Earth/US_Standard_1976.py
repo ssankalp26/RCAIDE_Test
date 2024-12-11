@@ -1,4 +1,3 @@
-## @ingroup Library-Attributes-Atmospheres-Earth
 # RCAIDE/Library/Attributes/Atmospheres/Earth/US_Standard_1976.py
 # 
 #

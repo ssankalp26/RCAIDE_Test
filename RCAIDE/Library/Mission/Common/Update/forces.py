@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Common-Update
 # RCAIDE/Library/Missions/Common/Update/forces.py
 # 
 # 
@@ -16,7 +15,6 @@ import  numpy as  np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Update Forces
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Segments-Common-Update
 def forces(segment): 
     """ Updates the total resultant force on the vehicle 
         

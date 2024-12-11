@@ -1,4 +1,3 @@
-## @defgroup Analyses-Noise Noise
 # RCAIDE/Framework/Analyses/Noise/__init__.py
 # 
 
