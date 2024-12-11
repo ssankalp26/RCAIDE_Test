@@ -40,5 +40,12 @@ class Propanol(Propellant):
         self.surrogate_species_list                = ['CO', 'CO2', 'H2O']
         self.species_list                          = ['CO', 'CO2', 'H2O', 'NO', 'NO2', 'CSOLID']   
         self.surrogate_chemical_kinetics           = 'Fuel_Surrogate.yaml'
-        self.chemical_kinetics                     = 'Jet_A_High_Fidelity.yaml'
+        self.chemical_kinetics                     = 'Fuel.yaml'
         self.oxidizer                              = 'Air.yaml'        
+        
+        self.global_warming_potential_100.CO2       = 1     # CO2e/kg  
+        self.global_warming_potential_100.H2O       = 0.06  # CO2e/kg  
+        self.global_warming_potential_100.SO2       = -226  # CO2e/kg  
+        self.global_warming_potential_100.NOx       = 52    # CO2e/kg  
+        self.global_warming_potential_100.Soot      = 1166  # CO2e/kg    
+        self.global_warming_potential_100.Contrails = 11    # kg/CO2e/km          

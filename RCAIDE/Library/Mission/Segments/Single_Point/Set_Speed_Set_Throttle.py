@@ -27,7 +27,7 @@ def initialize_conditions(segment):
     segment.altitude                               [meters]
     segment.air_speed                              [meters/second]
     segment.throttle                               [unitless]
-    segment.acceleration_z                         [meters/second^2]
+    segment.linear_acceleration_z                         [meters/second^2]
     segment.state.unknowns.acceleration            [meters/second^2]
 
     Outputs:
@@ -42,11 +42,14 @@ def initialize_conditions(segment):
     """      
     
     # unpack
-    alt              = segment.altitude
-    air_speed        = segment.air_speed
-    beta             = segment.sideslip_angle  
-    acceleration_z   = segment.acceleration_z
-    acceleration     = segment.state.unknowns.acceleration[0][0]
+    alt                     = segment.altitude
+    air_speed               = segment.air_speed
+    beta                    = segment.sideslip_angle  
+    linear_acceleration_z   = segment.linear_acceleration_z
+    angular_acceleration_x  = segment.angular_acceleration_x
+    angular_acceleration_y  = segment.angular_acceleration_y
+    angular_acceleration_z  = segment.angular_acceleration_z
+    acceleration            = segment.state.unknowns.acceleration[0][0]
     
     # check for initial altitude
     if alt is None:
@@ -61,7 +64,8 @@ def initialize_conditions(segment):
     segment.state.conditions.frames.inertial.position_vector[:,2] = -alt # z points down
     segment.state.conditions.frames.inertial.velocity_vector[:,0] = v_x 
     segment.state.conditions.frames.inertial.velocity_vector[:,1] = v_y 
-    segment.state.conditions.frames.inertial.acceleration_vector  = np.array([[acceleration,0.0,acceleration_z]]) 
+    segment.state.conditions.frames.inertial.acceleration_vector  = np.array([[acceleration,0.0,linear_acceleration_z]]) 
+    segment.state.conditions.frames.inertial.angular_acceleration_vector  = np.array([[angular_acceleration_x,angular_acceleration_y,angular_acceleration_z]]) 
     
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Unpack Unknowns 

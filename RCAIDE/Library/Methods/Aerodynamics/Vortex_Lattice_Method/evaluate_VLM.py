@@ -62,9 +62,9 @@ def evaluate_surrogate(state,settings,vehicle):
         for control_surface in wing.control_surfaces:  
             if type(control_surface) == RCAIDE.Library.Components.Wings.Control_Surfaces.Aileron:
                 if trim ==  True: 
-                    delta_a = -np.atleast_2d(conditions.control_surfaces.aileron.deflection) 
+                    delta_a = np.atleast_2d(conditions.control_surfaces.aileron.deflection) 
                 else:
-                    delta_a = -np.ones_like(Mach) * control_surface.deflection  
+                    delta_a = np.ones_like(Mach) * control_surface.deflection  
             if type(control_surface) == RCAIDE.Library.Components.Wings.Control_Surfaces.Elevator: 
                 if trim ==  True: 
                     delta_e = np.atleast_2d(conditions.control_surfaces.elevator.deflection)

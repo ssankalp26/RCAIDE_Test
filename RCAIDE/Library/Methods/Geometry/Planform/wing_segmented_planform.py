@@ -224,11 +224,10 @@ def segment_properties(wing,update_wet_areas=False,update_ref_areas=False):
     t_c_w                     = wing.thickness_to_chord
     segments                  = wing.Segments
     segment_names             = list(segments.keys())
-    num_segments              = len(segment_names)      
-    
-    total_wetted_area            = 0.
-    total_reference_area         = 0.
-    root_chord                   = wing.chords.root      
+    num_segments              = len(segment_names)   
+    total_wetted_area         = 0.
+    total_reference_area      = 0.
+    root_chord                = wing.chords.root      
     
     for i_segs in range(num_segments):
         if i_segs == num_segments-1:

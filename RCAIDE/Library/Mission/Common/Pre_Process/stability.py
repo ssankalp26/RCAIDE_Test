@@ -9,6 +9,7 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
 # RCAIDE imports  
 import  RCAIDE 
+from RCAIDE.Library.Methods.Geometry.Planform  import wing_segmented_planform, wing_planform
 # ----------------------------------------------------------------------------------------------------------------------
 #  stability
 # ----------------------------------------------------------------------------------------------------------------------  
@@ -24,10 +25,19 @@ def stability(mission):
             
         Outputs:
             None             
-    """      
+    """
     last_tag = None
-    for tag,segment in mission.segments.items():
-        if segment.analyses.stability !=  None:
+    for tag,segment in mission.segments.items(): 
+                
+        if segment.analyses.stability !=  None: 
+            # ensure all properties of wing are computed before drag calculations  
+            vehicle =  segment.analyses.stability.vehicle
+            for wing in  vehicle.wings: 
+                if len(wing.Segments) > 1: 
+                    wing_segmented_planform(wing)
+                else:
+                    wing_planform(wing)
+                    
             if  (last_tag!=  None) and  ('compute' in mission.segments[last_tag].analyses.stability.process.keys()): 
                 segment.analyses.stability.process.compute.lift.inviscid_wings = mission.segments[last_tag].analyses.stability.process.compute.lift.inviscid_wings
                 segment.analyses.stability.surrogates       = mission.segments[last_tag].analyses.stability.surrogates 
