@@ -1,4 +1,3 @@
-# @ingroup Methods-Aerodynamics
 # RCAIDE/Methods/Aerodynamics/Lifting_Line/__init__.py
 # 
 

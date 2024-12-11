@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments 
 # RCAIDE/Library/Missions/Segments/expand_state.py
 # 
 # 

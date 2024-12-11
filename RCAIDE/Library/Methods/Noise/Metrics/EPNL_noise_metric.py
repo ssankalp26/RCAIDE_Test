@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Metrics  
 # RCAIDE/Methods/Noise/Metrics/EPNL_noise_metric.py
 # 
 # 

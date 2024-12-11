@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors-Electric_Ducted_Fan_Propulsor
 # RCAIDE/Methods/Energy/Propulsors/Electric_Ducted_Fan_Propulsor/compute_ducted_fan_performance.py
 # 
 # 

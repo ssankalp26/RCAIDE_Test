@@ -7,7 +7,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
-# @ingroup Methods-Geometry-Two_Dimensional
 
 from .convert_sweep import convert_sweep
 from Legacy.trunk.S.Methods.Geometry.Two_Dimensional.Planform import fuselage_planform

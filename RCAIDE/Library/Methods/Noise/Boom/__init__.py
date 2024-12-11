@@ -1,4 +1,3 @@
-# @ingroup Methods 
 # RCAIDE/Methods/Noise/Boom/__init__.py
 # 
 

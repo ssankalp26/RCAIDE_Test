@@ -1,4 +1,3 @@
-## @ingroup Energy-Propulsion-Converters
 # RCAIDE/Library/Compoments/Energy/Propulsion/Converters/Rotor.py
 # 
 # 
@@ -7,6 +6,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
+
  # RCAIDE imports 
 from RCAIDE.Framework.Core                              import Data , Units, Container
 from RCAIDE.Library.Components                          import Component 

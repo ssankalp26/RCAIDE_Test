@@ -5,8 +5,7 @@
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
-# ----------------------------------------------------------------------------------------------------------------------
-# @ingroup Methods-Energy-Sources-Battery
+# ---------------------------------------------------------------------------------------------------------------------- 
 
 from .append_battery_conditions               import append_battery_conditions, append_battery_segment_conditions
 from .find_ragone_properties                  import find_ragone_properties

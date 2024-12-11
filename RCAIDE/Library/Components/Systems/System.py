@@ -1,4 +1,3 @@
-## @ingroup Library-Compoments-Systems
 # RCAIDE/Library/Compoments/Systems/System.py
 # 
 # Created:  Mar 2024, M. Clarke 

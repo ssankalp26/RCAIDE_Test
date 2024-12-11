@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments
 # optimize.py
 # 
 # Created:  Dec 2016, E. Botero

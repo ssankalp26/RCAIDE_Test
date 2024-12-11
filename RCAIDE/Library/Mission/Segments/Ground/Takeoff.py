@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Ground
 # RCAIDE/Library/Missions/Segments/Ground/Takeoff.py
 # 
 # 

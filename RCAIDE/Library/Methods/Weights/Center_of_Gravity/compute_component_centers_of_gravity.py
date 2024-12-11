@@ -1,4 +1,3 @@
-## @ingroup Methods-Stability-Center_of_Gravity Center_of_Gravity
 # RCAIDE/Methods/Stability/Center_of_Gravity/compute_component_centers_of_gravity.py
 # 
 # 

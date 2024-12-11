@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors-Networks-Turboprop_Propulsor
 # RCAIDE/Methods/Energy/Propulsors/Networks/Turboprop_Propulsor/compute_turboprop_performance.py
 # 
 # 
@@ -9,8 +8,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 # RCAIDE imports      
 
-from RCAIDE.Framework.Core                                           import Data
-from RCAIDE.Framework.Mission.Common                                 import Conditions
+from RCAIDE.Framework.Core                                           import Data 
 from RCAIDE.Library.Methods.Propulsors.Converters.Ram                import compute_ram_performance
 from RCAIDE.Library.Methods.Propulsors.Converters.Combustor          import compute_combustor_performance
 from RCAIDE.Library.Methods.Propulsors.Converters.Compressor         import compute_compressor_performance

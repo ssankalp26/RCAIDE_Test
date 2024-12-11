@@ -1,4 +1,3 @@
-## @ingroup Library-Methods-Energy-Propulsors-Turboshaft_Propulsor
 # RCAIDE/Library/Methods/Energy/Propulsors/Turboshaft_Propulsor/design_turboprop.py
 # 
 # 

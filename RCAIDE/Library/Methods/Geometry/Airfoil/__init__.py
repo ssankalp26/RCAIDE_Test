@@ -7,7 +7,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
-# @ingroup Methods-Geometry-Two_Dimensional-Cross_Section
 
 from .compute_naca_4series        import compute_naca_4series 
 from .compute_airfoil_properties  import compute_airfoil_properties

@@ -1,7 +1,4 @@
-## @ingroup Methods-Weights-Buildups-Common
-
-# rotor.py
-#
+# RCAIDE/Library/Methods/Weights/Physics_Based_Buildups/Common
 # Created:  Jun 2017, J. Smart
 # Modified: Apr 2018, J. Smart
 #           Mar 2020, M. Clarke
@@ -9,14 +6,13 @@
 #-------------------------------------------------------------------------------
 # Imports
 #-------------------------------------------------------------------------------
-
 from Legacy.trunk.S.Attributes.Solids import (
     Bidirectional_Carbon_Fiber, Carbon_Fiber_Honeycomb, Paint, Unidirectional_Carbon_Fiber, Aluminum, Epoxy, Nickel, Aluminum_Rib)
 import numpy as np
 import copy as cp
 
 #-------------------------------------------------------------------------------
-# Prop
+# compute_rotor_weight
 #-------------------------------------------------------------------------------
 def compute_rotor_weight(rotor,
          maximum_lifting_thrust,

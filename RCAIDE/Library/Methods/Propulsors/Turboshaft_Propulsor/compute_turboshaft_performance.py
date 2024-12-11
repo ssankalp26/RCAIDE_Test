@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors-Networks-turboshaft_Propulsor
 # RCAIDE/Methods/Energy/Propulsors/Networks/turboshaft_Propulsor/compute_turboshaft_performance.py
 # 
 # 

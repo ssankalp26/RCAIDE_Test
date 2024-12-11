@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Boom  
 # RCAIDE/Methods/Noise/Boom/lift_equivalent_area.py
 # 
 # 

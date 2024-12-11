@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors-Converters-DC_Motor
 # RCAIDE/Methods/Energy/Propulsors/Converters/DC_Motor/dc_motor_performance.py
 # 
 # 

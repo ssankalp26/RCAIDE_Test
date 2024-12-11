@@ -7,7 +7,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
-# @ingroup Methods-Energy-Sources-Fuel_Cell
 
 from Legacy.trunk.S.Methods.Power.Fuel_Cell.Discharge.zero_fidelity            import zero_fidelity
 from Legacy.trunk.S.Methods.Power.Fuel_Cell.Discharge.larminie                 import larminie

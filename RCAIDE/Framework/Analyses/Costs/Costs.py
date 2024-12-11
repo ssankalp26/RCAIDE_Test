@@ -1,4 +1,3 @@
-## @ingroup Framework-Analyses-Costs
 # RCAIDE/Framework/Analyses/Costs/Costs.py
 # 
 # 

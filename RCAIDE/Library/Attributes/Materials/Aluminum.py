@@ -1,4 +1,3 @@
-# @ingroup Library-Attributes-Solids 
 # RCAIDE/Library/Attributes/Solids/Aluminum.py
 # 
  
