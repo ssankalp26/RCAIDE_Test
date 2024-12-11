@@ -278,8 +278,7 @@ def reuse_stored_nmc_cell_data(battery_module,state,bus,coolant_lines, t_idx, de
     
         
     return
-
-## @ingroup Methods-Energy-Sources-Lithium_Ion_NMC
+ 
 def compute_nmc_cell_state(battery_module_data,SOC,T,I):
     """This computes the electrical state variables of a lithium ion 
     battery_module cell with a  lithium-nickel-cobalt-aluminum oxide cathode 

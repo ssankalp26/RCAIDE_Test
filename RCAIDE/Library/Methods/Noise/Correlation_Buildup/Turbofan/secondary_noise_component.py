@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Correlation_Buildup-Engine 
 # RCAIDE/Methods/Noise/Correlation_Buildup/Engine/secondary_noise_component.py
 # 
 # 

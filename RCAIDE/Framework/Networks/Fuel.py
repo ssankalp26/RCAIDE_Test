@@ -1,4 +1,3 @@
-## @ingroup Networks
 # RCAIDE/Energy/Networks/Fuel.py
 # 
 # Created:  Oct 2023, M. Clarke

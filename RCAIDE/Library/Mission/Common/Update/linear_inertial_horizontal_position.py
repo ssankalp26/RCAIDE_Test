@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Common Common-Update
 # RCAIDE/Library/Missions/Common/Update/linear_inertial_horizontal_position.py
 # 
 # 

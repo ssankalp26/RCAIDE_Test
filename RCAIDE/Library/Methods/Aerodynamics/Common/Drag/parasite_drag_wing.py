@@ -157,9 +157,7 @@ def parasite_drag_wing(state,settings,geometry):
     state.conditions.aerodynamics.coefficients.drag.parasite[wing.tag] = wing_result
 
     return  
-
-
-## @ingroup Methods-Aerodynamics-Common-Fidelity_Zero-Drag
+ 
 def compute_parasite_drag(re,mac_w,Mc,Tc,xtu,xtl,sweep_w,t_c_w,Sref,Swet,C):
     """Computes the parasite drag due to wings
 

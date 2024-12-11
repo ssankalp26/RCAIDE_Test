@@ -255,9 +255,8 @@ class Electric(Network):
                     for propulsor_group in  bus.assigned_propulsors:
                         propulsor =  network.propulsors[propulsor_group[0]]
                         propulsor.pack_propulsor_residuals(segment)   
-        return     
-
-    ## @ingroup Components-Energy-Networks
+        return
+    
     def add_unknowns_and_residuals_to_segment(self, segment):
         """ This function sets up the information that the mission needs to run a mission segment using this network
 

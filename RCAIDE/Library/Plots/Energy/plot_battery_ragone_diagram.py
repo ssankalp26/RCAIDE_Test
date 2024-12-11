@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Geometry
 # RCAIDE/Library/Plots/Energy/plot_battery_ragone_diagram.py
 # 
 # 

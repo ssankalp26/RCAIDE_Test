@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Correlation_Buildup-Engine 
 # RCAIDE/Methods/Noise/Correlation_Buildup/Engine/jet_installation_effect.py
 # 
 # 

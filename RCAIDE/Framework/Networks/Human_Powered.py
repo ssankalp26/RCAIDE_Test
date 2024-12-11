@@ -1,4 +1,3 @@
-## @ingroup Energy-Networks
 # RCAIDE/Energy/Networks/Human_Powered.py
 #  
 # Created:  Sep 2024, M. Clarke 

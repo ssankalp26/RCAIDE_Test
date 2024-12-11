@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Common-Residuals
 # RCAIDE/Library/Missions/Common/Residuals/flight_dynamics.py
 # 
 # 
@@ -13,8 +12,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Residual Total Forces
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Common-Residuals
+# ---------------------------------------------------------------------------------------------------------------------- 
 def flight_dynamics(segment):
     '''Packs the residuals related to the flight dynamics.
        This includes the force and moment equations about x,y and z

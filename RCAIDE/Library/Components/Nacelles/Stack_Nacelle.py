@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Nacelles
 # RCAIDE/Compoments/Nacelles/Stack_Nacelle.py
 # 
 # 

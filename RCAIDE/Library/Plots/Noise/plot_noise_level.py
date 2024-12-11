@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Noise
 # RCAIDE/Library/Plots/Noise/plot_noise_level.py
 # 
 # 
@@ -17,7 +16,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Plots-Noise
 def plot_noise_level(noise_data,
                      noise_level = False,
                      save_figure = False,

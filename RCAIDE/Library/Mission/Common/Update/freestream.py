@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Common-Update
 # RCAIDE/Library/Missions/Common/Update/Aerodynamics.py
 # 
 # 

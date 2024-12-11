@@ -1,8 +1,5 @@
-## @ingroup Components-Propulsors-Modulators
 # RCAIDE/Library/Components/Propulsors/Modulators/Electronic_Speed_Controller.py
-# 
-# 
-# 
+#  
 # Created:  Mar 2024, M. Clarke 
 
 # ----------------------------------------------------------------------------------------------------------------------

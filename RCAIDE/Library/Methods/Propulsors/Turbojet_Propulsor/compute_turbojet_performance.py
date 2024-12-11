@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors-Networks-Turbojet_Propulsor
 # RCAIDE/Methods/Energy/Propulsors/Networks/Turbojet_Propulsor/compute_turbojet_performance.py
 # 
 # 
@@ -20,6 +19,7 @@ from RCAIDE.Library.Methods.Propulsors.Turbojet_Propulsor            import comp
 # python imports 
 import  numpy as  np 
 from copy import  deepcopy
+
 # ----------------------------------------------------------------------------------------------------------------------
 # compute_turbojet_performance
 # ---------------------------------------------------------------------------------------------------------------------- 

@@ -16,8 +16,7 @@ import numpy as np
     
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Equivalent Area from lift for Sonic Boom
-# ----------------------------------------------------------------------------------------------------------------------      
-## @ingroup Methods-Noise-Boom  
+# ----------------------------------------------------------------------------------------------------------------------         
 def lift_equivalent_area(config,analyses,conditions):
     """ This method calculates the lift equivalent area for a vehicle for sonic boom analysis.
     

@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Sources-Battery-Ragone
 # RCAIDE/Methods/Energy/Sources/Battery/Ragone/find_specific_power.py
 # 
 # 

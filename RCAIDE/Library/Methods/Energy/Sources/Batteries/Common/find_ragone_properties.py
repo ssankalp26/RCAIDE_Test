@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Sources-Battery-Ragone
 # RCAIDE/Methods/Energy/Sources/Battery/Ragone/find_ragone_properties.py
 # 
 # 

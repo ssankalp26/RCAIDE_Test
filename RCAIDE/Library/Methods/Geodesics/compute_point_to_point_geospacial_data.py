@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Noise
 # RCAIDE/Library/Missions/Common/compute_point_to_point_geospacial_data.py
 # 
 # 
@@ -8,14 +7,13 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------  
 import RCAIDE
-from RCAIDE.Framework.Core import Units, Data
+from RCAIDE.Framework.Core import Units 
 from scipy.interpolate import griddata
 import numpy as np
-#from  RCAIDE.Framework.Analyses.Geodesics.Geodesics import Calculate_Distance
+
 # ----------------------------------------------------------------------
 #  Compute Point to Point Geospacial Data
-# ---------------------------------------------------------------------
-## @ingroup Library-Missions
+# --------------------------------------------------------------------- 
 def compute_point_to_point_geospacial_data(settings):
     """This computes the absolute microphone/observer locations on a defined topography
             

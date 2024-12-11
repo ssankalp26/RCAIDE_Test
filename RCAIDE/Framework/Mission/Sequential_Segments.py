@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission
 # RCAIDE/Framework/Analyses/Mission/Sequential_Segments.py
 # 
 # 

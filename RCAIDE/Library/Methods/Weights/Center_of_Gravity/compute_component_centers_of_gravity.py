@@ -21,9 +21,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Computer Aircraft Center of Gravity
-# ---------------------------------------------------------------------------------------------------------------------- 
-
-## @ingroup Methods-Stability-Center_of_Gravity
+# ----------------------------------------------------------------------------------------------------------------------  
 def compute_component_centers_of_gravity(vehicle, nose_load = 0.06):
     """ computes the center of gravity of all of the vehicle components based on correlations 
     from Stanford University AA241 Lecture Notes 

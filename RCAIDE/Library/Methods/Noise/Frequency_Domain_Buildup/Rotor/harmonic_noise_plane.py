@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Multi_Fidelity
 # RCAIDE/Methods/Noise/Multi_Fidelity/harmonic_noise_plane.py
 # 
 # 

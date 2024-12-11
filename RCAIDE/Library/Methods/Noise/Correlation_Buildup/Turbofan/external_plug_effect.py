@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Correlation_Buildup-Engine 
 # RCAIDE/Methods/Noise/Correlation_Buildup/Engine/external_plug_effect.py
 # 
 # 

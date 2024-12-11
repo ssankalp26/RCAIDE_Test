@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Common-Unknowns
 # RCAIDE/Library/Missions/Common/Unknowns/ground.py
 # 
 # 
@@ -6,8 +5,7 @@
  
 # ----------------------------------------------------------------------------------------------------------------------
 #  Unpack Unknowns
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Common-Unknowns
+# ---------------------------------------------------------------------------------------------------------------------- 
 def ground(segment):
     """ Unpacks the times and velocities from the solver to the mission
     

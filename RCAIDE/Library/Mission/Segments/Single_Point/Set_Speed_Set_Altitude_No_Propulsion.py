@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Single_Point
 # RCAIDE/Library/Missions/Segments/Single_Point/Set_Speed_Set_Altitude_No_Propulsion.py
 # 
 # 

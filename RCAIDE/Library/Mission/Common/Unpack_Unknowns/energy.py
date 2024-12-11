@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Common-Unpack_Unknowns
 # RCAIDE/Library/Missions/Common/Unpack_Unknowns/energy.py
 # 
 # 
@@ -6,8 +5,7 @@
  
 # ----------------------------------------------------------------------------------------------------------------------
 #  Unpack Unknowns
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Common-Unpack_Unknowns 
+# ---------------------------------------------------------------------------------------------------------------------- 
 def unknowns(segment):  
     ACV_T  =  segment.assigned_control_variables.throttle
     ACV_TA =  segment.assigned_control_variables.thrust_vector_angle

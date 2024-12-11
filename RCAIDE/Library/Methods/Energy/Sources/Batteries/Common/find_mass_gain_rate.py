@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Sources-Battery-Common
 # RCAIDE/Methods/Energy/Sources/Battery/Common/find_mass_gain_rate.py
 # 
 # 

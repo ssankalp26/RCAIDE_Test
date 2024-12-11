@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Geometry
 # RCAIDE/Library/Plots/Geometry/plot_3d_vehicle_vlm_panelization.py
 # 
 # 

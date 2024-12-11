@@ -1,4 +1,3 @@
-## @ingroup Methods-Cryogenic-Dynamo
 # dynamo_efficiency.py
 #
 # Created:  Feb 2022,  S. Claridge
@@ -12,8 +11,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------
 #  Estimated efficiency of HTS Dynamo 
-# ----------------------------------------------------------------------
-## @ingroup Methods-Cryogenic-Dynamos
+# ---------------------------------------------------------------------- 
 def efficiency_curve(Dynamo, current):
 
     """ This sets the default values.

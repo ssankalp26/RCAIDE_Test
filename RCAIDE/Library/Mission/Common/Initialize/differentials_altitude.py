@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Common
 # RCAIDE/Library/Missions/Segments/Common/Update/dimensionless.py
 # 
 # 

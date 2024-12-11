@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Nacelles
 # RCAIDE/Compoments/Nacelles/Body_of_Revolution_Nacelle.py
 # 
 # 

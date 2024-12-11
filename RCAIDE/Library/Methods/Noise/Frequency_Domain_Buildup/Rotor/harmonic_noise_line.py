@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Multi_Fidelity
 # RCAIDE/Methods/Noise/Multi_Fidelity/harmonic_noise_line.py
 # 
 # 
@@ -9,7 +8,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 # RCAIDE
 from RCAIDE.Framework.Core                                 import orientation_product, orientation_transpose      
-from RCAIDE.Library.Methods.Noise.Common                         import convert_to_third_octave_band 
+from RCAIDE.Library.Methods.Noise.Common                   import convert_to_third_octave_band 
 
 # Python Package imports  
 import numpy as np

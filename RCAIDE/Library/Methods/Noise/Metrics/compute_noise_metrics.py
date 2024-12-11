@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Metrics 
 # RCAIDE/Methods/Noise/Metrics/compute_noise_metrics.py
 # 
 # 

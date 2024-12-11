@@ -9,10 +9,10 @@
 from RCAIDE.Framework.Core import Units
 import numpy as np  
 from copy import deepcopy
+
 # ----------------------------------------------------------------------------------------------------------------------
 # compute_lfp_cell_performance
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Energy-Sources-Batteries-Lithium_Ion_LFP
+# ----------------------------------------------------------------------------------------------------------------------  
 def compute_lfp_cell_performance(battery_module,state,bus,coolant_lines,t_idx, delta_t): 
     """
        Assumptions: 

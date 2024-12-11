@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Frequency_Domain_Buildup-Rotor 
 # RCAIDE/Methods/Noise/Frequency_Domain_Buildup/Rotor/TBL_TE_broadband_noise.py
 # 
 # 

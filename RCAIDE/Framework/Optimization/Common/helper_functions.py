@@ -1,4 +1,3 @@
-## @ingroup Framework-Optimization-Common
 # RCAIDE/Framework/Optimization/Common/helper_functions.py 
 
 # ----------------------------------------------------------------------------------------------------------------- 
@@ -9,8 +8,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------- 
 #  Set Values
-# --- ------------------------------------------------------------------------------------------------------------- 
-## @ingroup Framework-Optimization-Common
+# -----------------------------------------------------------------------------------------------------------------  
 def set_values(dictionary,input_dictionary,converted_values,aliases):
     """ This method regresses through a dictionary to set the required values.
         dictionary is the base class that will be modified, input_dictionary is

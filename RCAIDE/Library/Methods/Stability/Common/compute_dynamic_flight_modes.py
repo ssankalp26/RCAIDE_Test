@@ -1,4 +1,3 @@
-## @ingroup Library-Methods-Stability-Dynamic_Stability 
 # RCAIDE/Library/Methods/Stability/Dynamic_Stability/compute_dynamic_flight_modes.py
 # 
 # 
@@ -9,8 +8,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE imports
-import RCAIDE
-from RCAIDE.Framework.Core                            import Units 
+import RCAIDE 
 from RCAIDE.Library.Components.Wings.Control_Surfaces import Aileron , Elevator  
 
 # python imports 
@@ -19,8 +17,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  compute_dynamic_flight_modes
 # ----------------------------------------------------------------------------------------------------------------------
-
-## @ingroup Library-Methods-Stability-Dynamic_Stability
 def compute_dynamic_flight_modes(state,settings,aircraft): 
     """This function follows the stability axis EOM derivation in Blakelock
     to return the aircraft's dynamic modes and state space 

@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Conditions
 # RCAIDE/Framework/Analyses/Mission/Segments/Conditions/Results.py
 # 
 # 

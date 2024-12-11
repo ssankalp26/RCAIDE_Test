@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Sources-Battery-Common
 # RCAIDE/Methods/Energy/Sources/Battery/Common/size_module_from_energy_and_power.py
 # 
 # 

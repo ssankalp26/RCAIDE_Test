@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Correlation_Buildup-Engine 
 # RCAIDE/Methods/Noise/Correlation_Buildup/Engine/angle_of_attack_effect.py
 # 
 # 

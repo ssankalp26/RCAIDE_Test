@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Sources-Battery-Common
 # RCAIDE/Methods/Energy/Sources/Battery/Common/compute_module_properties.py
 # 
 # 

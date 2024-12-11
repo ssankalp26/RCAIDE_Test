@@ -1,4 +1,3 @@
-## @ingroup Library-Compoments-Energy-Sources-Fuel_Tanks Wing_Fuel_Tanks
 # RCAIDE/Library/Compoments/Energy/Fuel_Tanks/Central_Fuel_Tank.py
 # 
 # 

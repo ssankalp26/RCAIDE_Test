@@ -1,4 +1,3 @@
-## @ingroup Analyses-Energy
 # RCAIDE/Framework/Analyses/Energy/Energy.py
 # 
 # 

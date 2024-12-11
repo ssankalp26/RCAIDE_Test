@@ -1,4 +1,3 @@
-## @ingroup Methods-Geometry-Two_Dimensional-Cross_Section-Airfoil
 # import_airfoil_dat.py
 # 
 # Created:  
@@ -12,9 +11,7 @@ import numpy as np
 
 # ------------------------------------------------------------
 #  import airfoil dat
-# ------------------------------------------------------------
-
-## @ingroup Methods-Geometry-Two_Dimensional-Cross_Section-Airfoil
+# ------------------------------------------------------------ 
 def import_airfoil_dat(filename):
     """Import an airfoil data file and stores it in a numpy array.
     

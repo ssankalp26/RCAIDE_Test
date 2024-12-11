@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Wings
 # RCAIDE/Compoments/Wings/Horizontal_Tail.py
 # 
 # 

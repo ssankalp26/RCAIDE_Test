@@ -82,8 +82,6 @@ def plot_airfoil_boundary_layer_properties(ap,
 # ----------------------------------------------------------------------
 #  Plot Quantity
 # ----------------------------------------------------------------------  
-
-## @ingroup Library-Plots-Performance
 def plot_quantity(ap, q, qaxis, qname,ylim_low,ylim_high,file_type,show_legend,save_figure,width,height) :
     """Plots a quantity q over lower/upper/wake surfaces
     

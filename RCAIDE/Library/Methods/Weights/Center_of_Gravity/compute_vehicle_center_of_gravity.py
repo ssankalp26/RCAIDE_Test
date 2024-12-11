@@ -1,4 +1,3 @@
-## @ingroup Methods-Stability-Center_of_Gravity
 # RCAIDE/Methods/Stability/Center_of_Gravity/compute_vehicle_center_of_gravity.py 
 # 
 # Created:  Jul 2023, M. Clarke 
@@ -17,8 +16,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Computer Aircraft Center of Gravity
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Methods-Center_of_Gravity 
+# ----------------------------------------------------------------------------------------------------------------------   
 def compute_vehicle_center_of_gravity(vehicle, update_CG=True): 
     ''' Computes the moment of intertia of aircraft 
     

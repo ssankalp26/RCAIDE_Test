@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Sources-Battery-Common
 # RCAIDE/Methods/Energy/Sources/Battery/Common/find_total_mass_gain.py
 # 
 # 
