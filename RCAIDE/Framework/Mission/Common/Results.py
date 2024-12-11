@@ -19,7 +19,6 @@ import numpy as np
 # Results
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-## @ingroup Analyses-Mission-Segments-Conditions
 class Results(Conditions):
     """ This builds upon Basic, which itself builds on conditions, to add the data structure for aerodynamic mission analyses.
     

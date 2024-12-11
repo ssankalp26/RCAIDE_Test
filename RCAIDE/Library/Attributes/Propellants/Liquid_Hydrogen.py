@@ -1,4 +1,3 @@
-## @ingroup Library-Attributes-Propellants 
 # RCAIDE/Library/Attributes/Liquid_Hydrogen.py
 # 
 # 

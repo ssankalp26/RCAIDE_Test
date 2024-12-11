@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Climb
 # RCAIDE/Framework/Analyses/Mission/Segments/Climb/Constant_EAS_Constant_Rate.py
 # 
 # 
@@ -16,8 +15,6 @@ from RCAIDE.Library.Mission                          import Common,Segments
 # ----------------------------------------------------------------------------------------------------------------------
 # Constant_EAS_Constant_Rate
 # ---------------------------------------------------------------------------------------------------------------------- 
-
-## @ingroup Analyses-Mission-Segments-Climb
 class Constant_EAS_Constant_Rate(Evaluate):
     """ Climb at a constant Equivalent Airspeed (EAS) at a constant rate.
     

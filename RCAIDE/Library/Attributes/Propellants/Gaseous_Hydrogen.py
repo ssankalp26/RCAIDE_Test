@@ -14,7 +14,6 @@ from RCAIDE.Framework.Core import Data
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Gaseous_Hydrogen Class
 # ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup  Library-Attributes-Propellants 
 class Gaseous_Hydrogen(Propellant):
     """Gaseous hydrogen class
     """

@@ -13,7 +13,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  dc_motor_performance
 # ----------------------------------------------------------------------------------------------------------------------           
-## @ingroup Methods-Energy-Propulsors-Converters-DC_Motor
 def compute_Q_from_omega_and_V(motor,motor_conditions,freestream):
     """Calculates the motor's torque
 
@@ -60,7 +59,6 @@ def compute_Q_from_omega_and_V(motor,motor_conditions,freestream):
 # ----------------------------------------------------------------------------------------------------------------------
 #  compute_omega_and_Q_from_Cp_and_V
 # ----------------------------------------------------------------------------------------------------------------------           
-## @ingroup Methods-Energy-Propulsors-Converters-DC_Motor
 def compute_omega_and_Q_from_Cp_and_V(motor,motor_conditions,freestream):
     """Calculates the motor's rotation rate
 
@@ -125,7 +123,6 @@ def compute_omega_and_Q_from_Cp_and_V(motor,motor_conditions,freestream):
 # ----------------------------------------------------------------------------------------------------------------------
 # compute_I_from_omega_and_V
 # ----------------------------------------------------------------------------------------------------------------------           
-## @ingroup Methods-Energy-Propulsors-Converters-DC_Motor
 def compute_I_from_omega_and_V(motor,motor_conditions,freestream):
     """Calculates the motor's current
 
@@ -177,8 +174,7 @@ def compute_I_from_omega_and_V(motor,motor_conditions,freestream):
 
 # ----------------------------------------------------------------------------------------------------------------------
 # compute_V_and_I_from_omega_and_Kv
-# ----------------------------------------------------------------------------------------------------------------------           
-## @ingroup Methods-Energy-Propulsors-Converters-DC_Motor
+# ----------------------------------------------------------------------------------------------------------------------            
 def compute_V_and_I_from_omega_and_Kv(motor,motor_conditions,freestream):
     """Calculates the motor's voltage and current
 

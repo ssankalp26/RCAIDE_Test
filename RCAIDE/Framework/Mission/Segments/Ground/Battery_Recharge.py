@@ -1,7 +1,4 @@
-## @ingroup Analyses-Mission-Segments-Ground
-# RCAIDE/Framework/Analyses/Mission/Segments/Ground/Battery_Charge.py
-# 
-# 
+# RCAIDE/Framework/Analyses/Mission/Segments/Ground/Battery_Charge.py 
 # Created:  Jul 2023, M. Clarke
  
 # ----------------------------------------------------------------------------------------------------------------------
@@ -9,16 +6,14 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE imports
-from RCAIDE.Framework.Mission.Segments.Evaluate       import Evaluate
+from RCAIDE.Framework.Mission.Segments.Evaluate      import Evaluate
 from RCAIDE.Library.Mission.Segments                 import Ground   
-from RCAIDE.Framework.Core                                     import Units
-from RCAIDE.Library.Methods.skip                             import skip 
+from RCAIDE.Framework.Core                           import Units
+from RCAIDE.Library.Methods.skip                     import skip 
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  SEGMENT
-# ----------------------------------------------------------------------------------------------------------------------
-
-## @ingroup Analyses-Mission-Segments-Ground
+# ---------------------------------------------------------------------------------------------------------------------- 
 class Battery_Recharge(Evaluate): 
 
     # ------------------------------------------------------------------

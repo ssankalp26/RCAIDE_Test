@@ -13,9 +13,7 @@ from .Solid import Solid
 
 #-------------------------------------------------------------------------------
 # Aluminum for WavyChannel for battery cooling
-#-------------------------------------------------------------------------------
-
-## @ingroup Attributes-Solid
+#------------------------------------------------------------------------------- 
 class Aluminum(Solid): 
     """ Physical Constants Specific to 6061-T6 Aluminum
     """

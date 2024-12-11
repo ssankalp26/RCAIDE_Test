@@ -1,4 +1,3 @@
-## @ingroup Library-Compoments-Energy-Batteries
 # RCAIDE/Library/Compoments/Energy/Sources/Batteries/Lithium_Ion_LiNiMnCoO2_18650.py
 # 
 # 
@@ -19,8 +18,7 @@ from scipy.interpolate  import RegularGridInterpolator
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Lithium_Ion_NMC
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Compoments-Energy-Batteries 
+# ----------------------------------------------------------------------------------------------------------------------  
 class Lithium_Ion_NMC(Generic_Battery_Module):
     """ 18650 lithium-nickel-manganese-cobalt-oxide battery cellc.
     """       

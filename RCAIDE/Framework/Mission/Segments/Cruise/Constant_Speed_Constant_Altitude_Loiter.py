@@ -17,7 +17,6 @@ from RCAIDE.Library.Mission                      import Common,Segments
 #  Constant_Speed_Constant_Altitude_Loiter
 # ---------------------------------------------------------------------------------------------------------------------- 
  
-## @ingroup Analyses-Mission-Segments-Cruise
 class Constant_Speed_Constant_Altitude_Loiter(Evaluate):
     """ Fixed true airspeed and altitude for a fixed time.
         This is useful aircraft who need to station keep.

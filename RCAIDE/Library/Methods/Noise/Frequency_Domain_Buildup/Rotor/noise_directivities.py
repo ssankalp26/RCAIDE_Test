@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Frequency_Domain_Buildup-Rotor
 # RCAIDE/Methods/Noise/Frequency_Domain_Buildup/Rotor/noise_directivities.py
 # 
 # 

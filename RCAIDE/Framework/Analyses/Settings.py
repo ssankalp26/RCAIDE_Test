@@ -1,4 +1,3 @@
-## @ingroup Analyses
 # RCAIDE/Framework/Analyses/Settings.py
 # 
 # 

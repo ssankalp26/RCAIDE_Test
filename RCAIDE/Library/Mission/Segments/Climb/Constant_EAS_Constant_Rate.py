@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Climb
 # RCAIDE/Library/Missions/Segments/Climb/Constant_EAS_Constant_Rate.py
 # 
 # 
@@ -16,7 +15,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Initialize Conditions
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Segments-Climb
 def initialize_conditions(segment):
     """Sets the specified conditions which are given for the segment type.
     

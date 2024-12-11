@@ -1,4 +1,3 @@
-## @ingroup Library-Attributes-Propellants 
 # RCAIDE/Library/Attributes/RP1.py
 # 
 # 

@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Ground
 # RCAIDE/Framework/Analyses/Mission/Segments/Ground/Takeoff.py
 # 
 # 
@@ -18,7 +17,6 @@ from RCAIDE.Library.Mission.Common                    import Residuals , Unpack_
 #  Takeoff
 # ----------------------------------------------------------------------------------------------------------------------
 
-## @ingroup Analyses-Mission-Segments-Ground
 class Takeoff(Evaluate):
     """ Segment for takeoff. Integrates equations of motion
         including rolling friction.

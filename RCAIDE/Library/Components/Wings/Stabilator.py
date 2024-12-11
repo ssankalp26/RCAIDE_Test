@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Wings
 # RCAIDE/Compoments/Wings/Stabilator.py
 # 
 # 
@@ -14,8 +13,7 @@ from RCAIDE.Library.Methods.Weights.Moment_of_Inertia.compute_wing_moment_of_ine
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Stabilator
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Wings    
+# ----------------------------------------------------------------------------------------------------------------------     
 class Stabilator(Horizontal_Tail, All_Moving_Surface):
     """ This class is used to define stabilators in RCAIDE. Note that it 
     inherits from both Horizontal_Tail and All_Moving_Surface

@@ -17,7 +17,6 @@ from RCAIDE.Library.Mission                      import Common,Segments
 #  Constant_Dynamic_Pressure_Constant_Altitude_Loiter
 # ----------------------------------------------------------------------------------------------------------------------  
 
-## @ingroup Analyses-Mission-Segments-Cruise
 class Constant_Dynamic_Pressure_Constant_Altitude_Loiter(Evaluate):
     """ Vehicle flies at a constant dynamic pressure at a set altitude for a fixed time. 
     

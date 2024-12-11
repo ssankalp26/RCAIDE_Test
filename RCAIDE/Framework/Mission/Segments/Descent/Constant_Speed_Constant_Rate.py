@@ -16,8 +16,6 @@ from RCAIDE.Library.Mission                      import Common,Segments
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Constant_Speed_Constant_Rate
 # ---------------------------------------------------------------------------------------------------------------------- 
-
-## @ingroup Analyses-Mission-Segments-Descent
 class Constant_Speed_Constant_Rate(Evaluate):
     
     def __defaults__(self):

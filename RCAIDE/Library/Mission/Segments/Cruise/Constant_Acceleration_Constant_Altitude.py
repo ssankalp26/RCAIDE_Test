@@ -13,7 +13,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Initialize Conditions
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Segments-Cruise
 def initialize_conditions(segment):
     """Sets the specified conditions which are given for the segment type.
 

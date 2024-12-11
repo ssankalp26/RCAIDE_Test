@@ -16,8 +16,6 @@ from RCAIDE.Library.Mission                      import Common,Segments
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Constant_EAS_Constant_Rate
 # ----------------------------------------------------------------------------------------------------------------------  
-
-## @ingroup Analyses-Mission-Segments-Descent
 class Constant_EAS_Constant_Rate(Evaluate):
     """ Fixed at an Equivalent Airspeed (EAS) the vehicle will descent at a constant rate.
     

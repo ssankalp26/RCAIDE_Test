@@ -17,7 +17,6 @@ from RCAIDE.Library.Mission                      import Common,Segments
 #  Constant_Mach_Constant_Altitude_Loiter
 # ----------------------------------------------------------------------------------------------------------------------  
 
-## @ingroup Analyses-Mission-Segments-Cruise
 class Constant_Mach_Constant_Altitude_Loiter(Evaluate):
     """ Vehicle flies at a constant Mach number at a set altitude for a fixed time.
         This is useful aircraft who need to station keep.

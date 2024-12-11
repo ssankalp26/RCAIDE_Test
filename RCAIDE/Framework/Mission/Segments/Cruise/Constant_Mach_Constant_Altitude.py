@@ -17,7 +17,6 @@ from RCAIDE.Library.Mission                      import Common,Segments
 # Constant_Mach_Constant_Altitude
 # ----------------------------------------------------------------------------------------------------------------------  
 
-## @ingroup Analyses-Mission-Segments-Cruise
 class Constant_Mach_Constant_Altitude(Evaluate):
     """ Vehicle flies at a constant Mach number at a set altitude for a fixed distance
     

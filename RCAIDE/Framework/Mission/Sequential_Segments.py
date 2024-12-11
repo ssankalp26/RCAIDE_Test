@@ -17,8 +17,7 @@ from . import Segments
 
 # ----------------------------------------------------------------------------------------------------------------------
 # ANALYSIS
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Analyses-Mission
+# ----------------------------------------------------------------------------------------------------------------------  -Mission
 class Sequential_Segments(Segments.Segment.Container):
     """ Solves each segment one at time
     
@@ -117,8 +116,7 @@ class Sequential_Segments(Segments.Segment.Container):
 # ----------------------------------------------------------------------
 #   Container Class
 # ----------------------------------------------------------------------
-
-## @ingroup Analyses-Mission
+-Mission
 class Container(ContainerBase):
     """ Container for mission
     

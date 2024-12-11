@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Wings
 # RCAIDE/Compoments/Wings/Main_Wing.py
 # 
 # 
@@ -15,8 +14,7 @@ from RCAIDE.Library.Methods.Weights.Moment_of_Inertia.compute_wing_moment_of_ine
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Main Wing 
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Wings   
+# ----------------------------------------------------------------------------------------------------------------------  
 class Main_Wing(Wing):
     """This class is used to define main wings RCAIDE
 
@@ -55,9 +53,7 @@ class Main_Wing(Wing):
         """ 
         self.tag                 = 'main_wing'
         self.Segments            = Segment_Container()
-        
-## @ingroup Library-Components-Wings
-
+         
     def moment_of_inertia(wing,center_of_gravity):
         I =  compute_wing_moment_of_inertia(wing,center_of_gravity) 
         return I 

@@ -16,7 +16,6 @@ from RCAIDE.Library.Mission                           import Common,Segments
 # ----------------------------------------------------------------------------------------------------------------------
 #  Constant_Acceleration_Constant_Angle_Linear_Climb
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Analyses-Mission-Segments-Transition
 class Constant_Acceleration_Constant_Angle_Linear_Climb(Evaluate):
     """ Vehicle accelerates at a constant rate between two airspeeds.
     

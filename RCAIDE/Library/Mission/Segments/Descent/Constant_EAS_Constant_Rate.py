@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Descent
 # RCAIDE/Library/Missions/Segments/Descent/Constant_EAS_Constant_Rate.py
 # 
 # 
@@ -16,7 +15,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Initialize Conditions
 # ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Missions-Segments-Descent
 def initialize_conditions(segment):
     """Sets the specified conditions which are given for the segment type.
 

@@ -1,4 +1,3 @@
-## @ingroup Methods-Aerodynamics-Common-Lift
 # RCAIDE/Methods/Aerodynamics/Common/Lift/compute_RHS_matrix.py
 # 
 # 

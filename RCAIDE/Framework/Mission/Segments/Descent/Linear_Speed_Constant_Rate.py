@@ -16,8 +16,6 @@ from RCAIDE.Library.Mission                      import Common,Segments
 # ----------------------------------------------------------------------------------------------------------------------
 #  Linear_Speed_Constant_Rate
 # ----------------------------------------------------------------------------------------------------------------------
-
-## @ingroup Analyses-Mission-Segments-Descent
 class Linear_Speed_Constant_Rate(Evaluate):
     """ Linearly change true airspeed while climbing at a constant rate.
     

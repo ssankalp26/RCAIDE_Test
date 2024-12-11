@@ -16,8 +16,6 @@ from RCAIDE.Library.Mission                      import Common,Segments
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Constant_Speed_Constant_Angle
 # ----------------------------------------------------------------------------------------------------------------------  
-
-## @ingroup Analyses-Mission-Segments-Descent
 class Constant_Speed_Constant_Angle(Evaluate):
     """ Fixed at a true airspeed the vehicle will descend at a constant angle.
     

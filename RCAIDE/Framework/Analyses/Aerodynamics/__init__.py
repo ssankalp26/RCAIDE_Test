@@ -1,4 +1,3 @@
-## @defgroup Framework-Analyses-Aerodynamics Aerodynamics
 # RCAIDE/Framework/Analyses/Aerodynamics/__init__.py
 # 
 

@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Fuselages
 # RCAIDE/Compoments/Fuselages/Tube_Fuselage.py
 # 
 # 

@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Fuselages
 # RCAIDE/Library/Compoments/Fuselage/Segment.py
 # 
 # 
@@ -13,8 +12,7 @@ from RCAIDE.Library.Components import Component
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Segment
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Wings  
+# ----------------------------------------------------------------------------------------------------------------------   
 class Segment(Component):
     def __defaults__(self): 
         """This sets the default for fuselage segments in RCAIDE.

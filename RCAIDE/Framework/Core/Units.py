@@ -39,7 +39,7 @@ def __rmul__(self,other):
         return self.magnitude
 
 # division converts out of base unit
-## @ingroup Core
+
 def __rdiv__(self,other):
     """ Override the basic python division for Units
 

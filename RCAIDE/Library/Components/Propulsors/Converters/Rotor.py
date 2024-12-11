@@ -251,7 +251,6 @@ class Rotor(Component):
         return rot_mat, rots
 
  
-## @ingroup Library-Components-Wings
 class Airfoil_Container(Container):
     """ Container for rotor airfoil  
     

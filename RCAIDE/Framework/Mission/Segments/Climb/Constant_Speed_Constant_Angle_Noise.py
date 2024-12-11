@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Climb
 # RCAIDE/Framework/Analyses/Mission/Segments/Climb/Constant_Speed_Constant_Angle_Noise.py
 # 
 # 
@@ -16,8 +15,6 @@ from RCAIDE.Library.Mission                          import Common,Segments
 # ----------------------------------------------------------------------------------------------------------------------
 #  Constant_Speed_Constant_Angle_Noise
 # ---------------------------------------------------------------------------------------------------------------------- 
-
-## @ingroup Analyses-Mission-Segments-Climb
 class Constant_Speed_Constant_Angle_Noise(Evaluate):
     """ Fixed at a true airspeed the vehicle will climb at a constant angle. This is a specific segment for Noise.
         A vehicle performs a climb in accordance with a certification points for takeoff noise.

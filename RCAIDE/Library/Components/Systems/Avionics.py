@@ -1,4 +1,3 @@
-## @ingroup Library-Compoments-Systems  
 # RCAIDE/Library/Compoments/Systems/Avionics.py
 # 
 # Created:  Mar 2024, M. Clarke 
@@ -12,8 +11,7 @@ from RCAIDE.Library.Methods.Propulsors.Common.append_avionics_conditions import 
  
 # ----------------------------------------------------------------------------------------------------------------------
 #  Avionics
-# ----------------------------------------------------------------------------------------------------------------------           
-## @ingroup Library-Components-Systems
+# ----------------------------------------------------------------------------------------------------------------------            
 class Avionics(Component):
     """A class representing avionics.
     

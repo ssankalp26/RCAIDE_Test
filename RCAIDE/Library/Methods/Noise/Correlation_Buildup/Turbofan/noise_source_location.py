@@ -1,5 +1,4 @@
-## @ingroup Methods-Noise-Correlation_Buildup-Engine 
-# RCAIDE/Methods/Noise/Correlation_Buildup/Engine/noise_source_location.py
+ # RCAIDE/Methods/Noise/Correlation_Buildup/Engine/noise_source_location.py
 # 
 # 
 # Created:  Jul 2023, M. Clarke  
@@ -8,7 +7,7 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-# RCAIDE tmports  
+# RCAIDE imports  
 from RCAIDE.Framework.Core  import  Data 
 
 # Python package imports   
@@ -16,8 +15,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------     
 #  Noise Source Location
-# ----------------------------------------------------------------------------------------------------------------------      
-## @ingroup Methods-Noise-Correlation_Buildup-Engine   
+# ----------------------------------------------------------------------------------------------------------------------       
 def noise_source_location(B,Xo,zk,Diameter_primary,theta_p,Area_primary,Area_secondary,distance_microphone,
                            Diameter_secondary,theta,theta_s,theta_m,Diameter_mixed,Velocity_primary,Velocity_secondary,
                            Velocity_mixed,Velocity_aircraft,sound_ambient,Str_m,Str_s):

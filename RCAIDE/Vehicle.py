@@ -1,4 +1,3 @@
-## @defgroup Vehicle
 # Vehicle.py
 # 
 # Created:  Apr 2024, M. Clarke

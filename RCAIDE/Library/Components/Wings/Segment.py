@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Wings
 # RCAIDE/Compoments/Wings/Segment.py
 # 
 # 
@@ -13,8 +12,7 @@ from RCAIDE.Library.Components import Component
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Segment
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Wings  
+# ----------------------------------------------------------------------------------------------------------------------   
 class Segment(Component):
     def __defaults__(self):
         """This sets the default for wing segments in RCAIDE.

@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Wings
 # RCAIDE/Compoments/Wings/All_Moving_Surface.py
 # 
 # 
@@ -15,8 +14,7 @@ from RCAIDE.Library.Methods.Weights.Moment_of_Inertia.compute_wing_moment_of_ine
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  All_Moving_Surface
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Wings  
+# ----------------------------------------------------------------------------------------------------------------------  
 class All_Moving_Surface(Component):
     """ This class is used to allow every all-moving control surface class
     (e.g. Stabilator) to inherit from both a type of Wing (Horizontal_Tail

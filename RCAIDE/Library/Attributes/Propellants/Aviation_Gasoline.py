@@ -1,4 +1,3 @@
-## @ingroup Library-Attributes-Propellants 
 # RCAIDE/Library/Attributes/Aviation_Gasoline.py
 # 
 # 
@@ -13,7 +12,6 @@ from .Propellant import Propellant
 # ----------------------------------------------------------------------------------------------------------------------
 #  Aviation_Gasoline  
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Attributes-Propellants
 class Aviation_Gasoline(Propellant):
     """Aviation gasoline class
     """

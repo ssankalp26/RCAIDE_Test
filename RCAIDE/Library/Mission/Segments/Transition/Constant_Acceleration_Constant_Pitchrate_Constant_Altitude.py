@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Transition
 # RCAIDE/Library/Missions/Segments/Transition/Constant_Acceleration_Constant_Pitchrate_Constant_Altitude.py
 # 
 # 
@@ -10,7 +9,6 @@
 # Package imports 
 import numpy as np
 
-## @ingroup Library-Missions-Segments-Transition
 def initialize_conditions(segment):
     """Sets the specified conditions which are given for the segment type.
 

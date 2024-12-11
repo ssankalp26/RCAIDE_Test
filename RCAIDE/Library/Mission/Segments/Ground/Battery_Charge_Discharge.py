@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Ground
 # RCAIDE/Library/Missions/Segments/Ground/Battery_Charge_or_Discharge.py
 # 
 # 
@@ -8,8 +7,7 @@ from RCAIDE.Framework.Core import  Units
 import  numpy as  np 
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Initialize Conditions
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Missions-Segments-Ground 
+# ----------------------------------------------------------------------------------------------------------------------    
 def initialize_conditions(segment):  
     """Sets the specified conditions which are given for the segment type.
 
