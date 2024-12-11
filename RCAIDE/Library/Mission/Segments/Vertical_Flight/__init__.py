@@ -1,4 +1,3 @@
-## @defgroup Methods-Missions-Segments-Hover Hover
 # RCAIDE/Methods/Mission/Segments/Hover/__init__.py
 # 
 

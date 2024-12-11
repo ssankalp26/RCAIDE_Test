@@ -1,4 +1,3 @@
-## @defgroup Library-Attributes-Gases Gases
 # RCAIDE/Library/Attributes/Gases/__init__.py
 # 
 

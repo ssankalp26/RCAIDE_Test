@@ -14,7 +14,6 @@ from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor.append_motor_conditio
 # ----------------------------------------------------------------------------------------------------------------------
 #  DC_Motor  
 # ----------------------------------------------------------------------------------------------------------------------           
-## @ingroup Components-Propulsors-Converters 
 class DC_Motor(Component):
     """This is a motor component.
     

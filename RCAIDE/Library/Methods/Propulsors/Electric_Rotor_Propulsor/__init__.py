@@ -1,4 +1,3 @@
-## @defgroup Methods-Energy-Propulsors-Electric_Rotor_Propulsor
 # RCAIDE/Methods/Energy/Propulsors/Electric_Rotor_Propulsor/__init__.py
 # 
 

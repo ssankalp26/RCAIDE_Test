@@ -1,4 +1,3 @@
-## @defgroup Components-Propulsors-Converters Converters
 # RCAIDE/Library/Components/Propulsors/Converters/__init__.py
 # 
 

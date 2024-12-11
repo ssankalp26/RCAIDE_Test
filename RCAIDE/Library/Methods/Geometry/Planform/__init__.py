@@ -1,4 +1,3 @@
-## @defgroup Methods-Geometry-Two_Dimensional/Planform Planform
 # RCAIDE/Methods/Geometry/Two_Dimensional/Planform/__init__.py
 # 
 

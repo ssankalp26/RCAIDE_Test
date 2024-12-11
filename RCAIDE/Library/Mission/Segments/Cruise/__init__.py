@@ -1,4 +1,3 @@
-## @defgroup Methods-Missions-Segments-Cruise Cruise
 # RCAIDE/Methods/Mission/Segments/Cruise/__init__.py
 # 
 

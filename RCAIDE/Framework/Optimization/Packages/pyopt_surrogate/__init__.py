@@ -1,5 +1,3 @@
-## @defgroup Optimization-Packages-pyopt_surrogate  pyopt_surrogate  
-# @ingroup Optimization-Packages   
 # RCAIDE/Optimization/Packages/pyopt_surrogate/__init__.py
 # 
 

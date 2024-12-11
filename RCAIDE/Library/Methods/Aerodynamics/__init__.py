@@ -1,5 +1,5 @@
-## @defgroup Methods-Aerodynamics Aerodynamics 
-# RCAIDE/Methods/Aerodynamics/__init__.py
+
+ RCAIDE/Methods/Aerodynamics/__init__.py
 # 
 
 """ RCAIDE Package Setup

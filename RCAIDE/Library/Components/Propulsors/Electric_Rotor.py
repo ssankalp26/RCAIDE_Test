@@ -16,8 +16,7 @@ from RCAIDE.Library.Methods.Propulsors.Electric_Rotor_Propulsor.append_electric_
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Electric_Rotor
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Components-Propulsors-Converters
+# ----------------------------------------------------------------------------------------------------------------------  
 class Electric_Rotor(Propulsor):
     """This is a electric motor-rotor propulsor 
     

@@ -1,4 +1,3 @@
-## @defgroup Methods-Missions Missions
 # RCAIDE/Library/Missions/__init__.py
 # 
 

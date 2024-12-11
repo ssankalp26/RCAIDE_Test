@@ -1,4 +1,3 @@
-## @defgroup Analyses-Weights Weights
 # RCAIDE/Framework/Analyses/Weights/__init__.py
 # 
 

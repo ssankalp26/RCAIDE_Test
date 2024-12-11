@@ -1,4 +1,3 @@
-## @defgroup Methods-Missions-Segments-Transition Transition
 # RCAIDE/Methods/Mission/Segments/Transition/__init__.py
 # 
 

@@ -1,4 +1,3 @@
-## @defgroup Library-Plots-Mission  
 # RCAIDE/Library/Plots/Performance/Mission/plot_flight_trajectory.py
 # 
 # 

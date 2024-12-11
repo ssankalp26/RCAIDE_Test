@@ -1,4 +1,3 @@
-## @defgroup Methods-Costs-Operating_Costs  Operating_Costs 
 # RCAIDE/Methods/Costs/Operating_Costs /__init__.py
 # 
 

@@ -1,4 +1,3 @@
-## @defgroup Methods-Utilities-Chebyshev Chebyshev
 # RCAIDE/Methods/Utilities/Chebyshev/__init__.py
 # 
 

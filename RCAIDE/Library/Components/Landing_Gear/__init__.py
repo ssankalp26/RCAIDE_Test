@@ -1,4 +1,3 @@
-## @defgroup Components-Landing_Gear Landing_Gear
 # RCAIDE/Components/Landing_Gear/__init__.py
 # 
 

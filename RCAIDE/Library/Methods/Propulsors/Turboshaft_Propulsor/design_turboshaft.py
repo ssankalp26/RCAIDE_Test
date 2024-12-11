@@ -27,7 +27,6 @@ import numpy                                                                as n
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Design Turboshaft
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Methods-Energy-Propulsors-Turboshaft_Propulsor
 def design_turboshaft(turboshaft):  
     #check if mach number and temperature are passed
     if(turboshaft.design_mach_number==None or turboshaft.design_altitude==None):

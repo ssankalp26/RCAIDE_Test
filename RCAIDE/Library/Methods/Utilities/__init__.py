@@ -1,4 +1,3 @@
-## @defgroup Methods-Utilities Utilities
 # RCAIDE/Methods/Utilities/__init__.py
 # 
 

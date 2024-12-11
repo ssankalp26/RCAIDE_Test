@@ -1,4 +1,3 @@
-## @defgroup Library-Plots-Geometry Geometry
 # RCAIDE/Library/Plots/Geometry/__init__.py
 # 
 

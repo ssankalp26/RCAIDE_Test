@@ -1,4 +1,3 @@
-## @defgroup Methods-Missions-Common-Unpack_Unknowns Unpack_Unknowns
 # RCAIDE/Methods/Mission/Common/Unpack_Unknowns/__init__.py
 # 
 

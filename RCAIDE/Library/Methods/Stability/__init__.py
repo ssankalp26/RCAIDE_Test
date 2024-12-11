@@ -1,4 +1,3 @@
-## @defgroup Methods-Stability Stability
 # RCAIDE/Methods/Stability/__init__.py
 # 
 

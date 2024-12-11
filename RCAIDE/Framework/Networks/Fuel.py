@@ -9,14 +9,13 @@
 # ---------------------------------------------------------------------------------------------------------------------
 # RCAIDE Imports
 import  RCAIDE 
-from RCAIDE.Framework.Mission.Common                      import Residuals , Conditions 
+from RCAIDE.Framework.Mission.Common                      import Residuals 
 from RCAIDE.Library.Mission.Common.Unpack_Unknowns.energy import unknowns
 from .Network                                             import Network   
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Fuel
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Energy-Networks
+# ----------------------------------------------------------------------------------------------------------------------  
 class Fuel(Network):
     """ This is a  fuel-based network. 
     

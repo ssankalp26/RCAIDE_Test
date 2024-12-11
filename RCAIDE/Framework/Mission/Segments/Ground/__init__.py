@@ -1,4 +1,3 @@
-## @defgroup Analyses-Mission-Segments-Ground Ground
 # RCAIDE/Framework/Analyses/Mission/Segments/Ground/__init__.py
 # 
 

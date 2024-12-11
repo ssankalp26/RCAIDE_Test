@@ -1,4 +1,3 @@
-## @defgroup Methods-Weights-Correlations Correlations
 # RCAIDE/Library/Methods/Weights/Correlations/__init__.py
 # 
 

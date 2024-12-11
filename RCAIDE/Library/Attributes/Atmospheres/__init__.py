@@ -1,4 +1,3 @@
-## @defgroup Library-Attributes-Atmospheres Atmospheres
 # RCAIDE/Library/Attributes/Atmospheres/__init__.py 
 # 
 

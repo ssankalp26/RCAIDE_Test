@@ -26,7 +26,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 # compute_turboprop_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Energy-Propulsors-Turboshaft_Propulsor
 def compute_turboprop_performance(turboprop,state,center_of_gravity= [[0.0, 0.0,0.0]]):    
     
     ''' Computes the performance of one turboprop

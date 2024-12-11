@@ -1,4 +1,3 @@
-## @defgroup Methods-Missions-Common-Residuals Residuals
 # RCAIDE/Methods/Mission/Common/Residuals/__init__.py
 # 
 

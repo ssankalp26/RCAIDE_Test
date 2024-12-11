@@ -1,4 +1,3 @@
-## @defgroup Library-Compoments-Configs
 # RCAIDE/Library/Compoments/Configs/Config.py
 # 
 # 

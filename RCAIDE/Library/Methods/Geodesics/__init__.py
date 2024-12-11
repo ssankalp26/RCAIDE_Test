@@ -1,4 +1,3 @@
-## @defgroup Methods-Geodesics
 # RCAIDE/Methods/Geodesics/__init__.py
 # 
 

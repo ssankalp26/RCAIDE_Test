@@ -1,4 +1,3 @@
-## @defgroup Methods-Energy-Sources-Fuel_Cell-Discharge Discharge
 # RCAIDE/Methods/Power/Fuel_Cell/Discharge/__init__.py
 # 
 

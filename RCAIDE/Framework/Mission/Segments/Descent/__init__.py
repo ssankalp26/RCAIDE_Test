@@ -1,4 +1,3 @@
-## @defgroup Analyses-Mission-Segments-Descent Descent
 # RCAIDE/Framework/Analyses/Mission/Segments/Descent/__init__.py
 # 
 

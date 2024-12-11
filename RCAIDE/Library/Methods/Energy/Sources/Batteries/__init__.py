@@ -1,4 +1,3 @@
-## @defgroup Methods-Energy-Sources-Battery Battery
 # RCAIDE/Methods/Energy/Sources/Battery/__init__.py
 # 
 

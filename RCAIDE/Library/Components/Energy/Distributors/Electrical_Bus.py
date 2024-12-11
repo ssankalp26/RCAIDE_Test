@@ -1,4 +1,3 @@
-## @defgroup Library-Compoments-Energy-Networks-Distribution
 # RCAIDE/Library/Compoments/Energy/Networks/Distribution/Electrical_Bus.py 
 # 
 # Created:  Jul 2023, M. Clarke 
@@ -17,7 +16,6 @@ from RCAIDE.Library.Methods.Energy.Distributors.Electrical_Bus import *
 # ----------------------------------------------------------------------------------------------------------------------
 #  Electrical_Bus
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Compoments-Energy-Networks-Distribution
 class Electrical_Bus(Component):
     """Electrical bus component.
     """ 

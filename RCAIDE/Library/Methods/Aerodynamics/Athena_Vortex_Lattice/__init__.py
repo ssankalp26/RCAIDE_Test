@@ -1,7 +1,4 @@
-## @defgroup Methods-Aerodynamics-AVL AVL
-# Functions to AVL calculations
-# @ingroup Methods-Aerodynamics
-
+# RCAIDE/Library/Methods/Aerodynamics/Athena_Vortex_Lattice/__init__.py
 """ RCAIDE AVL Interface Package Setup
 """
 

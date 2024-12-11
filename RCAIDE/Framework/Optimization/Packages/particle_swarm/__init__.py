@@ -1,5 +1,3 @@
-## @defgroup Optimization-Packages-particle_swarm particle_swarm  
-# @ingroup Optimization-Packages
 # RCAIDE/Optimization/Packages/particle_swarm/__init__.py
 # 
 

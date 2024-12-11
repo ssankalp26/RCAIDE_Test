@@ -1,5 +1,3 @@
-## @defgroup Methods-Aerodynamics-AVL-Data Data
-# @ingroup Methods-Aerodynamics-AVL
 
 """ RCAIDE AVL Data Package Setup
 """

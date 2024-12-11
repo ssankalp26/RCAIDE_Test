@@ -1,4 +1,3 @@
-## @defgroup Methods-Weights-Correlations-General_Aviation General_Aviation
 # RCAIDE/Library/Methods/Weights/Correlations/General_Aviation/__init__.py
 # 
 

@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Common-Initialize
 # RCAIDE/Library/Missions/Common/Initialize/differentials_dimensionless.py
 # 
 # 
@@ -13,7 +12,6 @@ from RCAIDE.Framework.Core.Arrays  import atleast_2d_col
 # ----------------------------------------------------------------------------------------------------------------------
 #  Initialize Differentials
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Common-Initialize
 def differentials_dimensionless(segment):
     """ Discretizes the differential operators
     

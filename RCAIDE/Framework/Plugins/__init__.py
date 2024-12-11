@@ -1,4 +1,3 @@
-## @defgroup Plugins
 # These are external packages that have been incorporated into RCADE. RCADE specific documentation is not used for these packages. 
 # Currently the only package used is pint.
 

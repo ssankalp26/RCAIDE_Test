@@ -1,4 +1,3 @@
-## @defgroup Methods-Energy Energy 
 # RCAIDE/Methods/Energy/__init__.py
 # 
 

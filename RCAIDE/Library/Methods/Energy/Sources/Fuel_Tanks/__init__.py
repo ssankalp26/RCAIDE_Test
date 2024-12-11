@@ -1,4 +1,3 @@
-## @defgroup Methods-Energy-Sources-Fuel_Tanks
 # RCAIDE/Methods/Energy/Sources/Battery/Common/__init__.py
 # 
 

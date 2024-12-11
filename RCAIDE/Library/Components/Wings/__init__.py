@@ -1,4 +1,3 @@
-## @defgroup Library-Components-Wings Wings
 # RCAIDE/Library/Components/Wings/__init__.py
 # 
 

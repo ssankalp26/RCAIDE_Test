@@ -1,4 +1,3 @@
-## @defgroup Methods-Missions-Common Common
 # RCAIDE/Methods/Mission/Common/__init__.py
 # 
 

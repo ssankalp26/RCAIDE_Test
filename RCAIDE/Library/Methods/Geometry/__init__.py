@@ -1,4 +1,3 @@
-## @defgroup Methods-Geometry Geometry
 # RCAIDE/Methods/Geometry/__init__.py
 # 
 

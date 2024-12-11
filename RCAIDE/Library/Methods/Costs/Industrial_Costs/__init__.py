@@ -1,4 +1,3 @@
-## @defgroup Methods-Costs-Industrial_Costs  Industrial_Costs   
 # RCAIDE/Methods/Costs/Industrial_Costs /__init__.py
 # 
 

@@ -1,4 +1,3 @@
-## @defgroup Methods-Missions-Solver Solver
 # RCAIDE/Methods/Mission/Solver/__init__.py
 # 
 

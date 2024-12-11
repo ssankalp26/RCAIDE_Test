@@ -1,4 +1,3 @@
-## @defgroup Attributes-Materials Materials
 # RCAIDE/Library/Attributes/Materials/__init__.py
 # 
 

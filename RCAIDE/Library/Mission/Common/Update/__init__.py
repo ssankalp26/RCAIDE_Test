@@ -1,4 +1,3 @@
-## @defgroup Methods-Missions-Common-Update Update
 # RCAIDE/Methods/Mission/Common/Update/__init__.py
 # 
 

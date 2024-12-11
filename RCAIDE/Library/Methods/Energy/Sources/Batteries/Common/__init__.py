@@ -1,5 +1,3 @@
-## @defgroup Methods-Energy-Sources-Battery-Common Common
-# RCAIDE/Methods/Energy/Sources/Battery/Common/__init__.py
 # 
 
 """ RCAIDE Package Setup

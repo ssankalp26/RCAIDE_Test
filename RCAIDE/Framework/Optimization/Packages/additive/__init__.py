@@ -1,5 +1,3 @@
-## @defgroup Optimization-Packages-additive additive  
-# @ingroup Optimization-Packages 
 # RCAIDE/Optimization/Packages/additive/__init__.py
 # 
 

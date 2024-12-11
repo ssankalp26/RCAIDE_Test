@@ -1,5 +1,3 @@
-## @defgroup External_Interfaces-OpenVSP OpenVSP  
-# @ingroup External_Interfaces
 # RCAIDE/External_Interfaces/OpenVSP/__init__.py
 # 
 

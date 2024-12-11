@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors-Turboshaft_Propulsor
 # RCAIDE/Methods/Energy/Propulsors/Turboshaft_Propulsor/size_core.py
 # 
 # 
@@ -16,7 +15,6 @@ import numpy                                                       as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  size_core
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Methods-Energy-Propulsors-Turboshaft_Propulsor 
 def size_core(turboshaft,turboshaft_conditions,conditions):
     """Sizes the core flow for the design condition.
 

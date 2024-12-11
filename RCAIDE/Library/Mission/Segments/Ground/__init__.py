@@ -1,4 +1,3 @@
-## @defgroup Methods-Missions-Segments-Ground Ground
 # RCAIDE/Methods/Mission/Segments/Ground/__init__.py
 # 
 
