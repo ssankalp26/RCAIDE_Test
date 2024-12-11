@@ -18,8 +18,6 @@ import copy as cp
 #-------------------------------------------------------------------------------
 # Prop
 #-------------------------------------------------------------------------------
-
-## @ingroup Methods-Weights-Buildups-Common
 def compute_rotor_weight(rotor,
          maximum_lifting_thrust,
          chord_to_radius_ratio = 0.1,

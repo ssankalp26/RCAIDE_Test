@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Common-Initialize
 # RCAIDE/Library/Missions/Common/Initialize/energy.py
 # 
 # 
@@ -9,7 +8,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  energy
 # ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Missions-Segments-Common-Initialize
 def energy(segment):
     """ Sets the initial battery energy at the start of the mission
 

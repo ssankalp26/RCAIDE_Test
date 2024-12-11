@@ -147,8 +147,7 @@ def compute_misc_engine_weight(vehicle, NENG, WENG):
     WEC     = 5 * NENG + 0.8 * Lec
     WSTART  = 49.19*(NENG*WENG/1000)**0.541
     return WEC * Units.lbs, WSTART * Units.lbs
-
-## @ingroup Methods-Weights-Correlations-Raymer
+ 
 def compute_fuel_system_weight(vehicle, NENG):
     """ Calculates the weight of the fuel system based on the Raymer method
         Assumptions:

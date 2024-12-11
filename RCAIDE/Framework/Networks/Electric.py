@@ -1,6 +1,4 @@
-## @ingroup Energy-Networks
 # RCAIDE/Energy/Networks/Electric.py
-# 
 # 
 # Created:  Jul 2023, M. Clarke
 # Modified: Sep 2024, S. Shekar
@@ -8,7 +6,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------  
-    # RCAIDE imports 
+# RCAIDE imports 
 import RCAIDE  
 from RCAIDE.Framework.Mission.Common                      import Residuals
 from RCAIDE.Library.Mission.Common.Unpack_Unknowns.energy import unknowns

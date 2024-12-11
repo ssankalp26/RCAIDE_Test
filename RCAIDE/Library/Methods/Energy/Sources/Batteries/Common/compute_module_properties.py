@@ -13,8 +13,7 @@ import  numpy as  np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  METHOD
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Energy-Sources-Battery-Common
+# ---------------------------------------------------------------------------------------------------------------------- -Common
 def compute_module_properties(battery_module):  
     """Calculate module level properties of battery module using cell 
     properties and module configuraton

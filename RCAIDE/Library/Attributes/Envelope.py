@@ -1,4 +1,3 @@
-## @ingroup Library-Compoments
 # RCAIDE/Library/Compoments/Envelope.py
 # 
 # 

@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors-Rotor_Design 
 # RCAIDE/Methods/Energy/Propulsors/Rotor_Design/set_optimized_parameters.py
 # 
 # 
@@ -7,7 +6,6 @@
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Set Optimized rotor platform paramters
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Methods-Energy-Propulsors-Rotor_Design
 def set_optimized_parameters(rotor,optimization_problem):
     """ Append parameters of optimized prop-rotor to input prop-rotor
           

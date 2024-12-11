@@ -1,5 +1,3 @@
-
-## @ingroup Methods-Aerodynamics-Airfoil_Panel_Method
 # RCAIDE/Methods/Aerodynamics/Airfoil_Panel_Method/velocity_distribution.py
 # 
 # 
@@ -15,7 +13,6 @@ import numpy as np
 # ---------------------------------------------------------------------------------------------------------------------- 
 # velocity_distribution
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Aerodynamics-Airfoil_Panel_Method
 def velocity_distribution(qg,x,y,xbar,ybar,st,ct,alpha_2d,npanel,ncases,ncpts):
     """Compute the tangential velocity distribution at the       
                  midpoint of each panel   

@@ -1,4 +1,3 @@
-## @ingroup  Library-Methods-Aerodynamics-Vortex_Lattice_Method
 # RCAIDE/Library/Methods/Aerodynamics/Vortex_Lattice_Method/build_VLM_surrogates.py
 #  
 # ----------------------------------------------------------------------------------------------------------------------
@@ -14,8 +13,7 @@ from scipy import interpolate
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Vortex_Lattice
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Methods-Stability    
+# ----------------------------------------------------------------------------------------------------------------------   
 def build_VLM_surrogates(aerodynamics):
     """Build a surrogate using sample evaluation results.
     

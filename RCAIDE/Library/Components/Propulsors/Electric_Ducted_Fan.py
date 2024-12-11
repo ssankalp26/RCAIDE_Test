@@ -1,6 +1,4 @@
-## @ingroup Components-Propulsors-Electric_Ducted_Fan
 # RCAIDE/Library/Components/Propulsors/Electric_Ducted_Fan.py
-# 
 # 
 # 
 # Created:  Oct 2024, M. Clarke
@@ -19,7 +17,6 @@ from RCAIDE.Library.Methods.Propulsors.Electric_Ducted_Fan_Propulsor.append_elec
 # ----------------------------------------------------------------------
 #  Electric Ducted Fan Component
 # ----------------------------------------------------------------------
-## @ingroup Components-Propulsors-Converters
 class Electric_Ducted_Fan(Propulsor):
     """This is a electric motor-ducted_fan propulsor 
     

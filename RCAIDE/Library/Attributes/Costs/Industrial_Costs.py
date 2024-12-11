@@ -1,5 +1,4 @@
-## @ingroup Library-Attributes-Costs
-# RCAIDE/Library/Attributes/Costs/Industrial_Costs.py
+ # RCAIDE/Library/Attributes/Costs/Industrial_Costs.py
 # 
 #
 # Created:  Mar 2024, M. Clarke
@@ -12,8 +11,7 @@ from RCAIDE.Framework.Core import Data
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Industrial_Costs Class
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Attributes-Costs
+# ----------------------------------------------------------------------------------------------------------------------   
 class Industrial_Costs(Data):
     """A class containing industrial cost variables. 
     """     

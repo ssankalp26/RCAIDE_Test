@@ -23,7 +23,6 @@ from copy import  deepcopy
 # ----------------------------------------------------------------------------------------------------------------------
 # compute_turbojet_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Energy-Propulsors-Turbojet_Propulsor
 def compute_turbojet_performance(turbojet,state,center_of_gravity= [[0.0, 0.0,0.0]]):  
     ''' Computes the perfomrance of one turbojet
     

@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Sources-Battery 
 # RCAIDE/Methods/Energy/Sources/Fuel_Tanks/append_fuel_tank_conditions.py
 # 
 # 
@@ -12,8 +11,7 @@ from RCAIDE.Framework.Mission.Common     import   Conditions
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  METHOD
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Energy-Sources-Battery 
+# ----------------------------------------------------------------------------------------------------------------------  
 def append_fuel_tank_conditions(fuel_tank,segment,fuel_line): 
     ones_row    = segment.state.ones_row                 
     segment.state.conditions.energy[fuel_line.tag][fuel_tank.tag]                 = Conditions()  

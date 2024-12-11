@@ -12,8 +12,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  METHOD
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Energy-Sources-Battery-Common 
+# ---------------------------------------------------------------------------------------------------------------------- -Common 
 def compute_net_generated_battery_heat(n_total,battery,Q_heat_gen,numerics):
     '''Computes the net heat generated in a battery during cycling. 
 

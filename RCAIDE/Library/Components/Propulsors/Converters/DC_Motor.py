@@ -1,4 +1,3 @@
-## @ingroup Components-Propulsors-Converters
 # RCAIDE/Library/Components/Propulsors/Converters/DC_Motor.py
 # 
 # 

@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Sources-Battery 
 # RCAIDE/Methods/Energy/Sources/Battery/Common/append_battery_conditions.py
 # 
 # 
@@ -14,8 +13,7 @@ from RCAIDE.Framework.Mission.Common     import   Conditions
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  METHODS
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Energy-Sources-Battery 
+# ----------------------------------------------------------------------------------------------------------------------  
 def append_battery_conditions(battery,segment,bus): 
     """ Appends the initial battery conditions
     

@@ -1,4 +1,3 @@
-## @ingroup Analyses-Emissions
 # RCAIDE/Framework/Analyses/Emissions/Emissions.py
 # 
 # 
@@ -14,8 +13,7 @@ import  numpy as  np
 
 # ----------------------------------------------------------------------
 #  Emissions
-# ----------------------------------------------------------------------
-## @ingroup Analyses-Emissions
+# ---------------------------------------------------------------------- 
 class Emissions(Analysis):
     """ The Top Level Emissions Analysis Class 
     """

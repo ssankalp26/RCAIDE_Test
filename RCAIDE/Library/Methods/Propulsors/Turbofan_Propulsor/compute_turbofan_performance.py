@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors-Turbofan_Propulsor
 # RCAIDE/Methods/Energy/Propulsors/Turbofan_Propulsor/compute_turbofan_performance.py
 # 
 # 
@@ -23,8 +22,7 @@ from copy import  deepcopy
 
 # ----------------------------------------------------------------------------------------------------------------------
 # compute_performance
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Energy-Propulsors-Turbofan_Propulsor  
+# ----------------------------------------------------------------------------------------------------------------------   
 def compute_turbofan_performance(turbofan,state,center_of_gravity= [[0.0, 0.0,0.0]]):  
     ''' Computes the perfomrance of one turbofan
     
