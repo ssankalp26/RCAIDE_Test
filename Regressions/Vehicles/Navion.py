@@ -346,11 +346,12 @@ def vehicle_setup():
     prop.airfoil_polar_stations             = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]  
     design_propeller(prop)    
     ice_prop.propeller                      = prop
+    
     net.propulsors.append(ice_prop) 
     
     #------------------------------------------------------------------------------------------------------------------------------------   
     # Assign propulsors to fuel line to network      
-    net.assigned_propulsors =  [[ice_prop.tag]]
+    fuel_line.assigned_propulsors =  [[ice_prop.tag]]
     
     #------------------------------------------------------------------------------------------------------------------------------------   
     # Append fuel line to fuel line to network      
