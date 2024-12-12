@@ -44,7 +44,11 @@ def design_cross_flow_heat_exchanger(HEX,coolant_line,battery, single_side_conta
     elapsed_time         = round((tf-ti)/60,2)
     print('HEX sizing optimization Simulation Time: ' + str(elapsed_time) + ' mins')    
  
-    HEX_opt = optimization_problem.hex_configurations.optimized.networks.electric.coolant_lines.coolant_line.heat_exchangers.cross_flow_hex
+
+    for coolant_line in optimization_problem.hex_configurations.optimized.networks.electric.coolant_lines:
+        for heat_exchanger in coolant_line.heat_exchangers: 
+            HEX_opt       = heat_exchanger
+             
     HEX.design_air_inlet_pressure     = output[0]
     HEX.design_coolant_inlet_pressure = output[1]
     HEX.design_air_mass_flow_rate     = output[2]
@@ -119,7 +123,7 @@ def crossflow_heat_exchanger_design_problem_setup(HEX,coolant_line,print_iterati
     #  Aliases
     # ------------------------------------------------------------------- 
     aliases = [] 
-    btms = 'hex_configurations.optimized.networks.electric.coolant_lines.coolant_line.heat_exchangers.cross_flow_hex'
+    btms = 'hex_configurations.optimized.networks.electric.coolant_lines.' +  coolant_line.tag + '.heat_exchangers.'+  HEX.tag
     aliases.append([ 'm_dot_c'     , btms + '.air_flow_rate' ]) 
     aliases.append([ 'm_dot_c'     , btms + '.coolant_flow_rate' ]) 
     aliases.append([ 'p_c_1'       , btms + '.air_inlet_pressure' ])       

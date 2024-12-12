@@ -12,7 +12,7 @@ from RCAIDE.Framework.Mission.Common                             import Conditio
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  append electric ducted fan network conditions
 # ----------------------------------------------------------------------------------------------------------------------    
-def append_electric_ducted_fan_conditions(propulsor,segment,bus):
+def append_electric_ducted_fan_conditions(propulsor,segment):
     '''
     
     

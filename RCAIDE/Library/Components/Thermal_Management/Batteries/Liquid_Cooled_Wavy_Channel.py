@@ -72,9 +72,7 @@ class Liquid_Cooled_Wavy_Channel(Component):
         
         Source:
             None
-        """               
-        distributor.heat_exchangers                = Container()
-        distributor.reservoirs                     = Container()
+        """                
         
     def append_operating_conditions(self,segment,coolant_line):
         append_wavy_channel_conditions(self,segment,coolant_line)

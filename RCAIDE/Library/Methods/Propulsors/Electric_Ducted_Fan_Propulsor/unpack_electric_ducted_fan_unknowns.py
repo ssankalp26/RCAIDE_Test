@@ -7,8 +7,8 @@
 #  unpack electric ducted_fan network unknowns 
 # ----------------------------------------------------------------------------------------------------------------------  
 
-def unpack_electric_ducted_fan_unknowns(propulsor,reference_propulsor,segment): 
+def unpack_electric_ducted_fan_unknowns(propulsor,segment): 
     results = segment.state.conditions.energy[propulsor.tag]
-    motor   =  propulsor.motor  
-    results[motor.tag].rotor_power_coefficient = segment.state.unknowns[reference_propulsor.tag  + '_ducted_fan_cp'] 
+    motor   = propulsor.motor  
+    results[motor.tag].rotor_power_coefficient = segment.state.unknowns[propulsor.tag  + '_ducted_fan_cp'] 
     return 

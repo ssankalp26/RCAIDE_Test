@@ -60,24 +60,11 @@ def plot_disc_and_power_loading(results,
     axis_1 = plt.subplot(2,1,1)
     axis_2 = plt.subplot(2,1,2)   
     pi     = 0 
-    for network in results.segments[0].analyses.energy.vehicle.networks:  
-        if 'busses' in network: 
-            for bus in network.busses:    
-                for p_i, propulsor in enumerate(bus.propulsors): 
-                    if p_i == 0: 
-                        plot_propulsor_data(results,bus,propulsor,axis_1,axis_2,line_colors,ps,pi)
-                    elif (bus.identical_propulsors == False) and p_i !=0:  
-                        plot_propulsor_data(results,bus,propulsor,axis_1,axis_2,line_colors,ps,pi)  
-                    pi += 1
-             
-        if 'fuel_lines' in network: 
-            for fuel_line in network.fuel_lines:    
-                for p_i, propulsor in enumerate(fuel_line.propulsors):   
-                    if p_i == 0: 
-                        plot_propulsor_data(results,fuel_line,propulsor,axis_1,axis_2,line_colors,ps,pi)
-                    elif (fuel_line.identical_propulsors == False) and p_i !=0:  
-                        plot_propulsor_data(results,fuel_line,propulsor,axis_1,axis_2,line_colors,ps,pi)  
-                    pi += 1
+    for network in results.segments[0].analyses.energy.vehicle.networks:   
+        for p_i, propulsor in enumerate(network.propulsors):  
+            if (p_i == 0) or (network.identical_propulsors == False):    
+                plot_propulsor_data(results,propulsor,axis_1,axis_2,line_colors,ps,pi) 
+              
     if show_legend:             
         leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4) 
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
@@ -94,14 +81,14 @@ def plot_disc_and_power_loading(results,
         
     return fig 
 
-def plot_propulsor_data(results,distributor,propulsor,axis_1,axis_2,line_colors,ps,pi):
+def plot_propulsor_data(results,propulsor,axis_1,axis_2,line_colors,ps,pi):
     if 'rotor' in  propulsor:
         thrustor =  propulsor.rotor
     elif 'propeller' in  propulsor:
         thrustor =  propulsor.propeller
 
     for i in range(len(results.segments)): 
-        bus_results  = results.segments[i].conditions.energy[distributor.tag] 
+        bus_results  = results.segments[i].conditions.energy
         time         = results.segments[i].conditions.frames.inertial.time[:,0] / Units.min    
         DL           = bus_results[propulsor.tag][thrustor.tag].disc_loading[:,0]
         PL           = bus_results[propulsor.tag][thrustor.tag].power_loading[:,0]   

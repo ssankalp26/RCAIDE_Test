@@ -18,7 +18,7 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 # internal_combustion_engine_constant_speed_propulsor
 # ----------------------------------------------------------------------------------------------------------------------  
-def compute_cs_ice_performance(propulsor,state,fuel_line,center_of_gravity= [[0.0, 0.0,0.0]]):  
+def compute_cs_ice_performance(propulsor,state,center_of_gravity= [[0.0, 0.0,0.0]]):  
     ''' Computes the perfomrance of one propulsor
     
     Assumptions: 
@@ -55,7 +55,7 @@ def compute_cs_ice_performance(propulsor,state,fuel_line,center_of_gravity= [[0.
     propeller_conditions.omega          = engine_conditions.rpm * Units.rpm
     propeller_conditions.pitch_command  = ice_cs_conditions.throttle - 0.5
     propeller_conditions.throttle       = ice_cs_conditions.throttle
-    compute_rotor_performance(propulsor,state,fuel_line,center_of_gravity)
+    compute_rotor_performance(propulsor,state,center_of_gravity)
 
     # Run the engine to calculate the throttle setting and the fuel burn
     engine_conditions.power        = conditions.energy[propulsor.tag][propeller.tag].power 

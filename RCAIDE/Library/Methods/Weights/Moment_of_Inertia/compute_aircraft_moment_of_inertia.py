@@ -62,25 +62,24 @@ def compute_aircraft_moment_of_inertia(vehicle, CG_location, update_MOI=True):
     I_network = np.zeros([3, 3]) 
     for network in vehicle.networks:
         for propulsor in network.propulsors:
-            for item , tag in  propulsor.items():
-                if isinstance(item, RCAIDE.Library.Components.Propulsors.Converters.Rotor):
-                    pass
-                if isinstance(item,RCAIDE.Library.Components.Propulsors.Converters.DC_Motor):
-                    I, mass = compute_cylinder_moment_of_inertia(item.origin,item.mass_properties.mass, 0, 0, 0,0, CG_location)
-                    I_network += I
-                    MOI_mass += mass
-                if isinstance(propulsor,RCAIDE.Library.Components.Propulsors.Turbofan):
-                    I, mass= compute_cylinder_moment_of_inertia(propulsor.origin, propulsor.mass_properties.mass, propulsor.engine_length, propulsor.nacelle.diameter/2, 0, 0, CG_location)                    
-                    I_network += I
-                    MOI_mass += mass
-                if isinstance(propulsor,RCAIDE.Library.Components.Propulsors.Turboprop):
-                    I, mass= compute_cylinder_moment_of_inertia(propulsor.origin, propulsor.mass_properties.mass, propulsor.engine_length, propulsor.engine_diameter/2, 0, 0, CG_location)                    
-                    I_network += I
-                    MOI_mass += mass
-                if isinstance(propulsor,RCAIDE.Library.Components.Propulsors.ICE_Propeller):
-                    I, mass= compute_cylinder_moment_of_inertia(propulsor.origin, propulsor.engine_mass, propulsor.engine_length, propulsor.engine_diameter/2, 0, 0, CG_location)                    
-                    I_network += I
-                    MOI_mass += mass
+            if isinstance(propulsor,RCAIDE.Library.Components.Propulsors.Electric_Rotor):
+                motor   = propulsor.motor 
+                I, mass = compute_cylinder_moment_of_inertia(motor.origin,motor.mass_properties.mass, 0, 0, 0,0, CG_location)
+                I_network += I
+                MOI_mass  += mass
+                    
+            if isinstance(propulsor,RCAIDE.Library.Components.Propulsors.Turbofan):
+                I, mass= compute_cylinder_moment_of_inertia(propulsor.origin, propulsor.mass_properties.mass, propulsor.engine_length, propulsor.nacelle.diameter/2, 0, 0, CG_location)                    
+                I_network += I
+                MOI_mass += mass
+            if isinstance(propulsor,RCAIDE.Library.Components.Propulsors.Turboprop):
+                I, mass= compute_cylinder_moment_of_inertia(propulsor.origin, propulsor.mass_properties.mass, propulsor.engine_length, propulsor.engine_diameter/2, 0, 0, CG_location)                    
+                I_network += I
+                MOI_mass += mass
+            if isinstance(propulsor,RCAIDE.Library.Components.Propulsors.ICE_Propeller):
+                I, mass= compute_cylinder_moment_of_inertia(propulsor.origin, propulsor.engine_mass, propulsor.engine_length, propulsor.engine_diameter/2, 0, 0, CG_location)                    
+                I_network += I
+                MOI_mass += mass
         
         for bus in network.busses: 
             for battery in bus.battery_modules: 

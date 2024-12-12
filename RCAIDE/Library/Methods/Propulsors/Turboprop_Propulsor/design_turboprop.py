@@ -68,10 +68,10 @@ def design_turboprop(turboprop):
     segment.state.conditions                              = conditions
     segment.state.conditions.energy[fuel_line.tag]        = Conditions()
     segment.state.conditions.noise[fuel_line.tag]         = Conditions()
-    turboprop.append_operating_conditions(segment,fuel_line) 
+    turboprop.append_operating_conditions(segment) 
     for tag, item in  turboprop.items(): 
         if issubclass(type(item), RCAIDE.Library.Components.Component):
-            item.append_operating_conditions(segment,fuel_line,turboprop) 
+            item.append_operating_conditions(segment,turboprop) 
          
     ram                                                   = turboprop.ram
     inlet_nozzle                                          = turboprop.inlet_nozzle

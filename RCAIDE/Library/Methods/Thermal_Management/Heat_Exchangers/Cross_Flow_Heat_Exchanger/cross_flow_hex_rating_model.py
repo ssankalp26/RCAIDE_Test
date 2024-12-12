@@ -5,7 +5,6 @@
 # ----------------------------------------------------------------------
 #  Imports
 # ---------------------------------------------------------------------- 
-from RCAIDE.Framework.Core import Units
 import numpy as np  
 
 # ----------------------------------------------------------------------
@@ -98,7 +97,7 @@ def cross_flow_hex_rating_model(HEX,state,bus,coolant_line, delta_t,t_idx):
 
     # Inlet temperatures 
     for reservoir in  coolant_line.reservoirs:
-        T_i_h                  = state.conditions.energy.coolant_line[reservoir.tag].coolant_temperature[t_idx,0] 
+        T_i_h  = state.conditions.energy[coolant_line.tag][reservoir.tag].coolant_temperature[t_idx,0] 
     T_i_c           = state.conditions.freestream.temperature[t_idx,0]     
     #turndown_ratio  = battery_conditions.thermal_management_system.HEX.percent_operation[t_idx,0]
     m_dot_h         = HEX.design_coolant_mass_flow_rate#*turndown_ratio

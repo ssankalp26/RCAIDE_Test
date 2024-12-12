@@ -66,10 +66,10 @@ def design_turbojet(turbojet):
     segment.state.conditions                       = conditions
     segment.state.conditions.energy[fuel_line.tag] = Conditions()
     segment.state.conditions.noise[fuel_line.tag]  = Conditions()
-    turbojet.append_operating_conditions(segment,fuel_line) 
+    turbojet.append_operating_conditions(segment) 
     for tag, item in  turbojet.items(): 
         if issubclass(type(item), RCAIDE.Library.Components.Component):
-            item.append_operating_conditions(segment,fuel_line,turbojet)
+            item.append_operating_conditions(segment,turbojet)
     
     ram                       = turbojet.ram
     inlet_nozzle              = turbojet.inlet_nozzle

@@ -68,10 +68,10 @@ def design_turboshaft(turboshaft):
     segment.state.conditions = conditions
     segment.state.conditions.energy[fuel_line.tag] = Conditions()
     segment.state.conditions.noise[fuel_line.tag] = Conditions()
-    turboshaft.append_operating_conditions(segment,fuel_line) 
+    turboshaft.append_operating_conditions(segment) 
     for tag, item in  turboshaft.items(): 
         if issubclass(type(item), RCAIDE.Library.Components.Component):
-            item.append_operating_conditions(segment,fuel_line,turboshaft) 
+            item.append_operating_conditions(segment,turboshaft) 
          
     ram                                                   = turboshaft.ram
     inlet_nozzle                                          = turboshaft.inlet_nozzle

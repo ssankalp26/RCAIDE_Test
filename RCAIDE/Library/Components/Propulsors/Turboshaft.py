@@ -63,21 +63,21 @@ class Turboshaft(Propulsor):
         self.areas.exit                                       = 0.0
         self.areas.inflow                                     = 0.0 
 
-    def append_operating_conditions(self,segment,fuel_line):
-        append_turboshaft_conditions(self,segment,fuel_line)
+    def append_operating_conditions(self,segment):
+        append_turboshaft_conditions(self,segment)
         return
 
-    def unpack_propulsor_unknowns(self,segment,fuel_line):   
+    def unpack_propulsor_unknowns(self,segment):   
         return 
 
-    def pack_propulsor_residuals(self,segment,fuel_line): 
+    def pack_propulsor_residuals(self,segment): 
         return    
 
     def append_propulsor_unknowns_and_residuals(self,segment): 
         return
     
-    def compute_performance(self,state,fuel_line,center_of_gravity = [[0, 0, 0]]):
-        thrust,moment,power,stored_results_flag,stored_propulsor_tag =  compute_turboshaft_performance(self,state,fuel_line,center_of_gravity)
+    def compute_performance(self,state,center_of_gravity = [[0, 0, 0]]):
+        thrust,moment,power,stored_results_flag,stored_propulsor_tag =  compute_turboshaft_performance(self,state,center_of_gravity)
         return thrust,moment,power,stored_results_flag,stored_propulsor_tag
     
     def reuse_stored_data(turboshaft,state,network,stored_propulsor_tag,center_of_gravity = [[0, 0, 0]]):

@@ -474,6 +474,7 @@ def vehicle_setup(cell_chemistry, btms_type):
         # Coolant Line
         #------------------------------------------------------------------------------------------------------------------------------------  
         coolant_line                                           = RCAIDE.Library.Components.Energy.Distributors.Coolant_Line(bus)
+        coolant_line.tag                                       = 'liquid_cooled_coolant_line'
         net.coolant_lines.append(coolant_line)
         HAS                                                    = RCAIDE.Library.Components.Thermal_Management.Batteries.Liquid_Cooled_Wavy_Channel(coolant_line)
         HAS.design_altitude                                    = 2500. * Units.feet  
@@ -503,6 +504,7 @@ def vehicle_setup(cell_chemistry, btms_type):
         # Coolant Line
         #------------------------------------------------------------------------------------------------------------------------------------  
         coolant_line                                 = RCAIDE.Library.Components.Energy.Distributors.Coolant_Line(bus)
+        coolant_line.tag                             = 'air_cooled_coolant_line'
         net.coolant_lines.append(coolant_line)
         HAS                                         = RCAIDE.Library.Components.Thermal_Management.Batteries.Air_Cooled() 
         HAS.convective_heat_transfer_coefficient    = 7.17
@@ -514,7 +516,7 @@ def vehicle_setup(cell_chemistry, btms_type):
     #------------------------------------------------------------------------------------------------------------------------------------   
     starboard_propulsor                              = RCAIDE.Library.Components.Propulsors.Electric_Rotor()  
     starboard_propulsor.tag                          = 'starboard_propulsor'
-    starboard_propulsor.active_busses                = ['bus']    
+    
     # Electronic Speed Controller       
     esc                                              = RCAIDE.Library.Components.Energy.Modulators.Electronic_Speed_Controller()
     esc.tag                                          = 'esc_1'
@@ -566,14 +568,13 @@ def vehicle_setup(cell_chemistry, btms_type):
     starboard_propulsor.motor                        = motor 
  
     # append propulsor to distribution line 
-    bus.propulsors.append(starboard_propulsor) 
+    net.propulsors.append(starboard_propulsor) 
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Port Propulsor
     #------------------------------------------------------------------------------------------------------------------------------------   
     port_propulsor                             = RCAIDE.Library.Components.Propulsors.Electric_Rotor() 
     port_propulsor.tag                         = "port_propulsor"
-    port_propulsor.active_busses               = ['bus']   
             
     esc_2                                      = deepcopy(esc)
     esc_2.origin                               = [[3.8, -2.8129,1.22 ]]        
@@ -590,7 +591,7 @@ def vehicle_setup(cell_chemistry, btms_type):
     port_propulsor.motor                       = motor_2  
     
     # append propulsor to distribution line 
-    bus.propulsors.append(port_propulsor) 
+    net.propulsors.append(port_propulsor) 
 
 
     #------------------------------------------------------------------------------------------------------------------------------------           
@@ -606,7 +607,11 @@ def vehicle_setup(cell_chemistry, btms_type):
     #------------------------------------------------------------------------------------------------------------------------------------  
     avionics                     = RCAIDE.Library.Components.Systems.Avionics()
     avionics.power_draw          = 20. # Watts
-    bus.avionics                 = avionics   
+    bus.avionics                 = avionics
+    
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    # Assign propulsors to bus       
+    bus.assigned_propulsors =  [[starboard_propulsor.tag, port_propulsor.tag]] 
 
     # append bus   
     net.busses.append(bus)

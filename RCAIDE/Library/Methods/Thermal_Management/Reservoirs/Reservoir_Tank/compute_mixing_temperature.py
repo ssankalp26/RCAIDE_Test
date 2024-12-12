@@ -45,7 +45,7 @@ def compute_mixing_temperature(reservoir, state, coolant_line, delta_t, t_idx):
     T_current = 0
     volume    = 0
     for reservoir in coolant_line.reservoirs:
-        T_current += state.conditions.energy.coolant_line[reservoir.tag].coolant_temperature[t_idx, 0]
+        T_current += state.conditions.energy[coolant_line.tag][reservoir.tag].coolant_temperature[t_idx, 0]
         volume    += reservoir.volume
     
     T_current = T_current / len(coolant_line.reservoirs)

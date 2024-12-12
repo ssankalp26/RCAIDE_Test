@@ -33,24 +33,24 @@ class Electric_Ducted_Fan(Propulsor):
         self.ducted_fan                   = None 
         self.electronic_speed_controller  = None 
 
-    def append_operating_conditions(self,segment,network):
-        append_electric_ducted_fan_conditions(self,segment,network)
+    def append_operating_conditions(self,segment):
+        append_electric_ducted_fan_conditions(self,segment)
         return 
 
-    def unpack_propulsor_unknowns(self,reference_propulsor,segment):  
-        unpack_electric_ducted_fan_unknowns(self,reference_propulsor,segment)
+    def unpack_propulsor_unknowns(self,segment):  
+        unpack_electric_ducted_fan_unknowns(self,segment)
         return 
 
-    def pack_propulsor_residuals(self,segment,network): 
-        pack_electric_ducted_fan_residuals(self,segment,network)
+    def pack_propulsor_residuals(self,segment): 
+        pack_electric_ducted_fan_residuals(self,segment)
         return        
 
     def append_propulsor_unknowns_and_residuals(self,segment):
         append_electric_ducted_fan_residual_and_unknown(self,segment)
         return 
     
-    def compute_performance(self,state,bus,voltage,center_of_gravity = [[0, 0, 0]]):
-        thrust,moment,power,stored_results_flag,stored_propulsor_tag =  compute_electric_ducted_fan_performance(self,state,bus,voltage,center_of_gravity)
+    def compute_performance(self,state,voltage,center_of_gravity = [[0, 0, 0]]):
+        thrust,moment,power,stored_results_flag,stored_propulsor_tag =  compute_electric_ducted_fan_performance(self,state,voltage,center_of_gravity)
         return thrust,moment,power,stored_results_flag,stored_propulsor_tag
     
     def reuse_stored_data(EDF,state,bus,stored_propulsor_tag,center_of_gravity = [[0, 0, 0]]):

@@ -261,7 +261,7 @@ def vehicle_setup():
 
     #------------------------------------------------------------------------------------------------------------------------------------   
     # Assign propulsors to fuel line to network      
-    net.assigned_propulsors =  [[ice_prop.tag]]
+    fuel_line.assigned_propulsors =  [[ice_prop.tag]]
     
     #------------------------------------------------------------------------------------------------------------------------------------   
     # Append fuel line to fuel line to network      
