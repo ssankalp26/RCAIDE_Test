@@ -78,6 +78,14 @@ def compute_component_centers_of_gravity(vehicle, nose_load = 0.06):
     network_moment = 0.
     network_mass   = 0.
     for network in vehicle.networks:
+        for propulsor in network.propulsors: 
+            for sub_tag, sub_item in propulsor.items():
+                if isinstance(sub_item,Component):
+                    for sub_sub_tag, sub_sub_item in  sub_item.items():
+                        if isinstance(sub_sub_item,Component):
+                            network_moment += sub_sub_item.mass_properties.mass*(np.array(sub_sub_item.origin) + np.array( sub_sub_item.mass_properties.center_of_gravity))
+                            network_mass   += sub_sub_item.mass_properties.mass
+                                                                        
         for bus in network.busses:
             for tag, item in  bus.items():
                 if tag == 'battery_modules':
@@ -85,34 +93,18 @@ def compute_component_centers_of_gravity(vehicle, nose_load = 0.06):
                         if isinstance(sub_item,Component):
                             network_moment += sub_item.mass_properties.mass*(np.array(sub_item.origin) + np.array( sub_item.mass_properties.center_of_gravity))
                             network_mass   += sub_item.mass_properties.mass 
-                elif tag == 'propulsors':
-                    for sub_tag, sub_item in  item.items():
-                        if isinstance(sub_item,Component):
-                            for sub_sub_tag, sub_sub_item in  sub_item.items():
-                                if isinstance(sub_sub_item,Component):
-                                    network_moment += sub_sub_item.mass_properties.mass*(np.array(sub_sub_item.origin) + np.array( sub_sub_item.mass_properties.center_of_gravity))
-                                    network_mass   += sub_sub_item.mass_properties.mass
-                                                                        
                             
                 elif isinstance(item,Component):
                     network_moment += item.mass_properties.mass*(np.array(item.origin) + np.array(item.mass_properties.center_of_gravity))
-                    network_mass   += item.mass_properties.mass                                     
+                    network_mass   += item.mass_properties.mass
+                    
         for fuel_line in network.fuel_lines:
             for tag, item in  fuel_line.items(): 
                 if tag == 'fuel_lines':
                     for sub_tag, sub_item in  item.items():
                         if isinstance(sub_item,Component):
                             network_moment += sub_item.mass_properties.mass*(np.array(sub_item.origin) + np.array( sub_item.mass_properties.center_of_gravity))
-                            network_mass   += sub_item.mass_properties.mass
-                elif tag == 'propulsors':
-                    for sub_tag, sub_item in  item.items():
-                        if isinstance(sub_item,Component):
-                            network_moment += sub_item.mass_properties.mass*(np.array(sub_item.origin) + np.array( sub_item.mass_properties.center_of_gravity))
-                            network_mass   += sub_item.mass_properties.mass
-                            for sub_sub_tag, sub_sub_item in  sub_item.items():
-                                if isinstance(sub_sub_item,Component):
-                                    network_moment += sub_sub_item.mass_properties.mass*(np.array(sub_sub_item.origin) + np.array( sub_sub_item.mass_properties.center_of_gravity))
-                                    network_mass   += sub_sub_item.mass_properties.mass                            
+                            network_mass   += sub_item.mass_properties.mass                        
                 elif isinstance(item,Component):
                     network_moment += item.mass_properties.mass*(np.array(item.origin) + np.array(item.mass_properties.center_of_gravity))
                     network_mass   += item.mass_properties.mass             

@@ -214,8 +214,7 @@ def vehicle_setup():
     fuel_tank.fuel.mass_properties.mass         = 319 *Units.lbs 
     fuel_tank.mass_properties.center_of_gravity = wing.mass_properties.center_of_gravity
     fuel_tank.volume                            = fuel_tank.fuel.mass_properties.mass/fuel_tank.fuel.density   
-    fuel_line.fuel_tanks.append(fuel_tank)  
-    net.fuel_lines.append(fuel_line)    
+    fuel_line.fuel_tanks.append(fuel_tank)   
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Propulsor
@@ -257,9 +256,16 @@ def vehicle_setup():
     prop.append_airfoil(airfoil)      
     prop.airfoil_polar_stations             = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]  
     design_propeller(prop)    
-    ice_prop.propeller                      = prop 
+    ice_prop.propeller                      = prop  
+    net.propulsors.append(ice_prop)
+
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    # Assign propulsors to fuel line to network      
+    net.assigned_propulsors =  [[ice_prop.tag]]
     
-    fuel_line.propulsors.append(ice_prop)
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    # Append fuel line to fuel line to network      
+    net.fuel_lines.append(fuel_line)            
 
     #------------------------------------------------------------------------------------------------------------------------------------ 
     # Avionics
