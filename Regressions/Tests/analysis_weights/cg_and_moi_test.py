@@ -91,9 +91,9 @@ def General_Aviation_Test():
     # ------------------------------------------------------------------
     #   Weight Breakdown 
     # ------------------------------------------------------------------  
-    weight_analysis                               = RCAIDE.Framework.Analyses.Weights.Weights_General_Aviation()
-    weight_analysis.vehicle                       = general_aviation_setup() 
-    results                                       = weight_analysis.evaluate() 
+    weight_analysis           = RCAIDE.Framework.Analyses.Weights.Weights_General_Aviation()
+    weight_analysis.vehicle   = general_aviation_setup() 
+    results                   = weight_analysis.evaluate() 
     
     # ------------------------------------------------------------------
     #   CG Location
@@ -136,9 +136,9 @@ def EVTOL_Aircraft_Test(update_regression_values):
     # ------------------------------------------------------------------
     #   Weight Breakdown 
     # ------------------------------------------------------------------  
-    weight_analysis                               = RCAIDE.Framework.Analyses.Weights.Weights_EVTOL()
-    weight_analysis.vehicle                       = vehicle
-    results                                       = weight_analysis.evaluate() 
+    weight_analysis          = RCAIDE.Framework.Analyses.Weights.Weights_EVTOL()
+    weight_analysis.vehicle  = vehicle
+    results                  = weight_analysis.evaluate() 
     
     # ------------------------------------------------------------------
     #   CG Location
