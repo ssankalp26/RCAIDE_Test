@@ -14,6 +14,7 @@ from RCAIDE.Library.Methods.Geometry.Planform import compute_span_location_from_
 from RCAIDE.Library.Methods.Geometry.Planform import compute_chord_length_from_span_location 
 from RCAIDE.Library.Methods.Geometry.Planform import convert_sweep
 from RCAIDE.Library.Components                import Component
+from RCAIDE.Library.Components.Component      import Container 
 
 # package imports 
 import numpy as np 
@@ -74,41 +75,12 @@ def compute_component_centers_of_gravity(vehicle, nose_load = 0.06):
             wing.mass_properties.center_of_gravity[0][0] = .3*wing.chords.mean_aerodynamic + mac_le_offset
             
             
-    # Go through all the networks
+    # Compute collective network center of gravity
     network_moment = 0.
     network_mass   = 0.
     for network in vehicle.networks:
-        for propulsor in network.propulsors: 
-            for sub_tag, sub_item in propulsor.items():
-                if isinstance(sub_item,Component):
-                    for sub_sub_tag, sub_sub_item in  sub_item.items():
-                        if isinstance(sub_sub_item,Component):
-                            network_moment += sub_sub_item.mass_properties.mass*(np.array(sub_sub_item.origin) + np.array( sub_sub_item.mass_properties.center_of_gravity))
-                            network_mass   += sub_sub_item.mass_properties.mass
-                                                                        
-        for bus in network.busses:
-            for tag, item in  bus.items():
-                if tag == 'battery_modules':
-                    for sub_tag, sub_item in  item.items():
-                        if isinstance(sub_item,Component):
-                            network_moment += sub_item.mass_properties.mass*(np.array(sub_item.origin) + np.array( sub_item.mass_properties.center_of_gravity))
-                            network_mass   += sub_item.mass_properties.mass 
-                            
-                elif isinstance(item,Component):
-                    network_moment += item.mass_properties.mass*(np.array(item.origin) + np.array(item.mass_properties.center_of_gravity))
-                    network_mass   += item.mass_properties.mass
-                    
-        for fuel_line in network.fuel_lines:
-            for tag, item in  fuel_line.items(): 
-                if tag == 'fuel_lines':
-                    for sub_tag, sub_item in  item.items():
-                        if isinstance(sub_item,Component):
-                            network_moment += sub_item.mass_properties.mass*(np.array(sub_item.origin) + np.array( sub_item.mass_properties.center_of_gravity))
-                            network_mass   += sub_item.mass_properties.mass                        
-                elif isinstance(item,Component):
-                    network_moment += item.mass_properties.mass*(np.array(item.origin) + np.array(item.mass_properties.center_of_gravity))
-                    network_mass   += item.mass_properties.mass             
-     
+        for p_tag, p_item in network.items():
+            network_moment,network_mass = compute_properties(network_moment,network_mass,p_item)
         network.mass_properties.mass   = network_mass
         network.mass_properties.center_of_gravity = (network_moment / network_mass).tolist()
         
@@ -234,4 +206,17 @@ def compute_component_centers_of_gravity(vehicle, nose_load = 0.06):
         pass         
          
     
-    return  
+    return
+
+def compute_properties(network_moment,network_mass,p_item):  
+    if isinstance(p_item,Component): 
+        network_moment += p_item.mass_properties.mass*(np.array(p_item.origin) + np.array( p_item.mass_properties.center_of_gravity))
+        network_mass   += p_item.mass_properties.mass
+        for p_sub_tag, p_sub_item in p_item.items():
+            network_moment,network_mass =  compute_properties(network_moment,network_mass,p_sub_item)    
+    elif isinstance(p_item,Container): 
+        for p_sub_tag, p_sub_item in p_item.items():
+            network_moment,network_mass =  compute_properties(network_moment,network_mass,p_sub_item)
+    
+    return network_moment,network_mass
+        
