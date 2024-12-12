@@ -1,5 +1,5 @@
 ## @ingroup Library-Components-Fuselages
-# RCAIDE/Compoments/Fuselages/Tube_Fuselage.py
+# RCAIDE/Library/Components/Fuselages/Tube_Fuselage.py
 # 
 # 
 # Created:  Mar 2024, M. Clarke 
@@ -16,13 +16,27 @@ from RCAIDE.Library.Methods.Weights.Moment_of_Inertia.compute_fuselage_moment_of
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Library-Components-Fuselages 
 class Tube_Fuselage(Fuselage):
-    """ This is a standard fuselage for a tube and wing aircraft.
+    """
+    A standard fuselage class for conventional tube and wing aircraft configurations.
+
+    Attributes
+    ----------
+    tag : str
+        Identifier for the fuselage component, defaults to 'tube_fuselage'
+
+    Methods
+    -------
+    compute_moment_of_inertia(center_of_gravity)
+        Computes the moment of inertia of the tube fuselage
+
+    Notes
+    -----
+    This class inherits from the base Fuselage class and represents the conventional
+    cylindrical fuselage design commonly used in tube and wing aircraft configurations.
     
-    Assumptions:
-    Conventional fuselage
-    
-    Source:
-    N/A
+    **Definitions**
+    'Tube Fuselage'
+        A conventional cylindrical fuselage design that forms the main body of the aircraft
     """
     
     def __defaults__(self):

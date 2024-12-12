@@ -19,13 +19,138 @@ from RCAIDE.Library.Methods.Weights.Moment_of_Inertia.compute_fuselage_moment_of
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Library-Components-Fuselages 
 class Fuselage(Component):
-    """ This is a standard fuselage for a tube and wing aircraft.
+    """
+    A standard fuselage class for tube and wing aircraft configurations that handles geometry, 
+    segmentation, and fuel tank definitions.
+
+    Attributes
+    ----------
+    tag : str
+        Identifier for the fuselage component
+        
+    origin : list
+        Origin point of the fuselage in [x, y, z] coordinates
+        
+    aerodynamic_center : list
+        Location of the aerodynamic center in [x, y, z] coordinates
+        
+    differential_pressure : float
+        Pressure differential between inside and outside of fuselage
+        
+    seats_abreast : float
+        Number of seats side by side in the fuselage
+        
+    seat_pitch : float
+        Distance between seats front to back
+        
+    number_coach_seats : float
+        Total number of coach class seats
+        
+    areas : Data
+        Collection of fuselage area measurements
+        - front_projected : float
+            Front view projected area
+        - side_projected : float
+            Side view projected area
+        - wetted : float
+            Total wetted area of the fuselage
+            
+    effective_diameter : float
+        Effective diameter of the fuselage
+        
+    width : float
+        Width of the fuselage
+        
+    heights : Data
+        Collection of height measurements at various fuselage stations
+        - maximum : float
+            Maximum height of the fuselage
+        - at_quarter_length : float
+            Height at 25% of fuselage length
+        - at_three_quarters_length : float
+            Height at 75% of fuselage length
+        - at_wing_root_quarter_chord : float
+            Height at wing root quarter chord
+        - at_vertical_root_quarter_chord : float
+            Height at vertical tail root quarter chord
+            
+    lengths : Data
+        Collection of length measurements
+        - nose : float
+            Length of nose section
+        - tail : float
+            Length of tail section
+        - total : float
+            Total length of fuselage
+        - cabin : float
+            Length of cabin section
+        - fore_space : float
+            Length of space forward of cabin
+        - aft_space : float
+            Length of space aft of cabin
+            
+    x_rotation : float
+        Rotation angle around x-axis
+        
+    y_rotation : float
+        Rotation angle around y-axis
+        
+    z_rotation : float
+        Rotation angle around z-axis
+        
+    fineness : Data
+        Fineness ratios
+        - nose : float
+            Nose fineness ratio
+        - tail : float
+            Tail fineness ratio
+            
+    nose_curvature : float
+        Curvature parameter for nose section
+        
+    tail_curvature : float
+        Curvature parameter for tail section
+        
+    fuel_tanks : Container
+        Container for fuel tank definitions
+        
+    vsp_data : Data
+        OpenVSP specific geometry data
+        - xsec_surf_id : str
+            Surface ID for cross-sections
+        - xsec_num : int
+            Number of cross-sections
+            
+    Segments : Container
+        Container for fuselage segment definitions
+
+    Methods
+    -------
+    append_segment(segment)
+        Adds a new segment to the fuselage
+        
+    append_fuel_tank(fuel_tank)
+        Adds a new fuel tank to the fuselage
+        
+    compute_moment_of_inertia(center_of_gravity)
+        Computes the moment of inertia of the fuselage
+
+    Notes
+    -----
+    The fuselage class is designed for conventional tube and wing aircraft configurations.
+    It provides a comprehensive framework for defining the geometry and characteristics
+    of an aircraft fuselage including its segments, fuel tanks, and various measurements.
     
-    Assumptions:
-    Conventional fuselage
+    **Definitions**
+    'Fineness Ratio'
+        The ratio of length to maximum diameter of a body
+    'Wetted Area'
+        The total surface area of the fuselage that is in contact with the airflow
     
-    Source:
-    N/A
+    References
+    ----------
+    .. [1] Raymer, D., "Aircraft Design: A Conceptual Approach", AIAA Education Series
+    .. [2] Torenbeek, E., "Synthesis of Subsonic Airplane Design", Delft University Press
     """
     
     def __defaults__(self):

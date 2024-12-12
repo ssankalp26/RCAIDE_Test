@@ -15,12 +15,41 @@ import numpy as np
 # ---------------------------------------------------------------------------------------------------------------------- 
 ## @ingroup Library-Components-Fuselages 
 class Blended_Wing_Body_Fuselage(Fuselage):
-    """ This is a blended wing body fuselage class 
+    """
+    A specialized fuselage class for blended wing body aircraft configurations.
+
+    Attributes
+    ----------
+    tag : str
+        Identifier for the fuselage component, defaults to 'bwb_fuselage'
+        
+    aft_centerbody_area : float
+        Area of the aft centerbody section, defaults to 0.0
+        
+    aft_centerbody_taper : float
+        Taper ratio of the aft centerbody section, defaults to 0.0
+        
+    cabin_area : float
+        Area of the cabin section, defaults to 0.0
+
+    Methods
+    -------
+    compute_moment_of_inertia(center_of_gravity)
+        Computes the moment of inertia matrix for the blended wing body fuselage about the given center of gravity
+
+    Notes
+    -----
+    The Blended Wing Body Fuselage class extends the base Fuselage class to provide
+    specialized functionality for BWB aircraft configurations. This design integrates
+    the wing and fuselage into a single lifting body.
     
-    Assumptions: 
-    
-    Source:
-    N/A
+    **Definitions**
+    'Blended Wing Body'
+        An aircraft configuration that smoothly integrates the wings and fuselage
+        into a single aerodynamic surface
+    'Centerbody'
+        The central section of a BWB aircraft that houses the passenger cabin
+        and cargo hold
     """
     
     def __defaults__(self):
