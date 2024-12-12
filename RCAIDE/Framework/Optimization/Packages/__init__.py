@@ -16,6 +16,5 @@ from . import particle_swarm
 from . import pyopt 
 from . import pyopt_sparse 
 from . import pyopt_surrogate
-from . import scipy 
-from . import surrogate_optimization
+from . import scipy
 from . import trmm

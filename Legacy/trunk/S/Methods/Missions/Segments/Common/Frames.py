@@ -297,7 +297,7 @@ def update_orientations(segment):
 
     # back calculate wind frame rotations
     wind_body_rotations = body_inertial_rotations * 0.
-    wind_body_rotations[:,0] = 0          # no roll in wind frame
+    wind_body_rotations[:,0] = phi[:,0]   # CHANGED AIDAN 10/22/2024 yes roll in wind frame
     wind_body_rotations[:,1] = alpha[:,0] # theta is angle of attack
     wind_body_rotations[:,2] = beta[:,0]  # psi is side slip angle
 

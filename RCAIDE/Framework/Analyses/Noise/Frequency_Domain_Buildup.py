@@ -8,9 +8,9 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------  
-# RCAIDE Imports 
-from RCAIDE.Library.Methods.Noise.Common.decibel_arithmetic                           import SPL_arithmetic 
-from RCAIDE.Library.Methods.Noise.Common.evaluate_noise_surrogate                     import evaluate_noise_surrogate
+# RCAIDE Imports
+import RCAIDE
+from RCAIDE.Library.Methods.Noise.Common.decibel_arithmetic                           import SPL_arithmetic  
 from RCAIDE.Library.Methods.Noise.Common.generate_hemisphere_microphone_locations     import generate_hemisphere_microphone_locations  
 from RCAIDE.Library.Methods.Noise.Frequency_Domain_Buildup.Rotor.compute_rotor_noise  import compute_rotor_noise 
 from .Noise      import Noise
@@ -62,8 +62,9 @@ class Frequency_Domain_Buildup(Noise):
         """
         
         # Initialize quantities 
-        self.tag =  "Frequency_Domain_Buildup"        
-            
+        self.tag                                   =  "Frequency_Domain_Buildup"        
+        self.settings.fidelity                     = 'line_source'
+        self.settings.use_plane_loading_surrogate =  True 
     def evaluate_noise(self,segment):
         """ Process vehicle to setup vehicle, condititon and configuration
     
@@ -98,19 +99,22 @@ class Frequency_Domain_Buildup(Noise):
         total_SPL_dBA          = np.ones((ctrl_pts,N_hemisphere_mics))*1E-16 
         total_SPL_spectra      = np.ones((ctrl_pts,N_hemisphere_mics,dim_cf))*1E-16  
          
-        # iterate through sources and iteratively add rotor noise 
+        # iterate through sources and iteratively add rotor noise
+        rotor_tag = None
         for network in config.networks:
             for tag , item in  network.items():
                 if (tag == 'busses') or (tag == 'fuel_line'): 
-                    for distributor in item: 
-                        for propulsor in distributor.propulsors:
-                            for sub_tag , sub_item in  propulsor.items():
-                                if (sub_tag == 'rotor') or (sub_tag == 'propeller'): 
-                                    compute_rotor_noise(microphone_locations,distributor,propulsor,segment,settings) 
-                                    total_SPL_dBA     = SPL_arithmetic(np.concatenate((total_SPL_dBA[:,None,:],conditions.noise[distributor.tag][propulsor.tag][sub_item.tag].SPL_dBA[:,None,:]),axis =1),sum_axis=1)
-                                    total_SPL_spectra = SPL_arithmetic(np.concatenate((total_SPL_spectra[:,None,:,:],conditions.noise[distributor.tag][propulsor.tag][sub_item.tag].SPL_1_3_spectrum[:,None,:,:]),axis =1),sum_axis=1) 
-                             
-        evaluate_noise_surrogate(total_SPL_dBA,total_SPL_spectra,settings,segment)
+                    for distributor in item:
+                        if distributor.active: 
+                            i = 0
+                            for propulsor in distributor.propulsors:
+                                for sub_tag , sub_item in  propulsor.items():
+                                    if isinstance(sub_item, RCAIDE.Library.Components.Propulsors.Converters.Rotor): 
+                                        rotor_tag         = compute_rotor_noise(microphone_locations,distributor,propulsor,sub_item,segment,settings, rotor_index = i, previous_rotor_tag= rotor_tag) 
+                                        total_SPL_dBA     = SPL_arithmetic(np.concatenate((total_SPL_dBA[:,None,:],conditions.noise[distributor.tag][propulsor.tag][sub_item.tag].SPL_dBA[:,None,:]),axis =1),sum_axis=1)
+                                        total_SPL_spectra = SPL_arithmetic(np.concatenate((total_SPL_spectra[:,None,:,:],conditions.noise[distributor.tag][propulsor.tag][sub_item.tag].SPL_1_3_spectrum[:,None,:,:]),axis =1),sum_axis=1) 
+                                        i += 1
+                                    
+        conditions.noise.hemisphere_SPL_dBA              = total_SPL_dBA
+        conditions.noise.hemisphere_SPL_1_3_spectrum_dBA = total_SPL_spectra  
         return
-    
-    

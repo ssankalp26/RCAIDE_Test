@@ -9,7 +9,7 @@
 # RCAIDE imports 
 import RCAIDE  
 from RCAIDE.Framework.Core                                    import Units, Data 
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common   import initialize_from_mass ,initialize_from_energy_and_power, initialize_from_mass, find_mass_gain_rate, find_total_mass_gain, find_ragone_properties, find_ragone_optimum  
+from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common   import size_module_from_mass ,size_module_from_energy_and_power, find_mass_gain_rate, find_total_mass_gain, find_ragone_properties  
 from RCAIDE.Framework.Mission.Common                          import Conditions
 from RCAIDE.Library.Plots                                     import * 
 
@@ -20,7 +20,8 @@ import matplotlib.cm as cm
 
 # local imports 
 import sys 
-sys.path.append('../../Vehicles') 
+import os
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 from Isolated_Battery_Cell   import vehicle_setup , configs_setup  
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -36,9 +37,6 @@ def main():
     
     # Lithium Sulfur Test 
     lithium_sulphur_battery_test(Ereq,Preq)
-    
-    # test ragone 
-    test_ragone(Ereq,Preq)
         
     # Lithium-Ion Test
     lithium_ion_battery_test()
@@ -46,7 +44,7 @@ def main():
      
 def aluminum_air_battery_test(Ereq,Preq): 
     battery_al_air                 = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Aluminum_Air()    
-    test_initialize_from_energy_and_power(battery_al_air, Ereq, Preq)
+    test_size_module_from_energy_and_power(battery_al_air, Ereq, Preq)
     test_mass_gain(battery_al_air, Preq)
     return 
    
@@ -57,23 +55,16 @@ def lithium_sulphur_battery_test(Ereq,Preq):
     plot_battery_ragone_diagram(battery_li_s,   save_filename =  'lithium_sulfur')     
     return 
 
-def test_ragone(Ereq,Preq):  
-    battery_li_ion                   = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_LFP() 
-    battery_li_ion.outputs           = Data()  
-    battery_li_ion.maximum_voltage   = battery_li_ion.cell.maximum_voltage
-    test_find_ragone_optimum(battery_li_ion,Ereq,Preq)   
-    test_initialize_from_mass(battery_li_ion,20*Units.kg)
-
 
 def lithium_ion_battery_test():    
     
-    # Operating conditions for battery 
+    # Operating conditions for battery p
     curr                  = [1.5,3]  
     C_rat                 = [0.5,1]  
     marker_size           = 5 
-    mAh                   = np.array([3550,1500]) 
-    V_ul_true             = np.array([[3.975183741087232,3.6014269379449155], [3.91835673395705,3.6143636985487304]])
-    bat_temp_true         = np.array([[292.3879080392878,288.85765659521235], [296.3978928496251,289.5653131904246]])  
+    mAh                   = np.array([3800,2600]) 
+    V_ul_true             = np.array([[3.176391931635407,3.1422615279089],[3.176391931635407,3.1422615279089]])
+    bat_temp_true         = np.array([[309.47942727882105,304.7804077267032], [309.65733640183896,304.9861235766863]])  
 
     # PLot parameters 
     marker                = ['s' ,'o' ,'P']
@@ -90,10 +81,11 @@ def lithium_ion_battery_test():
     axes6  = fig1.add_subplot(3,2,6)  
 
     battery_chemistry     = ['lithium_ion_nmc','lithium_ion_lfp']    
-    fixed_bus_voltage = False 
+    electrical_config     = ['Series','Parallel'] 
     for j in range(len(curr)):      
-        for i in range(len(battery_chemistry)):   
-            vehicle  = vehicle_setup(curr[j],C_rat[j],battery_chemistry[i],fixed_bus_voltage) 
+        for i in range(len(battery_chemistry)):
+            
+            vehicle  = vehicle_setup(curr[j],C_rat[j],battery_chemistry[i],electrical_config[j]) 
             
             # Set up vehicle configs
             configs  = configs_setup(vehicle)
@@ -110,14 +102,14 @@ def lithium_ion_battery_test():
             # mission analysis 
             results = missions.base_mission.evaluate()  
             
-            # Voltage Regression
-            V_ul        = results.segments[0].conditions.energy.bus.battery_modules[battery_chemistry[i]].voltage_under_load[2][0]   
+            # Voltage Cell Regression
+            V_ul        = results.segments[0].conditions.energy.bus.battery_modules[battery_chemistry[i]].cell.voltage_under_load[2][0]   
             print('Under load voltage: ' + str(V_ul))
             V_ul_diff   = np.abs(V_ul - V_ul_true[j,i])
             print('Under load voltage difference')
             print(V_ul_diff) 
-            assert np.abs((V_ul_diff)/V_ul_true[j,i]) < 1e-6 
-            
+            assert np.abs((V_ul_diff)/V_ul_true[j,i]) < 1e-6  
+           
             # Temperature Regression
             bat_temp        = results.segments[1].conditions.energy.bus.battery_modules[battery_chemistry[i]].cell.temperature[2][0]  
             print('Cell temperature: ' + str(bat_temp))
@@ -141,7 +133,6 @@ def lithium_ion_battery_test():
                     axes4.plot(Amp_Hrs , SOC   , marker= marker[i] , linestyle = linestyles[i],  color= linecolors[j], markersize=marker_size   ,label = battery_chemistry[i] + ': '+ str(C_rat[j]) + ' C') 
                     axes6.plot(Amp_Hrs , cell_temp, marker= marker[i] , linestyle = linestyles[i],  color= linecolors[j] , markersize=marker_size,label = battery_chemistry[i] + ': '+ str(C_rat[j]) + ' C')              
              
-
     legend_font_size = 6                     
     axes1.set_ylabel('Voltage $(V_{UL}$)')  
     axes1.legend(loc='upper right', ncol = 2, prop={'size': legend_font_size})  
@@ -209,6 +200,15 @@ def mission_setup(analyses,vehicle,battery_chemistry,current,mAh):
     Segments           = RCAIDE.Framework.Mission.Segments 
     base_segment       = Segments.Segment()   
     time               = 0.8 * (mAh/1000)/current * Units.hrs  
+
+    # Charge Segment 
+    segment                                 = Segments.Ground.Battery_Recharge(base_segment)      
+    segment.analyses.extend(analyses.charge) 
+    segment.cutoff_SOC                      = 1.0  
+    segment.initial_battery_state_of_charge = 0.2  
+    segment.tag                             = 'Recharge' 
+    mission.append_segment(segment)   
+
          
     segment                                 = Segments.Ground.Battery_Discharge(base_segment) 
     segment.analyses.extend(analyses.discharge)  
@@ -223,13 +223,6 @@ def mission_setup(analyses,vehicle,battery_chemistry,current,mAh):
     segment.time                           = time/2  
     mission.append_segment(segment)        
     
-    # Charge Segment 
-    segment                                = Segments.Ground.Battery_Recharge(base_segment)      
-    segment.analyses.extend(analyses.charge) 
-    segment.cutoff_SOC                     = 0.9  
-    segment.tag                            = 'Recharge' 
-    mission.append_segment(segment)   
-
     return mission 
 
 def missions_setup(mission): 
@@ -250,8 +243,8 @@ def test_mass_gain(battery,power):
     print('mass_gain_rate = ', mdot)
     return
 
-def test_initialize_from_energy_and_power(battery,energy,power):
-    initialize_from_energy_and_power(battery, energy, power)
+def test_size_module_from_energy_and_power(battery,energy,power):
+    size_module_from_energy_and_power(battery, energy, power)
     print(battery)
     return
 
@@ -259,18 +252,6 @@ def test_find_ragone_properties(specific_energy,battery,energy,power):
     find_ragone_properties( specific_energy, battery, energy,power)
     print(battery)
     print('specific_energy (Wh/kg) = ',battery.specific_energy/(Units.Wh/Units.kg))
-    return
-
-def test_find_ragone_optimum(battery, energy, power):
-    find_ragone_optimum(battery,energy,power)
-    print(battery)
-    print('specific_energy (Wh/kg) = ',battery.specific_energy/(Units.Wh/Units.kg))
-    print('max_energy [W-h]=', battery.maximum_energy/Units.Wh)
-    return
-
-def test_initialize_from_mass(battery,mass):
-    initialize_from_mass(battery,mass)
-    print(battery)
     return
 
 if __name__ == '__main__':

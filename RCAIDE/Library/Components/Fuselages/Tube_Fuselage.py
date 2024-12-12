@@ -9,7 +9,7 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
 # RCAIDE imports     
 from .Fuselage import Fuselage
-from RCAIDE.Library.Methods.Stability.Moment_of_Inertia.compute_fuselage_moment_of_inertia import  compute_fuselage_moment_of_inertia
+from RCAIDE.Library.Methods.Weights.Moment_of_Inertia.compute_fuselage_moment_of_inertia import  compute_fuselage_moment_of_inertia
  
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Tube_Fuselage
@@ -44,8 +44,8 @@ class Tube_Fuselage(Fuselage):
         None
         """      
         self.tag                                    = 'tube_fuselage'
-    def compute_fuselage_moment_of_inertia(fuselage, center_of_gravity):
-
-        I =  compute_fuselage_moment_of_inertia(fuselage,center_of_gravity) 
+        
+    def compute_moment_of_inertia(self, center_of_gravity): 
+        I =  compute_fuselage_moment_of_inertia(self,center_of_gravity) 
         return I        
   

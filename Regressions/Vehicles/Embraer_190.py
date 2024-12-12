@@ -378,17 +378,19 @@ def vehicle_setup():
     #------------------------------------------------------------------------------------------------------------------------------------  
     #  Landing Gear
     #------------------------------------------------------------------------------------------------------------------------------------  
-    landing_gear                          =  RCAIDE.Library.Components.Landing_Gear.Landing_Gear()
-    landing_gear.tag                      = "main_landing_gear"
-    landing_gear.main_tire_diameter       = 1.12000 * Units.m
-    landing_gear.nose_tire_diameter       = 0.6858 * Units.m
-    landing_gear.main_strut_length        = 1.8 * Units.m
-    landing_gear.nose_strut_length        = 1.3 * Units.m
-    landing_gear.main_units               = 1    #number of nose landing gear
-    landing_gear.nose_units               = 1    #number of nose landing gear
-    landing_gear.main_wheels              = 2    #number of wheels on the main landing gear
-    landing_gear.nose_wheels              = 2    #number of wheels on the nose landing gear
-    vehicle.landing_gear                  = landing_gear
+    main_gear               = RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear()
+    main_gear.tire_diameter = 1.12000 * Units.m
+    main_gear.strut_length  = 1.8 * Units.m 
+    main_gear.units         = 2    # Number of main landing gear
+    main_gear.wheels        = 2    # Number of wheels on the main landing gear
+    vehicle.append_component(main_gear)  
+
+    nose_gear               = RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear()       
+    nose_gear.tire_diameter = 0.6858 * Units.m
+    nose_gear.units         = 1    # Number of nose landing gear
+    nose_gear.wheels        = 2    # Number of wheels on the nose landing gear
+    nose_gear.strut_length  = 1.3 * Units.m 
+    vehicle.append_component(nose_gear)
 
   
     #------------------------------------------------------------------------------------------------------------------------------------  
@@ -418,15 +420,16 @@ def vehicle_setup():
     fuel_7                                      = RCAIDE.Library.Attributes.Propellants.Alkane_Mixture()
     fuel_8                                      = RCAIDE.Library.Attributes.Propellants.Liquid_Natural_Gas()
     fuel_9                                      = RCAIDE.Library.Attributes.Propellants.Butanol()
-    fuel_10                                     = RCAIDE.Library.Attributes.Propellants.Jet_A1()
+    fuel_10                                     = RCAIDE.Library.Attributes.Propellants.Liquid_Petroleum_Gas()
+    fuel_11                                     = RCAIDE.Library.Attributes.Propellants.Jet_A1()
     
     # append correct fuel
-    fuel_11                                     = RCAIDE.Library.Attributes.Propellants.Jet_A()  
-    fuel_11.mass_properties.mass                = vehicle.mass_properties.max_takeoff-vehicle.mass_properties.max_fuel
-    fuel_11.origin                              = [[13.0,0,-1.]]      
-    fuel_11.mass_properties.center_of_gravity   = [[13.0,0,-1.]]
-    fuel_11.internal_volume                     = fuel_11.mass_properties.mass/fuel_11.density  
-    fuel_tank.fuel                              = fuel_11
+    fuel_12                                     = RCAIDE.Library.Attributes.Propellants.Jet_A()  
+    fuel_12.mass_properties.mass                = vehicle.mass_properties.max_takeoff-vehicle.mass_properties.max_fuel
+    fuel_12.origin                              = [[13.0,0,-1.]]      
+    fuel_12.mass_properties.center_of_gravity   = [[13.0,0,-1.]]
+    fuel_12.internal_volume                     = fuel_12.mass_properties.mass/fuel_12.density  
+    fuel_tank.fuel                              = fuel_12
     fuel_line.fuel_tanks.append(fuel_tank) 
     
 
@@ -573,8 +576,7 @@ def configs_setup(vehicle):
 
     configs     = RCAIDE.Library.Components.Configs.Config.Container() 
     base_config = RCAIDE.Library.Components.Configs.Config(vehicle)
-    base_config.tag = 'base' 
-    base_config.landing_gear.gear_condition                      = 'up'
+    base_config.tag = 'base'  
     configs.append(base_config)
 
     # ------------------------------------------------------------------
@@ -595,8 +597,7 @@ def configs_setup(vehicle):
     config.wings['main_wing'].control_surfaces.flap.deflection  = 20. * Units.deg
     config.wings['main_wing'].control_surfaces.slat.deflection  = 25. * Units.deg 
     config.networks.fuel.fuel_lines['fuel_line'].propulsors['starboard_propulsor'].fan.angular_velocity =  3470. * Units.rpm
-    config.networks.fuel.fuel_lines['fuel_line'].propulsors['port_propulsor'].fan.angular_velocity      =  3470. * Units.rpm
-    config.landing_gear.gear_condition                          = 'up'      
+    config.networks.fuel.fuel_lines['fuel_line'].propulsors['port_propulsor'].fan.angular_velocity      =  3470. * Units.rpm 
     configs.append(config)
 
     
@@ -609,8 +610,7 @@ def configs_setup(vehicle):
     config.wings['main_wing'].control_surfaces.flap.deflection  = 20. * Units.deg
     config.wings['main_wing'].control_surfaces.slat.deflection  = 20. * Units.deg
     config.networks.fuel.fuel_lines['fuel_line'].propulsors['starboard_propulsor'].fan.angular_velocity =  2780. * Units.rpm
-    config.networks.fuel.fuel_lines['fuel_line'].propulsors['port_propulsor'].fan.angular_velocity      =  2780. * Units.rpm
-    config.landing_gear.gear_condition                          = 'up'       
+    config.networks.fuel.fuel_lines['fuel_line'].propulsors['port_propulsor'].fan.angular_velocity      =  2780. * Units.rpm 
     configs.append(config)   
     
         
@@ -625,7 +625,8 @@ def configs_setup(vehicle):
     config.wings['main_wing'].control_surfaces.slat.deflection  = 25. * Units.deg
     config.networks.fuel.fuel_lines['fuel_line'].propulsors['starboard_propulsor'].fan.angular_velocity =  2030. * Units.rpm
     config.networks.fuel.fuel_lines['fuel_line'].propulsors['port_propulsor'].fan.angular_velocity      =  2030. * Units.rpm
-    config.landing_gear.gear_condition                          = 'down'    
+    config.landing_gears.main_gear.gear_extended    = True
+    config.landing_gears.nose_gear.gear_extended    = True  
     configs.append(config)   
      
     # ------------------------------------------------------------------
@@ -637,7 +638,8 @@ def configs_setup(vehicle):
     config.wings['main_wing'].control_surfaces.slat.deflection  = 25. * Units.deg
     config.networks.fuel.fuel_lines['fuel_line'].propulsors['starboard_propulsor'].fan.angular_velocity =  3470. * Units.rpm
     config.networks.fuel.fuel_lines['fuel_line'].propulsors['port_propulsor'].fan.angular_velocity      =  3470. * Units.rpm
-    config.landing_gear.gear_condition                          = 'down'    
+    config.landing_gears.main_gear.gear_extended    = True
+    config.landing_gears.nose_gear.gear_extended    = True  
     configs.append(config)    
 
     # done!

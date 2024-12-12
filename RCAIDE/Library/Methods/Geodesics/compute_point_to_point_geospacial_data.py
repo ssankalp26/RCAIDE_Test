@@ -27,15 +27,15 @@ def compute_point_to_point_geospacial_data(settings):
 
     Inputs:   
         topography_file                        - file of lattide, longitude and elevation points     
-        origin_coordinates                  - coordinates of origin location                                              [degrees]
+        origin_coordinates                     - coordinates of origin location                                              [degrees]
         destination_coordinates                - coordinates of destimation location                                            [degrees]  
         
     Outputs:                                   
         latitude_longitude_micrphone_locations - latitude-longitude and elevation coordinates of all microphones in domain      [deg,deg,m]  
         flight_range                           - gound distance between origin and destination location                      [meters]              
         true_course                            - true course angle measured clockwise from true north                     [radians]                      
-        origin_location                     - cartesial coordinates of origin location relative to computational domain   [meters]                   
-        destination_xyz_location                   - cartesial coordinates of destination location relative to computational domain [meters]    
+        origin_location                        - cartesial coordinates of origin location relative to computational domain   [meters]                   
+        destination_xyz_location               - cartesial coordinates of destination location relative to computational domain [meters]    
     
     Properties Used:
         N/A       
@@ -56,10 +56,10 @@ def compute_point_to_point_geospacial_data(settings):
     dep_long    = origin_coordinates[1]
     des_lat     = destination_coordinates[0]
     des_long    = destination_coordinates[1]
-    if dep_long>180: 
-        dep_long = dep_long-360
-    if des_long>180:
-        des_long = des_long-360  
+    if dep_long < 0: 
+        dep_long = 360 + dep_long
+    if des_long< 0:
+        des_long =360 +  des_long 
     
     bottom_left_map_coords   = np.array([x_min_coord,y_min_coord])  
     x0_coord                 = np.array([dep_lat,y_min_coord])
@@ -75,13 +75,14 @@ def compute_point_to_point_geospacial_data(settings):
     lat_flag             = np.where(origin_coordinates<0)[0]
     origin_coordinates[lat_flag]  = origin_coordinates[lat_flag] + 360 
     long_flag            = np.where(destination_coordinates<0)[0]
-    destination_coordinates[long_flag] = destination_coordinates[long_flag] + 360   
-    z0                   = griddata((Lat,Long), Elev, (np.array([origin_coordinates[0]]),np.array([origin_coordinates[1]])), method='linear')[0]
-    z1                   = griddata((Lat,Long), Elev, (np.array([destination_coordinates[0]]),np.array([destination_coordinates[1]])), method='linear')[0] 
+    destination_coordinates[long_flag] = destination_coordinates[long_flag] + 360 
+    z0                   = griddata((Lat,Long), Elev, (np.array([origin_coordinates[0]]),np.array([origin_coordinates[1]])), method='nearest')[0]
+    z1                   = griddata((Lat,Long), Elev, (np.array([destination_coordinates[0]]),np.array([destination_coordinates[1]])), method='nearest')[0] 
     dep_loc              = np.array([x0,y0,z0])
     des_loc              = np.array([x1,y1,z1])
     
     # pack data 
-    settings.origin_location      = dep_loc
-    settings.destination_location = des_loc  
+    settings.aircraft_origin_location      = dep_loc
+    settings.aircraft_destination_location = des_loc 
+        
     return 

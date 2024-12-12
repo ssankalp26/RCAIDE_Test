@@ -46,8 +46,8 @@ class Jet_A(Propellant):
         self.air_chemical_properties               = {'O2':0.2095, 'N2':0.7809, 'AR':0.0096}
         self.surrogate_species_list                = ['CO', 'CO2', 'H2O']
         self.species_list                          = ['CO', 'CO2', 'H2O', 'NO', 'NO2', 'CSOLID']   
-        self.surrogate_chemical_kinetics           = 'Jet_A_Surrogate.yaml'
-        self.chemical_kinetics                     = 'Jet_A.yaml'
+        self.surrogate_chemical_kinetics           = 'Fuel_Surrogate.yaml'
+        self.chemical_kinetics                     = 'Fuel.yaml'
         self.oxidizer                              = 'Air.yaml'
 
         # critical temperatures   

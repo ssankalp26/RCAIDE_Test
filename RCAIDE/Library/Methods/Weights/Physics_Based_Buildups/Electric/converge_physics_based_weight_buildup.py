@@ -48,6 +48,7 @@ def converge_physics_based_weight_buildup(base_vehicle,
 
     weight_analysis          = RCAIDE.Framework.Analyses.Weights.Weights_EVTOL()
     weight_analysis.vehicle  = base_vehicle
+    weight_analysis.settings.miscelleneous_weight_factor =  miscelleneous_weight_factor
     breakdown                = weight_analysis.evaluate() 
     build_up_mass            = breakdown.total    
     diff                     = weight_analysis.vehicle.mass_properties.max_takeoff - build_up_mass

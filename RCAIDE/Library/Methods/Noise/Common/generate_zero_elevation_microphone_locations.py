@@ -53,6 +53,5 @@ def generate_zero_elevation_microphone_locations(settings):
     gm_mic_locations[:,0] = x_coords_0.reshape(num_gm)
     gm_mic_locations[:,1] = y_coords_0.reshape(num_gm)
     gm_mic_locations[:,2] = z_coords_0.reshape(num_gm) 
-    
-    settings.microphone_locations =  gm_mic_locations
-    return  
+     
+    return gm_mic_locations 

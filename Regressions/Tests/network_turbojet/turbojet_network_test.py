@@ -14,10 +14,11 @@ from RCAIDE.Library.Plots                           import *
 # python imports     
 import numpy as np  
 import sys
-import matplotlib.pyplot as plt  
+import matplotlib.pyplot as plt 
+import os
 
 # local imports 
-sys.path.append('../../Vehicles')
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 from Concorde    import vehicle_setup as vehicle_setup
 from Concorde    import configs_setup as configs_setup 
 
@@ -59,9 +60,9 @@ def main():
             print(val)
     
     # Truth values
-    thrust_truth     = 182595.39930805957
-    throttle_truth   = 1.0733672692406722
-    CL_truth         = 0.27062735354848166
+    thrust_truth     = 182566.0177458797
+    throttle_truth   = 1.0733674394507737
+    CL_truth         = 0.27062739821240467
     
     # Store errors 
     error = Data()

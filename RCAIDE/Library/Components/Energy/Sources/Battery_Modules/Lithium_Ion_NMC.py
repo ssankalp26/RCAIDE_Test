@@ -62,20 +62,8 @@ class Lithium_Ion_NMC(Generic_Battery_Module):
         self.tag                                         = 'lithium_ion_nmc'
         self.maximum_energy                              = 0.0
         self.maximum_power                               = 0.0
-        self.maximum_voltage                             = 0.0 
-        
-        self.electrical_configuration                    = Data()
-        self.electrical_configuration.series             = 1
-        self.electrical_configuration.parallel           = 1   
-        self.electrical_configuration.total              = 1
-        self.number_of_cells                             = self.electrical_configuration.series * self.electrical_configuration.parallel
-        
-        self.geometrtic_configuration                    = Data() 
-        self.geometrtic_configuration.normal_count       = self.electrical_configuration.series 
-        self.geometrtic_configuration.parallel_count     = self.electrical_configuration.parallel
-        self.geometrtic_configuration.normal_spacing     = 0.02
-        self.geometrtic_configuration.parallel_spacing   = 0.02
-        
+        self.maximum_voltage                             = 0.0  
+         
         # ----------------------------------------------------------------------------------------------------------------------
         #  Cell Level Properties
         # ----------------------------------------------------------------------------------------------------------------------        
@@ -89,7 +77,7 @@ class Lithium_Ion_NMC(Generic_Battery_Module):
         self.cell.electrode_area              = 0.0342                                                                           # [m^2] 
                                                                                                                            
         self.cell.maximum_voltage             = 4.2                                                                              # [V]
-        self.cell.nominal_capacity            = 3.55                                                                             # [Amp-Hrs]
+        self.cell.nominal_capacity            = 3.8                                                                             # [Amp-Hrs]
         self.cell.nominal_voltage             = 3.6                                                                              # [V] 
         self.cell.charging_voltage            = self.cell.nominal_voltage                                                        # [V] 
         
@@ -132,28 +120,9 @@ class Lithium_Ion_NMC(Generic_Battery_Module):
     
     def reuse_stored_data(self,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag):
         reuse_stored_nmc_cell_data(self,state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag)
-        return
-        
+        return 
     
-    def compute_voltage(self,battery_conditions):  
-        """ Computes the voltage of a single NMC cell or a battery pack of NMC cells   
-        
-        Assumptions:
-            None
-        
-        Source:
-            None
-    
-        Args:
-            self               : battery          [unitless] 
-            battery_conditions : state of battery [unitless]
-            
-        Returns: 
-            None
-        """              
-        return battery_conditions.voltage_under_load 
-    
-    def update_battery_age(self,battery_conditions,increment_battery_age_by_one_day = False):  
+    def update_battery_age(self,segment,battery_conditions,increment_battery_age_by_one_day = False):  
         """ This is an aging model for 18650 lithium-nickel-manganese-cobalt-oxide batteries.   
         
         Assumptions:
@@ -170,7 +139,7 @@ class Lithium_Ion_NMC(Generic_Battery_Module):
         Returns: 
             None
         """        
-        update_nmc_cell_age(self,battery_conditions,increment_battery_age_by_one_day) 
+        update_nmc_cell_age(self,segment,battery_conditions,increment_battery_age_by_one_day) 
         
         return  
 
@@ -191,8 +160,8 @@ def create_discharge_performance_map(raw_data):
         """   
     # Process raw data   
     processed_data = Data() 
-    processed_data.Voltage        = np.zeros((5,6,15,2)) # current , operating temperature , SOC vs voltage      
-    processed_data.Temperature    = np.zeros((5,6,15,2)) # current , operating temperature , SOC vs temperature 
+    processed_data.Voltage        = np.zeros((5,6,15,2)) # current , operating temperature , state_of_charge vs voltage      
+    processed_data.Temperature    = np.zeros((5,6,15,2)) # current , operating temperature , state_of_charge vs temperature 
 
     # Reshape  Data          
     raw_data.Voltage 

@@ -15,10 +15,10 @@ from RCAIDE.Library.Methods.Performance.estimate_stall_speed        import estim
 # python imports     
 import sys
 import matplotlib.pyplot as  plt
-
+import os
 
 # local imports 
-sys.path.append('../../Vehicles')
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 from Electric_Twin_Otter    import vehicle_setup, configs_setup 
 
 
@@ -29,8 +29,8 @@ def main():
          
     battery_types = ['lithium_ion_nmc', 'lithium_ion_lfp']
     btms_types    = ['Liquid_Cooled_Wavy_Channel', 'Air_Cooled', None] 
-    CL_true       = [[0.8025399895694054,0.8025399895694054,0.8025399895694054],
-                     [0.80253998956437, 0.80253998956437,0.80253998956437]] 
+    CL_true       = [[0.8025301499309839,0.8025301499333614,0.8025301499333614],
+                     [0.8025301499284809,0.802530149928007,0.802530149928007]] 
     # vehicle data
     for i , battery_type in enumerate(battery_types):
         for j , btms_type in enumerate(btms_types):

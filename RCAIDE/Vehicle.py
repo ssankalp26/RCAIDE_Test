@@ -45,7 +45,7 @@ class Vehicle(Data):
         self.costs.industrial                         = Attributes.Costs.Industrial_Costs()
         self.costs.operating                          = Attributes.Costs.Operating_Costs()    
         self.envelope                                 = Attributes.Envelope()
-        self.landing_gear                             = Components.Landing_Gear.Landing_Gear.Container()
+        self.landing_gears                            = Components.Landing_Gear.Landing_Gear.Container()  
         self.reference_area                           = 0.0
         self.passengers                               = 0.0
         self.maximum_cross_sectional_area             = 0.0
@@ -53,8 +53,9 @@ class Vehicle(Data):
         self.flight_envelope.design_dynamic_pressure  = None 
         self.flight_envelope.design_mach_number       = None  
         self.flight_envelope.design_cruise_altitude   = None
-        self.flight_envelope.design_range             = None
-        self.vehicle.flight_envelope.ultimate_load    = None
+        self.flight_envelope.design_range             = None 
+        self.flight_envelope.ultimate_load            = 5.7 
+        self.flight_envelope.limit_load               = 3.8          
         self.performance                              = DataOrdered()
          
     _energy_network_root_map = None 
@@ -89,7 +90,7 @@ class Vehicle(Data):
             Components.Nacelles.Nacelle                : self['nacelles']         ,
             Attributes.Envelope                        : self['envelope']         ,
             Components.Booms.Boom                      : self['booms']            ,
-            Components.Landing_Gear.Landing_Gear       : self['landing_gear']     ,
+            Components.Landing_Gear.Landing_Gear       : self['landing_gears']     ,
             Vehicle_Mass_Properties                    : self['mass_properties']  ,
         }
          

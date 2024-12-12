@@ -59,7 +59,10 @@ class Set_Speed_Set_Altitude_No_Propulsion(Evaluate):
         self.altitude                                = None
         self.air_speed                               = 10. * Units['km/hr']
         self.distance                                = 1.  * Units.km
-        self.acceleration_z                          = 0. # note that down is positive
+        self.linear_acceleration_z                   = 0. # note that down is positive
+        self.angular_acceleration_x                  = 0
+        self.angular_acceleration_y                  = 0
+        self.angular_acceleration_z                  = 0
         self.state.numerics.number_of_control_points = 1
 
         # -------------------------------------------------------------------------------------------------------------- 
@@ -75,7 +78,7 @@ class Set_Speed_Set_Altitude_No_Propulsion(Evaluate):
         iterate.conditions.planet_position = skip 
         iterate.residuals.flight_dynamics  = Common.Residuals.flight_dynamics
         iterate.unknowns.controls          = Common.Unpack_Unknowns.control_surfaces
-        iterate.unknowns.mission           = Common.Unpack_Unknowns.orientation
+        iterate.unknowns.orientation       = Common.Unpack_Unknowns.orientation
         
         return
 

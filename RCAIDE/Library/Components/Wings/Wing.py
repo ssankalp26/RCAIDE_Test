@@ -10,14 +10,13 @@
 # RCAIDE imports    
 from RCAIDE.Framework.Core import Data,Container
 from RCAIDE.Library.Components import Mass_Properties, Component  
-from RCAIDE.Library.Methods.Stability.Moment_of_Inertia.compute_wing_moment_of_inertia import  compute_wing_moment_of_inertia
+from RCAIDE.Library.Methods.Weights.Moment_of_Inertia.compute_wing_moment_of_inertia import  compute_wing_moment_of_inertia
 
 import numpy as np
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Wing
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Wings  
+# ----------------------------------------------------------------------------------------------------------------------  
 class Wing(Component):
     """This class defines the wing in RCAIDE
 
@@ -223,13 +222,10 @@ class Wing(Component):
         self.Fuel_Tanks.append(fuel_tank)
 
         return
-
-    
-    def moment_of_inertia(wing,center_of_gravity):
-        
-        I =  compute_wing_moment_of_inertia(wing,center_of_gravity) 
-        return I  
-    
+ 
+    def compute_moment_of_inertia(self,mass,center_of_gravity=[[0, 0, 0]], fuel_flag = False): 
+        I =  compute_wing_moment_of_inertia(self,mass, center_of_gravity, fuel_flag) 
+        return I   
     
 class Container(Component.Container):
     def get_children(self):
