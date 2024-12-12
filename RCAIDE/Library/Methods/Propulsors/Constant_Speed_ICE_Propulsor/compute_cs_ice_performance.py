@@ -10,9 +10,10 @@
 from RCAIDE.Framework.Core import Units  
 from RCAIDE.Library.Methods.Propulsors.Converters.Engine import compute_throttle_from_power
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor.compute_rotor_performance import  compute_rotor_performance
-
+ 
 # pacakge imports  
-import numpy as np 
+from copy import deepcopy
+import numpy as np  
 
 # ----------------------------------------------------------------------------------------------------------------------
 # internal_combustion_engine_constant_speed_propulsor
@@ -61,7 +62,7 @@ def compute_cs_ice_performance(propulsor,state,fuel_line,center_of_gravity= [[0.
     compute_throttle_from_power(engine,engine_conditions,conditions) 
     
     # Create the outputs
-    ice_cs_conditions.fuel_flow_rate            = engine_conditions.fuel_flow_rate  
+    ice_cs_conditions.fuel_flow_rate         = engine_conditions.fuel_flow_rate  
     stored_results_flag                      = True
     stored_propulsor_tag                     = propulsor.tag  
 
@@ -101,11 +102,11 @@ def reuse_stored_ice_cs_prop_data(propulsor,state,network,stored_propulsor_tag,c
     conditions                 = state.conditions
     engine                     = propulsor.engine
     propeller                  = propulsor.propeller 
-    engine_0                   = fuel_line.propulsors[stored_propulsor_tag].engine
-    propeller_0                = fuel_line.propulsors[stored_propulsor_tag].propeller  
-    
-    conditions.energy[propulsor.tag][engine.tag]        = conditions.energy[stored_propulsor_tag][engine_0.tag]
-    conditions.energy[propulsor.tag][propeller.tag]        = conditions.energy[stored_propulsor_tag][propeller_0.tag] 
+    engine_0                   = network.propulsors[stored_propulsor_tag].engine
+    propeller_0                = network.propulsors[stored_propulsor_tag].propeller
+
+    conditions.energy[propulsor.tag][engine.tag]        = deepcopy(conditions.energy[stored_propulsor_tag][engine_0.tag])
+    conditions.energy[propulsor.tag][propeller.tag]     = deepcopy(conditions.energy[stored_propulsor_tag][propeller_0.tag])    
   
     thrust                  = conditions.energy[propulsor.tag][propeller.tag].thrust 
     power                   = conditions.energy[propulsor.tag][propeller.tag].power 

@@ -1,4 +1,4 @@
- import os, sys
+import os, sys
 __dir__ = os.path.abspath(os.path.dirname(__file__))
  
 def load_plugin(package_name):

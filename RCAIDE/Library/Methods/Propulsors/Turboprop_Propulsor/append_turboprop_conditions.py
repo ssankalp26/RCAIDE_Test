@@ -14,6 +14,7 @@ def append_turboprop_conditions(turboprop,segment,fuel_line):
     segment.state.conditions.energy[turboprop.tag].throttle                      = 0. * ones_row(1)     
     segment.state.conditions.energy[turboprop.tag].commanded_thrust_vector_angle = 0. * ones_row(1)   
     segment.state.conditions.energy[turboprop.tag].power                         = 0. * ones_row(1) 
+    segment.state.conditions.energy[turboprop.tag].fuel_flow_rate                = 0. * ones_row(1)
     segment.state.conditions.energy[turboprop.tag].inputs                        = Conditions()
     segment.state.conditions.energy[turboprop.tag].outputs                       = Conditions() 
     segment.state.conditions.noise[turboprop.tag]                                = Conditions() 

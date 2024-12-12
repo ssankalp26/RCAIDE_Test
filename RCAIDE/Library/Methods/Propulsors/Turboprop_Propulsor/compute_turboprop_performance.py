@@ -49,9 +49,9 @@ def compute_turboprop_performance(turboprop,state,center_of_gravity= [[0.0, 0.0,
     Properties Used: 
     N.A.        
     ''' 
-    conditions                = state.conditions 
-    noise_conditions          = conditions.noise[turboprop.tag]  
-    turboprop_conditions      = conditions.energy[turboprop.tag]
+    conditions                                            = state.conditions 
+    noise_conditions                                      = conditions.noise[turboprop.tag]  
+    turboprop_conditions                                  = conditions.energy[turboprop.tag]
     
     ram                                                   = turboprop.ram
     inlet_nozzle                                          = turboprop.inlet_nozzle
@@ -223,7 +223,7 @@ def reuse_stored_turboprop_data(turboprop,state,network,stored_propulsor_tag,cen
     Properties Used: 
     N.A.        
     ''' 
-    conditions                                      = state.conditions  
+    conditions                        = state.conditions  
     conditions.energy[turboprop.tag]  = deepcopy(conditions.energy[stored_propulsor_tag])
     conditions.noise[turboprop.tag]   = deepcopy(conditions.noise[stored_propulsor_tag])
     

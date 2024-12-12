@@ -13,8 +13,7 @@ from RCAIDE.Library.Methods.Propulsors.Converters.Rotor.compute_rotor_performanc
 
 # pacakge imports  
 from copy import deepcopy
-import numpy as np 
-
+import numpy as np  
 
 # ----------------------------------------------------------------------------------------------------------------------
 # compute_ice_performance

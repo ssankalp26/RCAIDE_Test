@@ -3,13 +3,12 @@
 # 
 # Created:  Jun 2024, M. Clarke  
 
-from RCAIDE.Framework.Mission.Common     import   Conditions
-from RCAIDE.Framework.Core               import Units
+from RCAIDE.Framework.Mission.Common     import   Conditions 
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  append_ice_propeller_conditions
 # ----------------------------------------------------------------------------------------------------------------------    
-def append_ice_propeller_conditions(propulsor,segment,fuel_line):  
+def append_ice_propeller_conditions(propulsor,segment):  
     ones_row    = segment.state.ones_row                  
     segment.state.conditions.energy[propulsor.tag]                               = Conditions()  
     segment.state.conditions.energy[propulsor.tag].throttle                      = 0. * ones_row(1)      
@@ -17,6 +16,7 @@ def append_ice_propeller_conditions(propulsor,segment,fuel_line):
     segment.state.conditions.energy[propulsor.tag].thrust                        = 0. * ones_row(3) 
     segment.state.conditions.energy[propulsor.tag].power                         = 0. * ones_row(1) 
     segment.state.conditions.energy[propulsor.tag].moment                        = 0. * ones_row(3) 
+    segment.state.conditions.energy[propulsor.tag].fuel_flow_rate                = 0. * ones_row(1)
     segment.state.conditions.energy[propulsor.tag].inputs                        = Conditions()
     segment.state.conditions.energy[propulsor.tag].outputs                       = Conditions() 
     segment.state.conditions.noise[propulsor.tag]                                = Conditions() 

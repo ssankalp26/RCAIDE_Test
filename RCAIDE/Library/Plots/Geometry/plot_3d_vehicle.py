@@ -184,32 +184,21 @@ def plot_3d_energy_network(plot_data,network,number_of_airfoil_points,color_map)
     show_axis     = False 
     save_figure   = False 
     show_figure   = False
-    save_filename = 'Rotor'
+    save_filename = 'propulsor'
  
-    if 'busses' in network:  
-        for bus in network.busses:
-            for propulsor in bus.propulsors: 
-                number_of_airfoil_points = 21
-                tessellation             = 24
-                if 'nacelle' in propulsor: 
-                    if propulsor.nacelle !=  None: 
-                        plot_data = plot_3d_nacelle(plot_data,propulsor.nacelle,tessellation,number_of_airfoil_points,color_map = 'darkmint') 
-                if 'rotor' in propulsor: 
-                    plot_data = plot_3d_rotor(propulsor.rotor,save_filename,save_figure,plot_data,show_figure,show_axis,0,number_of_airfoil_points,color_map) 
-                if 'propeller' in propulsor:
-                    plot_data = plot_3d_rotor(propulsor.propeller,save_filename,save_figure,plot_data,show_figure,show_axis,0,number_of_airfoil_points,color_map) 
- 
-    if 'fuel_lines' in network:  
-        for fuel_line in network.fuel_lines:
-            for propulsor in fuel_line.propulsors: 
-                number_of_airfoil_points = 21
-                tessellation             = 24
-                if 'nacelle' in propulsor:
-                    if propulsor.nacelle !=  None: 
-                        plot_data = plot_3d_nacelle(plot_data,propulsor.nacelle,tessellation,number_of_airfoil_points,color_map = 'darkmint')
-                if 'rotor' in propulsor: 
-                    plot_data = plot_3d_rotor(propulsor.rotor,save_filename,save_figure,plot_data,show_figure,show_axis,0,number_of_airfoil_points,color_map) 
-                if 'propeller' in propulsor:
-                    plot_data = plot_3d_rotor(propulsor.propeller,save_filename,save_figure,plot_data,show_figure,show_axis,0,number_of_airfoil_points,color_map) 
+    for propulsor in network.propulsors:   
+        number_of_airfoil_points = 21
+        tessellation             = 24
+        if 'nacelle' in propulsor: 
+            if propulsor.nacelle !=  None: 
+                plot_data = plot_3d_nacelle(plot_data,propulsor.nacelle,tessellation,number_of_airfoil_points,color_map = 'darkmint') 
+        if 'rotor' in propulsor: 
+            plot_data = plot_3d_rotor(propulsor.rotor,save_filename,save_figure,plot_data,show_figure,show_axis,0,number_of_airfoil_points,color_map) 
+        if 'propeller' in propulsor:
+            plot_data = plot_3d_rotor(propulsor.propeller,save_filename,save_figure,plot_data,show_figure,show_axis,0,number_of_airfoil_points,color_map)  
+        if 'rotor' in propulsor: 
+            plot_data = plot_3d_rotor(propulsor.rotor,save_filename,save_figure,plot_data,show_figure,show_axis,0,number_of_airfoil_points,color_map) 
+        if 'propeller' in propulsor:
+            plot_data = plot_3d_rotor(propulsor.propeller,save_filename,save_figure,plot_data,show_figure,show_axis,0,number_of_airfoil_points,color_map) 
  
     return plot_data

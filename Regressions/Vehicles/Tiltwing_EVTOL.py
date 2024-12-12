@@ -357,6 +357,7 @@ def vehicle_setup(new_regression=True):
     avionics.mass_properties.mass   = 1.0 * Units.kg
     bus.avionics                    = avionics    
     
+  
     network.busses.append(bus) 
         
     # append energy network 

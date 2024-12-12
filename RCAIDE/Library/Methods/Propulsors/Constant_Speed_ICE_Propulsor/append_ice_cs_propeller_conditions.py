@@ -20,6 +20,7 @@ def append_ice_cs_propeller_conditions(ice_cs_propeller,segment):
     segment.state.conditions.energy[ice_cs_propeller.tag].thrust                        = 0. * ones_row(3) 
     segment.state.conditions.energy[ice_cs_propeller.tag].power                         = 0. * ones_row(1) 
     segment.state.conditions.energy[ice_cs_propeller.tag].moment                        = 0. * ones_row(3) 
+    segment.state.conditions.energy[ice_cs_propeller.tag].fuel_flow_rate                = 0. * ones_row(1)
     segment.state.conditions.energy[ice_cs_propeller.tag].rpm                           = segment.state.conditions.energy.rpm * ones_row(1)      
     segment.state.conditions.energy[ice_cs_propeller.tag].inputs                        = Conditions()
     segment.state.conditions.energy[ice_cs_propeller.tag].outputs                       = Conditions() 

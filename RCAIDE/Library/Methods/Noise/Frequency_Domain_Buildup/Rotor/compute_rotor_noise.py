@@ -27,7 +27,7 @@ from RCAIDE.Framework.Core import interp2d
 # ----------------------------------------------------------------------------------------------------------------------    
 #  Rotor Noise 
 # ----------------------------------------------------------------------------------------------------------------------    
-def compute_rotor_noise(microphone_locations,network,propulsor,rotor,segment,settings, rotor_index = 0, previous_rotor_tag = None):
+def compute_rotor_noise(microphone_locations,propulsor,rotor,segment,settings, rotor_index = 0, previous_rotor_tag = None):
     ''' This is a collection medium-fidelity frequency domain methods for rotor acoustic noise prediction which 
     computes the acoustic signature (sound pressure level, weighted sound pressure levels,
     and frequency spectrums of a system of rotating blades           
@@ -64,7 +64,7 @@ def compute_rotor_noise(microphone_locations,network,propulsor,rotor,segment,set
  
     # unpack 
     conditions           = segment.state.conditions
-    propulsor_conditions = conditions.energy[network.tag][propulsor.tag]
+    propulsor_conditions = conditions.energy[propulsor.tag]
     harmonics_blade      = settings.harmonics
     harmonics_load       = np.linspace(0,5,6).astype(int)  
     num_mic              = len(microphone_locations[:,0]) 
@@ -96,7 +96,7 @@ def compute_rotor_noise(microphone_locations,network,propulsor,rotor,segment,set
      
         # compute position vector from point source (or should it be origin) at rotor hub to microphones
         microphone_location =  np.atleast_2d(microphone_locations[mic_no])
-        coordinates = compute_rotor_point_source_coordinates(network,propulsor,rotor,conditions,microphone_location,settings)
+        coordinates         = compute_rotor_point_source_coordinates(propulsor,rotor,conditions,microphone_location,settings)
                 
         # ----------------------------------------------------------------------------------
         # Harmonic Noise
@@ -209,5 +209,5 @@ def compute_rotor_noise(microphone_locations,network,propulsor,rotor,segment,set
         Results.SPL_broadband_1_3_spectrum_dBA[:,mic_no,:]    = A_weighting_metric(Results.SPL_broadband_1_3_spectrum,settings.center_frequencies)[:, 0, :]
     
     # A-weighted
-    conditions.noise[network.tag][propulsor.tag][rotor.tag] = Results 
+    conditions.noise[propulsor.tag][rotor.tag] = Results 
     return rotor.tag 

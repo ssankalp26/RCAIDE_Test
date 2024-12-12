@@ -8,8 +8,7 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------  
 # noise imports
-import RCAIDE
-from RCAIDE.Framework.Core import Data , Units 
+from RCAIDE.Framework.Core import  Data
 from RCAIDE.Library.Methods.Noise.Common.background_noise     import background_noise
 from RCAIDE.Library.Methods.Noise.Metrics import * 
 from RCAIDE.Library.Methods.Noise.Common.generate_zero_elevation_microphone_locations import generate_zero_elevation_microphone_locations 
@@ -25,7 +24,6 @@ from scipy.interpolate                                           import RegularG
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ---------------------------------------------------------------------------------------------------------------------- 
--Common
 def post_process_noise_data(results,
                             flight_times = np.array(['06:00:00','06:30:00','07:00:00','07:30:00','08:00:00','08:30:00',
                                                      '09:00:00','09:30:00','10:00:00','10:30:00','11:00:00','11:30:00',

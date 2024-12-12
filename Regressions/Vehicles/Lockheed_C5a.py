@@ -654,7 +654,7 @@ def vehicle_setup():
     design_turbofan(turbofan)  
     
     # append propulsor to distribution line 
-    fuel_line.propulsors.append(turbofan)
+    net.propulsors.append(turbofan)
 
 
     #------------------------------------------------------------------------------------------------------------------------------------  
@@ -669,7 +669,7 @@ def vehicle_setup():
     turbofan_2.nacelle.origin              = [[23.214,11.2,0.2]]    
     
     # append propulsor to distribution line 
-    fuel_line.propulsors.append(turbofan_2)
+    net.propulsors.append(turbofan_2)
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Inner Port Propulsor
@@ -683,7 +683,7 @@ def vehicle_setup():
     turbofan_3.nacelle.origin              = [[23.214, -11.2,0.2]]    
     
     # append propulsor to distribution line 
-    fuel_line.propulsors.append(turbofan_3)
+    net.propulsors.append(turbofan_3)
     
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Outer Port Propulsor
@@ -697,8 +697,12 @@ def vehicle_setup():
     turbofan_4.nacelle.origin              = [[26.429, -17.6,0.2]]    
     
     # append propulsor to distribution line 
-    fuel_line.propulsors.append(turbofan_4)
-
+    net.propulsors.append(turbofan_4)
+ 
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    # Assign propulsors to fuel line   
+    fuel_line.assigned_propulsors =  [[turbofan.tag, turbofan_2.tag, turbofan_3.tag, turbofan_4.tag]]
+ 
     #------------------------------------------------------------------------------------------------------------------------------------   
     # Append fuel line to network      
     net.fuel_lines.append(fuel_line)        

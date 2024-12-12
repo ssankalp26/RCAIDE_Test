@@ -533,11 +533,11 @@ def vehicle_setup():
     fan_nozzle.diameter                         = 1.659
     turbofan.fan_nozzle                         = fan_nozzle 
     
-    #design turbofan
+    # design turbofan
     design_turbofan(turbofan)  
     
-    # append propulsor to distribution line 
-    fuel_line.propulsors.append(turbofan)
+    # append propulsor to network
+    net.propulsors.append(turbofan)
 
 
     #------------------------------------------------------------------------------------------------------------------------------------  
@@ -551,11 +551,15 @@ def vehicle_setup():
     turbofan_2.origin                      = [[12.0,-4.38,-1.1]]  # change origin  
     turbofan_2.nacelle.origin              = [[12.0,-4.38,-2.1]]   
     
-    # append propulsor to distribution line 
-    fuel_line.propulsors.append(turbofan_2)
+    # append propulsor to network
+    net.propulsors.append(turbofan_2)
 
     #------------------------------------------------------------------------------------------------------------------------------------   
-    # Append fuel line to network      
+    # Assign propulsors to fuel line    
+    fuel_line.assigned_propulsors =  [[turbofan.tag, turbofan_2.tag]]
+
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    # Append fuel line to fuel line to network      
     net.fuel_lines.append(fuel_line)        
     
     # Append energy network to aircraft 

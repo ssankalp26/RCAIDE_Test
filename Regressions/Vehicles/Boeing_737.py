@@ -603,7 +603,8 @@ def vehicle_setup():
     nacelle_airfoil.NACA_4_Series_code          = '2410'
     nacelle.append_airfoil(nacelle_airfoil)  
     turbofan.nacelle                            = nacelle
-    
+
+    # append propulsor to network    
     net.propulsors.append(turbofan)  
 
     #------------------------------------------------------------------------------------------------------------------------------------  
@@ -616,7 +617,7 @@ def vehicle_setup():
     turbofan_2.origin                           = [[13.72,-4.38,-1.1]]  # change origin 
     turbofan_2.nacelle.origin                   = [[13.5,-4.38,-1.5]]
          
-    # append propulsor to distribution line 
+    # append propulsor to network
     net.propulsors.append(turbofan_2)
   
     #------------------------------------------------------------------------------------------------------------------------- 
@@ -630,17 +631,18 @@ def vehicle_setup():
     fuel_tank.fuel.origin                            = vehicle.wings.main_wing.mass_properties.center_of_gravity      
     fuel_tank.fuel.mass_properties.center_of_gravity = vehicle.wings.main_wing.aerodynamic_center
     fuel_tank.volume                                 = fuel_tank.fuel.mass_properties.mass/fuel_tank.fuel.density   
+    fuel_line.fuel_tanks.append(fuel_tank)
     
-    # apend fuel tank to dataclass of fuel tanks on fuel line
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    # Assign propulsors to fuel line to network      
     fuel_line.assigned_propulsors =  [[turbofan.tag, turbofan_2.tag]]
-    fuel_line.fuel_tanks.append(fuel_tank) 
 
-    # Append fuel line to Network      
-    net.fuel_lines.append(fuel_line)   
-
-    # Append energy network to aircraft 
-    vehicle.append_energy_network(net)     
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    # Append fuel line to fuel line to network      
+    net.fuel_lines.append(fuel_line)        
     
+    # Append energy network to aircraft 
+    vehicle.append_energy_network(net)       
     #------------------------------------------------------------------------------------------------------------------------- 
     # Done ! 
     #------------------------------------------------------------------------------------------------------------------------- 

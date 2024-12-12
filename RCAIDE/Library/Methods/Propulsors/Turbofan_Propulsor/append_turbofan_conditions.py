@@ -16,6 +16,7 @@ def append_turbofan_conditions(turbofan,segment):
     segment.state.conditions.energy[turbofan.tag].thrust                        = 0. * ones_row(3) 
     segment.state.conditions.energy[turbofan.tag].power                         = 0. * ones_row(1) 
     segment.state.conditions.energy[turbofan.tag].moment                        = 0. * ones_row(3) 
+    segment.state.conditions.energy[turbofan.tag].fuel_flow_rate                = 0. * ones_row(1)
     segment.state.conditions.energy[turbofan.tag].inputs                        = Conditions()
     segment.state.conditions.energy[turbofan.tag].outputs                       = Conditions() 
     segment.state.conditions.noise[turbofan.tag]                                = Conditions() 

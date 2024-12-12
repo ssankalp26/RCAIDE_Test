@@ -16,6 +16,7 @@ def append_turbojet_conditions(turbojet,segment,fuel_line):
     segment.state.conditions.energy[turbojet.tag].thrust                        = 0. * ones_row(3) 
     segment.state.conditions.energy[turbojet.tag].power                         = 0. * ones_row(1) 
     segment.state.conditions.energy[turbojet.tag].moment                        = 0. * ones_row(3) 
+    segment.state.conditions.energy[turbojet.tag].fuel_flow_rate                = 0. * ones_row(1)
     segment.state.conditions.energy[turbojet.tag].inputs                        = Conditions()
     segment.state.conditions.energy[turbojet.tag].outputs                       = Conditions() 
     segment.state.conditions.noise[turbojet.tag]                                = Conditions() 

@@ -115,7 +115,6 @@ class Sequential_Segments(Segments.Segment.Container):
 # ----------------------------------------------------------------------
 #   Container Class
 # ----------------------------------------------------------------------
--Mission
 class Container(ContainerBase):
     """ Container for mission
     

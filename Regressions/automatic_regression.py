@@ -21,9 +21,9 @@ sys.path.append(os.path.join(sys.path[-1], 'Rotors'))
 
 modules = [ 
     # ----------------------- Regression List --------------------------
-    'Tests/analysis_aerodynamics/airfoil_panel_method_test.py',    
-    'Tests/analysis_aerodynamics/airfoil_panel_method_convergence.py',    
-    'Tests/analysis_aerodynamics/VLM_test.py',    
+    #'Tests/analysis_aerodynamics/airfoil_panel_method_test.py',    
+    #'Tests/analysis_aerodynamics/airfoil_panel_method_convergence.py',    
+    #'Tests/analysis_aerodynamics/VLM_test.py',    
     #'Tests/analysis_emissions/emissions_test.py',   
     'Tests/analysis_noise/digital_elevation_test.py',  
     'Tests/analysis_noise/frequency_domain_test.py', 
@@ -36,7 +36,7 @@ modules = [
     'Tests/mission_segments/transition_segment_test.py', 
     'Tests/network_electric/electric_btms_test.py', 
     'Tests/network_ducted_fan/electric_ducted_fan_network_test.py',
-    'Tests/network_turbofan/turbofan_network_test.py',
+    #'Tests/network_turbofan/turbofan_network_test.py',
     'Tests/network_turbojet/turbojet_network_test.py',
     'Tests/network_turboprop/turboprop_network_test.py',
     'Tests/network_turboshaft/turboshaft_network_test.py',

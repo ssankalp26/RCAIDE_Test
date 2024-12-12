@@ -17,8 +17,7 @@ from RCAIDE.Library.Methods.Propulsors.Converters.Compression_Nozzle import comp
 from RCAIDE.Library.Methods.Propulsors.Turboshaft_Propulsor          import compute_power
  
 # python imports 
-from copy import deepcopy
-import numpy as np
+from copy import deepcopy 
 # ----------------------------------------------------------------------------------------------------------------------
 # compute_turboshaft_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
