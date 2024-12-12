@@ -11,7 +11,7 @@ from RCAIDE.Framework.Mission.Common     import   Conditions
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  append_turbofan_conditions
 # ----------------------------------------------------------------------------------------------------------------------    
-def append_air_cooled_conditions(air_cooled,segment,coolant_line,add_additional_network_equation):
+def append_air_cooled_conditions(air_cooled,segment,coolant_line):
     """ Packs the initial air cooling heat acqusition conditions
     
         Assumptions:

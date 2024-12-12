@@ -1,4 +1,3 @@
-## @ingroup Analyses-Geodesics
 # RCAIDE/Framework/Analyses/Geodesics/Geodesics.py
 # 
 # Created:  Oct. 2024, A. Molloy 

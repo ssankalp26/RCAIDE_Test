@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Performance-Stability  
 # RCAIDE/Library/Plots/Performance/Stability/plot_lateral_stability.py
 # 
 # 
@@ -16,7 +15,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Library-Plots-Performance-Stability
 def plot_lateral_stability(results,
                              save_figure = False,
                              show_legend=True,

@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Ground
 # RCAIDE/Framework/Analyses/Mission/Segments/Ground/Battery_Disharge.py
 # 
 # 
@@ -17,7 +16,6 @@ from RCAIDE.Library.Methods.skip                              import skip
 # ----------------------------------------------------------------------------------------------------------------------
 #  SEGMENT
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Analyses-Mission-Segments-Ground
 class Battery_Discharge(Evaluate): 
 
     # ------------------------------------------------------------------

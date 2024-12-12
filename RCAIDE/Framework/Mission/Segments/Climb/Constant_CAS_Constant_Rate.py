@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Climb
 # RCAIDE/Framework/Analyses/Mission/Segments/Climb/Constant_CAS_Constant_Rate.py
 # 
 # 
@@ -16,7 +15,6 @@ from RCAIDE.Library.Mission                          import Common,Segments
 # ----------------------------------------------------------------------------------------------------------------------
 #  Constant CAS Constant Rate
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Analyses-Mission-Segments-Climb
 class Constant_CAS_Constant_Rate(Evaluate):
     """ Climb at a constant Calibrated Airspeed (CAS) at a constant rate.
     

@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Transition
 # RCAIDE/Library/Missions/Segments/Transition/Constant_Acceleration_Constant_Angle_Linear_Climb.py
 # 
 # 
@@ -13,7 +12,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Initialize Conditions
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Library-Missions-Segments-Transition
 def initialize_conditions(segment):
     """Sets the specified conditions which are given for the segment type.
 

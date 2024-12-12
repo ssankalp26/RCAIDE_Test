@@ -32,7 +32,7 @@ def atleast_2d_col(A):
     """       
     return atleast_2d(A,'col')
 
-## @ingroup Core
+
 def atleast_2d_row(A):
     """Makes a 2D array in row format
 
@@ -53,7 +53,7 @@ def atleast_2d_row(A):
     """       
     return atleast_2d(A,'row')
 
-## @ingroup Core
+
 def atleast_2d(A,oned_as='row'):
     """ensures A is an array and at least of rank 2
 
@@ -92,7 +92,7 @@ def atleast_2d(A,oned_as='row'):
     return A
 
 
-## @ingroup Core
+
 def append_array(A=None,B=None):
     """ A stacking operation used by merged to put together data structures
 

@@ -1,4 +1,3 @@
-## @ingroup Methods-Aerodynamics-Common-Fidelity_Zero-Lift
 # generate_vortex_distribution.py
 # 
 # Created:  May 2018, M. Clarke
@@ -22,7 +21,6 @@ from RCAIDE.Library.Methods.Geometry.Airfoil                     import import_a
 # ----------------------------------------------------------------------
 #  Generate Vortex Distribution
 # ----------------------------------------------------------------------
-## @ingroup Methods-Aerodynamics-Common-Fidelity_Zero-Lift
 def generate_vortex_distribution(geometry,settings):
     ''' Compute the coordinates of panels, vortices , control points
     and geometry used to build the influence coefficient matrix. A 
@@ -258,7 +256,6 @@ def generate_vortex_distribution(geometry,settings):
 # ----------------------------------------------------------------------
 #  Discretize Wings
 # ----------------------------------------------------------------------
-## @ingroup Methods-Aerodynamics-Common-Fidelity_Zero-Lift
 def generate_wing_vortex_distribution(VD,wing,n_cw,n_sw,spc,precision):
     """ This generates vortex distribution points for the given wing 
 
@@ -824,7 +821,6 @@ def generate_wing_vortex_distribution(VD,wing,n_cw,n_sw,spc,precision):
 # ----------------------------------------------------------------------
 #  Discretize Fuselage
 # ----------------------------------------------------------------------
-## @ingroup Methods-Aerodynamics-Common-Fidelity_Zero-Lift
 def generate_fuselage_and_nacelle_vortex_distribution(VD,fus,n_cw,n_sw,precision,model_geometry=False):
     """ This generates the vortex distribution points on a fuselage or nacelle component
     Assumptions: 

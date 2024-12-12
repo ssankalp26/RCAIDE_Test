@@ -1,4 +1,3 @@
-## @defgroup Library-Components-Airfoils Airfoils
 # RCAIDE/Library/Components/Airfoils/__init__.py
 # 
 

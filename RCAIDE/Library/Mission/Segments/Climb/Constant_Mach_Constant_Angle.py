@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Climb
 # RCAIDE/Library/Missions/Segments/Climb/Constant_Mach_Constant_Angle.py
 # 
 # 
@@ -16,7 +15,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Initialize Conditions
 # ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Missions-Segments-Climb
 def initialize_conditions(segment):
     """Sets the specified conditions which are given for the segment type.
     
@@ -84,7 +82,6 @@ def initialize_conditions(segment):
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Residual Total Forces
 # ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Missions-Segments-Climb
 def residual_total_forces(segment):
     
     # Unpack results
@@ -108,8 +105,7 @@ def residual_total_forces(segment):
 
 # ----------------------------------------------------------------------------------------------------------------------  
 # Update Differentials
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Missions-Segments-Climb   
+# ----------------------------------------------------------------------------------------------------------------------     
 def update_differentials(segment):
     """ On each iteration creates the differentials and integration functions from knowns about the problem. 
       Sets the time at each point. Must return in dimensional time, with t[0] = 0.

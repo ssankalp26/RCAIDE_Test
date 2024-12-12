@@ -1,4 +1,3 @@
-## @defgroup Methods-Noise-Metrics Metrics   
 # RCAIDE/Methods/Noise/Metrics/__init__.py
 # 
 

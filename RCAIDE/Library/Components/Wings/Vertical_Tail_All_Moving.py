@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Wings
 # RCAIDE/Compoments/Wings/Vertical_Tail_All_Moving.py
 # 
 # 
@@ -14,8 +13,7 @@ from RCAIDE.Library.Methods.Weights.Moment_of_Inertia.compute_wing_moment_of_ine
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Vertical_Tail_All_Moving
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Wings    
+# ----------------------------------------------------------------------------------------------------------------------     
 class Vertical_Tail_All_Moving(Vertical_Tail, All_Moving_Surface):
     """ This class is used to define all-moving vertical tails in RCAIDE. Note that it 
     inherits from both Horizontal_Tail and All_Moving_Surface

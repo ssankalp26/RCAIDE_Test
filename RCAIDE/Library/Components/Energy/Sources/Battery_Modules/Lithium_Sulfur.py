@@ -1,4 +1,3 @@
-## @ingroup Library-Compoments-Energy-Batteries
 # RCAIDE/Library/Compoments/Energy/Sources/Batteries/Lithium_Sulfur.py
 # 
 # 
@@ -14,8 +13,7 @@ from .Generic_Battery_Module import Generic_Battery_Module
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Lithium_Sulfur
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Compoments-Energy-Batteries 
+# ----------------------------------------------------------------------------------------------------------------------  
 class Lithium_Sulfur(Generic_Battery_Module):
     """Lithium-Sulphur battery.
     """ 

@@ -1,5 +1,3 @@
-## @defgroup Methods-Aerodynamics-Airfoil_Panel_Method Airfoil_Panel_Method 
-# @ingroup Methods-Aerodynamics
 # RCAIDE/Methods/Aerodynamics/Airfoil_Panel_Method/__init__.py
 # 
 

@@ -14,8 +14,7 @@ from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common.append_battery_condi
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Battery
-# ----------------------------------------------------------------------------------------------------------------------     
-## @ingroup Library-Components-Energy-Batteries
+# ----------------------------------------------------------------------------------------------------------------------      
 class Generic_Battery_Module(Component):
     """Default battery module class."""
     def __defaults__(self):

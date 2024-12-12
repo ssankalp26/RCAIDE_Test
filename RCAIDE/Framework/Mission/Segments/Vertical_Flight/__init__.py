@@ -1,4 +1,3 @@
-## @defgroup Analyses-Mission-Segments-Vertical_Flight Vertical_Flight
 # RCAIDE/Framework/Analyses/Mission/Segments/Vertical_Flight/__init__.py
 # 
 

@@ -1,5 +1,3 @@
-## @defgroup Optimization-Packages-pyopt_sparse pyopt_sparse 
-# @ingroup Optimization-Packages 
 # RCAIDE/Optimization/Packages/pyopt_sparse/__init__.py
 # 
 

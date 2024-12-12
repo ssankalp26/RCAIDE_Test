@@ -1,7 +1,4 @@
-## @defgroup Methods-energy-Propulsors-Converters-Rotor-Wake Wake 
 # Rotor_Wake provides the functions needed to perform analyses.
-# @ingroup Methods-energy-Propulsors-Converters
-
 
 """ RCAIDE Package Setup
 """

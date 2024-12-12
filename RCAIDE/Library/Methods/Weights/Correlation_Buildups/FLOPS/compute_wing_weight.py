@@ -88,13 +88,12 @@ def compute_wing_weight(vehicle, wing, WPOD, complexity, settings, num_main_wing
     NENG = 0
     NEW  = 0
     for network in  vehicle.networks:
-        for fuel_line in network.fuel_lines:
-            for propulsor in fuel_line.propulsors:
-                if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
-                    NENG += 1  
-                    if propulsor.wing_mounted: 
-                        NEW += 1
-                         
+        for propulsor in network.propulsors:
+            if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
+                NENG += 1  
+                if propulsor.wing_mounted: 
+                    NEW += 1
+                        
     DG              = vehicle.mass_properties.max_takeoff / Units.lbs  # Design gross weight in lb
 
     if complexity == 'Simple':
@@ -247,7 +246,7 @@ def compute_wing_weight(vehicle, wing, WPOD, complexity, settings, num_main_wing
 
     return WWING * Units.lbs
 
-## @ingroup Methods-Weights-Correlations-FLOPS
+
 def generate_wing_stations(fuselage_width, wing):
     """ Divides half the wing in sections, using the defined sections
         and adding a section at the intersection of wing and fuselage
@@ -338,7 +337,7 @@ def generate_wing_stations(fuselage_width, wing):
     SWP[-1] = np.arctan(np.tan(wing.Segments[segment_keys[-2]].sweeps.quarter_chord) - (C[-2] - C[-1]))
     return ETA, C, T, SWP
 
-## @ingroup Methods-Weights-Correlations-FLOPS
+
 def generate_int_stations(NSD, ETA):
     """ Divides half of the wing in integration stations
 
@@ -371,7 +370,7 @@ def generate_int_stations(NSD, ETA):
             Y.append(Y[-1] + AINT)
     return NS, Y
 
-## @ingroup Methods-Weights-Correlations-FLOPS
+
 def calculate_load(ETA):
     """ Returns load factor assuming elliptical load distribution
 
@@ -392,7 +391,7 @@ def calculate_load(ETA):
     PS = np.sqrt(1. - ETA ** 2)
     return PS
 
-## @ingroup Methods-Weights-Correlations-FLOPS
+
 def find_sweep(y, lst_y, swp):
     """ Finds sweep angle for a certain y-location along the wing
 
@@ -423,7 +422,7 @@ def find_sweep(y, lst_y, swp):
 
     return swps
 
-## @ingroup Methods-Weights-Correlations-FLOPS
+
 def get_spanwise_engine(networks, SEMISPAN):
     """ Returns EETA for the engine locations along the wing
 
@@ -446,15 +445,14 @@ def get_spanwise_engine(networks, SEMISPAN):
     """
     EETA =  []
     for network in  networks:
-        for fuel_line in network.fuel_lines:
-            for propulsor in fuel_line.propulsors:
-                if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
-                    if propulsor.wing_mounted and propulsor.origin[0][1] > 0:  
-                        EETA.append((propulsor.origin[0][1] / Units.ft) * 1 / SEMISPAN) 
+        for propulsor in network.propulsors:
+            if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
+                if propulsor.wing_mounted and propulsor.origin[0][1] > 0:  
+                    EETA.append((propulsor.origin[0][1] / Units.ft) * 1 / SEMISPAN) 
     EETA =  np.array(EETA)
     return EETA
 
-## @ingroup Methods-Weights-Correlations-FLOPS
+
 def wing_weight_constants_FLOPS(ac_type):
     """Defines wing weight constants as defined by FLOPS
         Inputs: ac_type - determines type of instruments, electronics, and operating items based on types:
@@ -469,7 +467,7 @@ def wing_weight_constants_FLOPS(ac_type):
         A = [8.8, 6.25, 0.68, 0.34, 0.6, 0.035, 1.5]
     return A
 
-## @ingroup Methods-Weights-Correlations-FLOPS
+
 def determine_fuselage_chord(fuselage_width, wing):
     """ Determine chord at wing and fuselage intersection
 

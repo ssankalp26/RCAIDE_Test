@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Frequency_Domain_Buildup-Rotor
 # RCAIDE/Methods/Noise/Frequency_Domain_Buildup/Rotor/noise_directivities.py
 # 
 # 
@@ -13,8 +12,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Compute Noise Directivities  
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Methods-Noise-Frequency_Domain_Buildup-Rotor 
+# ---------------------------------------------------------------------------------------------------------------------- 
 def noise_directivities(Theta_er,Phi_er,cos_zeta_r,M_tot):
     '''This computes the laminar boundary layer compoment of broadband noise using the method outlined by the 
     Brooks, Pope and Marcolini (BPM) Model

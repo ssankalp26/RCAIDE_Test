@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Common 
 # RCAIDE/Methods/Noise/Common/atmospheric_attenuation.py
 # 
 # 
@@ -14,7 +13,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Atmospheric Attenuation
 # ----------------------------------------------------------------------------------------------------------------------      
-## @ingroup Methods-Noise-Common
 def atmospheric_attenuation(dist,center_frequencies):
     """ This calculates a the atmospheric attenuation of sound for each frequency band
     as a function of the distance from the source to the observer using Average Atmospheric 

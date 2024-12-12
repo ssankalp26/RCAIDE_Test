@@ -654,7 +654,7 @@ def vehicle_setup():
     design_turbofan(turbofan)  
     
     # append propulsor to distribution line 
-    fuel_line.propulsors.append(turbofan)
+    net.propulsors.append(turbofan)
 
 
     #------------------------------------------------------------------------------------------------------------------------------------  
@@ -669,7 +669,7 @@ def vehicle_setup():
     turbofan_2.nacelle.origin              = [[23.214,11.2,0.2]]    
     
     # append propulsor to distribution line 
-    fuel_line.propulsors.append(turbofan_2)
+    net.propulsors.append(turbofan_2)
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Inner Port Propulsor
@@ -683,7 +683,7 @@ def vehicle_setup():
     turbofan_3.nacelle.origin              = [[23.214, -11.2,0.2]]    
     
     # append propulsor to distribution line 
-    fuel_line.propulsors.append(turbofan_3)
+    net.propulsors.append(turbofan_3)
     
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Outer Port Propulsor
@@ -697,8 +697,12 @@ def vehicle_setup():
     turbofan_4.nacelle.origin              = [[26.429, -17.6,0.2]]    
     
     # append propulsor to distribution line 
-    fuel_line.propulsors.append(turbofan_4)
-
+    net.propulsors.append(turbofan_4)
+ 
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    # Assign propulsors to fuel line   
+    fuel_line.assigned_propulsors =  [[turbofan.tag, turbofan_2.tag, turbofan_3.tag, turbofan_4.tag]]
+ 
     #------------------------------------------------------------------------------------------------------------------------------------   
     # Append fuel line to network      
     net.fuel_lines.append(fuel_line)        
@@ -741,10 +745,10 @@ def configs_setup(vehicle):
     config.tag = 'takeoff'
     config.wings['main_wing'].control_surfaces.flap.deflection  =  16 * Units.deg
     config.wings['main_wing'].control_surfaces.slat.deflection  =  16 * Units.deg 
-    config.networks.fuel.fuel_lines['fuel_line'].propulsors['outer_starboard_propulsor'].fan.angular_velocity =   3860* Units.rpm
-    config.networks.fuel.fuel_lines['fuel_line'].propulsors['outer_port_propulsor'].fan.angular_velocity      =   3860* Units.rpm 
-    config.networks.fuel.fuel_lines['fuel_line'].propulsors['inner_starboard_propulsor'].fan.angular_velocity =   3860* Units.rpm
-    config.networks.fuel.fuel_lines['fuel_line'].propulsors['inner_port_propulsor'].fan.angular_velocity      =   3860* Units.rpm    
+    config.networks.fuel.propulsors['outer_starboard_propulsor'].fan.angular_velocity =   3860* Units.rpm
+    config.networks.fuel.propulsors['outer_port_propulsor'].fan.angular_velocity      =   3860* Units.rpm 
+    config.networks.fuel.propulsors['inner_starboard_propulsor'].fan.angular_velocity =   3860* Units.rpm
+    config.networks.fuel.propulsors['inner_port_propulsor'].fan.angular_velocity      =   3860* Units.rpm    
     config.V2_VS_ratio = 1.21
     configs.append(config)
 
@@ -757,10 +761,10 @@ def configs_setup(vehicle):
     config.tag = 'cutback'
     config.wings['main_wing'].control_surfaces.flap.deflection  =  0* Units.deg
     config.wings['main_wing'].control_surfaces.slat.deflection  =  0* Units.deg
-    config.networks.fuel.fuel_lines['fuel_line'].propulsors['outer_starboard_propulsor'].fan.angular_velocity =   3474* Units.rpm
-    config.networks.fuel.fuel_lines['fuel_line'].propulsors['outer_port_propulsor'].fan.angular_velocity      =   3474* Units.rpm
-    config.networks.fuel.fuel_lines['fuel_line'].propulsors['inner_starboard_propulsor'].fan.angular_velocity =   3474* Units.rpm
-    config.networks.fuel.fuel_lines['fuel_line'].propulsors['inner_port_propulsor'].fan.angular_velocity      =   3474* Units.rpm     
+    config.networks.fuel.propulsors['outer_starboard_propulsor'].fan.angular_velocity =   3474* Units.rpm
+    config.networks.fuel.propulsors['outer_port_propulsor'].fan.angular_velocity      =   3474* Units.rpm
+    config.networks.fuel.propulsors['inner_starboard_propulsor'].fan.angular_velocity =   3474* Units.rpm
+    config.networks.fuel.propulsors['inner_port_propulsor'].fan.angular_velocity      =   3474* Units.rpm     
     configs.append(config)   
     
         
@@ -773,10 +777,10 @@ def configs_setup(vehicle):
     config.tag = 'landing'
     config.wings['main_wing'].control_surfaces.flap.deflection  =  40* Units.deg
     config.wings['main_wing'].control_surfaces.slat.deflection  =  40* Units.deg
-    config.networks.fuel.fuel_lines['fuel_line'].propulsors['outer_starboard_propulsor'].fan.angular_velocity =  2316 * Units.rpm
-    config.networks.fuel.fuel_lines['fuel_line'].propulsors['outer_port_propulsor'].fan.angular_velocity      =  2316 * Units.rpm
-    config.networks.fuel.fuel_lines['fuel_line'].propulsors['inner_starboard_propulsor'].fan.angular_velocity =  2316 * Units.rpm
-    config.networks.fuel.fuel_lines['fuel_line'].propulsors['inner_port_propulsor'].fan.angular_velocity      =  2316 * Units.rpm    
+    config.networks.fuel.propulsors['outer_starboard_propulsor'].fan.angular_velocity =  2316 * Units.rpm
+    config.networks.fuel.propulsors['outer_port_propulsor'].fan.angular_velocity      =  2316 * Units.rpm
+    config.networks.fuel.propulsors['inner_starboard_propulsor'].fan.angular_velocity =  2316 * Units.rpm
+    config.networks.fuel.propulsors['inner_port_propulsor'].fan.angular_velocity      =  2316 * Units.rpm    
     config.landing_gears.main_gear.gear_extended    = True
     config.landing_gears.nose_gear.gear_extended    = True  
     config.Vref_VS_ratio = 1.3
@@ -790,10 +794,10 @@ def configs_setup(vehicle):
     config.tag = 'short_field_takeoff'    
     config.wings['main_wing'].control_surfaces.flap.deflection  =  16* Units.deg
     config.wings['main_wing'].control_surfaces.slat.deflection  =  16* Units.deg
-    config.networks.fuel.fuel_lines['fuel_line'].propulsors['outer_starboard_propulsor'].fan.angular_velocity =   4091* Units.rpm
-    config.networks.fuel.fuel_lines['fuel_line'].propulsors['outer_port_propulsor'].fan.angular_velocity      =   4091* Units.rpm
-    config.networks.fuel.fuel_lines['fuel_line'].propulsors['inner_starboard_propulsor'].fan.angular_velocity =   4091* Units.rpm
-    config.networks.fuel.fuel_lines['fuel_line'].propulsors['inner_port_propulsor'].fan.angular_velocity      =   4091* Units.rpm    
+    config.networks.fuel.propulsors['outer_starboard_propulsor'].fan.angular_velocity =   4091* Units.rpm
+    config.networks.fuel.propulsors['outer_port_propulsor'].fan.angular_velocity      =   4091* Units.rpm
+    config.networks.fuel.propulsors['inner_starboard_propulsor'].fan.angular_velocity =   4091* Units.rpm
+    config.networks.fuel.propulsors['inner_port_propulsor'].fan.angular_velocity      =   4091* Units.rpm    
     config.landing_gears.main_gear.gear_extended    = True
     config.landing_gears.nose_gear.gear_extended    = True  
     config.V2_VS_ratio = 1.21 

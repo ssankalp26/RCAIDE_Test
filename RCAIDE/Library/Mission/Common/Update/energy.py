@@ -6,7 +6,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  Update Battery Age
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Missions-Common-Update
 def energy(segment):  
     """Updates battery age based on operating conditions, cell temperature and time of operation.
        Source: 

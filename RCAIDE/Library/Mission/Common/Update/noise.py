@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Common-Update
 # RCAIDE/Library/Missions/Common/Update/noise.py
 # 
 # 
@@ -6,9 +5,7 @@
 
 # ----------------------------------------------------------------------------------------------------------------------
 # noise
-# ----------------------------------------------------------------------------------------------------------------------
-
-## @ingroup Library-Missions-Segments-Common-Update
+# ---------------------------------------------------------------------------------------------------------------------- 
 def noise(segment):
     """ Updates the noise produced by the vehicle
         

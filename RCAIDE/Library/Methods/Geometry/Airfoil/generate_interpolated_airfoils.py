@@ -1,4 +1,3 @@
-## @ingroup Library-Methods-Geomery-Two_Dimensional-Airfoil
 # RCAIDE/Library/Methods/Geometry/Two_Dimensional/Airfoil/generate_interpolated_airfoils.py
 # 
 # 
@@ -15,8 +14,7 @@ import os
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  generate_interpolated_airfoils
-# ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Library-Methods-Geometry-Two_Dimensional-Airfoil
+# ----------------------------------------------------------------------------------------------------------------------    
 def generate_interpolated_airfoils(a1, a2, nairfoils, npoints=200, save_filename="Transition"):
     """ Takes in two airfoils, interpolates between their coordinates to generate new
     airfoil geometries and saves new airfoil files.

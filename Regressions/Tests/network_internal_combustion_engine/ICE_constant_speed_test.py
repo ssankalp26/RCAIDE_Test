@@ -50,7 +50,7 @@ def main():
     P_truth     = 54435.6614505018
     mdot_truth  = 0.004782841837590511
     
-    P    = results.segments.cruise.state.conditions.energy.fuel_line.ice_constant_speed_propeller.internal_combustion_engine.power[-1,0]
+    P    = results.segments.cruise.state.conditions.energy.ice_constant_speed_propeller.internal_combustion_engine.power[-1,0]
     mdot = results.segments.cruise.state.conditions.weights.vehicle_mass_rate[-1,0]     
 
     # Check the errors
@@ -131,10 +131,17 @@ def ICE_CS(vehicle):
     prop.append_airfoil(airfoil)  
     prop.airfoil_polar_stations            = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     design_propeller(prop)   
-    propulsor.propeller                    = prop
+    propulsor.propeller                    = prop  
+
+    net.propulsors.append(propulsor)
+
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    # Assign propulsors to fuel line to network      
+    fuel_line.assigned_propulsors =  [[propulsor.tag]]
     
-    fuel_line.propulsors.append(propulsor)
-    net.fuel_lines.append(fuel_line) 
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    # Append fuel line to fuel line to network      
+    net.fuel_lines.append(fuel_line)
     
     # add the network to the vehicle
     vehicle.append_energy_network(net)

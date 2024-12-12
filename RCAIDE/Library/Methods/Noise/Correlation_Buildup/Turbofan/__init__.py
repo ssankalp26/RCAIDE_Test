@@ -1,5 +1,3 @@
-## @defgroup Methods-Noise-Correlation_Buildup-Turbofan Turbofan
-# @ingroup Methods 
 # RCAIDE/Methods/Noise/Correlation_Buildup/Turbofan/__init__.py
 # 
 

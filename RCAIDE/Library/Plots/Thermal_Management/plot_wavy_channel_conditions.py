@@ -16,7 +16,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #   plot_wavy_channel_conditions
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Visualization-Performance-Energy-Thermal_Management
 def plot_wavy_channel_conditions(wavy_channel, results, coolant_line, save_figure,show_legend ,save_filename,file_type , width, height):
     """Plots the Wavy Channel Heat Acqusition conditions throughout flight.
     

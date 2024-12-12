@@ -1,4 +1,3 @@
-## @defgroup VVisualization-Topography Topography
 # RCAIDE/Library/Plots/Topography/__init__.py
 # 
 

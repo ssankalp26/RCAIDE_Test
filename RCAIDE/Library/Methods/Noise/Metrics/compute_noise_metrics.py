@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Metrics 
 # RCAIDE/Methods/Noise/Metrics/compute_noise_metrics.py
 # 
 # 
@@ -16,8 +15,7 @@ import numpy as np
     
 # ----------------------------------------------------------------------------------------------------------------------  
 #  compute_noise_metrics
-# ----------------------------------------------------------------------------------------------------------------------     
-## @ingroup Methods-Noise-Metrics  
+# ----------------------------------------------------------------------------------------------------------------------       
 def compute_noise_metrics(noise_data, flight_times = ['12:00:00'],time_period = ['06:00:00','20:00:00']):   
     """This method calculates the Average A-weighted Sound Level (LAeqT), the Day-Night Average Sound Level and the
     Single Event Noise Exposure Level (SENEL) or Sound Exposure Level (SEL)

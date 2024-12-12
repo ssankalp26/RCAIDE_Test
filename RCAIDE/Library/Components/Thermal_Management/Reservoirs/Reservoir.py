@@ -15,8 +15,7 @@ from RCAIDE.Library.Plots.Thermal_Management.plot_reservoir_conditions          
 
 # ----------------------------------------------------------------------
 #  Reservoir
-# ----------------------------------------------------------------------
-## @ingroup Attributes-Coolants
+# ---------------------------------------------------------------------- 
 class Reservoir(Component):
     """Holds values for a coolant reservoir
 
@@ -50,8 +49,8 @@ class Reservoir(Component):
 
         return
     
-    def append_operating_conditions(self,segment,coolant_line,add_additional_network_equation = False):
-        append_reservoir_conditions(self,segment,coolant_line,add_additional_network_equation)
+    def append_operating_conditions(self,segment,coolant_line):
+        append_reservoir_conditions(self,segment,coolant_line)
         return
     
     def append_segment_conditions(self,segment,coolant_line,conditions):

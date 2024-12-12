@@ -1,4 +1,3 @@
-## @defgroup Analyses-Mission-Segments-Cruise Cruise
 # RCAIDE/Framework/Analyses/Mission/Segments/Cruise/__init__.py
 # 
 

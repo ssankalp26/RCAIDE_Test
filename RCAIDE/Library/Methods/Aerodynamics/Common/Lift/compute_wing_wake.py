@@ -1,4 +1,3 @@
-## @ingroup Methods-Aerodynamics-Common-Fidelity_Zero-Lift
 # compute_wing_wake.py
 # 
 # Created:   April 2021, R. Erhard

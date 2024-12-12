@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments
 # RCAIDE/Framework/Mission/Segment/Segment.py
 # 
 # 
@@ -15,7 +14,6 @@ from RCAIDE.Framework.Mission.Common     import State
 # ----------------------------------------------------------------------------------------------------------------------
 #  ANALYSES
 # ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Analyses-Mission-Segments
 class Segment(Analysis):
     """ 
     """    
@@ -243,7 +241,6 @@ class Segment(Analysis):
 #  Container
 # ----------------------------------------------------------------------
 
-## @ingroup Analyses-Mission-Segments
 class Container(Segment):
     """ A container for the segment
     

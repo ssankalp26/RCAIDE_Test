@@ -307,7 +307,7 @@ def vehicle_setup():
     nacelle_airfoil.NACA_4_Series_code          = '2410'
     nacelle.append_airfoil(nacelle_airfoil)  
     turbofan.nacelle                            = nacelle 
-    fuel_line.propulsors.append(turbofan) 
+    net.propulsors.append(turbofan) 
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     #  Inner Right Propulsor
@@ -320,7 +320,7 @@ def vehicle_setup():
     right_nacelle.tag                  = 'right_nacelle'
     right_nacelle.origin               = [[145.0 *Units.feet, 0.0*Units.feet, 6.5*Units.feet]]
     right_turbofan.nacelle = right_nacelle
-    fuel_line.propulsors.append(right_turbofan) 
+    net.propulsors.append(right_turbofan) 
     
     #------------------------------------------------------------------------------------------------------------------------------------  
     #  Inner Right Propulsor
@@ -333,7 +333,7 @@ def vehicle_setup():
     left_nacelle.tag                  = 'left_nacelle'
     left_nacelle.origin               = [[133.0 *Units.feet, -25.0*Units.feet, 6.5*Units.feet]]
     left_turbofan.nacelle = left_nacelle
-    fuel_line.propulsors.append(left_turbofan)
+    net.propulsors.append(left_turbofan)
        
     #------------------------------------------------------------------------------------------------------------------------- 
     #  Energy Source: Fuel Tank
@@ -347,7 +347,12 @@ def vehicle_setup():
     fuel_tank.volume                            = fuel_tank.fuel.mass_properties.mass/fuel_tank.fuel.density   
     
     # apend fuel tank to dataclass of fuel tanks on fuel line 
-    fuel_line.fuel_tanks.append(fuel_tank) 
+    fuel_line.fuel_tanks.append(fuel_tank)
+
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    # Assign propulsors to bus       
+    fuel_line.assigned_propulsors =  [[turbofan.tag, right_turbofan.tag, left_turbofan.tag]]
+    
 
     # Append fuel line to Network      
     net.fuel_lines.append(fuel_line)   

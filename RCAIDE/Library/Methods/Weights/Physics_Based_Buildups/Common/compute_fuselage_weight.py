@@ -1,4 +1,3 @@
-## @ingroup Methods-Weights-Buildups-Common 
 # RCAIDE/Library/Methods/Weights/Buildups/Common/compute_fuselage_weight.py
 # 
 # 
@@ -16,8 +15,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Compute boom weight
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Methods-Weights-Buildups-Common 
+# ---------------------------------------------------------------------------------------------------------------------- 
 def compute_fuselage_weight(fuse,maxSpan, MTOW, 
              maximum_g_load = 3.8,
              landing_impact_factor = 3.5,

@@ -11,7 +11,7 @@ from RCAIDE.Framework.Mission.Common     import   Conditions
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  append_reservoir_conditions
 # ---------------------------------------------------------------------------------------------------------------------- 
-def append_reservoir_conditions(reservoir,segment,coolant_line,add_additional_network_equation):
+def append_reservoir_conditions(reservoir,segment,coolant_line):
     """ Packs the initial reservoir conditions
     
         Assumptions:

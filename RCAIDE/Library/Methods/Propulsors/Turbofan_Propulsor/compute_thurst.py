@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors-Turbofan_Propulsor
 # RCAIDE/Methods/Energy/Propulsors/Turbofan_Propulsor/compute_thrust.py
 # 
 # 

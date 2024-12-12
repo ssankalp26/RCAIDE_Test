@@ -1,4 +1,3 @@
-## @defgroup Methods-Energy-Propulsors-Electric_Ducted_Fan_Propulsor
 # RCAIDE/Methods/Energy/Propulsors/Electric_Ducted_Fan_Propulsor/__init__.py
 # 
 

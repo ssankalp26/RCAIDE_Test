@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Common 
 # RCAIDE/Methods/Noise/Common/compute_relative_noise_evaluation_locations.py
 # 
 # 
@@ -14,7 +13,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Relative Noise Evaluatation Locations
 # ----------------------------------------------------------------------------------------------------------------------      
-## @ingroup Methods-Noise-Common 
 def compute_relative_noise_evaluation_locations(settings,microphone_locations, segment):
     """This computes the relative locations on the surface in the computational domain where the 
     propogated sound is computed. Vectors point from observer/microphone to aircraft/source  

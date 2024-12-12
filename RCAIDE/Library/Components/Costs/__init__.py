@@ -1,4 +1,3 @@
-## @defgroup Components-Costs Costs
 # RCAIDE/Components/Costs/__init__.py
 # 
 

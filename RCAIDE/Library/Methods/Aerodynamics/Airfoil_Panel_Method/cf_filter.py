@@ -1,4 +1,3 @@
-## @ingroup Methods-Aerodynamics-Airfoil_Panel_Method  
 # RCAIDE/Methods/Aerodynamics/Airfoil_Panel_Method/cf_filter.py
 # 
 # 
@@ -17,8 +16,7 @@ from scipy.signal import lfilter
 
 # ----------------------------------------------------------------------------------------------------------------------
 # cf_filter.py
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Methods-Aerodynamics-Airfoil_Panel_Method
+# ---------------------------------------------------------------------------------------------------------------------- 
 def cf_filter(ncpts,ncases,npanel,CF):
     n = npanel
     

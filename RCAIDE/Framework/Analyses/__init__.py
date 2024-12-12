@@ -1,4 +1,3 @@
-## @defgroup Analyses
 # RCAIDE/__init__.py
 # 
 

@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Cruise 
 # RCAIDE/Framework/Analyses/Mission/Segments/Cruise/Curved_Constant_Radius_Constant_Speed_Constant_Altitude.py
 # 
 # 
@@ -17,7 +16,6 @@ from RCAIDE.Library.Mission                       import Common,Segments
 #  Curved_Constant_Radius_Constant_Speed_Constant_Altitude
 # ----------------------------------------------------------------------------------------------------------------------  
 
-## @ingroup Analyses-Mission-Segments-Cruise
 class Curved_Constant_Radius_Constant_Speed_Constant_Altitude(Evaluate):
     """ Curved path with fixed true airspeed and altitude and a set sector arc with a constant radius.
        

@@ -1,4 +1,3 @@
-## @defgroup Methods-Missions-Segments-Cruise Cruise
 # RCAIDE/Methods/Mission/Segments/Cruise/__init__.py
 # 
 
@@ -8,7 +7,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
-# @ingroup Methods-Mission-Segments
  
 from . import Constant_Mach_Constant_Altitude
 from . import Constant_Speed_Constant_Altitude

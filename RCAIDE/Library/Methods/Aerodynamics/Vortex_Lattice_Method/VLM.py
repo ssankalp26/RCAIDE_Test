@@ -1,5 +1,4 @@
 
-## @ingroup Methods-Aerodynamics-Common-Fidelity_Zero-Lift
 # VLM.py
 # 
 # Created:  Oct 2020, E. Botero
@@ -21,7 +20,6 @@ from .compute_RHS_matrix                 import compute_RHS_matrix
 #  Vortex Lattice
 # ----------------------------------------------------------------------
 
-## @ingroup Methods-Aerodynamics-Common-Fidelity_Zero-Lift
 def VLM(conditions,settings,geometry):
     """Uses the vortex lattice method to compute the lift, induced drag and moment coefficients.
     

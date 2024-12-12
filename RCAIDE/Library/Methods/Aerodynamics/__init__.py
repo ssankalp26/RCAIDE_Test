@@ -1,4 +1,3 @@
-## @defgroup Methods-Aerodynamics Aerodynamics 
 # RCAIDE/Methods/Aerodynamics/__init__.py
 # 
 

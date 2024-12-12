@@ -1,5 +1,3 @@
-## @defgroup Optimization-Packages-trmm trmm    
-# @ingroup Optimization-Packages     
 # RCAIDE/Optimization/Packages/trmm/__init__.py
 # 
 

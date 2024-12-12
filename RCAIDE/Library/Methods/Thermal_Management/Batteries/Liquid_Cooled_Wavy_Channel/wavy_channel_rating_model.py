@@ -52,9 +52,9 @@ def  wavy_channel_rating_model(HAS,battery,bus,coolant_line,Q_heat_gen,T_cell,st
  
     # Inlet Properties from mission solver.
     for reservoir in  coolant_line.reservoirs:
-        T_inlet                  = state.conditions.energy.coolant_line[reservoir.tag].coolant_temperature[t_idx, 0] 
+        T_inlet = state.conditions.energy[coolant_line.tag][reservoir.tag].coolant_temperature[t_idx, 0]  
     #turndown_ratio           = battery_conditions.thermal_management_system.HAS.percent_operation[t_idx,0] 
-    T_cell                   = state.conditions.energy.bus.battery_modules[battery.tag].cell.temperature[t_idx, 0]  
+    T_cell                   = state.conditions.energy[bus.tag].battery_modules[battery.tag].cell.temperature[t_idx, 0]  
     heat_transfer_efficiency = HAS.heat_transfer_efficiency   
 
     # Coolant Properties

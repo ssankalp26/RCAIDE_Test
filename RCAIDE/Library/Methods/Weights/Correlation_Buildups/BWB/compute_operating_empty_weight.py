@@ -100,8 +100,7 @@ def compute_operating_empty_weight(vehicle,settings=None):
     for network in vehicle.networks:
         W_propulsion = 0
         no_of_engines = 0
-        for fuel_line in network.fuel_lines: 
-            for propulsor in fuel_line.propulsors:
+        for propulsor in network.propulsors:
                 if type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbofan:
                     no_of_engines  += 1
                     thrust_sls            = propulsor.sealevel_static_thrust
@@ -109,17 +108,10 @@ def compute_operating_empty_weight(vehicle,settings=None):
                     total_propulsor_mass  = Propulsion.integrated_propulsion(W_engine_jet)
                     propulsor.mass_properties.mass = total_propulsor_mass
                     W_propulsion   += total_propulsor_mass
+        for fuel_line in network.fuel_lines: 
             for fuel_tank in fuel_line.fuel_tanks:
                 number_of_tanks +=  1
-        for bus in network.busses: 
-            for propulsor in bus.propulsors:
-                if type(propulsor) == RCAIDE.Library.Components.Propulsors.Turbofan:
-                    no_of_engines  += 1
-                    thrust_sls      = propulsor.sealevel_static_thrust
-                    W_engine_jet    = Propulsion.compute_jet_engine_weight(thrust_sls)
-                    total_propulsor_mass  = Propulsion.integrated_propulsion(W_engine_jet)    
-                    propulsor.mass_properties.mass = total_propulsor_mass
-                    W_propulsion   += total_propulsor_mass          
+
         
     # Compute Wing Weight 
     for wing in vehicle.wings:

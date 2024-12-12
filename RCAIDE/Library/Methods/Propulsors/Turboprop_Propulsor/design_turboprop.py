@@ -1,4 +1,3 @@
-## @ingroup Library-Methods-Energy-Propulsors-Turboshaft_Propulsor
 # RCAIDE/Library/Methods/Energy/Propulsors/Turboshaft_Propulsor/design_turboprop.py
 # 
 # 
@@ -27,7 +26,6 @@ import numpy                                                                as n
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Design Turboshaft
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Methods-Energy-Propulsors-Turboshaft_Propulsor
 def design_turboprop(turboprop):  
     #check if mach number and temperature are passed
     if(turboprop.design_mach_number==None or turboprop.design_altitude==None):
@@ -70,10 +68,10 @@ def design_turboprop(turboprop):
     segment.state.conditions                              = conditions
     segment.state.conditions.energy[fuel_line.tag]        = Conditions()
     segment.state.conditions.noise[fuel_line.tag]         = Conditions()
-    turboprop.append_operating_conditions(segment,fuel_line) 
+    turboprop.append_operating_conditions(segment) 
     for tag, item in  turboprop.items(): 
         if issubclass(type(item), RCAIDE.Library.Components.Component):
-            item.append_operating_conditions(segment,fuel_line,turboprop) 
+            item.append_operating_conditions(segment,turboprop) 
          
     ram                                                   = turboprop.ram
     inlet_nozzle                                          = turboprop.inlet_nozzle
@@ -84,7 +82,7 @@ def design_turboprop(turboprop):
     core_nozzle                                           = turboprop.core_nozzle  
 
     # unpack component conditions
-    turboprop_conditions                                  = conditions.energy[fuel_line.tag][turboprop.tag]
+    turboprop_conditions                                  = conditions.energy[turboprop.tag]
     ram_conditions                                        = turboprop_conditions[ram.tag]     
     inlet_nozzle_conditions                               = turboprop_conditions[inlet_nozzle.tag]
     core_nozzle_conditions                                = turboprop_conditions[core_nozzle.tag] 

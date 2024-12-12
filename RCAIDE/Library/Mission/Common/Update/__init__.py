@@ -1,4 +1,3 @@
-## @defgroup Methods-Missions-Common-Update Update
 # RCAIDE/Methods/Mission/Common/Update/__init__.py
 # 
 
@@ -8,7 +7,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
-# @ingroup Methods-Mission-Segments
   
 from .linear_inertial_horizontal_position      import linear_inertial_horizontal_position
 from .curvilinear_inertial_horizontal_position import curvilinear_inertial_horizontal_position

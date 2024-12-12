@@ -1,5 +1,3 @@
-## @defgroup Methods-Aerodynamics-OpenVSP_Wave_Drag OpenVSP_Wave_Drag 
-# @ingroup Methods-Aerodynamics
 # RCAIDE/Methods/Aerodynamics/OpenVSP_Wave_Drag/__init__.py
 # 
 

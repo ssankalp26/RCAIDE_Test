@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Cruise 
 # RCAIDE/Framework/Analyses/Mission/Segments/Cruise/Constant_Acceleration_Constant_Altitude.py
 # 
 # 
@@ -20,7 +19,6 @@ from RCAIDE.Library.Methods.skip               import skip
 #  Constant_Acceleration_Constant_Altitude
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-## @ingroup Analyses-Mission-Segments-Cruise
 class Untrimmed(Segment):
     """ Base process class used to analyze a vehicle in each flight segment  
     

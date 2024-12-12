@@ -8,8 +8,7 @@ from scipy import interpolate
 
 # ----------------------------------------------------------------------
 #  Methods
-# ----------------------------------------------------------------------
-## @ingroup Methods-Thermal_Management-Batteries-Channel_Cooling
+# ---------------------------------------------------------------------- 
 def compute_heat_exhanger_factors(kc_vals,ke_vals,delta, Re):
     '''
     Core library about Kc & Ke factors for different types of HEX"

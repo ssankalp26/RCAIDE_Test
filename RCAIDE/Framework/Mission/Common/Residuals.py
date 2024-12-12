@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Conditions 
 # RCAIDE/Framework/Analyses/Mission/Segments/Conditions/Residuals.py
 # 
 # 
@@ -14,7 +13,6 @@ from .Conditions import Conditions
 #  Residuals
 # ----------------------------------------------------------------------------------------------------------------------
 
-## @ingroup Analyses-Mission-Segments-Conditions
 class Residuals(Conditions):
     """ Creates the data structure for the residuals that solved in a mission
     

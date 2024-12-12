@@ -537,7 +537,7 @@ def vehicle_setup(new_regression=True) :
     nac_segment.width              = 0.0
     propeller_nacelle.append_segment(nac_segment)      
     cruise_propulsor_1.nacelle = propeller_nacelle   
-    cruise_bus.propulsors.append(cruise_propulsor_1)
+    network.propulsors.append(cruise_propulsor_1)
       
     # make and append copy of forward propulsor (efficient coding)    
     cruise_propulsor_2                             = deepcopy(cruise_propulsor_1)
@@ -547,7 +547,7 @@ def vehicle_setup(new_regression=True) :
     propeller_nacelle_2.tag                        = 'propeller_nacelle_2' 
     propeller_nacelle_2.origin                     = [[5.583, - 1.300,     1.092]]
     cruise_propulsor_2.nacelle                     = propeller_nacelle_2
-    cruise_bus.propulsors.append(cruise_propulsor_2)    
+    network.propulsors.append(cruise_propulsor_2)    
         
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Additional Bus Loads
@@ -565,8 +565,8 @@ def vehicle_setup(new_regression=True) :
     cruise_bus.avionics            = avionics    
 
     # append forward bus
-    network.busses.append(cruise_bus)    
-    
+    cruise_bus.assigned_propulsors = [[cruise_propulsor_1.tag, cruise_propulsor_2.tag]]
+    network.busses.append(cruise_bus)     
         
     #==================================================================================================================================== 
     # Lift Bus 
@@ -681,7 +681,7 @@ def vehicle_setup(new_regression=True) :
     nacelle.tag                       = 'rotor_nacelle_1'
     nacelle.origin                    = [[  -0.073,  1.950, 1.2]]
     lift_propulsor_1.nacelle          =  nacelle 
-    lift_bus.propulsors.append(lift_propulsor_1)   
+    network.propulsors.append(lift_propulsor_1)   
 
 
     # make and append copy of lift propulsor (efficient coding)    
@@ -695,7 +695,7 @@ def vehicle_setup(new_regression=True) :
     rotor_nacelle.tag                                      = 'rotor_nacelle_2' 
     rotor_nacelle.origin                                   = [[ -0.073, -1.950, 1.2]]
     lift_propulsor_2.nacelle                               = rotor_nacelle  
-    lift_bus.propulsors.append(lift_propulsor_2)    
+    network.propulsors.append(lift_propulsor_2)    
         
 
     lift_propulsor_3                                       = deepcopy(lift_propulsor_1)
@@ -708,7 +708,7 @@ def vehicle_setup(new_regression=True) :
     rotor_nacelle.tag                                      = 'rotor_nacelle_3'  
     rotor_nacelle.origin                                   = [[   4.413,   1.950 ,1.2]]
     lift_propulsor_3.nacelle                               = rotor_nacelle  
-    lift_bus.propulsors.append(lift_propulsor_3)    
+    network.propulsors.append(lift_propulsor_3)    
     
 
     lift_propulsor_4                                       = deepcopy(lift_propulsor_1)
@@ -721,7 +721,7 @@ def vehicle_setup(new_regression=True) :
     rotor_nacelle.tag                                      = 'rotor_nacelle_4' 
     rotor_nacelle.origin                                   = [[   4.413, -1.950, 1.2]]
     lift_propulsor_4.nacelle                               = rotor_nacelle   
-    lift_bus.propulsors.append(lift_propulsor_4)    
+    network.propulsors.append(lift_propulsor_4)    
     
 
     lift_propulsor_5                                       = deepcopy(lift_propulsor_1)
@@ -734,7 +734,7 @@ def vehicle_setup(new_regression=True) :
     rotor_nacelle.tag                                      = 'rotor_nacelle_5'  
     rotor_nacelle.origin                                   = [[   0.219 ,   4.891 , 1.2]] 
     lift_propulsor_5.nacelle                               = rotor_nacelle   
-    lift_bus.propulsors.append(lift_propulsor_5)    
+    network.propulsors.append(lift_propulsor_5)    
     
 
     lift_propulsor_6                                       = deepcopy(lift_propulsor_1)
@@ -747,7 +747,7 @@ def vehicle_setup(new_regression=True) :
     rotor_nacelle.tag                                      = 'rotor_nacelle_6'  
     rotor_nacelle.origin                                   = [[   0.219 , -  4.891 ,1.2]]
     lift_propulsor_6.nacelle                               = rotor_nacelle   
-    lift_bus.propulsors.append(lift_propulsor_6)    
+    network.propulsors.append(lift_propulsor_6)    
     
     
 
@@ -761,7 +761,7 @@ def vehicle_setup(new_regression=True) :
     rotor_nacelle.tag                                      = 'rotor_nacelle_7'  
     rotor_nacelle.origin                                   = [[  4.196 ,   4.891 ,1.2]]
     lift_propulsor_7.nacelle                               = rotor_nacelle  
-    lift_bus.propulsors.append(lift_propulsor_7)    
+    network.propulsors.append(lift_propulsor_7)    
     
 
     lift_propulsor_8                                       = deepcopy(lift_propulsor_1)
@@ -774,7 +774,7 @@ def vehicle_setup(new_regression=True) :
     rotor_nacelle.tag                                      = 'rotor_nacelle_8' 
     rotor_nacelle.origin                                   = [[   4.196, -  4.891 ,1.2]]
     lift_propulsor_8.nacelle                               = rotor_nacelle  
-    lift_bus.propulsors.append(lift_propulsor_8)        
+    network.propulsors.append(lift_propulsor_8)        
      
 
     #------------------------------------------------------------------------------------------------------------------------------------  
@@ -792,7 +792,8 @@ def vehicle_setup(new_regression=True) :
     avionics.mass_properties.mass                           = 1.0 * Units.kg
     lift_bus.avionics                                       = avionics    
 
-   
+    lift_bus.assigned_propulsors =  [[lift_propulsor_1.tag, lift_propulsor_2.tag, lift_propulsor_3.tag, lift_propulsor_4.tag,
+                                      lift_propulsor_5.tag, lift_propulsor_6.tag, lift_propulsor_7.tag, lift_propulsor_8.tag]]
     network.busses.append(lift_bus)       
         
     # append energy network 

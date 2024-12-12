@@ -12,8 +12,7 @@ from RCAIDE.Library.Methods.Propulsors.Converters.Supersonic_Nozzle.append_super
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Compressor 
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Components-Energy-Converters
+# ----------------------------------------------------------------------------------------------------------------------  
 class Supersonic_Nozzle(Component):
     """This is a nozzle component that allows for supersonic outflow.
     Calling this class calls the compute function.
@@ -52,7 +51,7 @@ class Supersonic_Nozzle(Component):
         self.max_area_ratio                  = 1000.
         self.min_area_ratio                  = 0.
 
-    def append_operating_conditions(self,segment,fuel_line,propulsor): 
-        propulsor_conditions =  segment.state.conditions.energy[fuel_line.tag][propulsor.tag]
+    def append_operating_conditions(self,segment,propulsor): 
+        propulsor_conditions =  segment.state.conditions.energy[propulsor.tag]
         append_supersonic_nozzle_conditions(self,segment,propulsor_conditions)
         return 

@@ -1,4 +1,3 @@
-## @defgroup Analyses-Mission-Segments-Climb Climb
 # RCAIDE/Framework/Analyses/Mission/Segments/Climb/__init__.py
 # 
 

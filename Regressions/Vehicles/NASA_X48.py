@@ -232,10 +232,9 @@ def vehicle_setup(regression_flag):
     design_motor(motor)   
     motor.mass_properties.mass                    = compute_motor_weight(motor) 
     center_propulsor.motor                        = motor 
-  
-     
-    # append propulsor to distribution line 
-    bus.propulsors.append(center_propulsor) 
+   
+    # append propulsor to network
+    net.propulsors.append(center_propulsor) 
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Right Propulsor
@@ -253,8 +252,8 @@ def vehicle_setup(regression_flag):
     motor_2                                         = deepcopy(motor)
     motor_2.origin                                  = [[2., -2.5, 0.95]]      
     starboard_propulsor.motor                       = motor_2    
-    # append propulsor to distribution line   
-    bus.propulsors.append(starboard_propulsor)     
+    # append propulsor to network 
+    net.propulsors.append(starboard_propulsor)     
 
     
     #------------------------------------------------------------------------------------------------------------------------------------  
@@ -273,8 +272,8 @@ def vehicle_setup(regression_flag):
     motor_3                                    = deepcopy(motor)
     motor_3.origin                             = [[2., -2.5, 0.95]]      
     port_propulsor.motor                       = motor_2    
-    # append propulsor to distribution line 
-    bus.propulsors.append(port_propulsor)     
+    # append propulsor to network
+    net.propulsors.append(port_propulsor)     
 
 
     #------------------------------------------------------------------------------------------------------------------------------------           
@@ -291,6 +290,10 @@ def vehicle_setup(regression_flag):
     avionics                     = RCAIDE.Library.Components.Systems.Avionics()
     avionics.power_draw          = 20. # Watts
     bus.avionics                 = avionics   
+
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    # Assign propulsors to bus       
+    bus.assigned_propulsors =  [[center_propulsor.tag, starboard_propulsor.tag, port_propulsor.tag]]
 
     # append bus   
     net.busses.append(bus)

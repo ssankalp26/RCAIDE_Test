@@ -7,11 +7,10 @@
 #  pack ice propeller residuals
 # ----------------------------------------------------------------------------------------------------------------------  
 
-def pack_ice_propeller_residuals(propulsor,segment,fuel_line): 
-    fuel_line_results  = segment.state.conditions.energy[fuel_line.tag]
+def pack_ice_propeller_residuals(propulsor,segment):  
     engine             = propulsor.engine
     propeller          = propulsor.propeller  
-    q_engine           = fuel_line_results[propulsor.tag][engine.tag].torque
-    q_prop             = fuel_line_results[propulsor.tag][propeller.tag].torque 
-    segment.state.residuals.network[ fuel_line.tag + '_' + propulsor.tag + '_rotor_engine_torque'] = q_engine - q_prop 
+    q_engine           = segment.state.conditions.energy[propulsor.tag][engine.tag].torque
+    q_prop             = segment.state.conditions.energy[propulsor.tag][propeller.tag].torque 
+    segment.state.residuals.network[propulsor.tag + '_rotor_engine_torque'] = q_engine - q_prop 
     return 

@@ -1,4 +1,3 @@
-## @ingroup Methods-Performance
 # RCAIDE/Methods/Performance/estimate_stall_speed.py
 # 
 # 

@@ -1,4 +1,3 @@
-## @defgroup Methods-Missions-Segments-Hover Hover
 # RCAIDE/Methods/Mission/Segments/Hover/__init__.py
 # 
 
@@ -8,7 +7,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
-# @ingroup Methods-Mission-Segments
 
 from . import Climb
 from . import Hover 

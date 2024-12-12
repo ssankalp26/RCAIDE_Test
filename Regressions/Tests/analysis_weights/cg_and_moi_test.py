@@ -91,9 +91,9 @@ def General_Aviation_Test():
     # ------------------------------------------------------------------
     #   Weight Breakdown 
     # ------------------------------------------------------------------  
-    weight_analysis                               = RCAIDE.Framework.Analyses.Weights.Weights_General_Aviation()
-    weight_analysis.vehicle                       = general_aviation_setup() 
-    results                                       = weight_analysis.evaluate() 
+    weight_analysis           = RCAIDE.Framework.Analyses.Weights.Weights_General_Aviation()
+    weight_analysis.vehicle   = general_aviation_setup() 
+    results                   = weight_analysis.evaluate() 
     
     # ------------------------------------------------------------------
     #   CG Location
@@ -108,14 +108,14 @@ def General_Aviation_Test():
     print(weight_analysis.vehicle.tag + ' Moment of Intertia')
     print(MOI)
      
-    accepted  = np.array([[3015.5721652048214,   9.410202950934249, 9.410202950934249],
-                          [ 9.410202950934249, 4217.63369281284,    0.        ],
-                          [ 9.410202950934249,    0.           , 3701.7470985278796]]) 
+    accepted  = np.array([[3015.5721652 ,    9.41020295,    9.41020295],
+                          [   9.41020295, 4217.63369281,    0.        ],
+                          [   9.41020295,    0.        , 3701.74709853]])
     
     MOI_error     = MOI - accepted
 
     # Check the errors
-    error = Data()
+    error       = Data()
     error.Ixx   = MOI_error[0, 0]
     error.Iyy   = MOI_error[1, 1]
     error.Izz   = MOI_error[2, 2]
@@ -136,9 +136,9 @@ def EVTOL_Aircraft_Test(update_regression_values):
     # ------------------------------------------------------------------
     #   Weight Breakdown 
     # ------------------------------------------------------------------  
-    weight_analysis                               = RCAIDE.Framework.Analyses.Weights.Weights_EVTOL()
-    weight_analysis.vehicle                       = vehicle
-    results                                       = weight_analysis.evaluate() 
+    weight_analysis          = RCAIDE.Framework.Analyses.Weights.Weights_EVTOL()
+    weight_analysis.vehicle  = vehicle
+    results                  = weight_analysis.evaluate() 
     
     # ------------------------------------------------------------------
     #   CG Location
@@ -152,9 +152,9 @@ def EVTOL_Aircraft_Test(update_regression_values):
     
     print(weight_analysis.vehicle.tag + ' Moment of Intertia')
     print(MOI) 
-    accepted  = np.array([[1300.5071644417767, -47.59533102847911, -303.63837897868945],
-                          [-47.59533102847911,5681.519926122367, -26.879553233126806],
-                          [-303.63837897868945,-26.879553233126806, 6121.673140736512]]) 
+    accepted  = np.array([[ 6158.27730029,  -599.57162407,  -726.88178703],
+                          [ -599.57162407,  9527.43492578,   -96.20103752],
+                          [ -726.88178703,   -96.20103752, 14304.59473911]])
     MOI_error     = MOI - accepted
 
     # Check the errors

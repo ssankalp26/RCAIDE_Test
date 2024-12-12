@@ -1,4 +1,3 @@
-## @defgroup Methods-Weights-Correlations-Human_Powered Human_Powered
 # RCAIDE/Library/Methods/Weights/Correlations/Human_Powered/__init__.py
 # 
 

@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Multi_Fidelity
 # RCAIDE/Methods/Noise/Multi_Fidelity/harmonic_noise_plane.py
 # 
 # 
@@ -18,8 +17,7 @@ import scipy as sp
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Compute Harmonic Noise 
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Methods-Noise-Frequency_Domain_Buildup-Rotor 
+# ---------------------------------------------------------------------------------------------------------------------- 
 def harmonic_noise_plane(harmonics_blade,harmonics_load,conditions,propulsor_conditions,coordinates,rotor,settings,Noise):
     '''This computes the harmonic noise (i.e. thickness and loading noise) in the frequency domain 
     of a rotor at any angle of attack with load distribution along the blade span and blade chord. This is a 

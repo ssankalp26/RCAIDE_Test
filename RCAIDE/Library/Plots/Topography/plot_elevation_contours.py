@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Topograpgy
 # RCAIDE/Library/Plots/Topography/plot_elevation_contours.py
 # 
 # 
@@ -8,9 +7,10 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------   
 from RCAIDE.Framework.Core                             import Units
+from RCAIDE.Framework.Analyses.Geodesics.Geodesics import Calculate_Distance
 from RCAIDE.Library.Plots.Common import plot_style
 
-from RCAIDE.Framework.Analyses.Geodesics.Geodesics import Calculate_Distance
+# python imports 
 import matplotlib.pyplot as plt
 from scipy.interpolate import griddata
 import matplotlib.colors 
@@ -18,8 +18,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
-# ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Library-Plots-Topograpgy 
+# ----------------------------------------------------------------------------------------------------------------------    
 def plot_elevation_contours(topography_file,
                             number_of_latitudinal_points  = 100,
                             number_of_longitudinal_points = 100, 

@@ -1,13 +1,11 @@
 # RCAIDE/Library/Methods/Thermal_Management/Heat_Exchangers/Cross_Flow_Heat_Exchanger/design_cross_flow_heat_exchanger.py
-
-
+#
 # Created:  Apr 2024, S. Shekar 
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
-# RCAIDE imports
-import RCAIDE
+# RCAIDE imports 
 from RCAIDE.Framework.Core                            import Units, Data   
 from RCAIDE.Library.Methods.Thermal_Management.Heat_Exchangers.Cross_Flow_Heat_Exchanger.cross_flow_heat_exchanger_sizing_setup import cross_flow_heat_exchanger_sizing_setup 
 from RCAIDE.Library.Methods.Thermal_Management.Heat_Exchangers.Cross_Flow_Heat_Exchanger.cross_flow_heat_exchanger_geometry_setup import cross_flow_heat_exchanger_geometry_setup
@@ -20,8 +18,7 @@ import time
 
 # ----------------------------------------------------------------------
 #  Rotor Design
-# ----------------------------------------------------------------------
-## @ingroup Methods-Thermal_Management-Batteries
+# ---------------------------------------------------------------------- 
 def design_cross_flow_heat_exchanger(HEX,coolant_line,battery, single_side_contact=True, dry_mass=True,
                                        solver_name= 'SLSQP',iterations = 200,solver_sense_step = 1E-3,
                                        solver_tolerance = 1E-2,print_iterations = False):
@@ -47,7 +44,11 @@ def design_cross_flow_heat_exchanger(HEX,coolant_line,battery, single_side_conta
     elapsed_time         = round((tf-ti)/60,2)
     print('HEX sizing optimization Simulation Time: ' + str(elapsed_time) + ' mins')    
  
-    HEX_opt = optimization_problem.hex_configurations.optimized.networks.electric.coolant_lines.coolant_line.heat_exchangers.cross_flow_hex
+
+    for coolant_line in optimization_problem.hex_configurations.optimized.networks.electric.coolant_lines:
+        for heat_exchanger in coolant_line.heat_exchangers: 
+            HEX_opt       = heat_exchanger
+             
     HEX.design_air_inlet_pressure     = output[0]
     HEX.design_coolant_inlet_pressure = output[1]
     HEX.design_air_mass_flow_rate     = output[2]
@@ -60,8 +61,7 @@ def design_cross_flow_heat_exchanger(HEX,coolant_line,battery, single_side_conta
     HEX.design_heat_removed           = HEX_opt.heat_removed
     HEX.mass_properties.mass          = HEX_opt.heat_exchanger_mass
     return HEX
-
-## @ingroup Methods-Thermal_Management-Batteries-Sizing
+ 
 def crossflow_heat_exchanger_design_problem_setup(HEX,coolant_line,print_iterations): 
     """ Sets up cross flow heat exchanger optimization problem including design variables,
         constraints and objective function using RCAIDE's Nexus optimization framework.
@@ -123,7 +123,7 @@ def crossflow_heat_exchanger_design_problem_setup(HEX,coolant_line,print_iterati
     #  Aliases
     # ------------------------------------------------------------------- 
     aliases = [] 
-    btms = 'hex_configurations.optimized.networks.electric.coolant_lines.coolant_line.heat_exchangers.cross_flow_hex'
+    btms = 'hex_configurations.optimized.networks.electric.coolant_lines.' +  coolant_line.tag + '.heat_exchangers.'+  HEX.tag
     aliases.append([ 'm_dot_c'     , btms + '.air_flow_rate' ]) 
     aliases.append([ 'm_dot_c'     , btms + '.coolant_flow_rate' ]) 
     aliases.append([ 'p_c_1'       , btms + '.air_inlet_pressure' ])       

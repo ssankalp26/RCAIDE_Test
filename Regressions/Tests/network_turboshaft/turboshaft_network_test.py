@@ -115,29 +115,21 @@ def turboshaft_engine_Boeing_502_14(altitude,mach):
     turboshaft.core_nozzle                         = core_nozzle
 
     # design turboshaft
-    design_turboshaft(turboshaft)    
-     
-    # connect turboshaft with network
-    fuel_line                                      = RCAIDE.Library.Components.Energy.Distributors.Fuel_Line()    
-    fuel_tank                                      = RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Fuel_Tank()  
-    fuel                                           = RCAIDE.Library.Attributes.Propellants.Aviation_Gasoline()    
-    fuel_tank.fuel                                 = fuel  
-    fuel_line.fuel_tanks.append(fuel_tank)  
-    fuel_line.propulsors.append(turboshaft) 
+    design_turboshaft(turboshaft)     
     
     # ------------------------------------------------------------------------------------------------------------------------
     # Run engine 
     # ------------------------------------------------------------------------------------------------------------------------   
                                                                                   
     # define atmospheric properties                                           
-    atmosphere                                                                = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
-    atmo_data                                                                 = atmosphere.compute_values(altitude,0.0)
-    planet                                                                    = RCAIDE.Library.Attributes.Planets.Earth() 
-    p                                                                         = atmo_data.pressure          
-    T                                                                         = atmo_data.temperature       
-    rho                                                                       = atmo_data.density          
-    a                                                                         = atmo_data.speed_of_sound    
-    mu                                                                        = atmo_data.dynamic_viscosity      
+    atmosphere                                                          = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
+    atmo_data                                                           = atmosphere.compute_values(altitude,0.0)
+    planet                                                              = RCAIDE.Library.Attributes.Planets.Earth() 
+    p                                                                   = atmo_data.pressure          
+    T                                                                   = atmo_data.temperature       
+    rho                                                                 = atmo_data.density          
+    a                                                                   = atmo_data.speed_of_sound    
+    mu                                                                  = atmo_data.dynamic_viscosity      
                                                                               
     conditions = RCAIDE.Framework.Mission.Common.Results()
     
@@ -156,24 +148,21 @@ def turboshaft_engine_Boeing_502_14(altitude,mach):
     conditions.freestream.velocity                                      = np.atleast_2d(a*mach)   
  
 
-    ## setup conditions  
-    fuel_line                = RCAIDE.Library.Components.Energy.Distributors.Fuel_Line()
+    # setup conditions   
     segment                  = RCAIDE.Framework.Mission.Segments.Segment()  
-    segment.state.conditions = conditions     
-    segment.state.conditions.energy[fuel_line.tag] = Conditions()
-    segment.state.conditions.noise[fuel_line.tag]  = Conditions()
-    turboshaft.append_operating_conditions(segment,fuel_line) 
+    segment.state.conditions = conditions      
+    turboshaft.append_operating_conditions(segment) 
     for tag, item in  turboshaft.items(): 
         if issubclass(type(item), RCAIDE.Library.Components.Component):
-            item.append_operating_conditions(segment,fuel_line,turboshaft) 
+            item.append_operating_conditions(segment,turboshaft) 
     
     # set throttle
-    segment.state.conditions.energy[fuel_line.tag][turboshaft.tag].throttle[:,0] = 1.0  
-    thrust,moment,power,stored_results_flag,stored_propulsor_tag = turboshaft.compute_performance(segment.state,fuel_line)  
+    segment.state.conditions.energy[turboshaft.tag].throttle[:,0] = 1.0  
+    thrust,moment,power,stored_results_flag,stored_propulsor_tag = turboshaft.compute_performance(segment.state)  
     
     power                = power[0][0]
-    thermal_efficiency   = conditions.energy[fuel_line.tag][turboshaft.tag].thermal_efficiency[0][0]
-    PSFC                 = conditions.energy[fuel_line.tag][turboshaft.tag].power_specific_fuel_consumption[0][0]
+    thermal_efficiency   = conditions.energy[turboshaft.tag].thermal_efficiency[0][0]
+    PSFC                 = conditions.energy[turboshaft.tag].power_specific_fuel_consumption[0][0]
 
     return power, thermal_efficiency, PSFC
 

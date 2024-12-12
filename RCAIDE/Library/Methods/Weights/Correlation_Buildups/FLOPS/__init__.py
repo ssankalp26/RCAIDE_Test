@@ -1,4 +1,3 @@
-## @defgroup Methods-Weights-Correlations-FLOPS FLOPS
 # RCAIDE/Library/Methods/Weights/Correlations/FLOPS/__init__.py
 # 
 

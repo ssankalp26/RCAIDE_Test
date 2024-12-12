@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Conditions 
 # RCAIDE/Framework/Analyses/Mission/Segments/Conditions/Numerics.py
 # 
 # 
@@ -16,7 +15,6 @@ import numpy as np
 #  Numerics
 # ----------------------------------------------------------------------------------------------------------------------
 
-## @ingroup Analyses-Mission-Segments-Conditions
 class Numerics(Conditions):
     """ Creates the data structure for the numerical solving of a mission.
     

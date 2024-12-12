@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Common
 # RCAIDE/Library/Missions/Segments/Common/Update/dimensionless.py
 # 
 # 
@@ -14,7 +13,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Update Differentials Altitude
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Missions-Segments-Common-Update
 def differentials_altitude(segment):
     """ Initializes the differntial altitude
     

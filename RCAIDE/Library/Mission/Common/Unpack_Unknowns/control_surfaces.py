@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Common-Unpack_Unknowns
 # RCAIDE/Library/Missions/Common/Unpack_Unknowns/control_surfaces.py
 # 
 # 
@@ -8,7 +7,6 @@ import RCAIDE
 # ----------------------------------------------------------------------------------------------------------------------
 #  Unpack Unknowns
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Common-Unpack_Unknowns
 def control_surfaces(segment):
     assigned_control_variables   = segment.assigned_control_variables
     control_surfaces             = segment.state.conditions.control_surfaces

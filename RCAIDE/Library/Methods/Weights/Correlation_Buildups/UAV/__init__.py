@@ -1,4 +1,3 @@
-## @defgroup Methods-Weights-Correlations-UAV UAV
 # RCAIDE/Library/Methods/Weights/Correlations/UAV/__init__.py
 # 
 

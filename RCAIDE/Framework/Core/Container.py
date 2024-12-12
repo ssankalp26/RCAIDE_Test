@@ -1,4 +1,4 @@
-## @ingroup Core
+
 # RCAIDE/Core/Container.py
 # 
 # 
@@ -20,7 +20,7 @@ t_table = str.maketrans( chars          + string.ascii_uppercase ,
 # ----------------------------------------------------------------------------------------------------------------------
 #  Container
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Core
+
 class Container(Data):
     """ A dict-type container with attribute, item and index style access
         intended to hold a attribute-accessible list of Data(). This is unordered.

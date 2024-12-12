@@ -72,13 +72,12 @@ def compute_fuselage_weight(vehicle):
         FNEW = 0
         FNEF = 0 
         for network in  vehicle.networks:
-            for fuel_line in network.fuel_lines:
-                for propulsor in fuel_line.propulsors:
-                    if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
-                        NENG += 1 
-                        FNEF += 1
-                        if propulsor.wing_mounted: 
-                            FNEW += 1  
+            for propulsor in network.propulsors:
+                if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
+                    NENG += 1 
+                    FNEF += 1
+                    if propulsor.wing_mounted: 
+                        FNEW += 1  
         if vehicle.systems.accessories == 'cargo':
             CARGF = 1
         else:

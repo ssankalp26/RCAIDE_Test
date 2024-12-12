@@ -1,4 +1,3 @@
-## @defgroup External_Interfaces 
 # RCAIDE/External_Interfaces/__init__.py
 # 
 

@@ -57,7 +57,7 @@ def compute_propulsion_system_weight(vehicle,network):
         for fuel_line in network.fuel_lines:
             for fuel_tank in fuel_line.fuel_tanks:
                 number_of_tanks +=  1
-            for propulsor in fuel_line.propulsors:
+            for propulsor in network.propulsors:
                 if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
                     ref_propulsor = propulsor  
                     NENG  += 1 
@@ -83,7 +83,6 @@ def compute_propulsion_system_weight(vehicle,network):
     output.number_of_fuel_tanks = number_of_tanks  
     return output
 
-## @ingroup Methods-Weights-Correlations-Raymer
 def compute_nacelle_weight(vehicle,ref_nacelle, NENG, WENG):
     """ Calculates the nacelle weight based on the Raymer method
         Assumptions:
@@ -116,7 +115,6 @@ def compute_nacelle_weight(vehicle,ref_nacelle, NENG, WENG):
                       * Wec ** 0.611 * NENG * 0.984 * Sn ** 0.224
     return WNAC * Units.lbs
 
-## @ingroup Methods-Weights-Correlations-Raymer
 def compute_misc_engine_weight(vehicle, NENG, WENG):
     """ Calculates the miscellaneous engine weight based on the Raymer method, electrical control system weight
         and starter engine weight
@@ -147,8 +145,7 @@ def compute_misc_engine_weight(vehicle, NENG, WENG):
     WEC     = 5 * NENG + 0.8 * Lec
     WSTART  = 49.19*(NENG*WENG/1000)**0.541
     return WEC * Units.lbs, WSTART * Units.lbs
-
-## @ingroup Methods-Weights-Correlations-Raymer
+ 
 def compute_fuel_system_weight(vehicle, NENG):
     """ Calculates the weight of the fuel system based on the Raymer method
         Assumptions:

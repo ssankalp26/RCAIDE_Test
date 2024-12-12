@@ -1,4 +1,4 @@
-## @ingroup Library-Components-Airfoils
+
 # RCAIDE/Compoments/Airfoils/Airfoil.py
 # 
 # 
@@ -13,7 +13,7 @@ from RCAIDE.Library.Components   import Component
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Airfoil
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Airfoils 
+ 
 class Airfoil(Component):
     """Generic airfoil class."""
     

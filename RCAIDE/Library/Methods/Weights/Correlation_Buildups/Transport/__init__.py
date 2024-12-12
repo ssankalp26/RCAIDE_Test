@@ -1,4 +1,3 @@
-## @defgroup Methods-Weights-Correlations-Transport Transport
 # RCAIDE/Library/Methods/Weights/Correlations/Transport/__init__.py
 # 
 

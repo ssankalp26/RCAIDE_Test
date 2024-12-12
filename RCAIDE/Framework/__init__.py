@@ -1,4 +1,3 @@
-## @defgroup Framework
 # RCAIDE/Framework/__init__.py 
 
 """ RCAIDE Package Setup

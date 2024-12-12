@@ -1,6 +1,4 @@
-## @ingroup Analyses-Emissions
 # RCAIDE/Framework/Analyses/Emissions/Emission_Index_CRN_Method.py
-# 
 # 
 # Created:  Jul 2024, M. Clarke
 
@@ -17,7 +15,6 @@ import numpy as  np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Correlation_Buildup
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Analyses-Emissions
 class Emission_Index_CRN_Method(Emissions): 
     """ 
     Emissions Index Chemical Reactor Network Method

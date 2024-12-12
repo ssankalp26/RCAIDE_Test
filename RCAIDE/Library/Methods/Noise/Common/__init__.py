@@ -1,4 +1,3 @@
-## @defgroup Methods-Noise-Common Common 
 # RCAIDE/Methods/Noise/Common/__init__.py
 # 
 

@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors-Turbojet_Propulsor
 # RCAIDE/Methods/Energy/Propulsors/Turbojet_Propulsor/design_turbojet.py
 # 
 # 
@@ -26,7 +25,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Design Turbojet
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Methods-Energy-Propulsors-Turbojet_Propulsor
 def design_turbojet(turbojet):  
     #check if mach number and temperature are passed
     if(turbojet.design_mach_number==None or turbojet.design_altitude==None):
@@ -68,10 +66,10 @@ def design_turbojet(turbojet):
     segment.state.conditions                       = conditions
     segment.state.conditions.energy[fuel_line.tag] = Conditions()
     segment.state.conditions.noise[fuel_line.tag]  = Conditions()
-    turbojet.append_operating_conditions(segment,fuel_line) 
+    turbojet.append_operating_conditions(segment) 
     for tag, item in  turbojet.items(): 
         if issubclass(type(item), RCAIDE.Library.Components.Component):
-            item.append_operating_conditions(segment,fuel_line,turbojet)
+            item.append_operating_conditions(segment,turbojet)
     
     ram                       = turbojet.ram
     inlet_nozzle              = turbojet.inlet_nozzle
@@ -83,7 +81,7 @@ def design_turbojet(turbojet):
     core_nozzle               = turbojet.core_nozzle
 
     # unpack component conditions
-    turbojet_conditions     = conditions.energy[fuel_line.tag][turbojet.tag]
+    turbojet_conditions     = conditions.energy[turbojet.tag]
     ram_conditions          = turbojet_conditions[ram.tag]     
     inlet_nozzle_conditions = turbojet_conditions[inlet_nozzle.tag]
     core_nozzle_conditions  = turbojet_conditions[core_nozzle.tag] 

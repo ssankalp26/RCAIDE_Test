@@ -49,7 +49,7 @@ def main():
     P_truth     = 54394.94283712161
     mdot_truth  = 0.0047792642069995695
     
-    P    = results.segments.cruise.state.conditions.energy.fuel_line.ice_propeller.internal_combustion_engine.power[-1,0]
+    P    = results.segments.cruise.state.conditions.energy.ice_propeller.internal_combustion_engine.power[-1,0]
     mdot = results.segments.cruise.state.conditions.weights.vehicle_mass_rate[-1,0]
 
     # Check the errors

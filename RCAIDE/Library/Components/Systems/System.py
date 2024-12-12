@@ -1,4 +1,3 @@
-## @ingroup Library-Compoments-Systems
 # RCAIDE/Library/Compoments/Systems/System.py
 # 
 # Created:  Mar 2024, M. Clarke 
@@ -11,8 +10,7 @@ from RCAIDE.Library.Components import Component
  
 # ----------------------------------------------------------------------------------------------------------------------
 # System
-# ----------------------------------------------------------------------------------------------------------------------           
-## @ingroup Library-Components-Systems
+# ----------------------------------------------------------------------------------------------------------------------            
 class System(Component):
     """A class representing an aircraft system/systems.
     

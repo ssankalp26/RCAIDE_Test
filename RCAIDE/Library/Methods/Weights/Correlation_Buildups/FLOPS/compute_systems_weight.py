@@ -75,18 +75,17 @@ def compute_systems_weight(vehicle):
     FNEW = 0
     FNEF = 0 
     for network in  vehicle.networks:
-        for fuel_line in network.fuel_lines:
-            for propulsor in fuel_line.propulsors:
-                if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
-                    NENG += 1 
-                    FNEF += 1
-                    if propulsor.wing_mounted: 
-                        FNEW += 1   
-                    if 'nacelle' in propulsor:
-                        nacelle =  propulsor.nacelle 
-                        FNAC    = nacelle.diameter / Units.ft
-                    else:
-                        FNAC    = 0                     
+        for propulsor in network.propulsors:
+            if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
+                NENG += 1 
+                FNEF += 1
+                if propulsor.wing_mounted: 
+                    FNEW += 1   
+                if 'nacelle' in propulsor:
+                    nacelle =  propulsor.nacelle 
+                    FNAC    = nacelle.diameter / Units.ft
+                else:
+                    FNAC    = 0                     
             
     VMAX     = vehicle.flight_envelope.design_mach_number
     SFLAP    = 0

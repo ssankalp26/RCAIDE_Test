@@ -1,4 +1,3 @@
-## @ingroup Energy-Propulsion-Converters
 # RCAIDE/Library/Compoments/Energy/Propulsion/Converters/Rotor.py
 # 
 # 
@@ -7,6 +6,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
+
  # RCAIDE imports 
 from RCAIDE.Framework.Core                              import Data , Units, Container
 from RCAIDE.Library.Components                          import Component 
@@ -20,7 +20,6 @@ import scipy as sp
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Generalized Rotor Class
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Energy-Propulsion-Converters
 class Rotor(Component):
     """This is a general rotor component.
 
@@ -109,9 +108,9 @@ class Rotor(Component):
         self.optimization_parameters.ideal_efficiency                   = 1.0     
         self.optimization_parameters.ideal_figure_of_merit              = 1.0
 
-    def append_operating_conditions(rotor,segment,distribution_line,propulsor): 
-        energy_conditions       = segment.state.conditions.energy[distribution_line.tag][propulsor.tag]
-        noise_conditions        = segment.state.conditions.noise[distribution_line.tag][propulsor.tag]
+    def append_operating_conditions(rotor,segment,propulsor): 
+        energy_conditions       = segment.state.conditions.energy[propulsor.tag]
+        noise_conditions        = segment.state.conditions.noise[propulsor.tag]
         append_rotor_conditions(rotor,segment,energy_conditions,noise_conditions)
         return        
          
@@ -251,7 +250,6 @@ class Rotor(Component):
         return rot_mat, rots
 
  
-## @ingroup Library-Components-Wings
 class Airfoil_Container(Container):
     """ Container for rotor airfoil  
     

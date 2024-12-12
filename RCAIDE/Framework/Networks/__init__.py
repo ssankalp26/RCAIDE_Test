@@ -1,4 +1,3 @@
-## @defgroup Energy-Networks Networks
 # RCAIDE/Energy/Networks/__init__.py
 # 
 

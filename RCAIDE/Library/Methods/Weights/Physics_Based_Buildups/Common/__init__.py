@@ -1,4 +1,3 @@
-## @defgroup Methods-Weights-Buildups-Common Common
 # RCAIDE/Library/Methods/Weights/Buildups/Common/__init__.py
 # 
 

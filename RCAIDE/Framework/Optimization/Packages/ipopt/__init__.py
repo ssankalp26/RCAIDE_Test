@@ -1,5 +1,3 @@
-## @defgroup Optimization-Packages-ipopt ipopt 
-# @ingroup Optimization-Packages 
 # RCAIDE/Optimization/Packages/ipopt/__init__.py
 # 
 

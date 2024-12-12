@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors-Rotor_Design 
 # RCAIDE/Methods/Energy/Propulsors/Rotor_Design/set_optimized_parameters.py
 # 
 # 
@@ -7,7 +6,6 @@
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Set Optimized rotor platform paramters
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Methods-Energy-Propulsors-Rotor_Design
 def set_optimized_parameters(rotor,optimization_problem):
     """ Append parameters of optimized prop-rotor to input prop-rotor
           
@@ -25,8 +23,8 @@ def set_optimized_parameters(rotor,optimization_problem):
              None
     """    
     results                         = optimization_problem.results 
-    optimal_hover_rotor             = optimization_problem.vehicle_configurations.hover.networks.electric.busses.bus.propulsors.electric_rotor.rotor     
-    optimal_oei_rotor               = optimization_problem.vehicle_configurations.oei.networks.electric.busses.bus.propulsors.electric_rotor.rotor    
+    optimal_hover_rotor             = optimization_problem.vehicle_configurations.hover.networks.electric.propulsors.electric_rotor.rotor     
+    optimal_oei_rotor               = optimization_problem.vehicle_configurations.oei.networks.electric.propulsors.electric_rotor.rotor    
     rotor.chord_distribution        = optimal_hover_rotor.chord_distribution
     rotor.twist_distribution        = optimal_hover_rotor.twist_distribution   
     
@@ -50,7 +48,7 @@ def set_optimized_parameters(rotor,optimization_problem):
     rotor.oei.design_pitch_command         = optimal_oei_rotor.oei.design_pitch_command
     
     if optimization_problem.prop_rotor_flag:  
-        optimal_cruise_rotor  = optimization_problem.vehicle_configurations.cruise.networks.electric.busses.bus.propulsors.electric_rotor.rotor      
+        optimal_cruise_rotor  = optimization_problem.vehicle_configurations.cruise.networks.electric.propulsors.electric_rotor.rotor      
         if rotor.cruise.design_power == None: 
             rotor.cruise.design_power = results.cruise.power 
         

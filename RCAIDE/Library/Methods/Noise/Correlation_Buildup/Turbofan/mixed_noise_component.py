@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Correlation_Buildup-Engine 
 # RCAIDE/Methods/Noise/Correlation_Buildup/Engine/mixed_noise_component.py
 # 
 # 
@@ -13,8 +12,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------     
 #  Mixed Noise Component
-# ----------------------------------------------------------------------------------------------------------------------      
-## @ingroup Methods-Noise-Correlation_Buildup-Engine 
+# ----------------------------------------------------------------------------------------------------------------------       
 def mixed_noise_component(Velocity_primary,theta_m,sound_ambient,Velocity_secondary,
                           Velocity_aircraft,Area_primary,Area_secondary,DSPL_m,EX_m,Str_m,Velocity_mixed,XBPR):
     """This function calculates the noise contribution of the mixed jet component

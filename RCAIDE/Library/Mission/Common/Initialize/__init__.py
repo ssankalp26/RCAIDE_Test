@@ -1,4 +1,3 @@
-## @defgroup Methods-Missions-Common-Initialize Initialize
 # RCAIDE/Methods/Mission/Common/Initialize/__init__.py
 # 
 
@@ -7,8 +6,7 @@
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
-# ----------------------------------------------------------------------------------------------------------------------
-# @ingroup Methods-Mission-Segments-Common
+# -----------------------------------------------------------------------------------------------------------------------Common
    
 from .weights                      import weights
 from .differentials_dimensionless  import differentials_dimensionless

@@ -1,7 +1,5 @@
-## @ingroup Analyses-Emissions
 # RCAIDE/Framework/Analyses/Emissions/Emission_Index_Correlation_Method.py
-# 
-# 
+#  
 # Created:  Jul 2024, M. Clarke
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -14,8 +12,7 @@ from .Emissions            import Emissions
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Correlation_Buildup
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Analyses-Emissions
+# ---------------------------------------------------------------------------------------------------------------------- 
 class Emission_Index_Correlation_Method(Emissions): 
     """ 
     Emissions Index Correlation Method

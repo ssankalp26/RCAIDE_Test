@@ -1,4 +1,3 @@
-## @defgroup Methods-Noise-Correlation_Buildup-Airframe Airframe 
 # RCAIDE/Methods/Noise/Correlation_Buildup/Airframe/__init__.py
 # 
 

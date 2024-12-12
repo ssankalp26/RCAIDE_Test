@@ -33,7 +33,7 @@ class Fan(Component):
         self.angular_velocity               = 0
 
 
-    def append_operating_conditions(self,segment,fuel_line,propulsor): 
-        propulsor_conditions =  segment.state.conditions.energy[fuel_line.tag][propulsor.tag]
+    def append_operating_conditions(self,segment,propulsor): 
+        propulsor_conditions =  segment.state.conditions.energy[propulsor.tag]
         append_fan_conditions(self,segment,propulsor_conditions)
         return                                

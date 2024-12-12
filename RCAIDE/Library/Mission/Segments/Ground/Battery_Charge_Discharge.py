@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Ground
 # RCAIDE/Library/Missions/Segments/Ground/Battery_Charge_or_Discharge.py
 # 
 # 
@@ -8,8 +7,7 @@ from RCAIDE.Framework.Core import  Units
 import  numpy as  np 
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Initialize Conditions
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Missions-Segments-Ground 
+# ----------------------------------------------------------------------------------------------------------------------    
 def initialize_conditions(segment):  
     """Sets the specified conditions which are given for the segment type.
 
@@ -33,19 +31,22 @@ def initialize_conditions(segment):
 
     if isinstance(segment, RCAIDE.Framework.Mission.Segments.Ground.Battery_Recharge):
         for network in segment.analyses.energy.vehicle.networks:
-            time =  0 
+            time =  []
             for bus in  network.busses:
-                if not segment.state.initials.keys():
+                t=0
+                if segment.state.initials.keys():
                     end_of_flight_soc = 1
-                    for battery_module in segment.state.conditions.energy.bus.battery_modules:
+                    for battery_module in segment.state.conditions.energy[bus.tag].battery_modules:
                         end_of_flight_soc = min(end_of_flight_soc,battery_module.cell.state_of_charge[-1])
                 else:
-                    end_of_flight_soc =  segment.state.initials.conditions.energy[bus.tag].state_of_charge[-1]
+                    end_of_flight_soc =  segment.initial_battery_state_of_charge
                 
-                time           =  max(((segment.cutoff_SOC-end_of_flight_soc) / bus.charging_c_rate )*Units.hrs  , time) 
-                time           += segment.cooling_time
+                t           =  max(((segment.cutoff_SOC-end_of_flight_soc) / bus.charging_c_rate )*Units.hrs  , t) 
+                t           += segment.cooling_time
+                time.append(t)
             t_initial = segment.state.conditions.frames.inertial.time[0,0]
             t_nondim  = segment.state.numerics.dimensionless.control_points
+            time      = np.max(time)
             charging_time      = t_nondim * ( time ) + t_initial 
             segment.state.conditions.frames.inertial.time[:,0] = charging_time[:,0]
 

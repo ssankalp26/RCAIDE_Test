@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Climb
 # RCAIDE/Framework/Analyses/Mission/Segments/Climb/Constant_Speed_Constant_Rate.py
 # 
 # 
@@ -9,15 +8,13 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE imports 
-from RCAIDE.Framework.Core                                     import Units 
+from RCAIDE.Framework.Core                            import Units 
 from RCAIDE.Framework.Mission.Segments.Evaluate       import Evaluate
-from RCAIDE.Library.Mission                          import Common,Segments
+from RCAIDE.Library.Mission                           import Common,Segments
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Constant_Speed_Constant_Rate
 # ---------------------------------------------------------------------------------------------------------------------- 
-
-## @ingroup Analyses-Mission-Segments-Climb
 class Constant_Speed_Constant_Rate(Evaluate):
     """ The most basic segment. Fly at a constant true airspeed at a fixed rate of climb between 2 altitudes.
     

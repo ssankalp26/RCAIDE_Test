@@ -1,4 +1,3 @@
-## @ingroup Energy-Networks
 # RCAIDE/Energy/Networks/Solar.py
 #  
 # Created:  Sep 2024, M. Clarke 

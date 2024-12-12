@@ -1,8 +1,3 @@
-## @defgroup Plugins
-# These are external packages that have been incorporated into RCADE. RCADE specific documentation is not used for these packages. 
-# Currently the only package used is pint.
-
-
 from .load_plugin import load_plugin
 # these packages are imported by temporarily modifying
 # the python path to account for potential absolute

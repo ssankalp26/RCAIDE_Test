@@ -1,4 +1,3 @@
-## @defgroup Methods-Weights-Correlations-Common Common
 # RCAIDE/Library/Methods/Weights/Correlations/Common/__init__.py
 # 
 

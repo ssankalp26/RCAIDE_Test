@@ -234,9 +234,8 @@ def compute_operating_empty_weight(vehicle, settings=None, method_type='RCAIDE')
             W_energy_network.W_nacelle          += W_propulsion.W_nacelle    
             number_of_engines                   += W_propulsion.number_of_engines
             number_of_tanks                     += W_propulsion.number_of_fuel_tanks  
-            for fuel_line in  network.fuel_lines:  
-                for propulsor in fuel_line.propulsors:
-                    propulsor.mass_properties.mass = W_energy_network_total / number_of_engines
+            for propulsor in network.propulsors:
+                propulsor.mass_properties.mass = W_energy_network_total / number_of_engines
             
         elif method_type == 'Raymer':
             W_propulsion                        = Raymer.compute_propulsion_system_weight(vehicle, network) 
@@ -249,22 +248,21 @@ def compute_operating_empty_weight(vehicle, settings=None, method_type='RCAIDE')
             W_energy_network.W_nacelle          += W_propulsion.W_nacelle    
             number_of_engines                   += W_propulsion.number_of_engines
             number_of_tanks                     += W_propulsion.number_of_fuel_tanks
-            for fuel_line in  network.fuel_lines:  
-                for propulsor in fuel_line.propulsors:
-                    propulsor.mass_properties.mass = W_energy_network_total / number_of_engines
+            for propulsor in network.propulsors:
+                propulsor.mass_properties.mass = W_energy_network_total / number_of_engines
         else:
             number_of_tanks = 0
             for fuel_line in  network.fuel_lines: 
                 for fuel_tank in fuel_line.fuel_tanks:
                     number_of_tanks +=  1
-                for propulsor in fuel_line.propulsors:
-                    if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan):
-                        thrust_sls                     = propulsor.sealevel_static_thrust  
-                        W_engine_jet                   = Propulsion.compute_jet_engine_weight(thrust_sls)
-                        total_propulsor_mass           = Propulsion.integrated_propulsion(W_engine_jet) 
-                        propulsor.mass_properties.mass = total_propulsor_mass 
-                        W_energy_network_total         += total_propulsor_mass 
-                        number_of_engines += 1             
+            for propulsor in network.propulsors:
+                if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan):
+                    thrust_sls                     = propulsor.sealevel_static_thrust  
+                    W_engine_jet                   = Propulsion.compute_jet_engine_weight(thrust_sls)
+                    total_propulsor_mass           = Propulsion.integrated_propulsion(W_engine_jet) 
+                    propulsor.mass_properties.mass = total_propulsor_mass 
+                    W_energy_network_total         += total_propulsor_mass 
+                    number_of_engines += 1             
                  
         # Electric-Powered Propulsors  
         for bus in network.busses: 
@@ -278,10 +276,10 @@ def compute_operating_empty_weight(vehicle, settings=None, method_type='RCAIDE')
                 W_energy_network_total  += battery.mass_properties.mass * Units.kg
                 W_energy_network.W_battery = battery.mass_properties.mass * Units.kg
                 
-            for propulsor in bus.propulsors:
-                if 'motor' in propulsor:                           
-                    W_energy_network.W_motor +=  propulsor.motor.mass_properties.mass
-                    W_energy_network_total  +=  propulsor.motor.mass_properties.mass
+        for propulsor in network.propulsors:
+            if 'motor' in propulsor:                           
+                W_energy_network.W_motor +=  propulsor.motor.mass_properties.mass
+                W_energy_network_total  +=  propulsor.motor.mass_properties.mass
                    
     W_energy_network_cumulative += W_energy_network_total
     

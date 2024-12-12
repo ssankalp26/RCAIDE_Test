@@ -61,11 +61,10 @@ def compute_operating_items_weight(vehicle):
     """ 
     NENG =  0 
     for network in  vehicle.networks:
-        for fuel_line in network.fuel_lines:
-            for propulsor in fuel_line.propulsors:
-                if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
-                    ref_propulsor = propulsor  
-                    NENG  += 1   
+        for propulsor in network.propulsors:
+            if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
+                ref_propulsor = propulsor  
+                NENG  += 1   
     
     THRUST          = ref_propulsor.sealevel_static_thrust * 1 / Units.lbf
     SW              = vehicle.reference_area / Units.ft ** 2

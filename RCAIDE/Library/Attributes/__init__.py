@@ -1,4 +1,3 @@
-## @defgroup Library-Attributes Attributes
 # RCAIDE/Library/Attributes/__init__.py
 # 
 # 

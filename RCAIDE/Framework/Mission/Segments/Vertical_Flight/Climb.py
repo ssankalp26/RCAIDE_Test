@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Vertical_Flight
 # RCAIDE/Framework/Analyses/Mission/Segments/Vertical_Flight/Climb.py
 # 
 # 
@@ -15,9 +14,7 @@ from RCAIDE.Library.Mission                      import Common,Segments
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Climb
-# ----------------------------------------------------------------------------------------------------------------------
-
-## @ingroup Analyses-Mission-Segments-Vertical_Flight
+# ---------------------------------------------------------------------------------------------------------------------- 
 class Climb(Evaluate):
     """ A vertically climbing hover for VTOL aircraft. Although the vehicle moves, no aerodynamic drag and lift are used.
     

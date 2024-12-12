@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Noise
 # RCAIDE/Library/Plots/Noise/plot_3D_noise_contour.py
 # 
 # 
@@ -17,8 +16,6 @@ import plotly.graph_objects as go
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------    
- 
-## @ingroup Library-Plots-Noise
 def plot_3D_noise_contour(noise_data,
                        noise_level              = None ,
                        min_noise_level          = 35,  

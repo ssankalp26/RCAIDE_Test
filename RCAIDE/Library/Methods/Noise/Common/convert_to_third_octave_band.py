@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Common 
 # RCAIDE/Methods/Noise/Common/convert_to_third_octave_band.py
 # 
 # 
@@ -12,8 +11,7 @@ import numpy as np
     
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Convert to Third Octave Band 
-# ----------------------------------------------------------------------------------------------------------------------      
-## @ingroup Methods-Noise-Common  
+# ----------------------------------------------------------------------------------------------------------------------       
 def convert_to_third_octave_band(SPL,f,settings): 
     """This method converts the SPL spectrum from blade harmonic passing frequency
     to thrid octave spectrum

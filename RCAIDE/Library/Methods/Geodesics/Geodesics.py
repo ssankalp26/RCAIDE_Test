@@ -1,4 +1,3 @@
-## @ingroup Methods-Geodesics-Geodesics 
 # RCAIDE/Library/Methods/Geodesics/Geodesics.py
 # 
 # 

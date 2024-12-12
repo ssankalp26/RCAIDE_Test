@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors
 # RCAIDE/Methods/Energy/Propulsors/design_propeller.py
 # 
 # 
@@ -18,8 +17,7 @@ from scipy.optimize import root
 
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Design Propeller
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Methods-Energy-Propulsors
+# ----------------------------------------------------------------------------------------------------------------------   
 def design_propeller(prop,number_of_stations=20):
     """ Optimizes propeller chord and twist given input parameters.
           

@@ -1,6 +1,4 @@
-## @defgroup Methods-Costs Costs 
-# @ingroup Methods 
-# RCAIDE/Methods/Costs/__init__.py
+# RCAIDE/Library/Methods/Costs/__init__.py
 # 
 
 """ RCAIDE Package Setup

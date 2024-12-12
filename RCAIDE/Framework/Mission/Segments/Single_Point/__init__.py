@@ -1,4 +1,3 @@
-## @defgroup Analyses-Mission-Segments-Single_Point Single_Point
 # RCAIDE/Framework/Analyses/Mission/Segments/Single_Point/__init__.py
 # 
 

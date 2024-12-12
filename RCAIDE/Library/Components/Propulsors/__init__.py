@@ -1,4 +1,3 @@
-## @defgroup Components-Propulsors Propulsors
 # RCAIDE/Library/Components/Propulsors/__init__.py
 # 
 # 

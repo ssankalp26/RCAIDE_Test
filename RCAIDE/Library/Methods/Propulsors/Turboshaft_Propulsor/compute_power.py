@@ -1,5 +1,3 @@
-
-# @ingroup Methods-Energy-Propulsors-Turboshaft_Propulsor
 # RCAIDE/Library/Methods/Energy/Propulsors/Turboshaft_Propulsor/compute_power.py
 # 
 # 

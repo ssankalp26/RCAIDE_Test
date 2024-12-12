@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Common-Pre_Process
 # RCAIDE/Library/Missions/Common/Pre_Process/aerodynamics.py
 # 
 # 
@@ -12,7 +11,6 @@ from RCAIDE.Library.Methods.Geometry.Planform  import wing_segmented_planform, w
 # ----------------------------------------------------------------------------------------------------------------------
 #  aerodynamics
 # ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Missions-Segments-Common-Pre_Process
 def aerodynamics(mission):
     """ Runs aerdoynamics model and build surrogate
     

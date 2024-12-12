@@ -23,17 +23,15 @@ def train_CRN_EI_surrogates(emissions):
     FAR            = emissions.training.fuel_to_air_ratio
     
     vehicle        = emissions.vehicle
-    for network in vehicle.networks:  
-        for fuel_line in network.fuel_lines:
-            for propulsor in  fuel_line.propulsors:
-
-                if  isinstance(propulsor,RCAIDE.Library.Components.Propulsors.Turbofan) or \
-                    isinstance(propulsor,RCAIDE.Library.Components.Propulsors.Turbojet) or \
-                    isinstance(propulsor,RCAIDE.Library.Components.Propulsors.Turboshaft) or \
-                    isinstance(propulsor,RCAIDE.Library.Components.Propulsors.ICE_Propeller):            
-                    combustor = propulsor.combustor              
-                else:
-                    combustor = False 
+    for network in vehicle.networks:   
+        for propulsor in  network.propulsors:
+            if  isinstance(propulsor,RCAIDE.Library.Components.Propulsors.Turbofan) or \
+                isinstance(propulsor,RCAIDE.Library.Components.Propulsors.Turbojet) or \
+                isinstance(propulsor,RCAIDE.Library.Components.Propulsors.Turboshaft) or \
+                isinstance(propulsor,RCAIDE.Library.Components.Propulsors.ICE_Propeller):            
+                combustor = propulsor.combustor              
+            else:
+                combustor = False 
             
     len_P    = len(P)
     len_T    = len(T)
