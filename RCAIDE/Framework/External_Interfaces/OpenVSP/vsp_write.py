@@ -20,10 +20,10 @@
 
 import Legacy.trunk.S as SUAVE
 from Legacy.trunk.S.Core import Units, Data 
-from Legacy.trunk.S.Input_Output.OpenVSP.vsp_propeller import write_vsp_propeller_bem
-from Legacy.trunk.S.Input_Output.OpenVSP.vsp_fuselage  import write_vsp_fuselage
-from Legacy.trunk.S.Input_Output.OpenVSP.vsp_wing      import write_vsp_wing
-from Legacy.trunk.S.Input_Output.OpenVSP.vsp_nacelle   import write_vsp_nacelle 
+from RCAIDE.Framework.External_Interfaces.OpenVSP.vsp_propeller import write_vsp_propeller_bem
+from RCAIDE.Framework.External_Interfaces.OpenVSP.vsp_fuselage  import write_vsp_fuselage
+from RCAIDE.Framework.External_Interfaces.OpenVSP.vsp_wing      import write_vsp_wing
+from RCAIDE.Framework.External_Interfaces.OpenVSP.vsp_nacelle   import write_vsp_nacelle 
 try:
     import vsp as vsp
 except ImportError:
