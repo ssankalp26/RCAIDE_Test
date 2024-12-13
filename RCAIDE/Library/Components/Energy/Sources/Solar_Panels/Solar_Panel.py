@@ -1,4 +1,4 @@
-# RCAIDE/Library/Compoments/Energy/Sources/Solar_Panels/Solar_Panel.py
+# RCAIDE/Library/Components/Energy/Sources/Solar_Panels/Solar_Panel.py
 # 
 # 
 # Created:  Oct 2024, M. Clarke 
@@ -13,14 +13,28 @@ from RCAIDE.Library.Components    import Component
 #  Solar_Panel Class
 # ----------------------------------------------------------------------------------------------------------------------
 class Solar_Panel(Component):
-    """This is a solar cell component.
-    
-    Assumptions:
-    None
+    """
+    A base class for modeling solar panels in aircraft energy systems.
+    Inherits from the Component class.
 
-    Source:
-    None
-    """       
+    Attributes
+    ----------
+    area : float
+        Total surface area of the panel, defaults to 0.0
+    
+    efficiency : float
+        Solar energy conversion efficiency, defaults to 0.0
+    
+    Notes
+    -----
+    The Solar_Panel class serves as a base class for all solar panel types,
+    providing common attributes and methods for solar panel modeling. It includes
+    basic properties needed for energy conversion and panel characteristics.
+    
+    **Definitions**
+    'Panel Efficiency'
+        Ratio of electrical energy output to incident solar energy
+    """   
     def __defaults__(self):
         """This sets the default values for the component to function.
 

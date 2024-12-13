@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Fuselages
 # RCAIDE/Library/Compoments/Fuselage/Segment.py
 # 
 # 
@@ -13,11 +12,9 @@ from RCAIDE.Library.Components import Component
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Segment
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Wings  
+# ----------------------------------------------------------------------------------------------------------------------  
 class Segment(Component):
-    def __defaults__(self): 
-        """
+    """
     A class for defining fuselage segments in RCAIDE.
 
     Attributes
@@ -60,11 +57,8 @@ class Segment(Component):
         A discrete section of the fuselage with defined geometric properties
     'Curvature'
         Parameter that defines how the segment transitions between cross-sections
-    
-    References
-    ----------
-    .. [1] Aircraft design practices for fuselage segmentation and modeling
     """
+    def __defaults__(self): 
         self.tag                     = 'segment'
         self.prev                    = None
         self.next                    = None    

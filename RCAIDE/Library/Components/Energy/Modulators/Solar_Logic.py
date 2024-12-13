@@ -1,4 +1,4 @@
-# RCAIDE/Library/Components/Propulsors/Modulators/Solar_Logic.py
+# RCAIDE/Library/Components/Energy/Modulators/Solar_Logic.py
 #  
 # Created:  Mar 2024, M. Clarke 
 
@@ -13,17 +13,35 @@ from RCAIDE.Library.Components import Component
 #  Solar_Logic
 # ----------------------------------------------------------------------------------------------------------------------  
 class Solar_Logic(Component):
-    """ The distributor is a component unique to a solar aircraft. This controls the flow of energy in to and from the battery.
-        This includes the basic logic of the maximum power point tracker that modifies the voltage of the panels to
-        extract maximum power.
-    
-        Assumptions:
-        None
-        
-        Source:
-        None
     """
+    A class for managing solar power distribution and maximum power point tracking in solar aircraft.
+    Inherits from the base Component class.
+
+    Attributes
+    ----------
+    tag : str
+        Identifier for the component, defaults to 'config'
     
+    MPPT_efficiency : float
+        Maximum Power Point Tracking efficiency, defaults to 0.0
+    
+    system_voltage : float
+        Operating voltage of the solar power system, defaults to 0.0
+
+    Notes
+    -----
+    The Solar_Logic class manages the distribution of power from solar panels
+    to various aircraft systems. It includes maximum power point tracking (MPPT)
+    functionality to optimize solar panel output and controls energy flow
+    between solar panels, batteries, and other electrical systems.
+    
+    **Definitions**
+    'MPPT'
+        Maximum Power Point Tracking - technique to maximize solar panel power output
+    'System Voltage'
+        Operating voltage level of the solar power distribution system
+    
+    """
     
     def __defaults__(self):
         """ This sets the default values.

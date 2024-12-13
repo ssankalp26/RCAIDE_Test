@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Fuselages
 # RCAIDE/Compoments/Fuselages/Blended_Wing_Body_Fuselage.py
 # 
 # 
@@ -13,7 +12,6 @@ import numpy as np
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Blended_Wing_Body_Fuselage
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Fuselages 
 class Blended_Wing_Body_Fuselage(Fuselage):
     """
     A specialized fuselage class for blended wing body aircraft configurations.

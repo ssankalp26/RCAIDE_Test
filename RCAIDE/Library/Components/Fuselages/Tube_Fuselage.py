@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Fuselages
 # RCAIDE/Library/Components/Fuselages/Tube_Fuselage.py
 # 
 # 
@@ -14,7 +13,6 @@ from RCAIDE.Library.Methods.Weights.Moment_of_Inertia.compute_fuselage_moment_of
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Tube_Fuselage
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Fuselages 
 class Tube_Fuselage(Fuselage):
     """
     A standard fuselage class for conventional tube and wing aircraft configurations.

@@ -1,5 +1,4 @@
-## @ingroup Library-Components-Fuselages
-# RCAIDE/Compoments/Fuselages/Fuselage.py
+# RCAIDE/Library/Components/Fuselages/Fuselage.py
 # 
 # 
 # Created:  Mar 2024, M. Clarke 
@@ -17,7 +16,6 @@ from RCAIDE.Library.Methods.Weights.Moment_of_Inertia.compute_fuselage_moment_of
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Fuselage
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Fuselages 
 class Fuselage(Component):
     """
     A standard fuselage class for tube and wing aircraft configurations that handles geometry, 
@@ -146,11 +144,6 @@ class Fuselage(Component):
         The ratio of length to maximum diameter of a body
     'Wetted Area'
         The total surface area of the fuselage that is in contact with the airflow
-    
-    References
-    ----------
-    .. [1] Raymer, D., "Aircraft Design: A Conceptual Approach", AIAA Education Series
-    .. [2] Torenbeek, E., "Synthesis of Subsonic Airplane Design", Delft University Press
     """
     
     def __defaults__(self):

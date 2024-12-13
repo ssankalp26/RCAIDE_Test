@@ -1,5 +1,4 @@
-## @ingroup Components-Propulsors-Modulators
-# RCAIDE/Library/Components/Propulsors/Modulators/Electronic_Speed_Controller.py
+# RCAIDE/Library/Components/Energy/Modulators/Electronic_Speed_Controller.py
 # 
 # 
 # 
@@ -16,9 +15,36 @@ from RCAIDE.Library.Methods.Propulsors.Modulators.Electronic_Speed_Controller.ap
 # ----------------------------------------------------------------------------------------------------------------------
 #  Electronic Speed Controller Class
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Energy-Distributors
 class Electronic_Speed_Controller(Component):
+    """
+    A class for modeling electronic speed controllers (ESC) in aircraft propulsion systems.
+    Inherits from the base Component class.
+
+    Attributes
+    ----------
+    tag : str
+        Identifier for the component, defaults to 'electronic_speed_controller'
     
+    efficiency : float
+        Efficiency of the speed controller, defaults to 0.0
+
+    Methods
+    -------
+    append_operating_conditions(segment, bus, propulsor)
+        Appends operating conditions for a specific flight segment, bus, and propulsor
+
+    Notes
+    -----
+    The Electronic_Speed_Controller class manages the speed control of electric motors
+    in aircraft propulsion systems. It regulates power delivery from the electrical
+    bus to the propulsor and accounts for efficiency losses in the process.
+    
+    **Definitions**
+    'ESC'
+        Electronic Speed Controller - device that controls motor speed by regulating power
+    'Operating Conditions'
+        Set of parameters defining the ESC's state during operation
+    """
     def __defaults__(self):
         """ This sets the default values.
     
