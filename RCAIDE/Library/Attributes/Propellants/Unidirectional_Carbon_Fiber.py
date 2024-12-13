@@ -10,7 +10,7 @@
 #-------------------------------------------------------------------------------
 
 from .Solid import Solid
-from Legacy.trunk.S.Core import Units
+from RCAIDE.Framework.Core import Units
 
 #-------------------------------------------------------------------------------
 # Uni-Directional Carbon Fiber Solid Class
