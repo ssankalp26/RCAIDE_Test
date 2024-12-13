@@ -47,15 +47,11 @@ def orientations(segment):
     # unpack
     conditions              = segment.state.conditions
     V_inertial              = conditions.frames.inertial.velocity_vector
-    body_inertial_rotations = conditions.frames.body.inertial_rotations
- 
-    # Apply Rotation Rates 
-    I            = segment.state.numerics.time.integrate
-    omega        = segment.state.conditions.frames.inertial.angular_velocity_vector  
-    if len(I) != 0:
-        delta_angles = np.dot(I,omega)
-        body_inertial_rotations += delta_angles
-
+    body_inertial_rotations = conditions.frames.body.inertial_rotations 
+    roll_rate               = segment.state.conditions.static_stability.roll_rate      
+    pitch_rate              = segment.state.conditions.static_stability.pitch_rate 
+    yaw_rate                = segment.state.conditions.static_stability.yaw_rate    
+    
     # ------------------------------------------------------------------
     #  Body Frame
     # ------------------------------------------------------------------
@@ -106,6 +102,23 @@ def orientations(segment):
 
     # pack transformation tensor
     conditions.frames.wind.transform_to_inertial = T_wind2inertial
+    
+    # ------------------------------------------------------------------
+    # Rotation rates 
+    # ------------------------------------------------------------------ 
+    stability_frame_rotations       =  np.concatenate((np.concatenate((roll_rate, pitch_rate), axis=1), yaw_rate), axis=1)
+    phi                             = body_inertial_rotations[:, 0]
+    theta                           = body_inertial_rotations[:, 1]
+    reverse_transformation          = np.zeros_like(T_body2inertial)
+    reverse_transformation[:, 0, 0] =  1 
+    reverse_transformation[:, 0, 1] =  np.sin(phi)*np.tan(theta)
+    reverse_transformation[:, 0, 2] =  np.cos(phi)*np.tan(theta)
+    reverse_transformation[:, 1, 1] =  np.cos(phi)
+    reverse_transformation[:, 1, 2] =  -np.sin(phi) 
+    reverse_transformation[:, 2, 1] =  np.sin(phi) /np.cos(theta)
+    reverse_transformation[:, 2, 2] =  np.cos(phi) /np.cos(theta) 
+    inertial_rotations              =  orientation_product(reverse_transformation,stability_frame_rotations)
+    segment.state.conditions.frames.inertial.angular_velocity_vector = inertial_rotations 
     
     return
          

@@ -67,7 +67,7 @@ def set_optimized_parameters(rotor,optimization_problem):
     rotor.radius_distribution               = optimal_hover_rotor.radius_distribution         
     rotor.number_of_blades                  = optimal_hover_rotor.number_of_blades               
     rotor.mid_chord_alignment               = optimal_hover_rotor.mid_chord_alignment         
-    rotor.thickness_to_chord                = optimal_hover_rotor.thickness_to_chord          
+    rotor.thickness_to_chord                = optimal_hover_rotor.max_thickness_distribution / optimal_hover_rotor.chord_distribution
     rotor.blade_solidity                    = optimal_hover_rotor.blade_solidity   
     
     return rotor 

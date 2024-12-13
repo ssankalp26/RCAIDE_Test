@@ -35,34 +35,50 @@ def aerodynamics(segment):
     aerodynamics_model = segment.analyses.aerodynamics
     q                  = segment.state.conditions.freestream.dynamic_pressure
     Sref               = aerodynamics_model.vehicle.reference_area
-    CLmax              = aerodynamics_model.settings.maximum_lift_coefficient
+    CLmax              = aerodynamics_model.settings.maximum_lift_coefficient 
+    MAC                = aerodynamics_model.vehicle.wings.main_wing.chords.mean_aerodynamic
+    span               = aerodynamics_model.vehicle.wings.main_wing.spans.projected 
     
     # call aerodynamics model
-    results = aerodynamics_model(segment)    
-    
-    # unpack results
+    _ = aerodynamics_model(segment)     
+
+    # Forces 
     CL = conditions.aerodynamics.coefficients.lift.total
     CD = conditions.aerodynamics.coefficients.drag.total
+    CY = conditions.static_stability.coefficients.Y
 
     CL[q<=0.0] = 0.0
     CD[q<=0.0] = 0.0
-    
-    # CL limit
     CL[CL>CLmax] = CLmax
-    
     CL[CL< -CLmax] = -CLmax
-        
-    # dimensionalize
-    F = segment.state.ones_row(3) * 0.0
 
+    # dimensionalize
+    F      = segment.state.ones_row(3) * 0.0
     F[:,2] = ( -CL * q * Sref )[:,0]
+    F[:,1] = ( -CY * q * Sref )[:,0]
     F[:,0] = ( -CD * q * Sref )[:,0]
 
-    results.force_vector = F
-
-    # pack conditions
+    # rewrite aerodynamic CL and CD
     conditions.aerodynamics.coefficients.lift.total  = CL
     conditions.aerodynamics.coefficients.drag.total  = CD
     conditions.frames.wind.force_vector[:,:]   = F[:,:]
+
+    # -----------------------------------------------------------------
+    # Moments
+    # -----------------------------------------------------------------
+    CM = conditions.static_stability.coefficients.M
+    CL = conditions.static_stability.coefficients.L
+    CN = conditions.static_stability.coefficients.N
+
+    CM[q<=0.0] = 0.0
+
+    # dimensionalize
+    M      = segment.state.ones_row(3) * 0.0
+    M[:,0] = (CL[:,0] * q[:,0] * Sref * span)
+    M[:,1] = (CM[:,0] * q[:,0] * Sref * MAC)
+    M[:,2] = (CN[:,0] * q[:,0] * Sref * span)
+
+    # pack conditions
+    conditions.frames.wind.moment_vector[:,:] = M[:,:] 
 
     return

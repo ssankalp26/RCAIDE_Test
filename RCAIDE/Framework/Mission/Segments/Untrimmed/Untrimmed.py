@@ -69,9 +69,9 @@ class Untrimmed(Segment):
         self.linear_acceleration_x                   = 0.
         self.linear_acceleration_y                   = 0.  
         self.linear_acceleration_z                   = 0. # note that down is positive
-        self.angular_acceleration_x                  = 0.
-        self.angular_acceleration_y                  = 0.  
-        self.angular_acceleration_z                  = 0.  
+        self.roll_rate                               = 0.
+        self.pitch_rate                              = 0.  
+        self.yaw_rate                                = 0.  
         self.state.numerics.number_of_control_points = 2     
         self.state.conditions.update(Results())
         
@@ -106,13 +106,13 @@ class Untrimmed(Segment):
         # Update Conditions
         iterate.conditions = Process()
         iterate.conditions.differentials         = Common.Update.differentials_time
-        iterate.conditions.acceleration          = skip
-        iterate.conditions.angular_acceleration  = skip
+        iterate.conditions.orientations          = Common.Update.orientations
+        iterate.conditions.acceleration          = skip # Common.Update.acceleration
+        iterate.conditions.angular_acceleration  = skip # Common.Update.angular_acceleration
         iterate.conditions.altitude              = Common.Update.altitude
         iterate.conditions.atmosphere            = Common.Update.atmosphere
         iterate.conditions.gravity               = Common.Update.gravity
-        iterate.conditions.freestream            = Common.Update.freestream
-        iterate.conditions.orientations          = Common.Update.orientations
+        iterate.conditions.freestream            = Common.Update.freestream 
         iterate.conditions.thrust                = Common.Update.thrust
         iterate.conditions.aerodynamics          = Common.Update.aerodynamics
         iterate.conditions.stability             = Common.Update.stability

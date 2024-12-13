@@ -74,24 +74,25 @@ class Constant_Throttle_Constant_Altitude(Evaluate):
 
         # Update Conditions
         iterate.conditions = Process()
-        iterate.conditions.differentials   = Common.Update.differentials_time 
-        iterate.conditions.velocity        = Segments.Cruise.Constant_Throttle_Constant_Altitude.integrate_velocity     
-        iterate.conditions.acceleration    = Common.Update.acceleration   
-        iterate.conditions.altitude        = Common.Update.altitude
-        iterate.conditions.atmosphere      = Common.Update.atmosphere
-        iterate.conditions.gravity         = Common.Update.gravity
-        iterate.conditions.freestream      = Common.Update.freestream
-        iterate.conditions.orientations    = Common.Update.orientations
-        iterate.conditions.energy          = Common.Update.thrust
-        iterate.conditions.aerodynamics    = Common.Update.aerodynamics
-        iterate.conditions.stability       = Common.Update.stability
-        iterate.conditions.weights         = Common.Update.weights
-        iterate.conditions.forces          = Common.Update.forces
-        iterate.conditions.moments         = Common.Update.moments
-        iterate.conditions.planet_position = Common.Update.planet_position
-        iterate.residuals.flight_dynamics  = Common.Residuals.flight_dynamics
-        iterate.residuals.velocity         = Segments.Cruise.Constant_Throttle_Constant_Altitude.solve_velocity
-        iterate.unknowns.mission           = Common.Unpack_Unknowns.orientation  
-        iterate.unknowns.acceleration      = Segments.Cruise.Constant_Throttle_Constant_Altitude.unpack_unknowns  
+        iterate.conditions.differentials         = Common.Update.differentials_time 
+        iterate.conditions.velocity              = Segments.Cruise.Constant_Throttle_Constant_Altitude.integrate_velocity 
+        iterate.conditions.orientations          = Common.Update.orientations    
+        iterate.conditions.acceleration          = Common.Update.acceleration 
+        iterate.conditions.angular_acceleration  = Common.Update.angular_acceleration  
+        iterate.conditions.altitude              = Common.Update.altitude
+        iterate.conditions.atmosphere            = Common.Update.atmosphere
+        iterate.conditions.gravity               = Common.Update.gravity
+        iterate.conditions.freestream            = Common.Update.freestream
+        iterate.conditions.energy                = Common.Update.thrust
+        iterate.conditions.aerodynamics          = Common.Update.aerodynamics
+        iterate.conditions.stability             = Common.Update.stability
+        iterate.conditions.weights               = Common.Update.weights
+        iterate.conditions.forces                = Common.Update.forces
+        iterate.conditions.moments               = Common.Update.moments
+        iterate.conditions.planet_position       = Common.Update.planet_position
+        iterate.residuals.flight_dynamics        = Common.Residuals.flight_dynamics
+        iterate.residuals.velocity               = Segments.Cruise.Constant_Throttle_Constant_Altitude.solve_velocity
+        iterate.unknowns.mission                 = Common.Unpack_Unknowns.orientation  
+        iterate.unknowns.acceleration            = Segments.Cruise.Constant_Throttle_Constant_Altitude.unpack_unknowns  
 
         return

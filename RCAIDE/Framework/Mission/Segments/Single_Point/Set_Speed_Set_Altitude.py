@@ -58,9 +58,9 @@ class Set_Speed_Set_Altitude(Evaluate):
         self.linear_acceleration_x                   = 0.
         self.linear_acceleration_y                   = 0.  
         self.linear_acceleration_z                   = 0. # note that down is positive
-        self.angular_acceleration_x                  = 0.
-        self.angular_acceleration_y                  = 0.  
-        self.angular_acceleration_z                  = 0.  
+        self.roll_rate                               = 0.
+        self.pitch_rate                              = 0.  
+        self.yaw_rate                                = 0.  
         self.state.numerics.number_of_control_points = 1   
          
         # -------------------------------------------------------------------------------------------------------------- 
