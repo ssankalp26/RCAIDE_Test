@@ -1,9 +1,3 @@
-## @ingroup Methods-Geometry-Three_Dimensional
-# compute_span_location_from_chord_length.py
-# 
-# Created:  Oct 2015, M. Vegh, 
-# Modified: Jan 2016, E. Botero
-# Modified: Jan 2019, E. Botero
 
 # ----------------------------------------------------------------------
 #  Compute Span Location from Chord Length

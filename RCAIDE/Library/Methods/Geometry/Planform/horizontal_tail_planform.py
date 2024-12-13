@@ -1,8 +1,3 @@
-## @ingroup Methods-Geometry-Two_Dimensional-Cross_Section-Planform
-# horizontal_tail_planform.py
-#
-# Created:  Mar 2013, SUAVE Team
-# Modified: Jan 2016, E. Botero
 
 # ----------------------------------------------------------------------
 #  Imports

@@ -1,9 +1,3 @@
-## @ingroup Methods-Geometry-Two_Dimensional-Cross_Section-Planform
-# horizontal_tail_planform_raymer.py
-#
-# Created:  ### ####, M. Vegh
-# Modified: Feb 2016, E. Botero
-#           Jan 2016, E. Botero
 
 from .wing_planform import wing_planform
 # ----------------------------------------------------------------------

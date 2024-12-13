@@ -9,7 +9,7 @@
 #  Imports
 # ----------------------------------------------------------------------
 
-from Legacy.trunk.S.Methods.Geometry.Two_Dimensional.Planform  import wing_planform
+from RCAIDE.Library.Methods.Geometry.Planform  import wing_planform
 
 # ----------------------------------------------------------------------
 #  Methods

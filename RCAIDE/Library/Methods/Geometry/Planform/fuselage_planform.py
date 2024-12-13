@@ -1,15 +1,4 @@
-## @ingroup Methods-Geometry-Two_Dimensional-Cross_Section-Planform
-# fuselage_planform.py
-#
-# Created:  Jul 2014, T. MacDonald
-# Modified: Jan 2016, E. Botero
-#           May 2020, E. Botero
 
-
-# TODO:
-# object placement, wing location
-# tail: placed at end of fuselage, or pull from volume
-# engines: number of engines, position by 757
 
 # ----------------------------------------------------------------------
 #  Imports

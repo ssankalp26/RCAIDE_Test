@@ -1,8 +1,3 @@
-## @ingroup Methods-Geometry-Two_Dimensional-Cross_Section-Planform
-# wing_fuel_volume.py
-#
-# Created:  Apr 2014, T. Orra
-# Modified: Sep 2016, E. Botero
 
 # ----------------------------------------------------------------------
 #  Correlation-based methods for wing fuel capacity estimation

@@ -1,14 +1,9 @@
-## @ingroup Planform
-#rescale_non_dimensional.py
-
-# Created : May 2020, E. Botero
-# Modified:
 
 # ----------------------------------------------------------------------
 #  Imports
 # ----------------------------------------------------------------------
 
-import Legacy.trunk.S as SUAVE
+from  RCAIDE import  * 
 import numpy as np
 
 
