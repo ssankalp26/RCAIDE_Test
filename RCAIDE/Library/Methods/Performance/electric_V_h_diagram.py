@@ -9,7 +9,7 @@
 #------------------------------------------------------------------------------
 
 import Legacy.trunk.S as SUAVE
-from Legacy.trunk.S.Core import Units
+from RCAIDE.Framework.Core import Units
 
 from Legacy.trunk.S.Methods.Performance.propeller_single_point import propeller_single_point
 

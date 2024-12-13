@@ -8,7 +8,7 @@
 #  Imports
 # ----------------------------------------------------------------------
 import Legacy.trunk.S as SUAVE
-from Legacy.trunk.S.Core import Units , Data
+from RCAIDE.Framework.Core import Units , Data
 import numpy as np
 import scipy as sp
 import string

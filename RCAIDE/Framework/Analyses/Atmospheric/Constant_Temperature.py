@@ -1,27 +1,14 @@
-## @ingroup Analyses-Atmospheric
-# Constant_Temperature.py
-#
-# Created:  Mar 2014, SUAVE Team
-# Modified: Feb 2016, A. Wendorff
-#           Jan 2018, W. Maier
-# ----------------------------------------------------------------------
-#  Imports
-# ----------------------------------------------------------------------
-
 import numpy as np
 from warnings import warn
+ 
+import RCAIDE
+from RCAIDE.Framework.Core import Units
+from RCAIDE.Framework.Analyses.Atmospheric import Atmospheric
+from RCAIDE.Framework.Mission.Common.Conditions import Conditions 
+from RCAIDE.Framework.Core.Arrays import atleast_2d_col 
+from RCAIDE.Library.Attributes.Gases import Air
+from RCAIDE.Library.Attributes.Planets import Earth
 
-import Legacy.trunk.S as SUAVE
-
-from Legacy.trunk.S.Analyses.Atmospheric import Atmospheric
-
-from Legacy.trunk.S.Attributes.Gases import Air
-from Legacy.trunk.S.Attributes.Planets import Earth
-
-from Legacy.trunk.S.Analyses.Mission.Segments.Conditions import Conditions
-
-from Legacy.trunk.S.Core import Units
-from Legacy.trunk.S.Core.Arrays import atleast_2d_col
 
 
 # ----------------------------------------------------------------------

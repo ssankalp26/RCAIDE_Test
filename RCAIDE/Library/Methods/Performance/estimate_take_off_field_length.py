@@ -15,12 +15,11 @@
 
 # SUave Imports
 import Legacy.trunk.S as SUAVE
-from Legacy.trunk.S.Core            import Data, Units
-
+from RCAIDE.Framework.Core            import Data, Units
 from RCAIDE.Library.Methods.Aerodynamics.Common.Helper_Functions import windmilling_drag
 from RCAIDE.Library.Methods.Aerodynamics.Common.Helper_Functions import estimate_2ndseg_lift_drag_ratio
 from RCAIDE.Library.Methods.Aerodynamics.Common.Helper_Functions import asymmetry_drag
-from  RCAIDE.Library.Methods.Aerodynamics.Common.Lift import compute_max_lift_coeff
+from RCAIDE.Library.Methods.Aerodynamics.Common.Lift import compute_max_lift_coeff
 
 # package imports
 import numpy as np

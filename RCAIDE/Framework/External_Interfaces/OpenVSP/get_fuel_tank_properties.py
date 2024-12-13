@@ -14,7 +14,7 @@ except ImportError:
         # This allows SUAVE to build without OpenVSP
         pass
 import numpy as np
-from Legacy.trunk.S.Core import Data
+from RCAIDE.Framework.Core import Data
 
 ## @ingroup Input_Output-OpenVSP
 def get_fuel_tank_properties(vehicle,tag,fuel_tank_set_index=3,slices_for_calculation=100):

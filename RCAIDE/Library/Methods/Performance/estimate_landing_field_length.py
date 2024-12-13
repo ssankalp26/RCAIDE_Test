@@ -12,7 +12,7 @@
 # ----------------------------------------------------------------------
 
 import Legacy.trunk.S as SUAVE
-from   Legacy.trunk.S.Core import Data, Units
+from   RCAIDE.Framework.Core import Data, Units
 from Legacy.trunk.S.Methods.Aerodynamics.Fidelity_Zero.Lift import compute_max_lift_coeff
 
 import numpy as np

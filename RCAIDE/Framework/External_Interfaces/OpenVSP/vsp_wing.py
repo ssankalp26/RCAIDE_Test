@@ -13,7 +13,7 @@
 # ----------------------------------------------------------------------
 
 import Legacy.trunk.S as SUAVE
-from Legacy.trunk.S.Core import Units , Data
+from RCAIDE.Framework.Core import Units , Data
 from Legacy.trunk.S.Components.Airfoils.Airfoil import Airfoil
 from Legacy.trunk.S.Methods.Geometry.Two_Dimensional.Planform import wing_planform, wing_segmented_planform
 import numpy as np
