@@ -8,7 +8,7 @@
 # ----------------------------------------------------------------------------------------------------------------------    
 # package imports
 import numpy as np 
-from Legacy.trunk.S.Methods.Propulsion.fm_id import fm_id
+from RCAIDE.Library.Methods.Propulsion.fm_id import fm_id
 
 # exceptions/warnings
 from warnings import warn
