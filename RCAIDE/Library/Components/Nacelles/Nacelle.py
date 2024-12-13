@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Nacelles
 # RCAIDE/Compoments/Nacelles/Nacelle.py
 # 
 # 
@@ -17,15 +16,74 @@ import numpy as np
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Nacalle
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Nacelles
 class Nacelle(Component):
-    """ This is a nacelle for a generic aircraft.
+    """
+    A base class for modeling aircraft engine nacelles and their integration.
+    Inherits from the Component class.
+
+    Attributes
+    ----------
+    tag : str
+        Identifier for the component, defaults to 'nacelle'
+    origin : array
+        Origin of the nacelle [x, y, z], defaults to [0.0, 0.0, 0.0]
+    aerodynamic_center : array
+        Aerodynamic center of the nacelle [x, y, z], defaults to [0.0, 0.0, 0.0]
+    areas : Data
+        Collection of area-related properties
+        - wetted : float
+            Total wetted area, defaults to 0.0
+        - frontal : float
+            Frontal area, defaults to 0.0
+        - inlet : float
+            Inlet area, defaults to 0.0
+        - exit : float
+            Exit area, defaults to 0.0
+
+    mass_properties : Data
+        Collection of mass-related properties
+        - mass : float
+            Total mass of the nacelle assembly, defaults to 0.0
+        - center_of_gravity : array
+            CG location of the nacelle [x, y, z], defaults to [0.0, 0.0, 0.0]
+        - moments_of_inertia : array
+            Moments of inertia [Ixx, Iyy, Izz], defaults to [0.0, 0.0, 0.0]
+    diameter : float
+        Diameter of the nacelle, defaults to 0.0
+    inlet_diameter : float
+        Diameter of the inlet, defaults to 0.0
+    length : float
+        Length of the nacelle, defaults to 0.0
+    orientation_euler_angles : array
+        Euler angles [roll, pitch, yaw], defaults to [0.0, 0.0, 0.0]
+    flow_through : bool
+        Whether the nacelle is flow-through, defaults to True
+    has_pylon : bool
+        Whether the nacelle has a pylon, defaults to True
+    differential_pressure : float
+        Differential pressure across the nacelle, defaults to 0.0
+    cowling_airfoil_angle : float
+        Angle of the cowling airfoil, defaults to 0.0
+
+    Methods
+    -------
+    nac_vel_to_body()
+        Rotates from the systems body frame to the nacelles velocity frame
+    body_to_nac_vel()
+        Rotates from the systems body frame to the nacelles velocity frame
+    vec_to_vel()
+        Rotates from the nacelles vehicle frame to the nacelles velocity frame
+
+    Notes
+    -----
+    The Nacelle class serves as a base class for all nacelle types,
+    providing common attributes and methods for nacelle modeling. It includes
+    properties needed for aerodynamic, structural, and integration analysis.
+    This class is meant to be inherited by specific nacelle implementations.
     
-    Assumptions:
-    None
-    
-    Source:
-    N/A
+    **Definitions**
+    'Wetted Area'
+        Total surface area exposed to airflow
     """
     
     def __defaults__(self):

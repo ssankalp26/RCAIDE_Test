@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Nacelles
 # RCAIDE/Compoments/Nacelles/Body_of_Revolution_Nacelle.py
 # 
 # 
@@ -15,15 +14,22 @@ from .Nacelle import Nacelle
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Nacalle
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Nacelles
 class Body_of_Revolution_Nacelle(Nacelle):
-    """ This is a body of revolution nacelle for a generic aircraft.
-    
-    Assumptions:
-    None
-    
-    Source:
-    N/A
+    """
+    A class for modeling axisymmetric nacelles in aircraft propulsion systems.
+    Inherits from the Nacelle class.
+
+    Attributes
+    ----------
+    tag : str
+        Identifier for the component, defaults to 'body_of_revolution_nacelle'
+    Airfoil : Data()
+        Data object containing airfoil data
+        
+    Notes
+    -----
+    The Body_of_Revolution_Nacelle class models axisymmetric nacelles using
+    analytical methods.
     """
     
     def __defaults__(self):

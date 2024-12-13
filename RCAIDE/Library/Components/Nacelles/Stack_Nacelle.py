@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Nacelles
 # RCAIDE/Compoments/Nacelles/Stack_Nacelle.py
 # 
 # 
@@ -14,15 +13,35 @@ from .Nacelle import Nacelle
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Nacalle
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Nacelles
 class Stack_Nacelle(Nacelle):
-    """ This is a stacked nacelle for a generic aircraft.
+    """
+    A class for modeling nacelles composed of multiple segments.
+    Inherits from the Nacelle class.
+
+    Attributes
+    ----------
+    tag : str
+        Identifier for the component, defaults to 'stack_nacelle'
+
+    Segments : Data
+        Collection of Segment objects that make up the nacelle
+
+    Methods
+    -------
+    append_segment(segment)
+        Adds a new segment to the nacelle
+
+    Notes
+    -----
+    The Stack_Nacelle class enables the construction of complex nacelle geometries
+    through the combination of multiple segments. Each segment can have unique
+    dimensions and properties, allowing for detailed geometric definition of the
+    nacelle shape. This approach provides flexibility in modeling various nacelle
+    configurations.
     
-    Assumptions:
-    None
-    
-    Source:
-    N/A
+    **Definitions**
+    'Segment'
+        Individual section of the nacelle with unique geometric properties
     """
     
     def __defaults__(self):

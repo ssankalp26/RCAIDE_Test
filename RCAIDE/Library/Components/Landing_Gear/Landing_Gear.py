@@ -12,14 +12,34 @@ from RCAIDE.Library.Components import Component
 #  Landing_Gear
 # ----------------------------------------------------------------------------------------------------------------------  
 class Landing_Gear(Component):
-    """ The Top Landing Gear Component Class
-        
-            Assumptions:
-            None
-            
-            Source:
-            N/A
+    """
+    A base class for modeling aircraft landing gear systems.
+    Inherits from the Component class.
+
+    Attributes
+    ----------
+    tag : str
+        Identifier for the component, defaults to 'landing_gear'
+    tire_diameter : float
+        Diameter of the tire, defaults to 0.0
+    strut_length : float
+        Length of the strut, defaults to 0.0
+    units : float
+        Units of the gear, defaults to 0.0
+    gear_extended : bool
+        Whether the gear is extended, defaults to False
+    wheels : float
+        Number of wheels, defaults to 0.0
     
+    Notes
+    -----
+    The Landing_Gear class serves as a base class for all landing gear types,
+    providing common attributes and methods for landing gear modeling. It includes
+    properties needed for structural, dynamic, and kinematic analysis.
+    
+    **Definitions**
+    'Strut'
+        Main structural member of the landing gear
     """
 
     def __defaults__(self):

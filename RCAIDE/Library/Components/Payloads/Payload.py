@@ -1,4 +1,3 @@
-## @ingroup Energy-Peripherals
 # RCAIDE/Energy/Peripherals/Payload.py
 # 
 # 
@@ -14,16 +13,35 @@ from RCAIDE.Library.Methods.Propulsors.Common.append_payload_conditions import a
 # ----------------------------------------------------------------------------------------------------------------------
 #  Avionics
 # ----------------------------------------------------------------------------------------------------------------------           
-## @ingroup Energy-Peripherals  
 class Payload(Component):
-    """A class representing a payload.
+    """
+    A class representing a generic payload component in an aircraft or vehicle system.
+
+    Attributes
+    ----------
+    tag : str
+        Identifier for the payload component, defaults to 'payload'
+    power_draw : float
+        Power consumption of the payload in Watts, defaults to 0.0
+
+    Methods
+    -------
+    append_operating_conditions(segment, bus)
+        Appends payload operating conditions to the specified segment and bus
+    power()
+        Calculates and returns the current power draw of the payload
+
+    Notes
+    -----
+    The Payload class is designed to represent any generic payload that may be carried
+    by the vehicle. It primarily tracks power consumption characteristics and can be
+    extended for specific payload types.
     
-    Assumptions:
-    None
-    
-    Source:
-    N/A
-    """          
+    **Definitions**
+    'Power Draw'
+        The electrical power consumed by the payload component during operation,
+        measured in Watts
+"""         
     def __defaults__(self):
         """This sets the default power draw.
 
