@@ -9,7 +9,7 @@
 # Imports
 #-------------------------------------------------------------------------------
 
-from Legacy.trunk.S.Core import Data, Units
+from RCAIDE.Framework.Core import Data, Units
 
 #-------------------------------------------------------------------------------
 # Solid Data Class

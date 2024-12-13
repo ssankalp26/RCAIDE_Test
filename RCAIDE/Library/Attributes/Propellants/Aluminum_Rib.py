@@ -11,7 +11,7 @@
 
 from .Solid import Solid
 from .Aluminum import Aluminum
-from Legacy.trunk.S.Core import Units
+from RCAIDE.Framework.Core import Units
 
 #-------------------------------------------------------------------------------
 # Aluminim Component Material Property Data Class
