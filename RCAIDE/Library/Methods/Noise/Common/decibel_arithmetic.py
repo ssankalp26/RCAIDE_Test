@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Common 
 # RCAIDE/Methods/Noise/Common/decibel_arithmetic.py
 # 
 # 
@@ -12,8 +11,7 @@ import numpy as np
     
 # ----------------------------------------------------------------------------------------------------------------------  
 #  pressure_ratio_to_SPL_arithmetic
-# ----------------------------------------------------------------------------------------------------------------------      
-## @ingroup Methods-Noise-Common  
+# ----------------------------------------------------------------------------------------------------------------------       
 def pressure_ratio_to_SPL_arithmetic(p_pref_total):
     ''' This computes the total SPL given mutiple acoustic pressure ratios 
     of one of mutiple sources
@@ -42,7 +40,6 @@ def pressure_ratio_to_SPL_arithmetic(p_pref_total):
 # ----------------------------------------------------------------------------------------------------------------------  
 #  SPL_arithmetic
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Methods-Noise-Common
 def SPL_arithmetic(SPL, sum_axis):
     '''This computes the total SPL from multiple sources 
     using decibel arithmetic  
@@ -76,7 +73,6 @@ def SPL_arithmetic(SPL, sum_axis):
 # ----------------------------------------------------------------------------------------------------------------------  
 #  SPL_average
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Methods-Noise-Common
 def SPL_average(SPL, avg_axis):
     '''This computes the average SPL from multiple azimuthal locations 
     using decibel arithmetic  

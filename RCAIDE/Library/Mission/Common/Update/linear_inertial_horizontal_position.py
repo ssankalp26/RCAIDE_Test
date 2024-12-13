@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Common Common-Update
 # RCAIDE/Library/Missions/Common/Update/linear_inertial_horizontal_position.py
 # 
 # 
@@ -14,7 +13,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Integrate Position
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Common-Update
  
 def linear_inertial_horizontal_position(segment):
     """ Determines how far the airplane has traveled. 

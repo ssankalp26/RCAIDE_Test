@@ -1,4 +1,3 @@
-## @defgroup Methods-Performance Performance
 # RCAIDE/Methods/Performance/__init__.py
 # 
 

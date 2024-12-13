@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Ground
 # RCAIDE/Framework/Analyses/Mission/Segments/Ground/Ground.py
 # 
 # 
@@ -9,15 +8,13 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE imports
-from RCAIDE.Framework.Core                                      import Units , Data 
-from RCAIDE.Framework.Mission.Segments.Evaluate        import Evaluate
+from RCAIDE.Framework.Core                            import Units , Data 
+from RCAIDE.Framework.Mission.Segments.Evaluate       import Evaluate
 from RCAIDE.Library.Mission.Common                    import Residuals , Unpack_Unknowns, Update
  
 # ----------------------------------------------------------------------------------------------------------------------
 #  Ground
-# ----------------------------------------------------------------------------------------------------------------------
-
-## @ingroup Analyses-Mission-Segments-Ground
+# ---------------------------------------------------------------------------------------------------------------------- 
 class Ground(Evaluate):
     """ Base segment for takeoff and landing segments. Integrates equations of motion
         including rolling friction.

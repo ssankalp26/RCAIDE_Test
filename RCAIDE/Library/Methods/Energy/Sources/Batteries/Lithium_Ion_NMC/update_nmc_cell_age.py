@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Sources-Battery-Lithium_Ion_NMC
 # RCAIDE/Methods/Energy/Sources/Battery/Lithium_Ion_NMC/update_nmc_cell_age.py
 # 
 # 

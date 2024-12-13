@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Hover
 # RCAIDE/Library/Missions/Segments/Hover/Hover.py
 # 
 # 
@@ -8,7 +7,6 @@
 #  Initialize Conditions
 # ----------------------------------------------------------------------------------------------------------------------  
 
-## @ingroup Library-Missions-Segments-Hover
 def initialize_conditions(segment):
     """Sets the specified conditions which are given for the segment type.
 

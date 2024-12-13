@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Performance-Common
 # RCAIDE/Library/Plots/Performance/Common/set_axes.py
 # 
 # 
@@ -7,7 +6,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------    
-## @ingroup Library-Plots-Performance-Common
 def set_axes(axes):
     """This sets the axis parameters for all plots
 

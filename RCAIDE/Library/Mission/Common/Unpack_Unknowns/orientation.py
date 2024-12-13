@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Common-Unpack_Unknowns
 # RCAIDE/Library/Missions/Common/Unpack_Unknowns/orientation.py
 # 
 # 
@@ -6,7 +5,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  Unpack Unknowns
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Common-Unpack_Unknowns
 def orientation(segment): 
         
     ctrls    = segment.assigned_control_variables 

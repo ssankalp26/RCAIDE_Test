@@ -1,4 +1,3 @@
-## @defgroup Methods-Energy-Propulsion-Converters-Common Common 
 # RCAIDE/Methods/Energy/Propulsion/Converters/Common/__init__.py
 # 
 

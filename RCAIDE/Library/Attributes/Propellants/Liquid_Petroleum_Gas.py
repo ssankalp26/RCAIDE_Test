@@ -1,4 +1,3 @@
-## @ingroup Library-Attributes-Propellants
 # RCAIDE/Library/Attributes/Propellants/Liquid_Petroleum_Gas.py
 # 
 #
@@ -12,8 +11,7 @@ from .Propellant import Propellant
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Gaseous_Hydrogen Class
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup  Library-Attributes-Propellants 
+# ----------------------------------------------------------------------------------------------------------------------   
 class Liquid_Petroleum_Gas(Propellant):
     """Liquid petroleum gas fuel class,
     """

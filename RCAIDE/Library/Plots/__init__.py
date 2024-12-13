@@ -1,4 +1,3 @@
-## @defgroup Visualization
 # RCAIDE/Library/Plots/__init__.py
 # 
 

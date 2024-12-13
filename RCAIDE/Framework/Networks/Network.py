@@ -18,18 +18,20 @@ class Network(Component):
     """
     def __defaults__(self):
         """ This sets the default attributes for the network.
-        
+
             Assumptions:
                 None
-            
+
             Source:
                 None 
         """
         self.tag                          = 'network'
+        self.propulsors                   = Container()  
         self.busses                       = Container()
         self.coolant_lines                = Container()
-        self.fuel_lines                   = Container()
-
+        self.fuel_lines                   = Container() 
+        self.identical_propulsors         = True
+        
 # ----------------------------------------------------------------------
 #  Component Container
 # ---------------------------------------------------------------------- 
@@ -38,23 +40,23 @@ class Container(Component.Container):
     """
     def evaluate(self,state,center_of_gravity):
         """ This is used to evaluate the thrust produced by the network.
-        
+
             Assumptions:  
                 If multiple networks are attached their performances will be summed
-            
+
             Source:
                 None
-            
+
             Args:
                 State (dict): flight conditions 
-            
+
             Returns:
                 results (dict): Results of the evaluate method 
         """ 
         for net in self.values(): 
             net.evaluate(state,center_of_gravity)  
-        return  
-    
+        return   
+
 # ----------------------------------------------------------------------
 #  Handle Linking
 # ----------------------------------------------------------------------

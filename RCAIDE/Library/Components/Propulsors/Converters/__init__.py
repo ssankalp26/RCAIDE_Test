@@ -1,4 +1,3 @@
-## @defgroup Components-Propulsors-Converters Converters
 # RCAIDE/Library/Components/Propulsors/Converters/__init__.py
 # 
 
@@ -8,8 +7,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
-
-## @ingroup Energy
 
 from .Combustor                                  import Combustor
 from .Compressor                                 import Compressor

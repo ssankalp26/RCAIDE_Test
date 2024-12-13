@@ -1,4 +1,3 @@
-## @ingroup Framework-Analyses-Common
 # RCAIDE/Framework/Analyses/Common/Process_Geometry.py
 # 
 # 
@@ -15,7 +14,6 @@ from RCAIDE.Framework.Analyses import Process
 # ----------------------------------------------------------------------------------------------------------------------
 #  Analysis
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Framework-Analyses-Common
 class Process_Geometry(Process):
     """A process for evaluate over a component group.
 

@@ -1,4 +1,3 @@
-## @ingroup Methods-Stability-Common
 # RCAIDE/Methods/Stability/Common/mass_and_intertia_functions.py 
 # 
 # Created:  Jul 2023, M. Clarke 
@@ -15,8 +14,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Recursive Moment
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Methods-Stability-Common 
+# ----------------------------------------------------------------------------------------------------------------------   
 def sum_moment(component):
     """ Recursively sums up the moment of all compoments and subcomponents
 
@@ -53,8 +51,7 @@ def sum_moment(component):
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Recursive Moment of Intertia 
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Methods-Stability-Common 
+# ----------------------------------------------------------------------------------------------------------------------   
 def sum_moment_of_inertia(component, vehicle_center_of_gravity = None): 
     """ Recursively sums up the moment of intertia of all compoments and subcomponents
 

@@ -1,5 +1,4 @@
-## @ingroup Library-Attributes-Costs
-# RCAIDE/Library/Attributes/Costs/Operating_Costs.py
+ # RCAIDE/Library/Attributes/Costs/Operating_Costs.py
 # 
 #
 # Created:  Mar 2024, M. Clarke
@@ -13,7 +12,6 @@ from RCAIDE.Framework.Core import Data
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Operating_Costs Class
 # ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Attributes-Costs
 class Operating_Costs(Data):
     """A class containing operating cost variables.
     """    

@@ -1,4 +1,3 @@
-## @ingroup Library-Methods-Performance
 # RCAIDE/Library/Methods/Performance/payload_range_diagram.py
 # 
 # 

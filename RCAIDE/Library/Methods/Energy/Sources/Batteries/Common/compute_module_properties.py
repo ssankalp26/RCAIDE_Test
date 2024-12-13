@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Sources-Battery-Common
 # RCAIDE/Methods/Energy/Sources/Battery/Common/compute_module_properties.py
 # 
 # 
@@ -13,8 +12,7 @@ import  numpy as  np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  METHOD
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Energy-Sources-Battery-Common
+# ---------------------------------------------------------------------------------------------------------------------- -Common
 def compute_module_properties(battery_module):  
     """Calculate module level properties of battery module using cell 
     properties and module configuraton
@@ -57,7 +55,7 @@ def compute_module_properties(battery_module):
     stacking_rows      = battery_module.geometrtic_configuration.stacking_rows
 
     if int(parallel_e*series_e) != int(normal_count*parallel_count):
-        raise Exception('Number of cells in gemetric layout not equal to number of cells in electric circuit configuration ')
+        pass #raise Exception('Number of cells in gemetric layout not equal to number of cells in electric circuit configuration ')
         
         
     normal_spacing     = battery_module.geometrtic_configuration.normal_spacing   

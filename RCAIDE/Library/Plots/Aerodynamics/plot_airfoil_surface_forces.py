@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Performance-Aerodynamics  
 # RCAIDE/Library/Plots/Performance/Aerodynamics/plot_airfoil_surface_forces.py
 # 
 # 
@@ -14,8 +13,6 @@ import matplotlib.pyplot as plt
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------     
-
-## @ingroup Library-Plots-Performance-Aerodynamics   
 def plot_airfoil_surface_forces(ap, save_figure = False , arrow_color = 'red',save_filename = 'Airfoil_Cp_Distribution', show_figure = True, file_type = ".png"):  
     """ This plots the forces on an airfoil surface
     

@@ -1,4 +1,3 @@
-## @defgroup Library-Plots-Stability Stability 
 # RCAIDE/Library/Plots/Stability/__init__.py
 # 
 

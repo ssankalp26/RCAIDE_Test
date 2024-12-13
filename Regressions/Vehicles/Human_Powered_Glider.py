@@ -169,8 +169,14 @@ def vehicle_setup():
     
     propulsor.nacelle = nacelle
     
+
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    # Assign propulsors to fuel line    
+    bus.assigned_propulsors =  [[propulsor.tag]]
+
+    
     # append propulsor to distribution line 
-    bus.propulsors.append(propulsor) 
+    net.propulsors.append(propulsor) 
  
 
     # append bus   

@@ -1,4 +1,3 @@
-## @defgroup Library-Plots-Mission  
 # RCAIDE/Library/Plots/Performance/Mission/plot_aircraft_velocities.py
 # 
 # 
@@ -16,7 +15,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------   
-## @defgroup Library-Plots-Mission  
 def plot_aircraft_velocities(results,
                              save_figure = False,
                              show_legend = True,

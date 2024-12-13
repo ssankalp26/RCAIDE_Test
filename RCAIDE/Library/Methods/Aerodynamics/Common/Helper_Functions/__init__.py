@@ -1,5 +1,3 @@
-## @defgroup Methods-Aerodynamics-Common-Helper_Functions Helper_Functions
-# @ingroup Methods-Aerodynamics-Common
 # RCAIDE/Methods/Aerodynamics/Common/Helper_Functions/__init__.py
 # 
 

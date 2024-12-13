@@ -68,12 +68,12 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,conditions,propulsor_con
     '''
 
     aeroacoustic_data    = propulsor_conditions[rotor.tag]  
-    angle_of_attack      = conditions.aerodynamics.angles.alpha[cpt] 
-    velocity_vector      = conditions.frames.inertial.velocity_vector[cpt]  
+    angle_of_attack      = np.atleast_2d(conditions.aerodynamics.angles.alpha[cpt])
+    velocity_vector      = np.atleast_2d(conditions.frames.inertial.velocity_vector[cpt])  
     freestream           = conditions.freestream   
     num_h_b              = len(harmonics_blade)
     num_h_l              = len(harmonics_load)
-    num_cpt              = len(angle_of_attack) 
+    num_cpt              = 1
     num_mic              = len(coordinates.X_hub[0,:,0,0,0]) 
     phi_0                = np.array([rotor.phase_offset_angle])  # phase angle offset  
     airfoils             = rotor.Airfoils 
@@ -81,11 +81,11 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,conditions,propulsor_con
     num_az               = aeroacoustic_data.number_azimuthal_stations
     orientation          = np.array(rotor.orientation_euler_angles) * 1 
     body2thrust          = sp.spatial.transform.Rotation.from_rotvec(orientation).as_matrix()
+    commanded_thrust_vector = np.atleast_2d(propulsor_conditions.commanded_thrust_vector_angle[cpt])
     for jj,airfoil in enumerate(airfoils):
         airfoil_points = airfoil.number_of_points
         y_u_6          = np.tile(airfoil.geometry.y_upper_surface[None,None,None,None,None,:],(num_cpt,num_mic,num_sec,num_h_b,num_h_l,1))
         y_l_6          = np.tile(airfoil.geometry.y_lower_surface[None,None,None,None,None,:],(num_cpt,num_mic,num_sec,num_h_b,num_h_l,1))
-    commanded_thrust_vector = propulsor_conditions.commanded_thrust_vector_angle[cpt] 
     chord_coord             = int(np.floor(airfoil_points/2))
     
     
@@ -95,8 +95,8 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,conditions,propulsor_con
     # [control point, microphones, radial distribution, blade harmonics, load harmonics]  
     
     # freestream density and speed of sound
-    rho_3          = np.tile(freestream.density[:,:,None],(1,num_mic,num_h_b))
-    a_3            = np.tile(freestream.speed_of_sound[:,:,None],(1,num_mic,num_h_b))
+    rho_3          = np.tile(freestream.density[cpt,:,None],(1,num_mic,num_h_b))
+    a_3            = np.tile(freestream.speed_of_sound[cpt,:,None],(1,num_mic,num_h_b))
     B              = rotor.number_of_blades
     
     # blade harmonics
@@ -112,10 +112,10 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,conditions,propulsor_con
     p_ref          = 2E-5
     
     # net angle of inclination of propeller wrt inertial axis
-    alpha_4        = np.tile((angle_of_attack + np.arccos(body2thrust[0,0]))[:,:,None,None],(1,num_mic,num_h_b,num_h_l))          
+    alpha_4        = np.tile((angle_of_attack + np.arccos(body2thrust[0,0]))[:,:,None,None],(1,num_mic,num_h_b,num_h_l))      
     
     # rotor angular speed
-    omega_3        = np.tile(aeroacoustic_data.omega[:,:,None],(1,num_mic,num_h_b))
+    omega_3        = np.tile(aeroacoustic_data.omega[cpt,:,None],(1,num_mic,num_h_b))
     
     R              = rotor.radius_distribution
     
@@ -139,7 +139,7 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,conditions,propulsor_con
     H_6            = (y_u_6 - y_l_6)/c_6
     
     # Rotorcraft speed and mach number
-    V_3            = np.tile(np.linalg.norm(velocity_vector, axis=1) [:,None,None],(1,num_mic,num_h_b))
+    V_3            = np.tile(np.linalg.norm(velocity_vector, axis=1),(1,num_mic,num_h_b))
     M_3            = V_3/a_3
     M_4            = np.tile(M_3[:,:,:,None],(1,1,1,num_h_l))
     M_5            = np.tile(M_3[:,:,None,:,None],(1,1,num_sec,1,num_h_l))
@@ -153,10 +153,10 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,conditions,propulsor_con
     M_r_5          = np.sqrt(M_5**2 + (z_5**2)*(M_t_5**2))
     
     # Total Loading
-    T             = np.sum(aeroacoustic_data.disc_thrust_distribution, axis=1)
-    Q             = np.sum(aeroacoustic_data.disc_torque_distribution, axis=1)
-    dQ            = aeroacoustic_data.disc_torque_distribution
-    r             = aeroacoustic_data.disc_radial_distribution
+    T             = np.atleast_2d(np.sum(aeroacoustic_data.disc_thrust_distribution[cpt], axis=0))
+    Q             = np.atleast_2d(np.sum(aeroacoustic_data.disc_torque_distribution[cpt], axis=0))
+    dQ            = aeroacoustic_data.disc_torque_distribution[cpt][None, :, :]
+    r             = aeroacoustic_data.disc_radial_distribution[cpt][None, :, :]
     F_phi         = np.sum(dQ/r, axis=1)
     
     # Rotor load-location speed and mach number
@@ -170,19 +170,19 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,conditions,propulsor_con
     M_s_4          = np.tile(M_s_3[:,:,:,None],(1,1,1,num_h_l))
     
     # retarded theta
-    theta_r        = coordinates.theta_hub_r[:,:,0,0]
-    theta_r_3      = np.tile(theta_r[:,:,None],(1,1,num_h_b))
-    theta_r_4      = np.tile(theta_r[:,:,None,None],(1,1,num_h_b,num_h_l))
-    theta_r_5      = np.tile(theta_r[:,:,None,None,None],(1,1,num_sec,num_h_b,num_h_l))
+    theta_r        = coordinates.theta_hub_r[cpt,:,0,0]
+    theta_r_3      = np.tile(theta_r[None,:,None],(1,1,num_h_b))
+    theta_r_4      = np.tile(theta_r[None,:,None,None],(1,1,num_h_b,num_h_l))
+    theta_r_5      = np.tile(theta_r[None,:,None,None,None],(1,1,num_sec,num_h_b,num_h_l))
     
     # retarded distance to source
-    Y              = np.sqrt(coordinates.X_hub[:,:,0,0,1]**2 +  coordinates.X_hub[:,:,0,0,2] **2)
-    Y_3            = np.tile(Y[:,:,None],(1,1,num_h_b))
+    Y              = np.sqrt(coordinates.X_hub[cpt,:,0,0,1]**2 +  coordinates.X_hub[cpt,:,0,0,2] **2)
+    Y_3            = np.tile(Y[None,:,None],(1,1,num_h_b))
     r_3            = Y_3/np.sin(theta_r_3)
     
     # phase angles
     phi_0_vec      = np.tile(phi_0[:,None,None,None],(num_cpt,num_mic,num_h_b,num_h_l))
-    phi_4          = np.tile(coordinates.phi_hub_r[:,:,0,0,None,None],(1,1,num_h_b,num_h_l)) + phi_0_vec
+    phi_4          = np.tile(coordinates.phi_hub_r[cpt,:,0,0,None,None],(1,1,num_h_b,num_h_l)) + phi_0_vec
     
     # total angle between propeller axis and r vector
     theta_r_prime_4 = np.arccos(np.cos(theta_r_4)*np.cos(alpha_4) + np.sin(theta_r_4)*np.sin(phi_4)*np.sin(alpha_4))
@@ -191,7 +191,7 @@ def harmonic_noise_point(harmonics_blade,harmonics_load,conditions,propulsor_con
     phi_prime_4    = np.arccos((np.sin(theta_r_4)*np.cos(phi_4))/np.sin(theta_r_prime_4))
     
     # Velocity in the rotor frame
-    T_body2inertial = conditions.frames.body.transform_to_inertial
+    T_body2inertial = conditions.frames.body.transform_to_inertial[cpt][None,:, :]
     T_inertial2body = orientation_transpose(T_body2inertial)
     V_body          = orientation_product(T_inertial2body,velocity_vector)
     body2thrust,_   = rotor.body_to_prop_vel(commanded_thrust_vector)

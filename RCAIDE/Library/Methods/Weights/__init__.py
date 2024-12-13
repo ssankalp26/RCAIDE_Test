@@ -1,4 +1,3 @@
-## @defgroup Methods-Weights Weights
 # RCAIDE/Library/Methods/Weights/__init__.py
 # 
 

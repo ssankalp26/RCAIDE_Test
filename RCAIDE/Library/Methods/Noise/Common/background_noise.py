@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Common 
 # RCAIDE/Methods/Noise/Common/background_noise.py
 # 
 # 
@@ -7,7 +6,6 @@
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Bakcground Noise 
 # ----------------------------------------------------------------------------------------------------------------------      
-## @ingroup Methods-Noise-Common
 def background_noise():
     '''
     This is sound pressure level of background noise  

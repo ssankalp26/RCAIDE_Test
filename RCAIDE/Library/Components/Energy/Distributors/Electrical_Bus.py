@@ -1,4 +1,3 @@
-## @defgroup Library-Compoments-Energy-Networks-Distribution
 # RCAIDE/Library/Compoments/Energy/Networks/Distribution/Electrical_Bus.py 
 # 
 # Created:  Jul 2023, M. Clarke 
@@ -17,7 +16,6 @@ from RCAIDE.Library.Methods.Energy.Distributors.Electrical_Bus import *
 # ----------------------------------------------------------------------------------------------------------------------
 #  Electrical_Bus
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Compoments-Energy-Networks-Distribution
 class Electrical_Bus(Component):
     """Electrical bus component.
     """ 
@@ -32,11 +30,10 @@ class Electrical_Bus(Component):
         """                
         self.tag                                   = 'bus' 
         self.battery_modules                       = Container()
-        self.propulsors                            = Container() 
+        self.assigned_propulsors                   = []
         self.solar_panel                           = None 
         self.avionics                              = RCAIDE.Library.Components.Systems.Avionics()
-        self.payload                               = RCAIDE.Library.Components.Payloads.Payload()        
-        self.identical_propulsors                  = True
+        self.payload                               = RCAIDE.Library.Components.Payloads.Payload()         
         self.identical_battery_modules             = True  
         self.active                                = True
         self.efficiency                            = 1.0

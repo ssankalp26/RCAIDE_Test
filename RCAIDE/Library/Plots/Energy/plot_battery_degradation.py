@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Energy
 # RCAIDE/Library/Plots/Energy/plot_battery_degradation.py
 # 
 # 
@@ -16,7 +15,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Library-Plots-Energy
 def plot_battery_degradation(results,
                             save_figure = False,
                             line_color = 'bo-',

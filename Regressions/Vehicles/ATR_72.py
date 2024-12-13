@@ -437,7 +437,7 @@ def vehicle_setup():
     starboard_propulsor.design_altitude              = 25000*Units.ft                                   # [-]         Design Altitude
     starboard_propulsor.design_mach_number           = 0.5                                              # [-]         Design Mach number
     starboard_propulsor.design_propeller_efficiency  = 0.86
-    starboard_propulsor.design_thrust                = 50000.0 * Units.N                                  # [-]         Design Thrust 
+    starboard_propulsor.design_thrust                = 50000.0 * Units.N                                # [-]         Design Thrust 
     starboard_propulsor.working_fluid                = RCAIDE.Library.Attributes.Gases.Air()            
     starboard_propulsor.design_propeller_efficiency  = 0.83                                             # [-]         Design Propeller Efficiency
     starboard_propulsor.design_gearbox_efficiency    = 0.99                                             # [-]         Design Gearbox Efficiency
@@ -567,7 +567,7 @@ def vehicle_setup():
 
     starboard_propulsor.nacelle =  nacelle
     
-    fuel_line.propulsors.append(starboard_propulsor)    
+    net.propulsors.append(starboard_propulsor)    
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Propulsor: Port Propulsor
@@ -581,7 +581,7 @@ def vehicle_setup():
     port_propulsor.nacelle.origin                   = [[8.941625295,-4.219315295, 1.616135105 ]]
          
     # append propulsor to distribution line 
-    fuel_line.propulsors.append(port_propulsor) 
+    net.propulsors.append(port_propulsor) 
 
     #------------------------------------------------------------------------------------------------------------------------- 
     #  Energy Source: Fuel Tank
@@ -597,6 +597,11 @@ def vehicle_setup():
     
     # apend fuel tank to dataclass of fuel tanks on fuel line 
     fuel_line.fuel_tanks.append(fuel_tank) 
+
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    # Assign propulsors to fuel line    
+    fuel_line.assigned_propulsors =  [[starboard_propulsor.tag, port_propulsor.tag]]
+    
 
     # Append fuel line to Network      
     net.fuel_lines.append(fuel_line)   

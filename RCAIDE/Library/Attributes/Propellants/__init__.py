@@ -1,4 +1,3 @@
-## @defgroup Attributes-Propellants Propellants
 # RCAIDE/Library/Attributes/Propellants/__init__.py
 # 
 

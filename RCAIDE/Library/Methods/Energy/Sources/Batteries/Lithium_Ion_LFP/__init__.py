@@ -1,4 +1,3 @@
-## @defgroup Methods-Energy-Sources-Battery-Lithium_Ion_LFP Lithium_Ion_LFP
 # RCAIDE/Methods/Energy/Sources/Battery/Lithium_Ion_LFP/__init__.py
 # 
 

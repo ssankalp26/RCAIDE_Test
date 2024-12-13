@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Sources-Battery-Common
 # RCAIDE/Methods/Energy/Sources/Battery/Common/find_total_mass_gain.py
 # 
 # 
@@ -6,8 +5,7 @@
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  METHOD
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Energy-Sources-Battery-Common
+# ---------------------------------------------------------------------------------------------------------------------- -Common
 def find_total_mass_gain(battery):
     """finds the total mass of air that the battery 
     accumulates when discharged fully

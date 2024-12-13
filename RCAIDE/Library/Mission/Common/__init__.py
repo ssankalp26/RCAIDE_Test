@@ -1,4 +1,3 @@
-## @defgroup Methods-Missions-Common Common
 # RCAIDE/Methods/Mission/Common/__init__.py
 # 
 
@@ -8,7 +7,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
-# @ingroup Methods-Mission-Segments
 
 from .   import Initialize
 from .   import Pre_Process

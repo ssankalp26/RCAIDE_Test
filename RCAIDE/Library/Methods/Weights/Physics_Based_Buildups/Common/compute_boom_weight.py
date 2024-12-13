@@ -1,4 +1,3 @@
-## @ingroup Methods-Weights-Buildups-Common 
 # RCAIDE/Library/Methods/Weights/Buildups/Common/compute_boom_weight.py
 # 
 # 
@@ -14,7 +13,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 # Compute boom weight
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Methods-Weights-Buildups-Common 
 def compute_boom_weight(boom,
              maximum_g_load = 3.8,
              safety_factor = 1.5):

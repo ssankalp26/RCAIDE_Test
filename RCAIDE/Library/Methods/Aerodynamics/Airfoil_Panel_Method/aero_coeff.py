@@ -1,4 +1,3 @@
-## @ingroup Methods-Aerodynamics-Airfoil_Panel_Method
 # RCAIDE/Methods/Aerodynamics/Airfoil_Panel_Method/aero_coeff.py
 # 
 # 
@@ -16,7 +15,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 # aero_coeff
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Methods-Aerodynamics-Airfoil_Panel_Method
 def aero_coeff(x,y,cp,al,npanel):
     """Compute airfoil force and moment coefficients about 
                     the quarter chord point          

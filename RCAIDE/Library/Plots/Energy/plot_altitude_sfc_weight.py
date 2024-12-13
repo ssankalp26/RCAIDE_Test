@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Energy
 # RCAIDE/Library/Plots/Energy/plot_altitude_sfc_weight.py
 # 
 # 
@@ -16,7 +15,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Library-Plots-Performance-Energy-Fuel
 def plot_altitude_sfc_weight(results,
                              save_figure = False,
                              show_legend = True,
@@ -72,27 +70,14 @@ def plot_altitude_sfc_weight(results,
         
         axis_1.set_ylabel(r'Throttle')
         set_axes(axis_1)               
-        for network in results.segments[i].analyses.energy.vehicle.networks: 
-            busses      = network.busses
-            fuel_lines  = network.fuel_lines 
-            for network in results.segments[i].analyses.energy.vehicle.networks: 
-                busses      = network.busses
-                fuel_lines  = network.fuel_lines 
-                for bus in busses:
-                    for j ,  propulsor in enumerate(bus.propulsors):
-                        eta = results.segments[i].conditions.energy[bus.tag][propulsor.tag].throttle[:,0]  
-                        if j == 0 and i ==0: 
-                            axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = propulsor.tag    )
-                        else:
-                            axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)  
-                for fuel_line in fuel_lines:  
-                    for j ,  propulsor in enumerate(fuel_line.propulsors):
-                        eta = results.segments[i].conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0]
-                        eta = results.segments[i].conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0]  
-                        if j == 0 and i ==0: 
-                            axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = propulsor.tag   )
-                        else:
-                            axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)  
+        for network in results.segments[i].analyses.energy.vehicle.networks:   
+            for j ,  propulsor in enumerate(network.propulsors):
+                eta = results.segments[i].conditions.energy[propulsor.tag].throttle[:,0]
+                eta = results.segments[i].conditions.energy[propulsor.tag].throttle[:,0]  
+                if j == 0 and i ==0: 
+                    axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = propulsor.tag   )
+                else:
+                    axis_1.plot(time, eta, color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width)  
         
         if i == 0:
             axis_2.plot(time, Weight/1000 , color = line_colors[i], marker = ps.markers[0], linewidth = ps.line_width, label = propulsor.tag  ) 

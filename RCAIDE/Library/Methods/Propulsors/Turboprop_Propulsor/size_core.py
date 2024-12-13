@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors-Turboprop_Propulsor
 # RCAIDE/Methods/Energy/Propulsors/Turboprop_Propulsor/size_core.py
 # 
 # 
@@ -7,14 +6,11 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
-from RCAIDE.Library.Methods.Propulsors.Turboprop_Propulsor.compute_thrust import compute_thrust
-# Python package imports
-import numpy                                               as np
+from RCAIDE.Library.Methods.Propulsors.Turboprop_Propulsor.compute_thrust import compute_thrust 
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  size_core
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Methods-Energy-Propulsors-Turboshaft_Propulsor 
+# ---------------------------------------------------------------------------------------------------------------------- 
 def size_core(turboprop,turboprop_conditions,conditions):
     """Sizes the core flow for the design condition.
 

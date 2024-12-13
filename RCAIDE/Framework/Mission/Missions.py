@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission
 # RCAIDE/Framework/Analyses/Mission/Mission.py
 # 
 # 
@@ -8,13 +7,11 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------  
 # RCAIDE imports        
-from . import Segments
-from RCAIDE.Framework.Core import Container , Data 
+from RCAIDE.Framework.Core import Container 
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Mission
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Analyses-Mission
+# ----------------------------------------------------------------------------------------------------------------------  
 class Missions(Container):
     """ Mission.py: Top-level mission class
     

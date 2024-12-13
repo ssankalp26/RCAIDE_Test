@@ -1,4 +1,3 @@
-## @ingroup Library-Attributes-Gases
 # RCAIDE/Library/Attributes/Gases/CO2.py
 # 
 #
@@ -12,8 +11,7 @@ from .Gas import Gas
 
 # ----------------------------------------------------------------------------------------------------------------------  
 # Steam Class
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Attributes-Gases
+# ----------------------------------------------------------------------------------------------------------------------   
 class Steam(Gas):
     """Holds constants and functions that compute gas properties for steam. 
     """

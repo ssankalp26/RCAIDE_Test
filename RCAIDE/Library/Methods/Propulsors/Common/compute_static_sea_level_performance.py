@@ -58,20 +58,17 @@ def compute_static_sea_level_performance(propulsor):
     conditions.freestream.speed_of_sound              = np.atleast_1d(a)
     conditions.freestream.velocity                    = np.atleast_1d(a*0.01)   
 
-    # setup conditions  
-    fuel_line                                         = RCAIDE.Library.Components.Energy.Distributors.Fuel_Line()
+    # setup conditions   
     segment                                           = RCAIDE.Framework.Mission.Segments.Segment()  
-    segment.state.conditions                          = conditions     
-    segment.state.conditions.energy[fuel_line.tag]    = Conditions()
-    segment.state.conditions.noise[fuel_line.tag]     = Conditions()
-    propulsor.append_operating_conditions(segment,fuel_line) 
+    segment.state.conditions                          = conditions      
+    propulsor.append_operating_conditions(segment) 
     for tag, item in  propulsor.items(): 
         if issubclass(type(item), RCAIDE.Library.Components.Component):
-            item.append_operating_conditions(segment,fuel_line,propulsor) 
+            item.append_operating_conditions(segment,propulsor) 
     
     # set throttle
-    segment.state.conditions.energy[fuel_line.tag][propulsor.tag].throttle[:,0] = 1.0  
-    sls_T,sls_M,sls_P,_,_                             = propulsor.compute_performance(segment.state,fuel_line)
+    segment.state.conditions.energy[propulsor.tag].throttle[:,0] = 1.0  
+    sls_T,sls_M,sls_P,_,_                             = propulsor.compute_performance(segment.state)
         
     propulsor.sealevel_static_thrust                  = sls_T[0][0]
     return 

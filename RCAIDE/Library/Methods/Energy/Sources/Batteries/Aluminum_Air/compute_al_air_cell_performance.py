@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Sources-Battery-Aluminum_Air
 # RCAIDE/Methods/Energy/Sources/Battery/Aluminum_Air/compute_al_air_cell_performance.py
 # 
 # 
@@ -6,9 +5,7 @@
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  compute_al_air_cell_performance
-# ---------------------------------------------------------------------------------------------------------------------- 
-
-## @ingroup Methods-Energy-Sources-Battery-Aluminum_Air
+# ----------------------------------------------------------------------------------------------------------------------  
 def find_aluminum_mass(battery, energy):
     aluminum_mass = energy*battery.aluminum_mass_factor
     return aluminum_mass 

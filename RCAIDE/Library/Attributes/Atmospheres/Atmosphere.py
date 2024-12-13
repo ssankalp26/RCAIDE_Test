@@ -1,4 +1,3 @@
-## @ingroup Library-Attributes-Atmospheres
 # RCAIDE/Library/Attributes/Atmospheres/Atmosphere.py
 # 
 #
@@ -12,8 +11,7 @@ from RCAIDE.Framework.Core import Data
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Industrial_Costs Class
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Attributes-Atmospheres 
+# ----------------------------------------------------------------------------------------------------------------------   
 class Atmosphere(Data):
     """Default atmosphere class 
     """

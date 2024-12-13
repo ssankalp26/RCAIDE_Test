@@ -36,7 +36,7 @@ def cross_flow_heat_exchanger_geometry_setup(HEX,coolant_line_base):
     
     HEX.coolant_temperature_of_hot_fluid                  = 323
     HEX.design_heat_removed                               = 100000 
-    coolant_line.heat_exchangers.cross_flow_hex           = HEX     
+    coolant_line.heat_exchangers.append(HEX)     
 
     net.coolant_lines.append(coolant_line) 
     vehicle.append_energy_network(net) 

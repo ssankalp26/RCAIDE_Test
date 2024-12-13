@@ -11,7 +11,7 @@ from RCAIDE.Framework.Mission.Common     import   Conditions
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  append_wavy_channel_conditions
 # ----------------------------------------------------------------------------------------------------------------------    
-def append_wavy_channel_conditions(wavy_channel,segment,coolant_line,add_additional_network_equation):
+def append_wavy_channel_conditions(wavy_channel,segment,coolant_line):
      """ Packs the initial wavy channel heat acquisition conditions
 
          Assumptions:

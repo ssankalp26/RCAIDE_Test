@@ -1,8 +1,6 @@
-## @ingroup Plugins
 import os, sys
 __dir__ = os.path.abspath(os.path.dirname(__file__))
-
-## @ingroup Plugins
+ 
 def load_plugin(package_name):
     """This function loads a package that uses absolute package imports
     by temporarily modifying the python sys.path.

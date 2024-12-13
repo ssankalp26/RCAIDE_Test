@@ -1,5 +1,3 @@
-## @defgroup Methods-Aerodynamics-Common-Gas_Dynamics Gas_Dymamics
-# @ingroup Methods-Aerodynamics-Common
 # RCAIDE/Methods/Aerodynamics/Common/Gas_Dymamics/__init__.py
 # 
 

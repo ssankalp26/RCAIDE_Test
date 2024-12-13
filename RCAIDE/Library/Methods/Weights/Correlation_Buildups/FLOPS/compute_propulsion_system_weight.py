@@ -68,15 +68,16 @@ def compute_propulsion_system_weight(vehicle,ref_propulsor):
     NENG =  0 
     number_of_tanks =  0
     for network in  vehicle.networks:
+        for propulsor in network.propulsors:
+            if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
+                ref_propulsor = propulsor  
+                NENG  += 1 
+            if 'nacelle' in propulsor:
+                ref_nacelle =  propulsor.nacelle   
         for fuel_line in network.fuel_lines:
             for fuel_tank in fuel_line.fuel_tanks:
                 number_of_tanks +=  1
-            for propulsor in fuel_line.propulsors:
-                if isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbofan) or  isinstance(propulsor, RCAIDE.Library.Components.Propulsors.Turbojet):
-                    ref_propulsor = propulsor  
-                    NENG  += 1 
-                if 'nacelle' in propulsor:
-                    ref_nacelle =  propulsor.nacelle          
+                  
      
     WNAC            = nacelle_FLOPS(ref_propulsor,ref_nacelle,NENG ) 
     WFSYS           = fuel_system_FLOPS(vehicle, NENG)
@@ -97,7 +98,7 @@ def compute_propulsion_system_weight(vehicle,ref_propulsor):
     output.number_of_fuel_tanks = number_of_tanks  
     return output
 
-## @ingroup Methods-Weights-Correlations-FLOPS
+
 def nacelle_FLOPS(ref_propulsor,ref_nacelle,NENG):
     """ Calculates the nacelle weight based on the FLOPS method
     
@@ -131,7 +132,7 @@ def nacelle_FLOPS(ref_propulsor,ref_nacelle,NENG):
     WNAC   = 0.25 * TNAC * DNAC * XNAC * FTHRST ** 0.36
     return WNAC * Units.lbs
 
-## @ingroup Methods-Weights-Correlations-FLOPS
+
 def thrust_reverser_FLOPS(ref_propulsor,NENG):
     """ Calculates the weight of the thrust reversers of the aircraft
     
@@ -156,7 +157,7 @@ def thrust_reverser_FLOPS(ref_propulsor,NENG):
     WTHR = 0.034 * THRUST * TNAC
     return WTHR * Units.lbs
 
-## @ingroup Methods-Weights-Correlations-FLOPS
+
 def misc_engine_FLOPS(vehicle,ref_propulsor,ref_nacelle,NENG ):
     """ Calculates the miscellaneous engine weight based on the FLOPS method, electrical control system weight
         and starter engine weight
@@ -191,7 +192,7 @@ def misc_engine_FLOPS(vehicle,ref_propulsor,ref_nacelle,NENG ):
     WSTART  = 11.0 * NENG * VMAX ** 0.32 * FNAC ** 1.6
     return WEC * Units.lbs, WSTART * Units.lbs
 
-## @ingroup Methods-Weights-Correlations-FLOPS
+
 def fuel_system_FLOPS(vehicle, NENG):
     """ Calculates the weight of the fuel system based on the FLOPS method
         Assumptions:
@@ -215,7 +216,7 @@ def fuel_system_FLOPS(vehicle, NENG):
     WFSYS = 1.07 * FMXTOT ** 0.58 * NENG ** 0.43 * VMAX ** 0.34
     return WFSYS * Units.lbs
 
-## @ingroup Methods-Weights-Correlations-FLOPS
+
 def compute_engine_weight(vehicle, ref_propulsor):
     """ Calculates the dry engine weight based on the FLOPS method
         Assumptions:

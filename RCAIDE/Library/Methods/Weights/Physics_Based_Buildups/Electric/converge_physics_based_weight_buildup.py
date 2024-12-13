@@ -1,4 +1,3 @@
-## @ingroup Methods-Weights-Buildups-eVTOL 
 # RCAIDE/Library/Methods/Weights/Buildups/eVTOL/converge_physics_based_weight_buildup.py
 # 
 # 

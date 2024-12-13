@@ -122,8 +122,8 @@ class Cross_Flow_Heat_Exchanger(Component):
         self.ke_values                                              = load_ke_values()
         return  
 
-    def append_operating_conditions(self,segment,coolant_line,add_additional_network_equation = False):
-        append_cross_flow_heat_exchanger_conditions(self,segment,coolant_line,add_additional_network_equation)
+    def append_operating_conditions(self,segment,coolant_line):
+        append_cross_flow_heat_exchanger_conditions(self,segment,coolant_line)
         return
   
     def append_segment_conditions(self,segment,bus,coolant_line,conditions):

@@ -70,25 +70,25 @@ def harmonic_noise_line(harmonics_blade,harmonics_load,conditions,propulsor_cond
                       For instance, m_6 is the 6 dimensional harmonic modes variable, m_5 is 5 dimensional harmonic modes variable
     '''
 
-    aeroacoustic_data    = propulsor_conditions[rotor.tag] 
-    angle_of_attack      = np.atleast_2d(conditions.aerodynamics.angles.alpha[cpt]) 
-    velocity_vector      = np.atleast_2d(conditions.frames.inertial.velocity_vector[cpt])   
-    freestream           = conditions.freestream       
-    num_h_b              = len(harmonics_blade)
-    num_h_l              = len(harmonics_load)
-    num_cpt              = len(angle_of_attack) 
-    num_mic              = len(coordinates.X_hub[cpt,:,0,0,0]) 
-    phi_0                = np.array([rotor.phase_offset_angle])  # phase angle offset  
-    airfoils             = rotor.Airfoils
-    num_sec              = len(rotor.radius_distribution)
-    num_az               = aeroacoustic_data.number_azimuthal_stations 
-    orientation          = np.array(rotor.orientation_euler_angles) * 1 
-    body2thrust          = sp.spatial.transform.Rotation.from_rotvec(orientation).as_matrix()  
+    aeroacoustic_data       = propulsor_conditions[rotor.tag] 
+    angle_of_attack         = np.atleast_2d(conditions.aerodynamics.angles.alpha[cpt]) 
+    velocity_vector         = np.atleast_2d(conditions.frames.inertial.velocity_vector[cpt])   
+    freestream              = conditions.freestream       
+    num_h_b                 = len(harmonics_blade)
+    num_h_l                 = len(harmonics_load)
+    num_cpt                 = len(angle_of_attack) 
+    num_mic                 = len(coordinates.X_hub[cpt,:,0,0,0]) 
+    phi_0                   = np.array([rotor.phase_offset_angle])  # phase angle offset  
+    airfoils                = rotor.Airfoils
+    num_sec                 = len(rotor.radius_distribution)
+    num_az                  = aeroacoustic_data.number_azimuthal_stations 
+    orientation             = np.array(rotor.orientation_euler_angles) * 1 
+    body2thrust             = sp.spatial.transform.Rotation.from_rotvec(orientation).as_matrix()  
+    commanded_thrust_vector = np.atleast_2d(propulsor_conditions.commanded_thrust_vector_angle[cpt])
     for jj,airfoil in enumerate(airfoils):
         airfoil_points = airfoil.number_of_points
         y_u_6          = np.tile(airfoil.geometry.y_upper_surface[None,None,None,None,None,:],(num_cpt,num_mic,num_sec,num_h_b,num_h_l,1))
         y_l_6          = np.tile(airfoil.geometry.y_lower_surface[None,None,None,None,None,:],(num_cpt,num_mic,num_sec,num_h_b,num_h_l,1))
-    commanded_thrust_vector = np.atleast_2d(propulsor_conditions.commanded_thrust_vector_angle[cpt])
     chord_coord             = int(np.floor(airfoil_points/2))
     
     # ----------------------------------------------------------------------------------

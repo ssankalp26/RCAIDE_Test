@@ -1,5 +1,4 @@
-## @ingroup Library-Components-Nacelles
-# RCAIDE/Compoments/Nacelles/Nacelle.py
+ # RCAIDE/Compoments/Nacelles/Nacelle.py
 # 
 # 
 # Created:  Mar 2024, M. Clarke 
@@ -9,15 +8,13 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
 # RCAIDE imports    
 from RCAIDE.Framework.Core              import Data 
-from RCAIDE.Library.Components          import Component  
-from RCAIDE.Library.Components.Airfoils import Airfoil
+from RCAIDE.Library.Components          import Component   
 import scipy as sp
 import numpy as np
  
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Nacalle
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Nacelles
+# ----------------------------------------------------------------------------------------------------------------------  
 class Nacelle(Component):
     """ This is a nacelle for a generic aircraft.
     
@@ -60,7 +57,7 @@ class Nacelle(Component):
         self.differential_pressure     = 0.0    
         self.cowling_airfoil_angle     = 0.0
 
-    def append_operating_conditions(self,segment,fuel_line,propulsor): 
+    def append_operating_conditions(self,segment,propulsor): 
         return
 
     def nac_vel_to_body(self):

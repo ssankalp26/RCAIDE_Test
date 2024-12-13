@@ -1,4 +1,3 @@
-## @ingroup Library-Methods-Geomery-Two_Dimensional-Planform
 # RCAIDE/Library/Methods/Geometry/Two_Dimensional/Planform/wing_segmented_planform.py
 # 
 # 

@@ -1,4 +1,3 @@
-## @ingroup Analyses
 # RCAIDE/Framework/Analyses/Settings.py
 # 
 # 
@@ -12,7 +11,6 @@ from RCAIDE.Framework.Core import Data
 # ----------------------------------------------------------------------------------------------------------------------
 # Settings
 # ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Analyses
 class Settings(Data):
     """ RCAIDE.Framework.Analyses.Settings()
     

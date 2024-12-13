@@ -1,4 +1,3 @@
-## @defgroup Methods-Noise-Frequency_Domain_Buildup-Rotor Rotor 
 # RCAIDE/Methods/Noise/Frequency_Domain_Buildup/Rotor/__init__.py
 # 
 

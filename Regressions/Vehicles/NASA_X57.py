@@ -474,7 +474,7 @@ def vehicle_setup():
     starboard_propulsor.nacelle = nacelle
     
     # append propulsor to distribution line 
-    bus.propulsors.append(starboard_propulsor) 
+    net.propulsors.append(starboard_propulsor) 
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Port Propulsor
@@ -502,7 +502,7 @@ def vehicle_setup():
     port_propulsor.nacelle                     = nacelle_2
      
     # append propulsor to distribution line 
-    bus.propulsors.append(port_propulsor) 
+    net.propulsors.append(port_propulsor) 
 
 
     #------------------------------------------------------------------------------------------------------------------------------------           
@@ -519,7 +519,11 @@ def vehicle_setup():
     avionics                     = RCAIDE.Library.Components.Systems.Avionics()
     avionics.power_draw          = 20. # Watts
     bus.avionics                 = avionics   
-
+ 
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    # Assign propulsors to bus       
+    bus.assigned_propulsors =  [[starboard_propulsor.tag, port_propulsor.tag]]
+ 
     # append bus   
     net.busses.append(bus)
     

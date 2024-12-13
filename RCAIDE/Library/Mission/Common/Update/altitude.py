@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Common-Update  
 # RCAIDE/Library/Missions/Common/Update/altitude.py
 # 
 # 
@@ -6,8 +5,7 @@
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Update Altitude
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Common-Update 
+# ---------------------------------------------------------------------------------------------------------------------- 
 def altitude(segment):
     """ Updates freestream altitude from inertial position
         

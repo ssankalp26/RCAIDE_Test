@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Geometry
 # RCAIDE/Library/Plots/Geometry/plot_3d_nacelle.py
 # 
 # 
@@ -16,8 +15,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Plots-Geometry 
+# ----------------------------------------------------------------------------------------------------------------------   
 def plot_3d_nacelle(plot_data,nacelle,tessellation = 24,number_of_airfoil_points = 21,color_map= 'darkmint'):
     """ This plots a 3D surface of a nacelle  
 
@@ -62,8 +60,7 @@ def plot_3d_nacelle(plot_data,nacelle,tessellation = 24,number_of_airfoil_points
             plot_data.append(verts)    
 
     return plot_data
-
-## @ingroup Library-Plots-Geometry 
+ 
 def generate_3d_stack_nacelle_points(nac,tessellation = 24 ,number_of_airfoil_points = 21):
     """ This generates the coordinate points on the surface of the stack nacelle
 
@@ -140,8 +137,7 @@ def generate_3d_stack_nacelle_points(nac,tessellation = 24 ,number_of_airfoil_po
     return G     
 
 
-
-## @ingroup Library-Plots-Geometry 
+ 
 def generate_3d_BOR_nacelle_points(nac,tessellation = 24 ,number_of_airfoil_points = 21):
     """ This generates the coordinate points on the surface of the body of revolution nacelle
 

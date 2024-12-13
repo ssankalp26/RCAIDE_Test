@@ -1,4 +1,3 @@
-## @ingroup  Library-Methods-Aerodynamics-Vortex_Lattice_Method
 # RCAIDE/Library/Methods/Aerodynamics/Vortex_Lattice_Method/evaluate_VLM.py
  
 # ----------------------------------------------------------------------------------------------------------------------
@@ -20,8 +19,7 @@ import matplotlib.pyplot as plt
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Vortex_Lattice
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Methods-Stability  
+# ---------------------------------------------------------------------------------------------------------------------- 
 def evaluate_surrogate(state,settings,vehicle):
     """Evaluates surrogates forces and moments using built surrogates 
     

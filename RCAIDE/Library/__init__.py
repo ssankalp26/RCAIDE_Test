@@ -1,4 +1,3 @@
-## @defgroup Library Library 
 # RCAIDE/Library/__init__.py 
 
 """ RCAIDE Package Setup

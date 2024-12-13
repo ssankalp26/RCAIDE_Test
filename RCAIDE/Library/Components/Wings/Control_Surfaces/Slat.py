@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Wings-Control_Surfaces
 # RCAIDE/Compoments/Wings/Control_Surfaces/Slat.py
 # 
 # 
@@ -12,8 +11,7 @@ from .Control_Surface import Control_Surface
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Attribute
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Wings-Control_Surfaces
+# ---------------------------------------------------------------------------------------------------------------------- -Control_Surfaces
 class Slat(Control_Surface):
     """This class is used to define slats in RCAIDE
 

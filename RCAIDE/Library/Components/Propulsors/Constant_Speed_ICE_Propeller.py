@@ -31,21 +31,24 @@ class Constant_Speed_ICE_Propeller(Propulsor):
         self.propeller                    = None  
           
 
-    def append_operating_conditions(self,segment,fuel_line,add_additional_network_equation = False):
-        append_ice_cs_propeller_conditions(self,segment,fuel_line,add_additional_network_equation)
+    def append_operating_conditions(self,segment):
+        append_ice_cs_propeller_conditions(self,segment)
         return
 
-    def unpack_propulsor_unknowns(self,segment,fuel_line,add_additional_network_equation = False):   
+    def unpack_propulsor_unknowns(self,segment):   
         return 
 
-    def pack_propulsor_residuals(self,segment,fuel_line,add_additional_network_equation = False): 
+    def pack_propulsor_residuals(self,segment): 
         return        
-    
-    def compute_performance(self,state,fuel_line,center_of_gravity = [[0, 0, 0]]):
-        thrust,moment,power,stored_results_flag,stored_propulsor_tag =  compute_cs_ice_performance(self,state,fuel_line,center_of_gravity)
+
+    def append_propulsor_unknowns_and_residuals(self,segment): 
+        return
+        
+    def compute_performance(self,state,center_of_gravity = [[0, 0, 0]]):
+        thrust,moment,power,stored_results_flag,stored_propulsor_tag =  compute_cs_ice_performance(self,state,center_of_gravity)
         return thrust,moment,power,stored_results_flag,stored_propulsor_tag
     
-    def reuse_stored_data(ICE_cs_prop,state,fuel_line,stored_propulsor_tag,center_of_gravity = [[0, 0, 0]]):
-        thrust,moment,power  = reuse_stored_ice_cs_prop_data(ICE_cs_prop,state,fuel_line,stored_propulsor_tag,center_of_gravity)
+    def reuse_stored_data(ICE_cs_prop,state,network,stored_propulsor_tag,center_of_gravity = [[0, 0, 0]]):
+        thrust,moment,power  = reuse_stored_ice_cs_prop_data(ICE_cs_prop,state,network,stored_propulsor_tag,center_of_gravity)
         return thrust,moment,power           
  

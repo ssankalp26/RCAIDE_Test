@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Correlation_Buildup-Airframe 
 # RCAIDE/Methods/Noise/Correlation_Buildup/Airframe/airframe_noise.py
 # 
 # 
@@ -28,8 +27,6 @@ import numpy as np
 # ----------------------------------------------------------------------
 #  Airframe Noise 
 # ----------------------------------------------------------------------
-
-## @ingroup Methods-Noise-Correlation_Buildup-Airframe
 def airframe_noise(microphone_locations,segment,config,settings):  
     """ This computes the noise from different sources of the airframe for a given vehicle for a constant altitude flight. 
 

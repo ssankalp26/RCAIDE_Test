@@ -1,4 +1,3 @@
-## @ingroup Components-Propulsors-Converters
 # RCAIDE/Library/Components/Propulsors/Converters/Lift_Rotor.py
 # 
 # 
@@ -17,7 +16,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  LIFT ROTOR CLASS
 # ----------------------------------------------------------------------------------------------------------------------           
-## @ingroup Components-Propulsors-Converters
 class Lift_Rotor(Rotor):
     """This is a lift rotor component, and is a sub-class of rotor.
     

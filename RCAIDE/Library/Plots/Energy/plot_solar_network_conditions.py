@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Energy
 # RCAIDE/Library/Plots/Energy/plot_solar_network_conditions.py
 # 
 # 
@@ -17,7 +16,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Library-Plots-Energy
 def plot_solar_network_conditions(results,
                     save_figure   = False,
                     show_legend   = True,

@@ -1,4 +1,3 @@
-## @defgroup Library-Plots-Performance-Aerodynamics Aerodynamics
 # RCAIDE/Library/Plots/Performance/Aerodynamics/__init__.py
 # 
 

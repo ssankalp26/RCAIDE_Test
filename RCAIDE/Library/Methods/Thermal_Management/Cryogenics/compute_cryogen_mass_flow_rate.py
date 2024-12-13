@@ -1,5 +1,4 @@
-## @ingroup Methods-Cooling-Cryogen-Consumption
-# Coolant_use.py
+ # Coolant_use.py
 #
 # Created:  Feb 2020,   K. Hamilton - Through New Zealand Ministry of Business Innovation and Employment Research Contract RTVU2004 
 # Modified: Feb 2022,   S. Claridge 
@@ -14,9 +13,7 @@ import scipy.integrate as integrate
 
 # ----------------------------------------------------------------------
 #  Cryogen Coolant_use
-# ----------------------------------------------------------------------
-
-## @ingroup Methods-Thermal_Management.Cryogenics
+# ---------------------------------------------------------------------- 
 def compute_cryogen_mass_flow_rate(cryogen,cryogen_temp,equipment_temp,cooling_required,pressure):
     """ Calculate the mass flow rate of cryogen required to maintain cryogenic equipment temperature
 

@@ -1,4 +1,3 @@
-## @defgroup Methods-Weights-Correlations-Raymer Raymer
 # RCAIDE/Library/Methods/Weights/Correlations/Raymer/__init__.py
 # 
 

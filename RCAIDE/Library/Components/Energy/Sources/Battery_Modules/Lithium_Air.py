@@ -1,4 +1,3 @@
-## @ingroup Library-Compoments-Energy-Batteries
 # RCAIDE/Library/Compoments/Energy/Sources/Batteries/Lithium_Air.py
 # 
 # 
@@ -14,8 +13,7 @@ from .Generic_Battery_Module import Generic_Battery_Module
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Lithium_Air
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Compoments-Energy-Batteries 
+# ----------------------------------------------------------------------------------------------------------------------   
 class Lithium_Air(Generic_Battery_Module):
     """Lithium-Air battery cell.Specifies specific energy characteristics specific to
     lithium-air batteries. Also includes parameters related to consumption of oxygen

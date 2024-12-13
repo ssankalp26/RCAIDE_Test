@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Cruise
 # RCAIDE/Library/Missions/Segments/Cruise/Curved_Constant_Radius_Constant_Speed_Constant_Altitude/initialize_conditions.py
 # 
 # 
@@ -13,7 +12,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Initialize Conditions
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Segments-Cruise
 def initialize_conditions(segment):
     """Sets the specified conditions which are given for the segment type.
 

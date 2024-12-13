@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission
 # RCAIDE/Framework/Analyses/Mission/Sequential_Segments.py
 # 
 # 
@@ -17,8 +16,7 @@ from . import Segments
 
 # ----------------------------------------------------------------------------------------------------------------------
 # ANALYSIS
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Analyses-Mission
+# ----------------------------------------------------------------------------------------------------------------------  -Mission
 class Sequential_Segments(Segments.Segment.Container):
     """ Solves each segment one at time
     
@@ -117,8 +115,6 @@ class Sequential_Segments(Segments.Segment.Container):
 # ----------------------------------------------------------------------
 #   Container Class
 # ----------------------------------------------------------------------
-
-## @ingroup Analyses-Mission
 class Container(ContainerBase):
     """ Container for mission
     

@@ -1,5 +1,3 @@
-## @defgroup Optimization-Packages Packages  
-# @ingroup Optimization
 # RCAIDE/Optimization/Packages/__init__.py
 # 
 

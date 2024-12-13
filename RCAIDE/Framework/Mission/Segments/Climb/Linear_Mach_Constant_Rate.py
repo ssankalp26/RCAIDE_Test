@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Climb
 # RCAIDE/Framework/Analyses/Mission/Segments/Climb/Linear_Mach_Constant_Rate.py
 # 
 # 
@@ -16,8 +15,6 @@ from RCAIDE.Library.Mission                          import Common,Segments
 # ----------------------------------------------------------------------------------------------------------------------
 #  Linear_Mach_Constant_Rate
 # ---------------------------------------------------------------------------------------------------------------------- 
-
-## @ingroup Analyses-Mission-Segments-Climb
 class Linear_Mach_Constant_Rate(Evaluate):
     """ Linearly change mach number while climbing at a constant rate.
     

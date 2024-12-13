@@ -1,4 +1,3 @@
-## @ingroup Library-Attributes-Propellants 
 # RCAIDE/Library/Attributes/Propellants.py
 # 
 # 
@@ -14,8 +13,7 @@ from RCAIDE.Library.Components.Mass_Properties import Mass_Properties
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Propellant
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Attributes-Propellants  
+# ----------------------------------------------------------------------------------------------------------------------  
 class Propellant(Data):
     """Generic class for propellant
     """

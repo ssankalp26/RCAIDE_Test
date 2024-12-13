@@ -1,4 +1,3 @@
-## @defgroup Methods-Energy-Propulsors Propulsors
 # RCAIDE/Methods/Energy/Propulsors/__init__.py
 # 
 

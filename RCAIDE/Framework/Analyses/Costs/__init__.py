@@ -1,4 +1,3 @@
-## @defgroup Analyses-Costs Costs
 # RCAIDE/Framework/Analyses/Costs/__init__.py
 # 
 

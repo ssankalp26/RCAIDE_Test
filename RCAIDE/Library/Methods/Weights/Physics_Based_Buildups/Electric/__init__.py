@@ -1,4 +1,3 @@
-## @defgroup Methods-Weights-Buildups-eVTOL eVTOL
 # RCAIDE/Library/Methods/Weights/Buildups/eVTOL/__init__.py
 # 
 

@@ -1,4 +1,3 @@
-## @defgroup Library-Compoments-Energy-Networks-Distribution
 # RCAIDE/Library/Compoments/Energy/Networks/Distribution/Fuel_Line.py 
 # 
 # Created:  Jul 2023, M. Clarke 
@@ -14,7 +13,6 @@ from RCAIDE.Library.Components.Component                      import Container
 # ----------------------------------------------------------------------------------------------------------------------
 #  Fuel Line
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Compoments-Energy-Networks-Distribution
 class Fuel_Line(Component):
     """ Fuel line class.
     """ 
@@ -30,7 +28,6 @@ class Fuel_Line(Component):
         """          
         self.tag                           = 'fuel_line'  
         self.fuel_tanks                    = Container()
-        self.propulsors                    = Container()
-        self.identical_propulsors          = True 
+        self.assigned_propulsors           = []
         self.active                        = True 
         self.efficiency                    = 1.0 

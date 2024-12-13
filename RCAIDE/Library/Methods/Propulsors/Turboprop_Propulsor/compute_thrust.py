@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors-Turboprop_Propulsor
 # RCAIDE/Methods/Energy/Propulsors/Turboprop_Propulsor/compute_thrust.py
 # 
 # 
@@ -16,7 +15,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  compute_thrust
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Methods-Energy-Propulsors-Turboprop_Propulsor
 def compute_thrust(turboprop,turboprop_conditions,conditions):
     
     """Computes thrust and other properties as below.

@@ -1,4 +1,3 @@
-## @ingroup Library-Methods-Geomery-Two_Dimensional-Airfoil
 # RCAIDE/Library/Methods/Geometry/Two_Dimensional/Airfoil/import_airfoil_polars.py
 # 
 # 
@@ -13,8 +12,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  import_airfoil_polars
-# ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Library-Methods-Geometry-Two_Dimensional-Airfoil
+# ----------------------------------------------------------------------------------------------------------------------    
 def  import_airfoil_polars(airfoil_polar_files,angel_of_attack_discretization = 89):
     """This imports airfoil polars from a text file output from XFOIL or Airfoiltools.com
     

@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Descent
 # RCAIDE/Framework/Analyses/Mission/Segments/Descent/Constant_CAS_Constant_Rate.py
 # 
 # 
@@ -9,15 +8,13 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
 
 # RCAIDE imports
-from RCAIDE.Framework.Core                                 import Units 
+from RCAIDE.Framework.Core                        import Units 
 from RCAIDE.Framework.Mission.Segments.Evaluate   import Evaluate 
-from RCAIDE.Library.Mission                      import Common,Segments
+from RCAIDE.Library.Mission                       import Common,Segments
 
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Constant_CAS_Constant_Rate
 # ----------------------------------------------------------------------------------------------------------------------  
-
-## @ingroup Analyses-Mission-Segments-Descent
 class Constant_CAS_Constant_Rate(Evaluate):
     
     def __defaults__(self):

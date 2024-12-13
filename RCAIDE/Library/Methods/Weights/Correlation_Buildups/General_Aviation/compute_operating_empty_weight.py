@@ -189,44 +189,17 @@ def compute_operating_empty_weight(vehicle, settings=None):
     for network in vehicle.networks:
         W_energy_network_total   = 0
         number_of_jet_engines    = 0
-        number_of_piston_engines = 0
-        turbofan_flag      =  False
-        piston_engine_flag =  False
-        for fuel_line in network.fuel_lines: 
-            for propulsor in  fuel_line.propulsors: 
-                if type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turbofan:
-                    number_of_jet_engines += 1
-                    thrust_sls    =  propulsor.sealevel_static_thrust
-                    turbofan_flag = True 
-                elif type(propulsor) ==  RCAIDE.Library.Components.Propulsors.ICE_Propeller:      
-                    number_of_piston_engines += 1
-                    rated_power   = propulsor.engine.sea_level_power
-                    piston_engine_flag =  True 
-                elif type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turboprop:      
-                    number_of_piston_engines += 1
-                    rated_power   = propulsor.design_power
-                    piston_engine_flag =  True                    
-                          
-            if turbofan_flag:
-                W_engine_jet            = Propulsion.compute_jet_engine_weight(thrust_sls)
-                W_propulsion            = Propulsion.integrated_propulsion(W_engine_jet,number_of_jet_engines) 
-                propulsor.mass_properties.mass = W_propulsion
-                W_energy_network_total  += W_propulsion
-    
-            if piston_engine_flag:           
-                W_engine_piston          = Propulsion.compute_piston_engine_weight(rated_power)
-                W_propulsion             = Propulsion.integrated_propulsion_general_aviation(W_engine_piston,number_of_piston_engines) 
-                propulsor.mass_properties.mass = W_propulsion
-                W_energy_network_total  += W_propulsion
-         
+        number_of_piston_engines = 0  
+
+        for fuel_line in  network.fuel_lines: 
             for fuel_tank in fuel_line.fuel_tanks: 
                 m_fuel_tank     = fuel_tank.fuel.mass_properties.mass
                 m_fuel          += m_fuel_tank   
                 landing_weight  -= m_fuel_tank   
                 number_of_tanks += 1
                 V_fuel_int      += m_fuel_tank/fuel_tank.fuel.density  #assume all fuel is in integral tanks 
-                V_fuel          += m_fuel_tank/fuel_tank.fuel.density #total fuel
-        
+                V_fuel          += m_fuel_tank/fuel_tank.fuel.density #total fuel  
+         
         # Electric-Powered Propulsors  
         for bus in network.busses: 
             # electrical payload 
@@ -241,7 +214,30 @@ def compute_operating_empty_weight(vehicle, settings=None):
             for propulsor in bus.propulsors:
                 if 'motor' in propulsor: 
                     motor_mass = propulsor.motor.mass_properties.mass       
-                    W_energy_network_cumulative  += motor_mass
+                    W_energy_network_cumulative  += motor_mass                
+        
+        for propulsor in  network.propulsors: 
+            if type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turbofan:
+                number_of_jet_engines += 1
+                thrust_sls    =  propulsor.sealevel_static_thrust 
+                W_engine_jet            = Propulsion.compute_jet_engine_weight(thrust_sls)
+                W_propulsion            = Propulsion.integrated_propulsion(W_engine_jet,number_of_jet_engines) 
+                propulsor.mass_properties.mass = W_propulsion
+                W_energy_network_total  += W_propulsion                
+            elif type(propulsor) ==  RCAIDE.Library.Components.Propulsors.ICE_Propeller:      
+                number_of_piston_engines += 1
+                rated_power              = propulsor.engine.sea_level_power 
+                W_engine_piston          = Propulsion.compute_piston_engine_weight(rated_power)
+                W_propulsion             = Propulsion.integrated_propulsion_general_aviation(W_engine_piston,number_of_piston_engines) 
+                propulsor.mass_properties.mass = W_propulsion
+                W_energy_network_total  += W_propulsion
+            elif type(propulsor) ==  RCAIDE.Library.Components.Propulsors.Turboprop:      
+                number_of_piston_engines += 1
+                rated_power   = propulsor.design_power 
+                W_engine_piston          = Propulsion.compute_piston_engine_weight(rated_power)
+                W_propulsion             = Propulsion.integrated_propulsion_general_aviation(W_engine_piston,number_of_piston_engines) 
+                propulsor.mass_properties.mass = W_propulsion
+                W_energy_network_total  += W_propulsion        
                 
         W_energy_network_cumulative += W_energy_network_total
         number_of_engines           +=  number_of_jet_engines +  number_of_piston_engines

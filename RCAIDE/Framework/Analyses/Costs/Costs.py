@@ -1,4 +1,3 @@
-## @ingroup Framework-Analyses-Costs
 # RCAIDE/Framework/Analyses/Costs/Costs.py
 # 
 # 
@@ -18,8 +17,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Aerodynamics
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Framework-Analyses-Costs 
+# ---------------------------------------------------------------------------------------------------------------------- 
 class Costs(Analysis):
     """ This is the base class for cost analyses. It contains functions
     that are built into the default class.

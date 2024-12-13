@@ -1,4 +1,3 @@
-## @defgroup Energy-Thermal_Management-Reservoir
 # RCAIDE/Energy/Thermal_Management/Reservoir/__init__.py
 # 
 

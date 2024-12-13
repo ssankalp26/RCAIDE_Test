@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Wings
 # RCAIDE/Compoments/Wings/Horizontal_Tail.py
 # 
 # 
@@ -13,8 +12,7 @@ from RCAIDE.Library.Methods.Weights.Moment_of_Inertia.compute_wing_moment_of_ine
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Main Wing 
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Wings   
+# ----------------------------------------------------------------------------------------------------------------------    
 class Horizontal_Tail(Wing):
     """ This is the horizontal stabilizer class  
     

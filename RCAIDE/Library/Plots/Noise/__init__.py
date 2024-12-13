@@ -1,5 +1,3 @@
-## @defgroup Visualization-Noise Noise
-# @ingroup Visualization 
 # RCAIDE/Library/Plots/Noise/__init__.py
 # 
 

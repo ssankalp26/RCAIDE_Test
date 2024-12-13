@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Performance-Aerodynamics
 # RCAIDE/Library/Plots/Performance/Aerodynamics/plot_rotor_disc_inflow.py
 # 
 # 
@@ -16,8 +15,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
-# ----------------------------------------------------------------------------------------------------------------------      
-## @ingroup Library-Plots-Performance-Aerodynamics  
+# ----------------------------------------------------------------------------------------------------------------------        
 def plot_rotor_disc_inflow(prop,velocities, grid_points):
 
     """Plots rotor disc inflow velocities

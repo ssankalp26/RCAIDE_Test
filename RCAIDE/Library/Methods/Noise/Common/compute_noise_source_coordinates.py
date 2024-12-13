@@ -18,7 +18,7 @@ import scipy as sp
 #  Source Coordinates 
 # ----------------------------------------------------------------------------------------------------------------------      
 ## @ingroup Methods-Noise-Common 
-def compute_rotor_point_source_coordinates(distributor,propulsor,rotor,conditions,mls,settings):
+def compute_rotor_point_source_coordinates(propulsor,rotor,conditions,mls,settings):
     """This calculated the position vector from a point source to the observer 
             
     Assumptions:
@@ -40,8 +40,8 @@ def compute_rotor_point_source_coordinates(distributor,propulsor,rotor,condition
         N/A       
     """  
     # unpack 
-    rotor_conditions        =  conditions.energy[distributor.tag][propulsor.tag][rotor.tag]
-    commanded_thrust_vector =  conditions.energy[distributor.tag][propulsor.tag].commanded_thrust_vector_angle
+    rotor_conditions        =  conditions.energy[propulsor.tag][rotor.tag]
+    commanded_thrust_vector =  conditions.energy[propulsor.tag].commanded_thrust_vector_angle
 
     # aquire dimension of matrix
     num_cpt     = len(commanded_thrust_vector)

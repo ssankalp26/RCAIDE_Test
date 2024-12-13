@@ -21,7 +21,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Athena_Vortex_Lattice
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Analyses-Aerodynamics
 class Athena_Vortex_Lattice(Stability):
     """This is a subsonic aerodynamic buildup analysis based on the vortex lattice method
 

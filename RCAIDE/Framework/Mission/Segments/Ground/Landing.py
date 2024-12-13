@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Ground
 # RCAIDE/Framework/Analyses/Mission/Segments/Ground/Landing.py
 # 
 # 
@@ -18,7 +17,6 @@ from RCAIDE.Library.Mission.Common                    import Residuals , Unpack_
 #  Landing
 # ----------------------------------------------------------------------------------------------------------------------
 
-## @ingroup Analyses-Mission-Segments-Ground
 class Landing(Evaluate):
     """ Segment for landing. Integrates equations of motion
         including rolling friction.

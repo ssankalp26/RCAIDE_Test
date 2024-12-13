@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Cruise 
 # RCAIDE/Framework/Analyses/Mission/Segments/Cruise/Constant_Dynamic_Pressure_Constant_Altitude.py
 # 
 # 
@@ -17,7 +16,6 @@ from RCAIDE.Library.Mission                      import Common,Segments
 #  Constant_Dynamic_Pressure_Constant_Altitude
 # ----------------------------------------------------------------------------------------------------------------------  
 
-## @ingroup Analyses-Mission-Segments-Cruise
 class Constant_Dynamic_Pressure_Constant_Altitude(Evaluate):
     """ Vehicle flies at a constant dynamic pressure at a set altitude for a fixed distance
     

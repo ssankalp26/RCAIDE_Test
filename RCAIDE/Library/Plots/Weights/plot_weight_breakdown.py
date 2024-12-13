@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Weights
 # RCAIDE/Library/Plots/Weights/plot_weight_breakdown.py
 # 
 # 
@@ -8,16 +7,13 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 import RCAIDE 
-import numpy as np    
-import matplotlib.pyplot as plt   
-import plotly.express as px
-import plotly.graph_objects as go
+import numpy as np     
+import plotly.express as px 
 import pandas as pd
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Library-Plots-Weights
 def plot_weight_breakdown(vehicle,
                             save_figure    = False,
                             show_figure    = True, 

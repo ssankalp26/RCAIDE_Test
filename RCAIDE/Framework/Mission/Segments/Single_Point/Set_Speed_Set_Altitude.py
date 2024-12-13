@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Single_Point
 # RCAIDE/Framework/Analyses/Mission/Segments/Single_Point/Set_Speed_Set_Altitude.py
 # 
 # 
@@ -19,9 +18,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Set_Speed_Set_Altitude
-# ----------------------------------------------------------------------------------------------------------------------
-
-## @ingroup Analyses-Mission-Segments-Single_Point
+# ---------------------------------------------------------------------------------------------------------------------- 
 class Set_Speed_Set_Altitude(Evaluate):
     """ This is a segment that is solved using a single point. A snapshot in time.
         We fix the speed and altitude. Throttle is solved from those.

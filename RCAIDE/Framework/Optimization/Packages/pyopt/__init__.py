@@ -1,5 +1,3 @@
-## @defgroup Optimization-Packages-pyopt pyopt  
-# @ingroup Optimization-Packages    
 # RCAIDE/Optimization/Packages/pyopt/__init__.py
 # 
 

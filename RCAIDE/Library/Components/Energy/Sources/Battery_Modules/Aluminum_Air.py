@@ -1,4 +1,3 @@
-## @ingroup Library-Compoments-Energy-Batteries
 # RCAIDE/Library/Compoments/Energy/Sources/Batteries/Aluminum_Air.py
 # 
 # 
@@ -15,7 +14,6 @@ from .Generic_Battery_Module    import Generic_Battery_Module
 # ----------------------------------------------------------------------------------------------------------------------
 #  Aluminum_Air
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Library-Compoments-Energy-Batteries
 class Aluminum_Air(Generic_Battery_Module):
     """ Aluminum-Air battery cell. Specifies discharge/specific energy characteristics specific to
     aluminum-air batteries. Also includes parameters related to consumption of aluminum, oxygen, and water

@@ -1,4 +1,3 @@
-## @defgroup Optimization 
 # RCAIDE/Optimization/__init__.py
 # 
 

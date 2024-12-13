@@ -1,5 +1,3 @@
-## @defgroup Library-Plots-WeightsWeights
-# @ingroup Visualization 
 # RCAIDE/Library/Plots/Weights/__init__.py
 # 
 

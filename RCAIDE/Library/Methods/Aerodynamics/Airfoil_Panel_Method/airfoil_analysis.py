@@ -1,4 +1,3 @@
-## @ingroup Methods-Aerodynamics-Airfoil_Panel_Method  
 # RCAIDE/Methods/Aerodynamics/Airfoil_Panel_Method/airfoil_analysis.py
 # 
 # 
@@ -23,7 +22,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 # airfoil_analysis.py
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Methods-Aerodynamics-Airfoil_Panel_Method
 def airfoil_analysis(airfoil_geometry,alpha,Re_L,initial_momentum_thickness=1E-5,tolerance = 1E0,H_wake = 1.05,Ue_wake = 0.99):
     """This computes the aerodynamic polars as well as the boundary layer properties of 
     an airfoil at a defined set of reynolds numbers and angle of attacks

@@ -12,7 +12,7 @@ from RCAIDE.Framework.Mission.Common     import   Conditions
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  append_cross_flow_heat_exchanger_conditions
 # ----------------------------------------------------------------------------------------------------------------------    
-def append_cross_flow_heat_exchanger_conditions(cross_flow_hex,segment,coolant_line,add_additional_network_equation):
+def append_cross_flow_heat_exchanger_conditions(cross_flow_hex,segment,coolant_line):
     """ Packs the initial cross flow heat exchanger conditions
     
         Assumptions:

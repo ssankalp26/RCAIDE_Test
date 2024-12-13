@@ -1,4 +1,3 @@
-## @defgroup Library-Attributes-Cryogens Cryogens
 # RCAIDE/Library/Attributes/Cryogens/__init__.py
 # 
 

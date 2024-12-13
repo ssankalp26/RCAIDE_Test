@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Common 
 # RCAIDE/Methods/Noise/Common/generate_microphone_locations.py
 # 
 # 

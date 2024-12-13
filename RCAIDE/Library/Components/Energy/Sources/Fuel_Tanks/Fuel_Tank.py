@@ -1,4 +1,3 @@
-## @ingroup Library-Compoments-Energy-Fuel_Tanks Fuel_Tanks
 # RCAIDE/Library/Compoments/Energy/Fuel_Tanks/Fuel_Tank.py
 # 
 # 
@@ -14,8 +13,7 @@ from RCAIDE.Library.Methods.Energy.Sources.Fuel_Tanks.append_fuel_tank_condition
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Fuel Tank
-# ---------------------------------------------------------------------------------------------------------------------   
-## @ingroup Library-Compoments-Energy-Fuel_Tanks 
+# ---------------------------------------------------------------------------------------------------------------------     
 class Fuel_Tank(Component):
     """Fuel tank compoment.
     """

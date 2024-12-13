@@ -1,4 +1,3 @@
-## @defgroup Methods-Energy-Propulsors-Rotor_Design Rotor_Design
 # RCAIDE/Methods/Energy/Propulsors/Rotor_Design/__init__.py
 # 
 

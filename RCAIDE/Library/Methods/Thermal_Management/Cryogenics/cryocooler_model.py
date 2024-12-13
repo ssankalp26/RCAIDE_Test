@@ -1,4 +1,3 @@
-## @ingroup Methods-Cryogenics-Cryocooler
 # cryocooler_model.py
 # 
 # Created:  Feb 2020,   K.Hamilton
@@ -6,19 +5,13 @@
 
 # ----------------------------------------------------------------------
 #  Imports
-# ----------------------------------------------------------------------
-
-# RCAIDE imports
-import RCAIDE
-
-# package imports
-from RCAIDE.Framework.Core import Data 
+# ---------------------------------------------------------------------- 
+# package imports 
 import numpy as np
 
 # ----------------------------------------------------------------------
 #  Cryocooler Model 
-# ----------------------------------------------------------------------    
-## @ingroup Methods-Cryogenics-Cryocooler
+# ----------------------------------------------------------------------     
 def cryocooler_model(Cryocooler):
 
     """ Calculate the power required by the cryocooler based on the cryocooler type, the required cooling power, and the temperature conditions.

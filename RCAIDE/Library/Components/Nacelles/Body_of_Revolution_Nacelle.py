@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Nacelles
 # RCAIDE/Compoments/Nacelles/Body_of_Revolution_Nacelle.py
 # 
 # 
@@ -8,14 +7,12 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 # RCAIDE imports    
-from RCAIDE.Framework.Core              import Data 
-from RCAIDE.Library.Components.Airfoils import Airfoil 
-from .Nacelle import Nacelle
+from RCAIDE.Framework.Core     import Data  
+from .Nacelle                  import Nacelle
  
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Nacalle
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Nacelles
+# ----------------------------------------------------------------------------------------------------------------------  
 class Body_of_Revolution_Nacelle(Nacelle):
     """ This is a body of revolution nacelle for a generic aircraft.
     

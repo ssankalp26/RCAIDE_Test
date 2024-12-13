@@ -1,4 +1,3 @@
-## @defgroup Analyses-Energy Energy
 # RCAIDE/Framework/Analyses/Energy/__init__.py
 # 
 

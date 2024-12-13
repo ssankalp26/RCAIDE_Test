@@ -8,15 +8,16 @@ from RCAIDE.Framework.Mission.Common     import   Conditions
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  append_turboshaft_conditions
 # ----------------------------------------------------------------------------------------------------------------------    
-def append_turboshaft_conditions(turboshaft,segment,fuel_line,add_additional_network_equation):  
+def append_turboshaft_conditions(turboshaft,segment):  
     ones_row    = segment.state.ones_row                  
-    segment.state.conditions.energy[fuel_line.tag][turboshaft.tag]                               = Conditions()  
-    segment.state.conditions.energy[fuel_line.tag][turboshaft.tag].throttle                      = 0. * ones_row(1)     
-    segment.state.conditions.energy[fuel_line.tag][turboshaft.tag].commanded_thrust_vector_angle = 0. * ones_row(1)   
-    segment.state.conditions.energy[fuel_line.tag][turboshaft.tag].power                         = 0. * ones_row(1) 
-    segment.state.conditions.energy[fuel_line.tag][turboshaft.tag].inputs                        = Conditions()
-    segment.state.conditions.energy[fuel_line.tag][turboshaft.tag].outputs                       = Conditions() 
-    segment.state.conditions.noise[fuel_line.tag][turboshaft.tag]                                = Conditions() 
-    segment.state.conditions.noise[fuel_line.tag][turboshaft.tag].turboshaft                     = Conditions() 
-    segment.state.conditions.noise[fuel_line.tag][turboshaft.tag].turboshaft.core_nozzle         = Conditions()   
+    segment.state.conditions.energy[turboshaft.tag]                               = Conditions()  
+    segment.state.conditions.energy[turboshaft.tag].throttle                      = 0. * ones_row(1)     
+    segment.state.conditions.energy[turboshaft.tag].commanded_thrust_vector_angle = 0. * ones_row(1)   
+    segment.state.conditions.energy[turboshaft.tag].power                         = 0. * ones_row(1)
+    segment.state.conditions.energy[turboshaft.tag].fuel_flow_rate                = 0. * ones_row(1)
+    segment.state.conditions.energy[turboshaft.tag].inputs                        = Conditions()
+    segment.state.conditions.energy[turboshaft.tag].outputs                       = Conditions() 
+    segment.state.conditions.noise[turboshaft.tag]                                = Conditions() 
+    segment.state.conditions.noise[turboshaft.tag].turboshaft                     = Conditions() 
+    segment.state.conditions.noise[turboshaft.tag].turboshaft.core_nozzle         = Conditions()   
     return 

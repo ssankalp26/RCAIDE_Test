@@ -1,4 +1,3 @@
-## @ingroup Library-Methods-Energy-Propulsors-Turboshaft_Propulsor
 # RCAIDE/Library/Methods/Energy/Propulsors/Turboshaft_Propulsor/design_turboshaft.py
 # 
 # 
@@ -27,7 +26,6 @@ import numpy                                                                as n
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Design Turboshaft
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Methods-Energy-Propulsors-Turboshaft_Propulsor
 def design_turboshaft(turboshaft):  
     #check if mach number and temperature are passed
     if(turboshaft.design_mach_number==None or turboshaft.design_altitude==None):
@@ -70,10 +68,10 @@ def design_turboshaft(turboshaft):
     segment.state.conditions = conditions
     segment.state.conditions.energy[fuel_line.tag] = Conditions()
     segment.state.conditions.noise[fuel_line.tag] = Conditions()
-    turboshaft.append_operating_conditions(segment,fuel_line) 
+    turboshaft.append_operating_conditions(segment) 
     for tag, item in  turboshaft.items(): 
         if issubclass(type(item), RCAIDE.Library.Components.Component):
-            item.append_operating_conditions(segment,fuel_line,turboshaft) 
+            item.append_operating_conditions(segment,turboshaft) 
          
     ram                                                   = turboshaft.ram
     inlet_nozzle                                          = turboshaft.inlet_nozzle
@@ -84,7 +82,7 @@ def design_turboshaft(turboshaft):
     core_nozzle                                           = turboshaft.core_nozzle  
 
     # unpack component conditions
-    turboshaft_conditions   = conditions.energy[fuel_line.tag][turboshaft.tag]
+    turboshaft_conditions   = conditions.energy[turboshaft.tag]
     ram_conditions          = turboshaft_conditions[ram.tag]     
     inlet_nozzle_conditions = turboshaft_conditions[inlet_nozzle.tag]
     core_nozzle_conditions  = turboshaft_conditions[core_nozzle.tag] 

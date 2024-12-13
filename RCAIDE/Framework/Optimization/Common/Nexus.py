@@ -1,4 +1,3 @@
-## @ingroup RCAIDE-Framework-Optimization-Common
 # RCAIDE/Framework/Optmizaition/Common/Nexus.py 
 
 # ----------------------------------------------------------------------------------------------------------------- 

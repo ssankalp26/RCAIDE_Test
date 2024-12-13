@@ -17,7 +17,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #   plot_heat_exchanger_system_conditions
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Visualization-Performance-Energy-Thermal_Management
 def plot_reservoir_conditions(reservoir, results, coolant_line, save_figure,show_legend ,save_filename,file_type , width, height):
     """Plots the Reservoir conditions throughout flight.
     

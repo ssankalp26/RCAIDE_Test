@@ -1,4 +1,3 @@
-## @defgroup Library-Components-Nacelles Nacelles
 # RCAIDE/Library/Components/Nacelles/__init__.py
 # 
 
