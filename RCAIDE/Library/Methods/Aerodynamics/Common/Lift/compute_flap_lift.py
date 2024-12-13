@@ -8,9 +8,9 @@
 # ----------------------------------------------------------------------
 #  Imports
 # ----------------------------------------------------------------------
-import Legacy.trunk.S as SUAVE
-from Legacy.trunk.S.Core import Units
-import numpy as np
+from   RCAIDE import  * 
+from   RCAIDE.Framework.Core import Units
+import numpy  as np
 
 # ----------------------------------------------------------------------
 #  compute_flap_lift

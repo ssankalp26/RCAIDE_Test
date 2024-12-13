@@ -1,25 +1,15 @@
-## @ingroup Methods-Aerodynamics-Fidelity_Zero-Lift
-# compute_max_lift_coeff.py
-#
-# Created:  Dec 2013, A. Variyar
-# Modified: Feb 2014, T. Orra
-#           Jan 2016, E. Botero        
-#           Feb 2019, E. Botero      
-#           Jul 2020, E. Botero 
-#           May 2021, E. Botero  
 
 # ----------------------------------------------------------------------
 #  Imports
 # ----------------------------------------------------------------------
 
 #SUAVE Imports
-import Legacy.trunk.S as SUAVE
-from Legacy.trunk.S.Core import Units
-from Legacy.trunk.S.Components import Wings
-from Legacy.trunk.S.Core  import Data
+from RCAIDE import  * 
+from RCAIDE.Framework.Core import Units,  Data
+from RCAIDE.Library.Components import Wings
 
-from Legacy.trunk.S.Methods.Aerodynamics.Fidelity_Zero.Lift.compute_slat_lift import compute_slat_lift
-from Legacy.trunk.S.Methods.Aerodynamics.Fidelity_Zero.Lift.compute_flap_lift import compute_flap_lift
+from RCAIDE.Library.Methods.Aerodynamics.Common.Lift.compute_slat_lift import compute_slat_lift
+from RCAIDE.Library.Methods.Aerodynamics.Common.Lift.compute_flap_lift import compute_flap_lift
 
 # ----------------------------------------------------------------------
 #  compute_max_lift_coeff

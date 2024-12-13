@@ -1,16 +1,9 @@
-## @ingroup Methods-Aerodynamics-Fidelity_Zero-Lift
-# compute_slat_lift.py
-#
-# Created:  Dec 2013, A. Variyar
-# Modified: Feb 2014, T. Orra
-#           Jun 2014, T. Orra 
-#           Jan 2016, E. Botero
 
 # ----------------------------------------------------------------------
 #  Imports
 # ----------------------------------------------------------------------
-import Legacy.trunk.S as SUAVE
-from Legacy.trunk.S.Core import Units
+from   RCAIDE import  * 
+from   RCAIDE.Framework.Core import Units
 import numpy as np
 
 # ----------------------------------------------------------------------
