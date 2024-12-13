@@ -8,13 +8,13 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-from .convert_sweep import convert_sweep
-from .fuselage_planform import fuselage_planform
-from .horizontal_tail_planform import horizontal_tail_planform
-from .vertical_tail_planform import vertical_tail_planform
-from .wing_planform import wing_planform
-from .horizontal_tail_planform_raymer import horizontal_tail_planform_raymer
-from .set_origin_non_dimensional import set_origin_non_dimensional
+from .convert_sweep                              import convert_sweep
+from .fuselage_planform                          import fuselage_planform
+from .horizontal_tail_planform                   import horizontal_tail_planform
+from .vertical_tail_planform                     import vertical_tail_planform
+from .wing_planform                              import wing_planform
+from .horizontal_tail_planform_raymer            import horizontal_tail_planform_raymer
+from .set_origin_non_dimensional                 import set_origin_non_dimensional
 from .set_origin_dimensional                     import set_origin_dimensional
 from .wing_segmented_planform                    import wing_segmented_planform
 from .segment_properties                         import segment_properties
