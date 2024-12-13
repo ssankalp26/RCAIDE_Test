@@ -10,7 +10,7 @@
 # package imports
 import numpy as np
 from RCAIDE.Library.Methods.Propulsion.fm_id import fm_id
-from Legacy.trunk.S.Methods.Propulsion.nozzle_calculations import  pressure_ratio_isentropic, pressure_ratio_shock_in_nozzle
+from RCAIDE.Library.Methods.Propulsion.nozzle_calculations import  pressure_ratio_isentropic, pressure_ratio_shock_in_nozzle
 
 
 # ---------------------------------------------------------------------------------------------------------------------- 
