@@ -10,7 +10,7 @@
 # ----------------------------------------------------------------------
 
 import numpy as np
-from Legacy.trunk.S.Core import Data
+from RCAIDE.Framework.Core import Data
 
 # ----------------------------------------------------------------------
 #   Wave Drag Lift

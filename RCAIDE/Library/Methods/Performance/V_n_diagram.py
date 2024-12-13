@@ -9,12 +9,12 @@
 # ----------------------------------------------------------------------
 
 # SUave Imports
-import Legacy.trunk.S as SUAVE
-from Legacy.trunk.S.Core import Data
-from Legacy.trunk.S.Core import Units
+import RCAIDE
+from RCAIDE.Framework.Core import Data
+from RCAIDE.Framework.Core import Units
 
-from Legacy.trunk.S.Analyses.Mission.Segments.Conditions import Aerodynamics,Numerics
-from Legacy.trunk.S.Methods.Aerodynamics.Fidelity_Zero.Lift import compute_max_lift_coeff
+from RCAIDE.Framework.Mission.Common  import Results 
+from RCAIDE.Library.Methods.Aerodynamics.Common.Lift import compute_max_lift_coeff
 from Legacy.trunk.S.Methods.Flight_Dynamics.Static_Stability.Approximations import datcom
 
 # package imports
@@ -95,7 +95,7 @@ def V_n_diagram(vehicle,analyses,weight,altitude,delta_ISA):
     # ----------------------------------------------
     atmo_values       = atmo.compute_values(altitude,delta_ISA)
     SL_atmo_values    = atmo.compute_values(0,delta_ISA)
-    conditions        = SUAVE.Analyses.Mission.Segments.Conditions.Aerodynamics()
+    conditions        = Results()
 
     rho               = atmo_values.density
     sea_level_rho     = SL_atmo_values.density

@@ -14,17 +14,15 @@
 
 from copy import deepcopy
 
-import Legacy.trunk.S as SUAVE
-from Legacy.trunk.S.Input_Output.OpenVSP.vsp_propeller        import read_vsp_propeller
-from Legacy.trunk.S.Input_Output.OpenVSP.vsp_fuselage         import read_vsp_fuselage
-from Legacy.trunk.S.Input_Output.OpenVSP.vsp_wing             import read_vsp_wing
-from Legacy.trunk.S.Input_Output.OpenVSP.vsp_nacelle          import read_vsp_nacelle
-from Legacy.trunk.S.Input_Output.OpenVSP.get_vsp_measurements import get_vsp_measurements
+import RCIADE
+from   RCAIDE.Framework.Core import Units, Data, Container
 
-from Legacy.trunk.S.Components.Energy.Networks.Lift_Cruise              import Lift_Cruise
-from Legacy.trunk.S.Components.Energy.Networks.Battery_Propeller        import Battery_Propeller
-
-from Legacy.trunk.S.Core import Units, Data, Container
+from RCAIDE.Framework.External_Interfaces.OpenVSP.vsp_propeller        import read_vsp_propeller
+from RCAIDE.Framework.External_Interfaces.OpenVSP.vsp_fuselage         import read_vsp_fuselage
+from RCAIDE.Framework.External_Interfaces.OpenVSP.vsp_wing             import read_vsp_wing
+from RCAIDE.Framework.External_Interfaces.OpenVSP.vsp_nacelle          import read_vsp_nacelle
+from RCAIDE.Framework.External_Interfaces.OpenVSP.get_vsp_measurements import get_vsp_measurements
+ 
 try:
     import vsp as vsp
 except ImportError:
@@ -263,36 +261,36 @@ def vsp_read(tag, units_type='SI',specified_network=None,use_scaling=True,calcul
                 prop_sym.origin[0][1] = - prop_sym.origin[0][1]   
                 propellers.append(prop_sym)
 
-    if specified_network == None:
-        # If no network specified, assign a network
-        if number_of_lift_rotor_engines>0 and number_of_propeller_engines>0:
-            net = Lift_Cruise()
-        else:
-            net = Battery_Propeller() 
-    else:
-        net = specified_network
+    #if specified_network == None:
+        ## If no network specified, assign a network
+        #if number_of_lift_rotor_engines>0 and number_of_propeller_engines>0:
+            #net = Lift_Cruise()
+        #else:
+            #net = Battery_Propeller() 
+    #else:
+        #net = specified_network
 
-    # Create the rotor network
-    if net.tag == "Lift_Cruise":
-        # Lift + Cruise network
-        for i in range(number_of_lift_rotor_engines):
-            net.lift_rotors.append(lift_rotors[list(lift_rotors.keys())[i]])
-        net.number_of_lift_rotor_engines = number_of_lift_rotor_engines	
+    ## Create the rotor network
+    #if net.tag == "Lift_Cruise":
+        ## Lift + Cruise network
+        #for i in range(number_of_lift_rotor_engines):
+            #net.lift_rotors.append(lift_rotors[list(lift_rotors.keys())[i]])
+        #net.number_of_lift_rotor_engines = number_of_lift_rotor_engines	
 
-        for i in range(number_of_propeller_engines):
-            net.propellers.append(propellers[list(propellers.keys())[i]])
-        net.number_of_propeller_engines = number_of_propeller_engines		
+        #for i in range(number_of_propeller_engines):
+            #net.propellers.append(propellers[list(propellers.keys())[i]])
+        #net.number_of_propeller_engines = number_of_propeller_engines		
 
-    elif net.tag == "Battery_Propeller":
-        # Append all rotors as propellers for the battery propeller network
-        for i in range(number_of_lift_rotor_engines):
-            # Accounts for multicopter configurations
-            net.propellers.append(lift_rotors[list(lift_rotors.keys())[i]])
+    #elif net.tag == "Battery_Propeller":
+        ## Append all rotors as propellers for the battery propeller network
+        #for i in range(number_of_lift_rotor_engines):
+            ## Accounts for multicopter configurations
+            #net.propellers.append(lift_rotors[list(lift_rotors.keys())[i]])
 
-        for i in range(number_of_propeller_engines):
-            net.propellers.append(propellers[list(propellers.keys())[i]])
+        #for i in range(number_of_propeller_engines):
+            #net.propellers.append(propellers[list(propellers.keys())[i]])
 
-        net.number_of_propeller_engines = number_of_lift_rotor_engines + number_of_propeller_engines	
+        #net.number_of_propeller_engines = number_of_lift_rotor_engines + number_of_propeller_engines	
 
     vehicle.networks.append(net)
 

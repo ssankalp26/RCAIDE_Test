@@ -9,8 +9,8 @@
 #  Imports
 # ----------------------------------------------------------------------
 
-from Legacy.trunk.S.Attributes.Atmospheres.Atmosphere import Atmosphere
-from Legacy.trunk.S.Analyses import Analysis
+from RCAIDE.Library.Attributes.Atmospheres.Atmosphere import Atmosphere
+from RCAIDE.Framework.Analyses import Analysis
 
 
 # ----------------------------------------------------------------------

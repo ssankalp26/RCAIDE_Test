@@ -53,7 +53,7 @@ if __name__ == '__main__':
     matplotlib.interactive(True)
     import scipy as sp
     import Legacy.trunk.S as SUAVE
-    from Legacy.trunk.S.Core import Units
+    from RCAIDE.Framework.Core import Units
 
     #define array of sweep and deflection
     sweep_vec = sp.linspace(-10,30,20) * Units.deg

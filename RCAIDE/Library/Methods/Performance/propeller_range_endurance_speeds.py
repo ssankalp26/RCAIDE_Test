@@ -8,7 +8,7 @@
 #  Imports
 # ----------------------------------------------------------------------
 
-from Legacy.trunk.S.Core import Data
+from RCAIDE.Framework.Core import Data
 import numpy as np
 import scipy as sp
 
