@@ -1,18 +1,14 @@
-## @ingroup Methods-Aerodynamics-Common-Fidelity_Zero-Helper_Functions
-# windmilling_drag_coefficient.py
-#
-# Created:  Jul 2014, T. Orra, C. Ilario, 
-# Modified: Oct 2015, T. Orra
-#           Jan 2016, E. Botero  
+
 
 # ----------------------------------------------------------------------
 #  Imports
 # ----------------------------------------------------------------------
 
 # SUAVE Imports
-import Legacy.trunk.S as SUAVE
-from Legacy.trunk.S.Components import Wings
-from Legacy.trunk.S.Core import Units, Data
+from  RCAIDE import * 
+from   RCAIDE                    import * 
+from   RCAIDE.Library.Components import Wings
+from   RCAIDE.Framework.Core     import Units, Data
 
 # ----------------------------------------------------------------------
 #  Compute drag of turbofan in windmilling condition
