@@ -54,9 +54,7 @@ modules = [
     'Tests/performance/landing_field_length.py',
     'Tests/performance/payload_range_test.py',
     'Tests/performance/take_off_field_length.py',
-    'Tests/performance/take_off_weight_from_tofl.py',
-    #'Tests/propulsion/dc_motor_test.py',
-    
+    'Tests/performance/take_off_weight_from_tofl.py',    
 ]
 
 def regressions():
