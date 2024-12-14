@@ -21,7 +21,7 @@ import numpy as np
 # ----------------------------------------------------------------------
 
 ## @ingroup Methods-Performance
-def estimate_landing_field_length(vehicle,analyses,airport):
+def estimate_landing_field_length(vehicle,analyses, altitude=0, delta_isa=0):
     """ Computes the landing field length for a given vehicle configuration in a given airport.
 
     Assumptions:
@@ -50,10 +50,9 @@ def estimate_landing_field_length(vehicle,analyses,airport):
    
     # ==============================================
     # Unpack
-    # ==============================================
-    atmo            = airport.atmosphere
-    altitude        = airport.altitude * Units.ft
-    delta_isa       = airport.delta_isa
+    # ============================================== 
+    altitude        = altitude * Units.ft
+    delta_isa       = delta_isa
     weight          = vehicle.mass_properties.landing
     reference_area  = vehicle.reference_area
     try:
@@ -64,13 +63,14 @@ def estimate_landing_field_length(vehicle,analyses,airport):
     # ==============================================
     # Computing atmospheric conditions
     # ==============================================
+    atmo            = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
     atmo_values     = atmo.compute_values(altitude,delta_isa)
     
-    p   = atmo_values.pressure
-    T   = atmo_values.temperature
-    rho = atmo_values.density
-    a   = atmo_values.speed_of_sound
-    mu  = atmo_values.dynamic_viscosity
+    p                 = atmo_values.pressure
+    T                 = atmo_values.temperature
+    rho               = atmo_values.density
+    a                 = atmo_values.speed_of_sound
+    mu                = atmo_values.dynamic_viscosity
     sea_level_gravity = atmo.planet.sea_level_gravity
    
     # ==============================================
@@ -100,7 +100,7 @@ def estimate_landing_field_length(vehicle,analyses,airport):
     # ========================================================================================
 
     # Defining landing distance equation coefficients 
-    landing_constants = np.zeros(3)
+    landing_constants    = np.zeros(3)
     landing_constants[0] = 250.
     landing_constants[1] =   0.
     landing_constants[2] =  2.485  / sea_level_gravity  # Two-wheels truck : [ (1.56 / 0.40 + 1.07) / (2*sea_level_gravity) ]

@@ -12,4 +12,3 @@ from . import Airfoil_Panel_Method
 from . import AERODAS
 from . import Vortex_Lattice_Method
 from . import Common
-from . import Lifting_Line

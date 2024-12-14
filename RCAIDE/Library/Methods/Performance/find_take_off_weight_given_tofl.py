@@ -18,7 +18,7 @@ import numpy as np
 # ----------------------------------------------------------------------
 
 ## @ingroup Methods-Performance
-def find_take_off_weight_given_tofl(vehicle,analyses,airport,target_tofl):
+def find_take_off_weight_given_tofl(vehicle,analyses,target_tofl,altitude = 0, delta_isa = 0,):
     """Estimates the takeoff weight given a certain takeoff field length.
 
     Assumptions:
@@ -54,10 +54,10 @@ def find_take_off_weight_given_tofl(vehicle,analyses,airport,target_tofl):
 
     for id,tow in enumerate(tow_vec):
         vehicle.mass_properties.takeoff = tow
-        tofl[id] = estimate_take_off_field_length(vehicle,analyses,airport)
+        tofl[id], _ = estimate_take_off_field_length(vehicle,analyses,altitude = 0, delta_isa = 0)
 
     target_tofl = np.atleast_1d(target_tofl)
-    max_tow = np.zeros_like(target_tofl)
+    max_tow     = np.zeros_like(target_tofl)
 
     for id,toflid in enumerate(target_tofl):
         max_tow[id] = np.interp(toflid,tofl,tow_vec)

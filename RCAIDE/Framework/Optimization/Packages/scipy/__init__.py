@@ -9,3 +9,4 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
 
 from .scipy_setup import SciPy_Solve
+from .scipy_setup import SciPy_Problem
