@@ -7,7 +7,7 @@
 #  Imports
 # ----------------------------------------------------------------------
 
-import Legacy.trunk.S as SUAVE
+import RCAIDE
 from RCAIDE.Framework.Core import Units, Data 
 import numpy as np
 try:
@@ -233,7 +233,7 @@ def read_vsp_nacelle(nacelle_id,vsp_nacelle_type, units_type='SI'):
     Properties Used:
     N/A
     """  	
-    nacelle = SUAVE.Components.Nacelles.Nacelle()	
+    nacelle = RCAIDE.Library.Components.Nacelles.Nacelle()	
 
     if units_type == 'SI':
         units_factor = Units.meter * 1.
@@ -269,7 +269,7 @@ def read_vsp_nacelle(nacelle_id,vsp_nacelle_type, units_type='SI'):
         for i in range(num_segs): 
             # Create the segment
             xsec_id      = vsp.GetXSec(xsec_surf_id, i) # VSP XSec ID.
-            segment      = SUAVE.Components.Lofted_Body_Segment.Segment() 
+            segment      = RCAIDE.Library.Components.Fuselages.Segment() 
             segment.tag  = 'segment_' + str(i)
     
             # Pull out Parms that will be needed
@@ -330,7 +330,7 @@ def read_vsp_nacelle(nacelle_id,vsp_nacelle_type, units_type='SI'):
         shape_dict = {0:'point',1:'circle',2:'ellipse',3:'super ellipse',4:'rounded rectangle',5:'general fuse',6:'fuse file',\
                       7:'four series',8:'six series',9:'biconvex',10:'wedge',11:'editcurve',12:'file airfoil'}  
         if shape_dict[shape] == 'four series': 
-            naf        = SUAVE.Components.Airfoils.Airfoil()
+            naf        = RCAIDE.Library.Components.Airfoils.Airfoil()
             length     = vsp.GetParmVal(nacelle_id, "Chord", "XSecCurve") * units_factor 
             thickness  = int(round(vsp.GetParmVal(nacelle_id, "ThickChord", "XSecCurve")*10,0))
             camber     = int(round(vsp.GetParmVal(nacelle_id, "Camber", "XSecCurve")*100,0))
@@ -354,7 +354,7 @@ def read_vsp_nacelle(nacelle_id,vsp_nacelle_type, units_type='SI'):
                 height   = diameter/2
         
         elif shape_dict[shape] == 'file airfoil': 
-            naf                = SUAVE.Components.Airfoils.Airfoil()
+            naf                = RCAIDE.Library.Components.Airfoils.Airfoil()
             thickness_to_chord = vsp.GetParmVal(nacelle_id, "ThickChord", "XSecCurve")   * units_factor
             length             = vsp.GetParmVal(nacelle_id, "Chord", "XSecCurve")   * units_factor 
             height             = thickness_to_chord*length  * units_factor            

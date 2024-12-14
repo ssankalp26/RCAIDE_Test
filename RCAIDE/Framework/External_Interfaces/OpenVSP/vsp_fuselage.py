@@ -10,7 +10,7 @@
 #  Imports
 # ----------------------------------------------------------------------
 
-import Legacy.trunk.S as SUAVE
+import RCAIDE
 from RCAIDE.Framework.Core import Units, Data  
 import numpy as np
 try:
@@ -85,7 +85,7 @@ def read_vsp_fuselage(fuselage_id,fux_idx,sym_flag, units_type='SI', fineness=Tr
     Properties Used:
     N/A
     """  	
-    fuselage = SUAVE.Components.Fuselages.Fuselage()	
+    fuselage = RCAIDE.Library.Components.Fuselages.Fuselage()	
 
     if units_type == 'SI':
         units_factor = Units.meter * 1.
@@ -127,7 +127,7 @@ def read_vsp_fuselage(fuselage_id,fux_idx,sym_flag, units_type='SI', fineness=Tr
     for ii in range(0, fuselage.vsp_data.xsec_num): 
         # Create the segment
         x_sec                     = vsp.GetXSec(fuselage.vsp_data.xsec_surf_id, ii) # VSP XSec ID.
-        segment                   = SUAVE.Components.Lofted_Body_Segment.Segment()
+        segment                   = RCAIDE.Library.Components.Fuselages.Segment()
         segment.vsp_data.xsec_id  = x_sec 
         segment.tag               = 'segment_' + str(ii)
 
