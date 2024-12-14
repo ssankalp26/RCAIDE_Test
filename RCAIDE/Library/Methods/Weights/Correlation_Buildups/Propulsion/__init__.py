@@ -13,4 +13,4 @@ from .compute_piston_engine_weight                          import compute_pisto
 from .integrated_propulsion                                 import integrated_propulsion
 from .integrated_propulsion_general_aviation                import integrated_propulsion_general_aviation
 from .compute_motor_weight                                  import compute_motor_weight
-from Legacy.trunk.S.Methods.Weights.Dynamo_Supply.dynamo_supply_mass_estimation   import dynamo_supply_mass_estimation
+from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Electric   import dynamo_supply_mass_estimation
