@@ -6,5 +6,5 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-from Legacy.trunk.S.Methods.Propulsion.Rotor_Wake.Fidelity_Zero.compute_fidelity_zero_induced_velocity   import compute_fidelity_zero_induced_velocity 
-from Legacy.trunk.S.Methods.Propulsion.Rotor_Wake.Fidelity_Zero.compute_wake_contraction_matrix          import compute_wake_contraction_matrix
+from RCAIDE.Library.Methods.Propulsors.Converters.Rotor.Wake.Perscribed_Vortex_Wake.compute_fidelity_zero_induced_velocity   import compute_fidelity_zero_induced_velocity 
+from RCAIDE.Library.Methods.Propulsors.Converters.Rotor.Wake.Perscribed_Vortex_Wake.compute_wake_contraction_matrix          import compute_wake_contraction_matrix
