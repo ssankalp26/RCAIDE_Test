@@ -8,5 +8,5 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-from Legacy.trunk.S.Methods.Utilities.Chebyshev.chebyshev_data import chebyshev_data
-from Legacy.trunk.S.Methods.Utilities.Chebyshev.linear_data    import linear_data
+from .chebyshev_data import chebyshev_data
+from .linear_data    import linear_data

@@ -40,44 +40,4 @@ def compute_slat_lift(slat_angle,sweep_angle):
 
     #returning dcl_slat
     return dcl_slat
-
-# ----------------------------------------------------------------------
-#   Module Tests
-# ----------------------------------------------------------------------
-# this will run from command line, put simple tests for your code here
-if __name__ == '__main__':
-
-    #imports
-    import pylab as plt
-    import matplotlib
-    matplotlib.interactive(True)
-    import scipy as sp
-    import Legacy.trunk.S as SUAVE
-    from RCAIDE.Framework.Core import Units
-
-    #define array of sweep and deflection
-    sweep_vec = sp.linspace(-10,30,20) * Units.deg
-    deflection_vec = sp.linspace(0,50,6)* Units.deg
-
-    dcl_slat = sp.zeros((len(sweep_vec),len(deflection_vec)))
-    legend = ''
-
-    for i in range(len(sweep_vec)):
-        for j in range(len(deflection_vec)):
-            sweep = sweep_vec[i]
-            deflection = deflection_vec[j]
-            dcl_slat[i,j] = compute_slat_lift(deflection,sweep)
-
-    # ------------------------------------------------------------------
-    #   Plotting Delta CL due to Slat vs Sweep angle
-    # ------------------------------------------------------------------
-    title = "Delta dCL_slat vs Wing sweep"
-    plt.figure(1); 
-    for deflection in range(len(deflection_vec)):
-        plt.plot(sweep_vec/Units.deg , dcl_slat[:,deflection] ,'bo-', \
-                    label = 'Deflection: ' +  str(deflection_vec[deflection]/Units.deg) + ' deg')
-    plt.xlabel('Sweep angle (deg)'); plt.ylabel('delta CL due to Slat')
-    plt.title(title); plt.grid(True)
-    legend = plt.legend(loc='upper right', shadow = 'true')
-    plt.show(block=True)
-
+ 
