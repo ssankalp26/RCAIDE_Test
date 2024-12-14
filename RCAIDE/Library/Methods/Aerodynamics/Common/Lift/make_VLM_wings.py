@@ -11,7 +11,7 @@
 import numpy as np
 from copy import deepcopy
 import  RCAIDE
-import Legacy.trunk.S as SUAVE
+
 from RCAIDE.Framework.Core import  Data
 from RCAIDE.Library.Components.Wings import All_Moving_Surface 
 from RCAIDE.Library.Components.Wings.Control_Surfaces import Aileron , Elevator , Slat , Flap , Rudder 
@@ -123,9 +123,9 @@ def make_VLM_wings(geometry, settings):
             continue
         
         #prepare to iterate across all segments and control surfaces
-        seg_breaks  = SUAVE.Core.ContainerOrdered()
-        LE_breaks   = SUAVE.Core.ContainerOrdered()
-        TE_breaks   = SUAVE.Core.ContainerOrdered()
+        seg_breaks  = RCAIDE.Framework.Core.ContainerOrdered()
+        LE_breaks   = RCAIDE.Framework.Core.ContainerOrdered()
+        TE_breaks   = RCAIDE.Framework.Core.ContainerOrdered()
         n_segments  = len(wing.Segments.keys())
 
         #process all control surfaces in each segment-------------------------------------
