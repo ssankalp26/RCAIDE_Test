@@ -132,7 +132,7 @@ def base_analysis(vehicle):
     
     # ------------------------------------------------------------------
     #  Planet Analysis
-    planet = RCAIDE.Framework.Analyses.Planets.Planet()
+    planet = RCAIDE.Framework.Analyses.Planets.Earth()
     analyses.append(planet)
     
     # ------------------------------------------------------------------
@@ -215,6 +215,7 @@ def mission_setup(analyses):
     segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment)
     segment.tag = "climb_2" 
     segment.analyses.extend( analyses.cruise ) 
+    segment.analyses.aerodynamics.settings.supersonic.wave_drag_type == 'Sears-Haack'    
     segment.altitude_end = 8000. * Units.ft
     segment.airpseed     = 250.  * Units.kts
     segment.climb_rate   = 2000. * Units['ft/min']  

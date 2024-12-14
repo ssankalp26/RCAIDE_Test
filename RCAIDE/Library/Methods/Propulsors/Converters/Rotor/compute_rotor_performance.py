@@ -7,8 +7,7 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
  # RCAIDE imports 
-from RCAIDE.Framework.Core                              import Data , Units, orientation_product, orientation_transpose 
-from RCAIDE.Framework.Analyses.Propulsion               import Rotor_Wake_Fidelity_One
+from RCAIDE.Framework.Core                              import Data , Units, orientation_product, orientation_transpose  
 from RCAIDE.Library.Methods.Aerodynamics.Common.Lift    import compute_airfoil_aerodynamics,compute_inflow_and_tip_loss  
 
 # package imports
@@ -109,11 +108,7 @@ def compute_rotor_performance(propulsor,state,center_of_gravity= [[0.0, 0.0,0.0]
     airfoils              = rotor.Airfoils 
     Na                    = rotor.number_azimuthal_stations
     nonuniform_freestream = rotor.nonuniform_freestream
-    use_2d_analysis       = rotor.use_2d_analysis
-    
-    # 2d analysis required for wake fid1
-    if isinstance(rotor.Wake, Rotor_Wake_Fidelity_One):
-        use_2d_analysis=True
+    use_2d_analysis       = rotor.use_2d_analysis 
 
     # Check for variable pitch
     if np.any(pitch_c !=0) and not rotor.variable_pitch:

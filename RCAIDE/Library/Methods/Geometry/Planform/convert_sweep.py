@@ -1,8 +1,3 @@
-# convert_sweep.py
-#
-# Created:  Feb 2014, T. Momose
-# Modified: Jan 2016, E. Botero
-#           Jun 2021, A. Blaufox
 
 # ----------------------------------------------------------------------
 #  Imports

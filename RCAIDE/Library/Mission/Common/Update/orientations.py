@@ -27,7 +27,7 @@ def orientations(segment):
         segment.state.conditions:
             frames.inertial.velocity_vector          [meters/second]
             frames.body.inertial_rotations           [Radians]
-        segment.analyses.planet.features.mean_radius [meters]
+        segment.analyses.planet.mean_radius [meters]
         state.numerics.time.integrate                [float]
             
         Outputs:

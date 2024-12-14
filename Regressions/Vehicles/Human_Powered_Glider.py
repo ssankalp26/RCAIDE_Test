@@ -26,15 +26,15 @@ def vehicle_setup():
     #   Vehicle-level Properties
     # ------------------------------------------------------------------    
     # mass properties
-    vehicle.mass_properties.takeoff         = 250. * Units.kg
-    vehicle.mass_properties.operating_empty = 250. * Units.kg
-    vehicle.mass_properties.max_takeoff     = 250. * Units.kg 
+    vehicle.mass_properties.takeoff                  = 250. * Units.kg
+    vehicle.mass_properties.operating_empty          = 250. * Units.kg
+    vehicle.mass_properties.max_takeoff              = 250. * Units.kg 
     
     # basic parameters
-    vehicle.reference_area                    = 80.       
-    vehicle.envelope.ultimate_load            = 2.0
-    vehicle.envelope.limit_load               = 1.5
-    vehicle.envelope.maximum_dynamic_pressure = 0.5*1.225*(40.**2.) #Max q
+    vehicle.reference_area                           = 80.       
+    vehicle.flight_envelope.ultimate_load            = 2.0
+    vehicle.flight_envelope.limit_load               = 1.5
+    vehicle.flight_envelope.maximum_dynamic_pressure = 0.5*1.225*(40.**2.) #Max q
 
     # ------------------------------------------------------------------        
     #   Main Wing

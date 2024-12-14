@@ -9,21 +9,23 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
- 
-from RCAIDE.Framework.Core import DataOrdered
 import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')
 import sys, os, traceback, time
+from RCAIDE.Framework.Core import DataOrdered
 
 sys.path.append(os.path.join(sys.path[0], 'Vehicles'))
-sys.path.append(os.path.join(sys.path[-1], 'Rotors'))
+sys.path.append(os.path.join(sys.path[0], 'Vehicles' + os.sep + 'Rotors' )) 
 
 modules = [ 
     # ----------------------- Regression List --------------------------
     'Tests/analysis_aerodynamics/airfoil_panel_method_test.py',    
-    'Tests/analysis_aerodynamics/airfoil_panel_method_convergence.py',    
-    'Tests/analysis_aerodynamics/VLM_test.py',    
+    'Tests/analysis_aerodynamics/airfoil_panel_method_convergence.py',
+    'Tests/analysis_aerodynamics/VLM_control_surface_test.py',    
+    'Tests/analysis_aerodynamics/VLM_moving_surface_test.py',    
+    'Tests/atmosphere/atmosphere.py',
+    'Tests/atmosphere/constant_temperature.py',
     'Tests/analysis_emissions/emissions_test.py',   
     'Tests/analysis_noise/digital_elevation_test.py',  
     'Tests/analysis_noise/frequency_domain_test.py', 
@@ -32,8 +34,12 @@ modules = [
     'Tests/analysis_stability/untrimmed_flight_test.py', 
     'Tests/analysis_weights/operating_empty_weight_test.py',
     'Tests/analysis_weights/cg_and_moi_test.py',
-    'Tests/geometry_airfoils/airfoil_import_test.py', 
-    'Tests/geometry_airfoils/airfoil_interpolation_test.py',     
+    'Tests/energy_sources/cell_test.py',
+    'Tests/geometry/airfoil_import_test.py', 
+    'Tests/geometry/airfoil_interpolation_test.py',    
+    'Tests/geometry/wing_volume_test.py',
+    'Tests/geometry/wing_fuel_volume_compute.py',
+    'Tests/geometry/fuselage_planform_compute.py',    
     'Tests/mission_segments/transition_segment_test.py', 
     'Tests/network_electric/electric_btms_test.py', 
     'Tests/network_ducted_fan/electric_ducted_fan_network_test.py',
@@ -43,9 +49,11 @@ modules = [
     'Tests/network_turboshaft/turboshaft_network_test.py',
     'Tests/network_internal_combustion_engine/ICE_test.py',
     'Tests/network_internal_combustion_engine/ICE_constant_speed_test.py',
-    'Tests/network_isolated_battery_cell/cell_test.py',
-    'Tests/performance_payload_range/payload_range_test.py',
-    
+    'Tests/optimization/optimization_packages.py',
+    'Tests/performance/landing_field_length.py',
+    'Tests/performance/payload_range_test.py',
+    'Tests/performance/take_off_field_length.py',
+    'Tests/performance/take_off_weight_from_tofl.py',    
 ]
 
 def regressions():

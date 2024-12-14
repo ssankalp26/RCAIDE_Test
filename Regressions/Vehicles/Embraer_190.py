@@ -43,14 +43,14 @@ def vehicle_setup():
     vehicle.mass_properties.moments_of_inertia.tensor = [[10 ** 5, 0, 0],[0, 10 ** 6, 0,],[0,0, 10 ** 7]] 
 
     # envelope properties
-    vehicle.envelope.ultimate_load = 3.5
-    vehicle.envelope.limit_load    = 1.5
+    vehicle.flight_envelope.ultimate_load             = 3.5
+    vehicle.flight_envelope.limit_load                = 1.5
 
     # basic parameters
-    vehicle.reference_area         = 92.
-    vehicle.passengers             = 106
-    vehicle.systems.control        = "fully powered"
-    vehicle.systems.accessories    = "medium range"
+    vehicle.reference_area                            = 92.
+    vehicle.passengers                                = 106
+    vehicle.systems.control                           = "fully powered"
+    vehicle.systems.accessories                       = "medium range"
 
 
     #------------------------------------------------------------------------------------------------------------------------------------

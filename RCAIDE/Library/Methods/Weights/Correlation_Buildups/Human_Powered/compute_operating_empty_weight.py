@@ -82,7 +82,7 @@ def compute_operating_empty_weight(vehicle,settings=None):
     
     nult   = vehicle.flight_envelope.ultimate_load
     gw     = vehicle.mass_properties.max_takeoff
-    qm     = vehicle.envelope.maximum_dynamic_pressure
+    qm     = vehicle.flight_envelope.maximum_dynamic_pressure
     
     for wing in vehicle.wings:
         if isinstance(wing,RCAIDE.Library.Components.Wings.Main_Wing):

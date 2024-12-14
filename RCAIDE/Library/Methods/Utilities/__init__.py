@@ -10,6 +10,6 @@
 
 from . import Chebyshev
 
-from Legacy.trunk.S.Methods.Utilities.soft_max                 import soft_max
-from Legacy.trunk.S.Methods.Utilities.latin_hypercube_sampling import latin_hypercube_sampling
-from Legacy.trunk.S.Methods.Utilities.Cubic_Spline_Blender     import Cubic_Spline_Blender
+from RCAIDE.Library.Methods.Utilities.soft_max                 import soft_max
+from RCAIDE.Library.Methods.Utilities.latin_hypercube_sampling import latin_hypercube_sampling
+from RCAIDE.Library.Methods.Utilities.Cubic_Spline_Blender     import Cubic_Spline_Blender

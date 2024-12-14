@@ -8,4 +8,4 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-from Legacy.trunk.S.Optimization.Package_Setups import additive_setup 
+from .additive_setup import Additive_Solver 

@@ -9,5 +9,5 @@
 # ----------------------------------------------------------------------------------------------------------------------
   
 from .Aerodynamics           import Aerodynamics 
-from .Vortex_Lattice_Method  import Vortex_Lattice_Method
 from .Athena_Vortex_Lattice  import Athena_Vortex_Lattice
+from .Vortex_Lattice_Method  import Vortex_Lattice_Method

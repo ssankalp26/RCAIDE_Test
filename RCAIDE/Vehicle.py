@@ -29,31 +29,61 @@ class Vehicle(Data):
         Source:
             None
         """    
-        self.tag                                      = 'vehicle'
-        self.networks                                 = Framework.Networks.Network.Container()
-        self.fuselages                                = Components.Fuselages.Fuselage.Container()
-        self.wings                                    = Components.Wings.Wing.Container()
-        self.nacelles                                 = Components.Nacelles.Nacelle.Container()
-        self.systems                                  = Components.Systems.System.Container()
-        self.avionics                                 = Components.Systems.Avionics.Container()
-        self.booms                                    = Components.Booms.Boom.Container()
-        self.mass_properties                          = Vehicle_Mass_Container()
-        self.payload                                  = Components.Payloads.Payload.Container()
-        self.costs                                    = Data() 
-        self.costs.industrial                         = Attributes.Costs.Industrial_Costs()
-        self.costs.operating                          = Attributes.Costs.Operating_Costs()    
-        self.envelope                                 = Attributes.Envelope()
-        self.landing_gears                            = Components.Landing_Gear.Landing_Gear.Container()  
-        self.reference_area                           = 0.0
-        self.passengers                               = 0.0
-        self.maximum_cross_sectional_area             = 0.0
-        self.flight_envelope                          = Data()
-        self.flight_envelope.design_dynamic_pressure  = None 
-        self.flight_envelope.design_mach_number       = None  
-        self.flight_envelope.design_cruise_altitude   = None
-        self.flight_envelope.design_range             = None 
-        self.flight_envelope.ultimate_load            = 5.7 
-        self.flight_envelope.limit_load               = 3.8          
+        self.tag                                                           = 'vehicle'
+        self.networks                                                      = Framework.Networks.Network.Container()
+        self.fuselages                                                     = Components.Fuselages.Fuselage.Container()
+        self.wings                                                         = Components.Wings.Wing.Container()
+        self.nacelles                                                      = Components.Nacelles.Nacelle.Container()
+        self.systems                                                       = Components.Systems.System.Container()
+        self.avionics                                                      = Components.Systems.Avionics.Container()
+        self.booms                                                         = Components.Booms.Boom.Container()
+        self.mass_properties                                               = Vehicle_Mass_Container()
+        self.payload                                                       = Components.Payloads.Payload.Container()
+        self.costs                                                         = Data()     
+        self.landing_gears                                                 = Components.Landing_Gear.Landing_Gear.Container()  
+        self.reference_area                                                = 0.0
+        self.passengers                                                    = 0.0
+        self.maximum_cross_sectional_area                                  = 0.0
+        
+        self.flight_envelope                                               = Data()
+        self.flight_envelope.design_dynamic_pressure                       = None 
+        self.flight_envelope.design_mach_number                            = None  
+        self.flight_envelope.design_cruise_altitude                        = None
+        self.flight_envelope.design_range                                  = None 
+        self.flight_envelope.ultimate_load                                 = 5.7 
+        self.flight_envelope.limit_load                                    = 3.8   
+        self.flight_envelope.alpha_maximum                                 = 0.0
+        self.flight_envelope.alt_vc                                        = 0.0
+        self.flight_envelope.alt_gust                                      = 0.0
+        self.flight_envelope.max_ceiling                                   = 0.0
+        self.flight_envelope.maximum_dynamic_pressure                      = 0.0
+        self.flight_envelope.maximum_mach_operational                      = 0.0
+
+        self.flight_envelope.maneuver                                      = Data()
+        self.flight_envelope.maneuver.load_alleviation_factor              = 0.0
+        
+        self.flight_envelope.maneuver.equivalent_speed                     = Data()
+        self.flight_envelope.maneuver.equivalent_speed.velocity_max_gust   = 0
+        self.flight_envelope.maneuver.equivalent_speed.velocity_max_cruise = 0
+        self.flight_envelope.maneuver.equivalent_speed.velocity_max_dive   = 0
+        
+        self.flight_envelope.maneuver.load_factor                          = Data()
+        self.flight_envelope.maneuver.load_factor.velocity_max_gust        = 0
+        self.flight_envelope.maneuver.load_factor.velocity_max_cruise      = 0
+        self.flight_envelope.maneuver.load_factor.velocity_max_dive        = 0
+
+        self.flight_envelope.gust                                          = Data()
+        self.flight_envelope.gust.load_alleviation_factor                  = 0.0
+        self.flight_envelope.gust.equivalent_speed                         = Data()
+        self.flight_envelope.gust.equivalent_speed.velocity_max_gust       = 0
+        self.flight_envelope.gust.equivalent_speed.velocity_max_cruise     = 0
+        self.flight_envelope.gust.equivalent_speed.velocity_max_dive       = 0
+        
+        self.flight_envelope.gust.load_factor                              = Data()
+        self.flight_envelope.gust.load_factor.velocity_max_gust            = 0
+        self.flight_envelope.gust.load_factor.velocity_max_cruise          = 0
+        self.flight_envelope.gust.load_factor.velocity_max_dive            = 0 
+        
         self.performance                              = DataOrdered()
          
     _energy_network_root_map = None 
@@ -85,8 +115,7 @@ class Vehicle(Data):
             Components.Systems.System                  : self['systems']          ,
             Components.Systems.Avionics                : self['avionics']         ,
             Components.Payloads.Payload                : self['payload']          , 
-            Components.Nacelles.Nacelle                : self['nacelles']         ,
-            Attributes.Envelope                        : self['envelope']         ,
+            Components.Nacelles.Nacelle                : self['nacelles']         , 
             Components.Booms.Boom                      : self['booms']            ,
             Components.Landing_Gear.Landing_Gear       : self['landing_gears']     ,
             Vehicle_Mass_Properties                    : self['mass_properties']  ,

@@ -8,4 +8,4 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-from Legacy.trunk.S.Optimization.Package_Setups import pyoptsparse_setup
+from .pyoptsparse_setup import Pyoptsparse_Solve

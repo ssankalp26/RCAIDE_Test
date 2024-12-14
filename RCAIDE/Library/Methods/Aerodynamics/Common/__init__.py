@@ -10,5 +10,3 @@
 
 from . import Drag
 from . import Lift
-from . import Helper_Functions
-from . import Gas_Dynamics

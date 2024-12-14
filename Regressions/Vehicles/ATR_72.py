@@ -49,14 +49,14 @@ def vehicle_setup():
     vehicle.design_cruise_alt                         = 25000 *Units.feet
 
     # envelope properties
-    vehicle.envelope.ultimate_load        = 3.75
-    vehicle.envelope.limit_load           = 1.5
-       
-    # basic parameters       
-    vehicle.reference_area                = 61.0  
-    vehicle.passengers                    = 72
-    vehicle.systems.control               = "fully powered"
-    vehicle.systems.accessories           = "short range"  
+    vehicle.flight_envelope.ultimate_load             = 3.75
+    vehicle.flight_envelope.limit_load                = 1.5
+              
+    # basic parameters              
+    vehicle.reference_area                            = 61.0  
+    vehicle.passengers                                = 72
+    vehicle.systems.control                           = "fully powered"
+    vehicle.systems.accessories                       = "short range"  
 
  
     # ------------------------------------------------------------------
