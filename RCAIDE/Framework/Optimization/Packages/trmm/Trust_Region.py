@@ -8,8 +8,7 @@
 #  Imports
 # ----------------------------------------------------------------------
 
-import Legacy.trunk.S as SUAVE
-from Legacy.trunk.S.Core import Data
+from RCAIDE.Framework.Core import Data
 
 # ----------------------------------------------------------------------
 #  Trust Region Class

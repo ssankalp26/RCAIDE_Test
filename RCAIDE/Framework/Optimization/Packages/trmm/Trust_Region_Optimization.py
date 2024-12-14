@@ -10,13 +10,12 @@
 # ----------------------------------------------------------------------
 
 import numpy as np
-import Legacy.trunk.S as SUAVE
 try:
-    import pyOpt
+    import RCAIDE.Framework.Optimization.Packages.pyopt.pyopt_setup
 except:
     pass
-from Legacy.trunk.S.Core import Data
-from Legacy.trunk.S.Optimization import helper_functions as help_fun
+from RCAIDE.Framework.Core import Data
+from RCAIDE.Framework.Optimization.Common import helper_functions as help_fun
 import os
 import sys
 from scipy.optimize import minimize

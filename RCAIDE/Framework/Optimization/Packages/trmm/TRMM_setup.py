@@ -8,8 +8,8 @@
 #  Imports
 # ----------------------------------------------------------------------
 
-from Legacy.trunk.S.Optimization.Package_Setups.TRMM import Trust_Region_Optimization as tro
-from Legacy.trunk.S.Optimization.Package_Setups.TRMM.Trust_Region import Trust_Region
+from RCAIDE.Framework.Optimization.Packages.trmm import Trust_Region_Optimization as tro
+from RCAIDE.Framework.Optimization.Packages.trmm.Trust_Region import Trust_Region
 
 # ----------------------------------------------------------------------
 #  TRMM_Solve
