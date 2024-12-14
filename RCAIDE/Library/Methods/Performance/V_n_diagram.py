@@ -11,11 +11,9 @@
 # SUave Imports
 import RCAIDE
 from RCAIDE.Framework.Core import Data
-from RCAIDE.Framework.Core import Units
-
+from RCAIDE.Framework.Core import Units 
 from RCAIDE.Framework.Mission.Common  import Results 
-from RCAIDE.Library.Methods.Aerodynamics.Common.Lift import compute_max_lift_coeff
-from Legacy.trunk.S.Methods.Flight_Dynamics.Static_Stability.Approximations import datcom
+from RCAIDE.Library.Methods.Aerodynamics.Common.Lift import compute_max_lift_coeff 
 
 # package imports
 import numpy as np
@@ -100,13 +98,13 @@ def V_n_diagram(vehicle,analyses,weight,altitude,delta_ISA):
     rho               = atmo_values.density
     sea_level_rho     = SL_atmo_values.density
     sea_level_gravity = atmo.planet.sea_level_gravity
-    Vc                = Mc * (1.4 * 287 * atmo_values.temperature) ** 0.5
+    Vc                = Mc * atmo_values.speed_of_sound
     
     # ------------------------------
     # Computing lift-curve slope
-    # ------------------------------  
-    CLa = datcom(vehicle.wings.main_wing, np.array([Mc]))
-    CLa = CLa[0]
+    # ------------------------------ 
+    results =  evalaute_aircraft(vehicle,altitude,Vc) 
+    CLa     =  results.segments.cruise.conditions.static_stability.derivatives.CLift_alpha[0, 0] 
 
     # -----------------------------------------------------------
     # Determining vehicle minimum and maximum lift coefficients
@@ -427,6 +425,134 @@ def V_n_diagram(vehicle,analyses,weight,altitude,delta_ISA):
     flog.close()
   
     return V_n_data
+
+      
+def evalaute_aircraft(vehicle,altitude,Vc): 
+    
+    # Set up vehicle configs
+    configs  = configs_setup(vehicle)
+
+    # create analyses
+    analyses = analyses_setup(configs)
+
+    # mission analyses
+    mission  = base_mission_setup(analyses,altitude,Vc) 
+
+    # create mission instances (for multiple types of missions)
+    missions = missions_setup(mission) 
+
+    # mission analysis 
+    results = missions.base_mission.evaluate() 
+
+    return results
+ 
+def analyses_setup(configs):
+
+    analyses = RCAIDE.Framework.Analyses.Analysis.Container()
+
+    # build a base analysis for each config
+    for tag,config in configs.items():
+        analysis = base_analysis(config)
+        analyses[tag] = analysis
+
+    return analyses
+
+def base_analysis(vehicle):
+
+       # ------------------------------------------------------------------
+    #   Initialize the Analyses
+    # ------------------------------------------------------------------     
+    analyses        = RCAIDE.Framework.Analyses.Vehicle() 
+
+    # ------------------------------------------------------------------
+    #  Weights
+    # ------------------------------------------------------------------
+    weights         = RCAIDE.Framework.Analyses.Weights.Weights_EVTOL()
+    weights.vehicle = vehicle
+    analyses.append(weights)
+
+    # ------------------------------------------------------------------
+    #  Aerodynamics Analysis
+    # ------------------------------------------------------------------
+    aerodynamics                                      = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
+    aerodynamics.vehicle                              = vehicle  
+    aerodynamics.settings.use_surrogate               = False 
+    aerodynamics.settings.trim_aircraft               = False 
+    analyses.append(aerodynamics)
+    
+    
+    # ------------------------------------------------------------------
+    #  Energy
+    # ------------------------------------------------------------------
+    energy     = RCAIDE.Framework.Analyses.Energy.Energy()
+    energy.vehicle = vehicle  
+    analyses.append(energy)
+
+    # ------------------------------------------------------------------
+    #  Planet Analysis
+    # ------------------------------------------------------------------
+    planet     = RCAIDE.Framework.Analyses.Planets.Planet()
+    analyses.append(planet)
+
+    # ------------------------------------------------------------------
+    #  Atmosphere Analysis
+    # ------------------------------------------------------------------
+    atmosphere = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
+    atmosphere.features.planet = planet.features
+    analyses.append(atmosphere)   
+
+    # done!
+    return analyses
+
+  
+def configs_setup(vehicle): 
+    # ------------------------------------------------------------------
+    #   Initialize Configurations
+    # ------------------------------------------------------------------ 
+    configs = RCAIDE.Library.Components.Configs.Config.Container() 
+    base_config                                                       = RCAIDE.Library.Components.Configs.Config(vehicle)
+    base_config.tag                                                   = 'base'     
+    configs.append(base_config)  
+    return configs
+ 
+def base_mission_setup(analyses,altitude,Vc):   
+    '''
+    This sets up the nominal cruise of the aircraft
+    '''
+     
+    mission = RCAIDE.Framework.Mission.Sequential_Segments()
+    mission.tag = 'base_mission'
+  
+    # unpack Segments module
+    Segments = RCAIDE.Framework.Mission.Segments
+
+    #   Cruise Segment: constant Speed, constant altitude 
+    segment                           = Segments.Untrimmed.Untrimmed()
+    segment.analyses.extend( analyses.base )   
+    segment.tag                       = "cruise" 
+    segment.altitude                  = altitude
+    segment.air_speed                 = Vc
+
+    segment.flight_dynamics.force_x   = True    
+    segment.flight_dynamics.force_z   = True    
+    segment.flight_dynamics.force_y   = True     
+    segment.flight_dynamics.moment_y  = True 
+    segment.flight_dynamics.moment_x  = True
+    segment.flight_dynamics.moment_z  = True
+    
+    mission.append_segment(segment)     
+    
+    return mission
+
+def missions_setup(mission): 
+ 
+    missions     = RCAIDE.Framework.Mission.Missions()
+    
+    # base mission 
+    mission.tag  = 'base_mission'
+    missions.append(mission)
+ 
+    return missions  
 
 
 #------------------------------------------------------------------------------------------------------
