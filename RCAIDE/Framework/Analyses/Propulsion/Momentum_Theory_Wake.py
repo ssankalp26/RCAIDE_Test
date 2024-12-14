@@ -1,5 +1,5 @@
 ## @ingroup Analyses-Propulsion
-# Momentum_Rotor_Wake_Model.py
+# Momentum_Theory_Wake.py
 #
 # Created:  Jan 2022, R. Erhard
 # Modified: 
@@ -7,22 +7,19 @@
 # ----------------------------------------------------------------------
 #  Imports
 # ----------------------------------------------------------------------
-from Legacy.trunk.S.Core import Data
-from Legacy.trunk.S.Components.Energy.Energy_Component import Energy_Component
-
-
-from Legacy.trunk.S.Components import Wings
-from Legacy.trunk.S.Methods.Propulsion.Rotor_Wake.Fidelity_Zero.fidelity_zero_wake_convergence import fidelity_zero_wake_convergence
-from Legacy.trunk.S.Methods.Propulsion.Rotor_Wake.Fidelity_Zero.compute_fidelity_zero_induced_velocity import compute_fidelity_zero_induced_velocity
-
-from Legacy.trunk.S.Methods.Aerodynamics.Common.Fidelity_Zero.Lift.extract_wing_VD import extract_wing_collocation_points
+from RCAIDE.Framework.Core import Data
+from RCAIDE.Library.Components import Component 
+from RCAIDE.Library.Components import Wings
+from RCAIDE.Library.Methods.Propulsors.Converters.Rotor.Wake.Momentum_Theory_Wake.fidelity_zero_wake_convergence import fidelity_zero_wake_convergence
+from RCAIDE.Library.Methods.Propulsors.Converters.Rotor.Wake.Momentum_Theory_Wake.compute_fidelity_zero_induced_velocity import compute_fidelity_zero_induced_velocity 
+from RCAIDE.Library.Methods.Aerodynamics.Vortex_Lattice_Method.extract_wing_collocation_points import extract_wing_collocation_points
 
 import numpy as np
 # ----------------------------------------------------------------------
 #  Generalized Rotor Class
 # ----------------------------------------------------------------------
 ## @ingroup Analyses-Propulsion
-class Momentum_Rotor_Wake_Model(Energy_Component):
+class Momentum_Theory_Wake(Component):
     """This is a general rotor wake component. 
 
     Assumptions:

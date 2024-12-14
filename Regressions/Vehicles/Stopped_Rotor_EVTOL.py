@@ -645,7 +645,7 @@ def vehicle_setup(new_regression=True) :
         
         for key,item in lift_rotor.items():
             lift_rotor[key] = loaded_lift_rotor[key] 
-        lift_rotor.Wake   = RCAIDE.Framework.Analyses.Propulsion.Momentum_Rotor_Wake_Model()         
+        lift_rotor.Wake   = RCAIDE.Framework.Analyses.Propulsion.Momentum_Theory_Wake()         
             
     lift_propulsor_1.rotor =  lift_rotor          
     
