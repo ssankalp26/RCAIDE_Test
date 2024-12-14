@@ -8,10 +8,10 @@
 # Imports
 #------------------------------------------------------------------------------
 
-import Legacy.trunk.S as SUAVE
+from RCAIDE import  * 
 from RCAIDE.Framework.Core import Units
 
-from Legacy.trunk.S.Methods.Performance.propeller_single_point import propeller_single_point
+from RCAIDE.Library.Methods.Performance.propeller_single_point import propeller_single_point
 
 import numpy as np
 import matplotlib.pyplot as plt

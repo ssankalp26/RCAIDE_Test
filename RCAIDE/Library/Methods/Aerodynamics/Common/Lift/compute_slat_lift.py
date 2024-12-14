@@ -52,7 +52,7 @@ if __name__ == '__main__':
     import matplotlib
     matplotlib.interactive(True)
     import scipy as sp
-    import Legacy.trunk.S as SUAVE
+    from  RCAIDE import  * 
     from RCAIDE.Framework.Core import Units
 
     #define array of sweep and deflection
