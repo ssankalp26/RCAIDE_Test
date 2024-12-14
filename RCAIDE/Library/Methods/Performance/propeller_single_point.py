@@ -9,9 +9,9 @@
 # Imports
 #-------------------------------------------------------------------------------
 
-import Legacy.trunk.S as SUAVE
+from  RCAIDE import  * 
 
-from RCAIDE.Framework.Core import Data
+from  RCAIDE.Framework.Core import Data
 
 import matplotlib.pyplot as plt
 import numpy as np
