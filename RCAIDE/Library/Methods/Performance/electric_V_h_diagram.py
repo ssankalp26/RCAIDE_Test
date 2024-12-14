@@ -7,8 +7,7 @@
 #------------------------------------------------------------------------------
 # Imports
 #------------------------------------------------------------------------------
-
-from RCAIDE import  * 
+import  RCAIDE 
 from RCAIDE.Framework.Core import Units
 
 from RCAIDE.Library.Methods.Performance.propeller_single_point import propeller_single_point
@@ -57,10 +56,10 @@ def electric_V_h_diagram(vehicle,
 
         Inputs:
 
-            vehicle                         SUAVE Vehicle Structure
+            vehicle                         RCAIDE Vehicle Structure
                 .mass_properties
                     .takeoff                                            [kg]
-            analyses                        SUAVE Analyses Structure
+            analyses                        RCAIDE Analyses Structure
                 .atmosphere
                     .planet
                         .sea_level_gravity                              [m/s^2]
@@ -88,10 +87,10 @@ def electric_V_h_diagram(vehicle,
 
     def mini_mission(altitude, speed):
 
-        mission = SUAVE.Analyses.Mission.Sequential_Segments()
+        mission = RCAIDE.Framework.Mission.Sequential_Segments()
         mission.tag = 'the_mission'
 
-        segment = SUAVE.Analyses.Mission.Segments.Single_Point.Set_Speed_Set_Altitude_No_Propulsion()
+        segment = RCAIDE.Framework.Mission.Segments.Single_Point.Set_Speed_Set_Altitude_No_Propulsion()
         segment.tag = 'single_point'
         segment.analyses.extend(analyses)
         segment.altitude = altitude

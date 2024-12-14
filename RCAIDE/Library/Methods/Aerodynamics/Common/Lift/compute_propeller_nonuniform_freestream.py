@@ -15,7 +15,7 @@ def compute_propeller_nonuniform_freestream(prop, upstream_wake,conditions):
     """ Computes the inflow velocities in the frame of the rotating propeller
     
     Inputs:
-       prop.                               SUAVE propeller 
+       prop.                               RCAIDE propeller 
             tip_radius                     - propeller radius                         [m]
             rotation                       - propeller rotation direction             [-]
             thrust_angle                   - thrust angle of prop                     [rad]

@@ -33,7 +33,7 @@ def estimate_landing_field_length(vehicle,analyses,airport):
 
     Inputs:
     airport.
-      atmosphere                           [SUAVE data type]
+      atmosphere                           [RCAIDE data type]
       altitude                             [m]
       delta_isa                            [K]
     vehicle.

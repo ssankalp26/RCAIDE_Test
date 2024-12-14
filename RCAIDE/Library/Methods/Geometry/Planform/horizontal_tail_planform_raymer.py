@@ -14,8 +14,8 @@ def horizontal_tail_planform_raymer(horizontal_stabilizer, wing,  l_ht,c_ht):
     Raymer
 
     Inputs:
-    horizontal_stabilizer                  [SUAVE data structure]
-    wing                                   [SUAVE data structure]  (should be the main wing)
+    horizontal_stabilizer                  [RCAIDE data structure]
+    wing                                   [RCAIDE data structure]  (should be the main wing)
     l_ht                                   [m] length from wing mean aerodynamic chord (MAC) to horizontal stabilizer MAC
     c_ht                                   [-] horizontal tail coefficient (Raymer specific) .5 = Sailplane, .5 = homebuilt, 
                                                .7 = GA single engine, .8 = GA twin engine .5 = agricultural, .9 = twin turboprop, 

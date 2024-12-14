@@ -9,7 +9,7 @@
 #  Imports
 # ----------------------------------------------------------------------
 
-# suave imports
+# RCAIDE imports
 import numpy as np
 from RCAIDE.Framework.Optimization.Common import helper_functions as help_fun
 
@@ -20,7 +20,7 @@ from RCAIDE.Framework.Optimization.Common import helper_functions as help_fun
 
 ## @ingroup Optimization-Package_Setups
 def Pyopt_Solve(problem,solver='SNOPT',FD='single', sense_step=1.0E-6,  nonderivative_line_search=False):
-    """ This converts your SUAVE Nexus problem into a PyOpt optimization problem and solves it
+    """ This converts your RCAIDE Nexus problem into a PyOpt optimization problem and solves it
         PyOpt has many algorithms, they can be switched out by using the solver input. 
 
         Assumptions:
@@ -57,7 +57,7 @@ def Pyopt_Solve(problem,solver='SNOPT',FD='single', sense_step=1.0E-6,  nonderiv
    
     # Instantiate the problem and set objective
     import pyOpt
-    opt_prob = pyOpt.Optimization('SUAVE',mywrap)
+    opt_prob = pyOpt.Optimization('RCAIDE',mywrap)
     for ii in range(len(obj)):
         opt_prob.addObj(obj[ii,0])    
        
@@ -159,7 +159,7 @@ def Pyopt_Solve(problem,solver='SNOPT',FD='single', sense_step=1.0E-6,  nonderiv
 
 ## @ingroup Optimization-Package_Setups
 def PyOpt_Problem(problem,x):
-    """ This wrapper runs the SUAVE problem and is called by the PyOpt solver.
+    """ This wrapper runs the RCAIDE problem and is called by the PyOpt solver.
         Prints the inputs (x) as well as the objective values and constraints.
         If any values produce NaN then a fail flag is thrown.
 

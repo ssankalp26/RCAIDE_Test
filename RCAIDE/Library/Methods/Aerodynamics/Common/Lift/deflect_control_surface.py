@@ -64,7 +64,7 @@ def deflect_control_surface(VD,wing):
     
     Assumptions: 
     If the user calls this function outside of generate_vortex_distribution,
-    SUAVE.Methods.Aerodynamics.Common.Fidelity_Zero.Lift.postprocess_VD MUST be called
+    RCAIDE.Methods.Aerodynamics.Common.Fidelity_Zero.Lift.postprocess_VD MUST be called
     right after
 
     Source:  

@@ -15,7 +15,7 @@ except ImportError:
     try:
         import openvsp as vsp
     except ImportError:
-        # This allows SUAVE to build without OpenVSP
+        # This allows RCAIDE to build without OpenVSP
         pass
 import numpy as np
 

@@ -1,7 +1,7 @@
 ## @ingroup Methods-Utilities
 # latin_hypercube_sampling.py
 #
-# Created:  Jul 2016, R. Fenrich (outside of SUAVE code)
+# Created:  Jul 2016, R. Fenrich (outside of RCAIDE code)
 # Modified: Apr 2017, T. MacDonald
 
 

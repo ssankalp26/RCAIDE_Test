@@ -4,7 +4,7 @@
 #  Imports
 # ----------------------------------------------------------------------
 
-# SUAVE Imports
+# RCAIDE Imports
 from  RCAIDE import * 
 from   RCAIDE                    import * 
 from   RCAIDE.Library.Components import Wings

@@ -8,7 +8,7 @@
 #  Imports
 # ----------------------------------------------------------------------
 
-# SUave Imports
+# RCAIDE Imports
 import RCAIDE
 from RCAIDE.Framework.Core import Data
 from RCAIDE.Framework.Core import Units 
@@ -34,7 +34,7 @@ def V_n_diagram(vehicle,analyses,weight,altitude,delta_ISA):
     CFR FAR Part 25: https://www.ecfr.gov/cgi-bin/text-idx?tpl=/ecfrbrowse/Title14/14cfr25_main_02.tpl
 
     Inputs:
-    analyses.base.atmosphere               [SUAVE data type]
+    analyses.base.atmosphere               [RCAIDE data type]
     vehicle.
       reference_area                       [m^2]
       maximum_lift_coefficient             [Unitless]
@@ -67,26 +67,26 @@ def V_n_diagram(vehicle,analyses,weight,altitude,delta_ISA):
     print('Running the V-n diagram calculation...')
     flog.write('Running the V-n diagram calculation...\n')
     flog.write('Aircraft: ' + vehicle.tag + '\n')
-    flog.write('Category: ' + vehicle.envelope.category + '\n')
-    flog.write('FAR certification: Part ' + str(vehicle.envelope.FAR_part_number) + '\n\n')
+    flog.write('Category: ' + vehicle.flight_envelope.category + '\n')
+    flog.write('FAR certification: Part ' + str(vehicle.flight_envelope.FAR_part_number) + '\n\n')
     
     # ----------------------------------------------
     # Unpack
     # ----------------------------------------------
     flog.write('Unpacking the input and calculating required inputs...\n')
-    FAR_part_number = vehicle.envelope.FAR_part_number
+    FAR_part_number = vehicle.flight_envelope.FAR_part_number
     atmo            = analyses.atmosphere
-    Mc              = vehicle.envelope.cruise_mach
+    Mc              = vehicle.flight_envelope.cruise_mach
 
     for wing in vehicle.wings: 
         reference_area  = vehicle.reference_area 
         Cmac            = wing.chords.mean_aerodynamic
 
     for envelope in vehicle:
-        pos_limit_load  = vehicle.envelope.limit_loads.positive
-        neg_limit_load  = vehicle.envelope.limit_loads.negative
+        pos_limit_load  = vehicle.flight_envelope.limit_loads.positive
+        neg_limit_load  = vehicle.flight_envelope.limit_loads.negative
 
-    category_tag = vehicle.envelope.category
+    category_tag = vehicle.flight_envelope.category
     
     # ----------------------------------------------
     # Computing atmospheric conditions
@@ -1043,8 +1043,8 @@ def post_processing(category_tag, Uref_rough, Uref_cruise, Uref_dive, V_n_data, 
     fres.write('V-n diagram summary\n')
     fres.write('-------------------\n')
     fres.write('Aircraft: ' + vehicle.tag + '\n')
-    fres.write('category: ' + vehicle.envelope.category + '\n')
-    fres.write('FAR certification: Part ' + str(vehicle.envelope.FAR_part_number) + '\n')
+    fres.write('category: ' + vehicle.flight_envelope.category + '\n')
+    fres.write('FAR certification: Part ' + str(vehicle.flight_envelope.FAR_part_number) + '\n')
     fres.write('Weight = ' + str(round(weight)) + ' lb\n')
     fres.write('Altitude = ' + str(round(altitude)) + ' ft\n')
     fres.write('---------------------------------------------------------------\n\n')

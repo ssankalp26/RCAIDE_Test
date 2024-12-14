@@ -8,9 +8,7 @@
 #-------------------------------------------------------------------------------
 # Imports
 #-------------------------------------------------------------------------------
-
-from  RCAIDE import  * 
-
+import  RCAIDE 
 from  RCAIDE.Framework.Core import Data
 
 import matplotlib.pyplot as plt
@@ -40,7 +38,7 @@ def propeller_single_point(prop,
                               plots=False,
                               print_results=False):
 
-        Uses SUAVE's BEVW propeller model to evaluate propeller performance at a
+        Uses RCAIDE's BEVW propeller model to evaluate propeller performance at a
         single altitude, pitch command, and angular velocity. Can be used indep-
         endently, or as part of creation of a propller maps or flight envelopes.
 
@@ -54,21 +52,21 @@ def propeller_single_point(prop,
 
         Inputs:
 
-            prop                 SUAVE Propeller Data Structure
+            prop                 RCAIDE Propeller Data Structure
             pitch                Propeller Pitch/Collective                    [User Set]
             omega                Test Angular Velocity                         [User Set]
             altitude             Test Altitude                                 [User Set]
             delta_isa            Atmosphere Temp Offset                        [K]
             speed                Propeller Intake Speed                        [User Set]
             HFW                  Flag for use of helical fixed wake for rotor  [Boolean]
-            analyses             SUAVE Analyses Structure
-                .atmosphere      SUAVE Atmosphere Analysis Object
+            analyses             RCAIDE Analyses Structure
+                .atmosphere      RCAIDE Atmosphere Analysis Object
             plots                Flag for Plot Generation                      [Boolean]
             print_results        Flag for Terminal Output                      [Boolean]
 
         Outputs:
 
-            results                             SUAVE Data Object
+            results                             RCAIDE Data Object
                 .thrust                         BEVW Thrust Prediction      [N]
                 .torque                         BEVW Torque Prediction      [N-m]
                 .power                          BEVW Power Prediction       [W]
@@ -85,8 +83,8 @@ def propeller_single_point(prop,
     # Set atmosphere
     if analyses==None:
         # setup standard US 1976 atmosphere
-        analyses   = SUAVE.Analyses.Vehicle()
-        atmosphere = SUAVE.Analyses.Atmospheric.US_Standard_1976()
+        analyses   = RCAIDE.Framework.Analyses.Vehicle()
+        atmosphere = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
         analyses.append(atmosphere)           
         
     # Unpack Inputs
@@ -101,7 +99,7 @@ def propeller_single_point(prop,
     # Setup Pseudo-Mission for Prop Evaluation
     ctrl_pts = 1
     prop.inputs.omega                               = np.ones((ctrl_pts, 1)) * omega
-    conditions                                      = SUAVE.Analyses.Mission.Segments.Conditions.Conditions()
+    conditions                                      = RCAIDE.Framework.Mission.Common.Results()
     conditions.freestream                           = Data()
     conditions.propulsion                           = Data()
     conditions.noise                                = Data()

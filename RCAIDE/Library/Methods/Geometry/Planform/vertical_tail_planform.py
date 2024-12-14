@@ -19,7 +19,7 @@ def vertical_tail_planform(Wing):
     None
 
     Inputs:
-    Wing             [SUAVE data structure]
+    Wing             [RCAIDE data structure]
 
     Outputs:
     Changes to Wing (see wing_planform)

@@ -12,24 +12,24 @@
 #  Imports
 # ----------------------------------------------------------------------
 
-from copy import deepcopy
-
-import RCIADE
-from   RCAIDE.Framework.Core import Units, Data, Container
-
+import RCAIDE
+from   RCAIDE.Framework.Core import Units, Data, Container 
 from RCAIDE.Framework.External_Interfaces.OpenVSP.vsp_propeller        import read_vsp_propeller
 from RCAIDE.Framework.External_Interfaces.OpenVSP.vsp_fuselage         import read_vsp_fuselage
 from RCAIDE.Framework.External_Interfaces.OpenVSP.vsp_wing             import read_vsp_wing
 from RCAIDE.Framework.External_Interfaces.OpenVSP.vsp_nacelle          import read_vsp_nacelle
 from RCAIDE.Framework.External_Interfaces.OpenVSP.get_vsp_measurements import get_vsp_measurements
- 
+
+
+from copy import deepcopy
+
 try:
     import vsp as vsp
 except ImportError:
     try:
         import openvsp as vsp
     except ImportError:
-        # This allows SUAVE to build without OpenVSP
+        # This allows RCAIDE to build without OpenVSP
         pass
 
 
@@ -40,7 +40,7 @@ except ImportError:
 
 ## @ingroup Input_Output-OpenVSP
 def vsp_read(tag, units_type='SI',specified_network=None,use_scaling=True,calculate_wetted_area=True): 
-    """This reads an OpenVSP vehicle geometry and writes it into a SUAVE vehicle format.
+    """This reads an OpenVSP vehicle geometry and writes it into a RCAIDE vehicle format.
     Includes wings, fuselages, and propellers.
 
     Assumptions:
@@ -64,7 +64,7 @@ def vsp_read(tag, units_type='SI',specified_network=None,use_scaling=True,calcul
     4. Boolean for whether or not to use the scaling from OpenVSP (default = True).
 
     Outputs:
-    Writes SUAVE vehicle with these geometries from VSP:    (All values default to SI. Any other 2nd argument outputs Imperial.)
+    Writes RCAIDE vehicle with these geometries from VSP:    (All values default to SI. Any other 2nd argument outputs Imperial.)
     	Wings.Wing.    (* is all keys)
     		origin                                  [m] in all three dimensions
     		spans.projected                         [m]
@@ -141,7 +141,7 @@ def vsp_read(tag, units_type='SI',specified_network=None,use_scaling=True,calcul
     vsp_geoms         = vsp.FindGeoms()
     geom_names        = []
 
-    vehicle           = SUAVE.Vehicle()
+    vehicle           = RCAIDE.Vehicle()
     vehicle.tag       = tag 
 
     if units_type == 'SI':
@@ -261,36 +261,18 @@ def vsp_read(tag, units_type='SI',specified_network=None,use_scaling=True,calcul
                 prop_sym.origin[0][1] = - prop_sym.origin[0][1]   
                 propellers.append(prop_sym)
 
-    #if specified_network == None:
-        ## If no network specified, assign a network
-        #if number_of_lift_rotor_engines>0 and number_of_propeller_engines>0:
-            #net = Lift_Cruise()
-        #else:
-            #net = Battery_Propeller() 
-    #else:
-        #net = specified_network
+    if specified_network == None: 
+        net = RCIADE.Framework.Networks.Electric() 
+    else:
+        net = specified_network
+    
+     
 
-    ## Create the rotor network
-    #if net.tag == "Lift_Cruise":
-        ## Lift + Cruise network
-        #for i in range(number_of_lift_rotor_engines):
-            #net.lift_rotors.append(lift_rotors[list(lift_rotors.keys())[i]])
-        #net.number_of_lift_rotor_engines = number_of_lift_rotor_engines	
-
-        #for i in range(number_of_propeller_engines):
-            #net.propellers.append(propellers[list(propellers.keys())[i]])
-        #net.number_of_propeller_engines = number_of_propeller_engines		
-
-    #elif net.tag == "Battery_Propeller":
-        ## Append all rotors as propellers for the battery propeller network
-        #for i in range(number_of_lift_rotor_engines):
-            ## Accounts for multicopter configurations
-            #net.propellers.append(lift_rotors[list(lift_rotors.keys())[i]])
-
-        #for i in range(number_of_propeller_engines):
-            #net.propellers.append(propellers[list(propellers.keys())[i]])
-
-        #net.number_of_propeller_engines = number_of_lift_rotor_engines + number_of_propeller_engines	
+    for i in range(number_of_lift_rotor_engines):
+        propulsor = RCAIDE.Library.Components.Propulsors.Electric_Rotor()
+        propulsor.tag =  'propulsor_' +  str(i+1)
+        propulsor.rotor = lift_rotors[list(lift_rotors.keys())[i]]   
+        net.propulsors.append(propulsor)         	
 
     vehicle.networks.append(net)
 

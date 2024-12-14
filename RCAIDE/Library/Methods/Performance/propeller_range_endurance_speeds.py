@@ -6,9 +6,8 @@
 
 # ----------------------------------------------------------------------
 #  Imports
-# ----------------------------------------------------------------------
-
-from   RCAIDE import  * 
+# ---------------------------------------------------------------------- 
+import  RCAIDE  
 from   RCAIDE.Framework.Core import Data
 import numpy as np
 import scipy as sp
@@ -57,20 +56,20 @@ def propeller_range_endurance_speeds(analyses,altitude,CL_max,up_bnd,delta_isa):
                 # ------------------------------------------------------------------
                 #   Initialize the Mission
                 # ------------------------------------------------------------------
-                mission = SUAVE.Analyses.Mission.Sequential_Segments()
+                mission = RCAIDE.Framework.Mission.Sequential_Segments()
                 mission.tag = 'the_mission'
         
                 # ------------------------------------------------------------------
                 #  Single Point Segment 1: constant Speed, constant altitude
                 # ------------------------------------------------------------------ 
-                segment = SUAVE.Analyses.Mission.Segments.Single_Point.Set_Speed_Set_Altitude_No_Propulsion()
+                segment = RCAIDE.Framework.Mission.Segments.Single_Point.Set_Speed_Set_Altitude_No_Propulsion()
                 segment.tag = "single_point" 
                 segment.analyses.extend(analyses) 
                 segment.altitude              = altitude
                 segment.temperature_deviation = delta_isa
                 
-                segment.process.iterate.conditions.stability    = SUAVE.Methods.skip
-                segment.process.finalize.post_process.stability = SUAVE.Methods.skip                    
+                segment.process.iterate.conditions.stability    = RCAIDE.Library.Methods.skip
+                segment.process.finalize.post_process.stability = RCAIDE.Library.Methods.skip                    
         
                 # add to misison
                 mission.append_segment(segment)    

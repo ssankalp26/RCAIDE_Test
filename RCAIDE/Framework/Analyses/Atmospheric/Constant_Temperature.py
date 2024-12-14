@@ -45,7 +45,7 @@ class Constant_Temperature(Atmospheric):
         None
         """
         
-        atmo_data = SUAVE.Attributes.Atmospheres.Earth.Constant_Temperature()
+        atmo_data = RCAIDE.Library.Attributes.Atmospheres.Earth.Constant_Temperature()
         self.update(atmo_data)
     
     def compute_values(self,altitude,temperature=288.15):

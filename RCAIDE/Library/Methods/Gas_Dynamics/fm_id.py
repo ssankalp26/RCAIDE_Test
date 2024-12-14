@@ -1,7 +1,7 @@
 ## @ingroup Methods-Propulsion
 # fm_id.py
 #
-# Created:  ### ####, SUAVE Team
+# Created:  ### ####, RCAIDE Team
 # Modified: Feb 2016, E. Botero
 #           Dec 2017, W. Maier
 

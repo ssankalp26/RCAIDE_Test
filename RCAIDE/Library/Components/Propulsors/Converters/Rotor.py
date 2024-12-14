@@ -10,7 +10,7 @@
  # RCAIDE imports 
 from RCAIDE.Framework.Core                              import Data , Units, Container
 from RCAIDE.Library.Components                          import Component 
-from RCAIDE.Framework.Analyses.Propulsion               import Rotor_Wake_Fidelity_Zero 
+from RCAIDE.Framework.Analyses.Propulsion               import Momentum_Rotor_Wake_Model 
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor.append_rotor_conditions import  append_rotor_conditions
 
 # package imports
@@ -94,7 +94,7 @@ class Rotor(Component):
         self.electric_propulsion_fraction      = 1.0
 
         # Initialize the default wake set to Fidelity Zero 
-        self.Wake                      = Rotor_Wake_Fidelity_Zero() 
+        self.Wake                      = Momentum_Rotor_Wake_Model() 
         
         # blade optimization parameters     
         self.optimization_parameters                                    = Data() 

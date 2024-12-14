@@ -7,12 +7,13 @@
 
 # ----------------------------------------------------------------------
 #  Imports
-# ----------------------------------------------------------------------
+# ---------------------------------------------------------------------- 
+import RCAIDE 
+from RCAIDE.Framework.Core import Data
+from RCAIDE.Library.Components.Wings import All_Moving_Surface
+from .generate_VD_helpers import postprocess_VD
 
 import numpy as np
-from RCAIDE.Library.Components.Wings import All_Moving_Surface
-from RCAIDE.Framework.Core import Data
-from .generate_VD_helpers import postprocess_VD
 
 # ----------------------------------------------------------------------
 #  Deflect Control Surface
@@ -64,7 +65,7 @@ def deflect_control_surface(VD,wing):
     
     Assumptions: 
     If the user calls this function outside of generate_vortex_distribution,
-    SUAVE.Methods.Aerodynamics.Common.Fidelity_Zero.Lift.postprocess_VD MUST be called
+    RCAIDE.Library.Methods.Aerodynamics.Common.Fidelity_Zero.Lift.postprocess_VD MUST be called
     right after
 
     Source:  

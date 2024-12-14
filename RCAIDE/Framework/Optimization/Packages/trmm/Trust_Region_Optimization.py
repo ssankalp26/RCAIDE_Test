@@ -80,9 +80,9 @@ class Trust_Region_Optimization(Data):
         Inputs:
         problem.                 <Nexus class> (also passed into other functions)
           optimization_problem. 
-            inputs               Numpy array matching standard SUAVE optimization setup
-            objective            Numpy array matching standard SUAVE optimization setup
-            constraints          Numpy array matching standard SUAVE optimization setup
+            inputs               Numpy array matching standard RCAIDE optimization setup
+            objective            Numpy array matching standard RCAIDE optimization setup
+            constraints          Numpy array matching standard RCAIDE optimization setup
           fidelity_level         [-]
         print_output             <boolean> Determines if output is printed during the optimization run
 
@@ -188,7 +188,7 @@ class Trust_Region_Optimization(Data):
             problem.fidelity_level = 1
             
             if self.optimizer == 'SNOPT':
-                opt_prob = pyOpt.Optimization('SUAVE',self.evaluate_corrected_model, corrections=corrections,tr=tr)
+                opt_prob = pyOpt.Optimization('RCAIDE',self.evaluate_corrected_model, corrections=corrections,tr=tr)
                 
                 for ii in range(len(obj)):
                     opt_prob.addObj('f',f_center) 
@@ -261,7 +261,7 @@ class Trust_Region_Optimization(Data):
                 print('Infeasible within trust region, attempting to minimize constraint')
                 
                 if self.optimizer == 'SNOPT':
-                    opt_prob = pyOpt.Optimization('SUAVE',self.evaluate_constraints, corrections=corrections,tr=tr,
+                    opt_prob = pyOpt.Optimization('RCAIDE',self.evaluate_constraints, corrections=corrections,tr=tr,
                                                   lb=con_low_edge,ub=con_up_edge)
                     for ii in range(len(obj)):
                         opt_prob.addObj('constraint violation',0.) 
@@ -389,7 +389,7 @@ class Trust_Region_Optimization(Data):
             
         
     def evaluate_model(self,problem,x,der_flag=True):
-        """Evaluates the SUAVE nexus problem. This is often a mission evaluation.
+        """Evaluates the RCAIDE nexus problem. This is often a mission evaluation.
 
         Assumptions:
         None
@@ -429,7 +429,7 @@ class Trust_Region_Optimization(Data):
 
 
     def evaluate_corrected_model(self,x,problem=None,corrections=None,tr=None,return_cons=False):
-        """Evaluates the SUAVE nexus problem and applies corrections to the results.
+        """Evaluates the RCAIDE nexus problem and applies corrections to the results.
         
         Assumptions:
         None
@@ -479,7 +479,7 @@ class Trust_Region_Optimization(Data):
     
     
     def evaluate_constraints(self,x,problem=None,corrections=None,tr=None,lb=None,ub=None):
-        """Evaluates the SUAVE nexus problem provides an objective value based on constraint violation.
+        """Evaluates the RCAIDE nexus problem provides an objective value based on constraint violation.
         Correction factors are applied to the evaluation results.
         
         Assumptions:
@@ -611,7 +611,7 @@ class Trust_Region_Optimization(Data):
         N/A
 
         Inputs:
-        (all SUAVE format specific numpy arrays)
+        (all RCAIDE format specific numpy arrays)
         inp                 Design variables
         con                 Constraint limits
         ini                 Initial values

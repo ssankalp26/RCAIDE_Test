@@ -17,7 +17,7 @@ from RCAIDE.Framework.Analyses import Analysis
 
 ## @ingroup Analyses-Planets
 class Planet(Analysis):
-    """ SUAVE.Analyses.Planet()
+    """ RCAIDE.Framework.Analyses.Planet()
     """
     
     def __defaults__(self):

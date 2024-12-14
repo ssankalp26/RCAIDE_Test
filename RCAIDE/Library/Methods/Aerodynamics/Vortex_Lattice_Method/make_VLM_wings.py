@@ -123,9 +123,9 @@ def make_VLM_wings(geometry, settings):
             continue
         
         #prepare to iterate across all segments and control surfaces
-        seg_breaks  = SUAVE.Core.ContainerOrdered()
-        LE_breaks   = SUAVE.Core.ContainerOrdered()
-        TE_breaks   = SUAVE.Core.ContainerOrdered()
+        seg_breaks  = RCAIDE.Framework.Core.ContainerOrdered()
+        LE_breaks   = RCAIDE.Framework.Core.ContainerOrdered()
+        TE_breaks   = RCAIDE.Framework.Core.ContainerOrdered()
         n_segments  = len(wing.Segments.keys())
 
         #process all control surfaces in each segment-------------------------------------
@@ -165,7 +165,7 @@ def make_VLM_wings(geometry, settings):
         seg_breaks = sorted(seg_breaks, key=lambda span_break: span_break.span_fraction)
         
         # 2: similar to a 3-way merge sort
-        span_breaks = SUAVE.Core.ContainerOrdered()        
+        span_breaks = RCAIDE.Framework.Core.ContainerOrdered()        
         n_LE        = len(LE_breaks)
         n_TE        = len(TE_breaks)
         n_seg       = len(seg_breaks)
@@ -220,7 +220,7 @@ def make_VLM_wings(geometry, settings):
     for cs_wing in wings:
         if cs_wing.is_a_control_surface == False: #skip if this wing isn't actually a control surface
             continue  
-        span_breaks = SUAVE.Core.ContainerOrdered()
+        span_breaks = RCAIDE.Framework.Core.ContainerOrdered()
         span_break  = make_span_break_from_segment(cs_wing.Segments[0])
         span_breaks.append(span_break)
         span_break  = make_span_break_from_segment(cs_wing.Segments[1])
@@ -250,7 +250,7 @@ def copy_large_container(large_container, type_str):
     Inputs:
     objects  -  a Container of large objects
     """    
-    container = SUAVE.Core.Container()  if type_str != "Segments" else SUAVE.Core.ContainerOrdered()
+    container = RCAIDE.Framework.Core.Container()  if type_str != "Segments" else RCAIDE.Framework.Core.ContainerOrdered()
     paths = get_paths(type_str)
     
     for obj in large_container:
@@ -399,7 +399,7 @@ def make_cs_wing_from_cs(cs, seg_a, seg_b, wing, cs_ID):
     """      
     hspan = wing.spans.projected*0.5 if wing.symmetric else wing.spans.projected
     
-    cs_wing                       = copy_data_from_paths(SUAVE.Components.Wings.Wing(), get_paths("wings"))
+    cs_wing                       = copy_data_from_paths(RCAIDE.Library.Components.Wings.Wing(), get_paths("wings"))
     
     #standard wing attributes--------------------------------------------------------------------------------------
     cs_wing.tag                   = wing.tag + '__cs_id_{}'.format(cs_ID)
@@ -514,7 +514,7 @@ def convert_to_segmented_wing(wing):
     if len(wing.Segments.keys()) > 0:
         return wing   
     # root segment 
-    segment                               = SUAVE.Components.Wings.Segment()
+    segment                               = RCAIDE.Library.Components.Wings.Segment()
     segment.tag                           = 'root_segment'
     segment.percent_span_location         = 0.0
     segment.twist                         = wing.twists.root
@@ -534,7 +534,7 @@ def convert_to_segmented_wing(wing):
     elif wing.chords.tip==0:
         wing.chords.tip = wing.chords.root * wing.taper
         
-    segment                               = SUAVE.Components.Wings.Segment()
+    segment                               = RCAIDE.Library.Components.Wings.Segment()
     segment.tag                           = 'tip_segment'
     segment.percent_span_location         = 1.
     segment.twist                         = wing.twists.tip
@@ -594,7 +594,7 @@ def reprocess_span_breaks(span_breaks):
     Inputs:
     span_breaks
     """     
-    sbs = SUAVE.Core.ContainerOrdered()
+    sbs = RCAIDE.Framework.Core.ContainerOrdered()
     for i,span_break in enumerate(span_breaks):
         span_break.tag = make_span_break_tag(span_break)
         sbs.append(span_break)

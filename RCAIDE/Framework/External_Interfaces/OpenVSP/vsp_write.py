@@ -29,14 +29,14 @@ except ImportError:
     try:
         import openvsp as vsp
     except ImportError:
-        # This allows SUAVE to build without OpenVSP
+        # This allows RCAIDE to build without OpenVSP
         pass
 import numpy as np
 import os
 
 ## @ingroup Input_Output-OpenVSP
 def write(vehicle, tag, fuel_tank_set_ind=3, verbose=True, write_file=True, OML_set_ind = 4, write_igs = False):
-    """This writes a SUAVE vehicle to OpenVSP format. It will take wing segments into account
+    """This writes a RCAIDE vehicle to OpenVSP format. It will take wing segments into account
     if they are specified in the vehicle setup file.
     
     Assumptions:

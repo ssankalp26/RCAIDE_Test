@@ -11,7 +11,7 @@
 
 import numpy as np
 from warnings import warn
-
+import RCAIDE
 from RCAIDE.Framework.Analyses.Atmospheric import Atmospheric
 from RCAIDE.Framework.Mission.Common.Conditions import Conditions
 from RCAIDE.Framework.Core import Units
@@ -56,7 +56,7 @@ class US_Standard_1976(Atmospheric):
         None
         """     
         
-        atmo_data = SUAVE.Attributes.Atmospheres.Earth.US_Standard_1976()
+        atmo_data = RCAIDE.Library.Attributes.Atmospheres.Earth.US_Standard_1976()
         self.update(atmo_data)        
     
     def compute_values(self,altitude,temperature_deviation=0.0,var_gamma=False):

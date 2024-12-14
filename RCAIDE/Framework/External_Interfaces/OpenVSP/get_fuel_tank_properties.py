@@ -11,7 +11,7 @@ except ImportError:
     try:
         import openvsp as vsp
     except ImportError:
-        # This allows SUAVE to build without OpenVSP
+        # This allows RCAIDE to build without OpenVSP
         pass
 import numpy as np
 from RCAIDE.Framework.Core import Data
@@ -95,7 +95,7 @@ def get_fuel_tank_properties(vehicle,tag,fuel_tank_set_index=3,slices_for_calcul
 
 ## @ingroup Input_Output-OpenVSP
 def apply_properties(vehicle,fuel_tanks):
-    """Apply fuel tank properties from OpenVSP to the SUAVE vehicle.
+    """Apply fuel tank properties from OpenVSP to the RCAIDE vehicle.
     
     Assumptions:
     Fuel tanks exists in the fuselage and wings only

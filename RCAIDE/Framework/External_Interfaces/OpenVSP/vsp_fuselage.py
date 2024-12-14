@@ -19,7 +19,7 @@ except ImportError:
     try:
         import openvsp as vsp
     except ImportError:
-        # This allows SUAVE to build without OpenVSP
+        # This allows RCAIDE to build without OpenVSP
         pass
 # ----------------------------------------------------------------------
 #  vsp read fuselage
@@ -27,7 +27,7 @@ except ImportError:
 
 ## @ingroup Input_Output-OpenVSP
 def read_vsp_fuselage(fuselage_id,fux_idx,sym_flag, units_type='SI', fineness=True, use_scaling=True):
-    """This reads an OpenVSP fuselage geometry and writes it to a SUAVE fuselage format.
+    """This reads an OpenVSP fuselage geometry and writes it to a RCAIDE fuselage format.
 
     Assumptions:
     1. OpenVSP fuselage is "conventionally shaped" (generally narrow at nose and tail, wider in center). 
@@ -51,7 +51,7 @@ def read_vsp_fuselage(fuselage_id,fux_idx,sym_flag, units_type='SI', fineness=Tr
 
     Outputs:
 
-    Writes SUAVE fuselage, with these geometries:           (all defaults are SI, but user may specify Imperial)
+    Writes RCAIDE fuselage, with these geometries:           (all defaults are SI, but user may specify Imperial)
 
     	Fuselages.Fuselage.			
     		origin                                  [m] in all three dimensions
@@ -237,7 +237,7 @@ def write_vsp_fuselage(fuselage,area_tags, main_wing, fuel_tank_set_ind, OML_set
     fuse_x_rotation    = fuselage.x_rotation   
     fuse_y_rotation    = fuselage.y_rotation
     fuse_z_rotation    = fuselage.z_rotation    
-    if num_segs==0: # SUAVE default fuselage shaping
+    if num_segs==0: # RCAIDE default fuselage shaping
 
         width    = fuselage.width
         hmax     = fuselage.heights.maximum
@@ -496,13 +496,13 @@ def compute_fuselage_fineness(fuselage, x_locs, eff_diams, eff_diam_gradients_fw
 
     Inputs:
     0. Pre-loaded VSP vehicle in memory, via vsp_read.
-    1. Suave fuselage [object].
+    1. RCAIDE fuselage [object].
     2. Array of x_locations of fuselage segments. (length = L)
     3. Array of effective diameters of fuselage segments. (length = L)
     4. Array of effective diameter gradients from nose to tail. (length = L-1)
 
     Outputs:
-    Writes fineness values to SUAVE fuselage, returns fuselage.
+    Writes fineness values to RCAIDE fuselage, returns fuselage.
 
     Properties Used:
     N/A
@@ -536,7 +536,7 @@ def get_fuselage_height(fuselage, location):
 
     Inputs:
     0. Pre-loaded VSP vehicle in memory, via vsp_read.
-    1. Suave fuselage [object], containing fuselage.vsp_data.xsec_num in its data structure.
+    1. RCAIDE fuselage [object], containing fuselage.vsp_data.xsec_num in its data structure.
     2. Fuselage percentage point [float].
 
     Outputs:

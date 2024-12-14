@@ -7,6 +7,7 @@
 # ----------------------------------------------------------------------
 #  Imports
 # ----------------------------------------------------------------------
+import RCAIDE
 from RCAIDE.Framework.Core import Units , Data
 import numpy as np
 import scipy as sp
@@ -17,7 +18,7 @@ except ImportError:
     try:
         import openvsp as vsp
     except ImportError:
-        # This allows SUAVE to build without OpenVSP
+        # This allows RCAIDE to build without OpenVSP
         pass
 
 # This enforces lowercase names
@@ -31,7 +32,7 @@ t_table = str.maketrans( chars          + string.ascii_uppercase ,
 
 ## @ingroup Input_Output-OpenVSP
 def read_vsp_propeller(prop_id, units_type='SI',write_airfoil_file=True):
-    """This reads an OpenVSP propeller geometry and writes it into a SUAVE propeller format.
+    """This reads an OpenVSP propeller geometry and writes it into a RCAIDE propeller format.
 
     Assumptions:
     1. Written for OpenVSP 3.24.0
@@ -46,7 +47,7 @@ def read_vsp_propeller(prop_id, units_type='SI',write_airfoil_file=True):
     4. number_of_radial_stations is the radial discretization used to extract the propeller design from OpenVSP
 
     Outputs:
-    Writes SUAVE propeller/rotor object, with these geometries, from VSP:
+    Writes RCAIDE propeller/rotor object, with these geometries, from VSP:
     	prop.
     		origin                                  [m] in all three dimensions
     		orientation				[deg] in all three dimensions
@@ -91,10 +92,10 @@ def read_vsp_propeller(prop_id, units_type='SI',write_airfoil_file=True):
     # Check if the thrust angle	is > 70 deg in pitch
     if vsp.GetParmVal( prop_id,'Y_Rotation','XForm') >= 70:
         # Assume lift rotor
-        prop 	= SUAVE.Components.Energy.Converters.Lift_Rotor()
+        prop 	= RCAIDE.Library.Components.Propulsors.Converters.Lift_Rotor()
     else:
         # Instantiate a propeller
-        prop 	= SUAVE.Components.Energy.Converters.Propeller()
+        prop 	= RCAIDE.Library.Components.Propulsors.Converters.Propeller()
 
     # Set the units
     if units_type == 'SI':
@@ -194,7 +195,7 @@ def write_vsp_propeller_bem(vsp_bem_filename,propeller):
         None
     Inputs:
         OpenVSP .bem filename
-        SUAVE Propeller Data Structure
+        RCAIDE Propeller Data Structure
     Outputs:
         OpenVSP .bem file
     Properties Used:
@@ -225,7 +226,7 @@ def make_header_text(vsp_bem,prop):
         None
     Inputs:
         vsp_bem - OpenVSP .bem file
-        prop    - SUAVE propeller data structure
+        prop    - RCAIDE propeller data structure
 
     Outputs:
         NA
@@ -275,7 +276,7 @@ def make_section_text(vsp_bem,prop):
         None
     Inputs:
         vsp_bem - OpenVSP .bem file
-        prop    - SUAVE propeller data structure
+        prop    - RCAIDE propeller data structure
 
     Outputs:
         NA
@@ -320,7 +321,7 @@ def make_airfoil_text(vsp_bem,prop):
         None
     Inputs:
         vsp_bem - OpenVSP .bem file
-        prop    - SUAVE propeller data structure
+        prop    - RCAIDE propeller data structure
 
     Outputs:
         NA

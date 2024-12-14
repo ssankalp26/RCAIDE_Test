@@ -7,7 +7,7 @@
 #  Imports
 # ----------------------------------------------------------------------
 
-# suave imports
+# RCAIDE imports
 import numpy as np
 import scipy as sp
  

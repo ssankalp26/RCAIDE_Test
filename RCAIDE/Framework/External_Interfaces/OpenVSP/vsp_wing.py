@@ -12,10 +12,11 @@
 #  Imports
 # ----------------------------------------------------------------------
 import RCAIDE
-from RCAIDE.Library.Components.Wings import  Vertical_Tail,  Wing
 from RCAIDE.Framework.Core import Units , Data
+from RCAIDE.Library.Components.Wings import  Vertical_Tail,  Wing
 from RCAIDE.Library.Components.Airfoils.Airfoil import Airfoil
-from RCAIDE.Library.Methods.Geometry.Planform.Two_Dimensional.Planform import wing_planform, wing_segmented_planform
+from RCAIDE.Library.Methods.Geometry.Planform import wing_planform, wing_segmented_planform
+
 import numpy as np
 import string
 try:
@@ -94,7 +95,7 @@ def read_vsp_wing(wing_id, units_type='SI', write_airfoil_file=True, use_scaling
         x_rot = (sign*90 - sign*x_rot) * Units.deg
     else:
         # Instantiate a wing
-        wing = RCAIDE.Components.Wings.Wing()
+        wing = RCAIDE.Library.Components.Wings.Wing()
         x_rot =  x_rot  * Units.deg
 
     y_rot =  y_rot  * Units.deg
@@ -894,10 +895,10 @@ def write_wing_conformal_fuel_tank(vehicle,wing, wing_id,fuel_tank,fuel_tank_set
 
     # Fuel tank span bounds
     if n_segments>0:
-        span_trim_max = get_vsp_trim_from_SUAVE_trim(seg_span_percents,
+        span_trim_max = get_vsp_trim_from_RCAIDE_trim(seg_span_percents,
                                                      vsp_segment_breaks,
                                                              span_trim_max)
-        span_trim_min = get_vsp_trim_from_SUAVE_trim(seg_span_percents,
+        span_trim_min = get_vsp_trim_from_RCAIDE_trim(seg_span_percents,
                                                      vsp_segment_breaks,
                                                              span_trim_min)
     else:
@@ -916,7 +917,7 @@ def write_wing_conformal_fuel_tank(vehicle,wing, wing_id,fuel_tank,fuel_tank_set
     return
 
 ## @ingroup Input_Output-OpenVSP
-def get_vsp_trim_from_SUAVE_trim(seg_span_percents,vsp_segment_breaks,trim):
+def get_vsp_trim_from_RCAIDE_trim(seg_span_percents,vsp_segment_breaks,trim):
     """Compute OpenVSP span trim coordinates based on RCAIDE coordinates
 
     Assumptions:

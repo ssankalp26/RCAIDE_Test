@@ -16,7 +16,7 @@ except ImportError:
     try:
         import openvsp as vsp
     except ImportError:
-        # This allows SUAVE to build without OpenVSP
+        # This allows RCAIDE to build without OpenVSP
         pass
 # ----------------------------------------------------------------------
 #  vsp_nacelle
@@ -29,7 +29,7 @@ def write_vsp_nacelle(nacelle, OML_set_ind):
     1. If nacelle segments are defined, geometry written to OpenVSP is of type "StackGeom". 
        1.a  This type of nacelle can be either set as flow through or not flow through.
        1.b  Segments are defined in a similar manner to fuselage segments. See geometric 
-            documentation in SUAVE-Components-Nacelles-Nacelle
+            documentation in RCAIDE-Library-Components-Nacelles-Nacelle
     
     2. If nacelle segments are not defined, geometry written to OpenVSP is of type "BodyofRevolution".
        2.a This type of nacelle can be either set as flow through or not flow through.
@@ -201,7 +201,7 @@ def write_vsp_nacelle(nacelle, OML_set_ind):
 
 ## @ingroup Input_Output-OpenVSP
 def read_vsp_nacelle(nacelle_id,vsp_nacelle_type, units_type='SI'):
-    """This reads an OpenVSP stack geometry or body of revolution and writes it to a SUAVE nacelle format.
+    """This reads an OpenVSP stack geometry or body of revolution and writes it to a RCAIDE nacelle format.
     If an airfoil is defined in body-of-revolution, its coordinates are not read in due to absence of
     API functions in VSP.
 
@@ -216,7 +216,7 @@ def read_vsp_nacelle(nacelle_id,vsp_nacelle_type, units_type='SI'):
     2. Units_type set to 'SI' (default) or 'Imperial'. 
 
     Outputs:
-    Writes SUAVE nacelle, with these geometries:           (all defaults are SI, but user may specify Imperial)
+    Writes RCAIDE nacelle, with these geometries:           (all defaults are SI, but user may specify Imperial)
 
         Nacelles.Nacelle.	
             origin                  [m] in all three dimensions

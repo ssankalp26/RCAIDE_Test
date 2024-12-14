@@ -16,7 +16,7 @@ def generate_wing_wake_grid(geometry, H, L, hf, x_plane, Nzo=20, Nzf=35, Nyo=20)
     Uses smaller grid near the wing to better capture boundary layer.
     
     Inputs: 
-    geometry     SUAVE vehicle data object
+    geometry     RCAIDE vehicle data object
     H            Height of full grid, normalized by wing span
     L            Length of grid, normalized by wing span
     hf           Height of finer grid portion

@@ -31,8 +31,8 @@ def find_take_off_weight_given_tofl(vehicle,analyses,airport,target_tofl):
     vehicle.mass_properties.
       operating_empty         [kg]
       max_takeoff             [kg]
-      analyses                [SUAVE data structure]
-      airport                 [SUAVE data structure]
+      analyses                [RCAIDE data structure]
+      airport                 [RCAIDE data structure]
       target_tofl             [m]
       
     Outputs:

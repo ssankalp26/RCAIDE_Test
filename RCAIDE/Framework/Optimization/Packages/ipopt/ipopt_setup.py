@@ -9,7 +9,7 @@
 #  Imports
 # ----------------------------------------------------------------------
 
-# suave imports
+# RCAIDE imports
 import numpy as np
 
 # ----------------------------------------------------------------------
@@ -84,7 +84,7 @@ def Ipopt_Solve(problem):
             g_U[ii] = edge
 
     # Instantiate the problem and set objective
-    import pyipopt   #import down here to allow SUAVE to run without the user having Ipopt
+    import pyipopt   #import down here to allow RCAIDE to run without the user having Ipopt
     
     flbd = flbd.astype(float)
     fubd = fubd.astype(float)

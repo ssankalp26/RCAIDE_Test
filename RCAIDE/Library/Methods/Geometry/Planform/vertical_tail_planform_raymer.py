@@ -25,8 +25,8 @@ def vertical_tail_planform_raymer(vertical_stabilizer, wing,  l_vt,c_vt):
     Raymer
 
     Inputs:
-    vertical_stabilizer                    [SUAVE data structure]
-    wing                                   [SUAVE data structure]  (should be the main wing)
+    vertical_stabilizer                    [RCAIDE data structure]
+    wing                                   [RCAIDE data structure]  (should be the main wing)
     l_vt                                   [m] length from wing mean aerodynamic chord (MAC) to horizontal stabilizer MAC
     c_vt                                   [-] horizontal tail coefficient (Raymer specific) .02 = Sailplane, .04 = homebuilt, 
                                                .04 = GA single engine, .07 = GA twin engine, .04 = agricultural, 

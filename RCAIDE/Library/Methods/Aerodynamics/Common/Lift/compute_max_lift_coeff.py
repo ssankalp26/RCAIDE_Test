@@ -3,7 +3,7 @@
 #  Imports
 # ----------------------------------------------------------------------
 
-#SUAVE Imports
+#RCAIDE Imports
 from RCAIDE import  * 
 from RCAIDE.Framework.Core import Units,  Data
 from RCAIDE.Library.Components import Wings

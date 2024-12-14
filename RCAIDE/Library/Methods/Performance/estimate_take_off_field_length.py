@@ -40,7 +40,7 @@ def estimate_take_off_field_length(vehicle,analyses,airport,compute_2nd_seg_clim
     http://adg.stanford.edu/aa241/AircraftDesign.html
 
     Inputs:
-    analyses.base.atmosphere               [SUAVE data type]
+    analyses.base.atmosphere               [RCAIDE data type]
     airport.
       altitude                             [m]
       delta_isa                            [K]

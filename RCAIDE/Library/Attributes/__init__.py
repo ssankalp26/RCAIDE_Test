@@ -15,6 +15,4 @@ from . import Planets
 from . import Atmospheres
 from . import Propellants 
 from . import Materials
-from . import Cryogens
-
-from .Envelope   import Envelope 
+from . import Cryogens 

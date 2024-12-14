@@ -28,7 +28,7 @@ def compute_fidelity_zero_induced_velocity(evaluation_points, props, ctrl_pts, i
           YC              - Y-location of evaluation points (vehicle frame)             [m] 
           ZC              - Z-location of evaluation points (vehicle frame)             [m] 
           
-       geometry    - SUAVE vehicle                                 [Unitless] 
+       geometry    - RCAIDE vehicle                                 [Unitless] 
        cpts        - control points in segment                     [Unitless]
     Properties Used:
        N/A
