@@ -18,7 +18,6 @@
 #  Imports
 # ----------------------------------------------------------------------
 
-import Legacy.trunk.S as SUAVE
 from RCAIDE.Framework.Core import Units, Data 
 from RCAIDE.Framework.External_Interfaces.OpenVSP.vsp_propeller import write_vsp_propeller_bem
 from RCAIDE.Framework.External_Interfaces.OpenVSP.vsp_fuselage  import write_vsp_fuselage

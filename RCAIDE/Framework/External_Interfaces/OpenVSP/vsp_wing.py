@@ -14,8 +14,8 @@
 
 import Legacy.trunk.S as SUAVE
 from RCAIDE.Framework.Core import Units , Data
-from Legacy.trunk.S.Components.Airfoils.Airfoil import Airfoil
-from Legacy.trunk.S.Methods.Geometry.Two_Dimensional.Planform import wing_planform, wing_segmented_planform
+from RCAIDE.Library.Components.Airfoils.Airfoil import Airfoil
+from RCAIDE.Library.Methods.Geometry.Planform.Two_Dimensional.Planform import wing_planform, wing_segmented_planform
 import numpy as np
 import string
 try:
