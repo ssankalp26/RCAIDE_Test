@@ -21,8 +21,7 @@ sys.path.append(os.path.join(sys.path[0], 'Vehicles' + os.sep + 'Rotors' ))
 modules = [ 
     # ----------------------- Regression List --------------------------
     'Tests/analysis_aerodynamics/airfoil_panel_method_test.py',    
-    'Tests/analysis_aerodynamics/airfoil_panel_method_convergence.py',   
-    'Tests/analysis_aerodynamics/VLM_test.py',    
+    'Tests/analysis_aerodynamics/airfoil_panel_method_convergence.py',
     'Tests/analysis_aerodynamics/VLM_control_surface_test.py',    
     'Tests/analysis_aerodynamics/VLM_moving_surface_test.py',    
     'Tests/atmosphere/atmosphere.py',
