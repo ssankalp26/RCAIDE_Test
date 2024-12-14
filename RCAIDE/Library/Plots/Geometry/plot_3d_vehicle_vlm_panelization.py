@@ -18,7 +18,7 @@ import plotly.graph_objects as go
 # ----------------------------------------------------------------------------------------------------------------------  
 def plot_3d_vehicle_vlm_panelization(vehicle,
                                      alpha = 1.0,
-                                     plot_axis = False,
+                                     plot_axis   = False,
                                      save_figure = False,
                                      show_wing_control_points = True,
                                      save_filename = "VLM_Panelization",

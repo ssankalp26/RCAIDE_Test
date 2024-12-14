@@ -8,7 +8,6 @@
 # ----------------------------------------------------------------------------------------------------------------------    
 
 from RCAIDE.Library.Methods.Geometry.Airfoil.import_airfoil_geometry import import_airfoil_geometry 
-from RCAIDE.Library.Plots.Geometry import plot_airfoil
 import numpy as np
 import os
 
@@ -92,9 +91,5 @@ def generate_interpolated_airfoils(a1, a2, nairfoils, npoints=200, save_filename
     # plot new and original airfoils:
     airfoil_files.insert(0,a1)
     airfoil_files.append(a2)
-    
-    for airfoil_file in airfoil_files:
-        name = os.path.basename(airfoil_file)
-        plot_airfoil(airfoil_file,save_filename = name[:-4]) 
-    
-    return new_files
+     
+    return airfoil_files

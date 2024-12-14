@@ -23,7 +23,13 @@ modules = [
     # ----------------------- Regression List --------------------------
     'Tests/analysis_aerodynamics/airfoil_panel_method_test.py',    
     'Tests/analysis_aerodynamics/airfoil_panel_method_convergence.py',    
+    'Tests/analysis_aerodynamics/airfoil_interpolation_test.py',    
+    'Tests/analysis_aerodynamics/airfoil_import_test.py',    
     'Tests/analysis_aerodynamics/VLM_test.py',    
+    'Tests/analysis_aerodynamics/VLM_control_surface_test.py',    
+    'Tests/analysis_aerodynamics/VLM_moving_surface_test.py',    
+    'Tests/atmosphere/atmosphere.py',
+    'Tests/atmosphere/constant_temperature.py',
     'Tests/analysis_emissions/emissions_test.py',   
     'Tests/analysis_noise/digital_elevation_test.py',  
     'Tests/analysis_noise/frequency_domain_test.py', 
