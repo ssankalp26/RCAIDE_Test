@@ -9,7 +9,7 @@
 
 # package imports
 import numpy as np 
-from   RCAIDE.Library.Methods.Propulsors.Common  import rayleigh, fm_solver
+from   RCAIDE.Library.Methods.Gas_Dynamics  import rayleigh, fm_solver
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 # compute_rayleigh

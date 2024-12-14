@@ -123,9 +123,9 @@ def make_VLM_wings(geometry, settings):
             continue
         
         #prepare to iterate across all segments and control surfaces
-        seg_breaks  = RCAIDE.Framework.Core.ContainerOrdered()
-        LE_breaks   = RCAIDE.Framework.Core.ContainerOrdered()
-        TE_breaks   = RCAIDE.Framework.Core.ContainerOrdered()
+        seg_breaks  = SUAVE.Core.ContainerOrdered()
+        LE_breaks   = SUAVE.Core.ContainerOrdered()
+        TE_breaks   = SUAVE.Core.ContainerOrdered()
         n_segments  = len(wing.Segments.keys())
 
         #process all control surfaces in each segment-------------------------------------

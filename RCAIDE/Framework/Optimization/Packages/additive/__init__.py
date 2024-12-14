@@ -8,4 +8,4 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-from .additive_setup import additive_setup 
+from .additive_setup import Additive_Solver 

@@ -9,7 +9,7 @@
   
 from RCAIDE.Framework.Core                    import Data  
 from RCAIDE.Library.Methods.Utilities         import Cubic_Spline_Blender   
-from RCAIDE.Library.Methods.Aerodynamics.Common.Fidelity_Zero.Helper_Functions import compressible_turbulent_flat_plate
+from RCAIDE.Library.Methods.Aerodynamics.Common.Drag.compressible_turbulent_flat_plate import compressible_turbulent_flat_plate
 
 # package imports
 import numpy as np

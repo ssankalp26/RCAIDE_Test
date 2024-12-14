@@ -31,7 +31,6 @@ from scipy.optimize import shgo
 # ----------------------------------------------------------------------
 #  Additive Solve Functions
 # ----------------------------------------------------------------------
-
 class Additive_Solver():
     def __init__(self):
         # These defaults are chosen since they are built in to scipy and

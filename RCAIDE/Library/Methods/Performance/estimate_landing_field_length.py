@@ -10,10 +10,9 @@
 # ----------------------------------------------------------------------
 #  Imports
 # ----------------------------------------------------------------------
-
-from   RCAIDE import  * 
+import  RCAIDE
 from   RCAIDE.Framework.Core import Data, Units
-from   RCAIDE.Library.Methods.Aerodynamics.Common import compute_max_lift_coeff
+from   RCAIDE.Library.Methods.Aerodynamics.Common.Lift.compute_max_lift_coeff import compute_max_lift_coeff
 
 import numpy as np
 
@@ -79,7 +78,7 @@ def estimate_landing_field_length(vehicle,analyses,airport):
     # ==============================================
     # Condition to CLmax calculation: 90KTAS @ airport
     state = Data()
-    state.conditions = SUAVE.Analyses.Mission.Segments.Conditions.Aerodynamics()
+    state.conditions =  RCAIDE.Framework.Mission.Common.Results() 
     state.conditions.freestream = Data()
     state.conditions.freestream.density           = rho
     state.conditions.freestream.velocity          = 90. * Units.knots
@@ -100,15 +99,12 @@ def estimate_landing_field_length(vehicle,analyses,airport):
     #     Landing Field Length = k1 + k2 * Vref**2
     # ========================================================================================
 
-    # Defining landing distance equation coefficients
-    try:
-        landing_constants = config.landing_constants # user defined
-    except:  # default values - According to Torenbeek book
-        landing_constants = np.zeros(3)
-        landing_constants[0] = 250.
-        landing_constants[1] =   0.
-        landing_constants[2] =  2.485  / sea_level_gravity  # Two-wheels truck : [ (1.56 / 0.40 + 1.07) / (2*sea_level_gravity) ]
-        #landing_constants[2] =   2.9725 / sea_level_gravity  # Four-wheels truck: [ (1.56 / 0.32 + 1.07) / (2*sea_level_gravity) ] 
+    # Defining landing distance equation coefficients 
+    landing_constants = np.zeros(3)
+    landing_constants[0] = 250.
+    landing_constants[1] =   0.
+    landing_constants[2] =  2.485  / sea_level_gravity  # Two-wheels truck : [ (1.56 / 0.40 + 1.07) / (2*sea_level_gravity) ]
+    
     # Calculating landing field length
     landing_field_length = 0.
     for idx,constant in enumerate(landing_constants):

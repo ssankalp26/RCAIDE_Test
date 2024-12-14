@@ -10,7 +10,8 @@
 
 from . import Aerodynamics 
 from . import Emissions
-from . import Energy 
+from . import Energy
+from . import Gas_Dynamics
 from . import Geometry
 from . import Noise
 from . import Performance 

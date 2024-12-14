@@ -1,3 +1,4 @@
+## @ingroup Methods-Aerodynamics-Common-Fidelity_Zero-Lift
 # generate_wing_wake_grid.py
 # 
 # Created:   April 2021, R. Erhard
@@ -6,12 +7,11 @@
 # ----------------------------------------------------------------------
 #  Imports
 # ----------------------------------------------------------------------
+import numpy as np 
 from RCAIDE.Framework.Core import Data
-import numpy as np
-import pylab as plt
 
 
-def generate_wing_wake_grid(geometry, H, L, hf, x_plane, Nzo=20, Nzf=35, Nyo=20, plot_grid=False):
+def generate_wing_wake_grid(geometry, H, L, hf, x_plane, Nzo=20, Nzf=35, Nyo=20):
     """ Generates the grid points for evaluating the viscous wing wake in a downstream plane.
     Uses smaller grid near the wing to better capture boundary layer.
     
@@ -72,50 +72,6 @@ def generate_wing_wake_grid(geometry, H, L, hf, x_plane, Nzo=20, Nzf=35, Nyo=20,
     grid_points.YC = cp_YC
     grid_points.ZC = cp_ZC
     grid_points.yline = ylocs
-    grid_points.zline = zlocs
-    
-    if plot_grid:
-        yL = -span/2
-        yR = span/2
+    grid_points.zline = zlocs 
         
-        wing_y = np.array([yL, yR])
-        wing_z = np.array([0,0])
-        
-        # plot the grid points
-        fig  = plt.figure()
-        axes = fig.add_subplot(1,1,1)
-        axes.plot(cp_YC,cp_ZC,'k.')
-        
-        # plot the wing projection
-        axes.plot(wing_y,wing_z, 'r')
-        
-        axes.set_xlabel('y [m]')
-        axes.set_ylabel("z [m]")
-        axes.set_title("New Grid Points")
-        
-        plot_prop=True
-        if plot_prop: 
-            for network in geometry.networks: 
-                for propulsor in network.propulsors:  
-                    if 'rotor' in propulsor:
-                        rotor  =  propulsor.rotor
-                        R      = rotor.tip_radius
-                        origin = rotor.origin
-                        Na     = rotor.number_azimuthal_stations
-                        
-                        psi    = np.linspace(0,2*np.pi,Na+1)[:-1]
-                        ycoords = origin[0][1] + R*np.cos(psi)
-                        zcoords = origin[0][2] + R*np.sin(psi)
-                        axes.plot(ycoords,zcoords,'r')
-                    if 'propeller' in propulsor:
-                        propeller  =  propulsor.propeller 
-                        R      = propeller.tip_radius
-                        origin = propeller.origin
-                        Na     = propeller.number_azimuthal_stations
-                        
-                        psi    = np.linspace(0,2*np.pi,Na+1)[:-1]
-                        ycoords = origin[0][1] + R*np.cos(psi)
-                        zcoords = origin[0][2] + R*np.sin(psi)
-                        axes.plot(ycoords,zcoords,'r')
-                    
     return grid_points

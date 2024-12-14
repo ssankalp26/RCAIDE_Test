@@ -13,13 +13,11 @@
 #  Imports
 # ----------------------------------------------------------------------
 
-# SUave Imports
-from RCAIDE import * 
-from RCAIDE.Framework.Core            import Data, Units
-from RCAIDE.Library.Methods.Aerodynamics.Common.Helper_Functions import windmilling_drag
-from RCAIDE.Library.Methods.Aerodynamics.Common.Helper_Functions import estimate_2ndseg_lift_drag_ratio
-from RCAIDE.Library.Methods.Aerodynamics.Common.Helper_Functions import asymmetry_drag
-from RCAIDE.Library.Methods.Aerodynamics.Common.Lift import compute_max_lift_coeff
+# RCAIDE Imports
+import RCAIDE
+from RCAIDE.Framework.Core            import Data, Units     
+from RCAIDE.Library.Methods.Aerodynamics.Common.Drag import * 
+from RCAIDE.Library.Methods.Aerodynamics.Common.Lift import *
 
 # package imports
 import numpy as np
@@ -77,7 +75,7 @@ def estimate_take_off_field_length(vehicle,analyses,airport,compute_2nd_seg_clim
     # Computing atmospheric conditions
     # ==============================================
     atmo_values       = atmo.compute_values(altitude,delta_isa)
-    conditions        = SUAVE.Analyses.Mission.Segments.Conditions.Aerodynamics()
+    conditions        = RCAIDE.Framework.Mission.Common.Results()
     
     p   = atmo_values.pressure
     T   = atmo_values.temperature
@@ -91,7 +89,7 @@ def estimate_take_off_field_length(vehicle,analyses,airport,compute_2nd_seg_clim
     # ==============================================
     # Condition to CLmax calculation: 90KTAS @ airport
     state = Data()
-    state.conditions = SUAVE.Analyses.Mission.Segments.Conditions.Aerodynamics()
+    state.conditions = RCAIDE.Framework.Mission.Common.Results()
     state.conditions.freestream = Data()
     state.conditions.freestream.density           = rho
     state.conditions.freestream.velocity          = 90. * Units.knots
@@ -119,24 +117,50 @@ def estimate_take_off_field_length(vehicle,analyses,airport,compute_2nd_seg_clim
 
     # ==============================================
     # Getting engine thrust
-    # ==============================================    
-    state = SUAVE.Analyses.Mission.Segments.Conditions.State()
-    conditions = state.conditions
-    conditions.update( SUAVE.Analyses.Mission.Segments.Conditions.Aerodynamics() )
-
-    conditions.freestream.dynamic_pressure = np.array(np.atleast_1d(0.5 * rho * speed_for_thrust**2))
-    conditions.freestream.gravity          = np.array([np.atleast_1d(sea_level_gravity)])
-    conditions.freestream.velocity         = np.array(np.atleast_1d(speed_for_thrust))
-    conditions.freestream.mach_number      = np.array(np.atleast_1d(speed_for_thrust/ a))
-    conditions.freestream.speed_of_sound   = np.array(a)
-    conditions.freestream.temperature      = np.array(np.atleast_1d(T))
-    conditions.freestream.pressure         = np.array(np.atleast_1d(p))
-    conditions.propulsion.throttle         = np.array(np.atleast_2d([1.]))
+    # ==============================================
     
-    results = vehicle.networks.evaluate_thrust(state) # total thrust
-    
-    thrust = results.thrust_force_vector
 
+    # Step 28: Static Sea Level Thrust  
+    planet                                            = RCAIDE.Library.Attributes.Planets.Earth()
+    atmosphere_sls                                    = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
+    atmo_data                                         = atmosphere_sls.compute_values(0.0,0.0)
+                                                      
+    p                                                 = atmo_data.pressure          
+    T                                                 = atmo_data.temperature       
+    rho                                               = atmo_data.density          
+    a                                                 = atmo_data.speed_of_sound    
+    mu                                                = atmo_data.dynamic_viscosity
+    gamma                                             = atmo_data.isentropic_expansion_factor       
+    Cp                                                = atmo_data.specific_heat_capacity          
+    R                                                 = atmo_data.gas_specific_constant
+    
+    conditions                                        = RCAIDE.Framework.Mission.Common.Results() 
+    conditions.freestream.altitude                    = np.atleast_1d(0)
+    conditions.freestream.mach_number                 = np.atleast_1d(0.01)
+    conditions.freestream.pressure                    = np.atleast_1d(p)
+    conditions.freestream.temperature                 = np.atleast_1d(T)
+    conditions.freestream.density                     = np.atleast_1d(rho)
+    conditions.freestream.dynamic_viscosity           = np.atleast_1d(mu)
+    conditions.freestream.gravity                     = np.atleast_2d(planet.sea_level_gravity) 
+    conditions.freestream.isentropic_expansion_factor = np.atleast_1d(gamma)
+    conditions.freestream.Cp                          = np.atleast_1d(Cp)
+    conditions.freestream.R                           = np.atleast_1d(R)
+    conditions.freestream.speed_of_sound              = np.atleast_1d(a)
+    conditions.freestream.velocity                    = np.atleast_1d(a*0.01)   
+
+    # setup conditions   
+    segment                                           = RCAIDE.Framework.Mission.Segments.Segment()  
+    segment.state.conditions                          = conditions
+    
+    for network in  vehicle.networks: 
+
+        segment                                           = RCAIDE.Framework.Mission.Segments.Segment()  
+        segment.state.conditions                          = conditions
+         
+        network.evaluate(segment.state,center_of_gravity = vehicle.mass_properties.center_of_gravity)
+        
+        thrust += conditions.energy.thrust_force_vector
+         
     # ==============================================
     # Calculate takeoff distance
     # ==============================================

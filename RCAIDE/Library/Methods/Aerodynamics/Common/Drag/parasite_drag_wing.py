@@ -7,7 +7,7 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------   
 from RCAIDE.Framework.Core import Data  
-from RCAIDE.Library.Methods.Aerodynamics.Common.Helper_Functions import compressible_mixed_flat_plate
+from RCAIDE.Library.Methods.Aerodynamics.Common.Drag.compressible_mixed_flat_plate import compressible_mixed_flat_plate
 from RCAIDE.Library.Methods.Utilities         import Cubic_Spline_Blender  
  
 # package imports
