@@ -8,8 +8,8 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-from Legacy.trunk.S.Methods.Aerodynamics.Common.Fidelity_Zero.Lift                           import generate_vortex_distribution, compute_unit_normal 
-from Legacy.trunk.S.Methods.Aerodynamics.Common.Fidelity_Zero.Lift.generate_VD_helpers       import postprocess_VD, compute_panel_area, compute_unit_normal
+from RCAIDE.Library.Methods.Aerodynamics.Vortex_Lattice_Method                import generate_vortex_distribution, compute_unit_normal 
+from RCAIDE.Library.Methods.Aerodynamics.Common.Lift.generate_VD_helpers      import postprocess_VD, compute_panel_area, compute_unit_normal
 from Legacy.trunk.S.Methods.Aerodynamics.Common.Fidelity_Zero.Lift.make_VLM_wings            import make_VLM_wings  
 from Legacy.trunk.S.Methods.Aerodynamics.Common.Fidelity_Zero.Lift.deflect_control_surface   import deflect_control_surface
 from .compute_RHS_matrix                      import compute_RHS_matrix 
