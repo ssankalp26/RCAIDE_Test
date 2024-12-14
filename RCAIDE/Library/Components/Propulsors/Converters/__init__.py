@@ -22,7 +22,7 @@ from .Ram                                        import Ram
 from .Rotor                                      import Rotor
 from .Prop_Rotor                                 import Prop_Rotor
 from .Offtake_Shaft                              import Offtake_Shaft
-from Legacy.trunk.S.Components.Energy.Converters import Solar_Panel
+from RCAIDE.Library.Components.Energy.Sources.Solar_Panels import Solar_Panel
 from .Supersonic_Nozzle                          import Supersonic_Nozzle
 from .Turbine                                    import Turbine
 

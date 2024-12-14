@@ -8,5 +8,5 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-from .chebyshev_data import chebyshev_data
-from .linear_data    import linear_data
+from RCAIDE.Library.Methods.Utilities.Chebyshev.chebyshev_data import chebyshev_data
+from RCAIDE.Library.Methods.Utilities.Chebyshev.linear_data    import linear_data

@@ -45,7 +45,7 @@ class Planet(Analysis):
         self.features = Data()
         self.settings = Data()
         
-        from Legacy.trunk.S.Attributes.Planets.Earth import Earth
+        from RCAIDE.Framework.Analyses.Planets.Earth import Earth
         self.features = Earth()
         
         

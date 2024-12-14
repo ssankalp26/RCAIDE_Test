@@ -8,4 +8,4 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-from Legacy.trunk.S.Methods.Aerodynamics.Common.Gas_Dynamics.Oblique_Shock import oblique_shock_relations, theta_beta_mach
+from .Oblique_Shock import oblique_shock_relations, theta_beta_mach

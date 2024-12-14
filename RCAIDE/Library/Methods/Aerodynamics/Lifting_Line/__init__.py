@@ -8,4 +8,4 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-from Legacy.trunk.S.Methods.Aerodynamics.Lifting_Line import lifting_line
+from .Lifting_Line import lifting_line

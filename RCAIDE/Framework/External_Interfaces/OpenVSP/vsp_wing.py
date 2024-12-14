@@ -11,8 +11,8 @@
 # ----------------------------------------------------------------------
 #  Imports
 # ----------------------------------------------------------------------
-
-import Legacy.trunk.S as SUAVE
+import RCAIDE
+from RCAIDE.Library.Components.Wings import  Vertical_Tail,  Wing
 from RCAIDE.Framework.Core import Units , Data
 from RCAIDE.Library.Components.Airfoils.Airfoil import Airfoil
 from RCAIDE.Library.Methods.Geometry.Planform.Two_Dimensional.Planform import wing_planform, wing_segmented_planform
@@ -24,7 +24,7 @@ except ImportError:
     try:
         import openvsp as vsp
     except ImportError:
-        # This allows SUAVE to build without OpenVSP
+        # This allows RCAIDE to build without OpenVSP
         pass
 # This enforces lowercase names
 chars = string.punctuation + string.whitespace
@@ -37,7 +37,7 @@ t_table = str.maketrans( chars          + string.ascii_uppercase ,
 
 ## @ingroup Input_Output-OpenVSP
 def read_vsp_wing(wing_id, units_type='SI', write_airfoil_file=True, use_scaling=True):
-    """This reads an OpenVSP wing vehicle geometry and writes it into a SUAVE wing format.
+    """This reads an OpenVSP wing vehicle geometry and writes it into a RCAIDE wing format.
 
     Assumptions:
     1. OpenVSP wing is divided into segments ("XSecs" in VSP).
@@ -53,7 +53,7 @@ def read_vsp_wing(wing_id, units_type='SI', write_airfoil_file=True, use_scaling
     4. Boolean for whether or not to use the scaling from OpenVSP (default = True).
 
     Outputs:
-    Writes SUAVE wing object, with these geometries, from VSP:
+    Writes RCAIDE wing object, with these geometries, from VSP:
     	Wings.Wing.    (* is all keys)
     		origin                                  [m] in all three dimensions
     		spans.projected                         [m]
@@ -88,13 +88,13 @@ def read_vsp_wing(wing_id, units_type='SI', write_airfoil_file=True, use_scaling
     x_rot = vsp.GetParmVal( wing_id,'X_Rotation','XForm')
     y_rot = vsp.GetParmVal( wing_id,'Y_Rotation','XForm')
     if  abs(x_rot) >=70:
-        wing = SUAVE.Components.Wings.Vertical_Tail()
+        wing = RCAIDE.Library.Components.Wings.Vertical_Tail()
         wing.vertical = True
         sign = (np.sign(x_rot))
         x_rot = (sign*90 - sign*x_rot) * Units.deg
     else:
         # Instantiate a wing
-        wing = SUAVE.Components.Wings.Wing()
+        wing = RCAIDE.Components.Wings.Wing()
         x_rot =  x_rot  * Units.deg
 
     y_rot =  y_rot  * Units.deg
@@ -172,12 +172,12 @@ def read_vsp_wing(wing_id, units_type='SI', write_airfoil_file=True, use_scaling
 
     if single_seg == False:
 
-        # Convert VSP XSecs to SUAVE segments. (Wing segments are defined by outboard sections in VSP, but inboard sections in SUAVE.)
+        # Convert VSP XSecs to RCAIDE segments. (Wing segments are defined by outboard sections in VSP, but inboard sections in RCAIDE.)
         for i in range(1, segment_num+1):
             # XSec airfoil
-            jj = i-1  # Airfoil index i-1 because VSP airfoils and sections are one index off relative to SUAVE.
+            jj = i-1  # Airfoil index i-1 because VSP airfoils and sections are one index off relative to RCAIDE.
 
-            segment = SUAVE.Components.Wings.Segment()
+            segment = RCAIDE.Library.Components.Wings.Segment()
             segment.tag                   = 'Section_' + str(i)
             thick_cord                    = vsp.GetParmVal(wing_id, 'ThickChord', 'XSecCurve_' + str(jj))
             segment.thickness_to_chord    = thick_cord	# Thick_cord stored for use in airfoil, below.
@@ -192,7 +192,7 @@ def read_vsp_wing(wing_id, units_type='SI', write_airfoil_file=True, use_scaling
             if i==1:
                 wing.thickness_to_chord = thick_cord
 
-            if i < segment_num:      # This excludes the tip xsec, but we need a segment in SUAVE to store airfoil.
+            if i < segment_num:      # This excludes the tip xsec, but we need a segment in RCAIDE to store airfoil.
                 sweep     = vsp.GetParmVal(wing_id, 'Sweep', 'XSec_' + str(i)) * Units.deg
                 sweep_loc = vsp.GetParmVal(wing_id, 'Sweep_Location', 'XSec_' + str(i))
                 AR        = 2*vsp.GetParmVal(wing_id, 'Aspect', 'XSec_' + str(i))
@@ -361,15 +361,15 @@ def read_vsp_wing(wing_id, units_type='SI', write_airfoil_file=True, use_scaling
             if cs_idx == aileron_loc:
                 aileron_present = True
         if LE_flags[cs_idx] == 1.0:
-            CS = SUAVE.Components.Wings.Control_Surfaces.Slat()
+            CS = RCAIDE.Components.Wings.Control_Surfaces.Slat()
         else:
             if wing.vertical == True:
-                CS = SUAVE.Components.Wings.Control_Surfaces.Rudder()
+                CS = RCAIDE.Components.Wings.Control_Surfaces.Rudder()
             else:
                 if aileron_present:
-                    CS = SUAVE.Components.Wings.Control_Surfaces.Aileron()
+                    CS = RCAIDE.Components.Wings.Control_Surfaces.Aileron()
                 else:
-                    CS = SUAVE.Components.Wings.Control_Surfaces.Flap()
+                    CS = RCAIDE.Components.Wings.Control_Surfaces.Flap()
         CS.tag                 = tags[cs_idx]
         
         # Do some math to get U into a span fraction
@@ -397,7 +397,7 @@ def read_vsp_wing(wing_id, units_type='SI', write_airfoil_file=True, use_scaling
         CS.span_fraction_start = np.max([span_start, 0])
         CS.span_fraction_end   = np.min([span_end,1])
         if CS.span_fraction_start > 1 or CS.span_fraction_end < 0:
-            raise AssertionError("SUAVE import of VSP files does not allow control surfaces defined for the wing caps.")
+            raise AssertionError("RCAIDE import of VSP files does not allow control surfaces defined for the wing caps.")
 
         CS.chord_fraction      = chord_fractions[cs_idx]
         CS.span                = (CS.span_fraction_end - CS.span_fraction_start)*wing.spans.projected
@@ -490,7 +490,7 @@ def write_vsp_wing(vehicle,wing, area_tags, fuel_tank_set_ind, OML_set_ind):
         vsp.SetParmVal( wing_id,'Sym_Planar_Flag','Sym',0)
     if wing.vertical == True:
         vsp.SetParmVal( wing_id,'X_Rel_Rotation','XForm',90)
-        dihedral = -dihedral # check for vertical tail, direction reverses from SUAVE/AVL
+        dihedral = -dihedral # check for vertical tail, direction reverses from RCAIDE/AVL
 
     vsp.SetParmVal( wing_id,'X_Rel_Location','XForm',wing_x)
     vsp.SetParmVal( wing_id,'Y_Rel_Location','XForm',wing_y)
@@ -660,7 +660,7 @@ def write_vsp_wing(vehicle,wing, area_tags, fuel_tank_set_ind, OML_set_ind):
         vsp.SetParmVal(rt_ch_parm, chord_i)
         vsp.SetParmVal(tc_parm, tc_i)
         
-        # OpenVSP's rotation on vertical segmented wings is opposite of SUAVE's
+        # OpenVSP's rotation on vertical segmented wings is opposite of RCAIDE's
         if not wing.vertical:
             vsp.SetParmVal(dih_parm, dihedral_i)
         else:
@@ -753,7 +753,7 @@ def write_vsp_control_surface(wing,wing_id,ctrl_surf):
     param_names = vsp.GetSubSurfParmIDs(cs_id)
     for p_idx in range(len(param_names)):
         if 'LE_Flag' == vsp.GetParmName(param_names[p_idx]):
-            if type(ctrl_surf) == SUAVE.Components.Wings.Control_Surfaces.Slat:
+            if type(ctrl_surf) == RCAIDE.Components.Wings.Control_Surfaces.Slat:
                 vsp.SetParmVal(param_names[p_idx], 1.0)
             else:
                 vsp.SetParmVal( param_names[p_idx], 0.0)
@@ -917,7 +917,7 @@ def write_wing_conformal_fuel_tank(vehicle,wing, wing_id,fuel_tank,fuel_tank_set
 
 ## @ingroup Input_Output-OpenVSP
 def get_vsp_trim_from_SUAVE_trim(seg_span_percents,vsp_segment_breaks,trim):
-    """Compute OpenVSP span trim coordinates based on SUAVE coordinates
+    """Compute OpenVSP span trim coordinates based on RCAIDE coordinates
 
     Assumptions:
     Wing does not have end caps
@@ -928,7 +928,7 @@ def get_vsp_trim_from_SUAVE_trim(seg_span_percents,vsp_segment_breaks,trim):
     Inputs:
     seg_span_percents   [-] range of 0 to 1
     vsp_segment_breaks  [-] range of 0 to 1
-    trim                [-] range of 0 to 1 (SUAVE value)
+    trim                [-] range of 0 to 1 (RCAIDE value)
 
     Outputs:
     trim                [-] OpenVSP trim value
