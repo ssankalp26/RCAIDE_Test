@@ -8,4 +8,4 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-from Legacy.trunk.S.Optimization.Package_Setups import particle_swarm_optimization 
+from .particle_swarm_optimization import particle_swarm_optimization

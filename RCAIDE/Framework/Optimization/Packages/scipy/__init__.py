@@ -8,4 +8,4 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-from Legacy.trunk.S.Optimization.Package_Setups import scipy_setup 
+from .scipy_setup import SciPy_Solve

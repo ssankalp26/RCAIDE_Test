@@ -8,4 +8,4 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-from Legacy.trunk.S.Optimization.Package_Setups import pyopt_surrogate_setup
+from .pyopt_surrogate_setup import  pyopt_surrogate_setup
