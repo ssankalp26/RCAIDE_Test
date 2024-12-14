@@ -7,8 +7,8 @@
 # ----------------------------------------------------------------------
 #  Imports
 # ----------------------------------------------------------------------
-
-from RCAIDE.Framework.Core import Data
+import RCAIDE
+from RCAIDE.Framework.Core import Data 
 from RCAIDE.Framework.Analyses import Analysis
 
 # ----------------------------------------------------------------------
@@ -41,12 +41,8 @@ class Planet(Analysis):
             """                  
         
         
-        self.tag    = 'planet'
-        self.features = Data()
+        self.tag      = 'planet'
         self.settings = Data()
-        
-        from RCAIDE.Framework.Analyses.Planets.Earth import Earth
-        self.features = Earth()
         
         
         

@@ -143,7 +143,7 @@ def base_analysis(vehicle,emissions_method, use_surrogate):
     
     # ------------------------------------------------------------------
     #  Planet Analysis
-    planet = RCAIDE.Framework.Analyses.Planets.Planet()
+    planet = RCAIDE.Framework.Analyses.Planets.Earth()
     analyses.append(planet)
     
     # ------------------------------------------------------------------

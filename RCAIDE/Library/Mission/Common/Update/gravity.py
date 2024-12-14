@@ -29,7 +29,7 @@ def gravity(segment):
     H      = segment.conditions.freestream.altitude
     
     # calculate
-    g      = planet.features.compute_gravity(H)
+    g      = planet.compute_gravity(H)
 
     # pack
     segment.state.conditions.freestream.gravity[:,0] = g[:,0]
