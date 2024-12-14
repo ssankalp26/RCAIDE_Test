@@ -85,8 +85,8 @@ def compute_flap_lift(t_c,flap_type,flap_chord,flap_angle,sweep,wing_Sref,wing_a
 if __name__ == '__main__':
 
     #imports
-    import Legacy.trunk.S as SUAVE
-    from RCAIDE.Framework.Core import Units
+    from  RCAIDE import  * 
+    from  RCAIDE.Framework.Core import Units
 
     # Test case
     t_c             = 0.11

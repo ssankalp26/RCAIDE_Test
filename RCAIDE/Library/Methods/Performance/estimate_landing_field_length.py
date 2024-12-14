@@ -11,9 +11,9 @@
 #  Imports
 # ----------------------------------------------------------------------
 
-import Legacy.trunk.S as SUAVE
+from   RCAIDE import  * 
 from   RCAIDE.Framework.Core import Data, Units
-from Legacy.trunk.S.Methods.Aerodynamics.Fidelity_Zero.Lift import compute_max_lift_coeff
+from   RCAIDE.Library.Methods.Aerodynamics.Common import compute_max_lift_coeff
 
 import numpy as np
 

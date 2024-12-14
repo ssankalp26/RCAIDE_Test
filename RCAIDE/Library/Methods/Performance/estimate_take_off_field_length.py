@@ -14,7 +14,7 @@
 # ----------------------------------------------------------------------
 
 # SUave Imports
-import Legacy.trunk.S as SUAVE
+from RCAIDE import * 
 from RCAIDE.Framework.Core            import Data, Units
 from RCAIDE.Library.Methods.Aerodynamics.Common.Helper_Functions import windmilling_drag
 from RCAIDE.Library.Methods.Aerodynamics.Common.Helper_Functions import estimate_2ndseg_lift_drag_ratio

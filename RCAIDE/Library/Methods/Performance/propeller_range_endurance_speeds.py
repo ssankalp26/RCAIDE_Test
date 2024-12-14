@@ -8,11 +8,10 @@
 #  Imports
 # ----------------------------------------------------------------------
 
-from RCAIDE.Framework.Core import Data
+from   RCAIDE import  * 
+from   RCAIDE.Framework.Core import Data
 import numpy as np
 import scipy as sp
-
-import Legacy.trunk.S as SUAVE
 
 # ----------------------------------------------------------------------
 #  Propeller Range and Endurance Speeds
