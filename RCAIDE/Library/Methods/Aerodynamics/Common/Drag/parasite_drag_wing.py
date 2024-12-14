@@ -7,8 +7,8 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------   
 from RCAIDE.Framework.Core import Data  
-from Legacy.trunk.S.Methods.Aerodynamics.Common.Fidelity_Zero.Helper_Functions import compressible_mixed_flat_plate
-from Legacy.trunk.S.Methods.Aerodynamics.Supersonic_Zero.Drag.Cubic_Spline_Blender import Cubic_Spline_Blender
+from RCAIDE.Library.Methods.Aerodynamics.Common.Helper_Functions import compressible_mixed_flat_plate
+from RCAIDE.Library.Methods.Utilities         import Cubic_Spline_Blender  
  
 # package imports
 import numpy as np  
