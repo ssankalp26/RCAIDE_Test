@@ -187,12 +187,12 @@ def evaluate_CEM(fuel_cell_stack,fuel_cell_conditions,t_idx):
         The power required to run the CEM at the given operating conditions (W)
     """
     fuel_cell  = fuel_cell_stack.fuel_cell
-    FC_air_p   = fuel_cell_conditions.fuel_cell.FC_air_p[t_idx]
-    p_drop_hum = fuel_cell_conditions.fuel_cell.p_drop_hum[t_idx]  # calculated 
+    FC_air_p   = fuel_cell_conditions.fuel_cell.inputs.air_pressure[t_idx]
+    p_drop_hum = fuel_cell_conditions.fuel_cell.p_drop_hum[t_idx]  
     fuel_cell_conditions.fuel_cell.p_air_out[t_idx]  =  FC_air_p  + p_drop_hum
     
     evaluate_CEM_model(fuel_cell.CEM,fuel_cell_conditions,t_idx)
-    power_req      = fuel_cell_conditions.fuel_cell.P_CEM[t_idx]
+    power_req      = fuel_cell_conditions.fuel_cell.CEM_power[t_idx]
     mdot_out       = fuel_cell_conditions.fuel_cell.mdot_out_exp[t_idx]
     expander_power = fuel_cell_conditions.fuel_cell.P_exp[t_idx]
     return power_req, mdot_out, expander_power
@@ -596,7 +596,7 @@ def calculate_limiting_current_density_HT(fuel_cell_stack, stack_temperature, P_
 def evaluate_max_gross_power(fuel_cell_stack,fuel_cell_conditions,t_idx):
 
     fuel_cell    = fuel_cell_stack.fuel_cell
-    FC_air_p     = fuel_cell_conditions.fuel_cell.FC_air_p[t_idx, 0]    
+    FC_air_p     = fuel_cell_conditions.fuel_cell.inputs.air_pressure[t_idx, 0]    
     stack_temperature         = fuel_cell_conditions.fuel_cell.stack_temperature[t_idx, 0]        
     RH           = fuel_cell_conditions.fuel_cell.oxygen_relative_humidity[t_idx, 0]          
     air_excess_ratio    = fuel_cell_conditions.fuel_cell.air_excess_ratio[t_idx, 0] 
@@ -622,7 +622,7 @@ def evaluate_power_func(i,fuel_cell_stack,fuel_cell_conditions,t_idx):
 def evaluate_max_net_power(fuel_cell_stack,fuel_cell_conditions,t_idx): 
 
     fuel_cell   = fuel_cell_stack.fuel_cell     
-    FC_air_p     = fuel_cell_conditions.fuel_cell.FC_air_p  
+    FC_air_p     = fuel_cell_conditions.fuel_cell.inputs.air_pressure  
     stack_temperature         = fuel_cell_conditions.fuel_cell.stack_temperature      
     RH           = fuel_cell_conditions.fuel_cell.oxygen_relative_humidity        
     air_excess_ratio    = fuel_cell_conditions.fuel_cell.air_excess_ratio
@@ -748,7 +748,7 @@ def evaluate_CEM_model(CEM,fuel_cell_conditions, t_idx):
     fuel_cell_conditions.fuel_cell.P_motor_comp[t_idx]     = input_p
     fuel_cell_conditions.fuel_cell.P_exp[t_idx]            = exp_p_ext
     fuel_cell_conditions.fuel_cell.P_generator_exp[t_idx]  = output_p 
-    fuel_cell_conditions.fuel_cell.P_CEM[t_idx]            = p_req
+    fuel_cell_conditions.fuel_cell.CEM_power[t_idx]        = p_req
     return  
 
 def set_CEM_weight(CEM, compressor_max_power):

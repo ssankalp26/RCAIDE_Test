@@ -588,7 +588,7 @@ class PEM_Cell:
         """
         p_air_out = FC_air_p + p_drop_hum 
         state = self.CEM.evaluate(p_air_out, thermo_state_in, mdot_air_in, air_excess_ratio, p_drop_hum, p_drop_fc)
-        power_req = state.P_CEM
+        power_req = state.CEM_power
         mdot_out = state.mdot_out_exp
         expander_power = state.P_exp
         return power_req, mdot_out, expander_power

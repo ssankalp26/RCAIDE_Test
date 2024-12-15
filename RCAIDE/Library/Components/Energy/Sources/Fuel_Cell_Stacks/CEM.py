@@ -10,7 +10,7 @@ class CEM_state:
     P_motor_comp = None
     P_exp: float = None
     P_generator_exp: float = None
-    P_CEM: float = None 
+    CEM_power: float = None 
 
 class CEM_Module: 
     def __init__(self, compressor_efficiency, expander_efficiency, motor_efficiency, generator_efficiency, specific_weight):
@@ -45,7 +45,7 @@ class CEM_Module:
         state.P_motor_comp = input_p
         state.P_exp = exp_p_ext
         state.P_generator_exp = output_p 
-        state.P_CEM = p_req
+        state.CEM_power = p_req
         return state
 
     def set_weight(self, compressor_max_power):
