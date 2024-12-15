@@ -65,7 +65,6 @@ nosetests.xml
 *.geo
 *.stl
 *.vsp3
-*.cfg
 *.su2
 *.key
 
