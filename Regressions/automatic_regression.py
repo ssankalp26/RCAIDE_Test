@@ -1,25 +1,19 @@
-# Regressions/automatic_regression.py
-# 
+# Regressions/Tests/automatic_regression.py
 
-""" RCAIDE Regressions
-"""
-# Created:  Jun M. Clarke
-# Modified: 
+""" RCAIDE Automatic Regression Tests with pytest """
 
-# ----------------------------------------------------------------------------------------------------------------------
-#  IMPORT
-# ----------------------------------------------------------------------------------------------------------------------
+import pytest
 import matplotlib.pyplot as plt
 import matplotlib
+import os
+import sys
+import traceback
+import time
+
 matplotlib.use('Agg')
-import sys, os, traceback, time
-from RCAIDE.Framework.Core import DataOrdered
 
-sys.path.append(os.path.join(sys.path[0], 'Vehicles'))
-sys.path.append(os.path.join(sys.path[0], 'Vehicles' + os.sep + 'Rotors' )) 
-
+# List of regression modules to test
 modules = [ 
-    # ----------------------- Regression List --------------------------
     'Tests/analysis_aerodynamics/airfoil_panel_method_test.py',    
     'Tests/analysis_aerodynamics/airfoil_panel_method_convergence.py',
     'Tests/analysis_aerodynamics/VLM_control_surface_test.py',    
@@ -56,47 +50,10 @@ modules = [
     'Tests/performance/take_off_weight_from_tofl.py',    
 ]
 
-def regressions():
-     
-    # preallocate test results
-    results = DataOrdered()
-    for module in modules:
-        results[module] = 'Untested'
-
-    sys.stdout.write('# --------------------------------------------------------------------- \n')
-    sys.stdout.write('#   RCAIDE-UIUC Automatic Regression \n')
-    sys.stdout.write('#   %s \n' % time.strftime("%B %d, %Y - %H:%M:%S", time.gmtime()) )
-    sys.stdout.write('# --------------------------------------------------------------------- \n')
-    sys.stdout.write(' \n')
-
-    # run tests
-    all_pass = True
-    for module in modules:
-        passed = test_module(module)
-        if passed:
-            results[module] = '  Passed'
-        else:
-            results[module] = '* FAILED'
-            all_pass = False
-
-    # final report
-    sys.stdout.write('# --------------------------------------------------------------------- \n')
-    sys.stdout.write('Final Results \n')
-    for module,result in list(results.items()):
-        sys.stdout.write('%s - %s\n' % (result,module))
-
-    if all_pass:
-        sys.exit(0)
-    else:
-        sys.exit(1)
-        
-    return pass_fail 
- 
-# ----------------------------------------------------------------------
-#   Module Tester
-# ----------------------------------------------------------------------
-
-def test_module(module_path):
+# Parametrize the list of modules so each is run as a separate test
+@pytest.mark.parametrize("module_path", modules)
+def test_automatic_regressions(module_path):
+    """ Run the regressions listed in the modules """
     original_dir = os.getcwd()
     
     try:
@@ -104,22 +61,16 @@ def test_module(module_path):
         regression_dir = os.path.dirname(os.path.abspath(__file__))
         sys.path.append(regression_dir)
         
-        # Convert module_path to full path from regression directory
+        # Convert module_path to full path
         full_module_path = os.path.join(regression_dir, module_path)
         test_dir = os.path.dirname(full_module_path)
         module_name = os.path.basename(module_path)
         
-        sys.stdout.write('# --------------------------------------------------------------------- \n')
-        sys.stdout.write('# Start Test: %s \n' % full_module_path)
-        sys.stdout.flush()
-        
-        tic = time.time()
-        
         # Check if file exists
         if not os.path.exists(full_module_path):
-            raise ImportError(f'file {full_module_path} does not exist')
+            pytest.fail(f'File {full_module_path} does not exist')
         
-        # Add test directory to Python path and change to it
+        # Change to test directory and import module
         if test_dir:
             sys.path.append(test_dir)
             os.chdir(test_dir)
@@ -127,36 +78,14 @@ def test_module(module_path):
         # Import and run the test
         name = os.path.splitext(module_name)[0]
         module = __import__(name)
-        module.main()
+        module.main()  # Run the main function of the test
         
-        passed = True
-        
-    except Exception as exc:
-        sys.stderr.write('Test Failed: \n')
-        sys.stderr.write(traceback.format_exc())
-        sys.stderr.write('\n')
-        sys.stderr.flush()
-        passed = False
-        
-    finally:
         # Cleanup
         plt.close('all')
-        os.chdir(original_dir)
-        
-        # Log results
-        if passed:
-            sys.stdout.write('# Passed: %s \n' % module_name)
-        else:
-            sys.stdout.write('# FAILED: %s \n' % module_name)
-        sys.stdout.write('# Test Duration: %.4f min \n' % ((time.time()-tic)/60))
-        sys.stdout.write('\n')
-        
-        # Ensure output is written
-        sys.stdout.flush()
-        sys.stderr.flush()
-        
-    return passed
- 
+    
+    except Exception as exc:
+        pytest.fail(f'Test failed for {module_path}\n{traceback.format_exc()}')
 
-if __name__ == '__main__':
-    regressions()
+    finally:
+        # Ensure cleanup and return to original directory
+        os.chdir(original_dir)
