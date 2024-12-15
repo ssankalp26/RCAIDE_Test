@@ -8,11 +8,11 @@
 # ----------------------------------------------------------------------
 #  Imports
 # ----------------------------------------------------------------------
-
+import RCAIDE
 import numpy as np
 from RCAIDE.Library.Components.Wings import All_Moving_Surface
 from RCAIDE.Framework.Core import Data
-from .generate_VD_helpers import postprocess_VD
+from RCAIDE.Library.Methods.Aerodynamics.Vortex_Lattice_Method.generate_VD_helpers import postprocess_VD
 
 # ----------------------------------------------------------------------
 #  Deflect Control Surface
