@@ -1,13 +1,17 @@
-.. RCAIDE_LEADS documentation master file
+RCAIDE_LEADS Documentation
+===========================
 
-Welcome to RCAIDE_LEADS Documentation
-===================================
+Welcome to RCAIDE_LEADS's documentation!
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   modules
+   getting_started
+   api_reference
+   usage
+   contributing
+   changelog
 
 Indices and tables
 ==================

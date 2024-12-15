@@ -8,6 +8,8 @@
 
 import os
 import sys
+
+from unittest.mock import Mock
 os.environ['SPHINX_BUILD'] = 'sphinx'
 
 # Add all potential module paths
@@ -69,9 +71,35 @@ napoleon_type_aliases = None
 
 html_theme = 'alabaster'
 html_static_path = ['_static']
+html_theme = 'pydata_sphinx_theme'
 
+html_theme_options = {
+    "github_url": "https://github.com/your-repo",  # Replace with your GitHub repo
+    "twitter_url": "https://twitter.com/your-handle",  # Replace with your Twitter handle (optional)
+    "navbar_end": ["search-field.html", "theme-switcher"],  # Add a theme switcher
+    "show_toc_level": 2,  # Control levels of table of contents
+}
 
-from unittest.mock import Mock
+html_context = {
+    "default_mode": "auto",  # Default to light/dark mode based on user preference
+}
+
+html_theme = 'pydata_sphinx_theme'
+
+html_theme_options = {
+    "github_url": "https://github.com/your-repo",  # Replace with your GitHub repo
+    "twitter_url": "https://twitter.com/your-handle",  # Replace with your Twitter handle (optional)
+    "navbar_end": ["search-field.html", "theme-switcher"],  # Add a theme switcher
+    "show_toc_level": 2,  # Control levels of table of contents
+}
+
+html_context = {
+    "default_mode": "auto",  # Default to light/dark mode based on user preference
+}
+
+html_static_path = ['_static']
+html_css_files = ['custom.css']  # Add custom styles (optional)
+
 
 # Mock load_plugin to avoid runtime errors
 sys.modules['RCAIDE.Framework.Plugins.load_plugin'] = Mock()
