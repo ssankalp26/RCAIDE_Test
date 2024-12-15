@@ -149,26 +149,12 @@ def mission_setup(analyses,vehicle):
     base_segment       = Segments.Segment()    
 
     # Charge Segment 
-    segment                                 = Segments.Ground.Battery_Recharge(base_segment)      
-    segment.analyses.extend(analyses.charge) 
-    segment.cutoff_SOC                      = 1.0  
-    segment.initial_battery_state_of_charge = 0.2  
-    segment.tag                             = 'Recharge' 
-    mission.append_segment(segment)   
-
-         
-    segment                                 = Segments.Ground.Battery_Discharge(base_segment) 
-    segment.analyses.extend(analyses.discharge)  
-    segment.tag                             = 'Discharge_1' 
-    segment.time                            = 100
-    segment.initial_battery_state_of_charge = 1  
-    mission.append_segment(segment)
-    
-    segment                                = Segments.Ground.Battery_Discharge(base_segment) 
-    segment.tag                            = 'Discharge_2'
-    segment.analyses.extend(analyses.discharge)   
-    segment.time                           = 100
-    mission.append_segment(segment)        
+    segment                                 = Segments.Ground.Battery_Discharge(base_segment)      
+    segment.analyses.extend(analyses.charge)
+    segment.throttle =  1.0 
+    segment.tag                             = 'Discharge' 
+    mission.append_segment(segment)    
+     
     
     return mission 
 
