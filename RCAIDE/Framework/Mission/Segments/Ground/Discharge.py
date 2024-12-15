@@ -55,7 +55,7 @@ class Discharge(Evaluate):
         #  Mission specific processes 
         # --------------------------------------------------------------------------------------------------------------       
         initialize                         = self.process.initialize 
-        initialize.conditions              = Ground.Battery_Charge_Discharge.initialize_conditions 
+        initialize.conditions              = Ground.Charge_Discharge.initialize_conditions 
         iterate                            = self.process.iterate 
         iterate.unknowns.mission           = skip
         iterate.conditions.aerodynamics    = skip

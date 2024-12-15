@@ -43,7 +43,7 @@ class Generic_Fuel_Cell_Stack(Component):
         Properties Used:
         None
         """           
-
+        self.tag                                        = 'fuel_cell'
         self.energy_density                             = 0.0
         self.current_energy                             = 0.0
         self.current_capacitor_charge                   = 0.0

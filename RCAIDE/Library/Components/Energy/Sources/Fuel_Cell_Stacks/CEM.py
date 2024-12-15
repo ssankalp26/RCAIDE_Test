@@ -21,7 +21,7 @@ class CEM_Module:
         self.specific_weight = specific_weight
         self.weight = 0
 
-    def evaluate(self, p_air_FC, thermo_state_in, mdot_air_in, lambda_O2, p_drop_hum, p_drop_fc):
+    def evaluate(self, p_air_FC, thermo_state_in, mdot_air_in, air_excess_ratio, p_drop_hum, p_drop_fc):
         Tt_in = thermo_state_in.Tt 
         Pt_in = thermo_state_in.Pt
         Cp = 1004
@@ -30,7 +30,7 @@ class CEM_Module:
         input_p = comp_p_req / self.motor_efficiency 
         p_exp = p_air_FC - p_drop_fc - p_drop_hum
         Tt_exp = Tt_in * (p_exp / Pt_in) ** ((gam - 1) / gam)
-        mdot_air_out = mdot_air_in - mdot_air_in / lambda_O2 * 0.233
+        mdot_air_out = mdot_air_in - mdot_air_in / air_excess_ratio * 0.233
         exp_p_ext = mdot_air_out * Cp * Tt_exp * (1 - (Pt_in / p_exp) ** ((gam - 1) / gam)) * self.expander_efficiency
         output_p = exp_p_ext * self.generator_efficiency
         p_req = input_p - output_p 

@@ -216,7 +216,7 @@ class PEM_Cell:
         P_drop = (i/self.rated_cd) ** 2 * self.rated_p_drop_fc
         return P_drop
 
-    def calculate_P_O2(self, P_air, T_fc, RH, lambda_O2, P_drop, i): 
+    def calculate_P_O2(self, P_air, stack_temperature, RH, air_excess_ratio, P_drop, i): 
         """
         Calculate the partial pressure of oxygen at the fuel cell cathode 
 
@@ -224,11 +224,11 @@ class PEM_Cell:
         ----------
         P_air: float 
             The input air pressure to the fuel cell (bar)
-        T_fc: float 
+        stack_temperature: float 
             The fuel cell stack temperature (K)
         RH: float 
             The relative humidity of the oxygen stream (0-1)
-        lambda_O2: float 
+        air_excess_ratio: float 
             The oxygen excess ratio (above stoichometric)
         P_drop: float 
             The pressure drop (bar) across the fuel cell cathode 
@@ -240,14 +240,14 @@ class PEM_Cell:
         float
             The oxygen partial pressure (bar)
         """
-        T_C = T_fc - 273.15
+        T_C = stack_temperature - 273.15
         log_P_H2O = -2.1794 + 0.02953 * T_C - 9.1837e-5 * T_C**2 + 1.4454e-7 * T_C**3
         P_H2O = 10 ** log_P_H2O
-        N = 0.291 * i / (T_fc ** 0.832)
-        P_O2 = 0.21 * (P_air - P_drop / 2 - RH * P_H2O) *  ((1 + (lambda_O2 - 1) / lambda_O2) / 2)/ np.exp(N)
+        N = 0.291 * i / (stack_temperature ** 0.832)
+        P_O2 = 0.21 * (P_air - P_drop / 2 - RH * P_H2O) *  ((1 + (air_excess_ratio - 1) / air_excess_ratio) / 2)/ np.exp(N)
         return P_O2
     
-    def calculate_P_H2(self, P_H2_input, T_fc, RH, i):
+    def calculate_P_H2(self, P_H2_input, stack_temperature, RH, i):
         """
         Calculate the partial pressure of hydroen at the fuel cell anode
 
@@ -255,7 +255,7 @@ class PEM_Cell:
         ----------
         P_H2_input: float 
             The input hydrogen pressure to the fuel cell (bar)
-        T_fc: float 
+        stack_temperature: float 
             The fuel cell stack temperature (K)
         RH: float 
             The relative humidity of the oxygen stream (0-1)
@@ -267,19 +267,19 @@ class PEM_Cell:
         float
             The hydrogen partial pressure (bar)
         """
-        T_C = T_fc - 273.15
+        T_C = stack_temperature - 273.15
         log_P_H2O = -2.1794 + 0.02953 * T_C - 9.1837e-5 * T_C**2 + 1.4454e-7 * T_C**3
         P_H2O = 10 ** log_P_H2O
-        P_H2 = 0.5 * (P_H2_input / np.exp(1.653 * i / T_fc**1.334) - RH * P_H2O)
+        P_H2 = 0.5 * (P_H2_input / np.exp(1.653 * i / stack_temperature**1.334) - RH * P_H2O)
         return P_H2
 
-    def calculate_E_cell(self, T_fc, P_H2, P_O2):
+    def calculate_E_cell(self, stack_temperature, P_H2, P_O2):
         """
         Calculates the reversible Nernst Voltage of the cell
 
         Parameters:
         ----------
-        T_fc: float 
+        stack_temperature: float 
             The fuel cell stack temperature (K)
         P_H2: float 
             The hydrogen partial pressure (bar)
@@ -292,19 +292,19 @@ class PEM_Cell:
             The reversible cell potential (V)
         """
         try:
-            E_cell = 1.229 - 8.45e-4 * (T_fc - 298.15) + \
-            self.R*T_fc / (4 * self.alpha * self.F) * (np.log(P_H2) + 0.5 * np.log(P_O2))
+            E_cell = 1.229 - 8.45e-4 * (stack_temperature - 298.15) + \
+            self.R*stack_temperature / (4 * self.alpha * self.F) * (np.log(P_H2) + 0.5 * np.log(P_O2))
         except: 
             return -10
         return E_cell
     
-    def calculate_activation_losses(self, T_fc, P_O2, i):
+    def calculate_activation_losses(self, stack_temperature, P_O2, i):
         """
         calculation of activation losses for both high temperature and low temperature fuel cells
 
         Parameters: 
         ----------
-        T_fc: float 
+        stack_temperature: float 
             Stack Temperature (K)
         P_O2: float 
             Oxygen Partial Pressure (bar)
@@ -316,19 +316,19 @@ class PEM_Cell:
         float: 
             Activation voltage loss (V)
         """
-        A_const = self.R * T_fc / (2 * self.alpha * self.F)
+        A_const = self.R * stack_temperature / (2 * self.alpha * self.F)
         i0 = self.i0ref * self.L_c * self.a_c * (P_O2/self.i0ref_P_ref) ** (self.gamma) * \
-            np.exp(-self.E_C / (self.R * T_fc) * (1 - (T_fc / self.i0ref_T_ref)))
+            np.exp(-self.E_C / (self.R * stack_temperature) * (1 - (stack_temperature / self.i0ref_T_ref)))
         eta_act = A_const * np.log(i/i0)
         return eta_act
     
-    def calculate_ohmic_losses_LT(self, T_fc, i):
+    def calculate_ohmic_losses_LT(self, stack_temperature, i):
         """
         Calculation of ohmic losses for low temperature fuel cells
 
         Parameters: 
         ----------
-        T_fc: float 
+        stack_temperature: float 
             Stack Temperature (K)
         i: float 
             Current density to evaluate activation losses (A/cm2)
@@ -340,19 +340,19 @@ class PEM_Cell:
         """
         t_m = self.t_m 
         lambda_eff = self.lambda_eff
-        num = 181.6 * (1 + 0.03 * i + 0.062 * (T_fc/303) ** 2 * i ** 2.5)
-        denom = (lambda_eff - 0.634 - 3 * i) * np.exp(4.18 * (T_fc - 303) / T_fc)
+        num = 181.6 * (1 + 0.03 * i + 0.062 * (stack_temperature/303) ** 2 * i ** 2.5)
+        denom = (lambda_eff - 0.634 - 3 * i) * np.exp(4.18 * (stack_temperature - 303) / stack_temperature)
         rho = num/denom 
         eta_ohmic = (rho * t_m) * i
         return eta_ohmic 
     
-    def calculate_ohmic_losses_HT(self, T_fc, i):
+    def calculate_ohmic_losses_HT(self, stack_temperature, i):
         """
         Calculation of ohmic losses for high temperature fuel cells
 
         Parameters: 
         ----------
-        T_fc: float 
+        stack_temperature: float 
             Stack Temperature (K)
         i: float 
             Current density to evaluate activation losses (A/cm2)
@@ -365,24 +365,24 @@ class PEM_Cell:
         t_m = self.t_m 
         c1 = self.c1
         c2 = self.c2
-        s = (T_fc - 373.15) / (100) * (c2 - c1) + c1
+        s = (stack_temperature - 373.15) / (100) * (c2 - c1) + c1
         rho = 1/s 
         eta_ohmic = (rho * t_m) * i
         return eta_ohmic
 
-    def calculate_concentration_losses_LT(self, T_fc, P_O2, RH, lambda_O2, P_drop, i):
+    def calculate_concentration_losses_LT(self, stack_temperature, P_O2, RH, air_excess_ratio, P_drop, i):
         """
         Calculation of concentration losses for low temperature fuel cells 
 
         Parameters:
         ----------
-        T_fc: float 
+        stack_temperature: float 
             Stack Temperature (K)
         P_O2: float 
             Oxygen partial pressure (bar)
         RH: float 
             Relative humidity of the oxygen stream (0-1)
-        lambda_O2: float 
+        air_excess_ratio: float 
             Oxygen excess ratio (above stoichometric)
         P_drop: float 
             Pressure drop across the fuel cell stack (bar)
@@ -394,26 +394,26 @@ class PEM_Cell:
         float: 
             Concentration voltage loss (V)
         """
-        i_lim = self.calculate_limiting_current_density_LT(T_fc, P_O2, RH, lambda_O2, P_drop, i)
+        i_lim = self.calculate_limiting_current_density_LT(stack_temperature, P_O2, RH, air_excess_ratio, P_drop, i)
         if i >= i_lim: 
             return 10
         else: 
-            eta_conc = (1 + 1 / self.alpha) * self.R * T_fc / (2 * self.F) * np.log(i_lim / (i_lim - i)) 
+            eta_conc = (1 + 1 / self.alpha) * self.R * stack_temperature / (2 * self.F) * np.log(i_lim / (i_lim - i)) 
             return eta_conc
         
-    def calculate_limiting_current_density_LT(self, T_fc, P_O2, RH, lambda_O2, P_drop, i, **kwargs): 
+    def calculate_limiting_current_density_LT(self, stack_temperature, P_O2, RH, air_excess_ratio, P_drop, i, **kwargs): 
         """
         Calculation of the limiting current density for LT-PEM
 
         Parameters:
         ----------
-        T_fc: float 
+        stack_temperature: float 
             Stack Temperature (K)
         P_O2: float 
             Oxygen partial pressure (bar)
         RH: float 
             Relative humidity of the oxygen stream (0-1)
-        lambda_O2: float 
+        air_excess_ratio: float 
             Oxygen excess ratio (above stoichometric)
         P_drop: float 
             Pressure drop across the fuel cell stack (bar)
@@ -425,24 +425,24 @@ class PEM_Cell:
         float: 
             limiting current density (A/cm^2)
         """
-        P_O2_ref_1_atm = self.calculate_P_O2(1, T_fc, RH, lambda_O2, P_drop, i)
-        P_O2_ref_2_5_atm = self.calculate_P_O2(2.5, T_fc, RH, lambda_O2, P_drop, i)
+        P_O2_ref_1_atm = self.calculate_P_O2(1, stack_temperature, RH, air_excess_ratio, P_drop, i)
+        P_O2_ref_2_5_atm = self.calculate_P_O2(2.5, stack_temperature, RH, air_excess_ratio, P_drop, i)
         i_lim = (2.25 - 1.65) * (P_O2 - P_O2_ref_1_atm)**1 / (P_O2_ref_2_5_atm-P_O2_ref_1_atm)**1 + 1.65
         return self.i_lim_multiplier * i_lim
         
-    def calculate_concentration_losses_HT(self, T_fc, P_O2, RH, lambda_O2, P_drop, i):
+    def calculate_concentration_losses_HT(self, stack_temperature, P_O2, RH, air_excess_ratio, P_drop, i):
         """
         Calculation of concentration losses for high temperature fuel cells 
 
         Parameters:
         ----------
-        T_fc: float 
+        stack_temperature: float 
             Stack Temperature (K)
         P_O2: float 
             Oxygen partial pressure (bar)
         RH: float 
             Relative humidity of the oxygen stream (0-1)
-        lambda_O2: float 
+        air_excess_ratio: float 
             Oxygen excess ratio (above stoichometric)
         P_drop: float 
             Pressure drop across the fuel cell stack (bar)
@@ -454,26 +454,26 @@ class PEM_Cell:
         float: 
             Concentration voltage loss (V)
         """
-        i_lim = self.calculate_limiting_current_density_HT(T_fc, P_O2, RH, lambda_O2, P_drop, i)
+        i_lim = self.calculate_limiting_current_density_HT(stack_temperature, P_O2, RH, air_excess_ratio, P_drop, i)
         if i >= i_lim: 
             return 10
         else: 
-            eta_conc = (1 + 1.8/self.alpha) * self.R * T_fc / (2* self.F) * np.log(i_lim / (i_lim - i)) 
+            eta_conc = (1 + 1.8/self.alpha) * self.R * stack_temperature / (2* self.F) * np.log(i_lim / (i_lim - i)) 
             return eta_conc
 
-    def calculate_limiting_current_density_HT(self, T_fc, P_O2, RH, lambda_O2, P_drop, i): 
+    def calculate_limiting_current_density_HT(self, stack_temperature, P_O2, RH, air_excess_ratio, P_drop, i): 
         """
         Calculation of the limiting current density for HT-PEM
 
         Parameters:
         ----------
-        T_fc: float 
+        stack_temperature: float 
             Stack Temperature (K)
         P_O2: float 
             Oxygen partial pressure (bar)
         RH: float 
             Relative humidity of the oxygen stream (0-1)
-        lambda_O2: float 
+        air_excess_ratio: float 
             Oxygen excess ratio (above stoichometric)
         P_drop: float 
             Pressure drop across the fuel cell stack (bar)
@@ -485,11 +485,11 @@ class PEM_Cell:
         float: 
             limiting current density (A/cm^2)
         """
-        P_O2_ref_1_atm = self.calculate_P_O2(1, T_fc, RH, lambda_O2, P_drop, i)
-        P_O2_ref_2_atm = self.calculate_P_O2(2, T_fc, RH, lambda_O2, P_drop, i)
+        P_O2_ref_1_atm = self.calculate_P_O2(1, stack_temperature, RH, air_excess_ratio, P_drop, i)
+        P_O2_ref_2_atm = self.calculate_P_O2(2, stack_temperature, RH, air_excess_ratio, P_drop, i)
         i_lim = (2.15 - 1.4) * (P_O2 - P_O2_ref_1_atm)**1 / (P_O2_ref_2_atm-P_O2_ref_1_atm)**1 + 1.4
         return self.i_lim_multiplier * i_lim 
-    def calculate_voltage(self, i, T_fc, P_H2_input, P_air, RH, lambda_O2, p_drop_fc, degradation=0):
+    def calculate_voltage(self, i, stack_temperature, P_H2_input, P_air, RH, air_excess_ratio, p_drop_fc, degradation=0):
         """
         Calculates the output voltage of the fuel cell by subtracting the activation,
         ohmic, and concentration voltage losses from the reversible Nernst voltage, E_cell.
@@ -498,7 +498,7 @@ class PEM_Cell:
         ----------
         i: float 
             The current density to evaluate the cell voltage at (A/cm^2)
-        T_fc: float 
+        stack_temperature: float 
             Temperature of the fuel cell (K)
         P_H2_input: float 
             Pressure of the hydrogen stream (bar)
@@ -506,7 +506,7 @@ class PEM_Cell:
             Pressure of the incoming air (bar)
         RH: float 
             Relative humidity of the air and hydrogen streams (0-1)
-        lambda_O2: float 
+        air_excess_ratio: float 
             Air excess ratio (above stoichometric)
         p_drop_fc: float 
             Pressure drop of the fuel cell at the rated current density (bar)
@@ -519,25 +519,25 @@ class PEM_Cell:
         float: 
             Output voltage of the fuel cell (V)
         """
-        P_O2 = self.calculate_P_O2(P_air, T_fc, RH, lambda_O2, p_drop_fc, i)
-        P_H2 = self.calculate_P_H2(P_H2_input, T_fc, RH, i)
-        E_cell = self.calculate_E_cell(T_fc, P_H2, P_O2)
-        eta_act = self.calculate_activation_losses(T_fc, P_O2, i)
-        eta_ohmic = self.calculate_ohmic_losses(T_fc, i)
-        eta_conc = self.calculate_concentration_losses(T_fc, P_O2, RH, lambda_O2, p_drop_fc, i)
+        P_O2 = self.calculate_P_O2(P_air, stack_temperature, RH, air_excess_ratio, p_drop_fc, i)
+        P_H2 = self.calculate_P_H2(P_H2_input, stack_temperature, RH, i)
+        E_cell = self.calculate_E_cell(stack_temperature, P_H2, P_O2)
+        eta_act = self.calculate_activation_losses(stack_temperature, P_O2, i)
+        eta_ohmic = self.calculate_ohmic_losses(stack_temperature, i)
+        eta_conc = self.calculate_concentration_losses(stack_temperature, P_O2, RH, air_excess_ratio, p_drop_fc, i)
 
         # Calculate the output voltage of the fuel cell
         V_cell = E_cell - eta_act - eta_ohmic - eta_conc - degradation * self.maximum_deg
         V_loss = eta_act + eta_ohmic + eta_conc + degradation * self.maximum_deg
         return V_cell, V_loss
     
-    def evaluate_max_gross_power(self, T_fc, p_H2, FC_air_p, RH, lambda_O2, degradation=0, **kwargs):
+    def evaluate_max_gross_power(self, stack_temperature, p_H2, FC_air_p, RH, air_excess_ratio, degradation=0, **kwargs):
         
-        P_O2 = self.calculate_P_O2(FC_air_p, T_fc, RH, lambda_O2, self.rated_p_drop_fc, 0)
-        i_lim = self.calculate_limiting_current_density(T_fc, P_O2, RH, lambda_O2, 0, i=0)
+        P_O2 = self.calculate_P_O2(FC_air_p, stack_temperature, RH, air_excess_ratio, self.rated_p_drop_fc, 0)
+        i_lim = self.calculate_limiting_current_density(stack_temperature, P_O2, RH, air_excess_ratio, 0, i=0)
 
         def evaluate_power(i): 
-            V_cell, V_loss = self.calculate_voltage(i, T_fc, p_H2, FC_air_p, RH, lambda_O2, self.rated_p_drop_fc, degradation)
+            V_cell, V_loss = self.calculate_voltage(i, stack_temperature, p_H2, FC_air_p, RH, air_excess_ratio, self.rated_p_drop_fc, degradation)
             PD = -V_cell * i 
             return PD
 
@@ -546,12 +546,12 @@ class PEM_Cell:
         rated_pd = -res.fun 
         return rated_cd, rated_pd
     
-    def evaluate_max_net_power(self, T_fc, p_H2, FC_air_p, RH, lambda_O2, thermo_state, degradation=0): 
-        P_O2 = self.calculate_P_O2(FC_air_p, T_fc, RH, lambda_O2, self.rated_p_drop_fc, 0)
-        i_lim = self.calculate_limiting_current_density(T_fc, P_O2, RH, lambda_O2, 0, i=0)
+    def evaluate_max_net_power(self, stack_temperature, p_H2, FC_air_p, RH, air_excess_ratio, thermo_state, degradation=0): 
+        P_O2 = self.calculate_P_O2(FC_air_p, stack_temperature, RH, air_excess_ratio, self.rated_p_drop_fc, 0)
+        i_lim = self.calculate_limiting_current_density(stack_temperature, P_O2, RH, air_excess_ratio, 0, i=0)
         compressor_powers = []
         def evaluate_power(i): 
-            res = self.evaluate(i, T_fc, p_H2, FC_air_p, RH, lambda_O2, thermo_state, degradation)
+            res = self.evaluate(i, stack_temperature, p_H2, FC_air_p, RH, air_excess_ratio, thermo_state, degradation)
             net_power = res[1]
             compressor_powers.append(res[4])
             return -net_power
@@ -562,7 +562,7 @@ class PEM_Cell:
         rated_power = -res.fun 
         return rated_cd, rated_power, compressor_power
 
-    def evaluate_CEM(self, FC_air_p, thermo_state_in, mdot_air_in, lambda_O2, p_drop_hum, p_drop_fc):
+    def evaluate_CEM(self, FC_air_p, thermo_state_in, mdot_air_in, air_excess_ratio, p_drop_hum, p_drop_fc):
         """
         Evaluates the power required by the CEM (compressor-expander module)
 
@@ -574,7 +574,7 @@ class PEM_Cell:
             Air thermostate entering the compressor
         mdot_air_in: float 
             Mass flow of air entering the fuel cell and compressor (kg/s)
-        lambda_O2: float 
+        air_excess_ratio: float 
             Oxygen excess ratio (above stoichometric)
         p_drop_hum: float 
             The pressure drop (bar) through the humidifier 
@@ -587,13 +587,13 @@ class PEM_Cell:
             The power required to run the CEM at the given operating conditions (W)
         """
         p_air_out = FC_air_p + p_drop_hum 
-        state = self.CEM.evaluate(p_air_out, thermo_state_in, mdot_air_in, lambda_O2, p_drop_hum, p_drop_fc)
+        state = self.CEM.evaluate(p_air_out, thermo_state_in, mdot_air_in, air_excess_ratio, p_drop_hum, p_drop_fc)
         power_req = state.P_CEM
         mdot_out = state.mdot_out_exp
         expander_power = state.P_exp
         return power_req, mdot_out, expander_power
     
-    def evaluate(self, i, T_fc, P_H2_input, FC_air_p, RH, lambda_O2, thermo_state_in, degradation=0):
+    def evaluate(self, i, stack_temperature, P_H2_input, FC_air_p, RH, air_excess_ratio, thermo_state_in, degradation=0):
         """
         Determines the fuel cell state of the PEM fuel cell 
 
@@ -601,7 +601,7 @@ class PEM_Cell:
         ----------
         i: float 
             The current density to evaluate the cell voltage at (A/cm^2)
-        T_fc: Temperature 
+        stack_temperature: Temperature 
             Temperature of the fuel cell
         P_H2_input: Pressure
             Pressure of the hydrogen stream 
@@ -609,7 +609,7 @@ class PEM_Cell:
             Pressure of the hydrogen air entering the fuel cell
         RH: float 
             Relative humidity of the air and hydrogen streams (0-1)
-        lambda_O2: float 
+        air_excess_ratio: float 
             Air excess ratio (above stoichometric)
         thermo_state_in: ThermoState 
             Conditions of air entering the compressor
@@ -637,12 +637,12 @@ class PEM_Cell:
             p_drop_hum = self.calculate_P_drop_hum(i) 
         else: 
             p_drop_hum = 0
-        mdot_air_in = i * self.A * self.MMO2 / (4 * self.F * self.O2_mass_frac) * lambda_O2
+        mdot_air_in = i * self.A * self.MMO2 / (4 * self.F * self.O2_mass_frac) * air_excess_ratio
         mdot_H2 = i * self.A / (2 * self.F) * self.MMH2
-        V, V_loss = self.calculate_voltage(i, T_fc, P_H2_input, FC_air_p, RH, lambda_O2, p_drop_fc, degradation)
+        V, V_loss = self.calculate_voltage(i, stack_temperature, P_H2_input, FC_air_p, RH, air_excess_ratio, p_drop_fc, degradation)
         gross_power = V * i * self.A
         gross_heat = V_loss * i * self.A
-        compressor_power, mdot_air_out, expander_power = self.evaluate_CEM(FC_air_p, thermo_state_in, mdot_air_in, lambda_O2, p_drop_hum, p_drop_fc)
+        compressor_power, mdot_air_out, expander_power = self.evaluate_CEM(FC_air_p, thermo_state_in, mdot_air_in, air_excess_ratio, p_drop_hum, p_drop_fc)
         parasitic_power = self.gamma_para * gross_power
         net_power = gross_power - compressor_power - parasitic_power
         return mdot_H2, net_power, gross_power, gross_heat, compressor_power, mdot_air_in, mdot_air_out, expander_power
@@ -650,13 +650,13 @@ class PEM_Cell:
     def get_weight_estimate(self):
         return self.A / 100 / 100 * self.area_specific_mass 
 
-    def generate_gross_polarization_curve_data(self, T_fc, p_H2, FC_air_p, RH, lambda_O2, CD_end, thermo_state, degradation=0, no_points = 200):
+    def generate_gross_polarization_curve_data(self, stack_temperature, p_H2, FC_air_p, RH, air_excess_ratio, CD_end, thermo_state, degradation=0, no_points = 200):
         """
         Generates lists containing the output gross voltage as a function of current density of the fuel cell.
 
         Parameters:
         ----------
-        T_fc: float
+        stack_temperature: float
             Fuel cell stack temperature (K)
         P_H2_input: float 
             Input partial pressure of hydrogen (bar)
@@ -664,7 +664,7 @@ class PEM_Cell:
             Input partial pressure of air (bar)
         RH: float 
             Relative humidity (0 to 1)
-        lambda_O2: float
+        air_excess_ratio: float
             Air excess ratio (above stoichometric)
         CD_end: float 
             Current Density to end evaluation at 
@@ -682,20 +682,20 @@ class PEM_Cell:
         voltages = []
         for i in current_densities: 
             p_drop_fc = self.calculate_P_drop_stack(i)
-            v = self.calculate_voltage(i, T_fc, p_H2, FC_air_p, RH, lambda_O2, p_drop_fc, degradation)[0]
+            v = self.calculate_voltage(i, stack_temperature, p_H2, FC_air_p, RH, air_excess_ratio, p_drop_fc, degradation)[0]
             if v>0: 
                 voltages.append(v)
             else: 
                 voltages.append(np.nan)
         return current_densities, np.array(voltages)
 
-    def generate_net_polarization_curve_data(self, T_fc, p_H2, FC_air_p, RH, lambda_O2, CD_end, thermo_state, degradation=0, no_points = 200):
+    def generate_net_polarization_curve_data(self, stack_temperature, p_H2, FC_air_p, RH, air_excess_ratio, CD_end, thermo_state, degradation=0, no_points = 200):
         """
         Generates lists containing the output net voltage as a function of current density of the fuel cell.
 
         Parameters:
         ----------
-        T_fc: float
+        stack_temperature: float
             Fuel cell stack temperature (K)
         P_H2_input: float 
             Input partial pressure of hydrogen (bar)
@@ -703,7 +703,7 @@ class PEM_Cell:
             Input partial pressure of air (bar)
         RH: float 
             Relative humidity (0 to 1)
-        lambda_O2: float
+        air_excess_ratio: float
             Air excess ratio (above stoichometric)
         CD_end: float 
             Current Density to end evaluation at 
@@ -720,7 +720,7 @@ class PEM_Cell:
         current_densities = np.linspace(0.01, CD_end, no_points)  # Current densities from 0 to 2 A/cm^2 in steps of 0.01 A/cm^2
         voltages = []
         for i in current_densities: 
-            v = self.evaluate(i, T_fc, p_H2, FC_air_p, RH, lambda_O2, thermo_state, degradation)[1] / i / self.A
+            v = self.evaluate(i, stack_temperature, p_H2, FC_air_p, RH, air_excess_ratio, thermo_state, degradation)[1] / i / self.A
             if v>0: 
                 voltages.append(v)
             else: 

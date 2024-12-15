@@ -178,7 +178,7 @@ class Electric(Network):
                             battery_module.reuse_stored_data(state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_cell_tag)
                             
                 for fuel_cell_stack in  bus.fuel_cell_stacks:                   
-                    if bus.identical_fuel_cell_stack == False:
+                    if bus.identical_fuel_cell_stacks == False:
                         # run analysis  
                         stored_results_flag, stored_fuel_cell_tag =  fuel_cell_stack.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
                     else:             

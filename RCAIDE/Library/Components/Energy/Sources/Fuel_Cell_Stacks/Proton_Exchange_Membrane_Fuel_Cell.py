@@ -111,7 +111,8 @@ class Proton_Exchange_Membrane_Fuel_Cell(Generic_Fuel_Cell_Stack):
         area_specific_mass: float 
             The mass per active membrane area of the fuel cell (kg/m2)
         """ 
-        
+
+        self.tag                          = 'pem_fuel_cell'        
         self.fuel_cell.R                  = 8.31 # Universal gas constant (J / (mol*K))
         self.fuel_cell.F                  = 96485  # Faraday constant (C / mol)
         self.fuel_cell.E_C                = 66000 # Activation energy of ORR (J)
@@ -140,7 +141,7 @@ class Proton_Exchange_Membrane_Fuel_Cell(Generic_Fuel_Cell_Stack):
         self.fuel_cell.i0ref              = 9 * 10 ** -6
         self.fuel_cell.i0ref_P_ref        = 1 
         self.fuel_cell.i0ref_T_ref        = 353
-        self.fuel_cell.i_lim_multiplier   = 1
+        self.fuel_cell.current_density_limit_multiplier   = 1
         self.fuel_cell.area_specific_mass = 2.5 
         return 
         
@@ -162,7 +163,7 @@ class Proton_Exchange_Membrane_Fuel_Cell(Generic_Fuel_Cell_Stack):
         Returns: 
             None
         """        
-        if (self.fuel_cell.type != "LT") or  (self.fuel_cell.type != "HT"): 
+        if not (self.fuel_cell.type == "LT") or  (self.fuel_cell.type == "HT"): 
             raise ValueError('PEM type not supported, currently supported types are "LT" and "HT"')         
         
         stored_results_flag, stored_battery_tag = compute_fuel_cell_performance(self,state,bus,coolant_lines, t_idx,delta_t) 
