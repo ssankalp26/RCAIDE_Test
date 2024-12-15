@@ -10,11 +10,7 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        repo: 
-          - testpypi
-          - pypi
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -32,14 +28,8 @@ jobs:
       - name: Build package
         run: python -m build
 
-      - name: Set repository credentials
-        id: set-credentials
-        run: echo "TWINE_PASSWORD=${{ secrets.PYPI_API_TOKEN }}" >> $GITHUB_ENV
-        if: matrix.repo == 'pypi'
-        shell: bash
-
-
-      - name: Publish to ${{ matrix.repo }}
+      - name: Publish to PyPI
         env:
           TWINE_USERNAME: __token__
-        run: python -m twine upload --repository ${{ matrix.repo }} dist/*
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: python -m twine upload dist/*
