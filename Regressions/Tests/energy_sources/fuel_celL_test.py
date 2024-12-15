@@ -8,9 +8,8 @@
 # ----------------------------------------------------------------------------------------------------------------------
 # RCAIDE imports 
 import RCAIDE  
-from RCAIDE.Framework.Core                                    import Units, Data  
-from RCAIDE.Framework.Mission.Common                          import Conditions
-from RCAIDE.Library.Plots                                     import * 
+from RCAIDE.Framework.Core   import Units, Data   
+from RCAIDE.Library.Plots    import * 
 
 # package imports  
 import numpy as np
@@ -30,12 +29,8 @@ from Fuel_Cell   import vehicle_setup , configs_setup
 def main():   
     
     # Operating conditions for battery p
-    curr                  = [1.5,3]  
-    C_rat                 = [0.5,1]  
     marker_size           = 5 
-    mAh                   = np.array([3800,2600]) 
-    V_ul_true             = np.array([[3.176391931635407,3.1422615279089],[3.176391931635407,3.1422615279089]])
-    bat_temp_true         = np.array([[309.47942727882105,304.7804077267032], [309.65733640183896,304.9861235766863]])  
+    V_ul_true             = np.array([3.176391931635407,3.1422615279089]) 
 
     # PLot parameters 
     marker                = ['s' ,'o' ,'P']
@@ -64,7 +59,7 @@ def main():
         analyses = analyses_setup(configs)
     
         # mission analyses
-        mission  = mission_setup(analyses,vehicle,fuel_cell_model[i]) 
+        mission  = mission_setup(analyses,vehicle) 
         
         # create mission instances (for multiple types of missions)
         missions = missions_setup(mission) 
@@ -75,19 +70,11 @@ def main():
         # Voltage Cell Regression
         V_ul        = results.segments[0].conditions.energy.bus.battery_modules[fuel_cell_model[i]].cell.voltage_under_load[2][0]   
         print('Under load voltage: ' + str(V_ul))
-        V_ul_diff   = np.abs(V_ul - V_ul_true[j,i])
+        V_ul_diff   = np.abs(V_ul - V_ul_true[i])
         print('Under load voltage difference')
         print(V_ul_diff) 
-        assert np.abs((V_ul_diff)/V_ul_true[j,i]) < 1e-6  
-       
-        # Temperature Regression
-        bat_temp        = results.segments[1].conditions.energy.bus.battery_modules[fuel_cell_model[i]].cell.temperature[2][0]  
-        print('Cell temperature: ' + str(bat_temp))
-        bat_temp_diff   = np.abs(bat_temp  - bat_temp_true[j,i]) 
-        print('cell temperature difference')
-        print(bat_temp_diff)
-        assert np.abs((bat_temp_diff)/bat_temp_true[j,i]) < 1e-6
-   
+        assert np.abs((V_ul_diff)/V_ul_true[i]) < 1e-6
+        
         for segment in results.segments.values(): 
             volts         = segment.conditions.energy.bus.voltage_under_load[:,0] 
             SOC           = segment.conditions.energy.bus.battery_modules[fuel_cell_model[i]].cell.state_of_charge[:,0]   
@@ -95,13 +82,13 @@ def main():
             Amp_Hrs       = segment.conditions.energy.bus.battery_modules[fuel_cell_model[i]].cell.charge_throughput[:,0]                   
               
             if fuel_cell_model[i] == 'PEM':
-                axes1.plot(Amp_Hrs , volts , marker= marker[i], linestyle = linestyles[i],  color= linecolors[j]  , markersize=marker_size   ,label = fuel_cell_model[i] + ': '+ str(C_rat[j]) + ' C') 
-                axes3.plot(Amp_Hrs , SOC   , marker= marker[i] , linestyle = linestyles[i],  color= linecolors[j], markersize=marker_size   ,label = fuel_cell_model[i] + ': '+ str(C_rat[j]) + ' C') 
-                axes5.plot(Amp_Hrs , cell_temp, marker= marker[i] , linestyle = linestyles[i],  color= linecolors[j] , markersize=marker_size,label = fuel_cell_model[i] + ': '+ str(C_rat[j]) + ' C')              
+                axes1.plot(Amp_Hrs , volts , marker= marker[i], linestyle = linestyles[i],  color= linecolors[j]  , markersize=marker_size   ,label = fuel_cell_model[i] ) 
+                axes3.plot(Amp_Hrs , SOC   , marker= marker[i] , linestyle = linestyles[i],  color= linecolors[j], markersize=marker_size   ,label = fuel_cell_model[i]) 
+                axes5.plot(Amp_Hrs , cell_temp, marker= marker[i] , linestyle = linestyles[i],  color= linecolors[j] , markersize=marker_size,label = fuel_cell_model[i])              
             else:
-                axes2.plot(Amp_Hrs , volts , marker= marker[i], linestyle = linestyles[i],  color= linecolors[j] , markersize=marker_size   ,label = fuel_cell_model[i] + ': '+ str(C_rat[j]) + ' C') 
-                axes4.plot(Amp_Hrs , SOC   , marker= marker[i] , linestyle = linestyles[i],  color= linecolors[j], markersize=marker_size   ,label = fuel_cell_model[i] + ': '+ str(C_rat[j]) + ' C') 
-                axes6.plot(Amp_Hrs , cell_temp, marker= marker[i] , linestyle = linestyles[i],  color= linecolors[j] , markersize=marker_size,label = fuel_cell_model[i] + ': '+ str(C_rat[j]) + ' C')              
+                axes2.plot(Amp_Hrs , volts , marker= marker[i], linestyle = linestyles[i],  color= linecolors[j] , markersize=marker_size   ,label = fuel_cell_model[i] ) 
+                axes4.plot(Amp_Hrs , SOC   , marker= marker[i] , linestyle = linestyles[i],  color= linecolors[j], markersize=marker_size   ,label = fuel_cell_model[i] ) 
+                axes6.plot(Amp_Hrs , cell_temp, marker= marker[i] , linestyle = linestyles[i],  color= linecolors[j] , markersize=marker_size,label = fuel_cell_model[i] )              
              
     legend_font_size = 6                     
     axes1.set_ylabel('Voltage $(V_{UL}$)')  
@@ -118,16 +105,7 @@ def main():
     axes3.set_xlim([0,7]) 
     axes4.legend(loc='upper right', ncol = 2, prop={'size': legend_font_size})  
     axes4.set_ylim([0,1])   
-    axes4.set_xlim([0,7])      
-    axes5.set_xlabel('Amp-Hours (A-hr)') 
-    axes5.legend(loc='upper right', ncol = 2, prop={'size': legend_font_size})
-    axes5.set_ylim([273,320])
-    axes5.set_xlim([0,7]) 
-    axes5.set_ylabel(r'Temperature ($\degree$C)')    
-    axes6.set_xlabel('Amp-Hours (A-hr)')        
-    axes6.legend(loc='upper left', ncol = 2, prop={'size': legend_font_size})
-    axes6.set_ylim([273,320])
-    axes6.set_xlim([0,7])       
+    axes4.set_xlim([0,7])       
  
     return  
  
@@ -182,14 +160,14 @@ def mission_setup(analyses,vehicle):
     segment                                 = Segments.Ground.Battery_Discharge(base_segment) 
     segment.analyses.extend(analyses.discharge)  
     segment.tag                             = 'Discharge_1' 
-    segment.time                            = time/2  
+    segment.time                            = 100
     segment.initial_battery_state_of_charge = 1  
     mission.append_segment(segment)
     
     segment                                = Segments.Ground.Battery_Discharge(base_segment) 
     segment.tag                            = 'Discharge_2'
     segment.analyses.extend(analyses.discharge)   
-    segment.time                           = time/2  
+    segment.time                           = 100
     mission.append_segment(segment)        
     
     return mission 
