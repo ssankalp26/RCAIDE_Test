@@ -1,5 +1,4 @@
-## @defgroup Methods-Weights-Correlations-UAV UAV
-# RCAIDE/Methods/Weights/Correlations/UAV/__init__.py
+# RCAIDE/Library/Methods/Weights/Correlations/UAV/__init__.py
 # 
 
 """RCAIDE Package Setup
@@ -9,4 +8,4 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-from Legacy.trunk.S.Methods.Weights.Correlations.UAV.empty import empty
+from RCAIDE.Library.Methods.Weights.Correlation_Buildups.UAV.compute_operating_empty_weight import compute_operating_empty_weight

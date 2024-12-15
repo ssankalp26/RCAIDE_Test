@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Common-Residuals
 # RCAIDE/Library/Missions/Common/Residuals/flight_dynamics.py
 # 
 # 
@@ -13,9 +12,20 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Residual Total Forces
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Common-Residuals
-def flight_dynamics(segment): 
+# ---------------------------------------------------------------------------------------------------------------------- 
+def flight_dynamics(segment):
+    '''Packs the residuals related to the flight dynamics.
+       This includes the force and moment equations about x,y and z
+    
+    Assumptions:
+        N/A
+    
+    Inputs:
+        segment 
+        
+    Outputs:
+        None   
+    '''
     transition_seg_flag =  type(segment) == RCAIDE.Framework.Mission.Segments.Transition.Constant_Acceleration_Constant_Angle_Linear_Climb
     ground_seg_flag =  (type(segment) == RCAIDE.Framework.Mission.Segments.Ground.Landing) or\
         (type(segment) == RCAIDE.Framework.Mission.Segments.Ground.Takeoff) or \
@@ -37,7 +47,7 @@ def flight_dynamics(segment):
     MT      = segment.state.conditions.frames.inertial.total_moment_vector    
     ang_acc = segment.state.conditions.frames.inertial.angular_acceleration_vector  
     m       = segment.state.conditions.weights.total_mass
-    I       = segment.analyses.aerodynamics.geometry.mass_properties.moments_of_inertia.tensor  
+    I       = segment.analyses.aerodynamics.vehicle.mass_properties.moments_of_inertia.tensor  
 
     if ground_seg_flag:
         vf = segment.velocity_end

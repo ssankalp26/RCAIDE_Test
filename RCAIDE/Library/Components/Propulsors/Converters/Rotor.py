@@ -1,4 +1,3 @@
-## @ingroup Energy-Propulsion-Converters
 # RCAIDE/Library/Compoments/Energy/Propulsion/Converters/Rotor.py
 # 
 # 
@@ -7,10 +6,11 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
+
  # RCAIDE imports 
 from RCAIDE.Framework.Core                              import Data , Units, Container
 from RCAIDE.Library.Components                          import Component 
-from RCAIDE.Framework.Analyses.Propulsion               import Rotor_Wake_Fidelity_Zero 
+from RCAIDE.Framework.Analyses.Propulsion               import Momentum_Theory_Wake 
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor.append_rotor_conditions import  append_rotor_conditions
 
 # package imports
@@ -20,7 +20,6 @@ import scipy as sp
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Generalized Rotor Class
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Energy-Propulsion-Converters
 class Rotor(Component):
     """This is a general rotor component.
 
@@ -59,11 +58,12 @@ class Rotor(Component):
         self.sweep_distribution                = 0.0         # quarter chord offset from quarter chord of root airfoil
         self.chord_distribution                = 0.0
         self.thickness_to_chord                = 0.0
+        self.max_thickness_distribution        = 0.0
         self.radius_distribution               = None
         self.mid_chord_alignment               = 0.0
         self.blade_solidity                    = 0.0 
         self.flap_angle                        = 0.0
-        self.number_azimuthal_stations         = 24  
+        self.number_azimuthal_stations         = 16 
         self.vtk_airfoil_points                = 40        
         self.Airfoils                          = Airfoil_Container()
         self.airfoil_polar_stations            = None 
@@ -94,7 +94,7 @@ class Rotor(Component):
         self.electric_propulsion_fraction      = 1.0
 
         # Initialize the default wake set to Fidelity Zero 
-        self.Wake                      = Rotor_Wake_Fidelity_Zero() 
+        self.Wake                      = Momentum_Theory_Wake() 
         
         # blade optimization parameters     
         self.optimization_parameters                                    = Data() 
@@ -108,9 +108,9 @@ class Rotor(Component):
         self.optimization_parameters.ideal_efficiency                   = 1.0     
         self.optimization_parameters.ideal_figure_of_merit              = 1.0
 
-    def append_operating_conditions(rotor,segment,distribution_line,propulsor): 
-        energy_conditions       = segment.state.conditions.energy[distribution_line.tag][propulsor.tag]
-        noise_conditions        = segment.state.conditions.noise[distribution_line.tag][propulsor.tag]
+    def append_operating_conditions(rotor,segment,propulsor): 
+        energy_conditions       = segment.state.conditions.energy[propulsor.tag]
+        noise_conditions        = segment.state.conditions.noise[propulsor.tag]
         append_rotor_conditions(rotor,segment,energy_conditions,noise_conditions)
         return        
          
@@ -250,7 +250,6 @@ class Rotor(Component):
         return rot_mat, rots
 
  
-## @ingroup Library-Components-Wings
 class Airfoil_Container(Container):
     """ Container for rotor airfoil  
     

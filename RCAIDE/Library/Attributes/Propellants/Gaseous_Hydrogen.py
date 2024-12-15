@@ -1,4 +1,3 @@
-## @ingroup Library-Attributes-Propellants
 # RCAIDE/Library/Attributes/Propellants/Gaseous_Hydrogen.py
 # 
 #
@@ -14,7 +13,6 @@ from RCAIDE.Framework.Core import Data
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Gaseous_Hydrogen Class
 # ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup  Library-Attributes-Propellants 
 class Gaseous_Hydrogen(Propellant):
     """Gaseous hydrogen class
     """

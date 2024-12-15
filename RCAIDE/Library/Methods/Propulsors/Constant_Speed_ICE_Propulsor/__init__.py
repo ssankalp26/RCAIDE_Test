@@ -1,4 +1,3 @@
-## @defgroup Methods-Energy-Propulsors-Constant_Speed_ICE_Propulsor
 # RCAIDE/Methods/Energy/Propulsors/Constant_Speed_ICE_Propulsor/__init__.py
 # 
 

@@ -1,4 +1,3 @@
-## @defgroup Framework-Analyses-Stability Stability
 # RCAIDE/Framework/Analyses/Stability/__init__.py
 # 
 
@@ -9,5 +8,6 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
  
-from .Stability                  import Stability
-from .Vortex_Lattice_Method    import Vortex_Lattice_Method
+from .Stability              import Stability
+from .Vortex_Lattice_Method  import Vortex_Lattice_Method
+from .Athena_Vortex_Lattice  import Athena_Vortex_Lattice

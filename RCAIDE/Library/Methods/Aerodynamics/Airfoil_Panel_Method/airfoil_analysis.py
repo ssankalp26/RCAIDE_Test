@@ -1,4 +1,3 @@
-## @ingroup Methods-Aerodynamics-Airfoil_Panel_Method  
 # RCAIDE/Methods/Aerodynamics/Airfoil_Panel_Method/airfoil_analysis.py
 # 
 # 
@@ -23,7 +22,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 # airfoil_analysis.py
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Methods-Aerodynamics-Airfoil_Panel_Method
 def airfoil_analysis(airfoil_geometry,alpha,Re_L,initial_momentum_thickness=1E-5,tolerance = 1E0,H_wake = 1.05,Ue_wake = 0.99):
     """This computes the aerodynamic polars as well as the boundary layer properties of 
     an airfoil at a defined set of reynolds numbers and angle of attacks
@@ -42,7 +40,7 @@ def airfoil_analysis(airfoil_geometry,alpha,Re_L,initial_momentum_thickness=1E-5
     Inputs: 
     airfoil_geometry   - airfoil geometry points                                                             [unitless]
     alpha              - angle of attacks                                                                    [radians]
-    Re_L               - Reynolds numbers                                                                     [unitless]
+    Re_L               - Reynolds numbers                                                                    [unitless]
     batch_analysis     - boolean : If True: the specified number of angle of attacks and Reynolds            [boolean]
                                   numbers are used to create a table of 2-D results for each combination
                                   Note: Can only accomodate one airfoil
@@ -95,6 +93,9 @@ def airfoil_analysis(airfoil_geometry,alpha,Re_L,initial_momentum_thickness=1E-5
     # Reynolds number 
     RE_L_VALS = Re_L.T 
     
+    # kinematic coefficient of viscosity (assuming unit chord and unit inlet velocity)
+    nu           = 1/RE_L_VALS
+    
     # ---------------------------------------------------------------------
     # Bottom surface of airfoil 
     # ---------------------------------------------------------------------     
@@ -132,7 +133,7 @@ def airfoil_analysis(airfoil_geometry,alpha,Re_L,initial_momentum_thickness=1E-5
     L_BOT                          = X_BOT[-1,:,:]    
         
     # laminar boundary layer properties using thwaites method  
-    BOT_T_RESULTS  = thwaites_method(npanel,ncases,ncpts, L_BOT , RE_L_VALS, X_BOT, VE_BOT, DVE_BOT,tolerance,
+    BOT_T_RESULTS  = thwaites_method(npanel,ncases,ncpts, nu, L_BOT , RE_L_VALS, X_BOT, VE_BOT, DVE_BOT,tolerance,
                                       THETA_0=initial_momentum_thickness)
     
     X_T_BOT          = BOT_T_RESULTS.X_T      
@@ -160,12 +161,12 @@ def airfoil_analysis(airfoil_geometry,alpha,Re_L,initial_momentum_thickness=1E-5
     CF_TR_BOT         = CF_T_BOT[transition_panel,aoas,res].reshape(ncases,ncpts)
     H_TR_BOT          = H_T_BOT[transition_panel,aoas,res].reshape(ncases,ncpts)
     
-    # TURBULENT_SURF    = L_BOT.data  - X_TR_BOT
+    # TURBULENT_SURF  
     TURBULENT_SURF    = L_BOT.data
     TURBULENT_COORD   = np.ma.masked_less(X_BOT.data  - X_TR_BOT,0) 
     
     # turbulent boundary layer properties using heads method  
-    BOT_H_RESULTS     = heads_method(npanel,ncases,ncpts, DELTA_TR_BOT, THETA_TR_BOT , DELTA_STAR_TR_BOT, 
+    BOT_H_RESULTS     = heads_method(npanel,ncases,ncpts, nu, DELTA_TR_BOT, THETA_TR_BOT , DELTA_STAR_TR_BOT, 
                                          CF_TR_BOT, H_TR_BOT, RE_L_VALS, TURBULENT_COORD, VE_BOT, DVE_BOT, TURBULENT_SURF, tolerance)
     
     X_H_BOT          = BOT_H_RESULTS.X_H      
@@ -278,7 +279,7 @@ def airfoil_analysis(airfoil_geometry,alpha,Re_L,initial_momentum_thickness=1E-5
     L_TOP                          = X_TOP[-1,:,:]    
 
     # laminar boundary layer properties using thwaites method 
-    TOP_T_RESULTS    = thwaites_method(npanel,ncases,ncpts, L_TOP , RE_L_VALS,X_TOP,VE_TOP, DVE_TOP,tolerance,
+    TOP_T_RESULTS    = thwaites_method(npanel,ncases,ncpts, nu, L_TOP , RE_L_VALS,X_TOP,VE_TOP, DVE_TOP,tolerance,
                                       THETA_0=initial_momentum_thickness) 
     
     X_T_TOP          = TOP_T_RESULTS.X_T      
@@ -310,7 +311,7 @@ def airfoil_analysis(airfoil_geometry,alpha,Re_L,initial_momentum_thickness=1E-5
     TURBULENT_COORD   = np.ma.masked_less( X_TOP.data  - X_TR_TOP,0)
 
     # turbulent boundary layer properties using heads method  
-    TOP_H_RESULTS     = heads_method(npanel,ncases,ncpts, DELTA_TR_TOP, THETA_TR_TOP , DELTA_STAR_TR_TOP, 
+    TOP_H_RESULTS     = heads_method(npanel,ncases,ncpts, nu, DELTA_TR_TOP, THETA_TR_TOP , DELTA_STAR_TR_TOP, 
                                          CF_TR_TOP, H_TR_TOP, RE_L_VALS, TURBULENT_COORD, VE_TOP, DVE_TOP, TURBULENT_SURF, tolerance)
 
     X_H_TOP          = TOP_H_RESULTS.X_H      

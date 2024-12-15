@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Sources-Battery-Ragone
 # RCAIDE/Methods/Energy/Sources/Battery/Ragone/find_ragone_properties.py
 # 
 # 
@@ -8,16 +7,15 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 # RCAIDE imports 
-from .initialize_from_energy_and_power  import initialize_from_energy_and_power
-from .find_specific_power               import find_specific_power
+from .size_module_from_energy_and_power  import size_module_from_energy_and_power
+from .find_specific_power                import find_specific_power
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  METHOD
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Energy-Sources-Battery-Ragone
+# ---------------------------------------------------------------------------------------------------------------------- -Ragone
 def find_ragone_properties(specific_energy, battery, energy, power):
     """determines mass of a battery based on the specific energy, energy required, and power required,
-    works by calling find_specific_power and initialize_from_energy_and_power
+    works by calling find_specific_power and size_module_from_energy_and_power
     Assumptions:
     None
     
@@ -52,7 +50,7 @@ def find_ragone_properties(specific_energy, battery, energy, power):
     
     
     find_specific_power(battery, specific_energy)
-    initialize_from_energy_and_power(battery, energy, power)
+    size_module_from_energy_and_power(battery, energy, power)
     
     #can used for a simple optimization
     return battery.mass_properties.mass 

@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Descent
 # RCAIDE/Framework/Analyses/Mission/Segments/Descent/Linear_Mach_Constant_Rate.py
 # 
 # 
@@ -15,8 +14,6 @@ from RCAIDE.Library.Mission                      import Common,Segments
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Linear_Mach_Constant_Rate
 # ----------------------------------------------------------------------------------------------------------------------  
-
-## @ingroup Analyses-Mission-Segments-Descent
 class Linear_Mach_Constant_Rate(Evaluate):
     """ Change Mach numbers during a descent while descending at a constant rate. The Mach number changes linearly
         throughout the descent.

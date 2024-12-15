@@ -1,5 +1,4 @@
 
-## @ingroup Methods-Aerodynamics-Airfoil_Panel_Method
 # RCAIDE/Methods/Aerodynamics/Airfoil_Panel_Method/infl_coeff.py
 # 
 # 
@@ -14,7 +13,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 # infl_coeff
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Aerodynamics-Airfoil_Panel_Method
 def infl_coeff(x,y,xbar,ybar,st,ct,npanel,ncases,ncpts):
     """Compute the matrix of aerodynamic influence  coefficients for later use
 

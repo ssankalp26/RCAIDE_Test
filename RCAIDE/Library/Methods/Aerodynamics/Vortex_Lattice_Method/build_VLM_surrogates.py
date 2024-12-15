@@ -1,4 +1,3 @@
-## @ingroup  Library-Methods-Aerodynamics-Vortex_Lattice_Method
 # RCAIDE/Library/Methods/Aerodynamics/Vortex_Lattice_Method/build_VLM_surrogates.py
 #  
 # ----------------------------------------------------------------------------------------------------------------------
@@ -14,8 +13,7 @@ from scipy import interpolate
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Vortex_Lattice
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Methods-Stability    
+# ----------------------------------------------------------------------------------------------------------------------   
 def build_VLM_surrogates(aerodynamics):
     """Build a surrogate using sample evaluation results.
     
@@ -43,7 +41,7 @@ def build_surrogate(aerodynamics, training):
     # unpack data
     surrogates     = Data()
     mach_data      = training.Mach
-    geometry       = aerodynamics.geometry
+    vehicle        = aerodynamics.vehicle
     AoA_data       = aerodynamics.training.angle_of_attack           
     Beta_data      = aerodynamics.training.sideslip_angle  
     u_data         = aerodynamics.training.u
@@ -56,16 +54,14 @@ def build_surrogate(aerodynamics, training):
     elevator_data  = aerodynamics.training.elevator_deflection          
     rudder_data    = aerodynamics.training.rudder_deflection            
     flap_data      = aerodynamics.training.flap_deflection              
-    slat_data      = aerodynamics.training.slat_deflection   
-
-   
+    slat_data      = aerodynamics.training.slat_deflection
+    
     surrogates.Clift_wing_alpha = Data()
     surrogates.Cdrag_wing_alpha = Data() 
-    for wing in  geometry.wings: 
-        surrogates.Clift_wing_alpha[wing.tag] = RegularGridInterpolator((AoA_data ,mach_data),training.Clift_wing_alpha[wing.tag]        ,method = 'linear',   bounds_error=False, fill_value=None) 
-        surrogates.Cdrag_wing_alpha[wing.tag] = RegularGridInterpolator((AoA_data ,mach_data),training.Cdrag_wing_alpha[wing.tag]        ,method = 'linear',   bounds_error=False, fill_value=None) 
+    for wing in  vehicle.wings: 
+        surrogates.Clift_wing_alpha[wing.tag] = RegularGridInterpolator((AoA_data ,mach_data),training.Clift_wing_alpha[wing.tag],method = 'linear',   bounds_error=False, fill_value=None) 
+        surrogates.Cdrag_wing_alpha[wing.tag] = RegularGridInterpolator((AoA_data ,mach_data),training.Cdrag_wing_alpha[wing.tag],method = 'linear',   bounds_error=False, fill_value=None) 
      
-        
     # Pack the outputs     
     surrogates.Clift_alpha       = RegularGridInterpolator((AoA_data ,mach_data),training.Clift_alpha        ,method = 'linear',   bounds_error=False, fill_value=None)      
     surrogates.Clift_beta        = RegularGridInterpolator((Beta_data,mach_data),training.Clift_beta         ,method = 'linear',   bounds_error=False, fill_value=None) 

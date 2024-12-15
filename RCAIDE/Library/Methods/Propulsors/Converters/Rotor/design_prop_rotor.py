@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors
 # RCAIDE/Methods/Energy/Propulsors/design_prop_rotor.py
 # 
 # 
@@ -19,7 +18,6 @@ import time
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Design Prop-rotor
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Methods-Energy-Propulsors
 def design_prop_rotor(rotor,number_of_stations = 20,solver_name= 'SLSQP',iterations = 200,
                       solver_sense_step = 1E-4,solver_tolerance = 1E-3,print_iterations = False):  
     """ Optimizes prop-rotor chord and twist given input parameters to meet either design power or thurst. 
@@ -28,18 +26,18 @@ def design_prop_rotor(rotor,number_of_stations = 20,solver_name= 'SLSQP',iterati
           
           Inputs: 
           prop_attributes.
-              hub radius                       [m]
-              tip radius                       [m]
-              rotation rate                    [rad/s]
-              freestream velocity              [m/s]
-              number of blades                 [None]       
-              number of stations               [None]
-              design lift coefficient          [None]
-              airfoil data                     [None]
-              optimization_parameters.
-                 slack_constaint               [None]
-                 ideal_SPL_dbA                 [dBA]
-                 multiobjective_aeroacoustic_weight           [None]
+              hub radius                             [m]
+              tip radius                             [m]
+              rotation rate                          [rad/s]
+              freestream velocity                    [m/s]
+              number of blades                       [None]       
+              number of stations                     [None]
+              design lift coefficient                [None]
+              airfoil data                           [None]
+              optimization_parameters.      
+                 slack_constaint                     [None]
+                 ideal_SPL_dbA                       [dBA]
+                 multiobjective_aeroacoustic_weight  [None]
             
           Outputs:
           Twist distribution                   [array of radians]

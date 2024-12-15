@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Geometry 
 # RCAIDE/Library/Plots/Geometry/plot_3d_fuselage.py
 # 
 # 
@@ -13,8 +12,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Plots-Geometry 
+# ----------------------------------------------------------------------------------------------------------------------   
 def plot_3d_fuselage(plot_data,fuselage, tessellation = 24 ,color_map = 'teal'):
     """ This plots the fuselage surface
 

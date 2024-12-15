@@ -1,5 +1,3 @@
-## @defgroup Optimization-Packages-pyopt_surrogate  pyopt_surrogate  
-# @ingroup Optimization-Packages   
 # RCAIDE/Optimization/Packages/pyopt_surrogate/__init__.py
 # 
 
@@ -10,4 +8,4 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-from Legacy.trunk.S.Optimization.Package_Setups import pyopt_surrogate_setup
+from .pyopt_surrogate_setup import  pyopt_surrogate_setup

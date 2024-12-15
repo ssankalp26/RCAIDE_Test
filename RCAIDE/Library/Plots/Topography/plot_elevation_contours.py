@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Topograpgy
 # RCAIDE/Library/Plots/Topography/plot_elevation_contours.py
 # 
 # 
@@ -8,9 +7,10 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------   
 from RCAIDE.Framework.Core                             import Units
+from RCAIDE.Framework.Analyses.Geodesics.Geodesics import Calculate_Distance
 from RCAIDE.Library.Plots.Common import plot_style
 
-from geopy.distance                          import geodesic as GD 
+# python imports 
 import matplotlib.pyplot as plt
 from scipy.interpolate import griddata
 import matplotlib.colors 
@@ -18,8 +18,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
-# ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Library-Plots-Topograpgy 
+# ----------------------------------------------------------------------------------------------------------------------    
 def plot_elevation_contours(topography_file,
                             number_of_latitudinal_points  = 100,
                             number_of_longitudinal_points = 100, 
@@ -28,7 +27,7 @@ def plot_elevation_contours(topography_file,
                             show_legend = True,
                             save_filename = "Elevation_Contours",
                             file_type = ".png",
-                            width = 12, height = 7): 
+                            width = 11, height = 7): 
     
 
     """This plots the elevation contours
@@ -85,14 +84,14 @@ def plot_elevation_contours(topography_file,
     top_right_map_coords     = np.array([x_max_coord,y_max_coord])
     bottom_right_map_coords  = np.array([x_min_coord,y_max_coord]) 
     
-    x_dist_max = GD(top_left_map_coords,bottom_left_map_coords).m 
-    y_dist_max = GD(bottom_right_map_coords,bottom_left_map_coords).m  
+    x_dist_max = Calculate_Distance(top_left_map_coords,bottom_left_map_coords) * Units.kilometers
+    y_dist_max = Calculate_Distance(bottom_right_map_coords,bottom_left_map_coords) * Units.kilometers
     
     [long_dist,lat_dist]  = np.meshgrid(np.linspace(0,y_dist_max,number_of_longitudinal_points),np.linspace(0,x_dist_max,number_of_latitudinal_points))
     [long_deg,lat_deg]    = np.meshgrid(np.linspace(np.min(Long),np.max(Long),number_of_longitudinal_points),np.linspace(np.min(Lat),np.max(Lat),number_of_latitudinal_points)) 
     elevation             = griddata((Lat,Long), Elev, (lat_deg, long_deg), method='linear')     
     elevation             = elevation/Units.feet
-    norm = FixPointNormalize(sealevel=0,vmax=np.max(elevation),vmin=np.min(elevation)) 
+    norm                  = FixPointNormalize(sealevel=0,vmax=np.max(elevation),vmin=np.min(elevation)) 
     
     fig = plt.figure(save_filename)
     fig.set_size_inches(width,height)

@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Fuselages
 # RCAIDE/Compoments/Fuselages/Tube_Fuselage.py
 # 
 # 
@@ -9,11 +8,11 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
 # RCAIDE imports     
 from .Fuselage import Fuselage
+from RCAIDE.Library.Methods.Weights.Moment_of_Inertia.compute_fuselage_moment_of_inertia import  compute_fuselage_moment_of_inertia
  
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Tube_Fuselage
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Fuselages 
+# ----------------------------------------------------------------------------------------------------------------------  
 class Tube_Fuselage(Fuselage):
     """ This is a standard fuselage for a tube and wing aircraft.
     
@@ -42,5 +41,9 @@ class Tube_Fuselage(Fuselage):
         Properties Used:
         None
         """      
-        self.tag                                    = 'tube_fuselage' 
+        self.tag                                    = 'tube_fuselage'
+        
+    def compute_moment_of_inertia(self, center_of_gravity): 
+        I =  compute_fuselage_moment_of_inertia(self,center_of_gravity) 
+        return I        
   

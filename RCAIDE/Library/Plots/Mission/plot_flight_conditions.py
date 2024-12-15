@@ -1,4 +1,3 @@
-## @defgroup Library-Plots-Mission  
 # RCAIDE/Library/Plots/Performance/Mission/plot_flight_conditions.py
 # 
 # 
@@ -17,13 +16,12 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------   
-## @defgroup Library-Plots-Mission  
 def plot_flight_conditions(results,
                            save_figure = False,
                            show_legend=True,
                            save_filename = "Flight Conditions",
                            file_type = ".png",
-                           width = 12, height = 7): 
+                           width = 11, height = 7): 
 
     """This plots the flights the conditions
 
@@ -100,10 +98,11 @@ def plot_flight_conditions(results,
          
     
     if show_legend:        
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4) 
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
     # Adjusting the sub-plots for legend 
+    fig.tight_layout()
     fig.subplots_adjust(top=0.8)
     
     # set title of plot 

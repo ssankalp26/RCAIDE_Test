@@ -1,4 +1,3 @@
-## @ingroup Analyses
 # RCAIDE/Framework/Analyses/Process.py
 # 
 # 
@@ -13,7 +12,6 @@ from RCAIDE.Framework.Core import Data
 # ----------------------------------------------------------------------------------------------------------------------
 # Process
 # ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Analyses
 class Process(ContainerOrdered):
     """ RCAIDE.Framework.Analyses.Process()
     

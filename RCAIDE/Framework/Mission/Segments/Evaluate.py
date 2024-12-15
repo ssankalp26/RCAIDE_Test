@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments
 # RCAIDE/Framework/Analyses/Mission/Segment/Evaluate.py
 # 
 # 
@@ -8,7 +7,8 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-# RCAIDE imports  
+# RCAIDE imports
+from RCAIDE.Framework.Core import Units
 from RCAIDE.Framework.Mission.Segments         import Segment
 from RCAIDE.Framework.Mission.Common.Results   import Results
 from RCAIDE.Library.Mission            import Common , Solver 
@@ -17,7 +17,6 @@ from RCAIDE.Framework.Analyses                 import Process
 # ----------------------------------------------------------------------------------------------------------------------
 #  ANALYSES
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Analyses-Mission-Segments
 class Evaluate(Segment):
     """ Base process class used to analyze a vehicle in each flight segment  
     
@@ -63,6 +62,8 @@ class Evaluate(Segment):
         # conditions
         self.temperature_deviation                = 0.0
         self.sideslip_angle                       = 0.0 
+        self.angle_of_attack                      = 1.0 *  Units.degree
+        self.bank_angle                           = 0.0 
         self.state.conditions.update(Results())
         
         # ---------------------------------------------------------------
@@ -101,14 +102,14 @@ class Evaluate(Segment):
         # Update Conditions
         iterate.conditions = Process()
         iterate.conditions.differentials         = Common.Update.differentials_time
+        iterate.conditions.orientations          = Common.Update.orientations
         iterate.conditions.acceleration          = Common.Update.acceleration
         iterate.conditions.angular_acceleration  = Common.Update.angular_acceleration
         iterate.conditions.altitude              = Common.Update.altitude
         iterate.conditions.atmosphere            = Common.Update.atmosphere
         iterate.conditions.gravity               = Common.Update.gravity
         iterate.conditions.freestream            = Common.Update.freestream
-        iterate.conditions.orientations          = Common.Update.orientations
-        iterate.conditions.energy                = Common.Update.thrust
+        iterate.conditions.thrust                = Common.Update.thrust
         iterate.conditions.aerodynamics          = Common.Update.aerodynamics
         iterate.conditions.stability             = Common.Update.stability
         iterate.conditions.weights               = Common.Update.weights
@@ -123,8 +124,8 @@ class Evaluate(Segment):
         #  Post Process   
         # -------------------------------------------------------------- 
         post_process                    = self.process.post_process   
-        post_process.inertial_position  = Common.Update.inertial_horizontal_position
-        post_process.battery_age        = Common.Update.battery_age  
+        post_process.inertial_position  = Common.Update.linear_inertial_horizontal_position
+        post_process.energy             = Common.Update.energy 
         post_process.noise              = Common.Update.noise
         post_process.emissions          = Common.Update.emissions
         

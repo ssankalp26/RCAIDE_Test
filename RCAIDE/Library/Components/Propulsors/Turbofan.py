@@ -1,6 +1,6 @@
-# RCAIDE/Library/Components/Propulsors/Converters/Fan.py
-# (c) Copyright 2023 Aerospace Research Community LLC
-#  
+# RCAIDE/Library/Components/Propulsors/Turbofan.py 
+#
+#
 # Created:  Mar 2024, M. Clarke
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ class Turbofan(Propulsor):
         # setting the default values
         self.tag                                      = 'Turbofan'  
         self.nacelle                                  = None 
-        self.fan                                      = Container
+        self.fan                                      = None 
         self.ram                                      = None 
         self.inlet_nozzle                             = None 
         self.low_pressure_compressor                  = None 
@@ -39,6 +39,7 @@ class Turbofan(Propulsor):
         self.core_nozzle                              = None 
         self.fan_nozzle                               = None  
         self.active_fuel_tanks                        = None         
+        self.engine_diameter                          = 0.0      
         self.engine_length                            = 0.0
         self.engine_height                            = 0.5     # Engine centerline heigh above the ground plane
         self.exa                                      = 1       # distance from fan face to fan exit/ fan diameter)
@@ -57,20 +58,23 @@ class Turbofan(Propulsor):
         self.mass_flow_rate_design                    = 0.0
         self.OpenVSP_flow_through                     = False
     
-    def append_operating_conditions(self,segment,fuel_line,add_additional_network_equation = False):
-        append_turbofan_conditions(self,segment,fuel_line,add_additional_network_equation)
+    def append_operating_conditions(self,segment):
+        append_turbofan_conditions(self,segment)
         return
 
-    def unpack_propulsor_unknowns(self,segment,fuel_line,add_additional_network_equation = False):   
+    def unpack_propulsor_unknowns(self,segment):   
         return 
 
-    def pack_propulsor_residuals(self,segment,fuel_line,add_additional_network_equation = False): 
+    def pack_propulsor_residuals(self,segment): 
+        return
+
+    def append_propulsor_unknowns_and_residuals(self,segment): 
         return
     
-    def compute_performance(self,state,fuel_line,center_of_gravity = [[0, 0, 0]]):
-        thrust,moment,power,stored_results_flag,stored_propulsor_tag =  compute_turbofan_performance(self,state,fuel_line,center_of_gravity)
+    def compute_performance(self,state,center_of_gravity = [[0, 0, 0]]):
+        thrust,moment,power,stored_results_flag,stored_propulsor_tag =  compute_turbofan_performance(self,state,center_of_gravity)
         return thrust,moment,power,stored_results_flag,stored_propulsor_tag
     
-    def reuse_stored_data(turbofan,state,fuel_line,stored_propulsor_tag,center_of_gravity = [[0, 0, 0]]):
-        thrust,moment,power  = reuse_stored_turbofan_data(turbofan,state,fuel_line,stored_propulsor_tag,center_of_gravity)
+    def reuse_stored_data(turbofan,state,network,stored_propulsor_tag,center_of_gravity = [[0, 0, 0]]):
+        thrust,moment,power  = reuse_stored_turbofan_data(turbofan,state,network,stored_propulsor_tag,center_of_gravity)
         return thrust,moment,power 

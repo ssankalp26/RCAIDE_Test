@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Noise
 # RCAIDE/Library/Plots/Noise/plot_noise_level.py
 # 
 # 
@@ -17,13 +16,12 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Plots-Noise
 def plot_noise_level(noise_data,
                      noise_level = False,
                      save_figure = False,
                      save_filename="Sideline_Noise_Levels",
                      file_type=".png",
-                     width = 12, height = 7): 
+                     width = 11, height = 7): 
     """This plots the A-weighted Sound Pressure Level as a function of time at various aximuthal angles
     on the ground
 
@@ -46,8 +44,8 @@ def plot_noise_level(noise_data,
     Properties Used:
     N/A
     """      
-    N_gm_y       = noise_data.ground_microphone_y_resolution 
-    gm           = noise_data.ground_microphone_locations    
+    N_gm_y       = noise_data.microphone_y_resolution 
+    gm           = noise_data.microphone_locations    
     gm_x         = gm[:,:,0]
     gm_y         = gm[:,:,1]    
     

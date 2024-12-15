@@ -1,4 +1,3 @@
-## @ingroup Components-Propulsors-Converters
 # RCAIDE/Library/Components/Propulsors/Converters/Propeller.py
 # 
 # 
@@ -12,7 +11,6 @@ from .Rotor import Rotor
 # ----------------------------------------------------------------------------------------------------------------------
 #  Propeller
 # ----------------------------------------------------------------------------------------------------------------------     
-## @ingroup Components-Propulsors-Converters
 class Propeller(Rotor):
     """This is a propeller component, and is a sub-class of rotor.
     

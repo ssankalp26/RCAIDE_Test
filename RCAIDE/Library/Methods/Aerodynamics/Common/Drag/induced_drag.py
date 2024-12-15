@@ -14,9 +14,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------
 #  Induced Drag Aircraft
-# ----------------------------------------------------------------------
-
-## @ingroup Methods-Aerodynamics-Common-Fidelity_Zero-Drag
+# ---------------------------------------------------------------------- 
 def induced_drag(state,settings,geometry):
     """Determines induced drag for the full aircraft
 

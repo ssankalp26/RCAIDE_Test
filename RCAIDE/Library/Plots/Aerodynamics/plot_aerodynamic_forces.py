@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Performance-Aerodynamics
 # RCAIDE/Library/Plots/Performance/Aerodynamics/plot_aerodynamic_forces.py
 # 
 # 
@@ -16,13 +15,12 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Library-Plots-Performance-Aerodynamics
 def plot_aerodynamic_forces(results,
                              save_figure = False,
                              show_legend = True,
                              save_filename = "Aerodynamic_Forces",
                              file_type = ".png",
-                             width = 12, height = 7):
+                             width = 11, height = 7):
     """This plots the aerodynamic forces
     
     Assumptions:
@@ -65,8 +63,7 @@ def plot_aerodynamic_forces(results,
         Thrust = results.segments[i].conditions.frames.body.thrust_force_vector[:,0]
         Lift   = -results.segments[i].conditions.frames.wind.force_vector[:,2]
         Drag   = -results.segments[i].conditions.frames.wind.force_vector[:,0]
-        
-                       
+         
         segment_tag  =  results.segments[i].tag
         segment_name = segment_tag.replace('_', ' ')
         
@@ -95,10 +92,11 @@ def plot_aerodynamic_forces(results,
         
  
     if show_legend:    
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4) 
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
     # Adjusting the sub-plots for legend 
+    fig.tight_layout()
     fig.subplots_adjust(top=0.8)
     
     # set title of plot 

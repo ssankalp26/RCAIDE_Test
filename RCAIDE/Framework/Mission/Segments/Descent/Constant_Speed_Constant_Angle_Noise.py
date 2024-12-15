@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Descent
 # RCAIDE/Framework/Analyses/Mission/Segments/Descent/Constant_Speed_Constant_Angle_Noise.py
 # 
 # 
@@ -17,8 +16,6 @@ from RCAIDE.Library.Mission                      import Common,Segments
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Constant_Speed_Constant_Angle_Noise
 # ----------------------------------------------------------------------------------------------------------------------   
-
-## @ingroup Analyses-Mission-Segments-Descent
 class Constant_Speed_Constant_Angle_Noise(Evaluate):
     """ Fixed at a true airspeed the vehicle will descend at a constant angle. This is a specific segment for Noise.
         A vehicle performs a descent to landing in accordance with a certification points for landing noise.

@@ -1,4 +1,3 @@
-## @ingroup Analyses-Emissions
 # RCAIDE/Framework/Analyses/Emissions/Emissions.py
 # 
 # 
@@ -10,11 +9,11 @@
 
 from RCAIDE.Framework.Core import Data
 from RCAIDE.Framework.Analyses import Analysis
+import  numpy as  np
 
 # ----------------------------------------------------------------------
 #  Emissions
-# ----------------------------------------------------------------------
-## @ingroup Analyses-Emissions
+# ---------------------------------------------------------------------- 
 class Emissions(Analysis):
     """ The Top Level Emissions Analysis Class 
     """
@@ -27,11 +26,10 @@ class Emissions(Analysis):
             Source:
             None 
             """                   
-        self.tag    = 'Emissions'        
-  
-        self.geometry = Data()
-        self.settings = Data()
-        
+        self.tag      = 'Emissions'    
+        self.vehicle  = Data()
+        self.settings = Data() 
+    
         
     def evaluate(self,state):
         """The default evaluate function.

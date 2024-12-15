@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission
 # RCAIDE/Framework/Analyses/Mission/Sequential_Segments.py
 # 
 # 
@@ -10,15 +9,14 @@
 # RCAIDE imports   
 import RCAIDE
 from RCAIDE.Library.Mission.Common.Segments    import  sequential_segments
-from RCAIDE.Library.Mission.Common.Pre_Process import  aerodynamics,stability, energy,set_residuals_and_unknowns
+from RCAIDE.Library.Mission.Common.Pre_Process import  aerodynamics,stability, energy,emissions, set_residuals_and_unknowns
 from RCAIDE.Framework.Core                               import Container as ContainerBase
 from RCAIDE.Framework.Analyses                           import Process 
 from . import Segments
 
 # ----------------------------------------------------------------------------------------------------------------------
 # ANALYSIS
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Analyses-Mission
+# ----------------------------------------------------------------------------------------------------------------------  -Mission
 class Sequential_Segments(Segments.Segment.Container):
     """ Solves each segment one at time
     
@@ -55,6 +53,7 @@ class Sequential_Segments(Segments.Segment.Container):
         self.process.initialize.aero                           = aerodynamics
         self.process.initialize.stability                      = stability
         self.process.initialize.energy                         = energy
+        self.process.initialize.emissions                      = emissions
         self.process.initialize.set_residuals_and_unknowns     = set_residuals_and_unknowns
  
         #   Converge 
@@ -116,8 +115,6 @@ class Sequential_Segments(Segments.Segment.Container):
 # ----------------------------------------------------------------------
 #   Container Class
 # ----------------------------------------------------------------------
-
-## @ingroup Analyses-Mission
 class Container(ContainerBase):
     """ Container for mission
     

@@ -1,8 +1,5 @@
-## @ingroup Components-Propulsors-Modulators
 # RCAIDE/Library/Components/Propulsors/Modulators/Electronic_Speed_Controller.py
-# 
-# 
-# 
+#  
 # Created:  Mar 2024, M. Clarke 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -16,7 +13,6 @@ from RCAIDE.Library.Methods.Propulsors.Modulators.Electronic_Speed_Controller.ap
 # ----------------------------------------------------------------------------------------------------------------------
 #  Electronic Speed Controller Class
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Energy-Distributors
 class Electronic_Speed_Controller(Component):
     
     def __defaults__(self):
@@ -41,7 +37,7 @@ class Electronic_Speed_Controller(Component):
         self.tag              = 'electronic_speed_controller'  
         self.efficiency       = 0.0 
 
-    def append_operating_conditions(self,segment,bus,propulsor): 
-        propulsor_conditions =  segment.state.conditions.energy[bus.tag][propulsor.tag]
+    def append_operating_conditions(self,segment,propulsor): 
+        propulsor_conditions =  segment.state.conditions.energy[propulsor.tag]
         append_esc_conditions(self,segment,propulsor_conditions)
         return 

@@ -1,7 +1,9 @@
-# Regressions/Vehicles/NASA_X57.py
-# 
-# 
-# Created:  Jul 2023, M. Clarke 
+''' 
+  NASA_X57.py
+  
+  Created: June 2024, M Clarke 
+
+'''
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
@@ -11,8 +13,7 @@ import RCAIDE
 from RCAIDE.Framework.Core import Units   
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor             import design_propeller 
 from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor          import design_motor 
-from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion import nasa_motor
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common         import initialize_from_circuit_configuration
+from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Propulsion import compute_motor_weight
 from RCAIDE.Library.Methods.Geometry.Planform                       import wing_segmented_planform 
 
 # python imports 
@@ -24,42 +25,43 @@ import os
 #   Build the Vehicle
 # ----------------------------------------------------------------------------------------------------------------------
 def vehicle_setup():
-
-    #------------------------------------------------------------------------------------------------------------------------------------
-    #   Initialize the Vehicle
-    #------------------------------------------------------------------------------------------------------------------------------------
-
-    vehicle = RCAIDE.Vehicle()
-    vehicle.tag = 'X57_Maxwell_Mod2'
-
- 
-    # ################################################# Vehicle-level Properties ########################################################  
-
-    # mass properties
-    vehicle.mass_properties.max_takeoff   = 2550. * Units.pounds
-    vehicle.mass_properties.takeoff       = 2550. * Units.pounds
-    vehicle.mass_properties.max_zero_fuel = 2550. * Units.pounds 
-    vehicle.envelope.ultimate_load        = 5.7
-    vehicle.envelope.limit_load           = 3.8 
-    vehicle.reference_area                = 14.76
-    vehicle.passengers                    = 4
-    vehicle.systems.control               = "fully powered"
-    vehicle.systems.accessories           = "commuter"    
     
-    cruise_speed                          = 135.*Units['mph']    
-    altitude                              = 2500. * Units.ft
-    atmo                                  = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
-    freestream                            = atmo.compute_values (0.)
-    freestream0                           = atmo.compute_values (altitude)
-    mach_number                           = (cruise_speed/freestream.speed_of_sound)[0][0] 
-    vehicle.design_dynamic_pressure       = ( .5 *freestream0.density*(cruise_speed*cruise_speed))[0][0]
-    vehicle.design_mach_number            =  mach_number
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ################################################# Vehicle-level Properties ########################################################  
+    #------------------------------------------------------------------------------------------------------------------------------------
+
+    vehicle                                           = RCAIDE.Vehicle()
+    vehicle.tag                                       = 'X57_Maxwell_Mod2' 
+    vehicle.mass_properties.max_takeoff               = 2712. * Units.pounds
+    vehicle.mass_properties.takeoff                   = 2712. * Units.pounds
+    vehicle.mass_properties.max_zero_fuel             = 2712. * Units.pounds 
+    vehicle.mass_properties.max_payload               = 50.  * Units.pounds  # kg 
+    vehicle.flight_envelope.ultimate_load             = 3.75
+    vehicle.flight_envelope.limit_load                = 2.5 
+    vehicle.flight_envelope.design_mach_number        = 0.78 
+    vehicle.flight_envelope.design_cruise_altitude    = 2500. * Units.ft
+    vehicle.flight_envelope.design_range              = 200 * Units.nmi 
+    vehicle.reference_area                            = 14.76
+    vehicle.passengers                                = 4
+    vehicle.systems.control                           = "fully powered"
+    vehicle.systems.accessories                       = "commuter"    
+                 
+    cruise_speed                                      = 135.*Units['mph']    
+    atmo                                              = RCAIDE.Framework.Analyses.Atmospheric.US_Standard_1976()
+    freestream                                        = atmo.compute_values (0.)
+    freestream0                                       = atmo.compute_values (vehicle.flight_envelope.design_cruise_altitude )
+    mach_number                                       = (cruise_speed/freestream.speed_of_sound)[0][0] 
+    vehicle.design_dynamic_pressure                   = ( .5 *freestream0.density*(cruise_speed*cruise_speed))[0][0]
+    vehicle.design_mach_number                        =  mach_number
 
          
-    # ##########################################################  Wings ################################################################    
-    #------------------------------------------------------------------------------------------------------------------------------------  
-    #  Main Wing
     #------------------------------------------------------------------------------------------------------------------------------------
+    # ######################################################## Wings ####################################################################  
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------
+    #   Main Wing
+    # ------------------------------------------------------------------
+    
     wing                                  = RCAIDE.Library.Components.Wings.Main_Wing()
     wing.tag                              = 'main_wing' 
     wing.sweeps.quarter_chord             = 0.0 * Units.deg
@@ -332,38 +334,36 @@ def vehicle_setup():
     # add to vehicle
     vehicle.append_component(fuselage)
  
-    # ########################################################  Energy Network  #########################################################  
+    #------------------------------------------------------------------------------------------------------------------------------------  
+    #  Electric Network
+    #------------------------------------------------------------------------------------------------------------------------------------  
+    #initialize the electric network
     net                              = RCAIDE.Framework.Networks.Electric()   
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Bus
     #------------------------------------------------------------------------------------------------------------------------------------  
-    bus                              = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus() 
+    bus                              = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus()
+    bus.number_of_battery_modules    = 8
 
     #------------------------------------------------------------------------------------------------------------------------------------           
     # Battery
     #------------------------------------------------------------------------------------------------------------------------------------  
-    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Batteries.Lithium_Ion_NMC()
+    bat                                                    = RCAIDE.Library.Components.Energy.Sources.Battery_Modules.Lithium_Ion_NMC() 
     bat.tag                                                = 'li_ion_battery'
-    bat.pack.electrical_configuration.series               = 140   
-    bat.pack.electrical_configuration.parallel             = 100
-    initialize_from_circuit_configuration(bat)  
-    bat.module.number_of_modules                           = 14  
-    bat.module.geometrtic_configuration.total              = bat.pack.electrical_configuration.total
-    bat.module.voltage                                     = bat.pack.maximum_voltage/bat.module.number_of_modules # assumes modules are connected in parallel, must be less than max_module_voltage (~50) /safety_factor (~ 1.5)  
-    bat.module.geometrtic_configuration.normal_count       = 24
-    bat.module.geometrtic_configuration.parallel_count     = 40
-    bat.thermal_management_system.heat_acquisition_system  = RCAIDE.Library.Components.Thermal_Management.Batteries.Heat_Acquisition_Systems.Direct_Air()      
-    bus.voltage                                            = bat.pack.maximum_voltage  
-    bus.batteries.append(bat)            
-    
-
+    bat.electrical_configuration.series                    = 16   
+    bat.electrical_configuration.parallel                  = 40
+    bat.geometrtic_configuration.normal_count              = 20
+    bat.geometrtic_configuration.parallel_count            = 32
+     
+    for _ in range(bus.number_of_battery_modules):
+        bus.battery_modules.append(deepcopy(bat))      
+    bus.initialize_bus_properties()      
     #------------------------------------------------------------------------------------------------------------------------------------  
     #  Starboard Propulsor
     #------------------------------------------------------------------------------------------------------------------------------------   
     starboard_propulsor                              = RCAIDE.Library.Components.Propulsors.Electric_Rotor()  
-    starboard_propulsor.tag                          = 'starboard_propulsor'
-    starboard_propulsor.active_batteries             = ['li_ion_battery']   
+    starboard_propulsor.tag                          = 'starboard_propulsor' 
   
     # Electronic Speed Controller       
     esc                                              = RCAIDE.Library.Components.Energy.Modulators.Electronic_Speed_Controller()
@@ -402,13 +402,13 @@ def vehicle_setup():
     motor                                            = RCAIDE.Library.Components.Propulsors.Converters.DC_Motor()
     motor.efficiency                                 = 0.98
     motor.origin                                     = [[2.,  2.5, 0.95]]
-    motor.nominal_voltage                            = bat.pack.maximum_voltage*0.5
+    motor.nominal_voltage                            = bus.voltage*0.5
     motor.no_load_current                            = 1
     motor.rotor_radius                               = propeller.tip_radius
     motor.design_torque                              = propeller.cruise.design_torque
     motor.angular_velocity                           = propeller.cruise.design_angular_velocity 
     design_motor(motor)  
-    motor.mass_properties.mass                       = nasa_motor(motor.design_torque) 
+    motor.mass_properties.mass                       = compute_motor_weight(motor) 
     starboard_propulsor.motor                        = motor 
  
 
@@ -474,14 +474,13 @@ def vehicle_setup():
     starboard_propulsor.nacelle = nacelle
     
     # append propulsor to distribution line 
-    bus.propulsors.append(starboard_propulsor) 
+    net.propulsors.append(starboard_propulsor) 
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Port Propulsor
     #------------------------------------------------------------------------------------------------------------------------------------   
     port_propulsor                             = RCAIDE.Library.Components.Propulsors.Electric_Rotor() 
-    port_propulsor.tag                         = "port_propulsor"
-    port_propulsor.active_batteries            = ['li_ion_battery']   
+    port_propulsor.tag                         = "port_propulsor" 
             
     esc_2                                      = deepcopy(esc)
     esc_2.origin                               = [[2., -2.5, 0.95]]      
@@ -503,7 +502,7 @@ def vehicle_setup():
     port_propulsor.nacelle                     = nacelle_2
      
     # append propulsor to distribution line 
-    bus.propulsors.append(port_propulsor) 
+    net.propulsors.append(port_propulsor) 
 
 
     #------------------------------------------------------------------------------------------------------------------------------------           
@@ -520,7 +519,11 @@ def vehicle_setup():
     avionics                     = RCAIDE.Library.Components.Systems.Avionics()
     avionics.power_draw          = 20. # Watts
     bus.avionics                 = avionics   
-
+ 
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    # Assign propulsors to bus       
+    bus.assigned_propulsors =  [[starboard_propulsor.tag, port_propulsor.tag]]
+ 
     # append bus   
     net.busses.append(bus)
     

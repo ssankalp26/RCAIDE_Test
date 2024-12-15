@@ -1,4 +1,3 @@
-## @defgroup Methods-Energy-Propulsors-Modulators-Electronic_Speed_Controller
 # RCAIDE/Methods/Energy/Propulsors/Modulators/Electronic_Speed_Controller/__init__.py
 # 
 

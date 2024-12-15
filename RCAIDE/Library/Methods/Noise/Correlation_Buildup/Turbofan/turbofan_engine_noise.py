@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Correlation_Buildup-Turbofan
 # RCAIDE/Methods/Noise/Correlation_Buildup/Turbofan/turbofan_engine_noise.py
 # 
 # 
@@ -27,12 +26,12 @@ from RCAIDE.Library.Methods.Noise.Metrics import A_weighting_metric
 
 # Python package imports   
 import numpy as np   
+from copy import deepcopy
 
 # ----------------------------------------------------------------------------------------------------------------------     
 #  turbofan engine noise 
-# ----------------------------------------------------------------------------------------------------------------------        
-## @ingroup Methods-Noise-Correlation_Buildup-Engine
-def turbofan_engine_noise(turbofan,aeroacoustic_data,segment,settings):  
+# ----------------------------------------------------------------------------------------------------------------------         
+def turbofan_engine_noise(microphone_locations,turbofan,aeroacoustic_data,segment,settings):  
     """This method predicts the free-field 1/3 Octave Band SPL of coaxial subsonic
        jets for turbofan engines under the following conditions:
        a) Flyover (observer on ground)
@@ -81,11 +80,10 @@ def turbofan_engine_noise(turbofan,aeroacoustic_data,segment,settings):
     Mach_aircraft          = segment.conditions.freestream.mach_number
     Altitude               = segment.conditions.freestream.altitude[:,0] 
     AOA                    = np.mean(segment.conditions.aerodynamics.angles.alpha / Units.deg) 
-    noise_time             = segment.conditions.frames.inertial.time[:,0] 
-    RML                    = segment.conditions.noise.relative_microphone_locations  
-    distance_microphone    = np.linalg.norm(RML,axis = 2)
-    angles                 = np.arccos(RML[:,:,0]/distance_microphone) 
-    phi                    = np.arccos(RML[:,:,1]/distance_microphone)      
+    noise_time             = segment.conditions.frames.inertial.time[:,0]  
+    distance_microphone    = np.linalg.norm(microphone_locations,axis = 1)
+    angles                 = np.arccos(microphone_locations[:,0]/distance_microphone) 
+    phi                    = np.arccos(microphone_locations[:,1]/distance_microphone)      
     
     N1                     = turbofan.fan.angular_velocity * 0.92*(turbofan.design_thrust/52700.)
     Diameter_primary       = turbofan.core_nozzle.diameter
@@ -100,7 +98,7 @@ def turbofan_engine_noise(turbofan,aeroacoustic_data,segment,settings):
     frequency              = settings.center_frequencies[5:]        
     n_cpts                 = len(noise_time)     
     num_f                  = len(frequency) 
-    n_mic                  = len(RML[0,:,0])  
+    n_mic                  = len(microphone_locations)
 
     if type(Velocity_primary) == float:
         Velocity_primary    = np.ones(n_cpts)*Velocity_primary
@@ -123,10 +121,10 @@ def turbofan_engine_noise(turbofan,aeroacoustic_data,segment,settings):
     Area_primary   = np.pi*(Diameter_primary/2)**2 
     Area_secondary =  np.pi*(Diameter_secondary/2)**2   
    
-    # Defining each array before the main loop 
-    theta_P                = np.arccos(RML[:,:,0]/distance_microphone)
-    theta_S                = np.arccos(RML[:,:,0]/distance_microphone)
-    theta_M                = np.arccos(RML[:,:,0]/distance_microphone)
+    # Defining each array before the main loop  
+    theta_P                = np.tile(np.arctan2(microphone_locations[:, 1], microphone_locations[:, 0])[None,:],(n_cpts,1))  
+    theta_S                = deepcopy(theta_P)
+    theta_M                = deepcopy(theta_P)
     EX_p                   = np.zeros((n_cpts,n_mic,num_f)) 
     EX_s                   = np.zeros((n_cpts,n_mic,num_f)) 
     EX_m                   = np.zeros((n_cpts,n_mic,num_f))  
@@ -148,9 +146,9 @@ def turbofan_engine_noise(turbofan,aeroacoustic_data,segment,settings):
             EX_p    = np.zeros(num_f)
             EX_s    = np.zeros(num_f)
             EX_m    = np.zeros(num_f) 
-            theta_p = theta_P[i,j]
-            theta_s = theta_S[i,j]
-            theta_m = theta_M[i,j] 
+            theta_p = abs(theta_P[i,j])
+            theta_s = abs(theta_S[i,j])
+            theta_m = abs(theta_M[i,j])
  
             # Primary and Secondary jets
             Cpp = R_gas/(1-1/gamma_primary)
@@ -223,9 +221,9 @@ def turbofan_engine_noise(turbofan,aeroacoustic_data,segment,settings):
             EX_p = +5*exd*exps   #primary component - no frequency dependance
             EX_s = 2*sound_ambient[i]/(Velocity_secondary[i]*(zk)) #secondary component - no frequency dependance    
     
-            distance_primary   = distance_microphone[i,j] 
-            distance_secondary = distance_microphone[i,j] 
-            distance_mixed     = distance_microphone[i,j]
+            distance_primary   = distance_microphone[j] 
+            distance_secondary = distance_microphone[j] 
+            distance_mixed     = distance_microphone[j]
     
             #Noise attenuation due to Ambient Pressure
             dspl_ambient_pressure = 20*np.log10(pressure_amb[i]/pressure_isa)

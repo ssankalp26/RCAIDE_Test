@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Common-Update
 # RCAIDE/Library/Missions/Common/Update/thrust.py
 # 
 # 
@@ -7,7 +6,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  Update Thrust
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Missions-Common-Update
 def thrust(segment):
     """ Updates the thrust vector of the vehicle from the propulsors 
         
@@ -34,6 +32,7 @@ def thrust(segment):
     # pack conditions
     conditions = segment.state.conditions
     conditions.frames.body.thrust_force_vector       = conditions.energy.thrust_force_vector
+    conditions.frames.body.thrust_moment_vector      = conditions.energy.thrust_moment_vector
     conditions.weights.vehicle_mass_rate             = conditions.energy.vehicle_mass_rate 
 
     if "vehicle_additional_fuel_rate" in conditions.energy: 

@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Conditions 
 # RCAIDE/Framework/Analyses/Mission/Segments/Conditions/State.py
 # 
 # 
@@ -9,11 +8,11 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE imports
-from RCAIDE.Framework.Core        import DataOrdered
-from .Conditions        import Conditions
-from .Unknowns          import Unknowns
-from .Residuals         import Residuals
-from .Numerics          import Numerics   
+from RCAIDE.Framework.Core import DataOrdered
+from .Conditions           import Conditions
+from .Unknowns             import Unknowns
+from .Residuals            import Residuals
+from .Numerics             import Numerics   
 
 # python imports
 import numpy as np
@@ -21,8 +20,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  State
 # ----------------------------------------------------------------------------------------------------------------------
-
-## @ingroup Analyses-Mission-Segments-Conditions
 class State(Conditions):
     """ Creates the State data structure for storing daata that solved in a mission
     
@@ -104,8 +101,7 @@ class State(Conditions):
 # ----------------------------------------------------------------------------------------------------------------------
 # Container
 # ----------------------------------------------------------------------------------------------------------------------        
-        
-## @ingroup Analyses-Mission-Segments-Conditions        
+                
 class Container(State):
     def __defaults__(self):
         """ This sets the default values.
@@ -163,7 +159,6 @@ State.Container = Container
 # append_array
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-## @ingroup Analyses-Mission-Segments-Conditions
 def append_array(A,B=None):
     """ A stacking operation used by merged to put together data structures
 

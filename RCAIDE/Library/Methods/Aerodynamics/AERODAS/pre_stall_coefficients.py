@@ -1,4 +1,3 @@
-## @ingroup Library-Methods-Aerdoynamics-AERODAS
 # RCAIDE/Library/Methods/Aerdoynamics/AERODAS/pre_stall_coefficients.py
 # 
 # 
@@ -14,8 +13,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Pre Stall Coefficients
-# ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Library-Methods-Aerodynamics-AERODAS
+# ----------------------------------------------------------------------------------------------------------------------    
 def pre_stall_coefficients(state,settings,geometry):
     """Uses the AERODAS method to determine prestall parameters for lift and drag for a single wing
 

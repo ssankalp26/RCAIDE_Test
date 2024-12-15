@@ -1,4 +1,3 @@
-## @ingroup Library-Attributes-Planets
 # RCAIDE/Library/Attributes/Planets/Earth.py
 # 
 #
@@ -13,7 +12,6 @@ from .Planet                import Planet
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Earth Class
 # ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Attributes-Planets
 class Earth(Planet):
     """Class for planet Earth with defauk properties  
     """

@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Common-Update
 # RCAIDE/Library/Missions/Common/Update/planet_position.py
 # 
 # 
@@ -17,7 +16,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Update Planet Position
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Common-Update
 def planet_position(segment):
     """ Updates the location of the vehicle relative to the Planet throughout the mission
     
@@ -29,7 +27,7 @@ def planet_position(segment):
             freestream.velocity                      [meters/second]
             freestream.altitude                      [meters]
             frames.body.inertial_rotations           [Radians]
-        segment.analyses.planet.features.mean_radius [meters]
+        segment.analyses.planet.mean_radius [meters]
         segment.state.numerics.time.integrate        [float]
             
         Outputs:
@@ -52,7 +50,7 @@ def planet_position(segment):
     psi        = segment.true_course        
     alpha      = conditions.aerodynamics.angles.alpha[:,0]
     I          = segment.state.numerics.time.integrate
-    Re         = segment.analyses.planet.features.mean_radius  
+    Re         = segment.analyses.planet.mean_radius  
          
     # The flight path and radius
     gamma     = theta - alpha

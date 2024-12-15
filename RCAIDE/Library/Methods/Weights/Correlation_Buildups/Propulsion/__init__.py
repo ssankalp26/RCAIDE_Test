@@ -1,5 +1,4 @@
-## @defgroup Methods-Weights-Correlations-Propulsion Propulsion
-# RCAIDE/Methods/Weights/Correlations/Propulsion/__init__.py
+# RCAIDE/Library/Methods/Weights/Correlations/Propulsion/__init__.py
 # 
 
 """RCAIDE Package Setup
@@ -8,12 +7,10 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
-
-from Legacy.trunk.S.Methods.Weights.Correlations.Propulsion.air_cooled_motor                       import air_cooled_motor
-from Legacy.trunk.S.Methods.Weights.Correlations.Propulsion.engine_jet                             import engine_jet
-from Legacy.trunk.S.Methods.Weights.Correlations.Propulsion.engine_piston                          import engine_piston
-from Legacy.trunk.S.Methods.Weights.Correlations.Propulsion.hts_motor                              import hts_motor
-from Legacy.trunk.S.Methods.Weights.Correlations.Propulsion.integrated_propulsion                  import integrated_propulsion
-from Legacy.trunk.S.Methods.Weights.Correlations.Propulsion.integrated_propulsion_general_aviation import integrated_propulsion_general_aviation
-from Legacy.trunk.S.Methods.Weights.Correlations.Propulsion.nasa_motor                             import nasa_motor
-from Legacy.trunk.S.Methods.Weights.Dynamo_Supply.dynamo_supply_mass_estimation                    import dynamo_supply_mass_estimation
+ 
+from .compute_jet_engine_weight                             import compute_jet_engine_weight
+from .compute_piston_engine_weight                          import compute_piston_engine_weight 
+from .integrated_propulsion                                 import integrated_propulsion
+from .integrated_propulsion_general_aviation                import integrated_propulsion_general_aviation
+from .compute_motor_weight                                  import compute_motor_weight
+from RCAIDE.Library.Methods.Weights.Physics_Based_Buildups.Electric   import dynamo_supply_mass_estimation

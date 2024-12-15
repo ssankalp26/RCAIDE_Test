@@ -1,5 +1,4 @@
-## @defgroup Methods-Weights-Correlations-Human_Powered Human_Powered
-# RCAIDE/Methods/Weights/Correlations/Human_Powered/__init__.py
+# RCAIDE/Library/Methods/Weights/Correlations/Human_Powered/__init__.py
 # 
 
 """RCAIDE Package Setup
@@ -9,7 +8,7 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-from Legacy.trunk.S.Methods.Weights.Correlations.Human_Powered.empty    import empty
-from Legacy.trunk.S.Methods.Weights.Correlations.Human_Powered.fuselage import fuselage
-from Legacy.trunk.S.Methods.Weights.Correlations.Human_Powered.tail     import tail
-from Legacy.trunk.S.Methods.Weights.Correlations.Human_Powered.wing     import wing
+from .compute_operating_empty_weight    import compute_operating_empty_weight
+from .compute_fuselage_weight           import compute_fuselage_weight
+from .compute_tail_weight               import compute_tail_weight
+from .compute_wing_weight               import compute_wing_weight

@@ -1,4 +1,3 @@
-## @defgroup Analyses-Mission Mission
 # RCAIDE/Framework/Analyses/Mission/__init__.py
 # 
 

@@ -5,9 +5,7 @@ from RCAIDE.Framework.Analyses import Analysis
 
 # ----------------------------------------------------------------------
 #  Analysis
-# ----------------------------------------------------------------------
-
-## @ingroup Analyses-Stability
+# ---------------------------------------------------------------------- 
 class Stability(Analysis):
     """This is the base class for stability analyses. It contains functions
     that are built into the default class.
@@ -37,8 +35,8 @@ class Stability(Analysis):
         Properties Used:
         N/A
         """   
-        self.tag    = 'stability'
-        self.geometry = Data()
+        self.tag      = 'stability'
+        self.vehicle  = Data()
         self.settings = Data()
  
         return

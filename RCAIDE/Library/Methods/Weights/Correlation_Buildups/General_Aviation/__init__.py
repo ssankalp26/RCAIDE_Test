@@ -1,5 +1,4 @@
-## @defgroup Methods-Weights-Correlations-General_Aviation General_Aviation
-# RCAIDE/Methods/Weights/Correlations/General_Aviation/__init__.py
+# RCAIDE/Library/Methods/Weights/Correlations/General_Aviation/__init__.py
 # 
 
 """RCAIDE Package Setup
@@ -9,11 +8,11 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-from Legacy.trunk.S.Methods.Weights.Correlations.General_Aviation.empty import empty
-from Legacy.trunk.S.Methods.Weights.Correlations.General_Aviation.landing_gear import landing_gear
-from Legacy.trunk.S.Methods.Weights.Correlations.General_Aviation.payload import payload
-from Legacy.trunk.S.Methods.Weights.Correlations.General_Aviation.systems import systems
-from Legacy.trunk.S.Methods.Weights.Correlations.General_Aviation.tail_horizontal import tail_horizontal
-from Legacy.trunk.S.Methods.Weights.Correlations.General_Aviation.tail_vertical import tail_vertical
-from Legacy.trunk.S.Methods.Weights.Correlations.General_Aviation.fuselage import fuselage
-from Legacy.trunk.S.Methods.Weights.Correlations.General_Aviation.wing_main import wing_main
+from .compute_operating_empty_weight import compute_operating_empty_weight
+from .compute_landing_gear_weight    import compute_landing_gear_weight    
+from .compute_payload_weight         import compute_payload_weight         
+from .compute_systems_weight         import compute_systems_weight         
+from .compute_horizontal_tail_weight import compute_horizontal_tail_weight 
+from .compute_vertical_tail_weight   import compute_vertical_tail_weight   
+from .compute_fuselage_weight        import compute_fuselage_weight        
+from .compute_main_wing_weight       import compute_main_wing_weight       

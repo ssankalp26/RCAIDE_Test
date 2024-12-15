@@ -1,5 +1,3 @@
-## @defgroup Methods-Aerodynamics-Common-Drag Drag 
-# @ingroup Methods-Aerodynamics-Common
 # RCAIDE/Methods/Aerodynamics/Common/Drag/__init__.py
 # 
 
@@ -26,3 +24,11 @@ from .total_drag                                import total_drag
 from .drag_divergence                           import drag_divergence
 from .supersonic_wave_drag_volume_raymer        import supersonic_wave_drag_volume_raymer
 from .supersonic_wave_drag_volume_sears_haack   import supersonic_wave_drag_volume_sears_haack
+from .cooling_drag                              import cooling_drag
+from .windmilling_drag                          import windmilling_drag
+from .asymmetry_drag                            import asymmetry_drag
+from .wave_drag_lift                            import wave_drag_lift
+from .compressible_mixed_flat_plate             import compressible_mixed_flat_plate
+from .estimate_2ndseg_lift_drag_ratio           import estimate_2ndseg_lift_drag_ratio
+from .compressible_turbulent_flat_plate         import compressible_turbulent_flat_plate
+from .compressible_mixed_flat_plate             import compressible_mixed_flat_plate

@@ -1,4 +1,3 @@
-## @defgroup Attributes-Atmospheres-Earth Earth
 # RCAIDE/Library/Attributes/Atmospheres/Earth/__init__.py
 # 
 

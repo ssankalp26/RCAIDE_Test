@@ -1,7 +1,9 @@
-# Regressions/Vehicles/Concorde.py
-# 
-# 
-# Created:  Jul 2023, M. Clarke 
+''' 
+  Concorde.py
+  
+  Created: June 2024, M Clarke 
+
+''' 
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
@@ -18,45 +20,41 @@ import numpy as np
 from copy import deepcopy
 import os
  
-def vehicle_setup():
-
-    # ------------------------------------------------------------------
-    #   Initialize the Vehicle
-    # ------------------------------------------------------------------    
-    
+def vehicle_setup(): 
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ################################################# Vehicle-level Properties ########################################################  
+    #------------------------------------------------------------------------------------------------------------------------------------
     vehicle = RCAIDE.Vehicle()
-    vehicle.tag = 'Concorde'    
+    vehicle.tag = 'Concorde'
     
-    
-    # ------------------------------------------------------------------
-    #   Vehicle-level Properties
-    # ------------------------------------------------------------------    
-
     # mass properties
-    vehicle.mass_properties.max_takeoff               = 185000.   # kg
-    vehicle.mass_properties.operating_empty           = 78700.   # kg
-    vehicle.mass_properties.takeoff                   = 183000.   # kg, adjusted due to significant fuel burn on runway
-    vehicle.mass_properties.cargo                     = 1000.  * Units.kilogram   
-    vehicle.mass_properties.max_zero_fuel             = 92000.
+    vehicle.mass_properties.max_takeoff     = 185000.   # kg
+    vehicle.mass_properties.operating_empty = 78700.   # kg
+    vehicle.mass_properties.takeoff         = 183000.   # kg, adjusted due to significant fuel burn on runway
+    vehicle.mass_properties.cargo           = 1000.  * Units.kilogram   
+    vehicle.mass_properties.max_zero_fuel   = 92000.
         
     # envelope properties
-    vehicle.envelope.ultimate_load = 3.75
-    vehicle.envelope.limit_load    = 2.5
-
-    # basic parameters
-    vehicle.reference_area               = 358.25      
-    vehicle.passengers                   = 100
-    vehicle.systems.control              = "fully powered" 
-    vehicle.systems.accessories          = "sst"
-    vehicle.maximum_cross_sectional_area = 13.9
-    vehicle.total_length                 = 61.66
-    vehicle.design_mach_number           = 2.02
-    vehicle.design_range                 = 4505 * Units.miles
-    vehicle.design_cruise_alt            = 60000.0 * Units.ft
+    vehicle.flight_envelope.ultimate_load   = 3.75
+    vehicle.flight_envelope.limit_load      = 2.5
+  
+    # basic parameters  
+    vehicle.reference_area                 = 358.25      
+    vehicle.passengers                     = 100
+    vehicle.systems.control                = "fully powered" 
+    vehicle.systems.accessories            = "sst"
+    vehicle.maximum_cross_sectional_area   = 13.9
+    vehicle.total_length                   = 61.66
+    vehicle.design_mach_number             = 2.02
+    vehicle.design_range                   = 4505 * Units.miles
+    vehicle.design_cruise_alt              = 60000.0 * Units.ft
     
-    # ------------------------------------------------------------------        
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ######################################################## Wings ####################################################################  
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------
     #   Main Wing
-    # ------------------------------------------------------------------        
+    # ------------------------------------------------------------------     
     
     wing = RCAIDE.Library.Components.Wings.Main_Wing()
     wing.tag = 'main_wing'
@@ -358,9 +356,10 @@ def vehicle_setup():
     
     vehicle.append_component(fuselage)
 
-    #------------------------------------------------------------------------------------------------------------------------------------  
-    #  Turbofan Network
-    #------------------------------------------------------------------------------------------------------------------------------------  
+    #------------------------------------------------------------------------------------------------------------------------------------
+    # ########################################################## Energy Network ######################################################### 
+    #------------------------------------------------------------------------------------------------------------------------------------ 
+    #initialize the fuel network
     net                                            = RCAIDE.Framework.Networks.Fuel() 
     
     #------------------------------------------------------------------------------------------------------------------------------------  
@@ -482,7 +481,7 @@ def vehicle_setup():
     nac_segment.curvature                       = 5
     nacelle.append_segment(nac_segment)      
     outer_right_turbojet.nacelle = nacelle  
-    fuel_line.propulsors.append(outer_right_turbojet) 
+    net.propulsors.append(outer_right_turbojet) 
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     #  Inner Right Propulsor
@@ -495,7 +494,7 @@ def vehicle_setup():
     nacelle_2.tag                            = 'nacelle_2'
     nacelle_2.origin                         = [[37.,4,-1.6]]
     inner_right_turbojet.nacelle = nacelle_2 
-    fuel_line.propulsors.append(inner_right_turbojet) 
+    net.propulsors.append(inner_right_turbojet) 
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     #  Inner Right Propulsor
@@ -508,7 +507,7 @@ def vehicle_setup():
     nacelle_3.tag                           = 'nacelle_3'
     nacelle_3.origin                        = [[37.,-4,-1.6]]
     inner_left_turbojet.nacelle = nacelle_3 
-    fuel_line.propulsors.append(inner_left_turbojet) 
+    net.propulsors.append(inner_left_turbojet) 
 
     #------------------------------------------------------------------------------------------------------------------------------------  
     #  Inner Left Propulsor
@@ -521,9 +520,8 @@ def vehicle_setup():
     nacelle_4.tag                           = 'nacelle_4'
     nacelle_4.origin                        = [[37.,-5.5,-1.6]]
     outer_left_turbojet.nacelle = nacelle_4
-    fuel_line.propulsors.append(outer_left_turbojet) 
-
-       
+    net.propulsors.append(outer_left_turbojet) 
+ 
     #------------------------------------------------------------------------------------------------------------------------------------  
     #  Fuel Tank & Fuel
     #------------------------------------------------------------------------------------------------------------------------------------   
@@ -589,7 +587,11 @@ def vehicle_setup():
     fuel_tank.mass_properties.fuel_mass_when_full  = 10415
     fuel_tank.fuel_selector_ratio                  = 1/8
     fuel_tank.fuel                            = RCAIDE.Library.Attributes.Propellants.Jet_A() 
-    fuel_line.fuel_tanks.append(fuel_tank)      
+    fuel_line.fuel_tanks.append(fuel_tank)
+     
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    # Assign propulsors to fuel line to network      
+    fuel_line.assigned_propulsors =  [[outer_left_turbojet.tag,inner_left_turbojet.tag, outer_right_turbojet.tag, inner_right_turbojet.tag]]    
     
      # Append fuel line to network      
     net.fuel_lines.append(fuel_line)    
@@ -627,7 +629,7 @@ def configs_setup(vehicle):
     # ------------------------------------------------------------------ 
     config                                      = RCAIDE.Library.Components.Configs.Config(base_config)
     config.tag                                  = 'climb' 
-    for propulsor in config.networks.fuel.fuel_lines.fuel_line.propulsors:
+    for propulsor in config.networks.fuel.propulsors:
         propulsor.afterburner_active = True 
     configs.append(config)    
     
@@ -636,10 +638,9 @@ def configs_setup(vehicle):
     #   Takeoff Configuration
     # ------------------------------------------------------------------  
     config                                      = RCAIDE.Library.Components.Configs.Config(base_config)
-    config.tag                                  = 'takeoff' 
-    config.V2_VS_ratio                          = 1.21
+    config.tag                                  = 'takeoff'  
     config.maximum_lift_coefficient             = 2.  
-    for propulsor in config.networks.fuel.fuel_lines.fuel_line.propulsors:
+    for propulsor in config.networks.fuel.propulsors:
         propulsor.afterburner_active = True 
     configs.append(config) 
     
@@ -650,8 +651,7 @@ def configs_setup(vehicle):
     config                                = RCAIDE.Library.Components.Configs.Config(base_config)
     config.tag                            = 'landing' 
     config.wings['main_wing'].flaps_angle = 0. * Units.deg
-    config.wings['main_wing'].slats_angle = 0. * Units.deg 
-    config.Vref_VS_ratio                  = 1.23
+    config.wings['main_wing'].slats_angle = 0. * Units.deg  
     config.maximum_lift_coefficient       = 2.
     
     configs.append(config)

@@ -1,5 +1,4 @@
-## @defgroup Methods-Weights-Correlations-BWB BWB
-# RCAIDE/Methods/Weights/Correlations/BWB/__init__.py
+# RCAIDE/Library/Methods/Weights/Correlations/BWB/__init__.py
 # 
 
 """RCAIDE Package Setup
@@ -9,6 +8,6 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-from Legacy.trunk.S.Methods.Weights.Correlations.BWB.empty          import empty
-from Legacy.trunk.S.Methods.Weights.Correlations.BWB.aft_centerbody import aft_centerbody
-from Legacy.trunk.S.Methods.Weights.Correlations.BWB.cabin          import cabin
+from .compute_operating_empty_weight   import compute_operating_empty_weight
+from .compute_aft_centerbody_weight    import compute_aft_centerbody_weight
+from .compute_cabin_weight             import compute_cabin_weight

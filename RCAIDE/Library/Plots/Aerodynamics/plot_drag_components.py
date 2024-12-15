@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Performance-Aerodynamics
 # RCAIDE/Library/Plots/Performance/Aerodynamics/plot_drag_components.py
 # 
 # 
@@ -16,13 +15,12 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Library-Plots-Performance-Aerodynamics
 def plot_drag_components(results,
                          save_figure=False,
                          show_legend= True,
                          save_filename="Drag_Components",
                          file_type=".png",
-                        width = 12, height = 7):
+                        width = 11, height = 7):
     """This plots the drag components of the aircraft
     
     Assumptions:
@@ -88,10 +86,11 @@ def plot_drag_components(results,
         
     
     if show_legend:                    
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4) 
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
     # Adjusting the sub-plots for legend 
+    fig.tight_layout()
     fig.subplots_adjust(top=0.8)
     
     # set title of plot 

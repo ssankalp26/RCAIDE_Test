@@ -1,4 +1,3 @@
-## @defgroup Framework-Analyses-Common Common
 # RCAIDE/Framework/Analyses/Aerodynamics/Common/__init__.py
 # 
 

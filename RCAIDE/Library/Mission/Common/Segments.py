@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Common  
 # RCAIDE/Library/Missions/Common/helper_functions.py
 # 
 # 

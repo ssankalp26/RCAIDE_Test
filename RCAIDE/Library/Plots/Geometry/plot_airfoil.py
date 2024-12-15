@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Geometry
 # RCAIDE/Library/Plots/Geometry/plot_airfoil.py
 # 
 # 
@@ -17,12 +16,11 @@ import matplotlib.pyplot as plt
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Plots-Geometry
 def plot_airfoil(airfoil_paths,
                  save_figure = False, 
                  save_filename = "Airfoil_Geometry",
                  file_type = ".png", 
-                 width = 12, height = 7):
+                 width = 11, height = 7):
     """This plots all airfoil defined in the list "airfoil_names" 
 
     Assumptions:

@@ -1,5 +1,3 @@
-## @defgroup Optimization-Packages-additive additive  
-# @ingroup Optimization-Packages 
 # RCAIDE/Optimization/Packages/additive/__init__.py
 # 
 
@@ -10,4 +8,4 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-from Legacy.trunk.S.Optimization.Package_Setups import additive_setup 
+from .additive_setup import Additive_Solver 

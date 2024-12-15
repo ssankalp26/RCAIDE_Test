@@ -1,4 +1,3 @@
-## @defgroup Methods-Energy Energy 
 # RCAIDE/Methods/Energy/__init__.py
 # 
 
@@ -8,5 +7,5 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
-from . import Sources 
-from . import Thermal_Management
+from . import Sources
+from . import Distributors

@@ -8,15 +8,15 @@
 # RCAIDE Imports 
 from RCAIDE.Framework.Core import Units
 from RCAIDE.Library.Methods.Aerodynamics.Airfoil_Panel_Method     import airfoil_analysis 
-from RCAIDE.Library.Methods.Geometry.Airfoil      import compute_naca_4series
-from RCAIDE.Library.Methods.Geometry.Airfoil     import import_airfoil_geometry
+from RCAIDE.Library.Methods.Geometry.Airfoil                      import compute_naca_4series
+from RCAIDE.Library.Methods.Geometry.Airfoil                      import import_airfoil_geometry
 from RCAIDE.Library.Plots import * 
 
 # Python imports
 import os 
 import numpy as np
 import matplotlib.pyplot as plt    
- 
+import matplotlib.cm as cm
 
 # ----------------------------------------------------------------------
 #   Main
@@ -37,16 +37,40 @@ def single_airfoil():
     AoA_rad              = np.atleast_2d(AoA_deg*Units.degrees)   
     airfoil_file_1       = '4412'
     airfoil_geometry_1   = compute_naca_4series(airfoil_file_1,npoints = 201)
-    airfoil_properties_1 = airfoil_analysis(airfoil_geometry_1,AoA_rad,Re_vals)  
+    airfoil_properties_1 = airfoil_analysis(airfoil_geometry_1,AoA_rad,Re_vals) 
+     
+    # get line colors for plots 
+    line_colors   = cm.viridis(np.linspace(0,1,16))
+
+    fig_1   = plt.figure("Chordwise Lift Distribution")
+    fig_2   = plt.figure("Chordwise Drag Distribution") 
+    fig_1.set_size_inches(7,5)
+    fig_2.set_size_inches(7,5) 
+    axis_1 = fig_1.add_subplot(1,1,1)    
+    axis_2 = fig_2.add_subplot(1,1,1)
+    
+    # distribution plots
+    for i in range(16):
+        axis_1.plot(airfoil_geometry_1.x_upper_surface[:-1],airfoil_properties_1.fL[:,i,0], color = line_colors[i] ,  label = 'AOA =' +  str(AoA_deg[i]) + 'degrees') 
+        axis_1.set_ylabel("fL")
+        axis_1.set_xlabel("c") 
+        axis_1.set_ylim([-1, 1])
+    
+    for i in range(16):
+        axis_2.plot(airfoil_geometry_1.x_upper_surface[:-1],airfoil_properties_1.fD[:,i,0], color = line_colors[i] ,  label = 'AOA =' +  str(AoA_deg[i]) + 'degrees') 
+        axis_2.set_ylabel("fD")
+        axis_2.set_xlabel("c")
+        axis_2.set_ylim([-1, 1])
     
     # Plots    
     plot_airfoil_surface_forces(airfoil_properties_1)   
     plot_airfoil_polars(airfoil_properties_1)
-    plot_airfoil_boundary_layer_properties(airfoil_properties_1,show_legend = True )   
+    plot_airfoil_boundary_layer_properties(airfoil_properties_1,show_legend = True ) 
     
     # Verification  
     cl_invisc_true        = 1.0675160492711429
     cd_invisc_true        = 7.638304328309864e-05
+    cd_visc_true          = 0.014083014418361904
     cm_invisc_true        = -0.11066949071512713 
     
     print('\nThis is for single airfoil')
@@ -55,10 +79,15 @@ def single_airfoil():
     print(diff_CL)
     assert diff_CL < 1e-6 
     
-    diff_CD  = np.abs((airfoil_properties_1.cd_invisc[0,10] - cd_invisc_true)/cd_invisc_true)  
+    diff_CD_invisc = np.abs((airfoil_properties_1.cd_invisc[0,10] - cd_invisc_true)/cd_invisc_true)  
     print('\ncd_invisc difference')
-    print(diff_CD )
-    assert diff_CD  < 1e-6     
+    print(diff_CD_invisc)
+    assert diff_CD_invisc  < 1e-6
+
+    diff_CD_visc = np.abs((airfoil_properties_1.cd_visc[0,10] - cd_visc_true)/cd_visc_true)  
+    print('\ncd_invisc difference')
+    print(diff_CD_visc)
+    assert diff_CD_visc  < 1e-6    
 
     diff_CM = np.abs((airfoil_properties_1.cm_invisc[0,10] - cm_invisc_true)/cm_invisc_true) 
     print('\ncm_invisc difference')
@@ -71,13 +100,15 @@ def single_airfoil():
     Cd_abbot = 0.0064
     Cm_abbot = -0.0885
     
-    CL_invisc_val_diff = np.abs((airfoil_properties_1.cl_invisc[0,10] - Cl_abbot)/Cl_abbot) 
-    CD_invisc_val_diff = np.abs((airfoil_properties_1.cd_invisc[0,10] - Cd_abbot)/Cd_abbot)
-    CM_invisc_val_diff = np.abs((airfoil_properties_1.cm_invisc[0,10] - Cm_abbot)/Cm_abbot)
+    CL_invisc_abb_diff = np.abs((airfoil_properties_1.cl_invisc[0,10] - Cl_abbot)/Cl_abbot) 
+    CD_invisc_abb_diff = np.abs((airfoil_properties_1.cd_invisc[0,10] - Cd_abbot)/Cd_abbot)
+    CD_visc_abb_diff   = np.abs((airfoil_properties_1.cd_visc[0,10] - Cd_abbot)/Cd_abbot)
+    CM_invisc_abb_diff = np.abs((airfoil_properties_1.cm_invisc[0,10] - Cm_abbot)/Cm_abbot)
     print('\nValidation against Abbot data')
-    print('invisc Cl-Cl_abbot/Cl_abbot',CL_invisc_val_diff*100,'%\n') 
-    print('invisc Cd-Cd_abbot/Cd_abbot',CD_invisc_val_diff*100,'%\n')
-    print('invisc Cm-Cm_abbot/Cm_abbot',CM_invisc_val_diff*100,'%\n')
+    print('invisc Cl-Cl_abbot/Cl_abbot',CL_invisc_abb_diff*100,'%\n') 
+    print('invisc Cd-Cd_abbot/Cd_abbot',CD_invisc_abb_diff*100,'%\n')
+    print('visc Cd-Cd_abbot/Cd_abbot',CD_visc_abb_diff*100,'%\n')
+    print('invisc Cm-Cm_abbot/Cm_abbot',CM_invisc_abb_diff*100,'%\n')
     
     
     # CFD Validation
@@ -87,10 +118,12 @@ def single_airfoil():
     
     CL_invisc_CFD_diff = np.abs((airfoil_properties_1.cl_invisc[0,10] - Cl_CFD)/Cl_CFD) 
     CD_invisc_CFD_diff = np.abs((airfoil_properties_1.cd_invisc[0,10] - Cd_CFD)/Cd_CFD)
+    CD_visc_CFD_diff = np.abs((airfoil_properties_1.cd_visc[0,10] - Cd_CFD)/Cd_CFD)
     CM_invisc_CFD_diff = np.abs((airfoil_properties_1.cm_invisc[0,10] - Cm_CFD)/Cm_CFD)
     print('\nValidation against CFD data')
     print('invisc Cl-Cl_CFD/Cl_CFD',CL_invisc_CFD_diff*100,'%\n') 
     print('invisc Cd-Cd_CFD/Cd_CFD',CD_invisc_CFD_diff*100,'%\n')
+    print('visc Cd-Cd_CFD/Cd_CFD',CD_visc_CFD_diff*100,'%\n')
     print('invisc Cm-Cm_CFD/Cm_CFD',CM_invisc_CFD_diff*100,'%\n')
     
     AoA_abbot_cl_cd = np.array([-4.1552,-3.2336,-2.128,-1.207,-0.1014,0,1.0038,2.6623,4.8738,6.4392,7.8209,9.6644])
@@ -108,32 +141,33 @@ def single_airfoil():
     print('\nNormalised mean absolute error with respect to xfoil in CL inviscid',Final_CL_diff_invisc*100,'%\n') 
     Final_CD_diff_invisc = np.abs(np.sum((airfoil_properties_1.cd_invisc[0,:] - cd_xfoil)/cd_xfoil))/16
     print('Normalised mean absolute error with respect to xfoil in CD inviscid',Final_CD_diff_invisc*100,'%\n')
-     
+    Final_CD_diff_visc = np.abs(np.sum((airfoil_properties_1.cd_visc[0,:] - cd_xfoil)/cd_xfoil))/16
+    print('Normalised mean absolute error with respect to xfoil in CD viscous',Final_CD_diff_visc*100,'%\n')
     Final_CM_diff_invisc = np.abs(np.sum((airfoil_properties_1.cm_invisc[0,:] - cm_xfoil)/cm_xfoil))/16
     print('Normalised mean absolute error with respect to xfoil in CM inviscid',Final_CM_diff_invisc*100,'%\n') 
     
-    fig = plt.figure()
-    fig.set_size_inches(6,6)
-    axis_1 = fig.add_subplot(3,1,1) 
-    axis_2 = fig.add_subplot(3,1,2) 
-    axis_3 = fig.add_subplot(3,1,3) 
+    fig_3 = plt.figure()
+    fig_3.set_size_inches(6,6)
+    axis_3_1 = fig_3.add_subplot(3,1,1) 
+    axis_3_2 = fig_3.add_subplot(3,1,2) 
+    axis_3_3 = fig_3.add_subplot(3,1,3) 
     
-    axis_1.plot(AoA_deg,airfoil_properties_1.cl_invisc[0,:],'-ko', label='cl invisc')
-    axis_1.set_ylabel('CL inviscid')
-    axis_1.plot(AoA_abbot_cl_cd,cl_abbot, label='abbot')
-    axis_1.plot(AoA_deg,cl_xfoil,label='xfoil')
-    axis_1.legend(loc="upper right") 
-    axis_2.plot(AoA_deg,airfoil_properties_1.cd_invisc[0,:],'-ko', label='cd invisc')
-    axis_2.set_ylabel('CD inviscid')
-    axis_2.plot(AoA_abbot_cl_cd,cd_abbot,label='abbot')
-    axis_2.plot(AoA_deg,cd_xfoil,label='xfoil')
-    axis_2.legend(loc="upper right")  
-    axis_3.plot(AoA_deg,airfoil_properties_1.cm_invisc[0,:],'-ko', label='cm invisc')
-    axis_3.set_ylabel('CM inviscid')
-    axis_3.plot(AOA_abbot_cm,cm_abbot,label='abbot')
-    axis_3.plot(AoA_deg,cm_xfoil,label='xfoil')
-    axis_3.legend(loc="upper right")
-    axis_3.set_xlabel('AoA') 
+    axis_3_1.plot(AoA_deg,airfoil_properties_1.cl_invisc[0,:],'-ko', label='cl invisc')
+    axis_3_1.set_ylabel('CL inviscid')
+    axis_3_1.plot(AoA_abbot_cl_cd,cl_abbot, label='abbot')
+    axis_3_1.plot(AoA_deg,cl_xfoil,label='xfoil')
+    axis_3_1.legend(loc="upper right") 
+    axis_3_2.plot(AoA_deg,airfoil_properties_1.cd_invisc[0,:],'-ko', label='cd invisc')
+    axis_3_2.set_ylabel('CD inviscid')
+    axis_3_2.plot(AoA_abbot_cl_cd,cd_abbot,label='abbot')
+    axis_3_2.plot(AoA_deg,cd_xfoil,label='xfoil')
+    axis_3_2.legend(loc="upper right")  
+    axis_3_3.plot(AoA_deg,airfoil_properties_1.cm_invisc[0,:],'-ko', label='cm invisc')
+    axis_3_3.set_ylabel('CM inviscid')
+    axis_3_3.plot(AOA_abbot_cm,cm_abbot,label='abbot')
+    axis_3_3.plot(AoA_deg,cm_xfoil,label='xfoil')
+    axis_3_3.legend(loc="upper right")
+    axis_3_3.set_xlabel('AoA') 
        
     return 
     

@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Metrics  
 # RCAIDE/Methods/Noise/Metrics/A_weighting_metric.py
 # 
 # 
@@ -13,8 +12,7 @@ import numpy as np
     
 # ----------------------------------------------------------------------------------------------------------------------  
 #  A_weighting_metric
-# ----------------------------------------------------------------------------------------------------------------------     
-## @ingroup Methods-Noise-Metrics
+# ----------------------------------------------------------------------------------------------------------------------      
 def A_weighting_metric(SPL,f): 
     """This method calculates the A-weighted SPL given its stectra
     

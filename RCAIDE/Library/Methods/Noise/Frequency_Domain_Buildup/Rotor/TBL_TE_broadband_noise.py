@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Frequency_Domain_Buildup-Rotor 
 # RCAIDE/Methods/Noise/Frequency_Domain_Buildup/Rotor/TBL_TE_broadband_noise.py
 # 
 # 
@@ -13,8 +12,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Compute TBL-TE Broadband Noise 
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Methods-Noise-Frequency_Domain_Buildup-Rotor 
+# ---------------------------------------------------------------------------------------------------------------------- 
 def TBL_TE_broadband_noise(f,r_e,L,U,M,R_c,Dbar_h,Dbar_l,R_delta_star_p,delta_star_p,delta_star_s,alpha_star):
     '''This computes the turbument boundary layer- trailing edge noise compoment of broadband noise using the method outlined by the 
     Brooks, Pope and Marcolini (BPM) Model
@@ -105,7 +103,11 @@ def spectral_shape_function_A(St,St_peak,R_c):
     
     return A 
 
-def spectral_shape_function_B(St_s,St_2,R_c): 
+def spectral_shape_function_B(St_s,St_2,R_c):
+    '''
+    COMMENTS NIRANJAN 
+     
+    '''
     b                   = abs(np.log10(St_s/St_2))                    # 43  
     b_0                 = (-4.48*(10**(-13)))*((R_c - 8.57E5)**2) + 0.56      # 44
     b_0[R_c < 9.52E4]   = 0.30                         # 44
@@ -121,13 +123,20 @@ def spectral_shape_function_B(St_s,St_2,R_c):
     return B
 
 def A_min_function(a):   
+    '''
+    COMMENTS NIRANJAN 
+     
+    '''
     A_min          = -32.665*a +3.981 # eqn 35 
     A_min[a<0.204] = np.sqrt(67.552-886.788*(a[a<0.204]**2)) - 8.219 # eqn 35 
-    A_min[a>0.244] = -142.795*a[a>0.244]**3 +  103.656*a[a>0.244]**2 - 57.757*a[a>0.244] + 6.006 # eqn 35 
-   
+    A_min[a>0.244] = -142.795*a[a>0.244]**3 +  103.656*a[a>0.244]**2 - 57.757*a[a>0.244] + 6.006 # eqn 35  
     return A_min 
 
 def A_max_function(a):    
+    '''
+    COMMENTS NIRANJAN 
+     
+    '''
     A_max          = -15.901*a + 1.098 # eqn 36 
     A_max[a<0.13]  = np.sqrt(67.552-886.788*(a[a<0.13]**2)) - 8.219 # eqn 36 
     A_max[a>0.321] = -4.669*a[a>0.321]**3 + 3.491*a[a>0.321]**2  - 16.699*a[a>0.321] + 1.149 # eqn 36  
@@ -135,29 +144,49 @@ def A_max_function(a):
 
 
 def B_min_function(b):   
+    '''
+    COMMENTS NIRANJAN 
+     
+    '''
     B_min          = -83.607*b + 8.138  # eqn 41
     B_min[b<0.13]  = np.sqrt(16.888-886.788*(b[b<0.13]**2)) - 4.109
     B_min[b>0.145] = -817.810*b[b>0.145]**3 +  355.210*b[b>0.145]**2 - 135.024*b[b>0.145] + 10.619 # eqn 41    
     return B_min 
 
 def B_max_function(b):  
+    '''
+    COMMENTS NIRANJAN 
+     
+    '''
     B_max          = -31*33*b + 1.854  # eqn 42
     B_max[b<0.10]  = np.sqrt(16.888-886.788*(b[b<0.10]**2)) - 4.109 # eqn 42
     B_max[b>0.187] = -80.541*b[b>0.187]**3 +  44.174*b[b>0.187]**2 - 39.381*b[b>0.187] + 2.344 # eqn 42  
     return B_max 
 
 def amplitude_function_K_1(R_c): 
+    '''
+    COMMENTS NIRANJAN 
+     
+    '''
     K_1             = - 9.0*np.log10(R_c) + 181.6   # eqn 47 
     K_1[R_c<2.47E5] = -4.31*np.log10(R_c[R_c<2.47E5]) + 156.3  # eqn 47
     K_1[R_c>8.0E5]  = 128.5   # eqn 47 
     return K_1
 
-def amplitude_function_delta_K_1(alpha_star,R_delta_star_p):  
+def amplitude_function_delta_K_1(alpha_star,R_delta_star_p): 
+    '''
+    COMMENTS NIRANJAN 
+     
+    ''' 
     delta_K_1                        = alpha_star*(1.43*np.log10(R_delta_star_p) - 5.29)   # eqn 48 
     delta_K_1[R_delta_star_p>5000] = 0                                                       # eqn 48     
     return delta_K_1
 
-def amplitude_function_K_2(alpha_star,M,K_1):    
+def amplitude_function_K_2(alpha_star,M,K_1):
+    '''
+    COMMENTS NIRANJAN 
+     
+    '''    
     gamma   = 27.094*M + 3.31  # eqn 50  
     gamma_0 = 23.43*M + 4.651  # eqn 50  
     beta    = 72.65*M + 10.74  # eqn 50

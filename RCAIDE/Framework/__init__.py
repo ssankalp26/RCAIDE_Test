@@ -1,4 +1,3 @@
-## @defgroup Framework
 # RCAIDE/Framework/__init__.py 
 
 """ RCAIDE Package Setup
@@ -8,6 +7,7 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
+from . import Plugins
 from . import Core
 from . import Analyses
 from . import External_Interfaces

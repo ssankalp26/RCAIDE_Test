@@ -1,4 +1,3 @@
-## @ingroup Energy-Peripherals
 # RCAIDE/Energy/Peripherals/Payload.py
 # 
 # 
@@ -13,8 +12,7 @@ from RCAIDE.Library.Methods.Propulsors.Common.append_payload_conditions import a
  
 # ----------------------------------------------------------------------------------------------------------------------
 #  Avionics
-# ----------------------------------------------------------------------------------------------------------------------           
-## @ingroup Energy-Peripherals  
+# ----------------------------------------------------------------------------------------------------------------------              
 class Payload(Component):
     """A class representing a payload.
     
@@ -41,7 +39,8 @@ class Payload(Component):
 
         Properties Used:
         N/A
-        """            
+        """             
+        self.tag        = 'payload' 
         self.power_draw = 0.0
          
     def append_operating_conditions(self,segment,bus): 

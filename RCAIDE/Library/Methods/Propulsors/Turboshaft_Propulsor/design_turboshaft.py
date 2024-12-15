@@ -1,4 +1,3 @@
-## @ingroup Library-Methods-Energy-Propulsors-Turboshaft_Propulsor
 # RCAIDE/Library/Methods/Energy/Propulsors/Turboshaft_Propulsor/design_turboshaft.py
 # 
 # 
@@ -27,7 +26,6 @@ import numpy                                                                as n
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Design Turboshaft
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Methods-Energy-Propulsors-Turboshaft_Propulsor
 def design_turboshaft(turboshaft):  
     #check if mach number and temperature are passed
     if(turboshaft.design_mach_number==None or turboshaft.design_altitude==None):
@@ -70,10 +68,10 @@ def design_turboshaft(turboshaft):
     segment.state.conditions = conditions
     segment.state.conditions.energy[fuel_line.tag] = Conditions()
     segment.state.conditions.noise[fuel_line.tag] = Conditions()
-    turboshaft.append_operating_conditions(segment,fuel_line) 
+    turboshaft.append_operating_conditions(segment) 
     for tag, item in  turboshaft.items(): 
         if issubclass(type(item), RCAIDE.Library.Components.Component):
-            item.append_operating_conditions(segment,fuel_line,turboshaft) 
+            item.append_operating_conditions(segment,turboshaft) 
          
     ram                                                   = turboshaft.ram
     inlet_nozzle                                          = turboshaft.inlet_nozzle
@@ -84,7 +82,7 @@ def design_turboshaft(turboshaft):
     core_nozzle                                           = turboshaft.core_nozzle  
 
     # unpack component conditions
-    turboshaft_conditions   = conditions.energy[fuel_line.tag][turboshaft.tag]
+    turboshaft_conditions   = conditions.energy[turboshaft.tag]
     ram_conditions          = turboshaft_conditions[ram.tag]     
     inlet_nozzle_conditions = turboshaft_conditions[inlet_nozzle.tag]
     core_nozzle_conditions  = turboshaft_conditions[core_nozzle.tag] 
@@ -102,13 +100,21 @@ def design_turboshaft(turboshaft):
     # Step 3: link inlet nozzle to ram 
     inlet_nozzle_conditions.inputs.stagnation_temperature             = ram_conditions.outputs.stagnation_temperature
     inlet_nozzle_conditions.inputs.stagnation_pressure                = ram_conditions.outputs.stagnation_pressure
+    inlet_nozzle_conditions.inputs.static_temperature                 = ram_conditions.outputs.static_temperature
+    inlet_nozzle_conditions.inputs.static_pressure                    = ram_conditions.outputs.static_pressure
+    inlet_nozzle_conditions.inputs.mach_number                        = ram_conditions.outputs.mach_number
+    inlet_nozzle.working_fluid                                        = ram.working_fluid
 
     # Step 4: Compute flow through the inlet nozzle
     compute_compression_nozzle_performance(inlet_nozzle,inlet_nozzle_conditions,conditions)      
 
-    # Step 5: Link low pressure compressor to the inlet nozzle
+    # Step 5: Link low pressure compressor to the inlet nozzle 
     compressor_conditions.inputs.stagnation_temperature  = inlet_nozzle_conditions.outputs.stagnation_temperature
     compressor_conditions.inputs.stagnation_pressure     = inlet_nozzle_conditions.outputs.stagnation_pressure
+    compressor_conditions.inputs.static_temperature      = inlet_nozzle_conditions.outputs.static_temperature
+    compressor_conditions.inputs.static_pressure         = inlet_nozzle_conditions.outputs.static_pressure
+    compressor_conditions.inputs.mach_number             = inlet_nozzle_conditions.outputs.mach_number  
+    compressor.working_fluid                             = inlet_nozzle.working_fluid 
 
     # Step 6: Compute flow through the low pressure compressor
     compute_compressor_performance(compressor,compressor_conditions,conditions)
@@ -116,40 +122,52 @@ def design_turboshaft(turboshaft):
     # Step 11: Link the combustor to the high pressure compressor
     combustor_conditions.inputs.stagnation_temperature                = compressor_conditions.outputs.stagnation_temperature
     combustor_conditions.inputs.stagnation_pressure                   = compressor_conditions.outputs.stagnation_pressure
+    combustor_conditions.inputs.static_temperature                    = compressor_conditions.outputs.static_temperature
+    combustor_conditions.inputs.static_pressure                       = compressor_conditions.outputs.static_pressure
+    combustor_conditions.inputs.mach_number                           = compressor_conditions.outputs.mach_number  
+    combustor.working_fluid                                           = compressor.working_fluid 
     
-    # Step 12: Compute flow through the high pressor comprresor
-    compute_combustor_performance(combustor,combustor_conditions,conditions) 
+    # Step 12: Compute flow through the high pressor compressor 
+    compute_combustor_performance(combustor,combustor_conditions,conditions)
 
-    #link the high pressure turbione to the combustor
-    hpt_conditions.inputs.stagnation_temperature   = combustor_conditions.outputs.stagnation_temperature
-    hpt_conditions.inputs.stagnation_pressure      = combustor_conditions.outputs.stagnation_pressure
-    hpt_conditions.inputs.fuel_to_air_ratio        = combustor_conditions.outputs.fuel_to_air_ratio 
-    hpt_conditions.inputs.compressor               = compressor_conditions.outputs 
-    hpt_conditions.inputs.bypass_ratio             = 0.0
-    hpt_conditions.inputs.fan                      = Data()
-    hpt_conditions.inputs.fan.work_done            = 0.0
+    #link the high pressure turbione to the combustor 
+    hpt_conditions.inputs.stagnation_temperature    = combustor_conditions.outputs.stagnation_temperature
+    hpt_conditions.inputs.stagnation_pressure       = combustor_conditions.outputs.stagnation_pressure
+    hpt_conditions.inputs.fuel_to_air_ratio         = combustor_conditions.outputs.fuel_to_air_ratio 
+    hpt_conditions.inputs.static_temperature        = combustor_conditions.outputs.static_temperature
+    hpt_conditions.inputs.static_pressure           = combustor_conditions.outputs.static_pressure
+    hpt_conditions.inputs.mach_number               = combustor_conditions.outputs.mach_number 
+    hpt_conditions.inputs.compressor                = compressor_conditions.outputs 
+    hpt_conditions.inputs.bypass_ratio              = 0.0
+    hpt_conditions.inputs.fan                       = Data()
+    hpt_conditions.inputs.fan.work_done             = 0.0
+    high_pressure_turbine.working_fluid             = combustor.working_fluid
+    
     compute_turbine_performance(high_pressure_turbine,hpt_conditions,conditions)
             
-    #link the low pressure turbine to the high pressure turbine
-    lpt_conditions.inputs.stagnation_temperature    = hpt_conditions.outputs.stagnation_temperature
-    lpt_conditions.inputs.stagnation_pressure       = hpt_conditions.outputs.stagnation_pressure
-    
-    #link the low pressure turbine to the low_pressure_compresor
-    lpt_conditions.inputs.compressor                = Data()
-    lpt_conditions.inputs.compressor.work_done      = 0.0
-    
-    #link the low pressure turbine to the combustor
-    lpt_conditions.inputs.fuel_to_air_ratio         = combustor_conditions.outputs.fuel_to_air_ratio
-    
-    #flow through the low pressure turbine
-    lpt_conditions.inputs.bypass_ratio              = 0.0
-    lpt_conditions.inputs.fan                       = Data()
-    lpt_conditions.inputs.fan.work_done             = 0.0
+    #link the low pressure turbine to the high pressure turbine 
+    lpt_conditions.inputs.stagnation_temperature     = hpt_conditions.outputs.stagnation_temperature
+    lpt_conditions.inputs.stagnation_pressure        = hpt_conditions.outputs.stagnation_pressure 
+    lpt_conditions.inputs.static_temperature         = hpt_conditions.outputs.static_temperature
+    lpt_conditions.inputs.static_pressure            = hpt_conditions.outputs.static_pressure 
+    lpt_conditions.inputs.mach_number                = hpt_conditions.outputs.mach_number  
+    low_pressure_turbine.working_fluid               = high_pressure_turbine.working_fluid    
+    lpt_conditions.inputs.compressor                 = Data()
+    lpt_conditions.inputs.compressor.work_done       = 0.0     
+    lpt_conditions.inputs.fuel_to_air_ratio          = combustor_conditions.outputs.fuel_to_air_ratio 
+    lpt_conditions.inputs.bypass_ratio               = 0.0
+    lpt_conditions.inputs.fan                        = Data()
+    lpt_conditions.inputs.fan.work_done              = 0.0
+     
     compute_turbine_performance(low_pressure_turbine,lpt_conditions,conditions)
     
     #link the core nozzle to the low pressure turbine
-    core_nozzle_conditions.inputs.stagnation_temperature             = lpt_conditions.outputs.stagnation_temperature
-    core_nozzle_conditions.inputs.stagnation_pressure                = lpt_conditions.outputs.stagnation_pressure
+    core_nozzle_conditions.inputs.stagnation_temperature     = lpt_conditions.outputs.stagnation_temperature
+    core_nozzle_conditions.inputs.stagnation_pressure        = lpt_conditions.outputs.stagnation_pressure
+    core_nozzle_conditions.inputs.static_temperature         = lpt_conditions.outputs.static_temperature
+    core_nozzle_conditions.inputs.static_pressure            = lpt_conditions.outputs.static_pressure  
+    core_nozzle_conditions.inputs.mach_number                = lpt_conditions.outputs.mach_number   
+    core_nozzle.working_fluid                                = low_pressure_turbine.working_fluid  
     
     #flow through the core nozzle
     compute_expansion_nozzle_performance(core_nozzle,core_nozzle_conditions,conditions)

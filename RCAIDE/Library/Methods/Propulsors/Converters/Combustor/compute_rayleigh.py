@@ -9,8 +9,7 @@
 
 # package imports
 import numpy as np 
-from Legacy.trunk.S.Methods.Propulsion.rayleigh  import rayleigh
-from Legacy.trunk.S.Methods.Propulsion.fm_solver import fm_solver
+from   RCAIDE.Library.Methods.Gas_Dynamics  import rayleigh, fm_solver
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 # compute_rayleigh

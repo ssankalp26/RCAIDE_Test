@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Common-Update
 # RCAIDE/Library/Missions/Common/Update/emissions.py
 # 
 # 
@@ -8,7 +7,6 @@
 #  emissions
 # ----------------------------------------------------------------------------------------------------------------------
 
-## @ingroup Library-Missions-Segments-Common-Update
 def emissions(segment):
     """ Updates the emissions produced by the vehicle
         
@@ -28,4 +26,4 @@ def emissions(segment):
     emissions_model = segment.analyses.emissions
     
     if emissions_model:
-        emissions_model.evaluate_emissions(segment)    
+        emissions_model.evaluate(segment)    

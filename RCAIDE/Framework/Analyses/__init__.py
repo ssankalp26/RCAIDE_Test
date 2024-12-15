@@ -1,4 +1,3 @@
-## @defgroup Analyses
 # RCAIDE/__init__.py
 # 
 
@@ -17,7 +16,6 @@ from .Vehicle   import Vehicle
 from . import Common
 from . import Aerodynamics
 from . import Atmospheric
-from . import Costs
 from . import Emissions
 from . import Energy
 from . import Noise
@@ -25,3 +23,5 @@ from . import Planets
 from . import Propulsion
 from . import Stability
 from . import Weights
+from . import Emissions
+from . import Geodesics

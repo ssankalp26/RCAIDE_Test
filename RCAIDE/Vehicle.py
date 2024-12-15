@@ -1,4 +1,3 @@
-## @defgroup Vehicle
 # Vehicle.py
 # 
 # Created:  Apr 2024, M. Clarke
@@ -11,12 +10,12 @@
 from RCAIDE                    import Framework
 from RCAIDE.Framework.Core     import Data, DataOrdered
 from RCAIDE.Library            import Components, Attributes 
-import numpy as np
+import numpy as np 
+from RCAIDE.Library.Methods.Weights.Correlation_Buildups.Common.compute_operating_empty_weight import  compute_operating_empty_weight
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Vehicle
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Vehicle
+# ----------------------------------------------------------------------------------------------------------------------  
 class Vehicle(Data):
     """RCAIDE Vehicle container class with database + input / output functionality
     """    
@@ -30,25 +29,62 @@ class Vehicle(Data):
         Source:
             None
         """    
-        self.tag                    = 'vehicle'
-        self.networks               = Framework.Networks.Network.Container()
-        self.fuselages              = Components.Fuselages.Fuselage.Container()
-        self.wings                  = Components.Wings.Wing.Container()
-        self.nacelles               = Components.Nacelles.Nacelle.Container()
-        self.systems                = Components.Systems.System.Container()
-        self.avionics               = Components.Systems.Avionics.Container()
-        self.booms                  = Components.Booms.Boom.Container()
-        self.mass_properties        = Vehicle_Mass_Container()
-        self.payload                = Components.Payloads.Payload.Container()
-        self.costs                  = Data() 
-        self.costs.industrial       = Attributes.Costs.Industrial_Costs()
-        self.costs.operating        = Attributes.Costs.Operating_Costs()    
-        self.envelope               = Attributes.Envelope()
-        self.landing_gear           = Components.Landing_Gear.Landing_Gear.Container()
-        self.reference_area         = 0.0
-        self.passengers             = 0.0
-        self.maximum_cross_sectional_area =  0.0 
-        self.performance            = DataOrdered()
+        self.tag                                                           = 'vehicle'
+        self.networks                                                      = Framework.Networks.Network.Container()
+        self.fuselages                                                     = Components.Fuselages.Fuselage.Container()
+        self.wings                                                         = Components.Wings.Wing.Container()
+        self.nacelles                                                      = Components.Nacelles.Nacelle.Container()
+        self.systems                                                       = Components.Systems.System.Container()
+        self.avionics                                                      = Components.Systems.Avionics.Container()
+        self.booms                                                         = Components.Booms.Boom.Container()
+        self.mass_properties                                               = Vehicle_Mass_Container()
+        self.payload                                                       = Components.Payloads.Payload.Container()
+        self.costs                                                         = Data()     
+        self.landing_gears                                                 = Components.Landing_Gear.Landing_Gear.Container()  
+        self.reference_area                                                = 0.0
+        self.passengers                                                    = 0.0
+        self.maximum_cross_sectional_area                                  = 0.0
+        
+        self.flight_envelope                                               = Data()
+        self.flight_envelope.design_dynamic_pressure                       = None 
+        self.flight_envelope.design_mach_number                            = None  
+        self.flight_envelope.design_cruise_altitude                        = None
+        self.flight_envelope.design_range                                  = None 
+        self.flight_envelope.ultimate_load                                 = 5.7 
+        self.flight_envelope.limit_load                                    = 3.8   
+        self.flight_envelope.alpha_maximum                                 = 0.0
+        self.flight_envelope.alt_vc                                        = 0.0
+        self.flight_envelope.alt_gust                                      = 0.0
+        self.flight_envelope.max_ceiling                                   = 0.0
+        self.flight_envelope.maximum_dynamic_pressure                      = 0.0
+        self.flight_envelope.maximum_mach_operational                      = 0.0
+
+        self.flight_envelope.maneuver                                      = Data()
+        self.flight_envelope.maneuver.load_alleviation_factor              = 0.0
+        
+        self.flight_envelope.maneuver.equivalent_speed                     = Data()
+        self.flight_envelope.maneuver.equivalent_speed.velocity_max_gust   = 0
+        self.flight_envelope.maneuver.equivalent_speed.velocity_max_cruise = 0
+        self.flight_envelope.maneuver.equivalent_speed.velocity_max_dive   = 0
+        
+        self.flight_envelope.maneuver.load_factor                          = Data()
+        self.flight_envelope.maneuver.load_factor.velocity_max_gust        = 0
+        self.flight_envelope.maneuver.load_factor.velocity_max_cruise      = 0
+        self.flight_envelope.maneuver.load_factor.velocity_max_dive        = 0
+
+        self.flight_envelope.gust                                          = Data()
+        self.flight_envelope.gust.load_alleviation_factor                  = 0.0
+        self.flight_envelope.gust.equivalent_speed                         = Data()
+        self.flight_envelope.gust.equivalent_speed.velocity_max_gust       = 0
+        self.flight_envelope.gust.equivalent_speed.velocity_max_cruise     = 0
+        self.flight_envelope.gust.equivalent_speed.velocity_max_dive       = 0
+        
+        self.flight_envelope.gust.load_factor                              = Data()
+        self.flight_envelope.gust.load_factor.velocity_max_gust            = 0
+        self.flight_envelope.gust.load_factor.velocity_max_cruise          = 0
+        self.flight_envelope.gust.load_factor.velocity_max_dive            = 0 
+        
+        self.performance                              = DataOrdered()
          
     _energy_network_root_map = None 
 
@@ -79,10 +115,9 @@ class Vehicle(Data):
             Components.Systems.System                  : self['systems']          ,
             Components.Systems.Avionics                : self['avionics']         ,
             Components.Payloads.Payload                : self['payload']          , 
-            Components.Nacelles.Nacelle                : self['nacelles']         ,
-            Attributes.Envelope                        : self['envelope']         ,
+            Components.Nacelles.Nacelle                : self['nacelles']         , 
             Components.Booms.Boom                      : self['booms']            ,
-            Components.Landing_Gear.Landing_Gear       : self['landing_gear']     ,
+            Components.Landing_Gear.Landing_Gear       : self['landing_gears']     ,
             Vehicle_Mass_Properties                    : self['mass_properties']  ,
         }
          
@@ -216,8 +251,31 @@ class Vehicle(Data):
         
         self.mass_properties.center_of_gravity = CG
                 
-        return CG 
+        return CG
     
+    def moment_of_inertia(self):
+        """  
+        """
+        M = np.zeros((3, 3))
+        center_of_gravity =  self.mass_properties.center_of_gravity 
+        for key in self.keys():
+            item = self[key] 
+            M += item.moment_of_inertia(center_of_gravity) 
+                
+        return M
+     
+    def operating_empty_weight(self):
+        """ Compute operating empty weight  
+        
+            Assumptions:
+                None
+    
+            Source:
+                None
+        """  
+        outputs = compute_operating_empty_weight(self)  
+                
+        return outputs     
     
     def append_energy_network(self,energy_network):
         """ Adds an energy network to vehicle 
@@ -265,9 +323,7 @@ class Vehicle(Data):
             raise Exception("Unable to place energy_network type %s" % energy_network.typestring())
 
         return energy_network_root
-
-
-## @ingroup Vehicle
+ 
 class Vehicle_Mass_Properties(Components.Mass_Properties): 
     """ The vehicle's mass properties.
         

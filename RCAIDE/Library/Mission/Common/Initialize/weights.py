@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Common-Initialize
 # RCAIDE/Library/Missions/Common/Initialize/weights.py
 # 
 # 
@@ -7,8 +6,7 @@
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Initialize Weights
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Common-Initialize
+# ---------------------------------------------------------------------------------------------------------------------- 
 def weights(segment):
     """ Initializes weight of vehicle
     

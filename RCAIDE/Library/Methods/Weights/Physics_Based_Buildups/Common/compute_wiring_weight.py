@@ -1,8 +1,7 @@
-## @ingroup Methods-Weights-Buildups-Common 
-# RCAIDE/Methods/Weights/Buildups/Common/compute_boom_weight.py
+# RCAIDE/Library/Methods/Weights/Buildups/Common/compute_boom_weight.py
 # 
 # 
-# Created:  Jul 2023, M. Clarke  
+# Created:  Sep 2024, M. Clarke
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
@@ -14,7 +13,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 # Compute wiring weight
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Methods-Weights-Buildups-Common 
 def compute_wiring_weight(wing, config, cablePower):
     """ Calculates mass of wiring required for a wing, including DC power
         cables and communication cables, assuming power cables run an average of
@@ -38,16 +36,12 @@ def compute_wiring_weight(wing, config, cablePower):
     weight      = 0.0 
     cableLength = 0.0
     for network in config.networks:
-        for bus in network.busses: 
-            for propulsor in bus.propulsors:
-                motor = propulsor.motor
-                if motor.wing_mounted == True: 
-                    if motor.wing_tag == wing.tag: 
-                        MSL             = np.array(motor.origin)  
-                        cableLength     += np.sum(abs(MSL)) 
-                    else:
-                        cableLength     += 0
-                        
+        for propulsor in network.propulsors:
+            motor = propulsor.motor
+            if propulsor.wing_mounted == True:  
+                MSL             = np.array(motor.origin) #- np.array(bus.origin)  WHAT DO WE DO HERE SINCE WE DONT HAVE A BUS DEFINED YET AT THIS STAGE
+                cableLength     += np.sum(abs(MSL))  
+                    
     cableDensity    = 5.7e-6
     massCables      = cableDensity * cablePower * cableLength
      

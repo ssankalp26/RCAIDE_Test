@@ -1,7 +1,4 @@
-## @ingroup Analyses-Mission-Segments-Ground
-# RCAIDE/Framework/Analyses/Mission/Segments/Ground/Battery_Charge.py
-# 
-# 
+# RCAIDE/Framework/Analyses/Mission/Segments/Ground/Battery_Charge.py 
 # Created:  Jul 2023, M. Clarke
  
 # ----------------------------------------------------------------------------------------------------------------------
@@ -9,16 +6,14 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE imports
-from RCAIDE.Framework.Mission.Segments.Evaluate       import Evaluate
+from RCAIDE.Framework.Mission.Segments.Evaluate      import Evaluate
 from RCAIDE.Library.Mission.Segments                 import Ground   
-from RCAIDE.Framework.Core                                     import Units
-from RCAIDE.Library.Methods.skip                             import skip 
+from RCAIDE.Framework.Core                           import Units
+from RCAIDE.Library.Methods.skip                     import skip 
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  SEGMENT
-# ----------------------------------------------------------------------------------------------------------------------
-
-## @ingroup Analyses-Mission-Segments-Ground
+# ---------------------------------------------------------------------------------------------------------------------- 
 class Battery_Recharge(Evaluate): 
 
     # ------------------------------------------------------------------
@@ -48,11 +43,11 @@ class Battery_Recharge(Evaluate):
         # --------------------------------------------------------------
         #   User Inputs
         # --------------------------------------------------------------
-        self.altitude                      = None
-        self.time                          = 1.0 * Units.seconds
-        self.current                       = 0
+        self.altitude                      = None 
         self.overcharge_contingency        = 1.10
+        self.cutoff_SOC                    = 1.0
         self.true_course                   = 0.0 * Units.degrees  
+        self.cooling_time                  = 0.0 * Units.hr
          
         initialize                         = self.process.initialize  
         initialize.conditions              = Ground.Battery_Charge_Discharge.initialize_conditions  

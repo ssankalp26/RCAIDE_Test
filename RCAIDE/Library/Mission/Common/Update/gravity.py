@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Common-Update
 # RCAIDE/Library/Missions/Common/Update/gravity.py
 # 
 # 
@@ -8,7 +7,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  Update Gravity
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Common-Update
 def gravity(segment):
     """ Sets the gravity for each part of the mission
     
@@ -31,7 +29,7 @@ def gravity(segment):
     H      = segment.conditions.freestream.altitude
     
     # calculate
-    g      = planet.features.compute_gravity(H)
+    g      = planet.compute_gravity(H)
 
     # pack
     segment.state.conditions.freestream.gravity[:,0] = g[:,0]

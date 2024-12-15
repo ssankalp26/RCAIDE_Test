@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Vertical_Flight
 # RCAIDE/Framework/Analyses/Mission/Segments/Vertical_Flight/Descent.py
 # 
 # 
@@ -16,8 +15,6 @@ from RCAIDE.Library.Mission                      import Common,Segments
 # ----------------------------------------------------------------------------------------------------------------------
 #  Descent
 # ----------------------------------------------------------------------------------------------------------------------
-
-## @ingroup Analyses-Mission-Segments-Vertical_Flight
 class Descent(Evaluate):
     """ A vertically descending hover for VTOL aircraft. Although the vehicle moves, no aerodynamic drag and lift are used.
     

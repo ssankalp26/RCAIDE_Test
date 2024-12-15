@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Cruise 
 # RCAIDE/Framework/Analyses/Mission/Segments/Cruise/Constant_Speed_Constant_Altitude.py
 # 
 # 
@@ -17,7 +16,6 @@ from RCAIDE.Library.Mission                      import Common,Segments
 #  Constant_Speed_Constant_Altitude
 # ----------------------------------------------------------------------------------------------------------------------  
 
-## @ingroup Analyses-Mission-Segments-Cruise
 class Constant_Speed_Constant_Altitude(Evaluate):
     """ Fixed true airspeed and altitude and a set distance.
         Most other cruise segments are built off this segment. The most simple segment you can fly.
@@ -54,7 +52,8 @@ class Constant_Speed_Constant_Altitude(Evaluate):
         self.altitude          = None
         self.air_speed         = None
         self.distance          = 10. * Units.km
-        self.true_course       = 0.0 * Units.degrees  
+        self.true_course       = 0.0 * Units.degrees
+        self.bank_angle        = 0.0 * Units.degrees
 
         # -------------------------------------------------------------------------------------------------------------- 
         #  Mission specific processes 

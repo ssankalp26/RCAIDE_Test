@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Geometry  
 # RCAIDE/Library/Plots/Geometry/plot_3d_rotor.py
 # 
 # 
@@ -18,8 +17,7 @@ import plotly.graph_objects as go
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Plots-Geometry  
+# ----------------------------------------------------------------------------------------------------------------------    
 def plot_3d_rotor(rotor,save_filename = "Rotor", save_figure = False, plot_data = None,
                   show_figure  = True, plot_axis = False, cpt=0, number_of_airfoil_points = 21,
                     color_map='turbid',alpha=1):
@@ -99,8 +97,7 @@ def plot_3d_rotor(rotor,save_filename = "Rotor", save_figure = False, plot_data 
         return 
     else: 
         return plot_data
-
-## @ingroup Library-Plots-Geometry 
+ 
 def generate_3d_blade_points(rotor,n_points,dim,i,aircraftRefFrame=True):
     """ This generates the coordinates of the blade surface for plotting in the aircraft frame (x-back, z-up)
 
@@ -147,13 +144,14 @@ def generate_3d_blade_points(rotor,n_points,dim,i,aircraftRefFrame=True):
     airfoil_le_offset  = np.repeat(b[:,None], n_points, axis=1)/2  
 
     # get airfoil coordinate geometry
+    a_loc =  np.array(a_loc)
     if len(airfoils.keys())>0:
         xpts  = np.zeros((dim,n_points))
         zpts  = np.zeros((dim,n_points))
         max_t = np.zeros(dim)
         for af_idx,airfoil in enumerate(airfoils):
             geometry     = import_airfoil_geometry(airfoil.coordinate_file,n_points)
-            locs         = np.where(np.array(a_loc) == af_idx)
+            locs         = np.where(a_loc == af_idx)
             xpts[locs]   = geometry.x_coordinates  
             zpts[locs]   = geometry.y_coordinates  
             max_t[locs]  = geometry.thickness_to_chord 
@@ -173,7 +171,7 @@ def generate_3d_blade_points(rotor,n_points,dim,i,aircraftRefFrame=True):
      
     commanded_thrust_vector      = np.zeros((1,1))
     rotor_vel_to_body,orientaion = rotor.prop_vel_to_body(commanded_thrust_vector)
-    cpts              = len(rotor_vel_to_body[:,0,0])
+    cpts                         = len(rotor_vel_to_body[:,0,0])
 
     matrix        = np.zeros((len(zp),n_points,3)) # radial location, airfoil pts (same y)
     matrix[:,:,0] = xp

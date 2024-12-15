@@ -1,4 +1,3 @@
-## @defgroup Library-Plots-Energy 
 # RCAIDE/Library/Plots/Energy/__init__.py
 # 
 

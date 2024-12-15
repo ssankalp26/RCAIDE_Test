@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Sources-Battery-Common
 # RCAIDE/Methods/Energy/Sources/Battery/Common/find_total_mass_gain.py
 # 
 # 
@@ -6,8 +5,7 @@
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  METHOD
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Energy-Sources-Battery-Common
+# ---------------------------------------------------------------------------------------------------------------------- -Common
 def find_total_mass_gain(battery):
     """finds the total mass of air that the battery 
     accumulates when discharged fully
@@ -16,7 +14,7 @@ def find_total_mass_gain(battery):
     Earth Atmospheric composition
     
     Inputs:
-    battery.pack.maximum_energy [J]
+    battery.maximum_energy [J]
     battery.
       mass_gain_factor [kg/W]
       
@@ -24,6 +22,6 @@ def find_total_mass_gain(battery):
       mdot             [kg]
     """ 
     
-    mgain=battery.pack.maximum_energy*battery.mass_gain_factor
+    mgain=battery.maximum_energy*battery.mass_gain_factor
     
     return mgain

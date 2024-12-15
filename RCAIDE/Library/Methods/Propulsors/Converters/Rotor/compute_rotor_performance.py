@@ -7,8 +7,7 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
  # RCAIDE imports 
-from RCAIDE.Framework.Core                              import Data , Units, orientation_product, orientation_transpose 
-from RCAIDE.Framework.Analyses.Propulsion               import Rotor_Wake_Fidelity_One
+from RCAIDE.Framework.Core                              import Data , Units, orientation_product, orientation_transpose  
 from RCAIDE.Library.Methods.Aerodynamics.Common.Lift    import compute_airfoil_aerodynamics,compute_inflow_and_tip_loss  
 
 # package imports
@@ -16,9 +15,8 @@ import  numpy as  np
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Generalized Rotor Class
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Energy-Propulsion-Converters
-def compute_rotor_performance(propulsor,state,disributor,center_of_gravity= [[0.0, 0.0,0.0]]):
+# ----------------------------------------------------------------------------------------------------------------------  
+def compute_rotor_performance(propulsor,state,center_of_gravity= [[0.0, 0.0,0.0]]):
     """Analyzes a general rotor given geometry and operating conditions.
 
     Assumptions:
@@ -93,7 +91,7 @@ def compute_rotor_performance(propulsor,state,disributor,center_of_gravity= [[0.
     elif 'propeller' in  propulsor:
         rotor =  propulsor.propeller
      
-    propulsor_conditions  = conditions.energy[disributor.tag][propulsor.tag]
+    propulsor_conditions  = conditions.energy[propulsor.tag]
     rotor_conditions      = propulsor_conditions[rotor.tag]
     commanded_TV          = propulsor_conditions.commanded_thrust_vector_angle
     eta                   = rotor_conditions.throttle 
@@ -110,11 +108,7 @@ def compute_rotor_performance(propulsor,state,disributor,center_of_gravity= [[0.
     airfoils              = rotor.Airfoils 
     Na                    = rotor.number_azimuthal_stations
     nonuniform_freestream = rotor.nonuniform_freestream
-    use_2d_analysis       = rotor.use_2d_analysis
-    
-    # 2d analysis required for wake fid1
-    if isinstance(rotor.Wake, Rotor_Wake_Fidelity_One):
-        use_2d_analysis=True
+    use_2d_analysis       = rotor.use_2d_analysis 
 
     # Check for variable pitch
     if np.any(pitch_c !=0) and not rotor.variable_pitch:
@@ -293,14 +287,12 @@ def compute_rotor_performance(propulsor,state,disributor,center_of_gravity= [[0.
     lamdaw, F, _ = compute_inflow_and_tip_loss(r,R,Wa,Wt,B)
 
     # Compute aerodynamic forces based on specified input airfoil or surrogate
-    Cl, Cdval, alpha, Ma,W, Re = compute_airfoil_aerodynamics(beta,c,r,R,B,Wa,Wt,a,nu,airfoils,a_loc,ctrl_pts,Nr,Na,tc,use_2d_analysis)
-    
+    Cl, Cdval, alpha, alpha_disc,Ma,W,Re,Re_disc = compute_airfoil_aerodynamics(beta,c,r,R,B,Wa,Wt,a,nu,airfoils,a_loc,ctrl_pts,Nr,Na,tc,use_2d_analysis) 
     
     # compute HFW circulation at the blade
     Gamma = 0.5*W*c*Cl  
 
-    #---------------------------------------------------------------------------            
-            
+    #---------------------------------------------------------------------------      
     # tip loss correction for velocities, since tip loss correction is only applied to loads in prior BET iteration
     va     = F*va
     vt     = F*vt
@@ -333,6 +325,9 @@ def compute_rotor_performance(propulsor,state,disributor,center_of_gravity= [[0.
 
         Va_2d = Wa
         Vt_2d = Wt
+        V_disc  = np.sqrt(Va_2d**2 + Vt_2d**2)
+        M_disc  = Ma
+        
         Va_avg = np.average(Wa, axis=2)      # averaged around the azimuth
         Vt_avg = np.average(Wt, axis=2)      # averaged around the azimuth
 
@@ -363,7 +358,9 @@ def compute_rotor_performance(propulsor,state,disributor,center_of_gravity= [[0.
         blade_dQ_dr_2d           = np.repeat(blade_dQ_dr[:, :, None], Na, axis=2)
         blade_Gamma_2d           = np.repeat(Gamma[ :, :, None], Na, axis=2)
         alpha_2d                 = np.repeat(alpha[ :, :, None], Na, axis=2)
-
+        V_disc                   = np.sqrt(Va_2d**2 + Vt_2d**2)
+        M_disc                   = np.repeat(Ma[ :, :, None], Na, axis=2)
+        
         Vt_avg                  = Wt
         Va_avg                  = Wa
         Vt_ind_avg              = vt
@@ -451,6 +448,8 @@ def compute_rotor_performance(propulsor,state,disributor,center_of_gravity= [[0.
                 blade_axial_induced_velocity      = Va_ind_avg,
                 blade_reynolds_number             = Re,
                 blade_effective_angle_of_attack   = alpha,
+                disc_reynolds_number              = Re_disc,
+                disc_effective_angle_of_attack    = alpha_disc,
                 blade_tangential_velocity         = Vt_avg,
                 blade_axial_velocity              = Va_avg,
                 blade_velocity                    = W,
@@ -459,6 +458,8 @@ def compute_rotor_performance(propulsor,state,disributor,center_of_gravity= [[0.
                 disc_axial_induced_velocity       = Va_ind_2d,
                 disc_tangential_velocity          = Vt_2d,
                 disc_axial_velocity               = Va_2d,
+                disc_velocity                     = V_disc,
+                disc_Mach_number                  = M_disc,
                 drag_coefficient                  = Cd,
                 lift_coefficient                  = Cl, 
                 disc_loading                      = disc_loading, 
@@ -468,8 +469,7 @@ def compute_rotor_performance(propulsor,state,disributor,center_of_gravity= [[0.
                 blade_dT_dr                       = blade_dT_dr,
                 disc_dT_dr                        = blade_dT_dr_2d,
                 blade_thrust_distribution         = blade_T_distribution,
-                disc_thrust_distribution          = blade_T_distribution_2d,
-                disc_effective_angle_of_attack    = alpha_2d,
+                disc_thrust_distribution          = blade_T_distribution_2d, 
                 thrust_per_blade                  = thrust/B,
                 thrust_coefficient                = Ct,
                 disc_azimuthal_distribution       = psi_2d,
@@ -488,6 +488,6 @@ def compute_rotor_performance(propulsor,state,disributor,center_of_gravity= [[0.
                 figure_of_merit                   = FoM, 
         ) 
     
-    conditions.energy[disributor.tag][propulsor.tag][rotor.tag] = outputs   
+    conditions.energy[propulsor.tag][rotor.tag] = outputs   
     
     return  

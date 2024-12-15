@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Climb
 # RCAIDE/Library/Missions/Segments/Climb/Constant_Speed_Constant_Rate.py
 # 
 # 
@@ -14,7 +13,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Initialize Conditions
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Segments-Climb
 def initialize_conditions(segment):
     
     """Sets the specified conditions which are given for the segment type.
@@ -66,7 +64,7 @@ def initialize_conditions(segment):
     
     # process velocity vector
     v_mag = air_speed
-    v_z   = -climb_rate # z points down
+    v_z   = -climb_rate 
     v_xy  = np.sqrt( v_mag**2 - v_z**2 )
     v_x   = np.cos(beta)*v_xy
     v_y   = np.sin(beta)*v_xy

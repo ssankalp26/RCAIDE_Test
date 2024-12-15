@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors-Turbofan_Propulsor
 # RCAIDE/Methods/Energy/Propulsors/Turbofan_Propulsor/size_core.py
 # 
 # 
@@ -14,8 +13,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  size_core
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Methods-Energy-Propulsors-Turbofan_Propulsor 
+# ---------------------------------------------------------------------------------------------------------------------- 
 def size_core(turbofan,turbofan_conditions,conditions):
     """Sizes the core flow for the design condition by computing the
     non-dimensional thrust 
@@ -47,17 +45,20 @@ def size_core(turbofan,turbofan_conditions,conditions):
     Tref           = turbofan.reference_temperature
     Pref           = turbofan.reference_pressure 
     Tt_ref         = turbofan_conditions.total_temperature_reference  
-    Pt_ref         = turbofan_conditions.total_pressure_reference  
+    Pt_ref         = turbofan_conditions.total_pressure_reference
+    
     # Compute nondimensional thrust
     turbofan_conditions.throttle = 1.0
     compute_thrust(turbofan,turbofan_conditions,conditions) 
 
     # Compute dimensional mass flow rates
+    TSFC       = turbofan_conditions.thrust_specific_fuel_consumption
     Fsp        = turbofan_conditions.non_dimensional_thrust
     mdot_core  = turbofan.design_thrust/(Fsp*a0*(1+bypass_ratio)*turbofan_conditions.throttle)  
     mdhc       = mdot_core/ (np.sqrt(Tref/Tt_ref)*(Pt_ref/Pref))
 
     # Store results on turbofan data structure 
+    turbofan.TSFC                                = TSFC
     turbofan.mass_flow_rate_design               = mdot_core
     turbofan.compressor_nondimensional_massflow  = mdhc
 

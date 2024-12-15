@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors-Modulators
 # RCAIDE/Methods/Energy/Propulsors/Modulators/compute_esc_performance.py
 # 
 # 
@@ -7,7 +6,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 # compute_electric_rotor_performance
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Energy-Propulsors-Modulators
 def compute_voltage_out_from_throttle(esc,esc_conditions,conditions):
     """ The voltage out of the electronic speed controller
     
@@ -47,7 +45,6 @@ def compute_voltage_out_from_throttle(esc,esc_conditions,conditions):
 # ----------------------------------------------------------------------------------------------------------------------
 # compute_voltage_in_from_throttle
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Energy-Propulsors-Modulators
 def compute_voltage_in_from_throttle(esc,esc_conditions,conditions):
     """ The voltage out of the electronic speed controller
 
@@ -87,7 +84,6 @@ def compute_voltage_in_from_throttle(esc,esc_conditions,conditions):
 # ----------------------------------------------------------------------------------------------------------------------
 # compute_throttle_from_voltages
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Energy-Propulsors-Modulators
 def compute_throttle_from_voltages(esc,esc_conditions,conditions):
 
     """ The voltage out of the electronic speed controller
@@ -124,7 +120,6 @@ def compute_throttle_from_voltages(esc,esc_conditions,conditions):
 # ----------------------------------------------------------------------------------------------------------------------
 # compute_current_in_from_throttle
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Energy-Propulsors-Modulators
 def compute_current_in_from_throttle(esc,esc_conditions,conditions):
     """ The current going into the speed controller
     

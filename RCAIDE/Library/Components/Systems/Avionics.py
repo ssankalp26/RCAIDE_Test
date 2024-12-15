@@ -1,4 +1,3 @@
-## @ingroup Library-Compoments-Systems  
 # RCAIDE/Library/Compoments/Systems/Avionics.py
 # 
 # Created:  Mar 2024, M. Clarke 
@@ -12,8 +11,7 @@ from RCAIDE.Library.Methods.Propulsors.Common.append_avionics_conditions import 
  
 # ----------------------------------------------------------------------------------------------------------------------
 #  Avionics
-# ----------------------------------------------------------------------------------------------------------------------           
-## @ingroup Library-Components-Systems
+# ----------------------------------------------------------------------------------------------------------------------            
 class Avionics(Component):
     """A class representing avionics.
     
@@ -42,7 +40,7 @@ class Avionics(Component):
         N/A
         """                 
         self.power_draw = 0.0
-        self.tag        = 'avionics'
+        self.tag        = 'Avionics'
 
     def append_operating_conditions(self,segment,bus): 
         append_avionics_conditions(self,segment,bus)

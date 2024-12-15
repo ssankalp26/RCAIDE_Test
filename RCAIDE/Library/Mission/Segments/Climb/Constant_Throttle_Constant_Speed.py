@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Segments-Climb
 # RCAIDE/Library/Missions/Segments/Climb/Constant_Throttle_Constant_Speed.py
 # 
 # 
@@ -14,7 +13,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  Initialize Conditions
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Segments-Climb
 def unpack_body_angle(segment):
     """Unpacks and sets the proper value for body angle
 
@@ -33,17 +31,26 @@ def unpack_body_angle(segment):
     Properties Used:
     N/A
     """          
+    
+    ctrls    = segment.assigned_control_variables 
 
-    # unpack unknowns
-    theta      = segment.state.unknowns.body_angle 
-    segment.state.conditions.frames.body.inertial_rotations[:,1] = theta[:,0]      
+    # Body Angle Control    
+    if ctrls.body_angle.active: 
+        segment.state.conditions.frames.body.inertial_rotations[:,1] = segment.state.unknowns.body_angle[:,0] 
+    else:
+        segment.state.conditions.frames.body.inertial_rotations[:,1] = segment.angle_of_attack            
 
-
+    if ctrls.bank_angle.active: 
+        segment.state.conditions.frames.body.inertial_rotations[:,0] = segment.state.unknowns.bank_angle[:,0]
+    else:
+        segment.state.conditions.frames.body.inertial_rotations[:,0] = segment.bank_angle
+            
+    segment.state.conditions.frames.body.inertial_rotations[:,2] =  segment.state.conditions.frames.planet.true_heading[:,0]     
+         
 # ----------------------------------------------------------------------
 #  Initialize Conditions
 # ----------------------------------------------------------------------
 
-## @ingroup Library-Missions-Segments-Climb
 def initialize_conditions(segment):
     """Sets the specified conditions which are given for the segment type.
     
@@ -69,19 +76,32 @@ def initialize_conditions(segment):
     """         
     
     # unpack 
-    air_speed  = segment.air_speed   
     alt0       = segment.altitude_start 
+    v_mag      = segment.air_speed 
+    beta       = segment.sideslip_angle
+    alpha      = segment.state.unknowns.wind_angle[:,0][:,None]
+    theta      = segment.state.unknowns.body_angle[:,0][:,None]
     conditions = segment.state.conditions  
 
     # check for initial altitude
     if alt0 is None:
         if not segment.state.initials: raise AttributeError('initial altitude not set')
         alt0 = -1.0 *segment.state.initials.conditions.frames.inertial.position_vector[-1,2]
+   
+    # Flight path angle
+    gamma = theta-alpha
 
-    # pack conditions   
-    conditions.frames.inertial.velocity_vector[:,0] = air_speed # start up value
+    # process
+    v_x =   np.cos(beta) *v_mag * np.cos(gamma)
+    v_y =   np.sin(beta) *v_mag * np.cos(gamma)
+    v_z = -v_mag * np.sin(gamma) # z points down
 
-## @ingroup Library-Missions-Segments-Climb
+    # pack
+    conditions.frames.inertial.velocity_vector[:,0] = v_x[:,0]
+    conditions.frames.inertial.velocity_vector[:,1] = v_y[:,0]
+    conditions.frames.inertial.velocity_vector[:,2] = v_z[:,0]
+ 
+
 def update_differentials_altitude(segment):
     """On each iteration creates the differentials and integration funcitons from knowns about the problem. Sets the time at each point. Must return in dimensional time, with t[0] = 0
     
@@ -109,7 +129,6 @@ def update_differentials_altitude(segment):
     # unpack
     t = segment.state.numerics.dimensionless.control_points
     I = segment.state.numerics.dimensionless.integrate
-
     
     # Unpack segment initials
     alt0       = segment.altitude_start 
@@ -145,7 +164,6 @@ def update_differentials_altitude(segment):
 #  Update Velocity Vector from Wind Angle
 # ----------------------------------------------------------------------
 
-## @ingroup Library-Missions-Segments-Climb
 def update_velocity_vector_from_wind_angle(segment):
     
     # unpack

@@ -8,7 +8,7 @@
 # ----------------------------------------------------------------------------------------------------------------------    
 # package imports
 import numpy as np 
-from Legacy.trunk.S.Methods.Propulsion.fm_id import fm_id
+from RCAIDE.Library.Methods.Gas_Dynamics.fm_id import fm_id
 
 # exceptions/warnings
 from warnings import warn
@@ -57,10 +57,7 @@ def compute_expansion_nozzle_performance(expansion_nozzle,nozzle_conditions,cond
         None 
 
     """                 
-    # Unpack flight conditions 
-    gamma    = conditions.freestream.isentropic_expansion_factor
-    R        = conditions.freestream.gas_specific_constant
-    Cp       = conditions.freestream.specific_heat_at_constant_pressure
+    # Unpack flight conditions     
     M0       = conditions.freestream.mach_number
     P0       = conditions.freestream.pressure
     Pt0      = conditions.freestream.stagnation_pressure
@@ -71,6 +68,14 @@ def compute_expansion_nozzle_performance(expansion_nozzle,nozzle_conditions,cond
     Pt_in    = nozzle_conditions.inputs.stagnation_pressure 
     PR       = expansion_nozzle.pressure_ratio
     etapold  = expansion_nozzle.polytropic_efficiency
+    
+    P_in  = nozzle_conditions.inputs.static_pressure    
+    T_in  = nozzle_conditions.inputs.static_temperature
+    
+    # Unpack ram inputs       
+    working_fluid  = expansion_nozzle.working_fluid 
+    gamma          = working_fluid.compute_gamma(T_in,P_in) 
+    Cp             = working_fluid.compute_cp(T_in,P_in)    
      
     # Compute output stagnation quantities
     Pt_out   = Pt_in*PR
@@ -105,7 +110,7 @@ def compute_expansion_nozzle_performance(expansion_nozzle,nozzle_conditions,cond
     T_out         = Tt_out/(1+(gamma-1)/2*Mach*Mach)
     h_out         = T_out * Cp
     u_out         = np.sqrt(2*(ht_out-h_out))
-    rho_out       = P_out/(R*T_out)
+    #rho_out       = P_out/(R*T_out)
     
     # Compute the freestream to nozzle area ratio  
     area_ratio    = (fm_id(M0,gamma)/fm_id(Mach,gamma)*(1/(Pt_out/Pt0))*(np.sqrt(Tt_out/Tt0)))
@@ -113,7 +118,7 @@ def compute_expansion_nozzle_performance(expansion_nozzle,nozzle_conditions,cond
     #pack computed quantities into outputs
     nozzle_conditions.outputs.area_ratio              = area_ratio
     nozzle_conditions.outputs.mach_number             = Mach
-    nozzle_conditions.outputs.density                 = rho_out
+    #nozzle_conditions.outputs.density                 = rho_out
     nozzle_conditions.outputs.velocity                = u_out
     nozzle_conditions.outputs.static_pressure         = P_out
     nozzle_conditions.outputs.static_temperature      = T_out

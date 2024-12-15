@@ -1,4 +1,3 @@
-## @ingroup Methods-Aerodynamics-Common-Drag
 # RCAIDE/Methods/Aerodynamics/Common/Drag/wave_drag.py
 # 
 # 
@@ -14,8 +13,7 @@ from RCAIDE.Library.Components.Wings import Main_Wing
 
 # ----------------------------------------------------------------------
 #  Wave Drag 
-# ----------------------------------------------------------------------
-## @ingroup Methods-Aerodynamics-Common-Drag
+# ---------------------------------------------------------------------- 
 def wave_drag(conditions,wing):
     """Computes wave drag due to lift
 
@@ -28,7 +26,7 @@ def wave_drag(conditions,wing):
 
     Args:
     conditions.freestream.mach_number        [Unitless]
-    conditions.aerodynamics.lift_coefficient [Unitless]
+    conditions.aerodynamics.coefficients.lift [Unitless]
     wing.spans.projected                     [m]
     wing.total_length                        [m]
     wing.aspect_ratio                        [-]

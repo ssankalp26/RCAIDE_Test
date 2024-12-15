@@ -1,9 +1,3 @@
-## @ingroup Methods-Geometry-Planform
-# convert_sweep.py
-#
-# Created:  Feb 2014, T. Momose
-# Modified: Jan 2016, E. Botero
-#           Jun 2021, A. Blaufox
 
 # ----------------------------------------------------------------------
 #  Imports
@@ -11,10 +5,8 @@
 import numpy as np
 
 # ----------------------------------------------------------------------
-#  Method
-# ----------------------------------------------------------------------
-
-## @ingroup Methods-Geometry-Planform
+#  convert_sweep
+# ---------------------------------------------------------------------- 
 def convert_sweep(wing,old_ref_chord_fraction = 0.0,new_ref_chord_fraction = 0.25):
     """ This method converts the sweep of a wing planform to refer to a new
     chord fraction. Defaults to converting from leading-edge sweep to 
@@ -84,8 +76,6 @@ def convert_sweep(wing,old_ref_chord_fraction = 0.0,new_ref_chord_fraction = 0.2
 # ----------------------------------------------------------------------
 #  Alternate Method
 # ----------------------------------------------------------------------
-
-## @ingroup Methods-Flight_Dynamics-Static_Stability-Approximations-Supporting_Functions
 def convert_sweep_segments(old_sweep, seg_a, seg_b, wing, old_ref_chord_fraction=0.0, new_ref_chord_fraction=0.25):
     """ This method converts the sweep of a section of a wing between two segments 
     to refer to a new chord fraction. More specifically, it converts the inboard 

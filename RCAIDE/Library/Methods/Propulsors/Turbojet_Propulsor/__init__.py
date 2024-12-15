@@ -1,4 +1,3 @@
-## @defgroup Methods-Energy-Propulsors-Converters-Turbojet
 # RCAIDE/Methods/Energy/Propulsors/Converters/Turbojet/__init__.py
 # 
 

@@ -1,142 +1,91 @@
-# Regressions/automatic_regression.py
-# 
+# Regressions/Tests/automatic_regression.py
 
-""" RCAIDE Regressions
-"""
-# Created:  Jun M. Clarke
-# Modified: 
+""" RCAIDE Automatic Regression Tests with pytest """
 
-# ----------------------------------------------------------------------------------------------------------------------
-#  IMPORT
-# ----------------------------------------------------------------------------------------------------------------------
- 
-from RCAIDE.Framework.Core import DataOrdered
+import pytest
 import matplotlib.pyplot as plt
 import matplotlib
+import os
+import sys
+import traceback
+import time
+
 matplotlib.use('Agg')
-import sys, os, traceback, time 
- 
+
+# List of regression modules to test
 modules = [ 
-    # ----------------------- Regression List --------------------------
-    'Tests/analysis_aerodynamics/airfoil_panel_method_test.py',  
+    'Tests/analysis_aerodynamics/airfoil_panel_method_test.py',    
+    'Tests/analysis_aerodynamics/airfoil_panel_method_convergence.py',
+    'Tests/analysis_aerodynamics/VLM_control_surface_test.py',    
+    'Tests/analysis_aerodynamics/VLM_moving_surface_test.py',    
+    'Tests/atmosphere/atmosphere.py',
+    'Tests/atmosphere/constant_temperature.py',
+    'Tests/analysis_emissions/emissions_test.py',   
     'Tests/analysis_noise/digital_elevation_test.py',  
     'Tests/analysis_noise/frequency_domain_test.py', 
-    'Tests/analysis_noise/empirical_jet_noise_test.py',     
-    'Tests/analysis_noise/noise_hemisphere_test.py', 
-    'Tests/analysis_stability/vlm_pertubation_test.py', 
-    'Tests/geometry_airfoils/airfoil_import_test.py', 
-    'Tests/geometry_airfoils/airfoil_interpolation_test.py',    
-    'Tests/mission_segments/segment_test.py',     
-    'Tests/mission_segments/transition_segment_test.py',    
-    'Tests/network_all_electric/all_electric_rotor_test.py',  
+    'Tests/analysis_noise/empirical_jet_noise_test.py',    
+    'Tests/analysis_stability/trimmed_flight_test.py', 
+    'Tests/analysis_stability/untrimmed_flight_test.py', 
+    'Tests/analysis_weights/operating_empty_weight_test.py',
+    'Tests/analysis_weights/cg_and_moi_test.py',
+    'Tests/energy_sources/cell_test.py',
+    'Tests/geometry/airfoil_import_test.py', 
+    'Tests/geometry/airfoil_interpolation_test.py',    
+    'Tests/geometry/wing_volume_test.py',
+    'Tests/geometry/wing_fuel_volume_compute.py',
+    'Tests/geometry/fuselage_planform_compute.py',    
+    'Tests/mission_segments/transition_segment_test.py', 
+    'Tests/network_electric/electric_btms_test.py', 
+    'Tests/network_ducted_fan/electric_ducted_fan_network_test.py',
     'Tests/network_turbofan/turbofan_network_test.py',
     'Tests/network_turbojet/turbojet_network_test.py',
+    'Tests/network_turboprop/turboprop_network_test.py',
     'Tests/network_turboshaft/turboshaft_network_test.py',
     'Tests/network_internal_combustion_engine/ICE_test.py',
     'Tests/network_internal_combustion_engine/ICE_constant_speed_test.py',
-    'Tests/network_isolated_battery_cell/cell_test.py', 
+    'Tests/optimization/optimization_packages.py',
+    'Tests/performance/landing_field_length.py',
+    'Tests/performance/payload_range_test.py',
+    'Tests/performance/take_off_field_length.py',
+    'Tests/performance/take_off_weight_from_tofl.py',    
 ]
 
-def regressions():
-     
-    # preallocate test results
-    results = DataOrdered()
-    for module in modules:
-        results[module] = 'Untested'
-
-    sys.stdout.write('# --------------------------------------------------------------------- \n')
-    sys.stdout.write('#   RCAIDE-UIUC Automatic Regression \n')
-    sys.stdout.write('#   %s \n' % time.strftime("%B %d, %Y - %H:%M:%S", time.gmtime()) )
-    sys.stdout.write('# --------------------------------------------------------------------- \n')
-    sys.stdout.write(' \n')
-
-    # run tests
-    all_pass = True
-    for module in modules:
-        passed = test_module(module)
-        if passed:
-            results[module] = '  Passed'
-        else:
-            results[module] = '* FAILED'
-            all_pass = False
-
-    # final report
-    sys.stdout.write('# --------------------------------------------------------------------- \n')
-    sys.stdout.write('Final Results \n')
-    for module,result in list(results.items()):
-        sys.stdout.write('%s - %s\n' % (result,module))
-
-    if all_pass:
-        sys.exit(0)
-    else:
-        sys.exit(1)
-        
-    return pass_fail 
- 
-# ----------------------------------------------------------------------
-#   Module Tester
-# ----------------------------------------------------------------------
-
-def test_module(module_path):
-
-    home_dir = os.getcwd()
-    test_dir, module_name = os.path.split( os.path.abspath(module_path) )
-
-    sys.stdout.write('# --------------------------------------------------------------------- \n')
-    sys.stdout.write('# Start Test: %s \n' % module_path)
-    sys.stdout.flush()
-
-    tic = time.time()
-
-    # try the test
+# Parametrize the list of modules so each is run as a separate test
+@pytest.mark.parametrize("module_path", modules)
+def test_automatic_regressions(module_path):
+    """ Run the regressions listed in the modules """
+    original_dir = os.getcwd()
+    
     try:
-
-        # see if file exists
-        os.chdir(test_dir)
-        if not os.path.exists(module_name) and not os.path.isfile(module_name):
-            raise ImportError('file %s does not exist' % module_name)
-
-        # add module directory
-        sys.path.append(test_dir)
-
-        # do the import
+        # Get regression directory (where this script is)
+        regression_dir = os.path.dirname(os.path.abspath(__file__))
+        sys.path.append(regression_dir)
+        
+        # Convert module_path to full path
+        full_module_path = os.path.join(regression_dir, module_path)
+        test_dir = os.path.dirname(full_module_path)
+        module_name = os.path.basename(module_path)
+        
+        # Check if file exists
+        if not os.path.exists(full_module_path):
+            pytest.fail(f'File {full_module_path} does not exist')
+        
+        # Change to test directory and import module
+        if test_dir:
+            sys.path.append(test_dir)
+            os.chdir(test_dir)
+        
+        # Import and run the test
         name = os.path.splitext(module_name)[0]
         module = __import__(name)
-
-        # run main function
-        module.main()
-
-        passed = True
-
-    # catch an error
+        module.main()  # Run the main function of the test
+        
+        # Cleanup
+        plt.close('all')
+    
     except Exception as exc:
+        pytest.fail(f'Test failed for {module_path}\n{traceback.format_exc()}')
 
-        # print traceback
-        sys.stderr.write( 'Test Failed: \n' )
-        sys.stderr.write( traceback.format_exc() )
-        sys.stderr.write( '\n' )
-        sys.stderr.flush()
-
-        passed = False
-
-    # final result
-    if passed:
-        sys.stdout.write('# Passed: %s \n' % module_name)
-    else:
-        sys.stdout.write('# FAILED: %s \n' % module_name)
-    sys.stdout.write('# Test Duration: %.4f min \n' % ((time.time()-tic)/60) )
-    sys.stdout.write('\n')
-
-    # cleanup
-    plt.close('all')
-    os.chdir(home_dir)
-
-    # make sure to write to stdout
-    sys.stdout.flush()
-    sys.stderr.flush()
-
-    return passed
- 
-
-if __name__ == '__main__':
-    regressions()
+    finally:
+        # Ensure cleanup and return to original directory
+        os.chdir(original_dir)

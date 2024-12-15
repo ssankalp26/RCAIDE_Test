@@ -1,4 +1,3 @@
-## @defgroup Library-Components-Fuselages Fuselages
 # RCAIDE/Library/Components/Fuselages/__init__.py
 # 
 

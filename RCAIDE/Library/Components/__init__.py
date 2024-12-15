@@ -1,4 +1,3 @@
-## @defgroup Components Components
 # RCAIDE/Components/__init__.py
 # 
 

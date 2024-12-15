@@ -1,7 +1,5 @@
-## @ingroup Components-Propulsors
-# RCAIDE/Library/Components/Propulsors/Propusor.py
-# 
-# 
+# RCAIDE/Library/Components/Propulsors/Propuslor.py
+#  
 # 
 # Created:  Mar 2024, M. Clarke 
 
@@ -15,7 +13,6 @@ from RCAIDE.Library.Components                   import Component
 # ----------------------------------------------------------------------------------------------------------------------
 #  Propusor
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Energy-Distributors
 class Propulsor(Component):
     """  This controls the flow of energy into and from a battery-powered nework 
     
@@ -46,6 +43,7 @@ class Propulsor(Component):
             None
         """          
         self.tag                          = 'propulsor' 
-        self.active                       = True
+        self.active                       = True 
+        self.wing_mounted                 = True 
         
     

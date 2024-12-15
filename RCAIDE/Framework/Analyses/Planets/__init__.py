@@ -1,4 +1,3 @@
-## @defgroup Analyses-Planets Planets
 # RCAIDE/Framework/Analyses/Planets/__init__.py
 # 
 
@@ -9,4 +8,5 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-from Legacy.trunk.S.Analyses.Planets.Planet import Planet
+from .Planet import Planet
+from .Earth  import Earth

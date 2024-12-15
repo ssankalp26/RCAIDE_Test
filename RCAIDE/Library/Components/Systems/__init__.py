@@ -1,4 +1,3 @@
-## @defgroup Components-Systems Systems
 # RCAIDE/Library/Components/Systems/__init__.py 
 # 
 

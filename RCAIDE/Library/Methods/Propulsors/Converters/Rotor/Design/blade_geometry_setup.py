@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Propulsors-Rotor_Design  
 # RCAIDE/Methods/Energy/Propulsors/Rotor_Design/optimization_setup.py
 # 
 # 
@@ -18,8 +17,7 @@ import numpy as np
     
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Blade Geometry Setup 
-# ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Methods-Energy-Propulsors-Rotor_Design    
+# ----------------------------------------------------------------------------------------------------------------------    
 def blade_geometry_setup(rotor,number_of_stations): 
     """ Defines a dummy vehicle for prop-rotor blade optimization.
           
@@ -62,7 +60,7 @@ def blade_geometry_setup(rotor,number_of_stations):
         for _,airfoil in enumerate(airfoils):  
             if airfoil.geometry == None: # first, if airfoil geometry data not defined, import from geoemtry files
                 if type(airfoil) == RCAIDE.Library.Components.Airfoils.NACA_4_Series_Airfoil: # check if naca 4 series of airfoil from datafile
-                    airfoil.geometry = compute_naca_4series(airfoil.coordinate_file,airfoil.number_of_points)
+                    airfoil.geometry = compute_naca_4series(airfoil.NACA_4_Series_code,airfoil.number_of_points)
                 else:
                     airfoil.geometry = import_airfoil_geometry(airfoil.coordinate_file,airfoil.number_of_points) 
     
@@ -98,8 +96,9 @@ def blade_geometry_setup(rotor,number_of_stations):
     net                                = RCAIDE.Framework.Networks.Electric() 
     bus                                = RCAIDE.Library.Components.Energy.Distributors.Electrical_Bus()
     propulsor                          = RCAIDE.Library.Components.Propulsors.Electric_Rotor()
-    propulsor.rotor                    = rotor  
-    bus.propulsors.append(propulsor)
+    propulsor.rotor                    = rotor
+    bus.assigned_propulsors = [[propulsor.tag]]
+    net.propulsors.append(propulsor)
     net.busses.append(bus)
     vehicle.append_energy_network(net)
     
@@ -108,12 +107,12 @@ def blade_geometry_setup(rotor,number_of_stations):
     
     config                              = RCAIDE.Library.Components.Configs.Config(base_config)
     config.tag                          = 'hover' 
-    config.networks.electric.busses.bus.propulsors.electric_rotor.rotor.orientation_euler_angles = [0.0,np.pi/2,0.0]    
+    config.networks.electric.propulsors.electric_rotor.rotor.orientation_euler_angles = [0.0,np.pi/2,0.0]    
     configs.append(config)        
 
     config                              = RCAIDE.Library.Components.Configs.Config(base_config)
     config.tag                          = 'oei' 
-    config.networks.electric.busses.bus.propulsors.electric_rotor.rotor.orientation_euler_angles = [0.0,np.pi/2,0.0]    
+    config.networks.electric.propulsors.electric_rotor.rotor.orientation_euler_angles = [0.0,np.pi/2,0.0]    
     configs.append(config)       
     
     if type(rotor) == RCAIDE.Library.Components.Propulsors.Converters.Prop_Rotor:  
@@ -126,6 +125,6 @@ def blade_geometry_setup(rotor,number_of_stations):
         
         config                          = RCAIDE.Library.Components.Configs.Config(base_config)
         config.tag                      = 'cruise'
-        config.networks.electric.busses.bus.propulsors.electric_rotor.rotor.orientation_euler_angles = [0.0,np.pi/2,0.0] 
+        config.networks.electric.propulsors.electric_rotor.rotor.orientation_euler_angles = [0.0,np.pi/2,0.0] 
         configs.append(config)
     return configs 

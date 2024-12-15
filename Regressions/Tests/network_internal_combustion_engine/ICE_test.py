@@ -13,8 +13,9 @@ from RCAIDE.Framework.Core import Units ,Data
 # python imports     
 import numpy as np  
 import sys 
+import os
 
-sys.path.append('../../Vehicles')
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 # the analysis functions 
  
 from Cessna_172  import vehicle_setup ,configs_setup
@@ -45,10 +46,10 @@ def main():
     
     # evaluate
     results     = mission.evaluate()  
-    P_truth     = 54482.84055310519
-    mdot_truth  = 0.004786987102002009
+    P_truth     = 54394.94283712161
+    mdot_truth  = 0.0047792642069995695
     
-    P    = results.segments.cruise.state.conditions.energy.fuel_line.ice_propeller.internal_combustion_engine.power[-1,0]
+    P    = results.segments.cruise.state.conditions.energy.ice_propeller.internal_combustion_engine.power[-1,0]
     mdot = results.segments.cruise.state.conditions.weights.vehicle_mass_rate[-1,0]
 
     # Check the errors
@@ -92,10 +93,10 @@ def mission_setup(analyses):
     segment     = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
     segment.tag = "cruise" 
     segment.analyses.extend( analyses.base ) 
-    segment.altitude                                = 12000. * Units.feet
-    segment.air_speed                               = 119.   * Units.knots
-    segment.distance                                = 10 * Units.nautical_mile  
-    segment.state.numerics.number_control_points    = 4   
+    segment.altitude                                   = 12000. * Units.feet
+    segment.air_speed                                  = 119.   * Units.knots
+    segment.distance                                   = 10 * Units.nautical_mile  
+    segment.state.numerics.number_of_control_points    = 4   
     
     # define flight dynamics to model 
     segment.flight_dynamics.force_x                       = True  
@@ -127,7 +128,7 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
     aerodynamics = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
-    aerodynamics.geometry                            = vehicle
+    aerodynamics.vehicle                            = vehicle
     aerodynamics.settings.drag_coefficient_increment = 0.0000
     analyses.append(aerodynamics) 
 
@@ -139,7 +140,7 @@ def base_analysis(vehicle):
 
     # ------------------------------------------------------------------
     #  Planet Analysis
-    planet = RCAIDE.Framework.Analyses.Planets.Planet()
+    planet = RCAIDE.Framework.Analyses.Planets.Earth()
     analyses.append(planet)
 
     # ------------------------------------------------------------------

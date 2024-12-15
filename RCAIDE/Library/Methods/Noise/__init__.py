@@ -1,5 +1,3 @@
-## @defgroup Methods-Noise Noise  
-# @ingroup Methods 
 # RCAIDE/Methods/Noise/__init__.py
 # 
 

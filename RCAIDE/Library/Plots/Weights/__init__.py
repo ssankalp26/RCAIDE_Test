@@ -1,5 +1,3 @@
-## @defgroup Library-Plots-WeightsWeights
-# @ingroup Visualization 
 # RCAIDE/Library/Plots/Weights/__init__.py
 # 
 
@@ -10,4 +8,4 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-from . import plot_evtol_weight_breakdown
+from .plot_weight_breakdown import plot_weight_breakdown

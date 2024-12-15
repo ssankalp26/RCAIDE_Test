@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Wings
 # RCAIDE/Compoments/Wings/Vertical_Tail.py
 # 
 # 
@@ -9,12 +8,12 @@
 # ---------------------------------------------------------------------------------------------------------------------- 
 # RCAIDE imports   
 from .Wing import Wing 
-from copy import deepcopy 
+from copy import deepcopy
+from RCAIDE.Library.Methods.Weights.Moment_of_Inertia.compute_wing_moment_of_inertia import  compute_wing_moment_of_inertia
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Vertical_Tail
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Wings    
+# ----------------------------------------------------------------------------------------------------------------------  
 class Vertical_Tail(Wing):
     """This class is used to define vertical tails RCAIDE
 
@@ -51,7 +50,7 @@ class Vertical_Tail(Wing):
         Properties Used:
         N/A
         """ 
-        self.tag       = 'vertical_stabilizer'
+        self.tag       = 'vertical_tail'
         self.vertical  = True
         self.symmetric = False 
         
@@ -93,4 +92,9 @@ class Vertical_Tail(Wing):
         for cs in wing.control_surfaces:
             cs.deflection *= -1*cs.sign_duplicate
                 
-        return wing 
+        return wing
+    
+    def moment_of_inertia(wing,center_of_gravity):
+        
+        I =  compute_wing_moment_of_inertia(wing,center_of_gravity) 
+        return I      

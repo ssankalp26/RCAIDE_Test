@@ -1,4 +1,3 @@
-## @ingroup Methods-Aerodynamics-Common-Lift
 # RCAIDE/Methods/Aerodynamics/Common/Lift/BET_calculations.py
 # 
 # 
@@ -16,7 +15,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  compute_airfoil_aerodynamics
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Methods-Aerodynamics-Common-Lift
 def compute_airfoil_aerodynamics(beta,c,r,R,B,Wa,Wt,a,nu,airfoils,a_loc,ctrl_pts,Nr,Na,tc,use_2d_analysis):
     """
     Cl, Cdval = compute_airfoil_aerodynamics( beta,c,r,R,B,
@@ -67,31 +65,38 @@ def compute_airfoil_aerodynamics(beta,c,r,R,B,Wa,Wt,a,nu,airfoils,a_loc,ctrl_pts
     Re       = (W*c)/nu
 
     # If rotor airfoils are defined, use airfoil surrogate
-    if a_loc != None:  
+    a_loc = np.array(a_loc)
+    if np.any(a_loc) != None:  
         # Compute blade Cl and Cd distribution from the airfoil data 
         if use_2d_analysis:
             # return the 2D Cl and CDval of shape (ctrl_pts, Nr, Na)
-            Cl      = np.zeros((ctrl_pts,Nr,Na))
-            Cdval   = np.zeros((ctrl_pts,Nr,Na))
+            Cl         = np.zeros((ctrl_pts,Nr,Na))
+            Cdval      = np.zeros((ctrl_pts,Nr,Na))
+            
             for jj,airfoil in enumerate(airfoils):
-                pd              = airfoil.polars
-                Cl_af           = interp2d(Re,alpha,pd.reynolds_numbers, pd.angle_of_attacks, pd.lift_coefficients) 
-                Cdval_af        = interp2d(Re,alpha,pd.reynolds_numbers, pd.angle_of_attacks, pd.drag_coefficients)
-                locs            = np.where(np.array(a_loc) == jj )
-                Cl[:,locs,:]    = Cl_af[:,locs,:]
-                Cdval[:,locs,:] = Cdval_af[:,locs,:]
+                pd                   = airfoil.polars
+                Cl_af                = interp2d(Re,alpha,pd.reynolds_numbers, pd.angle_of_attacks, pd.lift_coefficients) 
+                Cdval_af             = interp2d(Re,alpha,pd.reynolds_numbers, pd.angle_of_attacks, pd.drag_coefficients)
+                locs                 = np.where(np.array(a_loc) == jj )
+                Cl[:,locs,:]         = Cl_af[:,locs,:]
+                Cdval[:,locs,:]      = Cdval_af[:,locs,:]
+            alpha_disc           = alpha
+            Re_disc              = Re
         else:
             # return the 1D Cl and CDval of shape (ctrl_pts, Nr)
-            Cl      = np.zeros((ctrl_pts,Nr))
-            Cdval   = np.zeros((ctrl_pts,Nr))
+            Cl         = np.zeros((ctrl_pts,Nr))
+            Cdval      = np.zeros((ctrl_pts,Nr))             
 
             for jj,airfoil in enumerate(airfoils):
-                pd            = airfoil.polars
-                Cl_af         = interp2d(Re,alpha,pd.reynolds_numbers, pd.angle_of_attacks, pd.lift_coefficients)
-                Cdval_af      = interp2d(Re,alpha,pd.reynolds_numbers, pd.angle_of_attacks, pd.drag_coefficients)
-                locs          = np.where(np.array(a_loc) == jj )
-                Cl[:,locs]    = Cl_af[:,locs]
-                Cdval[:,locs] = Cdval_af[:,locs]
+                pd                   = airfoil.polars
+                Cl_af                = interp2d(Re,alpha,pd.reynolds_numbers, pd.angle_of_attacks, pd.lift_coefficients)
+                Cdval_af             = interp2d(Re,alpha,pd.reynolds_numbers, pd.angle_of_attacks, pd.drag_coefficients)
+                locs                 = np.where(np.array(a_loc) == jj )
+                Cl[:,locs]           = Cl_af[:,locs]
+                Cdval[:,locs]        = Cdval_af[:,locs] 
+            alpha_disc = np.tile(alpha[:,:, None], (1, 1, Na)) 
+            Re_disc    = np.tile(Re[:,:, None], (1, 1, Na))  
+
     else:
         # Estimate Cl max
         tc_1 = tc*100
@@ -117,17 +122,18 @@ def compute_airfoil_aerodynamics(beta,c,r,R,B,Wa,Wt,a,nu,airfoils,a_loc,ctrl_pts
         #This is an atrocious fit of DAE51 data at RE=50k for Cd
         Cdval = (0.108*(Cl*Cl*Cl*Cl)-0.2612*(Cl*Cl*Cl)+0.181*(Cl*Cl)-0.0139*Cl+0.0278)*((50000./Re)**0.2)
         Cdval[alpha>=np.pi/2] = 2.
-
+        
+        alpha_disc = np.tile(alpha[:,:, None], (1, 1, Nr)) 
+        Re_disc    = np.tile(Re[:,:, None], (1, 1, Nr))  
 
     # prevent zero Cl to keep Cd/Cl from breaking in BET
     Cl[Cl==0] = 1e-6
 
-    return Cl, Cdval, alpha, Ma, W, Re  
+    return Cl, Cdval, alpha, alpha_disc,Ma,W,Re,Re_disc
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  compute_inflow_and_tip_loss
-# ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Methods-Aerodynamics-Common-Lift
+# ----------------------------------------------------------------------------------------------------------------------    
 def compute_inflow_and_tip_loss(r,R,Wa,Wt,B,et1=1,et2=1,et3=1):
     """
     Computes the inflow, lamdaw, and the tip loss factor, F.

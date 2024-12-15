@@ -1,5 +1,4 @@
-## @defgroup Methods-Weights-Correlations-Common Common
-# RCAIDE/Methods/Weights/Correlations/Common/__init__.py
+# RCAIDE/Library/Methods/Weights/Correlations/Common/__init__.py
 # 
 
 """RCAIDE Package Setup
@@ -9,7 +8,8 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-from Legacy.trunk.S.Methods.Weights.Correlations.Common.landing_gear import landing_gear
-from Legacy.trunk.S.Methods.Weights.Correlations.Common.payload import payload
-from Legacy.trunk.S.Methods.Weights.Correlations.Common.wing_main import wing_main
-from Legacy.trunk.S.Methods.Weights.Correlations.Common.weight_transport import empty_weight
+from .compute_landing_gear_weight        import compute_landing_gear_weight    
+from .compute_payload_weight             import compute_payload_weight         
+from .compute_main_wing_weight           import compute_main_wing_weight       
+from .compute_operating_empty_weight     import compute_operating_empty_weight
+from .compute_systems_weight             import compute_systems_weight

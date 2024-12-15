@@ -1,4 +1,3 @@
-## @defgroup Methods-Energy-Sources Sources
 # RCAIDE/Methods/Energy/Sources/__init__.py
 # 
 
@@ -10,5 +9,4 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 from . import Batteries
-from . import Fuel_Cells
 from . import Fuel_Tanks

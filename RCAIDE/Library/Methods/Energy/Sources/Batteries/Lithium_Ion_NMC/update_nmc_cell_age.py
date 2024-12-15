@@ -1,4 +1,3 @@
-## @ingroup Methods-Energy-Sources-Battery-Lithium_Ion_NMC
 # RCAIDE/Methods/Energy/Sources/Battery/Lithium_Ion_NMC/update_nmc_cell_age.py
 # 
 # 
@@ -11,9 +10,8 @@ import numpy as np
  
 # ----------------------------------------------------------------------------------------------------------------------
 # update_nmc_cell_age
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Energy-Sources-Batteries-Lithium_Ion_NMC 
-def update_nmc_cell_age(battery,battery_conditions,increment_battery_age_by_one_day):  
+# ----------------------------------------------------------------------------------------------------------------------  
+def update_nmc_cell_age(battery,segment, battery_conditions,increment_battery_age_by_one_day):  
     """ This is an aging model for 18650 lithium-nickel-manganese-cobalt-oxide batteries. 
    
     Source: 
@@ -39,9 +37,9 @@ def update_nmc_cell_age(battery,battery_conditions,increment_battery_age_by_one_
     Properties Used:
     N/A 
     """    
-    n_series   = battery.pack.electrical_configuration.series
+    n_series   = battery.electrical_configuration.series
     SOC        = battery_conditions.cell.state_of_charge
-    V_ul       = battery_conditions.pack.voltage_under_load/n_series
+    V_ul       = battery_conditions.voltage_under_load/n_series
     t          = battery_conditions.cell.cycle_in_day         
     Q_prior    = battery_conditions.cell.charge_throughput[-1,0] 
     Temp       = np.mean(battery_conditions.cell.temperature) 

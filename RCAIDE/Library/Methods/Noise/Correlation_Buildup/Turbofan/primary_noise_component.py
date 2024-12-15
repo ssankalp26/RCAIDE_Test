@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Correlation_Buildup-Engine 
 # RCAIDE/Methods/Noise/Correlation_Buildup/Engine/primary_noise_component.py
 # 
 # 
@@ -13,8 +12,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------     
 #  Primary Noise Component
-# ----------------------------------------------------------------------------------------------------------------------      
-## @ingroup Methods-Noise-Correlation_Buildup-Engine    
+# ----------------------------------------------------------------------------------------------------------------------          
 def primary_noise_component(Velocity_primary,Temperature_primary,R_gas,theta_p,DVPS,sound_ambient,Velocity_secondary,Velocity_aircraft,Area_primary,Area_secondary,DSPL_p,EX_p,Str_p):
     """This function calculates the noise contribution of the primary jet component
     

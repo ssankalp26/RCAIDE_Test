@@ -1,4 +1,3 @@
-## @defgroup Library-Attributes-Planets Planets
 # RCAIDE/Library/Attributes/Planets/__init__.py
 # 
 

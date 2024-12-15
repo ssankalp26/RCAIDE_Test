@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Stability
 # RCAIDE/Library/Plots/Stability/plot_stability_forces_and_moments.py
 # 
 # 
@@ -16,7 +15,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Library-Plots-Stability
 def plot_flight_forces_and_moments(results,
                              save_figure = False,
                              show_legend = True,
@@ -94,7 +92,7 @@ def plot_flight_forces_and_moments(results,
         set_axes(axis_6)   
  
     if show_legend:    
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4) 
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
     # Adjusting the sub-plots for legend 

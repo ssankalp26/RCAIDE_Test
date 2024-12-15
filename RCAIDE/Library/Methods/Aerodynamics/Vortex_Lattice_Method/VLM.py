@@ -1,5 +1,4 @@
 
-## @ingroup Methods-Aerodynamics-Common-Fidelity_Zero-Lift
 # VLM.py
 # 
 # Created:  Oct 2020, E. Botero
@@ -21,7 +20,6 @@ from .compute_RHS_matrix                 import compute_RHS_matrix
 #  Vortex Lattice
 # ----------------------------------------------------------------------
 
-## @ingroup Methods-Aerodynamics-Common-Fidelity_Zero-Lift
 def VLM(conditions,settings,geometry):
     """Uses the vortex lattice method to compute the lift, induced drag and moment coefficients.
     
@@ -406,7 +404,7 @@ def VLM(conditions,settings,geometry):
     # ** TO DO ** Add cosine spacing (earlier in VLM) to properly capture the magnitude of these earlier.
     # Right now, this computation still happens with linear spacing, though its effects are underestimated.
     CLE = compute_rotation_effects(VD, settings, EW, GAMMA, len_mach, X, CHORD, XLE, XBAR, 
-                                   rhs, COSINP, SINALF, PITCH, ROLL, YAW, STB, RNMAX)    
+                                   rhs, COSINP, SINALF,COSCOS, PITCH, ROLL, YAW, STB, RNMAX)    
     
     # Leading edge suction multiplier. See documentation. This is a negative integer if used
     # Default to 1 unless specified otherwise
@@ -511,12 +509,12 @@ def VLM(conditions,settings,geometry):
     results.Y_ref      = 0
     results.Z_ref      = z_m
     
-    results.CL         =  CL         
-    results.CDi        =  CDi  
+    results.CL         =  CL
+    results.CDi        =  CDi
     
-    results.CX         = CX
-    results.CY         = CY 
-    results.CZ         = CZ
+    results.CX         =  CX
+    results.CY         =  CY 
+    results.CZ         = -CZ
     
     results.CL_mom     =  CL_mom 
     results.CM         =  CM  
@@ -541,7 +539,7 @@ def VLM(conditions,settings,geometry):
 #  CLE rotation effects helper function
 # ----------------------------------------------------------------------
 def compute_rotation_effects(VD, settings, EW_small, GAMMA, len_mach, X, CHORD, XLE, XBAR, 
-                             rhs, COSINP, SINALF, PITCH, ROLL, YAW, STB, RNMAX):
+                             rhs, COSINP, SINALF,COSCOS, PITCH, ROLL, YAW, STB, RNMAX):
     """ This computes the effects of the freestream and aircraft rotation rate on 
     CLE, the induced flow at the leading edge
     
@@ -577,9 +575,9 @@ def compute_rotation_effects(VD, settings, EW_small, GAMMA, len_mach, X, CHORD, 
     
     # VX, VY, VZ ARE THE FLOW ONSET VELOCITY COMPONENTS AT THE LEADING
     # EDGE (STRIP MIDPOINT). VX, VY, VZ AND THE ROTATION RATES ARE
-    # REFERENCED TO THE FREE STREAM VELOCITY.    
-    VX = rhs.VX
-    VY = (COSINP - YAW  *XGIRO + ROLL *ZGIRO)
+    # REFERENCED TO THE FREE STREAM VELOCITY.     
+    VX = (COSCOS - PITCH*ZGIRO + YAW  *YGIRO)  
+    VY = (COSINP - YAW  *XGIRO + ROLL *ZGIRO)  
     VZ = (SINALF - ROLL *YGIRO + PITCH*XGIRO)
 
     # CCNTL, SCNTL, SID, and COD were computed in compute_RHS_matrix()

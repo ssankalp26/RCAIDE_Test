@@ -1,7 +1,5 @@
-## @ingroup Library-Compoments
 # RCAIDE/Library/Compoments/Component.py
-# 
-# 
+#  
 # Created:  Mar 2024, M. Clarke 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -17,8 +15,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Component
-# ----------------------------------------------------------------------------------------------------------------------        
-## @ingroup Library-Components
+# ----------------------------------------------------------------------------------------------------------------------         
 class Component(Data):
     """ the base component class
         Assumptions:
@@ -52,9 +49,7 @@ class Component(Data):
         
 # ----------------------------------------------------------------------------------------------------------------------
 #  Component Container
-# ----------------------------------------------------------------------------------------------------------------------    
-
-## @ingroup Components
+# ----------------------------------------------------------------------------------------------------------------------     
 class Container(ContainerBase):
     """ the base component container class
     
@@ -116,13 +111,11 @@ class Container(ContainerBase):
         total = np.array([[0.0,0.0,0.0]])
         for key,Comp in self.items():
             if isinstance(Comp,Component.Container):
-                total += Comp.total_moment() # recursive!
+                total += Comp.total_moment()  
             elif isinstance(Comp,Component):
                 total += Comp.mass_properties.mass*(np.sum(np.array(Comp.origin),axis=0)/len(Comp.origin)+Comp.mass_properties.center_of_gravity)
 
-        return total
-    
-    
+        return total  
     
 # ------------------------------------------------------------
 #  Handle Linking

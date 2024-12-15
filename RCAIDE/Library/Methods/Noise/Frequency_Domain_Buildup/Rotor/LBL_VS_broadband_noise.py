@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Frequency_Domain_Buildup-Rotor 
 # RCAIDE/Methods/Noise/Frequency_Domain_Buildup/Rotor/LBL_VS_broadband_noise.py
 # 
 # 
@@ -13,8 +12,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Compute LBL-VS Broadband Noise 
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Methods-Noise-Frequency_Domain_Buildup-Rotor 
+# ---------------------------------------------------------------------------------------------------------------------- 
 def LBL_VS_broadband_noise(R_c,alpha_star,delta_p,r_e,L,M,Dbar_h,f,U):
     '''This computes the laminar boundary layer compoment of broadband noise using the method outlined by the 
     Brooks, Pope and Marcolini (BPM) Model

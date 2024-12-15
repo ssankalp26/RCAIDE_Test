@@ -1,5 +1,3 @@
-## @defgroup Optimization-Packages-particle_swarm particle_swarm  
-# @ingroup Optimization-Packages
 # RCAIDE/Optimization/Packages/particle_swarm/__init__.py
 # 
 
@@ -10,4 +8,4 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-from Legacy.trunk.S.Optimization.Package_Setups import particle_swarm_optimization 
+from .particle_swarm_optimization import particle_swarm_optimization

@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Common-Update 
 # RCAIDE/Library/Missions/Common/Update/weights.py
 # 
 # 
@@ -11,8 +10,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Update Weights
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Library-Missions-Common-Update  
+# ----------------------------------------------------------------------------------------------------------------------  
 def weights(segment): 
     """ Updates the weight of the vehicle 
         

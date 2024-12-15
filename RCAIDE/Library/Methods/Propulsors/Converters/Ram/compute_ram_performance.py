@@ -49,9 +49,11 @@ def compute_ram_performance(ram,ram_conditions,conditions):
     working_fluid  = ram.working_fluid
  
     # Compute the working fluid properties
-    R      = working_fluid.gas_specific_constant
-    gamma  = working_fluid.compute_gamma(T0,P0) 
-    Cp     = working_fluid.compute_cp(T0,P0)
+    R        = working_fluid.gas_specific_constant
+    gamma    = working_fluid.compute_gamma(T0,P0) 
+    Cp       = working_fluid.compute_cp(T0,P0)
+    a        = working_fluid.compute_speed_of_sound(T0,P0)
+    V0       = a*M0 
 
     # Compute the stagnation quantities from the input static quantities
     stagnation_pressure    = P0*((1.+(gamma-1.)/2.*M0*M0 )**(gamma/(gamma-1.))) 
@@ -69,6 +71,11 @@ def compute_ram_performance(ram,ram_conditions,conditions):
     ram_conditions.outputs.specific_heat_at_constant_pressure  = Cp
     ram_conditions.outputs.gas_specific_constant               = R
     ram_conditions.outputs.stagnation_temperature              = stagnation_temperature
-    ram_conditions.outputs.stagnation_pressure                 = stagnation_pressure    
+    ram_conditions.outputs.stagnation_pressure                 = stagnation_pressure 
+    ram_conditions.outputs.static_temperature                  = T0
+    ram_conditions.outputs.static_pressure                     = P0
+    ram_conditions.outputs.mach_number                         = M0
+    ram_conditions.outputs.velocity                            = V0
+    ram_conditions.outputs.speed_of_sound                      = a    
     
     return 

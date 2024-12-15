@@ -37,10 +37,11 @@ def vehicle_setup():
     vehicle.mass_properties.takeoff                   = 2948 * Units.pounds
     vehicle.mass_properties.moments_of_inertia.tensor = np.array([[164627.7,0.0,0.0],[0.0,471262.4,0.0],[0.0,0.0,554518.7]])
     vehicle.mass_properties.center_of_gravity         = [[2.239696797,0,-0.131189711 ]]
-    vehicle.envelope.ultimate_load                    = 5.7
-    vehicle.envelope.limit_load                       = 3.8
+    vehicle.flight_envelope.ultimate_load             = 5.7
+    vehicle.flight_envelope.limit_load                = 3.8
     vehicle.reference_area                            = 17.112 
-    vehicle.passengers                                = 2 
+    vehicle.passengers                                = 2
+    vehicle.design_dynamic_pressure                   = 1929.16080736607
     # ------------------------------------------------------------------        
     #   Main Wing
     # ------------------------------------------------------------------   
@@ -155,7 +156,7 @@ def vehicle_setup():
     elevator.span_fraction_start          = 0.1
     elevator.span_fraction_end            = 0.9
     elevator.deflection                   = 0.0  * Units.deg
-    elevator.chord_fraction               = 0.3
+    elevator.chord_fraction               = 0.35
     wing.append_control_surface(elevator)       
 
     RCAIDE.Library.Methods.Geometry.Planform.wing_planform(wing)     
@@ -191,10 +192,10 @@ def vehicle_setup():
     
     rudder                                = RCAIDE.Library.Components.Wings.Control_Surfaces.Rudder()
     rudder.tag                            = 'rudder'
-    rudder.span_fraction_start            = 0.2
-    rudder.span_fraction_end              = 0.8
+    rudder.span_fraction_start            = 0.1
+    rudder.span_fraction_end              = 0.9
     rudder.deflection                     = 0.0  * Units.deg
-    rudder.chord_fraction                 = 0.2
+    rudder.chord_fraction                 = 0.4
     wing.append_control_surface(rudder) 
     
     # add to vehicle
@@ -287,23 +288,7 @@ def vehicle_setup():
     fuselage.Segments.append(segment)
     
     # add to vehicle
-    vehicle.append_component(fuselage)
- 
-    # ------------------------------------------------------------------
-    #   Fuel
-    # ------------------------------------------------------------------    
-    # define fuel weight needed to size fuel system
-    fuel                                        = RCAIDE.Library.Attributes.Propellants.Aviation_Gasoline()
-    fuel.mass_properties                        = RCAIDE.Library.Components.Mass_Properties() 
-    fuel.number_of_tanks                        = 1.
-    fuel.origin                                 = wing.origin
-    fuel.internal_volume                        = fuel.mass_properties.mass/fuel.density #all of the fuel volume is internal
-    fuel.mass_properties.center_of_gravity      = wing.mass_properties.center_of_gravity
-    fuel.mass_properties.mass                   = 319 *Units.lbs
-    vehicle.fuel                                = fuel
-
-
-
+    vehicle.append_component(fuselage) 
 
     # ########################################################  Energy Network  #########################################################  
     net                                         = RCAIDE.Framework.Networks.Fuel()   
@@ -316,16 +301,13 @@ def vehicle_setup():
     #------------------------------------------------------------------------------------------------------------------------------------  
     #  Fuel Tank & Fuel
     #------------------------------------------------------------------------------------------------------------------------------------       
-    fuel_tank                                   = RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Fuel_Tank()
-    fuel_tank.origin                            = wing.origin  
-    fuel                                        = RCAIDE.Library.Attributes.Propellants.Aviation_Gasoline() 
-    fuel.mass_properties.mass                   = 319 *Units.lbs 
-    fuel.mass_properties.center_of_gravity      = wing.mass_properties.center_of_gravity
-    fuel.internal_volume                        = fuel.mass_properties.mass/fuel.density  
-    fuel_tank.fuel                              = fuel     
+    fuel_tank                                             = RCAIDE.Library.Components.Energy.Sources.Fuel_Tanks.Fuel_Tank() 
+    fuel_tank.origin                                      = vehicle.wings.main_wing.origin  
+    fuel_tank.fuel                                        = RCAIDE.Library.Attributes.Propellants.Aviation_Gasoline() 
+    fuel_tank.fuel.mass_properties.mass                   = 319 *Units.lbs 
+    fuel_tank.fuel.mass_properties.center_of_gravity      = wing.mass_properties.center_of_gravity
+    fuel_tank.volume                                      = fuel_tank.fuel.mass_properties.mass/fuel_tank.fuel.density   
     fuel_line.fuel_tanks.append(fuel_tank)  
-    net.fuel_lines.append(fuel_line)    
-
     #------------------------------------------------------------------------------------------------------------------------------------  
     # Propulsor
     #------------------------------------------------------------------------------------------------------------------------------------   
@@ -363,12 +345,20 @@ def vehicle_setup():
     prop.append_airfoil(airfoil)           
     prop.airfoil_polar_stations             = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]  
     design_propeller(prop)    
-    ice_prop.propeller                      = prop 
+    ice_prop.propeller                      = prop
     
-    fuel_line.propulsors.append(ice_prop)
-
-    # add the network to the vehicle
-    vehicle.append_energy_network(net) 
+    net.propulsors.append(ice_prop) 
+    
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    # Assign propulsors to fuel line to network      
+    fuel_line.assigned_propulsors =  [[ice_prop.tag]]
+    
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    # Append fuel line to fuel line to network      
+    net.fuel_lines.append(fuel_line)        
+    
+    # Append energy network to aircraft 
+    vehicle.append_energy_network(net)    
 
     #------------------------------------------------------------------------------------------------------------------------------------ 
     # Avionics

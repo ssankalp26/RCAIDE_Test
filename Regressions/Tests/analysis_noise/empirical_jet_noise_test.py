@@ -18,9 +18,10 @@ import sys
 import matplotlib.pyplot as plt 
 import numpy as np     
 from copy import deepcopy
+import os
 
 # local imports 
-sys.path.append('../../Vehicles')
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 from Embraer_190    import vehicle_setup as vehicle_setup
 from Embraer_190    import configs_setup as configs_setup 
 
@@ -38,21 +39,23 @@ def main():
     
     # Set up configs
     configs           = configs_setup(vehicle) 
-    analyses          = analyses_setup(configs) 
-    
+    analyses          = analyses_setup(configs)  
     mission           = baseline_mission_setup(analyses)
     basline_missions  = baseline_missions_setup(mission)     
-    baseline_results  = basline_missions.base_mission.evaluate()   
+    baseline_results  = basline_missions.base_mission.evaluate()
+     
+    _   = post_process_noise_data(baseline_results)      
      
     # SPL of rotor check during hover 
-    B737_SPL        = np.max(baseline_results.segments.takeoff.conditions.noise.total_SPL_dBA)
-    B737_SPL_true   = 94.66377003071767
+    B737_SPL        = np.max(baseline_results.segments.takeoff.conditions.noise.hemisphere_SPL_dBA) 
+    B737_SPL_true   = 163.14985051328844 # this value is high because its of a hemisphere of radius 20
     B737_diff_SPL   = np.abs(B737_SPL - B737_SPL_true)
     print('SPL difference: ',B737_diff_SPL)
-    assert np.abs((B737_SPL - B737_SPL_true)/B737_SPL_true) < 1e-1    
-    return     
-  
- 
+    assert np.abs((B737_SPL - B737_SPL_true)/B737_SPL_true) < 1e-3
+    
+    # plot aircraft
+    plot_3d_vehicle(vehicle, show_figure=False)
+    return
 
 def base_analysis(vehicle):
 
@@ -72,15 +75,16 @@ def base_analysis(vehicle):
     #  Aerodynamics Analysis
     # ------------------------------------------------------------------
     aerodynamics = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
-    aerodynamics.geometry = vehicle
-    aerodynamics.settings.drag_coefficient_increment = 0.0000 
+    aerodynamics.vehicle = vehicle
+    aerodynamics.settings.number_of_spanwise_vortices   = 5
+    aerodynamics.settings.number_of_chordwise_vortices  = 2     
     analyses.append(aerodynamics)
 
     # ------------------------------------------------------------------
     #  Noise Analysis
     # ------------------------------------------------------------------
     noise = RCAIDE.Framework.Analyses.Noise.Correlation_Buildup()   
-    noise.geometry = vehicle          
+    noise.vehicle = vehicle          
     analyses.append(noise)
 
     # ------------------------------------------------------------------
@@ -93,7 +97,7 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     #  Planet Analysis
     # ------------------------------------------------------------------
-    planet = RCAIDE.Framework.Analyses.Planets.Planet()
+    planet = RCAIDE.Framework.Analyses.Planets.Earth()
     analyses.append(planet)
 
     # ------------------------------------------------------------------
@@ -128,6 +132,7 @@ def baseline_mission_setup(analyses):
     mission.tag  = 'base_mission' 
     Segments     = RCAIDE.Framework.Mission.Segments 
     base_segment = Segments.Segment() 
+    base_segment.state.numerics.number_of_control_points    = 3
 
     # -------------------   -----------------------------------------------
     #   Mission for Landing Noise
@@ -156,10 +161,10 @@ def baseline_mission_setup(analyses):
     # ------------------------------------------------------------------  
     segment                                                   = Segments.Climb.Constant_Throttle_Constant_Speed(base_segment)
     segment.tag                                               = "takeoff"    
-    segment.analyses.extend(analyses.takeoff )  
-    segment.altitude_start                                    = 35. *  Units.fts
-    segment.altitude_end                                      = 304.8 *  Units.meter
-    segment.air_speed                                         = 85.4 * Units['m/s']
+    segment.analyses.extend(analyses.takeoff )     
+    segment.altitude_start                                    = 0 *  Units.meter
+    segment.altitude_end                                      = 304.8 * Units.meter
+    segment.air_speed                                         = 100* Units['m/s']
     segment.throttle                                          = 1.    
     
     # define flight dynamics to model 
@@ -180,7 +185,8 @@ def baseline_mission_setup(analyses):
     segment                                              = Segments.Climb.Constant_Speed_Constant_Angle(base_segment)
     segment.tag                                          = "cutback"     
     segment.analyses.extend(analyses.cutback )
-    segment.air_speed                                    = 100 * Units['m/s']
+    segment.air_speed                                    = 100 * Units['m/s'] 
+    segment.altitude_end                                 = 1. * Units.km    
     segment.climb_angle                                  = 5  * Units.degrees
     
     # define flight dynamics to model 
@@ -199,8 +205,9 @@ def baseline_mission_setup(analyses):
     # ------------------------------------------------------------------      
     segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment)
     segment.tag = "climb_1" 
-    segment.analyses.extend( analyses.cruise )  
-    segment.altitude_end                                  = 3.0   * Units.km
+    segment.analyses.extend( analyses.cruise )   
+    segment.altitude_start                                = 1. * Units.km    
+    segment.altitude_end                                  = 2.0   * Units.km
     segment.air_speed                                     = 125.0 * Units['m/s']
     segment.climb_rate                                    = 6.0   * Units['m/s']  
     
@@ -232,4 +239,5 @@ def baseline_missions_setup(base_mission):
     return missions   
 
 if __name__ == '__main__': 
-    main()    
+    main()
+    plt.show()

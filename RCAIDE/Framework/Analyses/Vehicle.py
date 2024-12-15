@@ -1,4 +1,3 @@
-## @ingroup Analyses
 # RCAIDE/Framework/Analyses/Vehicle.py
 # 
 # 
@@ -13,7 +12,6 @@ from .Analysis import Analysis
 # ----------------------------------------------------------------------------------------------------------------------
 # Vehicle
 # ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Analyses
 class Vehicle(Analysis.Container):
     """ RCAIDE.Framework.Analyses.Vehicle()
     
@@ -108,7 +106,6 @@ class Vehicle(Analysis.Container):
             RCAIDE.Framework.Analyses.Planets.Planet            : 'planet'       ,
             RCAIDE.Framework.Analyses.Noise.Noise               : 'noise'        ,
             RCAIDE.Framework.Analyses.Emissions.Emissions       : 'emissions'    ,
-            RCAIDE.Framework.Analyses.Costs.Costs               : 'costs'        ,
         }
 
     def get_root(self,analysis):

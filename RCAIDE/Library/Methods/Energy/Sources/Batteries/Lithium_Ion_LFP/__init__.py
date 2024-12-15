@@ -1,4 +1,3 @@
-## @defgroup Methods-Energy-Sources-Battery-Lithium_Ion_LFP Lithium_Ion_LFP
 # RCAIDE/Methods/Energy/Sources/Battery/Lithium_Ion_LFP/__init__.py
 # 
 
@@ -8,4 +7,5 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
-from .compute_lfp_cell_performance   import compute_lfp_cell_performance 
+from .compute_lfp_cell_performance   import * 
+from .update_lfp_cell_age            import * 

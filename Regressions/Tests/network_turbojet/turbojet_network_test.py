@@ -14,10 +14,11 @@ from RCAIDE.Library.Plots                           import *
 # python imports     
 import numpy as np  
 import sys
-import matplotlib.pyplot as plt  
+import matplotlib.pyplot as plt 
+import os
 
 # local imports 
-sys.path.append('../../Vehicles')
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 from Concorde    import vehicle_setup as vehicle_setup
 from Concorde    import configs_setup as configs_setup 
 
@@ -30,18 +31,6 @@ def main():
 
     # vehicle data
     vehicle  = vehicle_setup()
-
-    # plot vehicle 
-    plot_3d_vehicle(vehicle, 
-                    min_x_axis_limit            = 0,
-                    max_x_axis_limit            = 60,
-                    min_y_axis_limit            = -30,
-                    max_y_axis_limit            = 30,
-                    min_z_axis_limit            = -30,
-                    max_z_axis_limit            = 30,
-                    show_figure                 = False 
-                    )         
-        
     
     # Set up vehicle configs
     configs  = configs_setup(vehicle)
@@ -56,10 +45,38 @@ def main():
     missions = missions_setup(mission) 
      
     # mission analysis 
-    results = missions.base_mission.evaluate() 
+    results = missions.base_mission.evaluate()   
+
+    # Extract sample values from computation  
+    thrust     = results.segments.climb_1.conditions.energy['inner_right_turbojet'].thrust[3][0]
+    throttle   = results.segments.level_cruise.conditions.energy['inner_right_turbojet'].throttle[3][0] 
+    CL        = results.segments.descent_1.conditions.aerodynamics.coefficients.lift.total[2][0] 
     
-    ## plt the old results
-    plot_mission(results)   
+    #print values for resetting regression
+    show_vals = True
+    if show_vals:
+        data = [thrust, throttle, CL]
+        for val in data:
+            print(val)
+    
+    # Truth values
+    thrust_truth     = 182566.0177458797
+    throttle_truth   = 1.0733674394507737
+    CL_truth         = 0.27062739821240467
+    
+    # Store errors 
+    error = Data()
+    error.thrust    = np.max(np.abs(thrust - thrust_truth )/thrust_truth) 
+    error.throttle  = np.max(np.abs(throttle  - throttle_truth  )/throttle_truth) 
+    error.CL        = np.max(np.abs(CL - CL_truth   )/CL_truth)      
+     
+    print('Errors:')
+    print(error)
+     
+    for k,v in list(error.items()): 
+        assert(np.abs(v)<1e-6)
+        
+    plot_mission(results)    
     return 
 
 # ----------------------------------------------------------------------
@@ -93,20 +110,20 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
     aerodynamics                                       = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method()
-    aerodynamics.geometry                              = vehicle
+    aerodynamics.vehicle                              = vehicle
     aerodynamics.settings.number_of_spanwise_vortices  = 5
     aerodynamics.settings.number_of_chordwise_vortices = 2       
     aerodynamics.settings.model_fuselage               = True
     aerodynamics.settings.drag_coefficient_increment   = 0.0000
     analyses.append(aerodynamics)
 
+
     # ------------------------------------------------------------------
-    #  Energy
+    #  Emissions
     emissions = RCAIDE.Framework.Analyses.Emissions.Emission_Index_Correlation_Method()
-    emissions.geometry = vehicle          
+    emissions.vehicle = vehicle          
     analyses.append(emissions)
-        
-    
+  
     # ------------------------------------------------------------------
     #  Energy
     energy= RCAIDE.Framework.Analyses.Energy.Energy()
@@ -115,7 +132,7 @@ def base_analysis(vehicle):
     
     # ------------------------------------------------------------------
     #  Planet Analysis
-    planet = RCAIDE.Framework.Analyses.Planets.Planet()
+    planet = RCAIDE.Framework.Analyses.Planets.Earth()
     analyses.append(planet)
     
     # ------------------------------------------------------------------
@@ -143,39 +160,12 @@ def plot_mission(results):
     
     plot_drag_components(results) 
  
-    plot_CO2e_emissions(results)    
-    return
-
-def simple_sizing(configs):
-    
-    base = configs.base
-    base.pull_base()
-    
-    # zero fuel weight
-    base.mass_properties.max_zero_fuel = 0.9 * base.mass_properties.max_takeoff 
-    
-    # fuselage seats
-    base.fuselages['fuselage'].number_coach_seats = base.passengers
-    
-    # diff the new data
-    base.store_diff()
-    
-    # ------------------------------------------------------------------
-    #   Landing Configuration
-    # ------------------------------------------------------------------
-    landing = configs.landing
-    
-    # make sure base data is current
-    landing.pull_base()
-    
-    # landing weight
-    landing.mass_properties.landing = 0.85 * base.mass_properties.takeoff
-    
-    # diff the new data
-    landing.store_diff()
-    
-    # done!
-    return
+    plot_CO2e_emissions(results) 
+  
+    plot_aerodynamic_forces(results)  
+     
+        
+    return 
 
 # ----------------------------------------------------------------------
 #   Define the Mission
@@ -225,6 +215,7 @@ def mission_setup(analyses):
     segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment)
     segment.tag = "climb_2" 
     segment.analyses.extend( analyses.cruise ) 
+    segment.analyses.aerodynamics.settings.supersonic.wave_drag_type == 'Sears-Haack'    
     segment.altitude_end = 8000. * Units.ft
     segment.airpseed     = 250.  * Units.kts
     segment.climb_rate   = 2000. * Units['ft/min']  
@@ -360,7 +351,7 @@ def mission_setup(analyses):
     segment.analyses.extend( analyses.cruise ) 
     segment.mach_number                                   = 2.02
     segment.distance                                      = 10. * Units.nmi
-    segment.state.numerics.number_control_points          = 4  
+    segment.state.numerics.number_of_control_points          = 4  
     
     # define flight dynamics to model 
     segment.flight_dynamics.force_x                       = True  
@@ -490,37 +481,8 @@ def missions_setup(mission):
     missions.append(mission)
     
     # done!
-    return missions  
-    
-def check_results(new_results,old_results):
+    return missions   
 
-    # check segment values
-    check_list = [
-        'segments.climbing_cruise.conditions.aerodynamics.angles.alpha',
-        'segments.climbing_cruise.conditions.aerodynamics.coefficients.drag.total',
-        'segments.climbing_cruise.conditions.aerodynamics.coefficients.lift.total', 
-        'segments.climbing_cruise.conditions.weights.vehicle_mass_rate', 
-    ]
-
-    # do the check
-    for k in check_list:
-        print(k)
-
-        old_val = np.max( old_results.deep_get(k) )
-        new_val = np.max( new_results.deep_get(k) )
-        err = (new_val-old_val)/old_val
-        print('Error at Max:' , err)
-        assert np.abs(err) < 1e-6 , 'Max Check Failed : %s' % k
-
-        old_val = np.min( old_results.deep_get(k) )
-        new_val = np.min( new_results.deep_get(k) )
-        err = (new_val-old_val)/old_val
-        print('Error at Min:' , err)
-        assert np.abs(err) < 1e-6 , 'Min Check Failed : %s' % k        
-
-        print('') 
-
-    return 
 
 if __name__ == '__main__': 
     main()    

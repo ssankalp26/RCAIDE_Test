@@ -1,4 +1,3 @@
-## @defgroup Library-Components-Booms Booms
 # RCAIDE/Library/Components/Booms/__init__.py
 # 
 

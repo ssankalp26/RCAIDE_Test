@@ -1,5 +1,4 @@
-## @defgroup Methods-Weights-Correlations-FLOPS FLOPS
-# RCAIDE/Methods/Weights/Correlations/FLOPS/__init__.py
+# RCAIDE/Library/Methods/Weights/Correlations/FLOPS/__init__.py
 # 
 
 """RCAIDE Package Setup
@@ -9,11 +8,12 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-from Legacy.trunk.S.Methods.Weights.Correlations.FLOPS.fuselage import fuselage_weight_FLOPS
-from Legacy.trunk.S.Methods.Weights.Correlations.FLOPS.landing_gear import landing_gear_FLOPS
-from Legacy.trunk.S.Methods.Weights.Correlations.FLOPS.operating_items import operating_items_FLOPS
-from Legacy.trunk.S.Methods.Weights.Correlations.FLOPS.payload import payload_FLOPS
-from Legacy.trunk.S.Methods.Weights.Correlations.FLOPS.prop_system import fuel_system_FLOPS, nacelle_FLOPS, thrust_reverser_FLOPS, misc_engine_FLOPS, engine_FLOPS
-from Legacy.trunk.S.Methods.Weights.Correlations.FLOPS.systems import systems_FLOPS
-from Legacy.trunk.S.Methods.Weights.Correlations.FLOPS.tail import tail_vertical_FLOPS, tail_horizontal_FLOPS
-from Legacy.trunk.S.Methods.Weights.Correlations.FLOPS.wing import wing_weight_FLOPS, wing_weight_constants_FLOPS
+from .compute_fuselage_weight            import compute_fuselage_weight          
+from .compute_horizontal_tail_weight     import compute_horizontal_tail_weight  
+from .compute_operating_items_weight     import compute_operating_items_weight   
+from .compute_landing_gear_weight        import compute_landing_gear_weight      
+from .compute_payload_weight             import compute_payload_weight           
+from .compute_propulsion_system_weight   import compute_propulsion_system_weight 
+from .compute_systems_weight             import compute_systems_weight           
+from .compute_vertical_tail_weight       import compute_vertical_tail_weight     
+from .compute_wing_weight                import compute_wing_weight              

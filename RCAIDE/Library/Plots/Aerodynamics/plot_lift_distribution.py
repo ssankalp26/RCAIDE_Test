@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Performance-Aerodynamics
 # RCAIDE/Library/Plots/Performance/Aerodynamics/plot_lift_distribution.py
 # 
 # 
@@ -14,12 +13,11 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Library-Plots-Performance-Aerodynamics
 def plot_lift_distribution(results,vehicle,
                            save_figure = False,
                            save_filename = "Lift_Distribution",
                            file_type = ".png",
-                           width = 12, height = 7):
+                           width = 11, height = 7):
     """This plots the sectional lift distrubtion at all control points
      on all lifting surfaces of the aircraft
 

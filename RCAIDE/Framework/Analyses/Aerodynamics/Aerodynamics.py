@@ -1,4 +1,3 @@
-## @ingroup Analyses-Aerodynamics
 # RCAIDE/Framework/Analyses/Aerodynamics/Aerodynamics.py
 # 
 # 
@@ -17,8 +16,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Aerodynamics
-# ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Analyses-Aerodynamics
+# ---------------------------------------------------------------------------------------------------------------------- 
 class Aerodynamics(Analysis):
     """This is the base class for aerodynamics analyses. It contains functions
     that are built into the default class.
@@ -48,7 +46,7 @@ class Aerodynamics(Analysis):
         N/A
         """           
         self.tag                               = 'aerodynamics'  
-        self.geometry                          = Data()
+        self.vehicle                           = Data()
         self.settings                          = Data()
         self.settings.maximum_lift_coefficient = np.inf
         

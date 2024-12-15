@@ -1,4 +1,3 @@
-## @defgroup Analyses-Emission_Index_Correlation_Method Emission_Index_Correlation_Method
 # RCAIDE/Framework/Analyses/Emission_Index_Correlation_Method/__init__.py
 # 
 
@@ -9,5 +8,6 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-from .Emissions                         import  Emissions
+from .Emissions                         import Emissions
 from .Emission_Index_Correlation_Method import Emission_Index_Correlation_Method
+from .Emission_Index_CRN_Method         import Emission_Index_CRN_Method

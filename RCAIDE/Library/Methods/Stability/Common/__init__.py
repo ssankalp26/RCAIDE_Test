@@ -1,4 +1,3 @@
-## @defgroup Library-Methods-Stability-Common
 # RCAIDE/Library/Methods/Stability/Common/__init__.py 
 
 """RCAIDE Package Setup

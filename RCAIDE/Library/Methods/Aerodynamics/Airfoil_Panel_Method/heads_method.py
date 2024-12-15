@@ -1,4 +1,3 @@
-## @ingroup Methods-Aerodynamics-Airfoil_Panel_Method
 # RCAIDE/Methods/Aerodynamics/Airfoil_Panel_Method/heads_method.py
 # 
 # 
@@ -16,8 +15,7 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 # heads_method
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Aerodynamics-Airfoil_Panel_Method
-def heads_method(npanel,ncases,ncpts,DEL_0,THETA_0,DELTA_STAR_0,CF_0,ShapeFactor_0,RE_L,TURBULENT_COORD,VE_I,DVE_I,TURBULENT_SURF,tol):
+def heads_method(npanel,ncases,ncpts,NU,DEL_0,THETA_0,DELTA_STAR_0,CF_0,ShapeFactor_0,RE_L,TURBULENT_COORD,VE_I,DVE_I,TURBULENT_SURF,tol):
     """ Computes the boundary layer characteristics in turbulent
     flow pressure gradients
 
@@ -75,12 +73,11 @@ def heads_method(npanel,ncases,ncpts,DEL_0,THETA_0,DELTA_STAR_0,CF_0,ShapeFactor
             if l == 0.0:
                 pass
             else: 
-                def getcf(ind, H, THETA):
-                    ReTheta = (Re_L/l)*Ve_i[ind]*THETA;
+                def getcf(ind, nu, H, THETA):
+                    ReTheta = Ve_i[ind]*THETA/nu;
                     cf_var = 0.246*(10**(-0.678*H))*(ReTheta**-0.268);
                     return cf_var
-
-
+                
                 def getH(H1_var):
                     if H1_var<3.3:
                         H_var = 3.0
@@ -88,8 +85,7 @@ def heads_method(npanel,ncases,ncpts,DEL_0,THETA_0,DELTA_STAR_0,CF_0,ShapeFactor
                         H_var = 0.6778 + 1.153793*(H1_var-3.3)**-0.32637;
                     elif H1_var >= 5.39142:
                         H_var = 1.1 + 0.8598636*(H1_var - 3.3)**-0.777;
-                    return H_var
-                
+                    return H_var 
              
                 # define RK4 slope function for Theta
                 def dTheta_by_dx(index, X, THETA, VETHETAH1):
@@ -102,10 +98,10 @@ def heads_method(npanel,ncases,ncpts,DEL_0,THETA_0,DELTA_STAR_0,CF_0,ShapeFactor
                 x_i          = TURBULENT_COORD.data[:,case,cpt][TURBULENT_COORD.mask[:,case,cpt] ==False] 
                 Ve_i         = VE_I.data[:,case,cpt][TURBULENT_COORD.mask[:,case,cpt] ==False]
                 dVe_i        = DVE_I.data[:,case,cpt][TURBULENT_COORD.mask[:,case,cpt] ==False]
-                Re_L         = RE_L[case,cpt] 
-                nu           = l/Re_L 
+                Re_L         = RE_L[case,cpt]
                 n            = len(x_i)
                 dx           = np.diff(x_i)
+                nu           = NU[case,cpt]
                 
                 H            = np.zeros(n) 
                 H[0]         = ShapeFactor_0[case,cpt]
@@ -145,7 +141,7 @@ def heads_method(npanel,ncases,ncpts,DEL_0,THETA_0,DELTA_STAR_0,CF_0,ShapeFactor
                         H[i] = getH(H1[i])
                         
                         # get skin friction
-                        cf[i] = getcf(i, H[i], Theta[i])
+                        cf[i] = getcf(i, nu, H[i], Theta[i])
                         
                         # define errors
                         erH = (H[i]-H_er)/H[i];
@@ -161,7 +157,7 @@ def heads_method(npanel,ncases,ncpts,DEL_0,THETA_0,DELTA_STAR_0,CF_0,ShapeFactor
                 
                 
                 delta_star   = H*Theta
-                Re_theta     = (Re_L/l)*Ve_i*Theta
+                Re_theta     = Ve_i*Theta/nu
                 Re_x         = (Ve_i*x_i)/nu
                 delta        = (Theta*H1) + delta_star
                 

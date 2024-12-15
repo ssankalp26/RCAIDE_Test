@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Noise
 # RCAIDE/Library/Plots/Noise/plot_3D_noise_contour.py
 # 
 # 
@@ -17,8 +16,6 @@ import plotly.graph_objects as go
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------    
- 
-## @ingroup Library-Plots-Noise
 def plot_3D_noise_contour(noise_data,
                        noise_level              = None ,
                        min_noise_level          = 35,  
@@ -64,9 +61,9 @@ def plot_3D_noise_contour(noise_data,
     N/A
     """   
     Aircraft_pos    = noise_data.aircraft_position      
-    X               = noise_data.ground_microphone_locations[:,:,0]/Units.nmi  
-    Y               = noise_data.ground_microphone_locations[:,:,1]/Units.nmi  
-    Z               = noise_data.ground_microphone_locations[:,:,2]/Units.feet  
+    X               = noise_data.microphone_locations[:,:,0]/Units.nmi  
+    Y               = noise_data.microphone_locations[:,:,1]/Units.nmi  
+    Z               = noise_data.microphone_locations[:,:,2]/Units.feet  
     plot_data       = []   
   
     # ---------------------------------------------------------------------------

@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Ground
 # RCAIDE/Framework/Analyses/Mission/Segments/Ground/Battery_Disharge.py
 # 
 # 
@@ -17,7 +16,6 @@ from RCAIDE.Library.Methods.skip                              import skip
 # ----------------------------------------------------------------------------------------------------------------------
 #  SEGMENT
 # ----------------------------------------------------------------------------------------------------------------------
-## @ingroup Analyses-Mission-Segments-Ground
 class Battery_Discharge(Evaluate): 
 
     # ------------------------------------------------------------------
@@ -48,8 +46,8 @@ class Battery_Discharge(Evaluate):
         #   User Inputs
         # --------------------------------------------------------------
         self.altitude               = None
-        self.time                   = 1.0 * Units.seconds
-        self.current                = 0
+        self.time                   = 1.0 * Units.seconds 
+        self.cooling_time           = 0.0 * Units.seconds
         self.overcharge_contingency = 1.10 
         self.true_course            = 0.0 * Units.degrees 
 

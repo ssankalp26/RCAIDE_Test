@@ -1,5 +1,3 @@
-## @defgroup Optimization-Packages-trmm trmm    
-# @ingroup Optimization-Packages     
 # RCAIDE/Optimization/Packages/trmm/__init__.py
 # 
 
@@ -10,7 +8,7 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-from Legacy.trunk.S.Optimization.Package_Setups      import TRMM 
-from Legacy.trunk.S.Optimization.Package_Setups.TRMM import TRMM_setup
-from Legacy.trunk.S.Optimization.Package_Setups.TRMM import Trust_Region
-from Legacy.trunk.S.Optimization.Package_Setups.TRMM import Trust_Region_Optimization
+from RCAIDE.Framework.Optimization.Packages      import trmm 
+from RCAIDE.Framework.Optimization.Packages.trmm import TRMM_setup
+from RCAIDE.Framework.Optimization.Packages.trmm import Trust_Region
+from RCAIDE.Framework.Optimization.Packages.trmm import Trust_Region_Optimization

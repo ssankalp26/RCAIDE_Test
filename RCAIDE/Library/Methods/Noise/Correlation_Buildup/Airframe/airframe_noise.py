@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Correlation_Buildup-Airframe 
 # RCAIDE/Methods/Noise/Correlation_Buildup/Airframe/airframe_noise.py
 # 
 # 
@@ -9,8 +8,8 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE Imports
-from RCAIDE.Framework.Core                      import Data , Units
-
+import  RCAIDE
+from RCAIDE.Framework.Core                      import Data , Units 
 from .clean_wing_noise             import clean_wing_noise
 from .landing_gear_noise           import landing_gear_noise
 from .leading_edge_slat_noise      import leading_edge_slat_noise
@@ -28,9 +27,7 @@ import numpy as np
 # ----------------------------------------------------------------------
 #  Airframe Noise 
 # ----------------------------------------------------------------------
-
-## @ingroup Methods-Noise-Correlation_Buildup-Airframe
-def airframe_noise(segment,analyses,config,settings):  
+def airframe_noise(microphone_locations,segment,config,settings):  
     """ This computes the noise from different sources of the airframe for a given vehicle for a constant altitude flight. 
 
     Assumptions:
@@ -91,16 +88,29 @@ def airframe_noise(segment,analyses,config,settings):
     deltaf   = flap.deflection                                              # flap delection, rad
     Sf       = flap.area  / (Units.ft)**2                                   # flap area, sq.ft        
     cf       = flap.chord_dimensional  / Units.ft                           # flap chord, ft
-    Dp       = config.landing_gear.main_tire_diameter  / Units.ft           # MLG tyre diameter, ft
-    Hp       = config.landing_gear.nose_tire_diameter  / Units.ft           # MLG strut length, ft
-    Dn       = config.landing_gear.main_strut_length   / Units.ft           # NLG tyre diameter, ft
-    Hn       = config.landing_gear.nose_strut_length   / Units.ft           # NLG strut length, ft
-    gear     = config.landing_gear.gear_condition                           # Gear up or gear down
+
+    Dp           = 0
+    Dn           = 0
+    main_wheels  = 0
+    main_units   = 0
+    Hp           = 0
+    Hn           = 0 
+    nose_wheels  = 0 
+    for landing_gear in  config.landing_gears:
+        if isinstance(landing_gear,RCAIDE.Library.Components.Landing_Gear.Main_Landing_Gear):
+            Dp            = landing_gear.tire_diameter  / Units.ft           # MLG tyre diameter, ft
+            Dn            = landing_gear.strut_length   / Units.ft           # NLG tyre diameter, ft
+            main_wheels   = landing_gear.wheels                          # Number of wheels   
+            gear_extended = landing_gear.gear_extended                   # Gear up or gear down 
+            main_units    = landing_gear.units                           # Number of main units
+        elif isinstance(landing_gear,RCAIDE.Library.Components.Landing_Gear.Nose_Landing_Gear):
+            Hp            = landing_gear.tire_diameter  / Units.ft           # MLG strut length, ft
+            Hn            = landing_gear.strut_length   / Units.ft           # NLG strut length, ft
+            gear_extended = landing_gear.gear_extended                   # Gear up or gear down 
+            nose_wheels   = landing_gear.wheels                          # Number of wheels   
     
-    nose_wheels  = config.landing_gear.nose_wheels                          # Number of wheels   
-    main_wheels  = config.landing_gear.main_wheels                          # Number of wheels   
-    main_units   = config.landing_gear.main_units                           # Number of main units   
-    velocity     = segment.conditions.freestream.velocity[0,0]              # aircraft velocity  
+    
+    velocity     = segment.conditions.freestream.velocity                  # aircraft velocity  
     noise_time   = segment.conditions.frames.inertial.time[:,0]             # time discretization 
 
     # determining flap slot number
@@ -109,22 +119,22 @@ def airframe_noise(segment,analyses,config,settings):
     elif wing.main_wing.control_surfaces.flap.configuration_type == 'double_slotted':
         slots = 2
     elif wing.main_wing.control_surfaces.flap.configuration_type == 'triple_slotted':
-        slots = 3  
-
-    # Geometric information from the source to observer position 
-    RML                 = segment.conditions.noise.relative_microphone_locations  
-    distance_vector     = np.linalg.norm(RML,axis = 2)
-    thetas              = np.arccos(RML[:,:,0]/distance_vector) 
-    phis                = np.arccos(RML[:,:,1]/distance_vector)   
-    viscosity           = segment.conditions.freestream.dynamic_viscosity[:,0]*Units.ft*Units.ft # units converstion - m2 to ft2 
-    M                   = segment.conditions.freestream.mach_number
+        slots = 3
+        
     
     # Generate array with the One Third Octave Band Center Frequencies
     frequency = settings.center_frequencies[5:]  
     num_f     = len(frequency) 
-    n_cpts    = len(thetas)  
-    n_mic     = len(RML[0,:,0]) 
+    n_cpts    = len(noise_time)  
+    n_mic     = len(microphone_locations)        
 
+    # Geometric information from the source to observer position  
+    distance_vector     = np.linalg.norm(microphone_locations,axis = 1)
+    thetas              = np.tile(np.arctan2(microphone_locations[:, 1], microphone_locations[:, 0])[None,:],(n_cpts,1)) 
+    phis                = np.tile(np.arctan2(np.sqrt(np.square(microphone_locations[:, 0]) + np.square(microphone_locations[:, 1])),  microphone_locations[:, 2])[None,:],(n_cpts,1))  
+    viscosity           = segment.conditions.freestream.dynamic_viscosity[:,0]*Units.ft*Units.ft  
+    M                   = segment.conditions.freestream.mach_number
+     
     SPL_wing_history              = np.zeros((n_cpts,n_mic,num_f))
     SPLht_history                 = np.zeros((n_cpts,n_mic,num_f))
     SPLvt_history                 = np.zeros((n_cpts,n_mic,num_f))
@@ -145,29 +155,29 @@ def airframe_noise(segment,analyses,config,settings):
             phi   = phis[i,j]
             
             # Distance from airplane to observer, evaluated at retarded time
-            distance = distance_vector[i,j]    
+            distance = distance_vector[j]    
            
             # Atmospheric attenuation
             delta_atmo=atmospheric_attenuation(np.array([distance]),frequency)[:,0]
     
             # Call each noise source model
-            SPL_wing = clean_wing_noise(Sw,bw,0,1,velocity,viscosity[i],M[i],phi,theta,distance,frequency) - delta_atmo    #Wing Noise
-            SPLht    = clean_wing_noise(Sht,bht,0,1,velocity,viscosity[i],M[i],phi,theta,distance,frequency)  -delta_atmo    #Horizontal Tail Noise
-            SPLvt    = clean_wing_noise(Svt,bvt,0,0,velocity,viscosity[i],M[i],phi,theta,distance,frequency)  -delta_atmo    #Vertical Tail Noise
+            SPL_wing = clean_wing_noise(Sw,bw,0,1,velocity[i,0],viscosity[i],M[i],phi,theta,distance,frequency) - delta_atmo    #Wing Noise
+            SPLht    = clean_wing_noise(Sht,bht,0,1,velocity[i,0],viscosity[i],M[i],phi,theta,distance,frequency)  -delta_atmo    #Horizontal Tail Noise
+            SPLvt    = clean_wing_noise(Svt,bvt,0,0,velocity[i,0],viscosity[i],M[i],phi,theta,distance,frequency)  -delta_atmo    #Vertical Tail Noise
      
-            SPL_slat = leading_edge_slat_noise(SPL_wing,Sw,bw,velocity,viscosity[i],M[i],phi,theta,distance,frequency) -delta_atmo        #Slat leading edge
+            SPL_slat = leading_edge_slat_noise(SPL_wing,Sw,bw,velocity[i,0],viscosity[i],M[i],phi,theta,distance,frequency) -delta_atmo        #Slat leading edge
      
             if (deltaf==0):
                 SPL_flap = np.zeros(num_f)
             else:
-                SPL_flap = trailing_edge_flap_noise(Sf,cf,deltaf,slots,velocity,M[i],phi,theta,distance,frequency) - delta_atmo #Trailing Edge Flaps Noise
+                SPL_flap = trailing_edge_flap_noise(Sf,cf,deltaf,slots,velocity[i,0],M[i],phi,theta,distance,frequency) - delta_atmo #Trailing Edge Flaps Noise
      
-            if gear=='up': #0
+            if gear_extended == False:  
                 SPL_main_landing_gear = np.zeros(num_f)
                 SPL_nose_landing_gear = np.zeros(num_f)
             else:
-                SPL_main_landing_gear = landing_gear_noise(Dp,Hp,main_wheels,M[i],velocity,phi,theta,distance,frequency)  - delta_atmo     #Main Landing Gear Noise
-                SPL_nose_landing_gear = landing_gear_noise(Dn,Hn,nose_wheels,M[i],velocity,phi,theta,distance,frequency)  - delta_atmo     #Nose Landing Gear Noise
+                SPL_main_landing_gear = landing_gear_noise(Dp,Hp,main_wheels,M[i],velocity[i,0],phi,theta,distance,frequency)  - delta_atmo     #Main Landing Gear Noise
+                SPL_nose_landing_gear = landing_gear_noise(Dn,Hn,nose_wheels,M[i],velocity[i,0],phi,theta,distance,frequency)  - delta_atmo     #Nose Landing Gear Noise
             if main_units>1: # Incoherent summation of each main landing gear unit
                 SPL_main_landing_gear = SPL_main_landing_gear+3*(main_units-1) 
      

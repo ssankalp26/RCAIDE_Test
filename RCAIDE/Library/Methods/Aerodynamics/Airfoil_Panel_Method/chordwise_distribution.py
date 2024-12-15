@@ -1,4 +1,3 @@
-## @ingroup Methods-Aerodynamics-Airfoil_Panel_Method
 # RCAIDE/Methods/Aerodynamics/Airfoil_Panel_Method/chordwise_distribution
 # 
 # 
@@ -16,7 +15,6 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 # chordwise_distribution
 # ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Methods-Aerodynamics-Airfoil_Panel_Method
 def chordwise_distribution(x,y,cp,al,npanel,cf,vt):
     """Compute chordwise distribution of lift and drag for
         an airfoil          

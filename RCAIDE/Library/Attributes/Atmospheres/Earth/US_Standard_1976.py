@@ -1,4 +1,3 @@
-## @ingroup Library-Attributes-Atmospheres-Earth
 # RCAIDE/Library/Attributes/Atmospheres/Earth/US_Standard_1976.py
 # 
 #
@@ -16,8 +15,7 @@ import numpy as np
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  US_Standard_1976 Class
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Attributes-Atmospheres-Earth  
+# ----------------------------------------------------------------------------------------------------------------------   
 class US_Standard_1976(Atmosphere):
     """Contains US Standard 1976 values.
     """

@@ -1,4 +1,3 @@
-## @ingroup Library-Components-Nacelles
 # RCAIDE/Compoments/Nacelles/Stack_Nacelle.py
 # 
 # 
@@ -13,8 +12,7 @@ from .Nacelle import Nacelle
   
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Nacalle
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Components-Nacelles
+# ----------------------------------------------------------------------------------------------------------------------  
 class Stack_Nacelle(Nacelle):
     """ This is a stacked nacelle for a generic aircraft.
     

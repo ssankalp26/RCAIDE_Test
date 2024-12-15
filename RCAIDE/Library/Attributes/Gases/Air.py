@@ -1,4 +1,3 @@
-## @ingroup Library-Attributes-Gases
 # RCAIDE/Library/Attributes/Gases/Air.py
 # 
 #
@@ -13,8 +12,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------  
 # Air Class
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Library-Attributes-Gases 
+# ----------------------------------------------------------------------------------------------------------------------   
 class Air(Gas):
     """Generic class of air gas. 
     """
@@ -208,3 +206,25 @@ class Air(Gas):
         mu = self.compute_absolute_viscosity(T)
         K  = self.compute_thermal_conductivity(T)
         return  mu*Cp/K      
+    
+    def compute_R(self,T=300.,p=101325.):
+        """Compute the prandtl number 
+             
+        Assumptions:
+            None
+            
+        Source:
+            None
+    
+        Args:
+            self      : air                   [unitless]
+            T (float) : temperature           [K] 
+            
+        Returns:
+            Pr  (float): Prandtl Number       [unitless]
+        """ 
+        
+        gamma = self.compute_gamma(T,p)
+        cp = self.compute_cp(T,p)
+        R  = ((gamma - 1)/gamma)*cp
+        return  R          

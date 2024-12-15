@@ -1,4 +1,3 @@
-## @ingroup Library-Missions-Common-Update 
 # RCAIDE/Library/Missions/Common/Update/acceleration.py
 # 
 # 
@@ -11,8 +10,7 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Update Acceleration
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Missions-Common-Update  
+# ----------------------------------------------------------------------------------------------------------------------   
 def acceleration(segment):
     """ Differentiates the velocity vector to get accelerations
     

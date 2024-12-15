@@ -1,4 +1,3 @@
-## @ingroup Methods-Aerodynamics-Airfoil_Panel_Method  
 # RCAIDE/Methods/Aerodynamics/Airfoil_Panel_Method/thwaites_method_new.py
 # 
 # 
@@ -13,7 +12,10 @@ from RCAIDE.Framework.Core import Data
 # pacakge imports  
 import numpy as np
 
-def thwaites_method(npanel,ncases,ncpts,L,RE_L,X_I,VE_I, DVE_I,tol,THETA_0):
+# ----------------------------------------------------------------------------------------------------------------------
+#  Thwaites Method
+# ----------------------------------------------------------------------------------------------------------------------
+def thwaites_method(npanel,ncases,ncpts,NU,L,RE_L,X_I,VE_I, DVE_I,tol,THETA_0):
     """ Computes the boundary layer characteristics in laminar 
     flow pressure gradients
     
@@ -70,10 +72,10 @@ def thwaites_method(npanel,ncases,ncpts,L,RE_L,X_I,VE_I, DVE_I,tol,THETA_0):
             l              = L[case,cpt]
             theta_0        = THETA_0 
             Re_L           = RE_L[case,cpt]
-            nu             = l/Re_L    
             x_i            = X_I.data[:,case,cpt][X_I.mask[:,case,cpt] ==False]
             Ve_i           = VE_I.data[:,case,cpt][VE_I.mask[:,case,cpt] ==False]
             dVe_i          = DVE_I.data[:,case,cpt][DVE_I.mask[:,case,cpt] ==False]
+            nu             = NU[case,cpt]
             n              = len(x_i)
             dx_i           = np.diff(x_i)
             theta2_Ve6     = np.zeros(n)
@@ -200,12 +202,12 @@ def getcf(lambda_val , Re_theta):
     return cf
 
 
-def RK4(ind, dx, x, Var1, Slope1):
-    m1 = Slope1(ind,  x[ind],  Var1[ind])
-    m2 = Slope1(ind,  x[ind] + dx[ind]/2,  Var1[ind] + m1*dx[ind]/2)
-    m3 = Slope1(ind,  x[ind] + dx[ind]/2,  Var1[ind] + m2*dx[ind]/2)
-    m4 = Slope1(ind,  x[ind] + dx[ind],  Var1[ind] + m3*dx[ind])
+def RK4(ind, dx, x, Var, Slope):
+    m1 = Slope(ind,  x[ind],  Var[ind])
+    m2 = Slope(ind,  x[ind] + dx[ind]/2,  Var[ind] + m1*dx[ind]/2)
+    m3 = Slope(ind,  x[ind] + dx[ind]/2,  Var[ind] + m2*dx[ind]/2)
+    m4 = Slope(ind,  x[ind] + dx[ind],  Var[ind] + m3*dx[ind])
     
     change = (dx[ind]/6)*(m1 + 2*m2 + 2*m3 + m4)
-    return Var1[ind] + change            
+    return Var[ind] + change            
             

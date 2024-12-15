@@ -16,7 +16,9 @@ import numpy as np
 
 # local imports 
 import sys 
-sys.path.append('../../Vehicles') 
+import os
+
+sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
 from Cessna_172                       import vehicle_setup  
 from RCAIDE.Library.Methods.Propulsors.Converters.Rotor import design_propeller
 
@@ -45,10 +47,10 @@ def main():
     # mission analysis 
     results = missions.base_mission.evaluate()   
     
-    P_truth     = 54521.82437744922
-    mdot_truth  = 0.004790412309609632
+    P_truth     = 54435.6614505018
+    mdot_truth  = 0.004782841837590511
     
-    P    = results.segments.cruise.state.conditions.energy.fuel_line.ice_constant_speed_propeller.internal_combustion_engine.power[-1,0]
+    P    = results.segments.cruise.state.conditions.energy.ice_constant_speed_propeller.internal_combustion_engine.power[-1,0]
     mdot = results.segments.cruise.state.conditions.weights.vehicle_mass_rate[-1,0]     
 
     # Check the errors
@@ -129,10 +131,17 @@ def ICE_CS(vehicle):
     prop.append_airfoil(airfoil)  
     prop.airfoil_polar_stations            = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     design_propeller(prop)   
-    propulsor.propeller                    = prop
+    propulsor.propeller                    = prop  
+
+    net.propulsors.append(propulsor)
+
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    # Assign propulsors to fuel line to network      
+    fuel_line.assigned_propulsors =  [[propulsor.tag]]
     
-    fuel_line.propulsors.append(propulsor)
-    net.fuel_lines.append(fuel_line) 
+    #------------------------------------------------------------------------------------------------------------------------------------   
+    # Append fuel line to fuel line to network      
+    net.fuel_lines.append(fuel_line)
     
     # add the network to the vehicle
     vehicle.append_energy_network(net)
@@ -197,7 +206,7 @@ def mission_setup(analyses):
     # base segment
     base_segment = Segments.Segment()
     ones_row     = base_segment.state.ones_row
-    base_segment.state.numerics.number_control_points    = 3
+    base_segment.state.numerics.number_of_control_points    = 3
 
 
     # ------------------------------------------------------------------    
@@ -245,7 +254,7 @@ def base_analysis(vehicle):
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
     aerodynamics = RCAIDE.Framework.Analyses.Aerodynamics.Vortex_Lattice_Method() 
-    aerodynamics.geometry                            = vehicle
+    aerodynamics.vehicle                            = vehicle
     aerodynamics.settings.drag_coefficient_increment = 0.0000
     analyses.append(aerodynamics)
 
@@ -257,7 +266,7 @@ def base_analysis(vehicle):
 
     # ------------------------------------------------------------------
     #  Planet Analysis
-    planet = RCAIDE.Framework.Analyses.Planets.Planet()
+    planet = RCAIDE.Framework.Analyses.Planets.Earth()
     analyses.append(planet)
 
     # ------------------------------------------------------------------

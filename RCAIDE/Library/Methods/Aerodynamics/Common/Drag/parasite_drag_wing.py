@@ -1,4 +1,3 @@
-## @ingroup Methods-Aerodynamics-Common-Drag
 # RCAIDE/Methods/Aerodynamics/Common/Drag/parasite_drag_wing.py
 # 
 # 
@@ -7,19 +6,16 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------   
- 
 from RCAIDE.Framework.Core import Data  
-from Legacy.trunk.S.Methods.Aerodynamics.Common.Fidelity_Zero.Helper_Functions import compressible_mixed_flat_plate
-from Legacy.trunk.S.Methods.Aerodynamics.Supersonic_Zero.Drag.Cubic_Spline_Blender import Cubic_Spline_Blender
-from RCAIDE.Library.Methods.Geometry.Planform.wing_segmented_planform import segment_properties
+from RCAIDE.Library.Methods.Aerodynamics.Common.Drag.compressible_mixed_flat_plate import compressible_mixed_flat_plate
+from RCAIDE.Library.Methods.Utilities         import Cubic_Spline_Blender  
  
 # package imports
 import numpy as np  
 
 # ----------------------------------------------------------------------------------------------------------------------  
 #   Parasite Drag Wing 
-# ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Methods-Aerodynamics-Common-Fidelity_Zero-Drag
+# ----------------------------------------------------------------------------------------------------------------------   
 def parasite_drag_wing(state,settings,geometry):
     """Computes the parasite drag due to wings
 
@@ -53,7 +49,7 @@ def parasite_drag_wing(state,settings,geometry):
     """
     
     # unpack inputs
-    C                             = settings.wing_parasite_drag_form_factor
+    C                             = settings.wing_parasite_drag_form_factor 
     recalculate_total_wetted_area = settings.recalculate_total_wetted_area
     freestream                    = state.conditions.freestream
     
@@ -85,10 +81,6 @@ def parasite_drag_wing(state,settings,geometry):
         total_segment_k_comp_l       = 0
         total_k_reyn_u               = 0          
         total_k_reyn_l               = 0
-        
-        if recalculate_total_wetted_area:
-            wing = segment_properties(wing,update_wet_areas=True)
-            
         
         for i,segment in enumerate (wing.Segments): 
             if i == num_segments-1:
@@ -165,9 +157,7 @@ def parasite_drag_wing(state,settings,geometry):
     state.conditions.aerodynamics.coefficients.drag.parasite[wing.tag] = wing_result
 
     return  
-
-
-## @ingroup Methods-Aerodynamics-Common-Fidelity_Zero-Drag
+ 
 def compute_parasite_drag(re,mac_w,Mc,Tc,xtu,xtl,sweep_w,t_c_w,Sref,Swet,C):
     """Computes the parasite drag due to wings
 

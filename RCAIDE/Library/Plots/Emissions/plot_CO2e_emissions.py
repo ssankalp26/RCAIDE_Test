@@ -14,14 +14,13 @@ import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
-# ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Library-Plots-Performance-Emissions 
+# ----------------------------------------------------------------------------------------------------------------------    
 def plot_CO2e_emissions(results,
                              save_figure = False,
                              show_legend = True,
                              save_filename = "CO2e_Emissions" ,
                              file_type = ".png",
-                             width = 12, height = 7):
+                             width = 11, height = 7):
     """  
  
     """
@@ -66,7 +65,7 @@ def plot_CO2e_emissions(results,
         set_axes(axis_1)
         
     if show_legend:
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4) 
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
     # Adjusting the sub-plots for legend 

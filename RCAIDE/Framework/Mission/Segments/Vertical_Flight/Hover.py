@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Vertical_Flight
 # RCAIDE/Framework/Analyses/Mission/Segments/Vertical_Flight/Hover.py
 # 
 # 
@@ -15,9 +14,7 @@ from RCAIDE.Library.Mission                      import Common,Segments
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Hover
-# ----------------------------------------------------------------------------------------------------------------------
-
-## @ingroup Analyses-Mission-Segments-Vertical_Flight
+# ---------------------------------------------------------------------------------------------------------------------- 
 class Hover(Evaluate):
     """ A stationary hover for VTOL aircraft. No aerodynamic drag and lift are used, since there is no velocity.
     

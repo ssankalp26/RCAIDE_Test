@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Cruise 
 # RCAIDE/Framework/Analyses/Mission/Segments/Cruise/Constant_Pitch_Rate_Constant_Altitude.py
 # 
 # 
@@ -18,7 +17,6 @@ from RCAIDE.Library.Mission                      import Common,Segments
 #  Constant_Pitch_Rate_Constant_Altitude
 # ----------------------------------------------------------------------------------------------------------------------  
 
-## @ingroup Analyses-Mission-Segments-Cruise
 class Constant_Pitch_Rate_Constant_Altitude(Evaluate):
     """ Vehicle flies at a constant pitch rate at a set altitude. This is maneuvering flight.
         This is used in VTOL aircraft which need to transition from one pitch attitude to another.

@@ -1,4 +1,3 @@
-## @ingroup Library-Attributes-Coolants 
 # RCAIDE/Library/Attributes/Coolants/Coolant.py
 # 
 #
@@ -12,8 +11,7 @@ from RCAIDE.Framework.Core import Data
 
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Class
-# ---------------------------------------------------------------------------------------------------------------------- 
-## @ingroup Library-Attributes-Coolants
+# ----------------------------------------------------------------------------------------------------------------------  
 class Coolant(Data):
     """Default class of a liquid coolant.
     """

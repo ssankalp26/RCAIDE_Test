@@ -1,4 +1,3 @@
-## @ingroup Methods-Noise-Common 
 # RCAIDE/Methods/Noise/Common/noise_tone_correction.py
 # 
 # 
@@ -13,8 +12,7 @@ import numpy as np
     
 # ----------------------------------------------------------------------------------------------------------------------  
 #  Noise Tone Correction
-# ----------------------------------------------------------------------------------------------------------------------      
-## @ingroup Methods-Noise-Common  
+# ----------------------------------------------------------------------------------------------------------------------       
 def noise_tone_correction(SPL):
     """This method calculates de correction for spectral irregularities by means of
         a correction tone factor
@@ -170,4 +168,3 @@ def noise_tone_correction(SPL):
             tone_correction_max[j,k] = np.max(tone_correction)
     
         return tone_correction_max
-    

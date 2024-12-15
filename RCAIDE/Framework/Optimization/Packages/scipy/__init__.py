@@ -1,5 +1,3 @@
-## @defgroup Optimization-Packages-scipy scipy  
-# @ingroup Optimization-Packages 
 # RCAIDE/Optimization/Packages/scipy/__init__.py
 # 
 
@@ -10,4 +8,5 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-from Legacy.trunk.S.Optimization.Package_Setups import scipy_setup 
+from .scipy_setup import SciPy_Solve
+from .scipy_setup import SciPy_Problem

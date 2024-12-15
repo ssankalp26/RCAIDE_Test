@@ -1,4 +1,3 @@
-## @ingroup Components-Propulsors-Converters
 # RCAIDE/Library/Components/Propulsors/Converters/DC_Motor.py
 # 
 # 
@@ -14,7 +13,6 @@ from RCAIDE.Library.Methods.Propulsors.Converters.DC_Motor.append_motor_conditio
 # ----------------------------------------------------------------------------------------------------------------------
 #  DC_Motor  
 # ----------------------------------------------------------------------------------------------------------------------           
-## @ingroup Components-Propulsors-Converters 
 class DC_Motor(Component):
     """This is a motor component.
     
@@ -52,13 +50,12 @@ class DC_Motor(Component):
         self.gear_ratio         = 1.0
         self.gearbox_efficiency = 1.0
         self.expected_current   = 0.0
-        self.power_split_ratio  = 0.0
-        self.design_torque      = 0.0
-        self.wing_mounted       = False
+        self.power_split_ratio  = 0.0 
+        self.design_torque      = 0.0 
         self.interpolated_func  = None
         
-    def append_operating_conditions(self,segment,bus,propulsor):
-        propulsor_conditions =  segment.state.conditions.energy[bus.tag][propulsor.tag]
+    def append_operating_conditions(self,segment,propulsor):
+        propulsor_conditions =  segment.state.conditions.energy[propulsor.tag]
         append_motor_conditions(self,segment,propulsor_conditions)
         return
     

@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Performance-Stability  
 # RCAIDE/Library/Plots/Performance/Stability/plot_lateral_stability.py
 # 
 # 
@@ -16,13 +15,12 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Library-Plots-Performance-Stability
 def plot_lateral_stability(results,
                              save_figure = False,
                              show_legend=True,
                              save_filename = "Lateral_Stability",
                              file_type = ".png",
-                             width = 12, height = 7):
+                             width = 11, height = 7):
     """This plots the static stability characteristics of an aircraft 
     """  
 
@@ -68,7 +66,7 @@ def plot_lateral_stability(results,
         set_axes(axis_3)         
          
     if show_legend:
-        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 5) 
+        leg =  fig.legend(bbox_to_anchor=(0.5, 0.95), loc='upper center', ncol = 4) 
         leg.set_title('Flight Segment', prop={'size': ps.legend_font_size, 'weight': 'heavy'})    
     
     # Adjusting the sub-plots for legend

@@ -1,5 +1,3 @@
-## @defgroup Optimization-Packages-pyopt pyopt  
-# @ingroup Optimization-Packages    
 # RCAIDE/Optimization/Packages/pyopt/__init__.py
 # 
 
@@ -10,4 +8,4 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-from Legacy.trunk.S.Optimization.Package_Setups import pyopt_setup
+from .pyopt_setup import Pyopt_Solve

@@ -1,4 +1,3 @@
-## @ingroup Library-Plots-Performance-Aerodynamics   
 # RCAIDE/Library/Plots/Performance/Aerodynamics/plot_airfoil_polar_files.py
 # 
 # 
@@ -17,13 +16,11 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 #  PLOTS
 # ----------------------------------------------------------------------------------------------------------------------     
-
-## @ingroup Library-Plots-Performance-Aerodynamics   
 def plot_airfoil_polar_files(polar_data,
                              save_figure = False,
                              save_filename = "Airfoil_Polars",
                              file_type = ".png",
-                             width = 12, height = 7):
+                             width = 11, height = 7):
     """This plots all airfoil polars in the list "airfoil_polar_paths" 
 
     Assumptions:

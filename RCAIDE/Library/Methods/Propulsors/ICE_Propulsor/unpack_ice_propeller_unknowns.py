@@ -7,8 +7,7 @@
 #  unpack ice propeller network unknowns 
 # ----------------------------------------------------------------------------------------------------------------------  
 
-def unpack_ice_propeller_unknowns(propulsor,reference_propulsor,segment,fuel_line): 
-    fuel_line_results = segment.state.conditions.energy[fuel_line.tag]  
+def unpack_ice_propeller_unknowns(propulsor,segment):  
     engine            = propulsor.engine 
-    fuel_line_results[propulsor.tag][engine.tag].rpm = segment.state.unknowns[reference_propulsor.tag + '_propeller_rpm'] 
+    segment.state.conditions.energy[propulsor.tag][engine.tag].rpm = segment.state.unknowns[propulsor.tag + '_propeller_rpm'] 
     return 

@@ -1,4 +1,3 @@
-## @ingroup Library-Methods-Geomery-Two_Dimensional-Airfoil
 # RCAIDE/Library/Methods/Geometry/Two_Dimensional/Airfoil/compute_airfoil_properties.py
 # 
 # 
@@ -19,11 +18,12 @@ from RCAIDE.Library.Methods.Aerodynamics.AERODAS.post_stall_coefficients        
 
 # numpy imports 
 import numpy as np
+from scipy.interpolate     import RegularGridInterpolator
+from RCAIDE.Framework.Core import interp2d 
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  compute_airfoil_properties
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Library-Methods-Geometry-Two_Dimensional-Airfoil
 def compute_airfoil_properties(airfoil_geometry, airfoil_polar_files = None,use_pre_stall_data=True):
     """This computes the aerodynamic properties and coefficients of an airfoil in stall regimes using pre-stall
     characterstics and AERODAS formation for post stall characteristics. This is useful for 
@@ -46,26 +46,7 @@ def compute_airfoil_properties(airfoil_geometry, airfoil_polar_files = None,use_
         cl_polars                           [unitless]
         cd_polars                           [unitless]      
         aoa_sweep                           [unitless]
-        
-        # raw data                          [unitless]
-        theta_lower_surface                 [unitless]
-        delta_lower_surface                 [unitless]
-        delta_star_lower_surface            [unitless] 
-        sa_lower_surface                    [unitless]
-        ue_lower_surface                    [unitless]
-        cf_lower_surface                    [unitless]
-        dcp_dx_lower_surface                [unitless] 
-        Ret_lower_surface                   [unitless]
-        H_lower_surface                     [unitless]
-        theta_upper_surface                 [unitless]
-        delta_upper_surface                 [unitless]
-        delta_star_upper_surface            [unitless] 
-        sa_upper_surface                    [unitless]
-        ue_upper_surface                    [unitless]
-        cf_upper_surface                    [unitless]
-        dcp_dx_upper_surface                [unitless] 
-        Ret_upper_surface                   [unitless]
-        H_upper_surface                     [unitless] 
+         
     
     Properties Used:
     N/A
@@ -265,8 +246,7 @@ def apply_pre_stall_data(AoA_sweep_deg, airfoil_aoa, airfoil_cl, airfoil_cd, CL,
     CD[data_ub:]  = np.maximum(CD[data_ub:],  CD[data_ub]*np.ones_like(CD[data_ub:])) 
     
     return CL, CD
-
-## @ingroup Methods-Geometry-Two_Dimensional-Cross_Section-Airfoil
+ 
 def compute_boundary_layer_properties(airfoil_geometry,Airfoil_Data): 
     '''Computes the boundary layer properties of an airfoil for a sweep of Reynolds numbers 
     and angle of attacks. 
@@ -308,18 +288,12 @@ def compute_boundary_layer_properties(airfoil_geometry,Airfoil_Data):
     Airfoil_Data.cm                                                 = af_res.cm_invisc
     Airfoil_Data.boundary_layer                                     = Data() 
     Airfoil_Data.boundary_layer.angle_of_attacks                    = AoA_sweep 
-    Airfoil_Data.boundary_layer.reynolds_numbers                    = Re_sweep      
-    Airfoil_Data.boundary_layer.theta_lower_surface                 = af_res.theta 
-    Airfoil_Data.boundary_layer.delta_lower_surface                 = af_res.delta  
-    Airfoil_Data.boundary_layer.delta_star_lower_surface            = af_res.delta_star  
-    Airfoil_Data.boundary_layer.Ue_Vinf_lower_surface               = af_res.Ue_Vinf   
-    Airfoil_Data.boundary_layer.cf_lower_surface                    = af_res.cf   
-    Airfoil_Data.boundary_layer.dcp_dx_lower_surface                = af_res.dcp_dx 
-    Airfoil_Data.boundary_layer.theta_upper_surface                 = af_res.theta 
-    Airfoil_Data.boundary_layer.delta_upper_surface                 = af_res.delta 
-    Airfoil_Data.boundary_layer.delta_star_upper_surface            = af_res.delta_star   
-    Airfoil_Data.boundary_layer.Ue_Vinf_upper_surface               = af_res.Ue_Vinf     
-    Airfoil_Data.boundary_layer.cf_upper_surface                    = af_res.cf   
-    Airfoil_Data.boundary_layer.dcp_dx_upper_surface                = af_res.dcp_dx   
+    Airfoil_Data.boundary_layer.reynolds_numbers                    = Re_sweep
+    fL                                                              = np.transpose(af_res.fL, axes=[1,2,0])
+    fD                                                              = np.transpose(af_res.fD, axes=[1,2,0]) 
+    Airfoil_Data.lift_distribution_func                             = RegularGridInterpolator((AoA_sweep,Re_sweep),fL,method = 'linear',   bounds_error=False, fill_value=None)
+    Airfoil_Data.drag_distribution_func                             = RegularGridInterpolator((AoA_sweep,Re_sweep),fD,method = 'linear',   bounds_error=False, fill_value=None)
+    Airfoil_Data.lift_distribution                                  = fL 
+    Airfoil_Data.drag_distribution                                  = fD  
     
     return Airfoil_Data

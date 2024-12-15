@@ -9,7 +9,7 @@
   
 from RCAIDE.Framework.Core                    import Data  
 from RCAIDE.Library.Methods.Utilities         import Cubic_Spline_Blender   
-from Legacy.trunk.S.Methods.Aerodynamics.Common.Fidelity_Zero.Helper_Functions import compressible_turbulent_flat_plate
+from RCAIDE.Library.Methods.Aerodynamics.Common.Drag.compressible_turbulent_flat_plate import compressible_turbulent_flat_plate
 
 # package imports
 import numpy as np
@@ -39,18 +39,9 @@ def parasite_drag_nacelle(state,settings,geometry):
      
     # Estimating nacelle drag 
     for network in  geometry.networks: 
-        if 'busses' in network:  
-            for bus in network.busses:
-                for propulsor in bus.propulsors:  
-                    if 'nacelle' in propulsor: 
-                        nacelle_drag(state,settings,propulsor.nacelle)
-     
-        if 'fuel_lines' in network:  
-            for fuel_line in network.fuel_lines:
-                for propulsor in fuel_line.propulsors:  
-                    if 'nacelle' in propulsor:
-                        nacelle_drag(state,settings,propulsor.nacelle)
-                        
+        for propulsor in network.propulsors:  
+            if 'nacelle' in propulsor: 
+                nacelle_drag(state,settings,propulsor.nacelle)
     return     
 # ---------------------------------------------------------------------------------------------------------------------- 
 #  Nacelle Drag 

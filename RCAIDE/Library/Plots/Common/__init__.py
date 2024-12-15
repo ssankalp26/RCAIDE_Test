@@ -1,4 +1,3 @@
-## @defgroup Library-Plots-Performance-Common Common 
 # RCAIDE/Library/Plots/Performance/Common/__init__.py
 # 
 

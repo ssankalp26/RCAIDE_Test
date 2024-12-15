@@ -1,4 +1,3 @@
-## @ingroup Analyses-Mission-Segments-Single_Point
 # RCAIDE/Framework/Analyses/Mission/Segments/Single_Point/Set_Speed_Set_Altitude_No_Propulsion.py
 # 
 # 
@@ -13,16 +12,13 @@ from RCAIDE.Library.Methods                                  import skip
 from RCAIDE.Framework.Core                                     import Units 
 from RCAIDE.Framework.Mission.Segments.Evaluate       import Evaluate
 from RCAIDE.Library.Mission                          import Common,Segments
-
-
+ 
 # Package imports 
 import numpy as np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  Set_Speed_Set_Altitude_No_Propulsion
-# ----------------------------------------------------------------------------------------------------------------------
-
-## @ingroup Analyses-Mission-Segments-Single_Point
+# ---------------------------------------------------------------------------------------------------------------------- 
 class Set_Speed_Set_Altitude_No_Propulsion(Evaluate):
     """ This is a segment that is solved using a single point. A snapshot in time.
         We fix the speed and altitude. Throttle is solved from those.
@@ -59,7 +55,10 @@ class Set_Speed_Set_Altitude_No_Propulsion(Evaluate):
         self.altitude                                = None
         self.air_speed                               = 10. * Units['km/hr']
         self.distance                                = 1.  * Units.km
-        self.acceleration_z                          = 0. # note that down is positive
+        self.linear_acceleration_z                   = 0. # note that down is positive
+        self.roll_rate                               = 0
+        self.pitch_rate                              = 0
+        self.yaw_rate                                = 0
         self.state.numerics.number_of_control_points = 1
 
         # -------------------------------------------------------------------------------------------------------------- 
@@ -75,7 +74,7 @@ class Set_Speed_Set_Altitude_No_Propulsion(Evaluate):
         iterate.conditions.planet_position = skip 
         iterate.residuals.flight_dynamics  = Common.Residuals.flight_dynamics
         iterate.unknowns.controls          = Common.Unpack_Unknowns.control_surfaces
-        iterate.unknowns.mission           = Common.Unpack_Unknowns.orientation
+        iterate.unknowns.orientation       = Common.Unpack_Unknowns.orientation
         
         return
 

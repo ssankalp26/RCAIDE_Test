@@ -37,10 +37,18 @@ def compute_turbine_performance(turbine,turbine_conditions,conditions):
 
     Returns:
         None 
-    """            
-    # Unpack flight conditions 
-    gamma           = conditions.freestream.isentropic_expansion_factor
-    Cp              = conditions.freestream.specific_heat_at_constant_pressure
+    """              
+                             
+    # Unpack ram inputs       
+    working_fluid   = turbine.working_fluid
+
+    # Compute the working fluid properties
+    T0              = turbine_conditions.inputs.static_temperature
+    P0              = turbine_conditions.inputs.static_pressure  
+    M0              = turbine_conditions.inputs.mach_number   
+    gamma           = working_fluid.compute_gamma(T0,P0) 
+    Cp              = working_fluid.compute_cp(T0,P0) 
+    R               = working_fluid.compute_R(T0,P0)    
     
     #Unpack turbine entering properties 
     eta_mech        = turbine.mechanical_efficiency
@@ -57,13 +65,25 @@ def compute_turbine_performance(turbine,turbine_conditions,conditions):
     deltah_ht = -1/(1+f) * (compressor_work + shaft_takeoff + alpha * fan_work) * 1/eta_mech
     
     # Compute the output stagnation quantities from the inputs and the energy drop computed above
-    Tt_out    =  Tt_in+deltah_ht/Cp
-    ht_out    =  Cp*Tt_out   
-    Pt_out    =  Pt_in*(Tt_out/Tt_in)**(gamma/((gamma-1)*etapolt))
+    Tt_out    = Tt_in+deltah_ht/Cp
+    ht_out    = Cp*Tt_out   
+    Pt_out    = Pt_in*(Tt_out/Tt_in)**(gamma/((gamma-1)*etapolt)) 
+    pi_t      = Pt_out/Pt_in
+    tau_t     = Tt_out/Tt_in
+    T_out     = Tt_out/(1.+(gamma-1.)/2.*M0*M0)
+    P_out     = Pt_out/((1.+(gamma-1.)/2.*M0*M0)**(gamma/(gamma-1.)))         
     
     # Pack outputs of turbine 
     turbine_conditions.outputs.stagnation_pressure     = Pt_out
     turbine_conditions.outputs.stagnation_temperature  = Tt_out
     turbine_conditions.outputs.stagnation_enthalpy     = ht_out
+    turbine_conditions.outputs.static_temperature      = T_out
+    turbine_conditions.outputs.static_pressure         = P_out 
+    turbine_conditions.outputs.mach_number             = M0 
+    turbine_conditions.outputs.gas_constant            = R 
+    turbine_conditions.outputs.pressure_ratio          = pi_t   
+    turbine_conditions.outputs.temperature_ratio       = tau_t     
+    turbine_conditions.outputs.gamma                   = gamma 
+    turbine_conditions.outputs.cp                      = Cp    
     
     return

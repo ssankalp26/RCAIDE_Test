@@ -1,4 +1,3 @@
-## @ingroup Analyses
 # RCAIDE/Framework/Analyses/Analysis.py
 # 
 # 
@@ -7,13 +6,12 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------  
+from RCAIDE.Framework.Core import Data 
 from RCAIDE.Framework.Core import Container as ContainerBase 
-from RCAIDE.Framework.Core import Data
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Analysis
 # ----------------------------------------------------------------------------------------------------------------------  
-## @ingroup Analyses
 class Analysis(Data):
     """ RCAIDE.Framework.Analyses.Analysis()
     
@@ -134,7 +132,6 @@ class Analysis(Data):
 # ----------------------------------------------------------------------------------------------------------------------  
 #  CONFIG CONTAINER
 # ----------------------------------------------------------------------------------------------------------------------   
-## @ingroup Analyses
 class Container(ContainerBase):
     """ RCAIDE.Framework.Analyses.Analysis.Container()
     
