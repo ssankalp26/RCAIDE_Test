@@ -17,36 +17,25 @@ import numpy as np
 from RCAIDE.Framework.Core import Data
 
 ## @ingroup Input_Output-OpenVSP
-def get_fuel_tank_properties(vehicle,tag,fuel_tank_set_index=3,slices_for_calculation=100):
-    """This function computes the center of gravity, total possible fuel mass,
-    the available volume of each fuel tank in the vehicle through a mass
-    properties computation in OpenVSP.
-    
+def get_fuel_tank_properties(vehicle):
+    """Gets the fuel tank properties from OpenVSP
+
     Assumptions:
-    Fuel tanks exists in the fuselage and wings only
-    All fuel tanks have unique names
+    None
 
     Source:
     N/A
 
     Inputs:
-    vehicle.fuselages.*.Fuel_Tanks.*.tag     [-]
-    vehicle.wings.*.Fuel_Tanks.*.tag         [-]
+    vehicle - vehicle data structure
 
-    Outputs:    
-    vehicle.fuselages.*.Fuel_Tanks.*.mass_properties.
-      center_of_gravity                      [m]
-      fuel_mass_when_full                    [kg]
-      fuel_volume_when_full                  [m^3]
-    vehicle.wings.*.Fuel_Tanks.*.mass_properties.
-      center_of_gravity                      [m]
-      fuel_mass_when_full                    [kg]
-      fuel_volume_when_full                  [m^3]
-      
+    Returns:
+    data    - OpenVSP results containing: tag, volume, center_of_gravity, reference_area, 
+    length_reference, width_reference, height_reference, max_length, max_width, max_height
 
     Properties Used:
-    N/A
-    """      
+    None
+    """
     
     # Reset OpenVSP to avoid including a previous vehicle
     vsp.ClearVSPModel()    
@@ -94,39 +83,24 @@ def get_fuel_tank_properties(vehicle,tag,fuel_tank_set_index=3,slices_for_calcul
     return vehicle
 
 ## @ingroup Input_Output-OpenVSP
-def apply_properties(vehicle,fuel_tanks):
-    """Apply fuel tank properties from OpenVSP to the RCAIDE vehicle.
-    
+def apply_properties(vehicle):
+    """Applies the fuel tank properties from OpenVSP to the vehicle
+
     Assumptions:
-    Fuel tanks exists in the fuselage and wings only
+    None
 
     Source:
     N/A
 
     Inputs:
-    vehicle.fuselages.*.Fuel_Tanks.*.tag     [-]
-    vehicle.wings.*.Fuel_Tanks.*.tag         [-]
-    fuel_tanks.
-      tag                                    [-]
-      center_of_gravity                      [m]
-      fuel_mass_when_full                    [kg]
-      volume                                 [m^3]
-      
+    vehicle - vehicle data structure with fuel and wings properties
 
-    Outputs:    
-    vehicle.fuselages.*.Fuel_Tanks.*.mass_properties.
-      center_of_gravity                      [m]
-      fuel_mass_when_full                    [kg]
-      fuel_volume_when_full                  [m^3]
-    vehicle.wings.*.Fuel_Tanks.*.mass_properties.
-      center_of_gravity                      [m]
-      fuel_mass_when_full                    [kg]
-      fuel_volume_when_full                  [m^3]
-      
+    Returns:
+    vehicle - vehicle data structure with updated fuel tank properties
 
     Properties Used:
-    N/A
-    """      
+    None
+    """
     for wing in vehicle.wings:
         for tank in wing.Fuel_Tanks:
             tank.mass_properties.center_of_gravity     = fuel_tanks[tank.tag].center_of_gravity

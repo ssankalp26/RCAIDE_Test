@@ -39,98 +39,29 @@ except ImportError:
 
 
 ## @ingroup Input_Output-OpenVSP
-def vsp_read(tag, units_type='SI',specified_network=None,use_scaling=True,calculate_wetted_area=True): 
-    """This reads an OpenVSP vehicle geometry and writes it into a RCAIDE vehicle format.
-    Includes wings, fuselages, and propellers.
+def vsp_read(vsp_file_in, tag_in):
+    """This reads an OpenVSP vehicle geometry file and writes it into a RCAIDE vehicle format.
 
     Assumptions:
-    1. OpenVSP vehicle is composed of conventionally shaped fuselages, wings, and propellers. 
-    1a. OpenVSP fuselage: generally narrow at nose and tail, wider in center). 
-    1b. Fuselage is designed in VSP as it appears in real life. That is, the VSP model does not rely on
-       superficial elements such as canopies, stacks, or additional fuselages to cover up internal lofting oddities.
-    1c. This program will NOT account for multiple geometries comprising the fuselage. For example: a wingbox mounted beneath
-       is a separate geometry and will NOT be processed.
-    2. Fuselage origin is located at nose. VSP file origin can be located anywhere, preferably at the forward tip
-       of the vehicle or in front (to make all X-coordinates of vehicle positive).
-    3. Written for OpenVSP 3.21.1
+    None
 
     Source:
     N/A
 
     Inputs:
-    1. A tag for an XML file in format .vsp3.
-    2. Units_type set to 'SI' (default) or 'Imperial'
-    3. User-specified network
-    4. Boolean for whether or not to use the scaling from OpenVSP (default = True).
+    vsp_file_in - OpenVSP geometry file (.vsp3)
+    tag_in      - Name of aircraft in file
 
-    Outputs:
-    Writes RCAIDE vehicle with these geometries from VSP:    (All values default to SI. Any other 2nd argument outputs Imperial.)
-    	Wings.Wing.    (* is all keys)
-    		origin                                  [m] in all three dimensions
-    		spans.projected                         [m]
-    		chords.root                             [m]
-    		chords.tip                              [m]
-    		aspect_ratio                            [-]
-    		sweeps.quarter_chord                    [radians]
-    		twists.root                             [radians]
-    		twists.tip                              [radians]
-    		thickness_to_chord                      [-]
-    		dihedral                                [radians]
-    		symmetric                               <boolean>
-    		tag                                     <string>
-    		areas.reference                         [m^2]
-    		areas.wetted                            [m^2]
-    		Segments.
-    		  tag                                   <string>
-    		  twist                                 [radians]
-    		  percent_span_location                 [-]  .1 is 10%
-    		  root_chord_percent                    [-]  .1 is 10%
-    		  dihedral_outboard                     [radians]
-    		  sweeps.quarter_chord                  [radians]
-    		  thickness_to_chord                    [-]
-    		  airfoil                               <NACA 4-series, 6 series, or airfoil file>
-
-    	Fuselages.Fuselage.			
-    		origin                                  [m] in all three dimensions
-    		width                                   [m]
-    		lengths.
-    		  total                                 [m]
-    		  nose                                  [m]
-    		  tail                                  [m]
-    		heights.
-    		  maximum                               [m]
-    		  at_quarter_length                     [m]
-    		  at_three_quarters_length              [m]
-    		effective_diameter                      [m]
-    		fineness.nose                           [-] ratio of nose section length to fuselage effective diameter
-    		fineness.tail                           [-] ratio of tail section length to fuselage effective diameter
-    		areas.wetted                            [m^2]
-    		tag                                     <string>
-    		segment[].   (segments are in ordered container and callable by number)
-    		  vsp.shape                               [point,circle,round_rect,general_fuse,fuse_file]
-    		  vsp.xsec_id                             <10 digit string>
-    		  percent_x_location
-    		  percent_z_location
-    		  height
-    		  width
-    		  length
-    		  effective_diameter
-    		  tag
-    		vsp.xsec_num                              <integer of fuselage segment quantity>
-    		vsp.xsec_surf_id                          <10 digit string>
-
-    	Propellers.Propeller.
-    		location[X,Y,Z]                            [radians]
-    		rotation[X,Y,Z]                            [radians]
-    		tip_radius                                 [m]
-    	        hub_radius                                 [m] 
+    Returns:
+    vehicle - Data structure containing vehicle geometry in RCAIDE format with:
+    fuselages, wings, propellers, and nacelles, each containing tags, dimensions and areas
 
     Properties Used:
-    N/A
-    """  	
+    None
+    """
 
     vsp.ClearVSPModel() 
-    vsp.ReadVSPFile(tag)	
+    vsp.ReadVSPFile(vsp_file_in)	
 
     vsp_fuselages     = []
     vsp_wings         = []	
@@ -142,14 +73,7 @@ def vsp_read(tag, units_type='SI',specified_network=None,use_scaling=True,calcul
     geom_names        = []
 
     vehicle           = RCAIDE.Vehicle()
-    vehicle.tag       = tag 
-
-    if units_type == 'SI':
-        units_type = 'SI' 
-    elif units_type == 'inches':
-        units_type = 'inches'	
-    else:
-        units_type = 'imperial'	
+    vehicle.tag       = tag_in 
 
     # The two for-loops below are in anticipation of an OpenVSP API update with a call for GETGEOMTYPE.
     # This print function allows user to enter VSP GeomID manually as first argument in vsp_read functions.
@@ -165,14 +89,13 @@ def vsp_read(tag, units_type='SI',specified_network=None,use_scaling=True,calcul
         
         
     # Use OpenVSP to calculate wetted area
-    if calculate_wetted_area:
-        measurements = get_vsp_measurements()
-        if units_type == 'SI':
-            units_factor = Units.meter * 1.
-        elif units_type == 'imperial':
-            units_factor = Units.foot * 1.
-        elif units_type == 'inches':
-            units_factor = Units.inch * 1.	         
+    measurements = get_vsp_measurements()
+    if units_type == 'SI':
+        units_factor = Units.meter * 1.
+    elif units_type == 'imperial':
+        units_factor = Units.foot * 1.
+    elif units_type == 'inches':
+        units_factor = Units.inch * 1.	         
 
     # --------------------------------
     # AUTOMATIC VSP ENTRY & PROCESSING

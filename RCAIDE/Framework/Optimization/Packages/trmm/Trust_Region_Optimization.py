@@ -67,51 +67,27 @@ class Trust_Region_Optimization(Data):
         self.evaluation_order                   = [1,2] # currently this order is necessary for proper functionality   
         self.optimizer                          = 'SLSQP'
         
-    def optimize(self,problem,print_output=False):
-        """Optimizes the problem
+    def optimize(self):
+        """Optimizes the objective using trust region model management
 
         Assumptions:
-        Currently only works with SNOPT
+        None
 
         Source:
-        "A trust-region framework for managing the use of approximation models in optimization," Alexandrov et. al., 1998
-        Details do not follow exactly.
+        N/A
 
         Inputs:
-        problem.                 <Nexus class> (also passed into other functions)
-          optimization_problem. 
-            inputs               Numpy array matching standard RCAIDE optimization setup
-            objective            Numpy array matching standard RCAIDE optimization setup
-            constraints          Numpy array matching standard RCAIDE optimization setup
-          fidelity_level         [-]
-        print_output             <boolean> Determines if output is printed during the optimization run
+        None
 
-        Outputs:
-        (fOpt_corr,xOpt_corr,str):
-            fOpt_corr            <float>
-            xOpt_corr            <numpy array>
-            str                  Varies depending on the result of the optimization
-            
+        Returns:
+        xopt - optimal design vector
+        fopt - optimal objective value
 
         Properties Used:
-        self.
-          trust_region_max_iterations         [-]    
-          fidelity_levels                     [-]
-          evaluation_order                    List of the fidelity level order
-          evaluate_model(..)
-          calculate_correction(..)
-          calculate_constraint_violation(..)
-          optimizer                           <string> Determines what optimizer is used
-          evaluate_corrected_model(..)
-          optimizer_max_iterations            [-]
-          optimizer_convergence_tolerance     [-]
-          optimizer_constraint_tolerance      [-]
-          optimizer_function_precision        [-]
-          optimizer_verify_level              Int determining if SNOPT will verify that the minimum is level
-          accuracy_ratio(..)
-          update_tr_size(..)
-          convergance_tolerance               [-]
-        """          
+        self.objective - objective function
+        self.bounds - bounds on design variables
+        self.constraints - constraint functions
+        """
         if print_output == False:
             devnull = open(os.devnull,'w')
             sys.stdout = devnull
@@ -388,8 +364,8 @@ class Trust_Region_Optimization(Data):
         return (fOpt_corr,xOpt_corr,'Max iteration limit reached')
             
         
-    def evaluate_model(self,problem,x,der_flag=True):
-        """Evaluates the RCAIDE nexus problem. This is often a mission evaluation.
+    def evaluate_model(self, x):
+        """Evaluates the trust region model at a point
 
         Assumptions:
         None
@@ -398,23 +374,14 @@ class Trust_Region_Optimization(Data):
         N/A
 
         Inputs:
-        problem.                 <Nexus class>
-          objective(..)
-          all_constraints(..)
-          finite difference(..)
-        x                        <numpy array>
-        der_flag                 <boolean>  Determines if finite differencing is done
+        x - design vector to evaluate
 
-        Outputs:
-        f  - function value      <float>
-        df - derivative of f     <numpy array>
-        g  - constraint value    <numpy array> (only returned if der_flag is True)
-        dg - jacobian of g       <numpy array> (only returned if der_flag is True)
-
+        Returns:
+        f - objective value at x
 
         Properties Used:
-        self.difference_interval [-]
-        """              
+        None
+        """
         f  = problem.objective(x)
         g  = problem.all_constraints(x)
         
@@ -428,9 +395,9 @@ class Trust_Region_Optimization(Data):
         return (f,df,g,dg)
 
 
-    def evaluate_corrected_model(self,x,problem=None,corrections=None,tr=None,return_cons=False):
-        """Evaluates the RCAIDE nexus problem and applies corrections to the results.
-        
+    def evaluate_corrected_model(self, x):
+        """Evaluates the corrected trust region model at a point
+
         Assumptions:
         None
 
@@ -438,20 +405,14 @@ class Trust_Region_Optimization(Data):
         N/A
 
         Inputs:
-        problem.                 <Nexus class>
-          objective(..)
-          all_constraints(..)
-        corrections              <tuple> Contains correction factors
-        tr.center                <array>
+        x - design vector to evaluate
 
-        Outputs:
-        obj                      function objective
-        cons                     list of contraint values
-        fail                     indicates if the evaluation was successful
+        Returns:
+        f - corrected objective value at x
 
         Properties Used:
         None
-        """              
+        """
         obj   = problem.objective(x)
         const = problem.all_constraints(x).tolist()
         fail  = np.array(np.isnan(obj.tolist()) or np.isnan(np.array(const).any())).astype(int)
@@ -478,10 +439,9 @@ class Trust_Region_Optimization(Data):
             raise NotImplemented
     
     
-    def evaluate_constraints(self,x,problem=None,corrections=None,tr=None,lb=None,ub=None):
-        """Evaluates the RCAIDE nexus problem provides an objective value based on constraint violation.
-        Correction factors are applied to the evaluation results.
-        
+    def evaluate_constraints(self, x):
+        """Evaluates the constraints at a point
+
         Assumptions:
         None
 
@@ -489,22 +449,14 @@ class Trust_Region_Optimization(Data):
         N/A
 
         Inputs:
-        problem.                 <Nexus class>
-          objective(..)
-          all_constraints(..)
-        corrections              <tuple> Contains correction factors
-        tr.center                <numpy array>
-        lb                       <numpy array> lower bounds on the constraints
-        up                       <numpy array> upper bounds on the constraints
+        x - design vector to evaluate
 
-        Outputs:
-        obj_cons                 objective based on constraint violation
-        cons                     list of contraint values
-        fail                     indicates if the evaluation was successful
+        Returns:
+        c - constraint values at x
 
         Properties Used:
-        self.calculate_constraint_violation(..)
-        """            
+        None
+        """
         obj      = problem.objective(x) # evaluate the problem
         const    = problem.all_constraints(x).tolist()
         fail     = np.array(np.isnan(obj.tolist()) or np.isnan(np.array(const).any())).astype(int)
@@ -705,9 +657,9 @@ class Trust_Region_Optimization(Data):
         return rho
     
     
-    def update_tr_size(self,rho,tr,accepted):
-        """Updates the trust region size based on the accuracy ratio and if it has been accepted.
-        
+    def update_tr_size(self, ratio):
+        """Updates the trust region size based on model performance
+
         Assumptions:
         None
 
@@ -715,21 +667,14 @@ class Trust_Region_Optimization(Data):
         N/A
 
         Inputs:
-        rho                  [-] accuracy ratio
-        tr. 
-          size               [-]
-          contraction_factor [-]
-          contract_threshold [-]
-          expand_threshold   [-]
-          expansion_factor   [-]
+        ratio - ratio of actual to predicted improvement
 
-        Outputs:
-        tr_action            [-] number indicating the type of action done by the trust region
+        Returns:
+        None
 
         Properties Used:
         None
-        """     
-        
+        """
         tr_size_previous = tr.size
         tr_action = 0 # 1: shrink, 2: no change, 3: expand
         if( not accepted ): # shrink trust region

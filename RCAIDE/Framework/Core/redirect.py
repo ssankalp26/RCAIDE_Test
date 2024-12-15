@@ -16,24 +16,20 @@ import os, sys, shutil, copy
 
 ## @ingroup Core
 class output(object):
-    """ Temporarily redirects sys.stdout and sys.stderr when used in
-        a 'with' contextmanager
-        
-        Example:
-        with SU2.io.redirect_output('stdout.txt','stderr.txt'):
-            sys.stdout.write("standard out")
-            sys.stderr.write("stanrard error")
-            # code
-        #: with output redirection
-        
-        Inputs:
-            stdout - None, a filename, or a file stream
-            stderr - None, a filename, or a file stream
-        None will not redirect outptut
-        
-        Source:
-        http://stackoverflow.com/questions/6796492/python-temporarily-redirect-stdout-stderr
-        
+    """Redirects output to a file and folder
+
+    Assumptions:
+    None
+
+    Source:
+    N/A
+
+    Inputs:
+    args   - Command to be evaluated
+    folder - Location to store data
+
+    Returns:
+    None
     """
     def __init__(self, stdout=None, stderr=None):
         """ Initializes a new output() class
@@ -91,42 +87,20 @@ class output(object):
 
 ## @ingroup Core
 class folder(object):
-    """ Temporarily redirects to a working folder, pulling 
-        and pushing needed files
-        
-        Example:
-        
-        folder = 'temp'                    
-        pull   = ['file1.txt','file2.txt'] 
-        link   = ['file3.big']             
-        force  = True                      
-        
-        # original path
-        import os
-        print os.getcwd()
-        
-        # enter folder
-        with SU2.io.redirect_folder(folder,pull,link,force) as push:
-            print os.getcwd()
-            # code
-            push.append('file4.txt')
-        #: with folder redirection
-        
-        # returned to original path
-        print os.getcwd()
-        
-        Inputs:
-            folder - working folder, relative or absolute
-            pull   - list of files to pull (copy to working folder)
-            link   - list of files to link (symbolic link in working folder)
-            force  - True/False overwrite existing files in working folder
-        
-        Targets:
-            push   - list of files to push (copy to originating path)
-        
-        Notes:
-            push must be appended or extended, not overwritten
-            links in Windows not supported, will simply copy
+    """Creates a folder and outputs files to that folder
+
+    Assumptions:
+    None
+
+    Source:
+    N/A
+
+    Inputs:
+    folder - Location to store data
+    force  - Will remove the directory if it already exists
+
+    Returns:
+    None
     """
     
     def __init__(self, folder, pull=None, link=None, force=True ):
@@ -236,13 +210,20 @@ class folder(object):
         
   
 def make_link(src,dst):
-    """ make_link(src,dst)
-        makes a relative link
-        Inputs:
-            src - source file
-            dst - destination to place link
-        
-        Windows links currently unsupported, will copy file instead
+    """Makes a symbolic link
+
+    Assumptions:
+    None
+
+    Source:
+    N/A
+
+    Inputs:
+    src - source location
+    dst - destination location
+
+    Returns:
+    None
     """
     
     assert os.path.exists(src) , 'source file does not exist \n%s' % src

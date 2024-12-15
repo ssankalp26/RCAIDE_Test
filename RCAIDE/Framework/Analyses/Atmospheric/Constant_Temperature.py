@@ -28,7 +28,7 @@ class Constant_Temperature(Atmospheric):
     
     def __defaults__(self):
         """This sets the default values for the analysis to function.
-    
+        
         Assumptions:
         None
     
@@ -49,35 +49,31 @@ class Constant_Temperature(Atmospheric):
         self.update(atmo_data)
     
     def compute_values(self,altitude,temperature=288.15):
-
         """Computes atmospheric values.
-    
+
         Assumptions:
         Constant temperature atmosphere
-    
+
         Source:
         U.S. Standard Atmosphere, 1976, U.S. Government Printing Office, Washington, D.C., 1976
-    
+
         Inputs:
         altitude                                 [m]
         temperature                              [K]
 
         Outputs:
-        atmo_data.
-          pressure                               [Pa]
-          temperature                            [K]
-          speed_of_sound                         [m/s]
-          dynamic_viscosity                      [kg/(m*s)]
-          prandtl_number                         [-]
-    
+        atmo_data.pressure                       [Pa]
+        atmo_data.temperature                    [K]
+        atmo_data.speed_of_sound                 [m/s]
+        atmo_data.dynamic_viscosity              [kg/(m*s)]
+        atmo_data.prandtl_number                 [-]
+
         Properties Used:
-        self.
-          fluid_properties.gas_specific_constant [J/(kg*K)]
-          planet.sea_level_gravity               [m/s^2]
-          planet.mean_radius                     [m]
-          breaks.
-            altitude                             [m]
-            pressure                             [Pa]
+        self.fluid_properties.gas_specific_constant [J/(kg*K)]
+        self.planet.sea_level_gravity              [m/s^2]
+        self.planet.mean_radius                    [m]
+        self.breaks.altitude                       [m]
+        self.breaks.pressure                       [Pa]
         """
 
         # unpack

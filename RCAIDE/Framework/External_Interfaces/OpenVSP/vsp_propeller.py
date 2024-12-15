@@ -31,62 +31,25 @@ t_table = str.maketrans( chars          + string.ascii_uppercase ,
 # ----------------------------------------------------------------------
 
 ## @ingroup Input_Output-OpenVSP
-def read_vsp_propeller(prop_id, units_type='SI',write_airfoil_file=True):
-    """This reads an OpenVSP propeller geometry and writes it into a RCAIDE propeller format.
+def read_vsp_propeller(vsp_propeller_file):
+    """Reads a OpenVSP propeller file
 
     Assumptions:
-    1. Written for OpenVSP 3.24.0
+    None
 
     Source:
     N/A
 
     Inputs:
-    1. VSP 10-digit geom ID for prop.
-    2. units_type set to 'SI' (default) or 'Imperial'.
-    3. write_airfoil_file set to True (default) or False
-    4. number_of_radial_stations is the radial discretization used to extract the propeller design from OpenVSP
+    vsp_propeller_file - XML file for propeller outer mold line
 
-    Outputs:
-    Writes RCAIDE propeller/rotor object, with these geometries, from VSP:
-    	prop.
-    		origin                                  [m] in all three dimensions
-    		orientation				[deg] in all three dimensions
-    		number_of_blades			[-]
-    		tip_radius				[m]
-    		hub_radius				[m]
-    		twist_distribution			[deg]
-    		chord_distribution			[m]
-    		radius_distribution			[m]
-    		sweep_distribution			[deg]
-    		mid_chord_alignment			[m]
-    		max_thickness_distribution		[m]
-    		thickness_to_chord			[-]
-    		blade_solidity				[-]
-    		rotation			        [-]
-    		thickness_to_chord                      [-]
-                beta34                                  [radians]
-                pre_cone                                [radians]
-                rake                                    [radians]
-                skew                                    [radians]
-                axial                                   [radians]
-                tangential                              [radians]
-    		dihedral                                [radians]
-    		symmetric                               <boolean>
-    		tag                                     <string>
-    		Segments.
-    		  tag                                   <string>
-    		  twist                                 [radians]
-    		  percent_span_location                 [-]  .1 is 10%
-    		  root_chord_percent                    [-]  .1 is 10%
-    		  dihedral_outboard                     [radians]
-    		  sweeps.quarter_chord                  [radians]
-    		  thickness_to_chord                    [-]
-    		  airfoil                               <NACA 4-series, 6 series, or airfoil file>
+    Returns:
+    propeller - Data structure containing propeller properties including radius, 
+    chord, twist, sweep, max thickness, and airfoil coordinates
 
     Properties Used:
-    N/A
+    None
     """
-
 
     # Check if this is a propeller or a lift rotor
     # Check if the thrust angle	is > 70 deg in pitch
@@ -186,52 +149,58 @@ def read_vsp_propeller(prop_id, units_type='SI',write_airfoil_file=True):
     return prop
 
 ## @ingroup Input_Output-OpenVSP
-def write_vsp_propeller_bem(vsp_bem_filename,propeller):
-    """   This functions writes a .bem file for OpenVSP
+def write_vsp_propeller_bem(prop, write_file):
+    """Writes a propeller in OpenVSP BEM format
+
     Assumptions:
-        None
+    None
 
     Source:
-        None
+    N/A
+
     Inputs:
-        OpenVSP .bem filename
-        RCAIDE Propeller Data Structure
-    Outputs:
-        OpenVSP .bem file
+    prop       - RCAIDE propeller data structure
+    write_file - VSP file to write propeller to
+
+    Returns:
+    None
+
     Properties Used:
-        N/A
+    None
     """
-    vsp_bem = open(vsp_bem_filename,'w')
-    with open(vsp_bem_filename,'w') as vsp_bem:
-        make_header_text(vsp_bem, propeller)
+    vsp_bem = open(write_file,'w')
+    with open(write_file,'w') as vsp_bem:
+        make_header_text(vsp_bem, prop)
 
-        make_section_text(vsp_bem,propeller)
+        make_section_text(vsp_bem,prop)
 
-        make_airfoil_text(vsp_bem,propeller)
+        make_airfoil_text(vsp_bem,prop)
 
     # Now import this prop
-    vsp.ImportFile(vsp_bem_filename,vsp.IMPORT_BEM,'')
+    vsp.ImportFile(write_file,vsp.IMPORT_BEM,'')
 
     return
 
 
 
 ## @ingroup Input_Output-OpenVSP
-def make_header_text(vsp_bem,prop):
-    """This function writes the header of the OpenVSP .bem file
+def make_header_text(prop):
+    """Creates header text for VSP propeller file
+
     Assumptions:
-        None
+    None
 
     Source:
-        None
-    Inputs:
-        vsp_bem - OpenVSP .bem file
-        prop    - RCAIDE propeller data structure
+    N/A
 
-    Outputs:
-        NA
+    Inputs:
+    prop - RCAIDE propeller data structure
+
+    Returns:
+    header_text - Formatted header text string
+
     Properties Used:
-        N/A
+    None
     """
     header_base = \
 '''...{0}...
@@ -267,21 +236,23 @@ Normal: {8}, {9}, {10}
     return
 
 ## @ingroup Input_Output-OpenVSP
-def make_section_text(vsp_bem,prop):
-    """This function writes the sectional information of the propeller
+def make_section_text(prop):
+    """Creates section text for VSP propeller file
+
     Assumptions:
-        None
+    None
 
     Source:
-        None
-    Inputs:
-        vsp_bem - OpenVSP .bem file
-        prop    - RCAIDE propeller data structure
+    N/A
 
-    Outputs:
-        NA
+    Inputs:
+    prop - RCAIDE propeller data structure
+
+    Returns:
+    section_text - Formatted section text string
+
     Properties Used:
-        N/A
+    None
     """
     header = \
         '''Radius/R, Chord/R, Twist (deg), Rake/R, Skew/R, Sweep, t/c, CLi, Axial, Tangential\n'''
@@ -312,21 +283,23 @@ def make_section_text(vsp_bem,prop):
     return
 
 ## @ingroup Input_Output-OpenVSP
-def make_airfoil_text(vsp_bem,prop):
-    """This function writes the airfoil geometry into the vsp file
+def make_airfoil_text(prop):
+    """Creates airfoil text for VSP propeller file
+
     Assumptions:
-        None
+    None
 
     Source:
-        None
-    Inputs:
-        vsp_bem - OpenVSP .bem file
-        prop    - RCAIDE propeller data structure
+    N/A
 
-    Outputs:
-        NA
+    Inputs:
+    prop - RCAIDE propeller data structure
+
+    Returns:
+    airfoil_text - Formatted airfoil text string
+
     Properties Used:
-        N/A
+    None
     """
 
     N             = len(prop.radius_distribution)

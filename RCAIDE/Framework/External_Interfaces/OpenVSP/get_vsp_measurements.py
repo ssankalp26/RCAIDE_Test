@@ -18,30 +18,25 @@ except ImportError:
 import numpy as np
 
 ## @ingroup Input_Output-OpenVSP
-def get_vsp_measurements(filename = 'Unnamed_CompGeom.csv', measurement_type = 'wetted_area'):
-    """This calls OpenVSP to compute the wetted areas or volumes of a previously written vehicle.
-    
+def get_vsp_measurements(vehicle):
+    """Gets measurements from OpenVSP using the VSP script
+
     Assumptions:
-    Vehicle must be open in OpenVSP (via recently used vsp_write)
-    All components have different tags. Repeated tags are added together under the
-    assumption that this represents multiple engines or similar. Values computed from
-    repeated tags in this way may need to be divided by the number of entities later 
-    before assignment. This is because some analyses may multiply an assigned area
-    by number of engines, for example.
+    None
 
     Source:
     N/A
 
     Inputs:
-    None
+    vehicle - vehicle data structure
 
-    Outputs:
-    measurement   [m^2 or m^3] - Dictionary with values for each component, 
-      with component tags as the keys.
+    Returns:
+    data - OpenVSP results containing: wetted areas, reference areas, volumes, lengths, 
+    widths, heights, aspect ratios for all components
 
     Properties Used:
-    N/A
-    """        
+    None
+    """
     
     if measurement_type == 'wetted_area':
         output_ind = 2

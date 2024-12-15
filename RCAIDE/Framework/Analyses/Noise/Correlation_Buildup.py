@@ -63,23 +63,22 @@ class Correlation_Buildup(Noise):
         return
             
     def evaluate_noise(self,segment):
-        """ Process vehicle to setup geometry, condititon and configuration
-    
+        """Process vehicle to setup geometry, condititon and configuration
+
         Assumptions:
         None
-    
+
         Source:
         N/4
-    
+
         Inputs:
-        self.settings.
-            center_frequencies  - 1/3 octave band frequencies   [unitless]
-    
+        self.settings.center_frequencies - 1/3 octave band frequencies [unitless]
+
         Outputs:
         None
-    
+
         Properties Used: 
-        """         
+        """
     
         # unpack 
         config        = segment.analyses.noise.vehicle 

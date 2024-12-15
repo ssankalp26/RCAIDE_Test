@@ -59,8 +59,7 @@ class US_Standard_1976(Atmospheric):
         atmo_data = RCAIDE.Library.Attributes.Atmospheres.Earth.US_Standard_1976()
         self.update(atmo_data)        
     
-    def compute_values(self,altitude,temperature_deviation=0.0,var_gamma=False):
-
+    def compute_values(self,altitude):
         """Computes atmospheric values.
 
         Assumptions:
@@ -70,28 +69,25 @@ class US_Standard_1976(Atmospheric):
         U.S. Standard Atmosphere, 1976, U.S. Government Printing Office, Washington, D.C., 1976
 
         Inputs:
-        altitude                                 [m]
-        temperature_deviation                    [K]
+        altitude [m]
 
-        Output:
-        atmo_data.
-          pressure                               [Pa]
-          temperature                            [K]
-          speed_of_sound                         [m/s]
-          dynamic_viscosity                      [kg/(m*s)]
-          kinematic_viscosity                    [m^2/s]
-          thermal_conductivity                   [W/(m*K)]
-          prandtl_number                         [-]
-           
+        Outputs:
+        atmo_data.pressure [Pa]
+        atmo_data.temperature [K]
+        atmo_data.speed_of_sound [m/s]
+        atmo_data.dynamic_viscosity [kg/(m*s)]
+        atmo_data.kinematic_viscosity [m^2/s]
+        atmo_data.density [kg/m^3]
+        atmo_data.thermal_conductivity [W/(m*K)]
+        atmo_data.prandtl_number [-]
+
         Properties Used:
-        self.
-          fluid_properties.gas_specific_constant [J/(kg*K)]
-          planet.sea_level_gravity               [m/s^2]
-          planet.mean_radius                     [m]
-          breaks.
-            altitude                             [m]
-            temperature                          [K]
-            pressure                             [Pa]
+        self.fluid_properties.gas_specific_constant [J/(kg*K)]
+        self.planet.sea_level_gravity [m/s^2]
+        self.planet.mean_radius [m]
+        self.breaks.altitude [m]
+        self.breaks.temperature [K]
+        self.breaks.pressure [Pa]
         """
 
         # unpack

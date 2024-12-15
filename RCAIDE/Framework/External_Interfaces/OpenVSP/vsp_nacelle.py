@@ -22,39 +22,25 @@ except ImportError:
 #  vsp_nacelle
 # ----------------------------------------------------------------------
 ## @ingroup Input_Output-OpenVSP
-def write_vsp_nacelle(nacelle, OML_set_ind):
-    """This converts nacelles into OpenVSP format.
-    
-    Assumptions: 
-    1. If nacelle segments are defined, geometry written to OpenVSP is of type "StackGeom". 
-       1.a  This type of nacelle can be either set as flow through or not flow through.
-       1.b  Segments are defined in a similar manner to fuselage segments. See geometric 
-            documentation in RCAIDE-Library-Components-Nacelles-Nacelle
-    
-    2. If nacelle segments are not defined, geometry written to OpenVSP is of type "BodyofRevolution".
-       2.a This type of nacelle can be either set as flow through or not flow through.
-       2.b BodyofRevolution can be either be a 4 digit airfoil (type string) or super ellipse (default)
+def write_vsp_nacelle(nacelle, write_file):
+    """Writes a nacelle in OpenVSP format
+
+    Assumptions:
+    None
+
     Source:
     N/A
-    Inputs: 
-      nacelle.
-      origin                              [m] in all three dimension, should have as many origins as engines 
-      length                              [m]
-      diameter                            [m]
-      flow_through                        <boolean> if True create a flow through nacelle, if False create a cylinder
-      segment(optional).
-         width                            [m]
-         height                           [m]
-         lenght                           [m]
-         percent_x_location               [m]     
-         percent_y_location               [m]        
-         percent_z_location               [m] 
-       
-    Outputs:
-    Operates on the active OpenVSP model, no direct output
+
+    Inputs:
+    nacelle    - RCAIDE nacelle data structure
+    write_file - VSP file to write nacelle to
+
+    Returns:
+    None
+
     Properties Used:
-    N/A
-    """    
+    None
+    """
     # default tesselation 
     radial_tesselation = 21
     axial_tesselation  = 25
@@ -200,39 +186,25 @@ def write_vsp_nacelle(nacelle, OML_set_ind):
     
 
 ## @ingroup Input_Output-OpenVSP
-def read_vsp_nacelle(nacelle_id,vsp_nacelle_type, units_type='SI'):
-    """This reads an OpenVSP stack geometry or body of revolution and writes it to a RCAIDE nacelle format.
-    If an airfoil is defined in body-of-revolution, its coordinates are not read in due to absence of
-    API functions in VSP.
+def read_vsp_nacelle(vsp_nacelle_file):
+    """Reads a OpenVSP nacelle file
 
-    Assumptions: 
-    
+    Assumptions:
+    None
+
     Source:
     N/A
 
     Inputs:
-    0. Pre-loaded VSP vehicle in memory, via vsp_read.
-    1. VSP 10-digit geom ID for nacelle.
-    2. Units_type set to 'SI' (default) or 'Imperial'. 
+    vsp_nacelle_file - XML file for nacelle outer mold line
 
-    Outputs:
-    Writes RCAIDE nacelle, with these geometries:           (all defaults are SI, but user may specify Imperial)
-
-        Nacelles.Nacelle.	
-            origin                  [m] in all three dimensions
-            width                   [m]
-            lengths                 [m]
-            heights                 [m]
-            tag                     <string>
-            segment[].   (segments are in ordered container and callable by number) 
-              percent_x_location    [unitless]
-              percent_z_location    [unitless]
-              height                [m]
-              width                 [m]
+    Returns:
+    nacelle - Data structure containing nacelle properties including lengths, 
+    widths, heights, areas, and tag
 
     Properties Used:
-    N/A
-    """  	
+    None
+    """
     nacelle = RCAIDE.Library.Components.Nacelles.Nacelle()	
 
     if units_type == 'SI':

@@ -37,51 +37,24 @@ t_table = str.maketrans( chars          + string.ascii_uppercase ,
 # ----------------------------------------------------------------------
 
 ## @ingroup Input_Output-OpenVSP
-def read_vsp_wing(wing_id, units_type='SI', write_airfoil_file=True, use_scaling=True):
-    """This reads an OpenVSP wing vehicle geometry and writes it into a RCAIDE wing format.
+def read_vsp_wing(vsp_wing_file):
+    """Reads a OpenVSP wing file
 
     Assumptions:
-    1. OpenVSP wing is divided into segments ("XSecs" in VSP).
-    2. Written for OpenVSP 3.21.1
+    None
 
     Source:
     N/A
 
     Inputs:
-    1. VSP 10-digit geom ID for wing.
-    2. units_type set to 'SI' (default) or 'Imperial'.
-    3. Boolean for whether or not to write an airfoil file(default = True).
-    4. Boolean for whether or not to use the scaling from OpenVSP (default = True).
+    vsp_wing_file - XML file for wing outer mold line
 
-    Outputs:
-    Writes RCAIDE wing object, with these geometries, from VSP:
-    	Wings.Wing.    (* is all keys)
-    		origin                                  [m] in all three dimensions
-    		spans.projected                         [m]
-    		chords.root                             [m]
-    		chords.tip                              [m]
-    		aspect_ratio                            [-]
-    		sweeps.quarter_chord                    [radians]
-    		twists.root                             [radians]
-    		twists.tip                              [radians]
-    		thickness_to_chord                      [-]
-    		dihedral                                [radians]
-    		symmetric                               <boolean>
-    		tag                                     <string>
-    		areas.reference                         [m^2]
-    		areas.wetted                            [m^2]
-    		Segments.
-    		  tag                                   <string>
-    		  twist                                 [radians]
-    		  percent_span_location                 [-]  .1 is 10%
-    		  root_chord_percent                    [-]  .1 is 10%
-    		  dihedral_outboard                     [radians]
-    		  sweeps.quarter_chord                  [radians]
-    		  thickness_to_chord                    [-]
-    		  airfoil                               <NACA 4-series, 6 series, or airfoil file>
+    Returns:
+    wing - Data structure containing wing properties including spans, chords, 
+    twists, sweeps, areas, and control surfaces
 
     Properties Used:
-    N/A
+    None
     """
 
     # Check if this is vertical tail, this seems like a weird first step but it's necessary
@@ -408,45 +381,25 @@ def read_vsp_wing(wing_id, units_type='SI', write_airfoil_file=True, use_scaling
 
 
 ## @ingroup Input_Output-OpenVSP
-def write_vsp_wing(vehicle,wing, area_tags, fuel_tank_set_ind, OML_set_ind):
-    """This write a given wing into OpenVSP format
+def write_vsp_wing(wing, area_tags, write_file):
+    """Writes a wing in OpenVSP format
 
     Assumptions:
-    If wing segments are defined, they must cover the full span.
-    (may work in some other cases, but functionality will not be maintained)
+    None
 
     Source:
     N/A
 
     Inputs:
-    vehicle                                   [-] vehicle data structure
-    wing.
-      origin                                  [m] in all three dimensions
-      spans.projected                         [m]
-      chords.root                             [m]
-      chords.tip                              [m]
-      sweeps.quarter_chord                    [radians]
-      twists.root                             [radians]
-      twists.tip                              [radians]
-      thickness_to_chord                      [-]
-      dihedral                                [radians]
-      tag                                     <string>
-      Segments.*. (optional)
-        twist                                 [radians]
-        percent_span_location                 [-]  .1 is 10%
-        root_chord_percent                    [-]  .1 is 10%
-        dihedral_outboard                     [radians]
-        sweeps.quarter_chord                  [radians]
-        thickness_to_chord                    [-]
-    area_tags                                 <dict> used to keep track of all tags needed in wetted area computation
-    fuel_tank_set_index                       <int> OpenVSP object set containing the fuel tanks
+    wing       - RCAIDE wing data structure
+    area_tags  - Tags for identifying wing segments
+    write_file - VSP file to write wing to
 
-    Outputs:
-    area_tags                                 <dict> used to keep track of all tags needed in wetted area computation
-    wing_id                                   <str>  OpenVSP ID for given wing
+    Returns:
+    None
 
     Properties Used:
-    N/A
+    None
     """
     wing_x = wing.origin[0][0]
     wing_y = wing.origin[0][1]
@@ -798,8 +751,8 @@ def write_vsp_control_surface(wing,wing_id,ctrl_surf):
     return
 
 ## @ingroup Input_Output-OpenVSP
-def write_wing_conformal_fuel_tank(vehicle,wing, wing_id,fuel_tank,fuel_tank_set_ind):
-    """This writes a conformal fuel tank in a wing.
+def write_wing_conformal_fuel_tank(wing, fuel_tank, write_file):
+    """Writes a conformal fuel tank in OpenVSP format
 
     Assumptions:
     None
@@ -808,24 +761,15 @@ def write_wing_conformal_fuel_tank(vehicle,wing, wing_id,fuel_tank,fuel_tank_set
     N/A
 
     Inputs:
-    vehicle                                     [-] vehicle data structure
-    wing.Segments.*.percent_span_location       [-]
-    wing.spans.projected                        [m]
-    wind_id                                     <str>
-    fuel_tank.
-      inward_offset                             [m]
-      start_chord_percent                       [-] .1 is 10%
-      end_chord_percent                         [-]
-      start_span_percent                        [-]
-      end_span_percent                          [-]
-      fuel_type.density                         [kg/m^3]
-    fuel_tank_set_ind                           <int>
+    wing       - RCAIDE wing data structure
+    fuel_tank  - RCAIDE fuel tank data structure
+    write_file - VSP file to write fuel tank to
 
-    Outputs:
-    Operates on the active OpenVSP model, no direct output
+    Returns:
+    None
 
     Properties Used:
-    N/A
+    None
     """
     # Unpack
     try:

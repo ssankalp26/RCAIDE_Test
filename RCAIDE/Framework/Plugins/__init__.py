@@ -1,6 +1,7 @@
-from .load_plugin import load_plugin
-# these packages are imported by temporarily modifying
-# the python path to account for potential absolute
-# package imports
+import os
 
-pint = load_plugin('pint')
+if os.getenv('SPHINX_BUILD', '0') == '1':
+    pass
+else:
+    from .load_plugin import load_plugin
+    pint = load_plugin('pint')

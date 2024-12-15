@@ -73,8 +73,7 @@ class Frequency_Domain_Buildup(Noise):
         N/4
     
         Inputs:
-        self.settings.
-            center_frequencies  - 1/3 octave band frequencies   [unitless]
+        self.settings.center_frequencies - 1/3 octave band frequencies [unitless]
     
         Outputs:
         None
