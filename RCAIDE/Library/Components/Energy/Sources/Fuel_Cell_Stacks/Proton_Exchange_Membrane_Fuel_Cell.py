@@ -110,10 +110,7 @@ class Proton_Exchange_Membrane_Fuel_Cell(Generic_Fuel_Cell_Stack):
             The value which the limiting current is multiplied by for advanced PEM systems
         area_specific_mass: float 
             The mass per active membrane area of the fuel cell (kg/m2)
-        """
-        
-
-        self.fuel_cell                    = Data()
+        """ 
         
         self.fuel_cell.R                  = 8.31 # Universal gas constant (J / (mol*K))
         self.fuel_cell.F                  = 96485  # Faraday constant (C / mol)

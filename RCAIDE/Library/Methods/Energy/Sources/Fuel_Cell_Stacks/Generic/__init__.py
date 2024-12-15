@@ -8,8 +8,6 @@
 #  IMPORT
 # ----------------------------------------------------------------------------------------------------------------------
 
-from .append_fuel_cell_conditions    import append_fuel_cell_conditions
-from .compute_fuel_cell_performance  import compute_fuel_cell_performance
 from .zero_fidelity                  import zero_fidelity
 from .larminie                       import larminie
 from .setup_larminie                 import setup_larminie

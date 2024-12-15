@@ -1,6 +1,4 @@
-# RCAIDE/Framework/Analyses/Mission/Segments/Ground/Battery_Disharge.py
-# 
-# 
+# RCAIDE/Framework/Analyses/Mission/Segments/Ground/Battery_Charge.py 
 # Created:  Jul 2023, M. Clarke
  
 # ----------------------------------------------------------------------------------------------------------------------
@@ -8,15 +6,15 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 # RCAIDE imports
-from RCAIDE.Framework.Mission.Segments.Evaluate        import Evaluate    
-from RCAIDE.Framework.Core                                      import Units
-from RCAIDE.Library.Mission.Segments                  import Ground  
-from RCAIDE.Library.Methods.skip                              import skip 
+from RCAIDE.Framework.Mission.Segments.Evaluate      import Evaluate
+from RCAIDE.Library.Mission.Segments                 import Ground   
+from RCAIDE.Framework.Core                           import Units
+from RCAIDE.Library.Methods.skip                     import skip 
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  SEGMENT
-# ----------------------------------------------------------------------------------------------------------------------
-class Battery_Discharge(Evaluate): 
+# ---------------------------------------------------------------------------------------------------------------------- 
+class Recharge(Evaluate): 
 
     # ------------------------------------------------------------------
     #   Data Defaults
@@ -45,17 +43,14 @@ class Battery_Discharge(Evaluate):
         # --------------------------------------------------------------
         #   User Inputs
         # --------------------------------------------------------------
-        self.altitude               = None
-        self.time                   = 1.0 * Units.seconds 
-        self.cooling_time           = 0.0 * Units.seconds
-        self.overcharge_contingency = 1.10 
-        self.true_course            = 0.0 * Units.degrees 
-
-        # -------------------------------------------------------------------------------------------------------------- 
-        #  Mission specific processes 
-        # --------------------------------------------------------------------------------------------------------------       
-        initialize                         = self.process.initialize 
-        initialize.conditions              = Ground.Battery_Charge_Discharge.initialize_conditions 
+        self.altitude                      = None 
+        self.overcharge_contingency        = 1.10
+        self.cutoff_SOC                    = 1.0
+        self.true_course                   = 0.0 * Units.degrees  
+        self.cooling_time                  = 0.0 * Units.hr
+         
+        initialize                         = self.process.initialize  
+        initialize.conditions              = Ground.Battery_Charge_Discharge.initialize_conditions  
         iterate                            = self.process.iterate 
         iterate.unknowns.mission           = skip
         iterate.conditions.aerodynamics    = skip

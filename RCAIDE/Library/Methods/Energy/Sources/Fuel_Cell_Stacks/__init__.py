@@ -8,5 +8,5 @@
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
 
-from . import Generic
+from . import Common
 from . import Proton_Exchange_Membrane

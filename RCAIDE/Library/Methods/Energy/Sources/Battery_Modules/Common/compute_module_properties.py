@@ -12,7 +12,7 @@ import  numpy as  np
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  METHOD
-# ---------------------------------------------------------------------------------------------------------------------- -Common
+# ----------------------------------------------------------------------------------------------------------------------  
 def compute_module_properties(battery_module):  
     """Calculate module level properties of battery module using cell 
     properties and module configuraton
@@ -64,7 +64,7 @@ def compute_module_properties(battery_module):
     cell_diameter      = battery_module.cell.diameter
     cell_height        = battery_module.cell.height  
     euler_angles       = battery_module.orientation_euler_angles
-    weight_factor      = battery_module.BMS_additional_weight_factor
+    weight_factor      = battery_module.additional_weight_factor
     
     x1 =  normal_count * (cell_diameter + normal_spacing) * volume_factor # distance in the module-level normal direction
     x2 =  parallel_count * (cell_diameter + parallel_spacing) * volume_factor # distance in the module-level parallel direction

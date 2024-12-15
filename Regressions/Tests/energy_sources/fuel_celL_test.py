@@ -47,7 +47,7 @@ def main():
     axes6  = fig1.add_subplot(3,2,6)  
  
 
-    fuel_cell_model     = ['lithium_ion_nmc','lithium_ion_lfp']      
+    fuel_cell_model     = ['PEM']      
     for i in range(len(fuel_cell_model)):
         
         vehicle  = vehicle_setup(fuel_cell_model[i]) 
@@ -149,8 +149,8 @@ def mission_setup(analyses,vehicle):
     base_segment       = Segments.Segment()    
 
     # Charge Segment 
-    segment                                 = Segments.Ground.Battery_Discharge(base_segment)      
-    segment.analyses.extend(analyses.charge)
+    segment                                 = Segments.Ground.Discharge(base_segment)      
+    segment.analyses.extend(analyses.base)
     segment.throttle =  1.0 
     segment.tag                             = 'Discharge' 
     mission.append_segment(segment)    

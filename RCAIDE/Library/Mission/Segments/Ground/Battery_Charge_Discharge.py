@@ -29,7 +29,7 @@ def initialize_conditions(segment):
     """    
     t_nondim   = segment.state.numerics.dimensionless.control_points
 
-    if isinstance(segment, RCAIDE.Framework.Mission.Segments.Ground.Battery_Recharge):
+    if isinstance(segment, RCAIDE.Framework.Mission.Segments.Ground.Recharge):
         for network in segment.analyses.energy.vehicle.networks:
             time =  []
             for bus in  network.busses:
