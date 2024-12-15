@@ -1,4 +1,4 @@
-# RCAIDE/Library/Compoments/Energy/Sources/Batteries/Lithium_Ion_LFP
+# RCAIDE/Library/Compoments/Energy/Sources/Battery_Modules/Lithium_Ion_LFP
 # 
 # 
 # Created: Nov 2024, S. Shekar
@@ -11,7 +11,7 @@
 import RCAIDE
 from RCAIDE.Framework.Core          import Units,Data
 from .Generic_Battery_Module import  Generic_Battery_Module
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Lithium_Ion_LFP  import * 
+from RCAIDE.Library.Methods.Energy.Sources.Battery_Modules.Lithium_Ion_LFP  import * 
 
 # package imports 
 import numpy as np  
@@ -36,7 +36,7 @@ class Lithium_Ion_LFP(Generic_Battery_Module):
             
             Arora, Shashank, and Ajay Kapoor. “Experimental Study of Heat Generation 
             Rate during Discharge of LiFePO4 Pouch Cells of Different Nominal Capacities
-            and Thickness.” Batteries 5, no. 4 (November 11, 2019): 70. 
+            and Thickness.” Battery_Modules 5, no. 4 (November 11, 2019): 70. 
             https://doi.org/10.3390/batteries5040070.        
         """
         # ----------------------------------------------------------------------------------------------------------------------

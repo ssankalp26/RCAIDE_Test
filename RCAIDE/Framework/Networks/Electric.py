@@ -20,7 +20,8 @@ import  numpy as  np
 #  All Electric
 # ----------------------------------------------------------------------------------------------------------------------  
 class Electric(Network):
-    """ A network comprising battery pack(s) to power rotors using electric motors via a bus.
+    """ A network comprising an electrichemical energy source to power electro mechanical power
+        conversion machines eg. electric motors via a bus.
         Electronic speed controllers, thermal management system, avionics, and other eletric 
         power systes paylaods are also modelled. Rotors and motors are arranged into groups,
         called propulsor groups, to siginify how they are connected in the network.
@@ -95,8 +96,8 @@ class Electric(Network):
             T               = 0. * state.ones_row(1) 
             total_power     = 0. * state.ones_row(1) 
             M               = 0. * state.ones_row(1)  
-            avionics              = bus.avionics
-            payload               = bus.payload  
+            avionics        = bus.avionics
+            payload         = bus.payload  
 
             # Avionics Power Consumtion
             avionics_conditions = state.conditions.energy[bus.tag][avionics.tag]
@@ -116,13 +117,13 @@ class Electric(Network):
                 bus.charging_current   = bus.nominal_capacity * bus.charging_c_rate 
                 charging_power         = (bus.charging_current*bus_voltage*bus.power_split_ratio)
 
-                # append bus outputs to battery
+                # append bus outputs to bus
                 bus_conditions                    = state.conditions.energy[bus.tag]
                 bus_conditions.power_draw         = ((avionics_power + payload_power + total_esc_power) - charging_power)/bus.efficiency
                 bus_conditions.current_draw       = -bus_conditions.power_draw/bus.voltage
 
             else:       
-                # compute energy consumption of each battery on bus 
+                # compute energy consumption of each electrochemical energy source on bus 
                 stored_results_flag  = False
                 stored_propulsor_tag = None 
                 for propulsor_group in bus.assigned_propulsors:
@@ -150,7 +151,7 @@ class Electric(Network):
                 charging_power  = (state.conditions.energy[bus.tag].regenerative_power*bus_voltage*bus.power_split_ratio) 
                 total_esc_power = total_power*bus.power_split_ratio  
 
-                # append bus outputs to battery 
+                # append bus outputs to electrochemical energy source 
                 bus_conditions                    = state.conditions.energy[bus.tag]
                 bus_conditions.power_draw        += ((avionics_power + payload_power + total_esc_power) - charging_power)/bus.efficiency
                 bus_conditions.current_draw       = bus_conditions.power_draw/bus_voltage
@@ -160,19 +161,33 @@ class Electric(Network):
         delta_t            = np.diff(time)
         for t_idx in range(state.numerics.number_of_control_points):    
             for bus in  busses:
-                stored_results_flag  = False
-                stored_battery_tag   = None                          
+                stored_results_flag       = False
+                stored_battery_cell_tag   = None 
+                stored_fuel_cell_tag      = None
+                
                 for battery_module in  bus.battery_modules:                   
                     if bus.identical_battery_modules == False:
                         # run analysis  
-                        stored_results_flag, stored_battery_tag =  battery_module.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
+                        stored_results_flag, stored_battery_cell_tag =  battery_module.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
                     else:             
                         if stored_results_flag == False: 
                             # run battery analysis 
-                            stored_results_flag, stored_battery_tag  =  battery_module.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
+                            stored_results_flag, stored_battery_cell_tag  =  battery_module.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
                         else:
                             # use previous battery results 
-                            battery_module.reuse_stored_data(state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_tag)
+                            battery_module.reuse_stored_data(state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_battery_cell_tag)
+                            
+                for fuel_cell_stack in  bus.fuel_cell_stacks:                   
+                    if bus.identical_fuel_cell_stack == False:
+                        # run analysis  
+                        stored_results_flag, stored_fuel_cell_tag =  fuel_cell_stack.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
+                    else:             
+                        if stored_results_flag == False: 
+                            # run battery analysis 
+                            stored_results_flag, stored_fuel_cell_tag  =  fuel_cell_stack.energy_calc(state,bus,coolant_lines, t_idx, delta_t)
+                        else:
+                            # use previous battery results 
+                            fuel_cell_stack.reuse_stored_data(state,bus,coolant_lines, t_idx, delta_t,stored_results_flag, stored_fuel_cell_tag)
                 bus.compute_distributor_conditions(state,t_idx, delta_t)
                 
                 # Thermal Management Calculations                    
@@ -182,6 +197,8 @@ class Electric(Network):
                             heat_exchanger.compute_heat_exchanger_performance(state,bus,coolant_line,delta_t[t_idx],t_idx) 
                         for reservoir in coolant_line.reservoirs:   
                             reservoir.compute_reservior_coolant_temperature(state,coolant_line,delta_t[t_idx],t_idx)
+     
+        # ADD CODE TO CONNECT MASS FLOW OF FUEL CELL TO AIRCRAFT WEIGHT AND STORAGE TANKS
         
         if reverse_thrust ==  True:
             total_thrust =  total_thrust * -1     
@@ -312,6 +329,8 @@ class Electric(Network):
                 for battery_module in  bus.battery_modules: 
                     battery_module.append_operating_conditions(segment,bus) 
     
+                for fuel_cell_stack in  bus.fuel_cell_stacks: 
+                    fuel_cell_stack.append_operating_conditions(segment,bus)      
                     
                 for tag, bus_item in  bus.items():  
                     if issubclass(type(bus_item), RCAIDE.Library.Components.Component):

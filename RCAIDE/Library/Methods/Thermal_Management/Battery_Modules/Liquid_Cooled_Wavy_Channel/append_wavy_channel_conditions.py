@@ -1,4 +1,4 @@
-# RCAIDE/Library/Methods/Thermal_Management/Batteries/Air_Cooled/append_air_cooling_conditions.py
+# RCAIDE/Library/Methods/Thermal_Management/Battery_Modules/Air_Cooled/append_air_cooling_conditions.py
 # 
 # Created:  Aug 2024, S. Shekar
 

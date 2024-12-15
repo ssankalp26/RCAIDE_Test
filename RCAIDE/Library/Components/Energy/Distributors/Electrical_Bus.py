@@ -30,18 +30,19 @@ class Electrical_Bus(Component):
         """                
         self.tag                                   = 'bus' 
         self.battery_modules                       = Container()
+        self.fuel_cell_stacks                      = Container()
         self.assigned_propulsors                   = []
         self.solar_panel                           = None 
         self.avionics                              = RCAIDE.Library.Components.Systems.Avionics()
         self.payload                               = RCAIDE.Library.Components.Payloads.Payload()         
-        self.identical_battery_modules             = True  
-        self.active                                = True
+        self.identical_battery_modules             = True      
+        self.identical_fuel_cell_stacks            = True  
+        self.active                                = True   
         self.efficiency                            = 1.0
         self.voltage                               = 0.0 
         self.power_split_ratio                     = 1.0
         self.nominal_capacity                      = 0.0
-        self.charging_c_rate                       = 1.0
-        self.number_of_battery_modules             = 1
+        self.charging_c_rate                       = 1.0 
         self.battery_module_electric_configuration = "Series" 
         
     def append_operating_conditions(self, segment):

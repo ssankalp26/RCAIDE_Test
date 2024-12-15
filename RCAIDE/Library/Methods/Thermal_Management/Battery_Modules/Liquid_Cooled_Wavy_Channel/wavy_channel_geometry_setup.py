@@ -1,5 +1,5 @@
 
-#RCAIDE/Library/Methods/Thermal_Management/Batteries/Liquid_Cooled_Wavy_Channel/wavy_channel_geometry_setup.py
+#RCAIDE/Library/Methods/Thermal_Management/Battery_Modules/Liquid_Cooled_Wavy_Channel/wavy_channel_geometry_setup.py
 #
 # Created: Apr 2024, S. Shekar 2024
 

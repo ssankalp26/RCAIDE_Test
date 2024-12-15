@@ -1,4 +1,4 @@
-# RCAIDE/Library/Compoments/Energy/Sources/Batteries/Lithium_Ion_LiNiMnCoO2_18650.py
+# RCAIDE/Library/Compoments/Energy/Sources/Battery_Modules/Lithium_Ion_LiNiMnCoO2_18650.py
 # 
 # 
 # Created:  Mar 2024, M. Clarke
@@ -10,7 +10,7 @@
 import RCAIDE
 from RCAIDE.Framework.Core                                            import Units , Data
 from .Generic_Battery_Module                                          import Generic_Battery_Module   
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Lithium_Ion_NMC  import *
+from RCAIDE.Library.Methods.Energy.Sources.Battery_Modules.Lithium_Ion_NMC  import *
 # package imports 
 import numpy as np
 import os 

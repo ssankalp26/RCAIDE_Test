@@ -1,4 +1,4 @@
-# RCAIDE/Methods/Thermal_Management/Batteries/Air_Cooled/__init__.py
+# RCAIDE/Methods/Thermal_Management/Battery_Modules/Air_Cooled/__init__.py
 
 """ RCAIDE Package Setup
 """

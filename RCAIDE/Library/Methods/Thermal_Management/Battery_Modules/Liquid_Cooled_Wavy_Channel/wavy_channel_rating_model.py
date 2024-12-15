@@ -1,4 +1,4 @@
-# RCAIDE/Methods/Energy/Thermal_Management/Batteries/Heat_Acquisition_Systems/wavy_channel_rating_model.py
+# RCAIDE/Methods/Energy/Thermal_Management/Battery_Modules/Heat_Acquisition_Systems/wavy_channel_rating_model.py
 # 
 # 
 # Created:  Apr 2024, M. Clarke, S. Shekar

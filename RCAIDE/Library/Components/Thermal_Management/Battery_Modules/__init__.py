@@ -1,4 +1,4 @@
-# RCAIDE/Energy/Thermal_Management/__init__.py
+# RCAIDE/Energy/Thermal_Management/Battery_Modules/__init__.py
 # 
 
 """ RCAIDE Package Setup
@@ -7,8 +7,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 #  IMPORT
 # ---------------------------------------------------------------------------------------------------------------------- 
-from . import Accessories
-from . import Battery_Modules
-from . import Heat_Exchangers
-from . import Reservoirs
-
+from .Air_Cooled                 import Air_Cooled
+from .Cryocooler                 import Cryocooler
+from .Liquid_Cooled_Wavy_Channel import Liquid_Cooled_Wavy_Channel

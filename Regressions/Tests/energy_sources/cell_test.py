@@ -9,7 +9,7 @@
 # RCAIDE imports 
 import RCAIDE  
 from RCAIDE.Framework.Core                                    import Units, Data 
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common   import size_module_from_mass ,size_module_from_energy_and_power, find_mass_gain_rate, find_total_mass_gain, find_ragone_properties  
+from RCAIDE.Library.Methods.Energy.Sources.Battery_Modules.Common   import size_module_from_mass ,size_module_from_energy_and_power, find_mass_gain_rate, find_total_mass_gain, find_ragone_properties  
 from RCAIDE.Framework.Mission.Common                          import Conditions
 from RCAIDE.Library.Plots                                     import * 
 
@@ -22,7 +22,7 @@ import matplotlib.cm as cm
 import sys 
 import os
 sys.path.append(os.path.join( os.path.split(os.path.split(sys.path[0])[0])[0], 'Vehicles'))
-from Isolated_Battery_Cell   import vehicle_setup , configs_setup  
+from Battery_Cell   import vehicle_setup , configs_setup  
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  REGRESSION

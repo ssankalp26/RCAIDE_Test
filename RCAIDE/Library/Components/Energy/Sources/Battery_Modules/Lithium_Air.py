@@ -1,4 +1,4 @@
-# RCAIDE/Library/Compoments/Energy/Sources/Batteries/Lithium_Air.py
+# RCAIDE/Library/Compoments/Energy/Sources/Battery_Modules/Lithium_Air.py
 # 
 # 
 # Created:  Mar 2024, M. Clarke 

@@ -250,8 +250,8 @@ def compute_nmc_cell_performance(battery_module,state,bus,coolant_lines,t_idx, d
         # Determine new charge throughput (the amount of charge gone through the battery_module)
         Q_cell[t_idx+1]    = Q_cell[t_idx] + abs(I_cell[t_idx])*delta_t[t_idx]/Units.hr
         
-    stored_results_flag     = True
-    stored_battery_module_tag     = battery_module.tag  
+    stored_results_flag         = True
+    stored_battery_module_tag   = battery_module.tag  
         
     return stored_results_flag, stored_battery_module_tag
 

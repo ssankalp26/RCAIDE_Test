@@ -1,4 +1,4 @@
-# RCAIDE/Library/Methods/Thermal_Management/Batteries/Liquid_Cooled_Wavy_Channel/__init__.py
+# RCAIDE/Library/Methods/Thermal_Management/Battery_Modules/Liquid_Cooled_Wavy_Channel/__init__.py
 
 """ RCAIDE Package Setup
 """

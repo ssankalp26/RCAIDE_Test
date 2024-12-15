@@ -1,4 +1,4 @@
-# RCAIDE/Methods/Thermal_Management/Batteries/Heat_Acquisition_System/Direct_Air_Heat_Acquisition/direct_convection_model.py
+# RCAIDE/Methods/Thermal_Management/Battery_Modules/Heat_Acquisition_System/Direct_Air_Heat_Acquisition/direct_convection_model.py
 # 
 # 
 # Created:  Jul 2023, M. Clarke 

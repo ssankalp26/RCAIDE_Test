@@ -2,7 +2,7 @@
 # 
 # Created: Sep 2024, S. Shekar
 #
-from RCAIDE.Library.Methods.Energy.Sources.Batteries.Common                    import compute_module_properties 
+from RCAIDE.Library.Methods.Energy.Sources.Battery_Modules.Common                    import compute_module_properties 
 
 # ----------------------------------------------------------------------------------------------------------------------
 #  METHODS

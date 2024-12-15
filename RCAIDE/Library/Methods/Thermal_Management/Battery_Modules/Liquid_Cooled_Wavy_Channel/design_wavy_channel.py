@@ -1,4 +1,4 @@
-# RCAIDE/Library/Methods/Thermal_Management/Batteries/Liquid_Cooled_Wavy_Channel/design_wavy_channel
+# RCAIDE/Library/Methods/Thermal_Management/Battery_Modules/Liquid_Cooled_Wavy_Channel/design_wavy_channel
 
 # Created:  Apr 2024, S. Shekar 
 
@@ -7,8 +7,8 @@
 # ----------------------------------------------------------------------------------------------------------------------
 # RCAIDE imports   
 from RCAIDE.Framework.Core                                                                                         import Units , Data  
-from RCAIDE.Library.Methods.Thermal_Management.Batteries.Liquid_Cooled_Wavy_Channel.wavy_channel_sizing_setup      import wavy_channel_sizing_setup
-from RCAIDE.Library.Methods.Thermal_Management.Batteries.Liquid_Cooled_Wavy_Channel.wavy_channel_geometry_setup    import wavy_channel_geometry_setup
+from RCAIDE.Library.Methods.Thermal_Management.Battery_Modules.Liquid_Cooled_Wavy_Channel.wavy_channel_sizing_setup      import wavy_channel_sizing_setup
+from RCAIDE.Library.Methods.Thermal_Management.Battery_Modules.Liquid_Cooled_Wavy_Channel.wavy_channel_geometry_setup    import wavy_channel_geometry_setup
 from RCAIDE.Framework.Optimization.Common                                                                          import Nexus
 from RCAIDE.Framework.Optimization.Packages.scipy                                                                  import scipy_setup
 
